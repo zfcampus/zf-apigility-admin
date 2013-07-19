@@ -15,8 +15,8 @@ angular.module('zf-api-first-admin', [])
             });
     }])
     .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-        $routeProvider.when('/', {templateUrl: 'partials/index.html', controller: 'IndexController'});
-        $routeProvider.when('/diagnostics', {templateUrl: 'partials/diagnostics.html', controller: 'DiagnosticsController'});
+        $routeProvider.when('/', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'IndexController'});
+        $routeProvider.when('/diagnostics', {templateUrl: '/zf-api-first-admin/partials/diagnostics.html', controller: 'DiagnosticsController'});
     }])
 ;
 
