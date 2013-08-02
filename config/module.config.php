@@ -28,11 +28,21 @@ return array(
                     'route' => '/admin',
                     'defaults' => array(
                         'controller' => 'ZFApiFirstAdmin\Controller\App',
-                        'action'     => 'app'
-                    )
-                )
-            )
-        )
+                        'action'     => 'app',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'api' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => '/api',
+                        ),
+                        'may_terminate' => false,
+                    ),
+                ),
+            ),
+        ),
     ),
 
 );
