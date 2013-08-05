@@ -26,15 +26,19 @@ angular.module('zf-api-first-admin', [])
 	};
 
 	$scope.doSubmit = function () {
-	    $http({
-		    method: 'PATCH',
-		    url: '/admin/api/config',
-		    headers: {'Content-Type': 'application/vnd.zfcampus.v1.config+json'},
-		    data: {db: $scope.db}
-	    })
-		.success(function (data) {
-		    console.log(data);
-		});
+        var req = {
+            method: 'PATCH',
+            url: '/admin/api/config',
+            headers: {
+                'Accept': 'application/vnd.zfcampus.v1.config+json',
+                'Content-Type': 'application/vnd.zfcampus.v1.config+json'
+            },
+            data: {db: $scope.db}
+        };
+	    $http(req)
+            .success(function (data) {
+                console.log(data);
+            });
 
 	}
     }])
