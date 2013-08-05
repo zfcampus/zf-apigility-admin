@@ -7,9 +7,10 @@
         "zf2"
     ],
     "homepage": "http://framework.zend.com/",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "dev-master",
+        "zendframework/zendframework": ">=2.3.0dev",
         "rwoverdijk/assetmanager": "dev-master"
     },
     "autoload": {
