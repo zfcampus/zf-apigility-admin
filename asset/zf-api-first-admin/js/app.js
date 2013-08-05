@@ -10,35 +10,32 @@ angular.module('zf-api-first-admin', [])
         $routeProvider.when('/configuration', {templateUrl: '/zf-api-first-admin/partials/configuration.html', controller: 'ConfigurationController'});
     }])
     .controller('ConfigurationController', ['$http', '$scope', '$compile', function($http, $scope, $compile) {
-
-
-
-//        $http.get('/admin/api/config', {headers: {'Content-Type': 'application/vnd.zfcampus.v1.config'}})
-//            .success(function (data) {
-//                $scope.configurations = data;
-//            });
-
-	$scope.addDatabase = function() {
-	    $http.get('/zf-api-first-admin/partials/configuration-db.html')
-		.success(function (data) {
-		    $scope.configForm = data;
-		});
-	};
-
-	$scope.doSubmit = function () {
-        var req = {
-            method: 'PATCH',
-            url: '/admin/api/config',
-            headers: {
-                'Accept': 'application/vnd.zfcampus.v1.config+json',
-                'Content-Type': 'application/vnd.zfcampus.v1.config+json'
-            },
-            data: {db: $scope.db}
-        };
-	    $http(req)
+        $http.get('/admin/api/config')
             .success(function (data) {
-                console.log(data);
+                $scope.configurations = data;
             });
+
+        $scope.addDatabase = function() {
+            $http.get('/zf-api-first-admin/partials/configuration-db.html')
+            .success(function (data) {
+                $scope.configForm = data;
+            });
+        };
+
+        $scope.doSubmit = function () {
+            var req = {
+                method: 'PATCH',
+                url: '/admin/api/config',
+                headers: {
+                    'Accept': 'application/vnd.zfcampus.v1.config+json',
+                    'Content-Type': 'application/vnd.zfcampus.v1.config+json'
+                },
+                data: {db: $scope.db}
+            };
+            $http(req)
+                .success(function (data) {
+                    console.log(data);
+                });
 
 	}
     }])
