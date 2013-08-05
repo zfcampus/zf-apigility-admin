@@ -1,7 +1,15 @@
+
+<a ng-click="addDatabase()">Add Db Configuration</a>
+
+<div compile="configForm" ng-show="configForm">
+</div>
+
+<h2>Existing Configuration</h2>
+
 <div ng-model="configurations">
   <ul>
-    <li ng-repeat="configuration in configurations">
-      {{ configuration }}
+    <li ng-repeat="(k, v) in configurations">
+      {{ k }} => {{ v }}
     </li>
   </ul>
 </div>

@@ -39,6 +39,18 @@ return array(
                             'route' => '/api',
                         ),
                         'may_terminate' => false,
+			'child_routes' => array(
+			    'config' => array(
+				'type' => 'literal',
+				'options' => array(
+				    'route' => '/config',
+				    'defaults' => array(
+					'controller' => 'ZF\Configuration\ConfigController',
+					'action'     => 'process',
+				    ),
+				),
+			    ),
+			),
                     ),
                 ),
             ),
