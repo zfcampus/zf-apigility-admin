@@ -10,10 +10,14 @@ angular.module('zf-api-first-admin', [])
         $routeProvider.when('/configuration', {templateUrl: '/zf-api-first-admin/partials/configuration.html', controller: 'ConfigurationController'});
     }])
     .controller('ConfigurationController', ['$http', '$scope', '$compile', function($http, $scope, $compile) {
-        $http.get('/admin/api/config')
-            .success(function (data) {
-                $scope.configurations = data;
-            });
+
+        $scope.loadConfiguration = function () {
+            $http.get('/admin/api/config')
+                .success(function (data) {
+                    $scope.configurations = data;
+                });
+        };
+
 
         $scope.addDatabase = function() {
             $http.get('/zf-api-first-admin/partials/configuration-db.html')
@@ -34,10 +38,13 @@ angular.module('zf-api-first-admin', [])
             };
             $http(req)
                 .success(function (data) {
-                    console.log(data);
+                    $scope.configForm = 'Configuration saved.';
+                    $scope.loadConfiguration();
                 });
 
-	}
+    	};
+
+        $scope.loadConfiguration();
     }])
     .directive('compile', function($compile) {
 	// directive factory creates a link function
