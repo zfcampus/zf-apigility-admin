@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="zf-api-first-admin">
-<head>
-  <title>API 1st UI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Bootstrap -->
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
-</head>
-<body>
+<?php
 
+$this->headLink()
+    ->prependStylesheet('/zf-api-first-admin/css/wizard.css')
+    ->prependStylesheet('/zf-api-first-admin/css/angular.treeview.css');
+    
+
+$this->headScript()->appendFile('/zf-api-first-admin/js/angular.js');
+	
+$this->inlineScript()
+	 ->appendFile('/zf-api-first-admin/js/angular.treeview.js', 'text/javascript')
+    ->appendFile('/zf-api-first-admin/js/app.js');
+
+?>
 <div id="main">
-  <!-- content -->
-  <div id="content">
-    <div class="container" ng-view>
-
+    <div id="content">
+        <div class="container" ng-view>
+        </div>
     </div>
-  </div>
 </div>
-<script src="/zf-api-first-admin/js/angular.js"></script>
-<script src="/zf-api-first-admin/js/app.js"></script>
-</body>
-</html>

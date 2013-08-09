@@ -1,0 +1,113 @@
+<div class="wizard">
+    <a><span class="badge">1</span>Setup</a>
+    <a><span class="badge">2</span>Db/Code API</a>
+	 <a class="current"><span class="current badge badge-inverse">3</span>Resources</a>
+    <a><span class="badge">4</span>Authentication</a>
+    <a><span class="badge">5</span>Filter & Validation</a>
+	 <a><span class="badge">6</span>Package</a>
+</div>
+
+<div class="well">
+
+    <form class="form-horizontal" ng-submit="step3()">
+    <fieldset>
+    
+    <!-- Form Name -->
+    <legend>Resources
+      <!-- Configuration -->
+	 	<div style="font-size:13px;float:right">
+            <a href="#myConfiguration" ng-click="loadConfiguration()" role="button" class="btn" data-toggle="modal"><i class="icon-wrench"></i> Configuration</a>
+	 	</div>  
+    </legend>
+
+    <!-- Modal window (configuration) -->
+     <div class="modal fade hide" id="myConfiguration">
+         <div class="modal-header"><h2>Configuration</h2></div>
+         <div class="modal-body">
+            <div
+      			data-angular-treeview="true"
+      			data-tree-model="tree"
+      			data-node-id="id"
+      			data-node-label="name"
+      			data-node-children="child"
+      			data-node-icon="icon" >
+    			</div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+         </div>
+     </div>
+     
+    <!-- Text input-->
+    <div class="control-group">
+      <label class="control-label" for="name">Resource Name</label>
+      <div class="controls">
+        <input id="name" name="name" placeholder="Give this resource a name" class="input-xlarge" required="" type="text">
+        <p class="help-block">machine-readable: [\w\d-_] allowed</p>
+      </div>
+    </div>
+
+    <!-- Select Basic -->
+    <div class="control-group">
+      <label class="control-label" for="type">Type</label>
+      <div class="controls">
+        <select id="type" name="type" class="input-xlarge">
+          <option>Code Connected Resource</option>
+          <option>Database Connected Resource</option>
+           <option>MongoDB Connected Resource</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Select Basic -->
+    <div class="control-group">
+      <label class="control-label" for="format">API format</label>
+      <div class="controls">
+        <select id="format" name="format" class="input-xlarge">
+          <option>RPC</option>
+          <option>RESTful</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Text input-->
+    <div class="control-group">
+      <label class="control-label" for="url">URL</label>
+      <div class="controls">
+        <input id="url" name="url" placeholder="Give this resource a URL" class="input-xlarge" required="" type="text">
+        <p class="help-block">with [:params] inside (optionals)</p>
+      </div>
+    </div>
+    
+    <!-- Select Basic -->
+    <div class="control-group">
+      <label class="control-label" for="format">Method</label>
+      <div class="controls">
+        <select id="method" name="method" class="input-xlarge">
+          <option>GET</option>
+          <option>PUT</option>
+			 <option>POST</option>
+          <option>DELETE</option>
+          <option>PATCH</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Button -->
+    <div class="control-group">
+      <label class="control-label" for="singlebutton"></label>
+      <div class="controls">
+        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Add resource</button>
+      </div>
+    </div>
+	 
+    <!-- Previous & Next -->
+    <div class="control-group">
+      <div class="controls" style="float:right">
+        <a href="#/step2" class="btn btn-primary"><i class="icon-chevron-left"></i> Previous</a>
+        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Next <i class="icon-chevron-right"></i></button>
+      </div>
+    </div>
+    </fieldset>
+    </form>
+</div>

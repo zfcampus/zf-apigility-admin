@@ -1,0 +1,44 @@
+<div class="well">
+    <form class="form-horizontal">
+    <fieldset>
+
+    <!-- Form Name -->
+    <legend>Database Connected Resource</legend>
+
+    <!-- Select Basic -->
+    <div class="control-group">
+      <label class="control-label" for="selectbasic">Select Table As Resource</label>
+      <div class="controls">
+	<select id="selectbasic" name="selectbasic" class="input-xlarge">
+	  <option>db_schema.table_one</option>
+	  <option>db_schema.table_two</option>
+	</select>
+      </div>
+    </div>
+
+    <!-- Multiple Checkboxes -->
+    <div class="control-group">
+      <label class="control-label" for="supported-actions">Supported Actions</label>
+      <div class="controls">
+	<label class="checkbox" for="supported-actions-0">
+	  <input name="supported-actions" id="supported-actions-0" value="GET as DB Select" type="checkbox">
+	  GET as DB Select
+	</label>
+	<label class="checkbox" for="supported-actions-1">
+	  <input name="supported-actions" id="supported-actions-1" value="POST as DB Insert" type="checkbox">
+	  POST as DB Insert
+	</label>
+	<label class="checkbox" for="supported-actions-2">
+	  <input name="supported-actions" id="supported-actions-2" value="PUT as DB Update" type="checkbox">
+	  PUT as DB Update
+	</label>
+	<label class="checkbox" for="supported-actions-3">
+	  <input name="supported-actions" id="supported-actions-3" value="DELETE as DB Delete" type="checkbox">
+	  DELETE as DB Delete
+	</label>
+      </div>
+    </div>
+
+    </fieldset>
+    </form>
+</div>

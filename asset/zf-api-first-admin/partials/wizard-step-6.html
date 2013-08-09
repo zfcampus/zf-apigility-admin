@@ -1,0 +1,52 @@
+<div class="wizard">
+    <a><span class="badge">1</span>Setup</a>
+    <a><span class="badge">2</span>Db/Code API</a>
+	 <a><span class="badge">3</span>Resources</a>
+    <a><span class="badge">4</span>Authentication</a>
+    <a><span class="badge">5</span>Filter & Validation</a>
+	 <a class="current"><span class="current badge badge-inverse">6</span>Package</a>
+</div>
+
+<div class="well">
+    <form class="form-horizontal" ng-submit="step6()">
+    <fieldset>
+
+    <!-- Form Name -->
+    <legend>
+    Package
+	 <!-- Configuration -->
+	 	<div style="font-size:13px;float:right">
+            <a href="#myConfiguration" ng-click="loadConfiguration()" role="button" class="btn" data-toggle="modal"><i class="icon-wrench"></i> Configuration</a>
+	 	</div>  
+    </legend>
+
+	 <!-- Modal window (configuration) -->
+     <div class="modal fade hide" id="myConfiguration">
+         <div class="modal-header"><h2>Configuration</h2></div>
+         <div class="modal-body">
+            <div
+      			data-angular-treeview="true"
+      			data-tree-model="tree"
+      			data-node-id="id"
+      			data-node-label="name"
+      			data-node-children="child"
+      			data-node-icon="icon" >
+    			</div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+         </div>
+     </div>
+
+    
+
+    <!-- Previous & Next -->
+    <div class="control-group">
+      <div class="controls" style="float:right">
+        <a href="#/step5" class="btn btn-primary"><i class="icon-chevron-left"></i> Previous</a>
+        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Next <i class="icon-chevron-right"></i></button>
+      </div>
+    </div>
+    </fieldset>
+    </form>
+</div>
