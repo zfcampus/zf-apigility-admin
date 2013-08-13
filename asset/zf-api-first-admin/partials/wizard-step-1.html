@@ -15,26 +15,33 @@
     <legend>Setup
      	<!-- Configuration -->
 	 	<div style="font-size:13px;float:right">
-            <a href="#myConfiguration" ng-click="loadConfiguration()" role="button" class="btn" data-toggle="modal"><i class="icon-wrench"></i> Configuration</a>
+            <a href="#myConfiguration" ng-click="loadConfiguration()" class="btn btn-primary btn-lg" data-toggle="modal"><span class="glyphicon glyphicon-wrench"></span> Configuration</a>
 	 	</div>
 	 </legend>
 	 
 	 <!-- Modal window (configuration) -->
-     <div class="modal fade hide" id="myConfiguration">
-         <div class="modal-header"><h2>Configuration</h2></div>
-         <div class="modal-body">
-            <div
-      			data-angular-treeview="true"
-      			data-tree-model="tree"
-      			data-node-id="id"
-      			data-node-label="name"
-      			data-node-children="child"
-      			data-node-icon="icon" >
-    			</div>
-         </div>
-         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal">Close</button>
-         </div>
+     <div class="modal fade" id="myConfiguration">
+         <div class="modal-dialog">
+            <div class="modal-content"> 
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Configuration</h2>
+                </div>
+                <div class="modal-body">
+                    <div
+      			        data-angular-treeview="true"
+      			        data-tree-model="tree"
+      			        data-node-id="id"
+      			        data-node-label="name"
+      			        data-node-children="child"
+      			        data-node-icon="icon" >
+    			    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
      </div>
      
     <!-- Text input-->
@@ -86,7 +93,7 @@
     <div class="control-group" style="float:right;margin-top:30px">
       <label class="control-label" for="singlebutton"></label>
       <div class="controls">
-        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Next <i class="icon-chevron-right"></i></button>
+        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
       </div>
     </div>
 
