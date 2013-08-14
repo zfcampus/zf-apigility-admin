@@ -30,7 +30,8 @@ angular.module('zf-api-first-admin', ['angularTreeview'])
                 url: '/admin/api/config',
                 data: '',
                 headers: {
-                    'Content-Type': 'application/vnd.zfcampus.v1.config+json'
+                    'Content-Type': 'application/vnd.zfcampus.v1.config+json',
+                    'Accept': 'application/vnd.zfcampus.v1.config+json'
                 }
 			};
             $http(req)
