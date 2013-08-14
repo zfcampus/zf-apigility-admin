@@ -10,7 +10,7 @@ return array(
 
     'view_manager' => array(
         'template_map' => array(
-            'zf-api-first-admin/app/app' => __DIR__ . '/../view/app/app.phtml',
+            'zf/app/app' => __DIR__ . '/../view/app/app.phtml',
         )
     ),
 
