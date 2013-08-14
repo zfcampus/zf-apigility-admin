@@ -1,6 +1,6 @@
 <?php
 
-namespace ZFApiFirstAdmin\Controller;
+namespace ZF\ApiFirstAdmin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

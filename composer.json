@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-0": {
-            "ZFApiFirstAdmin\\": "src/"
+            "ZF\\ApiFirstAdmin\\": "src/"
         }
     }
 }

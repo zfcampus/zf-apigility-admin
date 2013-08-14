@@ -1,20 +1,13 @@
 <?php
 
-namespace ZFApiFirstAdmin;
+namespace ZF\ApiFirstAdmin;
 
-use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-
-class Module implements AutoloaderProviderInterface, ConfigProviderInterface /*, ConsoleUsageProviderInterface */
+class Module
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var \Zend\ServiceManager\ServiceLocatorInterface
      */
     protected $sm;
 
@@ -51,7 +44,6 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface /*,
 
     public function getConfig()
     {
-        return include __DIR__ . '/../../config/module.config.php';
+        return include __DIR__ . '/../../../config/module.config.php';
     }
-
 }

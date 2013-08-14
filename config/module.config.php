@@ -16,7 +16,7 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'ZFApiFirstAdmin\Controller\App' => 'ZFApiFirstAdmin\Controller\AppController',
+            'ZF\ApiFirstAdmin\Controller\App' => 'ZF\ApiFirstAdmin\Controller\AppController',
         )
     ),
 
@@ -27,7 +27,7 @@ return array(
                 'options' => array(
                     'route' => '/admin',
                     'defaults' => array(
-                        'controller' => 'ZFApiFirstAdmin\Controller\App',
+                        'controller' => 'ZF\ApiFirstAdmin\Controller\App',
                         'action'     => 'app',
                     ),
                 ),
