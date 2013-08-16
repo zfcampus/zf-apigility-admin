@@ -10,7 +10,7 @@ return array(
 
     'view_manager' => array(
         'template_map' => array(
-            'zf/app/app' => __DIR__ . '/../view/app/app.phtml',
+	    'zf/app/app' => __DIR__ . '/../view/app.phtml',
         )
     ),
 
@@ -43,7 +43,7 @@ return array(
 			    'config' => array(
 				'type' => 'literal',
 				'options' => array(
-				    'route' => '/config',
+				'route' => '/config',
 				    'defaults' => array(
 					'controller' => 'ZF\Configuration\ConfigController',
 					'action'     => 'process',
