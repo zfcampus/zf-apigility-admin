@@ -103,6 +103,7 @@ return array(
             'identifier_name'         => 'module',
             'resource_http_options'   => array('GET'),
             'collection_http_options' => array('GET', 'POST'),
+            'collection_name'         => 'module',
         ),
     ),
 );
