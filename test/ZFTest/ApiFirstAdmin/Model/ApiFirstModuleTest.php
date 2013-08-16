@@ -60,8 +60,8 @@ class ApiFirstModuleTest extends TestCase
         // Test that each module name exists in the expected list
         $moduleNames = array();
         foreach ($modules as $module) {
-            $this->assertContains($module->getName(), $expected);
-            $moduleNames[] = $module->getName();
+            $this->assertContains($module->getNamespace(), $expected);
+            $moduleNames[] = $module->getNamespace();
         }
 
         // Test that we have all unique module names
@@ -142,7 +142,7 @@ class ApiFirstModuleTest extends TestCase
 
         $unique  = array();
         foreach ($modules as $module) {
-            $name = $module->getName();
+            $name = $module->getNamespace();
             $this->assertArrayHasKey($name, $expected);
             $this->assertNotContains($name, $unique);
             $expectedMetadata = $expected[$name];
@@ -161,7 +161,7 @@ class ApiFirstModuleTest extends TestCase
         mkdir($modulePath);
         mkdir("$modulePath/module");
         mkdir("$modulePath/config");
-        file_put_contents("$modulePath/config/application.config.php",'<?php return array();');
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
 
         $this->assertTrue($this->model->createModule($module, $modulePath));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
@@ -173,7 +173,7 @@ class ApiFirstModuleTest extends TestCase
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
         
-        $this->removeDir("$modulePath");
+        $this->removeDir($modulePath);
     }
 
     /**
@@ -182,10 +182,16 @@ class ApiFirstModuleTest extends TestCase
      * @param  string $dir
      * @return boolean
      */
-    protected function removeDir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
+    protected function removeDir($dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
+            $path = "$dir/$file";
+            if (is_dir($path)) {
+                $this->removeDir($path);
+            } else {
+                unlink($path);
+            }
         }
         return rmdir($dir);
     } 

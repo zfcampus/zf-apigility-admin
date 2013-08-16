@@ -13,6 +13,11 @@ class ModuleMetadata
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $namespace;
+
+    /**
      * @var bool
      */
     protected $isVendor;
@@ -34,16 +39,17 @@ class ModuleMetadata
      * @param  bool $isVendor
      * @throws InvalidArgumentException for modules that do not exist
      */
-    public function __construct($name, array $restEndpoints = array(), array $rpcEndpoints = array(), $isVendor = null)
+    public function __construct($namespace, array $restEndpoints = array(), array $rpcEndpoints = array(), $isVendor = null)
     {
-        if (!class_exists($name . '\\Module')) {
+        if (!class_exists($namespace . '\\Module')) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid module "%s"; no Module class exists for that module',
                 $name
             ));
         }
 
-        $this->name          = $name;
+        $this->name          = $this->normalizeName($namespace);
+        $this->namespace     = $namespace;
         $this->restEndpoints = $restEndpoints;
         $this->rpcEndpoints  = $rpcEndpoints;
         $this->isVendor      = is_bool($isVendor) ? $isVendor : null;
@@ -55,6 +61,14 @@ class ModuleMetadata
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
     }
 
     /**
@@ -97,6 +111,9 @@ class ModuleMetadata
                 case 'name':
                     $this->name = $value;
                     break;
+                case 'namespace':
+                    $this->namespace = $value;
+                    break;
                 case 'isvendor':
                 case 'is_vendor':
                     $this->isVendor = (bool) $value;
@@ -134,6 +151,7 @@ class ModuleMetadata
     {
         return array(
             'module'    => $this->name,
+            'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
             'rest'      => $this->rpcEndpoints,
             'rpc'       => $this->rpcEndpoints,
@@ -150,12 +168,28 @@ class ModuleMetadata
      */
     protected function determineVendorStatus()
     {
-        $r = new ReflectionClass($this->name . '\\Module');
+        $r = new ReflectionClass($this->namespace . '\\Module');
         $filename = $r->getFileName();
         if (preg_match('#[/\\\\]vendor[/\\\\]#', $filename)) {
             $this->isVendor = true;
             return;
         }
         $this->isVendor = false;
+    }
+
+    /**
+     * normalizeName 
+     * 
+     * @param mixed $namespace 
+     * @return void
+     */
+    protected function normalizeName($namespace)
+    {
+        return str_replace('\\', '.', $namespace);
+    }
+
+    protected function deriveNamespace($name)
+    {
+        return str_replace('.', '\\', $namespace);
     }
 }
