@@ -17,7 +17,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'ZF\ApiFirstAdmin\Controller\App' => 'ZF\ApiFirstAdmin\Controller\AppController',
-        )
+        ),
     ),
 
     'router' => array(
@@ -37,6 +37,9 @@ return array(
                         'type' => 'literal',
                         'options' => array(
                             'route' => '/api',
+                            'defaults' => array(
+                                'action' => false,
+                            ),
                         ),
                         'may_terminate' => false,
                         'child_routes' => array(
@@ -62,6 +65,23 @@ return array(
                         ),
                     ),
                 ),
+            ),
+        ),
+    ),
+
+    'zf-content-negotiation' => array(
+        'controllers' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleResource' => 'HalJson',
+        ),
+        'accept-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+                'application/json',
+            ),
+        ),
+        'content-type-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+                'application/json',
+                'application/*+json',
             ),
         ),
     ),
