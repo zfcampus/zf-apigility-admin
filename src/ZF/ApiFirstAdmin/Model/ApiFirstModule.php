@@ -159,7 +159,7 @@ class ApiFirstModule
         mkdir("$modulePath/src/$module", 0777, true);
         mkdir("$modulePath/view");
 
-        if (!file_put_contents("$modulePath/config/module.config.php", "<?php\nreturn array(\n);")) {
+        if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
         }
         

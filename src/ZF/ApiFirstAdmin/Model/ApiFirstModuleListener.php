@@ -68,7 +68,7 @@ class ApiFirstModuleListener extends AbstractResourceListener
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }
 
-        if (false === $this->modules->createModule($module, $this->modulePath)) {
+        if (false === $this->modules->createModule($name, $this->modulePath)) {
             throw new CreationException('Unable to create module; check your paths and permissions');
         }
 
