@@ -5,6 +5,7 @@ namespace ZFTest\ApiFirstAdmin\Model;
 use PHPUnit_Framework_TestCase as TestCase;
 use ZF\ApiFirstAdmin\Model\ApiFirstModule;
 use ZF\ApiFirstAdmin\Model\ModuleMetadata;
+use Test;
 
 class ApiFirstModuleTest extends TestCase
 {
@@ -188,4 +189,25 @@ class ApiFirstModuleTest extends TestCase
         }
         return rmdir($dir);
     } 
+
+    public function testVendorModulesAreMarkedAccordingly()
+    {
+        $modules = array(
+            'Test\Foo' => new Test\Foo\Module(),
+            'Test\Bar' => new Test\Foo\Module(),
+        );
+        $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+                              ->disableOriginalConstructor()
+                              ->getMock();
+        $moduleManager->expects($this->any())
+                      ->method('getLoadedModules')
+                      ->will($this->returnValue($modules));
+
+        $model = new ApiFirstModule($moduleManager, array(), array());
+
+        $modules = $model->getModules();
+        foreach ($modules as $module) {
+            $this->assertTrue($module->isVendor());
+        }
+    }
 }
