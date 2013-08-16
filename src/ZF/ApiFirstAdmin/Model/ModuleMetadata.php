@@ -153,7 +153,7 @@ class ModuleMetadata
             'module'    => $this->name,
             'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
-            'rest'      => $this->rpcEndpoints,
+            'rest'      => $this->restEndpoints,
             'rpc'       => $this->rpcEndpoints,
         );
     }
