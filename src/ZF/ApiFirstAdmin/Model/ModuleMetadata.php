@@ -28,10 +28,10 @@ class ModuleMetadata
     protected $rpcEndpoints;
 
     /**
-     * @param  string $name 
-     * @param  array $restEndpoints 
-     * @param  array $rpcEndpoints 
-     * @param  bool $isVendor 
+     * @param  string $name
+     * @param  array $restEndpoints
+     * @param  array $rpcEndpoints
+     * @param  bool $isVendor
      * @throws InvalidArgumentException for modules that do not exist
      */
     public function __construct($name, array $restEndpoints = array(), array $rpcEndpoints = array(), $isVendor = null)

@@ -56,7 +56,7 @@ class ApiFirstModule
 
     /**
      * Retrieve modules
-     * 
+     *
      * @return ModuleMetadata[]
      */
     public function getModules()
@@ -66,7 +66,7 @@ class ApiFirstModule
     }
 
     /**
-     * @param  string $moduleName 
+     * @param  string $moduleName
      * @return null|ModuleMetadata
      */
     public function getModule($moduleName)
