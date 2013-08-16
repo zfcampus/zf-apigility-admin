@@ -71,6 +71,7 @@ class ApiFirstModule
      */
     public function getModule($moduleName)
     {
+        $moduleName = $this->normalizeModuleName($moduleName);
         $modules = $this->getEnabledModules();
         if (!array_key_exists($moduleName, $modules)) {
             return null;
@@ -221,5 +222,14 @@ EOD;
         static::$valueGenerator->setArrayDepth($indent);
 
         return static::$valueGenerator;
+    }
+
+    /**
+     * @param  string $name 
+     * @return string
+     */
+    protected function normalizeModuleName($name)
+    {
+        return str_replace('\\', '.', $name);
     }
 }
