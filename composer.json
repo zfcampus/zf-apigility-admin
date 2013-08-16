@@ -25,7 +25,8 @@
     "autoload": {
         "psr-0": {
             "ZF\\ApiFirstAdmin\\": "src/",
-            "ZFTest\\": "test/"
+            "ZFTest\\": "test/",
+            "Test\\": "vendor/"
         }
     }
 }

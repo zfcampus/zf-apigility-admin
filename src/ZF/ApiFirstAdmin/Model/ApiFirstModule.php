@@ -55,11 +55,35 @@ class ApiFirstModule
     }
 
     /**
+     * Retrieve modules
+     *
+     * @return ModuleMetadata[]
+     */
+    public function getModules()
+    {
+        $modules = $this->getEnabledModules();
+        return array_values($modules);
+    }
+
+    /**
+     * @param  string $moduleName
+     * @return null|ModuleMetadata
+     */
+    public function getModule($moduleName)
+    {
+        $modules = $this->getEnabledModules();
+        if (!array_key_exists($moduleName, $modules)) {
+            return null;
+        }
+        return $modules[$moduleName];
+    }
+
+    /**
      * Returns list of all API-First-enabled modules
      *
      * @return array
      */
-    public function getEnabledModules()
+    protected function getEnabledModules()
     {
         if (is_array($this->modules)) {
             return $this->modules;
@@ -67,9 +91,13 @@ class ApiFirstModule
 
         $this->modules = array();
         foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
-            if ($module instanceof ApiFirstModuleInterface) {
-                $this->modules[] = $moduleName;
+            if (!$module instanceof ApiFirstModuleInterface) {
+                continue;
             }
+
+            $endpoints = $this->getEndpointsByModule($moduleName);
+            $metadata  = new ModuleMetadata($moduleName, $endpoints['rest'], $endpoints['rpc']);
+            $this->modules[$metadata->getName()] = $metadata;
         }
 
         return $this->modules;
@@ -86,38 +114,13 @@ class ApiFirstModule
      * @param  string $module
      * @return null|array
      */
-    public function getEndpointsByModule($module)
+    protected function getEndpointsByModule($module)
     {
-        if (isset($this->endpoints[$module])) {
-            return $this->endpoints[$module];
-        }
-
-        $modules = $this->getEnabledModules();
-        if (!in_array($module, $modules)) {
-            return null;
-        }
-
         $endpoints = array(
             'rest' => $this->discoverEndpointsByModule($module, $this->restConfig),
             'rpc'  => $this->discoverEndpointsByModule($module, $this->rpcConfig),
         );
-        $this->endpoints[$module] = $endpoints;
-
         return $endpoints;
-    }
-
-    /**
-     * Retrieve a list of all API-First-enabled modules with their associated
-     * endpoints.
-     *
-     * @return array
-     */
-    public function getEndpointsSortedByModule()
-    {
-        foreach ($this->getEnabledModules() as $module) {
-            $this->getEndpointsByModule($module);
-        }
-        return $this->endpoints;
     }
 
     /**
@@ -147,18 +150,16 @@ class ApiFirstModule
      */
     public function createModule($module, $path = '.')
     {
-        $modulePath = $path . "/module/" . $module;
+        $modulePath = sprintf('%s/module/%s', $path, $module);
         if (file_exists($modulePath)) {
             return false;
         }
 
-        mkdir($modulePath);
-        mkdir("$modulePath/config");
-        mkdir("$modulePath/src");
-        mkdir("$modulePath/src/$module");
+        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/src/$module", 0777, true);
         mkdir("$modulePath/view");
 
-        if (!file_put_contents("$modulePath/config/module.config.php", "<?php\nreturn array(\n);")) {
+        if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
         }
         
@@ -174,10 +175,10 @@ class ApiFirstModule
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<?php\nrequire __DIR__ . '/src/$module/Module.php';")) { 
+        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) { 
             return false;
         }
-        if (!file_put_contents("$modulePath/src/$module/Module.php", "<?php\n" . $renderer->render($view))) {
+        if (!file_put_contents("$modulePath/src/$module/Module.php", "<" . "?php\n" . $renderer->render($view))) {
             return false;
         }
 

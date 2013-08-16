@@ -17,7 +17,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'ZF\ApiFirstAdmin\Controller\App' => 'ZF\ApiFirstAdmin\Controller\AppController',
-        )
+        ),
     ),
 
     'router' => array(
@@ -37,24 +37,72 @@ return array(
                         'type' => 'literal',
                         'options' => array(
                             'route' => '/api',
+                            'defaults' => array(
+                                'action' => false,
+                            ),
                         ),
                         'may_terminate' => false,
-			'child_routes' => array(
-			    'config' => array(
-				'type' => 'literal',
-				'options' => array(
-				'route' => '/config',
-				    'defaults' => array(
-					'controller' => 'ZF\Configuration\ConfigController',
-					'action'     => 'process',
-				    ),
-				),
-			    ),
-			),
+                        'child_routes' => array(
+                            'config' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/config',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Configuration\ConfigController',
+                                        'action'     => 'process',
+                                    ),
+                                ),
+                            ),
+                            'module' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/module[/:module]',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                 ),
             ),
         ),
     ),
 
+    'zf-content-negotiation' => array(
+        'controllers' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleResource' => 'HalJson',
+        ),
+        'accept-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+                'application/json',
+            ),
+        ),
+        'content-type-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+                'application/json',
+                'application/*+json',
+            ),
+        ),
+    ),
+
+    'zf-hal' => array(
+        'metadata_map' => array(
+            'ZF\ApiFirstAdmin\Model\ModuleMetadata' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'module',
+                'route_name'      => 'zf-api-first-admin/api/module',
+            ),
+        ),
+    ),
+
+    'zf-rest' => array(
+        'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener',
+            'route_name'              => 'zf-api-first-admin/api/module',
+            'identifier_name'         => 'module',
+            'resource_http_options'   => array('GET'),
+            'collection_http_options' => array('GET', 'POST'),
+        ),
+    ),
 );

@@ -50,6 +50,7 @@ class Bootstrap
                     'namespaces' => array(
                         'ZF\ApiFirstAdmin' => __DIR__ . '/../src/ZF/ApiFirstAdmin/',
                         __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
+                        'Test' => __DIR__ . '/../vendor/Test/',
                     ),
                 ),
             ));
