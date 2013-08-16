@@ -50,6 +50,15 @@ return array(
                                     ),
                                 ),
                             ),
+                            'module' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/module[/:module]',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -57,4 +66,23 @@ return array(
         ),
     ),
 
+    'zf-hal' => array(
+        'metadata_map' => array(
+            'ZF\ApiFirstAdmin\Model\ModuleMetadata' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'module',
+                'route_name'      => 'zf-api-first-admin/api/module',
+            ),
+        ),
+    ),
+
+    'zf-rest' => array(
+        'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener',
+            'route_name'              => 'zf-api-first-admin/api/module',
+            'identifier_name'         => 'module',
+            'resource_http_options'   => array('GET'),
+            'collection_http_options' => array('GET', 'POST'),
+        ),
+    ),
 );

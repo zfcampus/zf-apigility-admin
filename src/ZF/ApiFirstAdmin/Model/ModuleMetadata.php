@@ -85,6 +85,62 @@ class ModuleMetadata
     }
 
     /**
+     * Populate object from array
+     * 
+     * @param  array $data 
+     */
+    public function exchangeArray(array $data)
+    {
+        foreach ($data as $key => $value) {
+            switch (strtolower($key)) {
+                case 'module':
+                case 'name':
+                    $this->name = $value;
+                    break;
+                case 'isvendor':
+                case 'is_vendor':
+                    $this->isVendor = (bool) $value;
+                    break;
+                case 'rest':
+                    if (!is_array($value)) {
+                        throw new InvalidArgumentException(
+                            'REST endpoints must be an array; received "%s"',
+                            (is_object($value) ? get_class($value) : gettype($value))
+                        );
+                    }
+                    $this->restEndpoints = $value;
+                    break;
+                case 'rpc':
+                    if (!is_array($value)) {
+                        throw new InvalidArgumentException(
+                            'RPC endpoints must be an array; received "%s"',
+                            (is_object($value) ? get_class($value) : gettype($value))
+                        );
+                    }
+                    $this->rpcEndpoints = $value;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Retrieve array representation
+     * 
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return array(
+            'module'    => $this->name,
+            'is_vendor' => $this->isVendor(),
+            'rest'      => $this->rpcEndpoints,
+            'rpc'       => $this->rpcEndpoints,
+        );
+    }
+
+    /**
      * Determine whether or not a module is a vendor module
      *
      * Use ReflectionClass to determine the filename, and then checks if the
