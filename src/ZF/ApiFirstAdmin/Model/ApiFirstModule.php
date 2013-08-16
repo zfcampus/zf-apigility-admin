@@ -97,7 +97,7 @@ class ApiFirstModule
 
             $endpoints = $this->getEndpointsByModule($moduleName);
             $metadata  = new ModuleMetadata($moduleName, $endpoints['rest'], $endpoints['rpc']);
-            $this->modules[$moduleName] = $metadata;
+            $this->modules[$metadata->getName()] = $metadata;
         }
 
         return $this->modules;
