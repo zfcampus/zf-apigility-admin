@@ -116,4 +116,41 @@ class ApiFirstModuleTest extends TestCase
         );
         $this->assertEquals($expected, $this->model->getEndpointsSortedByModule());
     }
+
+    public function testCreateModule()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+        
+        mkdir($modulePath);
+        mkdir("$modulePath/module");
+        mkdir("$modulePath/config");
+        file_put_contents("$modulePath/config/application.config.php",'<?php return array();');
+
+        $this->assertTrue($this->model->createModule($module, $modulePath));
+        $this->assertTrue(file_exists("$modulePath/module/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/config"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/view"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
+        
+        $this->removeDir("$modulePath");
+    }
+
+    /**
+     * Remove a directory even if not empty (recursive delete)
+     *
+     * @param  string $dir
+     * @return boolean
+     */
+    protected function removeDir($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    } 
 }

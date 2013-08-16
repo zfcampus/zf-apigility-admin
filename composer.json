@@ -16,7 +16,8 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "dev-develop",
         "zfcampus/zf-api-first": "dev-master",
-        "rwoverdijk/assetmanager": "dev-master"
+        "rwoverdijk/assetmanager": "dev-master",
+        "zfcampus/zf-api-problem": "dev-master"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
