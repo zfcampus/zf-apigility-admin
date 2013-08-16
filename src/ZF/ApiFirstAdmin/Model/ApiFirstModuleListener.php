@@ -54,6 +54,10 @@ class ApiFirstModuleListener extends AbstractResourceListener
      */
     public function create($data)
     {
+        if (is_object($data)) {
+            $data = (array) $data;
+        }
+
         if (!isset($data['name'])) {
             throw new CreationException('Missing module name');
         }
