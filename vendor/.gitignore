@@ -1,0 +1,9 @@
+bin/
+composer/
+kriswallsmith/
+phpunit/
+rwoverdijk/
+symfony/
+zendframework/
+zfcampus/
+autoload.php

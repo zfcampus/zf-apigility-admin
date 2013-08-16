@@ -4,6 +4,7 @@ namespace ZFTest\ApiFirstAdmin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use ZF\ApiFirstAdmin\Model\ApiFirstModule;
+use ZF\ApiFirstAdmin\Model\ModuleMetadata;
 
 class ApiFirstModuleTest extends TestCase
 {
@@ -49,7 +50,22 @@ class ApiFirstModuleTest extends TestCase
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Baz',
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bob',
         );
-        $this->assertEquals($expected, $this->model->getEnabledModules());
+
+        $modules = $this->model->getModules();
+
+        // make sure we have the same number of modules
+        $this->assertEquals(count($expected), count($modules));
+
+        // Test that each module name exists in the expected list
+        $moduleNames = array();
+        foreach ($modules as $module) {
+            $this->assertContains($module->getName(), $expected);
+            $moduleNames[] = $module->getName();
+        }
+
+        // Test that we have all unique module names
+        $test = array_unique($moduleNames);
+        $this->assertEquals($moduleNames, $test);
     }
 
     public function invalidModules()
@@ -65,13 +81,14 @@ class ApiFirstModuleTest extends TestCase
      */
     public function testNullIsReturnedWhenGettingEndpointsForNonApiFirstModules($module)
     {
-        $this->assertNull($this->model->getEndpointsByModule($module));
+        $this->assertNull($this->model->getModule($module));
     }
 
     public function testEmptyArraysAreReturnedWhenGettingEndpointsForApiFirstModulesWithNoEndpoints()
     {
-        $expected = array('rest' => array(), 'rpc' => array());
-        $this->assertEquals($expected, $this->model->getEndpointsByModule('ZFTest\ApiFirstAdmin\Model\TestAsset\Baz'));
+        $module = $this->model->getModule('ZFTest\ApiFirstAdmin\Model\TestAsset\Baz');
+        $this->assertEquals(array(), $module->getRestEndpoints());
+        $this->assertEquals(array(), $module->getRpcEndpoints());
     }
 
     public function testRestAndRpcControllersAreDiscoveredWhenGettingEndpointsForApiFirstModules()
@@ -86,13 +103,16 @@ class ApiFirstModuleTest extends TestCase
                 'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar\Controller\Do',
             ),
         );
-        $this->assertEquals($expected, $this->model->getEndpointsByModule('ZFTest\ApiFirstAdmin\Model\TestAsset\Bar'));
+        $module = $this->model->getModule('ZFTest\ApiFirstAdmin\Model\TestAsset\Bar');
+        $this->assertEquals($expected['rest'], $module->getRestEndpoints());
+        $this->assertEquals($expected['rpc'], $module->getRpcEndpoints());
     }
 
     public function testCanRetrieveListOfAllApiFirstModulesAndTheirEndpoints()
     {
         $expected = array(
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar' => array(
+                'vendor' => false,
                 'rest' => array(
                     'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar\Controller\Bar',
                     'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar\Controller\Baz',
@@ -103,10 +123,12 @@ class ApiFirstModuleTest extends TestCase
                 ),
             ),
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Baz' => array(
+                'vendor' => false,
                 'rest' => array(),
                 'rpc'  => array(),
             ),
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bob' => array(
+                'vendor' => false,
                 'rest' => array(
                 ),
                 'rpc' => array(
@@ -114,7 +136,20 @@ class ApiFirstModuleTest extends TestCase
                 ),
             ),
         );
-        $this->assertEquals($expected, $this->model->getEndpointsSortedByModule());
+
+        $modules = $this->model->getModules();
+
+        $unique  = array();
+        foreach ($modules as $module) {
+            $name = $module->getName();
+            $this->assertArrayHasKey($name, $expected);
+            $this->assertNotContains($name, $unique);
+            $expectedMetadata = $expected[$name];
+            $this->assertSame($expectedMetadata['vendor'], $module->isVendor());
+            $this->assertSame($expectedMetadata['rest'], $module->getRestEndpoints());
+            $this->assertSame($expectedMetadata['rpc'], $module->getRpcEndpoints());
+            $unique[] = $name;
+        }
     }
 
     public function testCreateModule()
