@@ -59,6 +59,7 @@ class ApiFirstModuleListener extends AbstractResourceListener
         }
 
         $name = $data['name'];
+        $name = str_replace('.', '\\', $name);
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\+[a-zA-Z][a-zA-Z0-9_]*)?$/', $name)) {
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }

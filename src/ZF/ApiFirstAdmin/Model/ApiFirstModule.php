@@ -150,15 +150,13 @@ class ApiFirstModule
      */
     public function createModule($module, $path = '.')
     {
-        $modulePath = $path . "/module/" . $module;
+        $modulePath = sprintf('%s/module/%s', $path, $module);
         if (file_exists($modulePath)) {
             return false;
         }
 
-        mkdir($modulePath);
-        mkdir("$modulePath/config");
-        mkdir("$modulePath/src");
-        mkdir("$modulePath/src/$module");
+        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/src/$module", 0777, true);
         mkdir("$modulePath/view");
 
         if (!file_put_contents("$modulePath/config/module.config.php", "<?php\nreturn array(\n);")) {
@@ -177,10 +175,10 @@ class ApiFirstModule
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<?php\nrequire __DIR__ . '/src/$module/Module.php';")) { 
+        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) { 
             return false;
         }
-        if (!file_put_contents("$modulePath/src/$module/Module.php", "<?php\n" . $renderer->render($view))) {
+        if (!file_put_contents("$modulePath/src/$module/Module.php", "<" . "?php\n" . $renderer->render($view))) {
             return false;
         }
 
