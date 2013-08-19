@@ -8,6 +8,7 @@ use Zend\Code\Generator\ValueGenerator;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
+use ReflectionObject;
 
 class ApiFirstModule
 {
@@ -202,6 +203,44 @@ EOD;
             if (!file_put_contents("$path/config/application.config.php", $content)) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    /**
+     * Update a module (adding the ApiFirstModule interface)
+     *
+     * @param  string $module
+     * @return boolean
+     */
+    public function updateModule($module)
+    {
+        $modules = $this->moduleManager->getLoadedModules();
+        
+        if (!isset($modules[$module])) {
+            return false;
+        }
+        if ($modules[$module] instanceof ApiFirstModuleInterface) {
+            return false;
+        }
+        $objModule = new ReflectionObject($modules[$module]);
+        $content   = file_get_contents($objModule->getFileName());
+        
+        $replacement = preg_replace(
+            '/class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
+            "use ZF\ApiFirst\ApiFirstModuleInterface;\n\nclass $1 implements ApiFirstModuleInterface {",
+            $content
+        );
+        if ($replacement === $content) {
+            $replacement = preg_replace(
+                '/implements\s/',
+                'implements ZF\ApiFirst\ApiFirstModuleInterface,',
+                $content
+            );
+        }
+        copy($objModule->getFileName(), $objModule->getFileName() . '.old');
+        if (!file_put_contents($objModule->getFileName(), $replacement)) {
+            return false;
         }
         return true;
     }

@@ -12,6 +12,7 @@ class ApiFirstModuleTest extends TestCase
     public function setUp()
     {
         $modules = array(
+            'ZFTest\ApiFirstAdmin\Model\TestAsset\Foa' => new TestAsset\Foa\Module(),
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Foo' => new TestAsset\Foo\Module(),
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar' => new TestAsset\Bar\Module(),
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Baz' => new TestAsset\Baz\Module(),
@@ -176,6 +177,36 @@ class ApiFirstModuleTest extends TestCase
         $this->removeDir($modulePath);
     }
 
+    public function testUpdateExistingApiModule()
+    {
+        $module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar';
+        $this->assertFalse($this->model->updateModule($module));
+    }
+
+    public function testUpdateModule()
+    {
+        $module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Foo';
+        $this->assertTrue($this->model->updateModule($module));
+        
+        unlink(__DIR__ . '/TestAsset/Foo/Module.php');
+        rename(
+            __DIR__ . '/TestAsset/Foo/Module.php.old', 
+            __DIR__ . '/TestAsset/Foo/Module.php'
+        ); 
+    }
+
+    public function testUpdateModuleWithOtherInterfaces()
+    {
+        $module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Foa';
+        $this->assertTrue($this->model->updateModule($module));
+
+        unlink(__DIR__ . '/TestAsset/Foa/Module.php');
+        rename(
+            __DIR__ . '/TestAsset/Foa/Module.php.old',
+            __DIR__ . '/TestAsset/Foa/Module.php'
+        );
+    }
+
     /**
      * Remove a directory even if not empty (recursive delete)
      *
@@ -195,7 +226,7 @@ class ApiFirstModuleTest extends TestCase
         }
         return rmdir($dir);
     } 
-
+/*
     public function testVendorModulesAreMarkedAccordingly()
     {
         $modules = array(
@@ -216,4 +247,5 @@ class ApiFirstModuleTest extends TestCase
             $this->assertTrue($module->isVendor());
         }
     }
+ */
 }
