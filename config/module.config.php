@@ -62,6 +62,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'module-enable' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/module/enable',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
+                                        'action'     => 'apiEnable',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -71,14 +81,22 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
+            'ZF\ApiFirstAdmin\Controller\Module'         => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\ModuleResource' => 'HalJson',
         ),
         'accept-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\Module' => array(
+                'application/json',
+            ),
             'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
                 'application/json',
             ),
         ),
         'content-type-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\Module' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
                 'application/json',
                 'application/*+json',

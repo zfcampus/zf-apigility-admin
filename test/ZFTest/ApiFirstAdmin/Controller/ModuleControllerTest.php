@@ -7,9 +7,12 @@ namespace ZFTest\ApiFirstAdmin;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Controller\PluginManager;
+use Zend\Mvc\MvcEvent;
 use ZF\ApiFirstAdmin\Controller\ModuleController;
 use ZF\ApiFirstAdmin\Model\ApiFirstModule;
-use Zend\ModuleManager\ModuleManager;
+use ZF\ContentNegotiation\ParameterDataContainer;
 
 class ModuleControllerTest extends TestCase
 {
@@ -25,7 +28,7 @@ class ModuleControllerTest extends TestCase
         return array(
             array('get'),
             array('patch'),
-            array('put'),
+            array('post'),
             array('delete'),
         );
     }
@@ -38,33 +41,60 @@ class ModuleControllerTest extends TestCase
         $request = new Request();
         $request->setMethod($method);
         $this->controller->setRequest($request);
-        $result = $this->controller->processAction();
+        $result = $this->controller->apiEnableAction();
         $this->assertInstanceOf('ZF\ApiProblem\View\ApiProblemModel', $result);
         $apiProblem = $result->getApiProblem();
         $this->assertEquals(405, $apiProblem->http_status);
     }
 
-    public function testProcessPostRequest()
+    public function testProcessPutRequest()
     {
         $currentDir = getcwd();
         $tmpDir     = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
         
         mkdir($tmpDir);
-        mkdir("$tmpDir/module");
+        mkdir("$tmpDir/module/Foo", 0777, true);
         mkdir("$tmpDir/config");
-        file_put_contents("$tmpDir/config/application.config.php",'<?php return array(\'modules\'=>array());');
+        file_put_contents("$tmpDir/config/application.config.php", '<' . '?php return array(\'modules\'=>array(\'Foo\'));');
+        file_put_contents("$tmpDir/module/Foo/Module.php", "<" . "?php\n\nnamespace Foo;\n\nclass Module\n{\n}");
         chdir($tmpDir);
 
+        require 'module/Foo/Module.php';
+
+        $moduleManager  = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+                               ->disableOriginalConstructor()
+                               ->getMock();
+        $moduleManager->expects($this->any())
+                      ->method('getLoadedModules')
+                      ->will($this->returnValue(array('Foo' => new \Foo\Module)));
+
+        $moduleResource = new ApiFirstModule($moduleManager, array(), array());
+        $controller     = new ModuleController($moduleResource);
+
         $request = new Request();
-        $request->setMethod('post');
-        $request->setContent(json_encode(array(
-            'module' => 'Foo'
-        )));
-        $this->controller->setRequest($request);
-        $result = $this->controller->processAction();
+        $request->setMethod('put');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+
+        $parameters = new ParameterDataContainer();
+        $parameters->setBodyParam('module', 'Foo');
+        $event = new MvcEvent();
+        $event->setParam('ZFContentNegotiationParameterData', $parameters);
+
+        $plugins = new PluginManager();
+        $plugins->setInvokableClass('bodyParam', 'ZF\ContentNegotiation\ControllerPlugin\BodyParam');
+
+        $controller->setRequest($request);
+        $controller->setEvent($event);
+        $controller->setPluginManager($plugins);
+
+        $result = $controller->apiEnableAction();
        
-        $this->assertTrue(is_array($result));
-        $this->assertEquals($result['module'], 'Foo');
+        $this->assertInstanceOf('ZF\Hal\Resource', $result, var_export($result, 1));
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\ModuleMetadata', $result->resource);
+
+        $metadata = $result->resource;
+        $this->assertEquals('Foo', $metadata->getName());
 
         $this->removeDir($tmpDir);
         chdir($currentDir);

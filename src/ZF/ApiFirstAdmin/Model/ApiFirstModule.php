@@ -56,6 +56,24 @@ class ApiFirstModule
     }
 
     /**
+     * Export the $config array in a human readable format
+     *
+     * @param  array $config
+     * @param  integer $space the initial indentation value
+     * @return string
+     */
+    public static function exportConfig($config, $indent = 0)
+    {
+        if (empty(static::$valueGenerator)) {
+            static::$valueGenerator = new ValueGenerator();
+        }
+        static::$valueGenerator->setValue($config);
+        static::$valueGenerator->setArrayDepth($indent);
+
+        return static::$valueGenerator;
+    }
+
+    /**
      * Retrieve modules
      *
      * @return ModuleMetadata[]
@@ -78,69 +96,6 @@ class ApiFirstModule
             return null;
         }
         return $modules[$moduleName];
-    }
-
-    /**
-     * Returns list of all API-First-enabled modules
-     *
-     * @return array
-     */
-    protected function getEnabledModules()
-    {
-        if (is_array($this->modules)) {
-            return $this->modules;
-        }
-
-        $this->modules = array();
-        foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
-            if (!$module instanceof ApiFirstModuleInterface) {
-                continue;
-            }
-
-            $endpoints = $this->getEndpointsByModule($moduleName);
-            $metadata  = new ModuleMetadata($moduleName, $endpoints['rest'], $endpoints['rpc']);
-            $this->modules[$metadata->getName()] = $metadata;
-        }
-
-        return $this->modules;
-    }
-
-    /**
-     * Retrieve all endpoints for a given module
-     *
-     * Returns null if the module is not API-enabled.
-     *
-     * Returns an array with the elements "rest" and "rpc" on success, with
-     * each being an array of controller service names.
-     *
-     * @param  string $module
-     * @return null|array
-     */
-    protected function getEndpointsByModule($module)
-    {
-        $endpoints = array(
-            'rest' => $this->discoverEndpointsByModule($module, $this->restConfig),
-            'rpc'  => $this->discoverEndpointsByModule($module, $this->rpcConfig),
-        );
-        return $endpoints;
-    }
-
-    /**
-     * Loops through an array of controllers, determining which match the given module.
-     *
-     * @param  string $module
-     * @param  array $config
-     * @return array
-     */
-    protected function discoverEndpointsByModule($module, array $config)
-    {
-        $endpoints = array();
-        foreach ($config as $controller) {
-            if (strpos($controller, $module) === 0) {
-                $endpoints[] = $controller;
-            }
-        }
-        return $endpoints;
     }
 
     /**
@@ -220,17 +175,20 @@ EOD;
         if (!isset($modules[$module])) {
             return false;
         }
+
         if ($modules[$module] instanceof ApiFirstModuleInterface) {
             return false;
         }
+
         $objModule = new ReflectionObject($modules[$module]);
         $content   = file_get_contents($objModule->getFileName());
         
         $replacement = preg_replace(
-            '/class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
-            "use ZF\ApiFirst\ApiFirstModuleInterface;\n\nclass $1 implements ApiFirstModuleInterface {",
+            '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
+            "use ZF\ApiFirst\ApiFirstModuleInterface;\n\nclass $1 implements ApiFirstModuleInterface\n{",
             $content
         );
+
         if ($replacement === $content) {
             $replacement = preg_replace(
                 '/implements\s/',
@@ -238,29 +196,76 @@ EOD;
                 $content
             );
         }
+
         copy($objModule->getFileName(), $objModule->getFileName() . '.old');
         if (!file_put_contents($objModule->getFileName(), $replacement)) {
             return false;
         }
+
         return true;
     }
 
     /**
-     * Export the $config array in a human readable format
+     * Returns list of all API-First-enabled modules
      *
-     * @param  array $config
-     * @param  integer $space the initial indentation value
-     * @return string
+     * @return array
      */
-    public static function exportConfig($config, $indent = 0)
+    protected function getEnabledModules()
     {
-        if (empty(static::$valueGenerator)) {
-            static::$valueGenerator = new ValueGenerator();
+        if (is_array($this->modules)) {
+            return $this->modules;
         }
-        static::$valueGenerator->setValue($config);
-        static::$valueGenerator->setArrayDepth($indent);
 
-        return static::$valueGenerator;
+        $this->modules = array();
+        foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
+            if (!$module instanceof ApiFirstModuleInterface) {
+                continue;
+            }
+
+            $endpoints = $this->getEndpointsByModule($moduleName);
+            $metadata  = new ModuleMetadata($moduleName, $endpoints['rest'], $endpoints['rpc']);
+            $this->modules[$metadata->getName()] = $metadata;
+        }
+
+        return $this->modules;
+    }
+
+    /**
+     * Retrieve all endpoints for a given module
+     *
+     * Returns null if the module is not API-enabled.
+     *
+     * Returns an array with the elements "rest" and "rpc" on success, with
+     * each being an array of controller service names.
+     *
+     * @param  string $module
+     * @return null|array
+     */
+    protected function getEndpointsByModule($module)
+    {
+        $endpoints = array(
+            'rest' => $this->discoverEndpointsByModule($module, $this->restConfig),
+            'rpc'  => $this->discoverEndpointsByModule($module, $this->rpcConfig),
+        );
+        return $endpoints;
+    }
+
+    /**
+     * Loops through an array of controllers, determining which match the given module.
+     *
+     * @param  string $module
+     * @param  array $config
+     * @return array
+     */
+    protected function discoverEndpointsByModule($module, array $config)
+    {
+        $endpoints = array();
+        foreach ($config as $controller) {
+            if (strpos($controller, $module) === 0) {
+                $endpoints[] = $controller;
+            }
+        }
+        return $endpoints;
     }
 
     /**

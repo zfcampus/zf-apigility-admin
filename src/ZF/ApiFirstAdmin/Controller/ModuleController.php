@@ -5,11 +5,13 @@
 
 namespace ZF\ApiFirstAdmin\Controller;
 
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use ZF\ApiFirstAdmin\Model\ApiFirstModule;
+use ZF\ApiFirstAdmin\Model\ModuleMetadata;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
-use ZF\ApiFirstAdmin\Model\ApiFirstModule;
-use Zend\Http\Request;
+use ZF\Hal\Resource;
 
 class ModuleController extends AbstractActionController
 {
@@ -20,29 +22,31 @@ class ModuleController extends AbstractActionController
         $this->moduleResource = $moduleResource;
     }
     
-    public function processAction()
+    public function apiEnableAction()
     {
         $request = $this->getRequest();
 
         switch ($request->getMethod()) {
 
-            case $request::METHOD_POST:
-                $params = json_decode($request->getContent(), true); 
-                $result = false;
-                if (isset($params['module'])) {
-                    $result = $this->moduleResource->createModule($params['module']);
+            case $request::METHOD_PUT:
+                $module = $this->bodyParam('module', false);
+                if (!$module) {
+                    return new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity');
                 }
-                $return = array();
-                if ($result) {
-                    $return = array(
-                        'module' => $params['module']
-                    );
+
+                $result = $this->moduleResource->updateModule($module);
+
+                if (!$result) {
+                    return new ApiProblem(500, 'Unable to API-First-enable the module');
                 }
-                return $return;
+
+                $metadata = new ModuleMetadata($module);
+                $resource = new Resource($metadata, $module);
+                return $resource;
            
             default:
                 return new ApiProblemModel(
-                    new ApiProblem(405, 'Only the method GET and POST are allowed for this URI')
+                    new ApiProblem(405, 'Only the method PUT is allowed for this URI')
                 );
         }
     }
