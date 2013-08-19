@@ -5,11 +5,9 @@ var module = angular.module('zfa1-admin', ['HALParser']);
 module.controller(
     'IndexController',
     ['$rootScope', function($rootScope) {
-        console.log('running index');
         $rootScope.pageTitle = 'Dashboard';
         $rootScope.pageDescription = 'Global system configuration and configuration to be applied to all modules.';
         $rootScope.subNavItems = ['General Information', 'Media Types', 'Authentication', 'phpinfo()', 'ZF2 Info'];
-        console.log($rootScope);
     }]
 );
 
