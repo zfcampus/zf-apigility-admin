@@ -119,7 +119,7 @@ class ApiFirstModule
         if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
         }
-        
+
         $view = new ViewModel(array(
             'module' => $module
         ));
@@ -132,7 +132,7 @@ class ApiFirstModule
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) { 
+        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) {
             return false;
         }
         if (!file_put_contents("$modulePath/src/$module/Module.php", "<" . "?php\n" . $renderer->render($view))) {
@@ -171,7 +171,7 @@ EOD;
     public function updateModule($module)
     {
         $modules = $this->moduleManager->getLoadedModules();
-        
+
         if (!isset($modules[$module])) {
             return false;
         }
@@ -182,7 +182,7 @@ EOD;
 
         $objModule = new ReflectionObject($modules[$module]);
         $content   = file_get_contents($objModule->getFileName());
-        
+
         $replacement = preg_replace(
             '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
             "use ZF\ApiFirst\ApiFirstModuleInterface;\n\nclass $1 implements ApiFirstModuleInterface\n{",
@@ -269,7 +269,7 @@ EOD;
     }
 
     /**
-     * @param  string $name 
+     * @param  string $name
      * @return string
      */
     protected function normalizeModuleName($name)

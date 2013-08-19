@@ -11,7 +11,9 @@ use ZF\ApiFirstAdmin\Model\ApiFirstModule;
 use ZF\ApiFirstAdmin\Model\ModuleMetadata;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
+use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Resource;
+use ZF\Hal\Link\Link;
 
 class ModuleController extends AbstractActionController
 {
@@ -21,7 +23,7 @@ class ModuleController extends AbstractActionController
     {
         $this->moduleResource = $moduleResource;
     }
-    
+
     public function apiEnableAction()
     {
         $request = $this->getRequest();
@@ -42,8 +44,17 @@ class ModuleController extends AbstractActionController
 
                 $metadata = new ModuleMetadata($module);
                 $resource = new Resource($metadata, $module);
-                return $resource;
-           
+                $resource->getLinks()->add(Link::factory(array(
+                    'rel'   => 'self',
+                    'route' => array(
+                        'name'   => 'zf-api-first-admin/api/module',
+                        'params' => array('module' => $module),
+                    ),
+                )));
+                $model    = new ViewModel(array('payload' => $resource));
+                $model->setTerminal(true);
+                return $model;
+
             default:
                 return new ApiProblemModel(
                     new ApiProblem(405, 'Only the method PUT is allowed for this URI')
@@ -55,13 +66,13 @@ class ModuleController extends AbstractActionController
      * Set the request object manually
      *
      * Provided for testing.
-     * 
-     * @param  Request $request 
+     *
+     * @param  Request $request
      * @return self
      */
     public function setRequest(Request $request)
     {
         $this->request = $request;
         return $this;
-    } 
+    }
 }

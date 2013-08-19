@@ -10,7 +10,7 @@ return array(
 
     'view_manager' => array(
         'template_map' => array(
-	    'zf/app/app' => __DIR__ . '/../view/app.phtml',
+        'zf/app/app' => __DIR__ . '/../view/app.phtml',
         )
     ),
 
@@ -53,22 +53,22 @@ return array(
                                     ),
                                 ),
                             ),
+                            'module-enable' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/module.enable',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
+                                        'action'     => 'apiEnable',
+                                    ),
+                                ),
+                            ),
                             'module' => array(
                                 'type' => 'segment',
                                 'options' => array(
                                     'route' => '/module[/:module]',
                                     'defaults' => array(
                                         'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
-                                    ),
-                                ),
-                            ),
-                            'module-enable' => array(
-                                'type' => 'literal',
-                                'options' => array(
-                                    'route' => '/module/enable',
-                                    'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
-                                        'action'     => 'apiEnable',
                                     ),
                                 ),
                             ),
