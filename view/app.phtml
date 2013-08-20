@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="text/javascript" src="/zf-api-first/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/zf-api-first/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/zf-api-first-admin/js/angular.js"></script>
     <script type="text/javascript" src="/zf-api-first-admin/js/angular.halparser.js"></script>
     <link rel="stylesheet" type="text/css" href="/zf-api-first/css/bootstrap.min.css" />
@@ -30,7 +32,15 @@
                         <a href="/apidoc">API Doc</a>
                     </li>
                 </ul>
-                <button class="btn btn-sm btn-primary pull-right">Create New API 1st Module</button>
+                <button id="create-module-button" class="btn btn-sm btn-primary pull-right" popover title="Create New API First Module" position="bottom" content="#create-module-form">
+                    Create New API 1st Module
+                </button>
+                <div id="create-module-form" style="display: none">
+                    <form ng-submit="createNewModule()" ng-controller="CreateModuleController">
+                        <input type="text" ng-model="moduleName" placeholder="Module Name ...">
+                        <button type="submit" class="btn btn-sm btn-success">Create Module</button>
+                    </form>
+                </div>
             </nav>
         </div>
     </header>

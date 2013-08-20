@@ -12,13 +12,26 @@ module.controller(
 );
 
 module.controller(
+    'CreateModuleController',
+    ['$scope', '$http', function($scope, $http) {
+        $scope.createNewModule = function () {
+            $http.post('/admin/api/module', {name: $scope.moduleName})
+                .success(function (data) {
+                    console.log(data);
+                    alert('success!');
+                });
+        }
+    }]
+);
+
+module.controller(
     'ModuleController',
     ['$rootScope', '$scope', '$routeParams', '$http', 'HALParser', function($rootScope, $scope, $routeParams, $http, HALParser) {
 
         var halParser = new HALParser;
 
-        $rootScope.pageTitle = $routeParams.name;
-        $rootScope.pageDescription = '';
+        $rootScope.pageTitle = ' ';
+        $rootScope.pageDescription = ' ';
 
         $scope.showRestResources = ($routeParams.section == 'rest-resources');
 
@@ -49,6 +62,29 @@ module.config(['$routeProvider', '$locationProvider', function($routeProvider, $
     $routeProvider.when('/module/:name/:section', {templateUrl: '/zf-api-first-admin/partials/module.html', controller: 'ModuleController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
+
+
+module.directive('popover', function($compile) {
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            var popOverContent;
+            var html = $(attrs.content).html();
+            popOverContent = $compile(html)(scope);
+            var options = {
+                content: popOverContent,
+                placement: "bottom",
+                html: true,
+                title: scope.title
+            };
+            $(element).popover(options);
+        },
+        scope: {
+            items: '=',
+            title: '@'
+        }
+    };
+});
 
 module.run(['$rootScope', '$http', 'HALParser', function ($rootScope, $http, HALParser) {
 
