@@ -5,7 +5,7 @@ namespace ZF\ApiFirstAdmin;
 use Zend\Mvc\MvcEvent;
 use ZF\ApiFirst\ApiFirstModuleInterface;
 
-class Module implements ApiFirstModuleInterface
+class Module // implements ApiFirstModuleInterface
 {
     /**
      * @var \Zend\ServiceManager\ServiceLocatorInterface

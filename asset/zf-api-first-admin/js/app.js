@@ -13,12 +13,15 @@ module.controller(
 
 module.controller(
     'CreateModuleController',
-    ['$scope', '$http', function($scope, $http) {
+    ['$rootScope', '$scope', '$http', '$location', 'HALParser', function($rootScope, $scope, $http, $location, HALParser) {
+        var halParser = new HALParser;
         $scope.createNewModule = function () {
             $http.post('/admin/api/module', {name: $scope.moduleName})
                 .success(function (data) {
-                    console.log(data);
-                    alert('success!');
+                    var newModule = halParser.parse(data);
+                    $('#create-module-button').popover('hide');
+                    $rootScope.syncModuleResources();
+                    $location.path('/module/' + newModule.module + '/info');
                 });
         }
     }]
@@ -92,7 +95,7 @@ module.run(['$rootScope', '$http', 'HALParser', function ($rootScope, $http, HAL
 
     var halParser = new HALParser;
 
-    function initialize() {
+    $rootScope.syncModuleResources = function () {
         $http.get('/admin/api/module')
             .success(function (data) {
                 var modules =  halParser.parse(data);
@@ -100,7 +103,7 @@ module.run(['$rootScope', '$http', 'HALParser', function ($rootScope, $http, HAL
             });
     }
 
-    initialize();
+    $rootScope.syncModuleResources();
 
 
 }]);
