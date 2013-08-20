@@ -124,4 +124,10 @@ return array(
             'collection_name'         => 'module',
         ),
     ),
+
+    'zf-rpc' => array(
+        // Dummy entry; still handled by ControllerManager, but this will force 
+        // it to show up in the list of RPC endpoints
+        'ZF\ApiFirstAdmin\Controller\Module' => 'ZF\ApiFirstAdmin\Controller\Module',
+    ),
 );

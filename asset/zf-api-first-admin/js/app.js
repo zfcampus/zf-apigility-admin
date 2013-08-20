@@ -37,6 +37,7 @@ module.controller(
         $rootScope.pageDescription = ' ';
 
         $scope.showRestResources = ($routeParams.section == 'rest-resources');
+        $scope.showRpcResources = ($routeParams.section == 'api-endpoints');
 
         function load() {
             $http.get('/admin/api/module/' + $routeParams.name)
@@ -51,7 +52,7 @@ module.controller(
                     $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/rest-resources'] = 'API Resources';
                     $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/api-endpoints'] = 'API RPC Endpoints';
                     $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/authentication'] = 'Authentication';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/filters-validators'] = 'Filters / Validatators';
+                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/filters-validators'] = 'Filters / Validators';
 
                 });
         }
