@@ -108,7 +108,7 @@ return array(
         'metadata_map' => array(
             'ZF\ApiFirstAdmin\Model\ModuleMetadata' => array(
                 'hydrator'        => 'ArraySerializable',
-                'identifier_name' => 'module',
+                'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',
             ),
         ),
@@ -118,7 +118,7 @@ return array(
         'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
             'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener',
             'route_name'              => 'zf-api-first-admin/api/module',
-            'identifier_name'         => 'module',
+            'identifier_name'         => 'name',
             'resource_http_options'   => array('GET'),
             'collection_http_options' => array('GET', 'POST'),
             'collection_name'         => 'module',

@@ -21,7 +21,7 @@ module.controller(
                     var newModule = halParser.parse(data);
                     $('#create-module-button').popover('hide');
                     $rootScope.syncModuleResources();
-                    $location.path('/module/' + newModule.module + '/info');
+                    $location.path('/module/' + newModule.name + '/info');
                 });
         }
     }]
@@ -48,11 +48,11 @@ module.controller(
                     $rootScope.pageDescription = '';
 
                     $rootScope.subNavItems = {};
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/info'] = 'General Information';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/rest-resources'] = 'API Resources';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/api-endpoints'] = 'API RPC Endpoints';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/authentication'] = 'Authentication';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.module + '/filters-validators'] = 'Filters / Validators';
+                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/info'] = 'General Information';
+                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/rest-resources'] = 'API Resources';
+                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/api-endpoints'] = 'API RPC Endpoints';
+                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/authentication'] = 'Authentication';
+                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/filters-validators'] = 'Filters / Validators';
 
                 });
         }
@@ -100,7 +100,7 @@ module.run(['$rootScope', '$http', 'HALParser', function ($rootScope, $http, HAL
         $http.get('/admin/api/module')
             .success(function (data) {
                 var modules =  halParser.parse(data);
-                $rootScope.moduleResources = modules.module;
+                $rootScope.moduleResources = modules.name;
             });
     }
 

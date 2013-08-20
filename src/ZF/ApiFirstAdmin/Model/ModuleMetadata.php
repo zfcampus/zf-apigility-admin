@@ -150,7 +150,7 @@ class ModuleMetadata
     public function getArrayCopy()
     {
         return array(
-            'module'    => $this->name,
+            'name'      => $this->name,
             'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
             'rest'      => $this->restEndpoints,
