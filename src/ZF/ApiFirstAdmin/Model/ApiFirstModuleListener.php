@@ -19,7 +19,7 @@ class ApiFirstModuleListener extends AbstractResourceListener
     protected $modulePath = '.';
 
     /**
-     * @param ApiFirstModule $modules 
+     * @param ApiFirstModule $modules
      */
     public function __construct(ApiFirstModule $modules)
     {
@@ -28,8 +28,8 @@ class ApiFirstModuleListener extends AbstractResourceListener
 
     /**
      * Set path to use when creating new modules
-     * 
-     * @param  string $path 
+     *
+     * @param  string $path
      * @return self
      * @throws InvalidArgumentException for invalid paths
      */
@@ -47,8 +47,8 @@ class ApiFirstModuleListener extends AbstractResourceListener
 
     /**
      * Create a new API-First enabled module
-     * 
-     * @param  array|object $data 
+     *
+     * @param  array|object $data
      * @return ModuleMetadata
      * @throws CreationException
      */
@@ -78,8 +78,8 @@ class ApiFirstModuleListener extends AbstractResourceListener
 
     /**
      * Fetch module metadata
-     * 
-     * @param  string $id 
+     *
+     * @param  string $id
      * @return ModuleMetadata|ApiProblem
      */
     public function fetch($id)
@@ -93,8 +93,8 @@ class ApiFirstModuleListener extends AbstractResourceListener
 
     /**
      * Fetch metadata for all API-First enabled modules
-     * 
-     * @param  array $params 
+     *
+     * @param  array $params
      * @return array
      */
     public function fetchAll($params = array())

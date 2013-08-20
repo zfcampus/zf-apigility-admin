@@ -10,7 +10,7 @@ return array(
 
     'view_manager' => array(
         'template_map' => array(
-	    'zf/app/app' => __DIR__ . '/../view/app.phtml',
+        'zf/app/app' => __DIR__ . '/../view/app.phtml',
         )
     ),
 
@@ -53,22 +53,22 @@ return array(
                                     ),
                                 ),
                             ),
-                            'module' => array(
-                                'type' => 'segment',
-                                'options' => array(
-                                    'route' => '/module[/:module]',
-                                    'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
-                                    ),
-                                ),
-                            ),
                             'module-enable' => array(
                                 'type' => 'literal',
                                 'options' => array(
-                                    'route' => '/module/enable',
+                                    'route' => '/module.enable',
                                     'defaults' => array(
                                         'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
                                         'action'     => 'apiEnable',
+                                    ),
+                                ),
+                            ),
+                            'module' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/module[/:name]',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
                                     ),
                                 ),
                             ),
@@ -108,7 +108,7 @@ return array(
         'metadata_map' => array(
             'ZF\ApiFirstAdmin\Model\ModuleMetadata' => array(
                 'hydrator'        => 'ArraySerializable',
-                'identifier_name' => 'module',
+                'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',
             ),
         ),
@@ -118,10 +118,16 @@ return array(
         'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
             'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener',
             'route_name'              => 'zf-api-first-admin/api/module',
-            'identifier_name'         => 'module',
+            'identifier_name'         => 'name',
             'resource_http_options'   => array('GET'),
             'collection_http_options' => array('GET', 'POST'),
             'collection_name'         => 'module',
         ),
+    ),
+
+    'zf-rpc' => array(
+        // Dummy entry; still handled by ControllerManager, but this will force 
+        // it to show up in the list of RPC endpoints
+        'ZF\ApiFirstAdmin\Controller\Module' => 'ZF\ApiFirstAdmin\Controller\ModuleController::apiEnableAction',
     ),
 );

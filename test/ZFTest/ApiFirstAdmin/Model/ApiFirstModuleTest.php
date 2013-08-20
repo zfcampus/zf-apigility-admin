@@ -226,7 +226,7 @@ class ApiFirstModuleTest extends TestCase
         }
         return rmdir($dir);
     } 
-/*
+
     public function testVendorModulesAreMarkedAccordingly()
     {
         $modules = array(
@@ -247,5 +247,4 @@ class ApiFirstModuleTest extends TestCase
             $this->assertTrue($module->isVendor());
         }
     }
- */
 }

@@ -1,101 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="text/javascript" src="/zf-api-first/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/zf-api-first/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/angular.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/angular.halparser.js"></script>
     <link rel="stylesheet" type="text/css" href="/zf-api-first/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/zf-api-first/css/main.css" />
 </head>
-<body>
+<body id="ng-app" ng-app="zfa1-admin">
     <a class="sr-only" href="#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top zfa1-nav" role="banner">
-	<div class="container">
-	    <div class="navbar-header">
-		<a href="/admin" class="navbar-brand">
-		    <img src="/zf-api-first/img/zfa1-logo.png">
-		</a>
-		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".zfa1-navbar-collapse">
-		    <span class="sr-only">Toggle navigation</span>
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-		</button>
-
-	    </div>
-	    <nav class="collapse navbar-collapse zfa1-navbar-collapse" role="navigation">
-		<ul class="nav navbar-nav">
-		    <li class="zfa1-nav-dashboard active">
-			<a href="#">Dashboard</a>
-		    </li>
-		    <li>
-			<a href="/apidoc">API Doc</a>
-		    </li>
-		</ul>
-	    </nav>
-
-
-	</div>
+        <div class="container">
+            <div class="navbar-header">
+                <a href="/admin" class="navbar-brand">
+                    <img src="/zf-api-first/img/zfa1-logo.png">
+                </a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".zfa1-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <nav class="collapse navbar-collapse zfa1-navbar-collapse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li class="zfa1-nav-dashboard active">
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="/apidoc">API Doc</a>
+                    </li>
+                </ul>
+                <button id="create-module-button" class="btn btn-sm btn-primary pull-right" popover title="Create New API First Module" position="bottom" content="#create-module-form">
+                    Create New API 1st Module
+                </button>
+                <div id="create-module-form" style="display: none">
+                    <form ng-submit="createNewModule()" ng-controller="CreateModuleController">
+                        <input type="text" ng-model="moduleName" placeholder="Module Name ...">
+                        <button type="submit" class="btn btn-sm btn-success">Create Module</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
     </header>
 
+    <div class="zf1a-module-navigation">
+        <div class="container">
+            <span class="pull-left">Modules: </span>
+            <ul class="nav nav-pills zfa1-nav-pills">
+                <li ng-repeat="moduleResource in moduleResources">
+                    <a href="#/module/{{ moduleResource.name }}/info">{{ moduleResource.namespace }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="zfa1-header" id="content">
-	<div class="container">
-	    <h1>Dashboard</h1>
-	    <p>Global system configuration and configuration to be applied to all modules.</p>
-	</div>
+        <div class="container">
+            <h1>{{ pageTitle }}</h1>
+            <p>{{ pageDescription }}</p>
+        </div>
     </div>
 
     <div class="container bs-docs-container">
-	<div class="row">
-	    <div class="col-md-3">
-		<aside class="zfa1-sidebar" role="complementary">
-		    <ul class="nav zfa1-sidenav">
-			<li>
-			    <a href="#">General Information</a>
-			</li>
-			<li>
-			    <a href="#">Media Types</a>
-			</li>
-			<li>
-			    <a href="#">Authentication</a>
-			</li>
-			<li>
-			    <a href="#">phpinfo()</a>
-			</li>
-			<li>
-			    <a href="#">ZF2 Information</a>
-			</li>
-		    </ul>
-		</aside>
-	    </div>
-	    <main class="col-md-9" role="main">
-
-		<h1>{{ view.title }}</h1>
-
-		<div id="content" ng-view></div>
-
-	    </main>
-	</div>
+        <div class="row">
+            <div class="col-md-3">
+                <aside class="zfa1-sidebar" role="complementary">
+                    <ul class="nav zfa1-sidenav">
+                        <li ng-repeat="(link, subNavName) in subNavItems">
+                            <a href="#{{ link }}">{{ subNavName }}</a>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+            <main class="col-md-9" role="main">
+                <h1>{{ view.title }}</h1>
+                <div id="content" ng-view></div>
+            </main>
+        </div>
     </div>
 
+    <script type="text/javascript" src="/zf-api-first-admin/js/app.js"></script>
     </body>
 </html>
-<?php
-
-//$this->headLink()
-//    ->prependStylesheet('/zf-api-first-admin/css/bootstrap-glyphicons.css')
-//    ->prependStylesheet('/zf-api-first-admin/css/wizard.css')
-//    ->prependStylesheet('/zf-api-first-admin/css/angular.treeview.css');
-
-
-//$this->headScript()->appendFile('/zf-api-first-admin/js/angular.js');
-//$this->headScript()->appendFile('/zf-api-first-admin/js/app.js');
-
-//$this->inlineScript()
-//	 ->appendFile('/zf-api-first-admin/js/angular.treeview.js', 'text/javascript')
-//    ->appendFile('/zf-api-first-admin/js/app.js');
-
-?>
-<!--<div id="main">-->
-<!--    <div id="content">-->
-<!--        <div class="container" ng-view>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->

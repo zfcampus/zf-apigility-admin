@@ -100,8 +100,8 @@ class ModuleMetadata
 
     /**
      * Populate object from array
-     * 
-     * @param  array $data 
+     *
+     * @param  array $data
      */
     public function exchangeArray(array $data)
     {
@@ -144,13 +144,13 @@ class ModuleMetadata
 
     /**
      * Retrieve array representation
-     * 
+     *
      * @return array
      */
     public function getArrayCopy()
     {
         return array(
-            'module'    => $this->name,
+            'name'      => $this->name,
             'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
             'rest'      => $this->restEndpoints,
@@ -178,9 +178,9 @@ class ModuleMetadata
     }
 
     /**
-     * normalizeName 
-     * 
-     * @param mixed $namespace 
+     * normalizeName
+     *
+     * @param mixed $namespace
      * @return void
      */
     protected function normalizeName($namespace)

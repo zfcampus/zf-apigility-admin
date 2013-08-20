@@ -87,4 +87,15 @@ class Module implements ApiFirstModuleInterface
             },
         ));
     }
+
+    public function getControllerConfig()
+    {
+        return array('factories' => array(
+            'ZF\ApiFirstAdmin\Controller\Module' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $model    = $services->get('ZF\ApiFirstAdmin\Model\ApiFirstModule');
+                return new Controller\ModuleController($model);
+            },
+        ));
+    }
 }
