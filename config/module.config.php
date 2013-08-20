@@ -66,7 +66,7 @@ return array(
                             'module' => array(
                                 'type' => 'segment',
                                 'options' => array(
-                                    'route' => '/module[/:module]',
+                                    'route' => '/module[/:name]',
                                     'defaults' => array(
                                         'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
                                     ),

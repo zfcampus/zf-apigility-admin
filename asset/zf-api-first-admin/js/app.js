@@ -30,7 +30,6 @@ module.controller(
 module.controller(
     'ModuleController',
     ['$rootScope', '$scope', '$routeParams', '$http', 'HALParser', function($rootScope, $scope, $routeParams, $http, HALParser) {
-
         var halParser = new HALParser;
 
         $rootScope.pageTitle = ' ';
@@ -91,20 +90,17 @@ module.directive('popover', function($compile) {
 });
 
 module.run(['$rootScope', '$http', 'HALParser', function ($rootScope, $http, HALParser) {
+    var halParser = new HALParser;
 
     $rootScope.moduleResources = [];
-
-    var halParser = new HALParser;
 
     $rootScope.syncModuleResources = function () {
         $http.get('/admin/api/module')
             .success(function (data) {
                 var modules =  halParser.parse(data);
-                $rootScope.moduleResources = modules.name;
+                console.log(modules);
+                $rootScope.moduleResources = modules.module;
             });
     }
-
     $rootScope.syncModuleResources();
-
-
 }]);
