@@ -52,6 +52,18 @@ return array(
                                         'action'     => 'process',
                                     ),
                                 ),
+                                'may_terminate' => true,
+                                'child_routes' => array(
+                                    'module' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/module',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Configuration\ModuleConfigController',
+                                            ),
+                                        ),
+                                    ),
+                                ),
                             ),
                             'module-enable' => array(
                                 'type' => 'literal',
@@ -128,6 +140,8 @@ return array(
     'zf-rpc' => array(
         // Dummy entry; still handled by ControllerManager, but this will force 
         // it to show up in the list of RPC endpoints
-        'ZF\ApiFirstAdmin\Controller\Module' => 'ZF\ApiFirstAdmin\Controller\ModuleController::apiEnableAction',
+        'ZF\ApiFirstAdmin\Controller\Module'      => 'ZF\ApiFirstAdmin\Controller\ModuleController::apiEnableAction',
+        'ZF\Configuration\ConfigController'       => 'ZF\Configuration\ConfigController::processAction',
+        'ZF\Configuration\ModuleConfigController' => 'ZF\Configuration\ModuleConfigController::processAction',
     ),
 );
