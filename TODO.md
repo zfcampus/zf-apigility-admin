@@ -13,18 +13,21 @@ Code-Connected tasks
 - Route (Required)
 
   The route to match. By default, it would be a normalized version of the service name.
+  Route name will match the service name. The dialog should not allow submitting
+  if another route with that name exists.
 
 - HTTP methods allowed (Optional)
 
   What HTTP methods will this endpoint allow/handle? (**Note**: at this time,
   we have no way to handle this!)
 
-  Default to GET.
+  Default to GET. Allow multiple methods to be checked.
 
 - Content negotiation (Optional)
 
   Capture the content-negotiation we will allow for creating a representation.
-  Should have a drop-down for already defined selectors.
+  Should have a drop-down for already defined selectors. E.g.: "Json",
+  "HalJson".
 
   Additionally, allow defining "accept" and "content-type" whitelists; this
   would be a radio to enable each feature, with text input to capture each
@@ -37,21 +40,14 @@ Code-Connected tasks
   For now, this could extend the `AbstractActionController`, with the method
   `serviceNameAction`, a camelCased version of the service name.
 
-- A controller factory class. 
-  
-  This would, for now, just instantiate and return the controller; it gives us
-  a location for injecting the controller later, though, which will almost
-  certainly be required (e.g., providing the service layer, domain objects,
-  etc.).
+- Controller invokable configuration.
 
-- Controller service configuration.
-
-  Define a controller factory entry for the controller service name pointing to
-  the new factory.
+  Define a controller invokable entry for the controller service name pointing to
+  the new controller class.
 
 - Route configuration.
 
-  A Literal route. The controller matched would be the generated controller,
+  A Segment route. The controller matched would be the generated controller,
   and the action would be `camelCasedService`.
 
 - `zf-rpc` configuration.
@@ -60,7 +56,10 @@ Code-Connected tasks
 
   ```php
   'zf-rpc' => array(
-      'Api\Controller\Foo' => 'Api\Controller\FooController::helloWorldAction',
+      'Api\Controller\Foo' => array(
+          'http_methods' => array('GET', 'PATCH'),
+          'route_name'   => 'foo',
+      ),
   ),
   ```
 
