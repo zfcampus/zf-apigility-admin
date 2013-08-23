@@ -3,7 +3,7 @@
  * @license   http://opensource.org/licenses/BSD-2-Clause BSD-2-Clause
  */
 
-namespace ZFTest\ApiFirstAdmin;
+namespace ZFTest\ApiFirstAdmin\Controller;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
@@ -90,17 +90,20 @@ class ModuleControllerTest extends TestCase
 
         $result = $controller->apiEnableAction();
        
-        $this->assertInstanceOf('ZF\Hal\Resource', $result, var_export($result, 1));
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\ModuleMetadata', $result->resource);
+        $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
+        $payload = $result->getVariable('payload');
+        $this->assertInstanceOf('ZF\Hal\Resource', $payload);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\ModuleMetadata', $payload->resource);
 
-        $metadata = $result->resource;
+        $metadata = $payload->resource;
         $this->assertEquals('Foo', $metadata->getName());
 
         $this->removeDir($tmpDir);
         chdir($currentDir);
     }
     
-    protected function removeDir($dir) {
+    protected function removeDir($dir) 
+    {
         $files = array_diff(scandir($dir), array('.','..'));
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
