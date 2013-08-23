@@ -50,8 +50,8 @@ Code-Connected tasks
   A Segment route. The controller matched would be the generated controller,
   and the action would be `camelCasedService`.
 
-  The route name will be the normalized module name, a hyphen, and the service
-  name: `social-status`, `developer_garden-update`, etc.
+  The route name will be the normalized module name, a period, and the
+  normalized service name: `social.status`, `developer-garden.update`, etc.
 
 - `zf-rpc` configuration.
 
@@ -88,8 +88,10 @@ Code-Connected tasks
 
   The route to match. Defaults to `/normalized_resource_name[/:normalized_resource_name_id]`.
 
-  Route name will match resource name. The dialog should not allow submitting if
-  another route with that name exists.
+  The route name will be the normalized module name, a period, and the
+  normalized resource name: `social.status`, `developer-garden.status-update`, etc.
+
+  The dialog should not allow submitting if another route with that name exists.
 
 - HTTP methods allowed for Collections (Required; has default)
 
@@ -138,8 +140,8 @@ Code-Connected tasks
   A Segment route. The controller matched would be the generated controller,
   and the action would be `camelCasedService`.
 
-  The route name will be the normalized module name, a hyphen, and the
-  normalized resource name: `social-status`, `developer_garden-status_update`,
+  The route name will be the normalized module name, a period, and the
+  normalized resource name: `social.status`, `developer-garden.status-update`,
   etc.
 
 - A `ZF\Rest\AbstractResource` implementation.
