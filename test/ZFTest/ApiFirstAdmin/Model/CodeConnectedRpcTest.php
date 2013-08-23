@@ -17,10 +17,7 @@ class CodeConnecedRpcTest extends TestCase
     public function setUp()
     {
         $this->module = 'FooConf';
-        $srcPath      = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
-        if (is_dir($srcPath)) {
-            $this->removeDir($srcPath);
-        }
+        $this->cleanUpAssets();
 
         $modules = array(
             'FooConf' => new FooConf\Module()
@@ -40,10 +37,7 @@ class CodeConnecedRpcTest extends TestCase
 
     public function tearDown()
     {
-        $srcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
-        if (is_dir($srcPath)) {
-            $this->removeDir($srcPath);
-        }
+        $this->cleanUpAssets();
     }
 
     public function testCreateControllerRpc()
@@ -54,15 +48,35 @@ class CodeConnecedRpcTest extends TestCase
             mkdir($moduleSrcPath, 0777, true);
         }
 
-        $this->assertTrue($this->codeRpc->createController($serviceName));
+        $result = $this->codeRpc->createController($serviceName);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertObjectHasAttribute('class', $result);
+        $this->assertObjectHasAttribute('file', $result);
+        $this->assertObjectHasAttribute('service', $result);
 
-        $fileName  = sprintf("%s/TestAsset/module/%s/src/%s/Controller/%sController.php", __DIR__, $this->module, $this->module, $serviceName);
-        $className = sprintf("%s\Controller\%sController", $this->module, $serviceName);
+        $className         = sprintf("%s\Controller\%sController", $this->module, $serviceName);
+        $fileName          = sprintf("%s/TestAsset/module/%s/src/%s/Controller/%sController.php", __DIR__, $this->module, $this->module, $serviceName);
+        $controllerService = sprintf("%s\Controller\%s", $this->module, $serviceName);
+
+        $this->assertEquals($className, $result->class);
+        $this->assertEquals($fileName, $result->file);
+        $this->assertEquals($controllerService, $result->service);
+
         require_once $fileName;
         $controllerClass = new ReflectionClass($className);
-        
         $this->assertTrue($controllerClass->isSubclassOf('Zend\Mvc\Controller\AbstractActionController'));
-        $this->assertTrue($controllerClass->hasMethod($serviceName . 'Action'));
+
+        $actionMethodName = lcfirst($serviceName) . 'Action';
+        $this->assertTrue($controllerClass->hasMethod($actionMethodName), 'Expected ' . $actionMethodName . "; class:\n" . file_get_contents($fileName));
+
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+        $expected = array(
+            'controllers' => array('invokables' => array(
+                $controllerService => $className,
+            )),
+        );
+        $this->assertEquals($expected, $config);
     }
 
     /**
@@ -85,4 +99,14 @@ class CodeConnecedRpcTest extends TestCase
         return rmdir($dir);
     } 
 
+    protected function cleanUpAssets()
+    {
+        $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
+        $configPath = $basePath . '/config';
+        $srcPath    = $basePath . '/src';
+        if (is_dir($srcPath)) {
+            $this->removeDir($srcPath);
+        }
+        copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
+    }
 }

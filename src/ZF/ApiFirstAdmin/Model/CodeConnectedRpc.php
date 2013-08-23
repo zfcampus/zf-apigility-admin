@@ -33,12 +33,18 @@ class CodeConnectedRpc
         $this->configResource = $config;
     }
 
+    /**
+     * Create a controller in the current module named for the given service
+     * 
+     * @param  string $serviceName 
+     * @return stdClass
+     */
     public function createController($serviceName)
     {
         $module     = $this->module;
         $modulePath = $this->modules->getModulePath($module);
 
-        $srcPath    = sprintf(
+        $srcPath = sprintf(
             '%s/src/%s/Controller',
             $modulePath,
             str_replace('\\', '/', $module)
@@ -48,8 +54,9 @@ class CodeConnectedRpc
             mkdir($srcPath, 0777, true);
         }
 
-        $className = sprintf('%sController', ucfirst($serviceName));
-        $classPath = sprintf('%s/%s.php', $srcPath, $className);
+        $className         = sprintf('%sController', ucfirst($serviceName));
+        $classPath         = sprintf('%s/%s.php', $srcPath, $className);
+        $controllerService = sprintf('%s\Controller\\%s', $module, ucfirst($serviceName));
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -77,9 +84,20 @@ class CodeConnectedRpc
             return false;
         }
 
-        $config = $this->configResource->fetch();
-        var_dump($config);
-        return true;
+        $fullClassName = sprintf('%s\Controller\\%s', $module, $className);
+        $this->configResource->patch(array(
+            'controllers' => array(
+                'invokables' => array(
+                    $controllerService => $fullClassName,
+                ),
+            ),
+        ), true);
+
+        return (object) array(
+            'class'   => $fullClassName,
+            'file'    => $classPath,
+            'service' => $controllerService,
+        );
     }
 
     public function createRoute()
