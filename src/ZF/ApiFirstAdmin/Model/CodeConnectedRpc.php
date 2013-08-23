@@ -5,44 +5,57 @@ namespace ZF\ApiFirstAdmin\Model;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
+use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
+use ZF\Configuration\ModuleUtils;
 
 class CodeConnectedRpc
 {
-    /**
-     * @var string
-     */
-    protected $module;
     /**
      * @var ConfigResource
      */
     protected $configResource;
         
-    public function __construct($module, ConfigResource $config)
+    /**
+     * @var string
+     */
+    protected $module;
+
+    /**
+     * @var ModuleUtils
+     */
+    protected $modules;
+
+    public function __construct($module, ModuleUtils $modules, ConfigResource $config)
     {
-        $this->module = $module;
+        $this->module         = $module;
+        $this->modules        = $modules;
         $this->configResource = $config;
     }
 
-    public function createController($serviceName, $path = '.')
+    public function createController($serviceName)
     {
-        $module = ucfirst($this->module);
-        
-        $modulePath = sprintf('%s/module/%s', $path, $module);
-        if (!file_exists($modulePath)) {
-            return false;
-        }
+        $module     = $this->module;
+        $modulePath = $this->modules->getModulePath($module);
 
-        if (!file_exists("$modulePath/src/$module/Controller")) {
-            mkdir ("$modulePath/src/$module/Controller");
+        $srcPath    = sprintf(
+            '%s/src/%s/Controller',
+            $modulePath,
+            str_replace('\\', '/', $module)
+        );
+
+        if (!file_exists($srcPath)) {
+            mkdir($srcPath, 0777, true);
         }
 
         $className = sprintf('%sController', ucfirst($serviceName));
+        $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
-        if (file_exists("$modulePath/src/$module/Controller/$className.php")) {
-            throw new Exception\RuntimeException(
-                "The controller $controllerName already exists"
-            );
+        if (file_exists($classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The controller "%s" already exists',
+                $className
+            ));
         }
         
         $view = new ViewModel(array(
@@ -59,16 +72,14 @@ class CodeConnectedRpc
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/src/$module/Controller/$className.php",
+        if (!file_put_contents($classPath,
             "<" . "?php\n" . $renderer->render($view))) {
             return false;
         }
 
-        $config = $this->configurationResource->fetch();
+        $config = $this->configResource->fetch();
         var_dump($config);
-
         return true;
-
     }
 
     public function createRoute()
@@ -79,4 +90,3 @@ class CodeConnectedRpc
     {
     }
 }
-

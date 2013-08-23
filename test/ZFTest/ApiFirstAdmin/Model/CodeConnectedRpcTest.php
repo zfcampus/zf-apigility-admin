@@ -2,18 +2,28 @@
 
 namespace ZFTest\ApiFirstAdmin\Model;
 
+use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\ApiFirstAdmin\Model\CodeConnectedRpc;
 use ReflectionClass;
+use ZF\ApiFirstAdmin\Model\CodeConnectedRpc;
 use ZF\Configuration\ResourceFactory;
+use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
+
+require_once __DIR__ . '/TestAsset/module/FooConf/Module.php';
 
 class CodeConnecedRpcTest extends TestCase
 {
     public function setUp()
     {
+        $this->module = 'FooConf';
+        $srcPath      = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
+        if (is_dir($srcPath)) {
+            $this->removeDir($srcPath);
+        }
+
         $modules = array(
-            'ZFTest\ApiFirstAdmin\Model\TestAsset\FooConf' => new TestAsset\FooConf\Module()
+            'FooConf' => new FooConf\Module()
         );
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
@@ -23,35 +33,36 @@ class CodeConnecedRpcTest extends TestCase
                             ->method('getLoadedModules')
                             ->will($this->returnValue($modules));
 
-        $this->module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\FooConf';
-        $this->resource = new ResourceFactory($this->moduleManager, new PhpArray());
-        $this->codeRpc = new CodeConnectedRpc($this->module, $this->resource->factory('ZFTest\ApiFirstAdmin\Model\TestAsset\FooConf'));
+        $this->modules  = new ModuleUtils($this->moduleManager);
+        $this->resource = new ResourceFactory($this->modules, new PhpArray());
+        $this->codeRpc  = new CodeConnectedRpc($this->module, $this->modules, $this->resource->factory('FooConf'));
     } 
+
+    public function tearDown()
+    {
+        $srcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
+        if (is_dir($srcPath)) {
+            $this->removeDir($srcPath);
+        }
+    }
 
     public function testCreateControllerRpc()
     {
         $serviceName = 'Bar';
-        //$path        = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
-        $path = '.';
-        $module      = $this->module;
+        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
+        if (!is_dir($moduleSrcPath)) {
+            mkdir($moduleSrcPath, 0777, true);
+        }
 
-        mkdir($path);
-        mkdir("$path/module");
-        mkdir("$path/module/$module");
-        mkdir("$path/module/$module/src");
-        mkdir("$path/module/$module/src/$module");
+        $this->assertTrue($this->codeRpc->createController($serviceName));
 
-        $this->assertTrue($this->codeRpc->createController($serviceName, $path));
-
-        $fileName  = sprintf("%s/module/%s/src/%s/Controller/%sController.php", $path, $module, $module, $serviceName);
-        $className = sprintf("%s\Controller\%sController", $module, $serviceName);
+        $fileName  = sprintf("%s/TestAsset/module/%s/src/%s/Controller/%sController.php", __DIR__, $this->module, $this->module, $serviceName);
+        $className = sprintf("%s\Controller\%sController", $this->module, $serviceName);
         require_once $fileName;
         $controllerClass = new ReflectionClass($className);
         
         $this->assertTrue($controllerClass->isSubclassOf('Zend\Mvc\Controller\AbstractActionController'));
         $this->assertTrue($controllerClass->hasMethod($serviceName . 'Action'));
-
-        //$this->removeDir($path);
     }
 
     /**
