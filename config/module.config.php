@@ -140,8 +140,17 @@ return array(
     'zf-rpc' => array(
         // Dummy entry; still handled by ControllerManager, but this will force 
         // it to show up in the list of RPC endpoints
-        'ZF\ApiFirstAdmin\Controller\Module'      => 'ZF\ApiFirstAdmin\Controller\ModuleController::apiEnableAction',
-        'ZF\Configuration\ConfigController'       => 'ZF\Configuration\ConfigController::processAction',
-        'ZF\Configuration\ModuleConfigController' => 'ZF\Configuration\ModuleConfigController::processAction',
+        'ZF\ApiFirstAdmin\Controller\Module'      => array(
+            'http_options' => array('PUT'),
+            'route_name'   => 'zf-api-first-admin/api/module-enable',
+        ),
+        'ZF\Configuration\ConfigController'       => array(
+            'http_options' => array('GET', 'PATCH'),
+            'route_name'   => 'zf-api-first-admin/api/config',
+        ),
+        'ZF\Configuration\ModuleConfigController' => array(
+            'http_options' => array('GET', 'PATCH'),
+            'route_name'   => 'zf-api-first-admin/api/config/module',
+        ),
     ),
 );
