@@ -2,6 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
+use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
@@ -15,6 +16,11 @@ class CodeConnectedRpc
      * @var ConfigResource
      */
     protected $configResource;
+
+    /**
+     * @var FilterChain
+     */
+    protected $filter;
         
     /**
      * @var string
@@ -100,11 +106,49 @@ class CodeConnectedRpc
         );
     }
 
-    public function createRoute()
+    public function createRoute($route, $serviceName, $controllerService = null)
     {
+        if (null === $controllerService) {
+            $controllerService = sprintf('%s\Controller\\%s', $this->module, $serviceName);
+        }
+
+        $routeName = sprintf('%s.%s', $this->normalize($this->module), $this->normalize($serviceName));
+        $action    = lcfirst($serviceName);
+
+        $config = array('router' => array('routes' => array(
+            $routeName => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => $route,
+                    'defaults' => array(
+                        'controller' => $controllerService,
+                        'action'     => $action,
+                    ),
+                ),
+            ),
+        )));
+
+        return $this->configResource->patch($config, true);
     }
 
     public function createConfiguration()
     {
+    }
+
+    protected function normalize($string)
+    {
+        $filter = $this->getNormalizationFilter();
+        return $filter->filter($string);
+    }
+
+    protected function getNormalizationFilter()
+    {
+        if ($this->filter instanceof FilterChain) {
+            return $this->filter;
+        }
+        $this->filter = new FilterChain();
+        $this->filter->attachByName('WordCamelCaseToDash')
+                     ->attachByName('StringToLower');
+        return $this->filter;
     }
 }

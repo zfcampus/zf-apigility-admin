@@ -79,6 +79,30 @@ class CodeConnecedRpcTest extends TestCase
         $this->assertEquals($expected, $config);
     }
 
+    public function testCanCreateRouteConfiguration()
+    {
+        $result = $this->codeRpc->createRoute('/foo_conf/hello_world', 'HelloWorld', 'FooConf\Controller\HelloWorld');
+        $expected = array(
+            'router' => array('routes' => array(
+                'foo-conf.hello-world' => array(
+                    'type' => 'Segment',
+                    'options' => array(
+                        'route' => '/foo_conf/hello_world',
+                        'defaults' => array(
+                            'controller' => 'FooConf\Controller\HelloWorld',
+                            'action' => 'helloWorld',
+                        ),
+                    ),
+                ),
+            )),
+        );
+        $this->assertEquals($expected, $result);
+
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+        $this->assertEquals($expected, $config);
+    }
+
     /**
      * Remove a directory even if not empty (recursive delete)
      *
