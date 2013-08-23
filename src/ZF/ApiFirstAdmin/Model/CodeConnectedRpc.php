@@ -128,11 +128,22 @@ class CodeConnectedRpc
             ),
         )));
 
-        return $this->configResource->patch($config, true);
+        $this->configResource->patch($config, true);
+        return $routeName;
     }
 
-    public function createConfiguration()
+    public function createRpcConfig($controllerService, $routeName, array $httpMethods = array('GET'), $callable = null)
     {
+        $config = array('zf-rpc' => array(
+            $controllerService => array(
+                'http_methods' => $httpMethods,
+                'route_name'   => $routeName,
+            ),
+        ));
+        if (null !== $callable) {
+            $config[$controllerService]['callable'] = $callable;
+        }
+        return $this->configResource->patch($config, true);
     }
 
     protected function normalize($string)

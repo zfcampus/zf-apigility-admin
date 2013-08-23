@@ -82,7 +82,11 @@ class CodeConnecedRpcTest extends TestCase
     public function testCanCreateRouteConfiguration()
     {
         $result = $this->codeRpc->createRoute('/foo_conf/hello_world', 'HelloWorld', 'FooConf\Controller\HelloWorld');
-        $expected = array(
+        $this->assertEquals('foo-conf.hello-world', $result);
+
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+        $expected   = array(
             'router' => array('routes' => array(
                 'foo-conf.hello-world' => array(
                     'type' => 'Segment',
@@ -95,6 +99,20 @@ class CodeConnecedRpcTest extends TestCase
                     ),
                 ),
             )),
+        );
+        $this->assertEquals($expected, $config);
+    }
+
+    public function testCanCreateRpcConfiguration()
+    {
+        $result = $this->codeRpc->createRpcConfig('FooConf\Controller\HelloWorld', 'foo-conf.hello-world', array('GET', 'PATCH'));
+        $expected = array(
+            'zf-rpc' => array(
+                'FooConf\Controller\HelloWorld' => array(
+                    'http_methods' => array('GET', 'PATCH'),
+                    'route_name'   => 'foo-conf.hello-world',
+                ),
+            ),
         );
         $this->assertEquals($expected, $result);
 
