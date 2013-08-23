@@ -45,12 +45,12 @@
         </div>
     </header>
 
-    <div class="zf1a-module-navigation">
+    <div class="zf1a-module-navigation" ng-controller="ModuleMenuController">
         <div class="container">
             <span class="pull-left">Modules: </span>
             <ul class="nav nav-pills zfa1-nav-pills">
-                <li ng-repeat="moduleResource in moduleResources">
-                    <a href="#/module/{{ moduleResource.name }}/info">{{ moduleResource.namespace }}</a>
+                <li ng-repeat="module in modules">
+                    <a href="#/module/{{ module.name }}/info">{{ module.namespace }}</a>
                 </li>
             </ul>
         </div>
@@ -67,9 +67,9 @@
         <div class="row">
             <div class="col-md-3">
                 <aside class="zfa1-sidebar" role="complementary">
-                    <ul class="nav zfa1-sidenav">
-                        <li ng-repeat="(link, subNavName) in subNavItems">
-                            <a href="#{{ link }}">{{ subNavName }}</a>
+                    <ul class="nav zfa1-sidenav" ng-controller="SubnavController">
+                        <li ng-repeat="item in items">
+                            <a href="#{{ item.link }}">{{ item.name }}</a>
                         </li>
                     </ul>
                 </aside>

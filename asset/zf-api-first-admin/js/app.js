@@ -7,7 +7,28 @@ module.controller(
     ['$rootScope', function($rootScope) {
         $rootScope.pageTitle = 'Dashboard';
         $rootScope.pageDescription = 'Global system configuration and configuration to be applied to all modules.';
-        $rootScope.subNavItems = ['General Information', 'Media Types', 'Authentication', 'phpinfo()', 'ZF2 Info'];
+    }]
+);
+
+module.controller(
+    'ModuleMenuController',
+    ['$scope', 'moduleFactory', function($scope, moduleFactory) {
+        moduleFactory.getAll().then(function (modules) {
+            $scope.modules = modules;
+        });
+    }]
+);
+
+module.controller(
+    'SubnavController',
+    ['$scope', '$routeParams', 'subnavFactory', function ($scope, $routeParams, subnavFactory) {
+        console.log($routeParams.moduleName);
+        if ($routeParams.moduleName == undefined) {
+            $scope.items = subnavFactory.getModuleNavigation($routeParams.moduleName);
+        } else {
+            $scope.items = subnavFactory.getGlobalNavigation();
+        }
+
     }]
 );
 
@@ -29,40 +50,15 @@ module.controller(
 
 module.controller(
     'ModuleController',
-    ['$rootScope', '$scope', '$routeParams', '$http', 'HALParser', function($rootScope, $scope, $routeParams, $http, HALParser) {
-        var halParser = new HALParser;
-
-        $rootScope.pageTitle = ' ';
-        $rootScope.pageDescription = ' ';
-
-        $scope.showRestResources = ($routeParams.section == 'rest-resources');
-        $scope.showRpcResources = ($routeParams.section == 'api-endpoints');
-
-        function load() {
-            $http.get('/admin/api/module/' + $routeParams.name)
-                .success(function (data) {
-
-                    $scope.moduleResource = halParser.parse(data);
-                    $rootScope.pageTitle = $scope.moduleResource.namespace;
-                    $rootScope.pageDescription = '';
-
-                    $rootScope.subNavItems = {};
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/info'] = 'General Information';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/rest-resources'] = 'API Resources';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/api-endpoints'] = 'API RPC Endpoints';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/authentication'] = 'Authentication';
-                    $rootScope.subNavItems['module/' + $scope.moduleResource.name + '/filters-validators'] = 'Filters / Validators';
-
-                });
-        }
-
-        load();
+    ['$rootScope', '$scope', '$routeParams', 'moduleFactory', function($rootScope, $scope, $routeParams, moduleFactory) {
+        $rootScope.pageTitle = $routeParams.moduleName;
+        $rootScope.pageDescription = '';
     }]
 );
 
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'IndexController'});
-    $routeProvider.when('/module/:name/:section', {templateUrl: '/zf-api-first-admin/partials/module.html', controller: 'ModuleController'});
+    $routeProvider.when('/module/:moduleName/:section', {templateUrl: '/zf-api-first-admin/partials/module.html', controller: 'ModuleController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
 
@@ -89,18 +85,47 @@ module.directive('popover', function($compile) {
     };
 });
 
-module.run(['$rootScope', '$http', 'HALParser', function ($rootScope, $http, HALParser) {
+module.factory('subnavFactory', ['moduleFactory', function (moduleFactory) {
+    return {
+        getGlobalNavigation: function () {
+            return [
+                {name: "General Information", link: "/general-information"},
+                {name: "Media Types",         link: "/media-types"},
+                {name: "Authentication",      link: "/authentication"},
+                {name: "phpinfo()",           link: "/phpinfo"},
+                {name: "zf2info()",           link: "/zf2info"}
+            ];
+        },
+        getModuleNavigation: function (moduleName) {
+            return [
+                {name: "General Information",  link: 'module/' + moduleName + '/info'},
+                {name: "API Resources",        link: 'module/' + moduleName + '/api-resources'},
+                {name: "RPC Endpoints",        link: 'module/' + moduleName + '/rpc-endpoints'},
+                {name: "Authentication",       link: 'module/' + moduleName + '/authentication'},
+                {name: "Filters / Validators", link: 'module/' + moduleName + '/filters-validators'}
+            ];
+        }
+    };
+}]);
+
+module.factory('moduleFactory', ['$http', 'HALParser', function ($http, HALParser) {
     var halParser = new HALParser;
-
-    $rootScope.moduleResources = [];
-
-    $rootScope.syncModuleResources = function () {
-        $http.get('/admin/api/module')
-            .success(function (data) {
-                var modules =  halParser.parse(data);
-                console.log(modules);
-                $rootScope.moduleResources = modules.module;
-            });
+    return {
+        getAll: function () {
+            return $http.get('/admin/api/module')
+                .then(function (result) {
+                    return halParser.parse(result.data).module;
+                });
+        },
+        getByName: function (name) {
+            return $http.get('/admin/api/module/' + name)
+                .then(function (result) {
+                    return halParser.parse(result.data);
+                });
+        }
     }
-    $rootScope.syncModuleResources();
+}]);
+
+module.run(['$rootScope', function ($rootScope) {
+
 }]);
