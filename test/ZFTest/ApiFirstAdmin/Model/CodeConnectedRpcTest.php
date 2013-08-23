@@ -121,6 +121,48 @@ class CodeConnecedRpcTest extends TestCase
         $this->assertEquals($expected, $config);
     }
 
+    public function testCanGenerateAllArtifactsAtOnceViaCreateService()
+    {
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpOptions = array('GET', 'PATCH');
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions);
+
+        $expected = array(
+            'controllers' => array('invokables' => array(
+                'FooConf\Controller\HelloWorld' => 'FooConf\Controller\HelloWorldController',
+            )),
+            'router' => array('routes' => array(
+                'foo-conf.hello-world' => array(
+                    'type' => 'Segment',
+                    'options' => array(
+                        'route' => '/foo_conf/hello_world',
+                        'defaults' => array(
+                            'controller' => 'FooConf\Controller\HelloWorld',
+                            'action' => 'helloWorld',
+                        ),
+                    ),
+                ),
+            )),
+            'zf-rpc' => array(
+                'FooConf\Controller\HelloWorld' => array(
+                    'http_methods' => array('GET', 'PATCH'),
+                    'route_name'   => 'foo-conf.hello-world',
+                ),
+            ),
+        );
+
+        $class     = 'FooConf\Controller\HelloWorldController';
+        $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/Controller/HelloWorldController.php', __DIR__);
+        $this->assertTrue(file_exists($classFile));
+        require_once $classFile;
+        $controllerClass = new ReflectionClass($class);
+        $this->assertTrue($controllerClass->isSubclassOf('Zend\Mvc\Controller\AbstractActionController'));
+
+        $actionMethodName = lcfirst($serviceName) . 'Action';
+        $this->assertTrue($controllerClass->hasMethod($actionMethodName), 'Expected ' . $actionMethodName . "; class:\n" . file_get_contents($classFile));
+    }
+
     /**
      * Remove a directory even if not empty (recursive delete)
      *

@@ -32,11 +32,35 @@ class CodeConnectedRpc
      */
     protected $modules;
 
+    /**
+     * @param  string $module 
+     * @param  ModuleUtils $modules 
+     * @param  ConfigResource $config 
+     */
     public function __construct($module, ModuleUtils $modules, ConfigResource $config)
     {
         $this->module         = $module;
         $this->modules        = $modules;
         $this->configResource = $config;
+    }
+
+    /**
+     * Create a new RPC service in this module
+     *
+     * Creates the controller and all configuration, returning the full configuration as a tree.
+     *
+     * @param  string $serviceName 
+     * @param  string $route 
+     * @param  array $httpMethods 
+     * @return array
+     */
+    public function createService($serviceName, $route, $httpMethods)
+    {
+        $controllerData = $this->createController($serviceName);
+        $controllerService = $controllerData->service;
+        $routeName      = $this->createRoute($route, $serviceName, $controllerService);
+        $this->createRpcConfig($controllerService, $routeName, $httpMethods);
+        return $this->configResource->fetch(true);
     }
 
     /**
@@ -106,6 +130,14 @@ class CodeConnectedRpc
         );
     }
 
+    /**
+     * Create the route configuration
+     * 
+     * @param  string $route 
+     * @param  string $serviceName 
+     * @param  string $controllerService 
+     * @return string The newly created route name
+     */
     public function createRoute($route, $serviceName, $controllerService = null)
     {
         if (null === $controllerService) {
@@ -132,6 +164,15 @@ class CodeConnectedRpc
         return $routeName;
     }
 
+    /**
+     * Create the zf-rpc configuration for the controller service
+     * 
+     * @param  string $controllerService 
+     * @param  string $routeName 
+     * @param  array $httpMethods 
+     * @param  null|string|callable $callable 
+     * @return array
+     */
     public function createRpcConfig($controllerService, $routeName, array $httpMethods = array('GET'), $callable = null)
     {
         $config = array('zf-rpc' => array(
@@ -146,12 +187,23 @@ class CodeConnectedRpc
         return $this->configResource->patch($config, true);
     }
 
+    /**
+     * Normalize a service or module name to lowercase, dash-separated
+     * 
+     * @param  string $string 
+     * @return string
+     */
     protected function normalize($string)
     {
         $filter = $this->getNormalizationFilter();
         return $filter->filter($string);
     }
 
+    /**
+     * Retrieve and/or initialize the normalization filter chain
+     * 
+     * @return FilterChain
+     */
     protected function getNormalizationFilter()
     {
         if ($this->filter instanceof FilterChain) {
