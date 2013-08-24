@@ -121,12 +121,41 @@ class CodeConnecedRpcTest extends TestCase
         $this->assertEquals($expected, $config);
     }
 
+    public function contentNegotiationSelectors()
+    {
+        return array(
+            'defaults' => array(null, 'Json'),
+            'HalJson' => array('HalJson', 'HalJson'),
+        );
+    }
+
+    /**
+     * @dataProvider contentNegotiationSelectors
+     */
+    public function testCanCreateContentNegotiationSelectorConfiguration($selector, $expected)
+    {
+        $result = $this->codeRpc->createSelectorConfig('FooConf\Controller\HelloWorld', $selector);
+        $expected = array(
+            'zf-content-negotiation' => array(
+                'controllers' => array(
+                    'FooConf\Controller\HelloWorld' => $expected,
+                ),
+            ),
+        );
+        $this->assertEquals($expected, $result);
+
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+        $this->assertEquals($expected, $config);
+    }
+
     public function testCanGenerateAllArtifactsAtOnceViaCreateService()
     {
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
         $httpOptions = array('GET', 'PATCH');
-        $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions);
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions, $selector);
 
         $expected = array(
             'controllers' => array('invokables' => array(
@@ -148,6 +177,11 @@ class CodeConnecedRpcTest extends TestCase
                 'FooConf\Controller\HelloWorld' => array(
                     'http_methods' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.hello-world',
+                ),
+            ),
+            'zf-content-negotiation' => array(
+                'controllers' => array(
+                    'FooConf\Controller\HelloWorld' => $selector,
                 ),
             ),
         );

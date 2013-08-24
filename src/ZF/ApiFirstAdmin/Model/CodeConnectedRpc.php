@@ -52,14 +52,16 @@ class CodeConnectedRpc
      * @param  string $serviceName 
      * @param  string $route 
      * @param  array $httpMethods 
+     * @param  null|string $selector
      * @return array
      */
-    public function createService($serviceName, $route, $httpMethods)
+    public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
         $controllerData = $this->createController($serviceName);
         $controllerService = $controllerData->service;
         $routeName      = $this->createRoute($route, $serviceName, $controllerService);
         $this->createRpcConfig($controllerService, $routeName, $httpMethods);
+        $this->createSelectorConfig($controllerService, $selector);
         return $this->configResource->fetch(true);
     }
 
@@ -184,6 +186,20 @@ class CodeConnectedRpc
         if (null !== $callable) {
             $config[$controllerService]['callable'] = $callable;
         }
+        return $this->configResource->patch($config, true);
+    }
+
+    public function createSelectorConfig($controllerService, $selector = null)
+    {
+        if (null === $selector) {
+            $selector = 'Json';
+        }
+
+        $config = array('zf-content-negotiation' => array(
+            'controllers' => array(
+                $controllerService => $selector,
+            ),
+        ));
         return $this->configResource->patch($config, true);
     }
 
