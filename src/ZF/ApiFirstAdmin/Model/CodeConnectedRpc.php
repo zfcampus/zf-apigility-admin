@@ -45,10 +45,82 @@ class CodeConnectedRpc
     }
 
     /**
+     * Fetch a single RPC endpoint
+     * 
+     * @todo   get route details?
+     * @param  string $controllerServiceName 
+     * @return RpcEndpointMetadata|false
+     */
+    public function fetch($controllerServiceName)
+    {
+        $data   = array('controller_service_name' => $controllerServiceName);
+        $config = $this->configResource->fetch(true);
+        if (isset($config['zf-rpc'])
+            && isset($config['zf-rpc'][$controllerServiceName])
+        ) {
+            $rpcConfig = $config['zf-rpc'][$controllerServiceName];
+            if (isset($rpcConfig['route_name'])) {
+                $data['route_name'] = $rpcConfig['route_name'];
+            }
+            if (isset($rpcConfig['http_methods'])) {
+                $data['http_methods'] = $rpcConfig['http_methods'];
+            }
+        } else {
+            return false;
+        }
+
+        if (isset($config['zf-content-negotiation'])) {
+            $contentNegotiationConfig = $config['zf-content-negotiation'];
+            if (isset($contentNegotiationConfig['controllers'])
+                && isset($contentNegotiationConfig['controllers'][$controllerServiceName])
+            ) {
+                $data['selector'] = $contentNegotiationConfig['controllers'][$controllerServiceName];
+            }
+
+            if (isset($contentNegotiationConfig['accept-whitelist'])
+                && isset($contentNegotiationConfig['accept-whitelist'][$controllerServiceName])
+            ) {
+                $data['accept_whitelist'] = $contentNegotiationConfig['accept_whitelist'][$controllerServiceName];
+            }
+
+            if (isset($contentNegotiationConfig['content-type-whitelist'])
+                && isset($contentNegotiationConfig['content-type-whitelist'][$controllerServiceName])
+            ) {
+                $data['content_type_whitelist'] = $contentNegotiationConfig['content-type-whitelist'][$controllerServiceName];
+            }
+        }
+
+        $endpoint = new RpcEndpointMetadata();
+        $endpoint->exchangeArray($data);
+        return $endpoint;
+    }
+
+    /**
+     * Fetch all endpoints
+     * 
+     * @return RpcEndpointMetadata[]
+     */
+    public function fetchAll()
+    {
+        $config = $this->configResource->fetch(true);
+        if (!isset($config['zf-rpc'])) {
+            return array();
+        }
+
+        $endpoints = array();
+        foreach (array_keys($config['zf-rpc']) as $service) {
+            $endpoints[] = $this->fetch($service);
+        }
+
+        return $endpoints;
+    }
+
+    /**
      * Create a new RPC service in this module
      *
      * Creates the controller and all configuration, returning the full configuration as a tree.
      *
+     * @todo   Return the controller service name
      * @param  string $serviceName 
      * @param  string $route 
      * @param  array $httpMethods 
