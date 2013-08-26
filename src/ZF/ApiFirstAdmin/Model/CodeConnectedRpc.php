@@ -126,7 +126,7 @@ class CodeConnectedRpc
      * @param  string $route 
      * @param  array $httpMethods 
      * @param  null|string $selector
-     * @return array
+     * @return RpcEndpointMetadata
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
@@ -135,7 +135,7 @@ class CodeConnectedRpc
         $routeName      = $this->createRoute($route, $serviceName, $controllerService);
         $this->createRpcConfig($controllerService, $routeName, $httpMethods);
         $this->createSelectorConfig($controllerService, $selector);
-        return $this->configResource->fetch(true);
+        return $this->fetch($controllerService);
     }
 
     public function patchService($controllerServiceName, RpcEndpointMetadata $updates)
@@ -294,14 +294,21 @@ class CodeConnectedRpc
     }
 
     /**
-     * Update a named route
+     * Update the route associated with a controller service
      * 
-     * @param  string $routeName 
+     * @param  string $controllerService 
      * @param  string $routeMatch 
      * @return true
      */
-    public function updateRoute($routeName, $routeMatch)
+    public function updateRoute($controllerService, $routeMatch)
     {
+        $endpoint  = $this->fetch($controllerService);
+        if (!$endpoint) {
+            return false;
+        }
+        $endpoint  = $endpoint->getArrayCopy();
+        $routeName = $endpoint['route_name'];
+
         $config = $this->configResource->fetch(true);
         $config['router']['routes'][$routeName]['options']['route'] = $routeMatch;
         $this->configResource->overwrite($config);

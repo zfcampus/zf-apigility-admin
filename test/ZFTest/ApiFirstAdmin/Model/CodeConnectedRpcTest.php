@@ -134,8 +134,9 @@ class CodeConnecedRpcTest extends TestCase
         );
         $this->assertEquals($expected, $config);
         return (object) array(
-            'config'      => $config,
-            'config_file' => $configFile
+            'config'             => $config,
+            'config_file'        => $configFile,
+            'controller_service' => 'FooConf\Controller\HelloWorld',
         );
     }
 
@@ -204,8 +205,10 @@ class CodeConnecedRpcTest extends TestCase
         $httpOptions = array('GET', 'PATCH');
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions, $selector);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointMetadata', $result);
 
-        $expected = array(
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $expected   = array(
             'controllers' => array('invokables' => array(
                 'FooConf\Controller\HelloWorld' => 'FooConf\Controller\HelloWorldController',
             )),
@@ -213,7 +216,7 @@ class CodeConnecedRpcTest extends TestCase
                 'foo-conf.hello-world' => array(
                     'type' => 'Segment',
                     'options' => array(
-                        'route' => '/foo_conf/hello_world',
+                        'route' => '/foo_conf/hello/world',
                         'defaults' => array(
                             'controller' => 'FooConf\Controller\HelloWorld',
                             'action' => 'helloWorld',
@@ -233,6 +236,8 @@ class CodeConnecedRpcTest extends TestCase
                 ),
             ),
         );
+        $config = include $configFile;
+        $this->assertEquals($expected, $config);
 
         $class     = 'FooConf\Controller\HelloWorldController';
         $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/Controller/HelloWorldController.php', __DIR__);
@@ -243,17 +248,32 @@ class CodeConnecedRpcTest extends TestCase
 
         $actionMethodName = lcfirst($serviceName) . 'Action';
         $this->assertTrue($controllerClass->hasMethod($actionMethodName), 'Expected ' . $actionMethodName . "; class:\n" . file_get_contents($classFile));
+
+        return (object) array(
+            'rpc_endpoint' => $result->getArrayCopy(),
+            'config_file'  => $configFile,
+            'config'       => $config,
+        );
     }
 
     /**
-     * @depends testCanCreateRouteConfiguration
+     * @depends testCanGenerateAllArtifactsAtOnceViaCreateService
      */
-    public function testCanUpdateRoute($configData)
+    public function testCanUpdateRoute($data)
     {
-        $this->writer->toFile($configData->config_file, $configData->config);
-        $this->assertTrue($this->codeRpc->updateRoute('foo-conf.hello-world', '/api/hello/world'));
-        $config = include $configData->config_file;
-        $this->assertEquals('/api/hello/world', $config['router']['routes']['foo-conf.hello-world']['options']['route']);
+        // State is lost in between tests; re-seed the service
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpOptions = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions, $selector);
+        $endpoint    = $result->getArrayCopy();
+
+        // and now do the actual work for the test
+        $this->assertTrue($this->codeRpc->updateRoute($endpoint['controller_service_name'], '/api/hello/world'));
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+        $this->assertEquals('/api/hello/world', $config['router']['routes'][$endpoint['route_name']]['options']['route']);
     }
 
     /**
