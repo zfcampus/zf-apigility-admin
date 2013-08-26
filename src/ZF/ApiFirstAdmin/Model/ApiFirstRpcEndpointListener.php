@@ -6,6 +6,7 @@ use RuntimeException;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
+use ZF\Rest\Exception\PatchException;
 
 /**
  * @todo We need to create a factory for returning a CodeConnectedRpc object based on the module name 
@@ -112,9 +113,50 @@ class ApiFirstModuleListener extends AbstractResourceListener
     }
 
     /**
-     * @todo Implement!
+     * Update an existing RPC endpoint
+     * 
+     * @param  string $id 
+     * @param  object|array $data 
+     * @return ApiProblem|RpcEndpointMetadata
+     * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)
     {
+        if (is_object($data)) {
+            $data = (array) $data;
+        }
+
+        if (!is_array($data)) {
+            return new ApiProblem(400, 'Invalid data provided for update');
+        }
+
+        if (empty($data)) {
+            return new ApiProblem(400, 'No data provided for update');
+        }
+
+        $model = $this->getModel();
+        foreach ($data as $key => $value) {
+            try {
+                switch (strtolower($key)) {
+                    case 'httpmethods':
+                    case 'http_methods':
+                        $model->updateHttpMethods($id, $value);
+                        break;
+                    case 'routematch':
+                    case 'route_match':
+                        $model->updateRoute($id, $value);
+                        break;
+                    case 'selector':
+                        $model->updateSelector($id, $value);
+                        break;
+                    default:
+                        break;
+                }
+            } catch (\Exception $e) {
+                throw new PatchException('Error updating RPC endpoint', 500, $e);
+            }
+        }
+
+        return $model->fetch($id);
     }
 }
