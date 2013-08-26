@@ -302,15 +302,21 @@ class CodeConnectedRpc
      */
     public function updateRoute($routeName, $routeMatch)
     {
-        $config = array('router' => array('routes' => array(
-            $routeName => array(
-                'options' => array(
-                    'route' => $routeMatch,
-                ),
-            ),
-        )));
+        $config = $this->configResource->fetch(true);
 
-        $this->configResource->patch($config, true);
+        $config['router']['routes'][$routeName]['options']['route'] = $routeMatch;
+
+        $this->configResource->overwrite($config);
+        return true;
+    }
+
+    public function updateHttpMethods($controllerService, array $httpMethods)
+    {
+        $config = $this->configResource->fetch(true);
+
+        $config['zf-rpc'][$controllerService]['http_methods'] = $httpMethods;
+
+        $this->configResource->overwrite($config);
         return true;
     }
 

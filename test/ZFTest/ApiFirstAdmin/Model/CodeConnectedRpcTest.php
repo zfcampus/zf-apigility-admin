@@ -155,6 +155,12 @@ class CodeConnecedRpcTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
         $this->assertEquals($expected, $config);
+
+        return (object) array(
+            'controller_service' => 'FooConf\Controller\HelloWorld',
+            'config'             => $config,
+            'config_file'        => $configFile,
+        );
     }
 
     public function contentNegotiationSelectors()
@@ -240,5 +246,19 @@ class CodeConnecedRpcTest extends TestCase
     {
         $this->writer->toFile($configData->config_file, $configData->config);
         $this->assertTrue($this->codeRpc->updateRoute('foo-conf.hello-world', '/api/hello/world'));
+        $config = include $configData->config_file;
+        $this->assertEquals('/api/hello/world', $config['router']['routes']['foo-conf.hello-world']['options']['route']);
+    }
+
+    /**
+     * @depends testCanCreateRpcConfiguration
+     */
+    public function testCanUpdateHttpMethods($configData)
+    {
+        $methods = array('GET', 'PUT', 'DELETE');
+        $this->writer->toFile($configData->config_file, $configData->config);
+        $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
+        $config = include $configData->config_file;
+        $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_methods']);
     }
 }
