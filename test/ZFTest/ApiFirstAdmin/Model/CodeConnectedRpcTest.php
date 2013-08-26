@@ -189,6 +189,12 @@ class CodeConnecedRpcTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
         $this->assertEquals($expected, $config);
+
+        return (object) array(
+            'config'             => $config,
+            'config_file'        => $configFile,
+            'controller_service' => 'FooConf\Controller\HelloWorld',
+        );
     }
 
     public function testCanGenerateAllArtifactsAtOnceViaCreateService()
@@ -260,5 +266,20 @@ class CodeConnecedRpcTest extends TestCase
         $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
         $config = include $configData->config_file;
         $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_methods']);
+    }
+
+    public function testCanUpdateContentNegotiationSelector()
+    {
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $this->writer->toFile($configFile, array(
+            'zf-content-negotiation' => array(
+                'controllers' => array(
+                    'FooConf\Controller\HelloWorld' => 'Json',
+                ),
+            ),
+        ));
+        $this->assertTrue($this->codeRpc->updateSelector('FooConf\Controller\HelloWorld', 'MyCustomSelector'));
+        $config = include $configFile;
+        $this->assertEquals('MyCustomSelector', $config['zf-content-negotiation']['controllers']['FooConf\Controller\HelloWorld']);
     }
 }

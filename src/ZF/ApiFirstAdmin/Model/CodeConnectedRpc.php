@@ -303,19 +303,37 @@ class CodeConnectedRpc
     public function updateRoute($routeName, $routeMatch)
     {
         $config = $this->configResource->fetch(true);
-
         $config['router']['routes'][$routeName]['options']['route'] = $routeMatch;
-
         $this->configResource->overwrite($config);
         return true;
     }
 
+    /**
+     * Update the allowed HTTP methods for a given service
+     * 
+     * @param  string $controllerService 
+     * @param  array $httpMethods 
+     * @return true
+     */
     public function updateHttpMethods($controllerService, array $httpMethods)
     {
         $config = $this->configResource->fetch(true);
-
         $config['zf-rpc'][$controllerService]['http_methods'] = $httpMethods;
+        $this->configResource->overwrite($config);
+        return true;
+    }
 
+    /**
+     * Update the content-negotiation selector for the given service
+     * 
+     * @param  string $controllerService 
+     * @param  string $selector 
+     * @return true
+     */
+    public function updateSelector($controllerService, $selector)
+    {
+        $config = $this->configResource->fetch(true);
+        $config['zf-content-negotiation']['controllers'][$controllerService] = $selector;
         $this->configResource->overwrite($config);
         return true;
     }
