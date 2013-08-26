@@ -60,7 +60,8 @@ class CodeConnectedRpc
         ) {
             $rpcConfig = $config['zf-rpc'][$controllerServiceName];
             if (isset($rpcConfig['route_name'])) {
-                $data['route_name'] = $rpcConfig['route_name'];
+                $data['route_name']  = $rpcConfig['route_name'];
+                $data['route_match'] = $this->getRouteMatchStringFromModuleConfig($data['route_name'], $config);
             }
             if (isset($rpcConfig['http_methods'])) {
                 $data['http_methods'] = $rpcConfig['http_methods'];
@@ -135,6 +136,16 @@ class CodeConnectedRpc
         $this->createRpcConfig($controllerService, $routeName, $httpMethods);
         $this->createSelectorConfig($controllerService, $selector);
         return $this->configResource->fetch(true);
+    }
+
+    public function patchService($controllerServiceName, RpcEndpointMetadata $updates)
+    {
+        $original = $this->fetch($controllerServiceName);
+        $merged   = array_merge(
+            $original->getArrayCopy(),
+            $updates->getArrayCopy()
+        );
+
     }
 
     /**
@@ -261,6 +272,13 @@ class CodeConnectedRpc
         return $this->configResource->patch($config, true);
     }
 
+    /**
+     * Create the selector configuration
+     * 
+     * @param  string $controllerService 
+     * @param  string $selector 
+     * @return array
+     */
     public function createSelectorConfig($controllerService, $selector = null)
     {
         if (null === $selector) {
@@ -273,6 +291,27 @@ class CodeConnectedRpc
             ),
         ));
         return $this->configResource->patch($config, true);
+    }
+
+    /**
+     * Update a named route
+     * 
+     * @param  string $routeName 
+     * @param  string $routeMatch 
+     * @return true
+     */
+    public function updateRoute($routeName, $routeMatch)
+    {
+        $config = array('router' => array('routes' => array(
+            $routeName => array(
+                'options' => array(
+                    'route' => $routeMatch,
+                ),
+            ),
+        )));
+
+        $this->configResource->patch($config, true);
+        return true;
     }
 
     /**
@@ -301,5 +340,38 @@ class CodeConnectedRpc
         $this->filter->attachByName('WordCamelCaseToDash')
                      ->attachByName('StringToLower');
         return $this->filter;
+    }
+
+    /**
+     * Retrieve the URL match for the given route name
+     * 
+     * @param  string $routeName 
+     * @param  array $config 
+     * @return false|string
+     */
+    protected function getRouteMatchStringFromModuleConfig($routeName, array $config)
+    {
+        if (!isset($config['router'])
+            || !isset($config['router']['routes'])
+        ) {
+            return false;
+        }
+
+        $config = $config['router']['routes'];
+        if (!isset($config[$routeName])
+            || !is_array($config[$routeName])
+        ) {
+            return false;
+        }
+
+        $config = $config[$routeName];
+
+        if (!isset($config['options'])
+            || !isset($config['options']['route'])
+        ) {
+            return false;
+        }
+
+        return $config['options']['route'];
     }
 }

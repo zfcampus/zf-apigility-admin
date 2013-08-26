@@ -18,6 +18,8 @@ class RpcEndpointMetadata
 
     protected $httpMethods = array('GET');
 
+    protected $routeMatch;
+
     protected $routeName;
 
     protected $selector = 'Json';
@@ -71,6 +73,10 @@ class RpcEndpointMetadata
                     }
                     $this->httpMethods = $value;
                     break;
+                case 'routematch':
+                case 'route_match':
+                    $this->routeMatch = $value;
+                    break;
                 case 'routename':
                 case 'route_name':
                     $this->routeName = $value;
@@ -104,6 +110,7 @@ class RpcEndpointMetadata
             'content_type_whitelist'  => $this->contentTypeWhitelist,
             'controller_service_name' => $this->controllerServiceName,
             'http_methods'            => $this->httpMethods,
+            'route_match'             => $this->routeMatch,
             'route_name'              => $this->routeName,
             'selector'                => $this->selector,
         );

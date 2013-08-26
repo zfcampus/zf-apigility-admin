@@ -14,6 +14,37 @@ require_once __DIR__ . '/TestAsset/module/FooConf/Module.php';
 
 class CodeConnecedRpcTest extends TestCase
 {
+    /**
+     * Remove a directory even if not empty (recursive delete)
+     *
+     * @param  string $dir
+     * @return boolean
+     */
+    protected function removeDir($dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            $path = "$dir/$file";
+            if (is_dir($path)) {
+                $this->removeDir($path);
+            } else {
+                unlink($path);
+            }
+        }
+        return rmdir($dir);
+    } 
+
+    protected function cleanUpAssets()
+    {
+        $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
+        $configPath = $basePath . '/config';
+        $srcPath    = $basePath . '/src';
+        if (is_dir($srcPath)) {
+            $this->removeDir($srcPath);
+        }
+        copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
+    }
+
     public function setUp()
     {
         $this->module = 'FooConf';
@@ -30,8 +61,9 @@ class CodeConnecedRpcTest extends TestCase
                             ->method('getLoadedModules')
                             ->will($this->returnValue($modules));
 
+        $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
-        $this->resource = new ResourceFactory($this->modules, new PhpArray());
+        $this->resource = new ResourceFactory($this->modules, $this->writer);
         $this->codeRpc  = new CodeConnectedRpc($this->module, $this->modules, $this->resource->factory('FooConf'));
     } 
 
@@ -101,6 +133,10 @@ class CodeConnecedRpcTest extends TestCase
             )),
         );
         $this->assertEquals($expected, $config);
+        return (object) array(
+            'config'      => $config,
+            'config_file' => $configFile
+        );
     }
 
     public function testCanCreateRpcConfiguration()
@@ -198,33 +234,11 @@ class CodeConnecedRpcTest extends TestCase
     }
 
     /**
-     * Remove a directory even if not empty (recursive delete)
-     *
-     * @param  string $dir
-     * @return boolean
+     * @depends testCanCreateRouteConfiguration
      */
-    protected function removeDir($dir)
+    public function testCanUpdateRoute($configData)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
-        foreach ($files as $file) {
-            $path = "$dir/$file";
-            if (is_dir($path)) {
-                $this->removeDir($path);
-            } else {
-                unlink($path);
-            }
-        }
-        return rmdir($dir);
-    } 
-
-    protected function cleanUpAssets()
-    {
-        $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
-        $configPath = $basePath . '/config';
-        $srcPath    = $basePath . '/src';
-        if (is_dir($srcPath)) {
-            $this->removeDir($srcPath);
-        }
-        copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
+        $this->writer->toFile($configData->config_file, $configData->config);
+        $this->assertTrue($this->codeRpc->updateRoute('foo-conf.hello-world', '/api/hello/world'));
     }
 }
