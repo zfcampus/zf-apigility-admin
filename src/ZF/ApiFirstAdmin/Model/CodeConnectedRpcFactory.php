@@ -33,6 +33,8 @@ class CodeConnectedRpcFactory
      */
     public function factory($module)
     {
+        $module = $this->normalizeModuleName($module);
+
         if (isset($this->models[$module])) {
             return $this->models[$module];
         }
@@ -41,5 +43,14 @@ class CodeConnectedRpcFactory
         $this->models[$module] = new CodeConnectedRpc($module, $this->modules, $config);
 
         return $this->models[$module];
+    }
+
+    /**
+     * @param  string $name
+     * @return string
+     */
+    protected function normalizeModuleName($name)
+    {
+        return str_replace('\\', '.', $name);
     }
 }
