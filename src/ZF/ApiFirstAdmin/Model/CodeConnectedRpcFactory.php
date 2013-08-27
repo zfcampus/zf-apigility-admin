@@ -24,7 +24,7 @@ class CodeConnectedRpcFactory
     public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory)
     {
         $this->modules = $modules;
-        $this->config  = $config;
+        $this->config  = $configFactory;
     }
 
     /**
