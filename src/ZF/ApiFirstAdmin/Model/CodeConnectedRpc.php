@@ -63,8 +63,8 @@ class CodeConnectedRpc
                 $data['route_name']  = $rpcConfig['route_name'];
                 $data['route_match'] = $this->getRouteMatchStringFromModuleConfig($data['route_name'], $config);
             }
-            if (isset($rpcConfig['http_methods'])) {
-                $data['http_methods'] = $rpcConfig['http_methods'];
+            if (isset($rpcConfig['http_options'])) {
+                $data['http_options'] = $rpcConfig['http_options'];
             }
         } else {
             return false;
@@ -262,7 +262,7 @@ class CodeConnectedRpc
     {
         $config = array('zf-rpc' => array(
             $controllerService => array(
-                'http_methods' => $httpMethods,
+                'http_options' => $httpMethods,
                 'route_name'   => $routeName,
             ),
         ));
@@ -325,7 +325,7 @@ class CodeConnectedRpc
     public function updateHttpMethods($controllerService, array $httpMethods)
     {
         $config = $this->configResource->fetch(true);
-        $config['zf-rpc'][$controllerService]['http_methods'] = $httpMethods;
+        $config['zf-rpc'][$controllerService]['http_options'] = $httpMethods;
         $this->configResource->overwrite($config);
         return true;
     }

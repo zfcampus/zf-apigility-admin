@@ -62,8 +62,8 @@ class RpcEndpointMetadata
                 case 'controller_service_name':
                     $this->controllerServiceName = $value;
                     break;
-                case 'httpmethods':
-                case 'http_methods':
+                case 'httpoptionss':
+                case 'http_options':
                     if (!is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
@@ -109,7 +109,7 @@ class RpcEndpointMetadata
             'accept_whitelist'        => $this->acceptWhitelist,
             'content_type_whitelist'  => $this->contentTypeWhitelist,
             'controller_service_name' => $this->controllerServiceName,
-            'http_methods'            => $this->httpMethods,
+            'http_options'            => $this->httpMethods,
             'route_match'             => $this->routeMatch,
             'route_name'              => $this->routeName,
             'selector'                => $this->selector,

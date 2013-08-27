@@ -89,7 +89,7 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
         // Munge data:
         // - need service_name
         // - need route
-        // - need http_methods (can default to array('GET'))
+        // - need http_options (can default to array('GET'))
         // - need selector (can default to null)
         // ...
 
@@ -97,7 +97,7 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
             $controllerServiceName = $this->getModel()->createService(
                 $creationData['service_name'],
                 $creationData['route'],
-                $creationData['http_methods'],
+                $creationData['http_options'],
                 $creationData['selector']
             );
         } catch (\Exception $e) {
@@ -159,8 +159,8 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
         foreach ($data as $key => $value) {
             try {
                 switch (strtolower($key)) {
-                    case 'httpmethods':
-                    case 'http_methods':
+                    case 'httpoptions':
+                    case 'http_options':
                         $model->updateHttpMethods($id, $value);
                         break;
                     case 'routematch':
