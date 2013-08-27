@@ -114,6 +114,11 @@ return array(
             ),
             'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
                 'application/json',
+                'application/*+json',
+            ),
+            'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
+                'application/json',
+                'application/*+json',
             ),
         ),
         'content-type-whitelist' => array(
@@ -122,6 +127,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
                 'application/json',
                 'application/*+json',
             ),
