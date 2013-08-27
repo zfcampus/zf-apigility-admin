@@ -81,7 +81,7 @@ class CodeConnectedRpc
             if (isset($contentNegotiationConfig['accept-whitelist'])
                 && isset($contentNegotiationConfig['accept-whitelist'][$controllerServiceName])
             ) {
-                $data['accept_whitelist'] = $contentNegotiationConfig['accept_whitelist'][$controllerServiceName];
+                $data['accept_whitelist'] = $contentNegotiationConfig['accept-whitelist'][$controllerServiceName];
             }
 
             if (isset($contentNegotiationConfig['content-type-whitelist'])

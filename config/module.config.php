@@ -85,7 +85,7 @@ return array(
                                 ),
                                 'may_terminate' => true,
                                 'child_routes' => array(
-                                    'rpc-endpoints' => array(
+                                    'rpc-endpoint' => array(
                                         'type' => 'segment',
                                         'options' => array(
                                             'route' => '/rpc[/:controller_service_name]',

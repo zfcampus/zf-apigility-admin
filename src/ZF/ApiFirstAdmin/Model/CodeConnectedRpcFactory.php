@@ -23,8 +23,8 @@ class CodeConnectedRpcFactory
      */
     public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory)
     {
-        $this->modules = $modules;
-        $this->config  = $configFactory;
+        $this->modules       = $modules;
+        $this->configFactory = $configFactory;
     }
 
     /**

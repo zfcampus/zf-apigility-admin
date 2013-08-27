@@ -47,7 +47,7 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
             return $this->moduleName;
         }
 
-        $moduleName = $this->getEvent()->getRouteMatch('name', false);
+        $moduleName = $this->getEvent()->getRouteParam('name', false);
         if (!$moduleName) {
             throw new RuntimeException(sprintf(
                 '%s cannot operate correctly without a "name" segment in the route matches',
