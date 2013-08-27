@@ -84,17 +84,48 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        $creationData = array();
+        $creationData = array(
+            'http_options' => array('GET'),
+            'selector'     => null,
+        );
 
-        // Munge data:
-        // - need service_name
-        // - need route
-        // - need http_options (can default to array('GET'))
-        // - need selector (can default to null)
-        // ...
+        if (!isset($data['service_name'])
+            || !is_string($data['service_name'])
+            || empty($data['service_name'])
+        ) {
+            throw new CreationException('Unable to create RPC endpoint; missing service_name');
+        }
+        $creationData['service_name'] = $data['service_name'];
+
+        $model = $this->getModel();
+        if ($model->fetch($creationData['service_name'])) {
+            throw new CreationException('Service by that name already exists', 409);
+        }
+
+        if (!isset($data['route'])
+            || !is_string($data['route'])
+            || empty($data['route'])
+        ) {
+            throw new CreationException('Unable to create RPC endpoint; missing route');
+        }
+        $creationData['route'] = $data['route'];
+
+        if (isset($data['http_options'])
+            && (is_string($data['http_options']) || is_array($data['http_options']))
+            && !empty($data['http_options'])
+        ) {
+            $creationData['http_options'] = $data['http_options'];
+        }
+
+        if (isset($data['selector'])
+            && is_string($data['selector'])
+            && !empty($data['selector'])
+        ) {
+            $creationData['selector'] = $data['selector'];
+        }
 
         try {
-            $controllerServiceName = $this->getModel()->createService(
+            $endpoint = $model->createService(
                 $creationData['service_name'],
                 $creationData['route'],
                 $creationData['http_options'],
@@ -104,7 +135,7 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
             throw new CreationException('Unable to create RPC endpoint', $e->getCode(), $e);
         }
 
-        return $this->getModel()->fetch($controllerServiceName);
+        return $endpoint;
     }
 
     /**

@@ -130,22 +130,13 @@ class CodeConnectedRpc
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
-        $controllerData = $this->createController($serviceName);
+        $controllerData    = $this->createController($serviceName);
         $controllerService = $controllerData->service;
-        $routeName      = $this->createRoute($route, $serviceName, $controllerService);
+        $routeName         = $this->createRoute($route, $serviceName, $controllerService);
         $this->createRpcConfig($controllerService, $routeName, $httpMethods);
         $this->createSelectorConfig($controllerService, $selector);
+
         return $this->fetch($controllerService);
-    }
-
-    public function patchService($controllerServiceName, RpcEndpointMetadata $updates)
-    {
-        $original = $this->fetch($controllerServiceName);
-        $merged   = array_merge(
-            $original->getArrayCopy(),
-            $updates->getArrayCopy()
-        );
-
     }
 
     /**
@@ -354,6 +345,7 @@ class CodeConnectedRpc
     protected function normalize($string)
     {
         $filter = $this->getNormalizationFilter();
+        $string = str_replace('\\', '-', $string);
         return $filter->filter($string);
     }
 
