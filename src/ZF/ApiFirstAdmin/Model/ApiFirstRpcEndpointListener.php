@@ -12,17 +12,35 @@ use ZF\Rest\Exception\PatchException;
  * @todo We need to create a factory for returning a CodeConnectedRpc object based on the module name 
  *       and the configuration resource.
  */
-class ApiFirstModuleListener extends AbstractResourceListener
+class ApiFirstRpcEndpointListener extends AbstractResourceListener
 {
+    /**
+     * @var CodeConnectedRpc
+     */
+    protected $model;
+
+    /**
+     * @var string
+     */
     protected $moduleName;
 
+    /**
+     * @var CodeConnectedRpcFactory
+     */
     protected $rpcFactory;
 
-    public function __construct($rpcFactory)
+    /**
+     * @param  CodeConnectedRpcFactory $rpcFactory 
+     */
+    public function __construct(CodeConnectedRpcFactory $rpcFactory)
     {
         $this->rpcFactory = $rpcFactory;
     }
 
+    /**
+     * @return string
+     * @throws RuntimeException if module name is not present in route matches
+     */
     public function getModuleName()
     {
         if (null !== $this->moduleName) {
@@ -40,6 +58,9 @@ class ApiFirstModuleListener extends AbstractResourceListener
         return $moduleName;
     }
 
+    /**
+     * @return CodeConnectedRpc
+     */
     public function getModel()
     {
         if ($this->model instanceof CodeConnectedRpc) {

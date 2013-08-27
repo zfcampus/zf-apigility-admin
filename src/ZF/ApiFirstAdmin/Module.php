@@ -85,6 +85,27 @@ class Module implements ApiFirstModuleInterface
                 }
                 return $listener;
             },
+            'ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory' => function ($services) {
+                if (!$services->has('ZF\Configuration\ModuleUtils')
+                    || !$services->has('ZF\Configuration\ConfigResourceFactory')
+                ) {
+                    throw new ServiceNotCreatedException(
+                        'ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory is missing one or more dependencies from ZF\Configuration'
+                    );
+                }
+                $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
+                $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
+                return new Model\CodeConnectedRpcFactory($moduleUtils, $configFactory);
+            },
+            'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener' => function ($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory')) {
+                    throw new ServiceNotCreatedException(
+                        'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener is missing one or more dependencies'
+                    );
+                }
+                $factory = $services->get('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory');
+                return new Model\ApiFirstRpcEndpointListener($factory);
+            },
         ));
     }
 
