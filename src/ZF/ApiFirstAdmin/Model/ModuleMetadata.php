@@ -95,6 +95,18 @@ class ModuleMetadata
      */
     public function getRpcEndpoints()
     {
+        foreach ($this->rpcEndpoints as $index => $identifier) {
+            if ($identifier instanceof RpcEndpointMetadata) {
+                break;
+            }
+
+            $endpoint = new RpcEndpointMetadata();
+            $endpoint->exchangeArray(array(
+                'controller_service_name' => $identifier
+            ));
+            $this->rpcEndpoints[$index] = $identifier;
+        }
+
         return $this->rpcEndpoints;
     }
 
@@ -154,7 +166,7 @@ class ModuleMetadata
             'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
             'rest'      => $this->restEndpoints,
-            'rpc'       => $this->rpcEndpoints,
+            'rpc'       => $this->getRpcEndpoints(),
         );
     }
 
