@@ -68,8 +68,8 @@ Code-Connected tasks
 
 - Route configuration.
 
-  A Segment route. The controller matched would be the generated controller,
-  and the action would be `camelCasedService`.
+  A Segment route. The controller matched will be a virtual controller name,
+  specifically `ModuleName\Controller\ResourceName`.
 
   The route name will be the normalized module name, a period, and the
   normalized resource name: `social.status`, `developer-garden.status-update`,
