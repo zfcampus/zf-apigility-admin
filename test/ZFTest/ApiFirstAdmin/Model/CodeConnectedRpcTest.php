@@ -146,7 +146,7 @@ class CodeConnecedRpcTest extends TestCase
         $expected = array(
             'zf-rpc' => array(
                 'FooConf\Controller\HelloWorld' => array(
-                    'http_methods' => array('GET', 'PATCH'),
+                    'http_options' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.hello-world',
                 ),
             ),
@@ -226,7 +226,7 @@ class CodeConnecedRpcTest extends TestCase
             )),
             'zf-rpc' => array(
                 'FooConf\Controller\HelloWorld' => array(
-                    'http_methods' => array('GET', 'PATCH'),
+                    'http_options' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.hello-world',
                 ),
             ),
@@ -285,7 +285,7 @@ class CodeConnecedRpcTest extends TestCase
         $this->writer->toFile($configData->config_file, $configData->config);
         $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
         $config = include $configData->config_file;
-        $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_methods']);
+        $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_options']);
     }
 
     public function testCanUpdateContentNegotiationSelector()
