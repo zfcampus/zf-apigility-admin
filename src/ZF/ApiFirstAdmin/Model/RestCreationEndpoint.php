@@ -5,50 +5,29 @@ namespace ZF\ApiFirstAdmin\Model;
 use Zend\Filter\FilterChain;
 use ZF\Rest\Exception\CreationException;
 
-class RestCreationEndpoint
+class RestCreationEndpoint extends RestEndpointMetadata
 {
     protected $filters = array();
 
     protected $resourceName;
 
-    protected $identifierName;
-
     protected $route;
-
-    protected $resourceHttpOptions = array('GET', 'PATCH', 'PUT', 'DELETE');
-
-    protected $collectionHttpOptions = array('GET', 'POST');
-
-    protected $collectionName;
-
-    protected $collectionQueryWhitelist = array();
-
-    protected $pageSize = 25;
-
-    protected $pageSizeParam = 'page';
-
-    protected $selector = 'HalJson';
-
-    protected $acceptWhitelist = array();
-
-    protected $contentTypeWhitelist = array();
 
     public function __get($name)
     {
-        if (!isset($this->{$name})
-            || $name === 'filter'
-        ) {
+        if ($name === 'filter') {
             throw new \OutOfRangeException(sprintf(
                 '%s does not contain a property by the name of "%s"',
                 __CLASS__,
                 $name
             ));
         }
-        return $this->{$name};
+        return parent::__get($name);
     }
 
     public function exchangeArray(array $data)
     {
+        parent::exchangeArray($data);
         foreach ($data as $key => $value) {
             $key = strtolower($key);
             $key = str_replace('_', '', $key);
@@ -56,38 +35,8 @@ class RestCreationEndpoint
                 case 'resourcename':
                     $this->resourceName = $value;
                     break;
-                case 'identifiername':
-                    $this->identifierName = $value;
-                    break;
                 case 'route':
                     $this->route = $value;
-                    break;
-                case 'resourcehttpoptions':
-                    $this->resourceHttpOptions = $value;
-                    break;
-                case 'collectionhttpoptions':
-                    $this->collectionHttpOptions = $value;
-                    break;
-                case 'collectionname':
-                    $this->resourceHttpOptions = $value;
-                    break;
-                case 'collectionquerywhitelist':
-                    $this->collectionQueryWhitelist = $value;
-                    break;
-                case 'pagesize':
-                    $this->pageSize = $value;
-                    break;
-                case 'pagesizeparam':
-                    $this->pageSizeParam = $value;
-                    break;
-                case 'selector':
-                    $this->selector = $value;
-                    break;
-                case 'acceptwhitelist':
-                    $this->acceptWhitelist = $value;
-                    break;
-                case 'contenttypewhitelist':
-                    $this->contentTypeWhitelist = $value;
                     break;
             }
         }
@@ -105,15 +54,22 @@ class RestCreationEndpoint
 
         if (null === $this->route) {
             $this->route = sprintf(
-                '/%s/%s',
-                $this->normalizeResourceNameForRoute($this->resourceName),
-                $this->identifierName
+                '/%s',
+                $this->normalizeResourceNameForRoute($this->resourceName)
             );
         }
 
         if (null === $this->collectionName) {
             $this->collectionName = $this->normalizeResourceNameForIdentifier($this->resourceName);
         }
+    }
+
+    public function getArrayCopy()
+    {
+        $return = parent::getArrayCopy();
+        $return['resource_name'] = $this->resourceName;
+        $return['route'] = $this->route;
+        return $return;
     }
 
     protected function normalizeResourceNameForIdentifier($resourceName)
@@ -163,5 +119,4 @@ class RestCreationEndpoint
         $this->filters['route'] = $filter;
         return $filter;
     }
-
 }

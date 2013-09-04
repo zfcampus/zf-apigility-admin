@@ -274,4 +274,18 @@ class CodeConnectedRestTest extends TestCase
             'is_collection'   => true,
         ), $config['BarConf\FooCollection']);
     }
+
+    public function testCreateServiceReturnsRestEndpointMetadataOnSuccess()
+    {
+        $details = $this->getCreationPayload();
+        $result  = $this->codeRest->createService($details);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointMetadata', $result);
+
+        $this->assertEquals('BarConf', $result->module);
+        $this->assertEquals('BarConf\Controller\Foo', $result->controllerServiceName);
+        $this->assertEquals('BarConf\FooResource', $result->resourceClass);
+        $this->assertEquals('BarConf\Foo', $result->entityClass);
+        $this->assertEquals('BarConf\Collection', $result->collectionClass);
+        $this->assertEquals('bar-conf.foo', $result->routeName);
+    }
 }
