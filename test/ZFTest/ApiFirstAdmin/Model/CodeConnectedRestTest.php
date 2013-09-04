@@ -95,5 +95,18 @@ class CodeConnectedRestTest extends TestCase
 
         $r = new ReflectionClass($resourceClass);
         $this->assertInstanceOf('ReflectionClass', $r);
+        $parent = $r->getParentClass();
+        $this->assertEquals('ZF\Rest\AbstractResourceListener', $parent->getName());
+    }
+
+    public function testCreateResourceClassAddsInvokableToConfiguration()
+    {
+        $resourceClass = $this->codeRest->createResourceClass('Foo');
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('service_manager', $config);
+        $this->assertArrayHasKey('invokables', $config['service_manager']);
+        $this->assertArrayHasKey($resourceClass, $config['service_manager']['invokables']);
+        $this->assertEquals($resourceClass, $config['service_manager']['invokables'][$resourceClass]);
     }
 }
