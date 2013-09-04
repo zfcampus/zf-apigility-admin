@@ -81,7 +81,7 @@ class CodeConnectedRest
         $collectionClass   = $this->createCollectionClass($resourceName);
         $routeName         = $this->createRoute($resourceName, $details->route, $details->identifierName, $controllerService);
         $this->createRestConfig($details, $controllerService, $resourceClass, $routeName);
-        $this->createContentNegotiationConfig($details);
+        $this->createContentNegotiationConfig($details, $controllerService);
         $this->createHalConfig($details, $entityClass, $collectionClass);
 
         return $this->fetch($controllerService);
@@ -271,6 +271,32 @@ class CodeConnectedRest
                 'page_size_param'            => $details->pageSizeParam,
             ),
         ));
+        $this->configResource->patch($config, true);
+    }
+
+    /**
+     * Create content negotiation configuration based on payload and discovered 
+     * controller service name
+     * 
+     * @param  RestCreationEndpoint $details 
+     * @param  string $controllerService 
+     */
+    public function createContentNegotiationConfig(RestCreationEndpoint $details, $controllerService)
+    {
+        $config = array(
+            'controllers' => array(
+                $controllerService => $details->selector,
+            ),
+        );
+        $whitelist = $details->acceptWhitelist;
+        if (!empty($whitelist)) {
+            $config['accept_whitelist'] = array($controllerService => $whitelist);
+        }
+        $whitelist = $details->contentTypeWhitelist;
+        if (!empty($whitelist)) {
+            $config['content_type_whitelist'] = array($controllerService => $whitelist);
+        }
+        $config = array('zf-content-negotiation' => $config);
         $this->configResource->patch($config, true);
     }
 

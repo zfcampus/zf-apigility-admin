@@ -225,4 +225,29 @@ class CodeConnectedRestTest extends TestCase
         );
         $this->assertEquals($expected, $config);
     }
+
+    public function testCreateContentNegotiationConfigWritesContentNegotiationConfiguration()
+    {
+        $details = $this->getCreationPayload();
+        $this->codeRest->createContentNegotiationConfig($details, 'BarConf\Controller\Foo');
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+
+        $this->assertArrayHasKey('zf-content-negotiation', $config);
+        $config = $config['zf-content-negotiation'];
+
+        $this->assertArrayHasKey('controllers', $config);
+        $this->assertEquals(array(
+            'BarConf\Controller\Foo' => $details->selector,
+        ), $config['controllers']);
+
+        $this->assertArrayHasKey('accept_whitelist', $config);
+        $this->assertEquals(array(
+            'BarConf\Controller\Foo' => $details->acceptWhitelist,
+        ), $config['accept_whitelist'], var_export($config, 1));
+
+        $this->assertArrayHasKey('content_type_whitelist', $config);
+        $this->assertEquals(array(
+            'BarConf\Controller\Foo' => $details->contentTypeWhitelist,
+        ), $config['content_type_whitelist'], var_export($config, 1));
+    }
 }
