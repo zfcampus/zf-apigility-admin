@@ -250,4 +250,28 @@ class CodeConnectedRestTest extends TestCase
             'BarConf\Controller\Foo' => $details->contentTypeWhitelist,
         ), $config['content_type_whitelist'], var_export($config, 1));
     }
+
+    public function testCreateHalConfigWritesHalConfiguration()
+    {
+        $details = $this->getCreationPayload();
+        $this->codeRest->createHalConfig($details, 'BarConf\Foo', 'BarConf\FooCollection', 'bar-conf.foo');
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+
+        $this->assertArrayHasKey('zf-hal', $config);
+        $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
+        $config = $config['zf-hal']['metadata_map'];
+
+        $this->assertArrayHasKey('BarConf\Foo', $config);
+        $this->assertEquals(array(
+            'identifier_name' => $details->identifierName,
+            'route_name'      => 'bar-conf.foo',
+        ), $config['BarConf\Foo']);
+
+        $this->assertArrayHasKey('BarConf\FooCollection', $config);
+        $this->assertEquals(array(
+            'identifier_name' => $details->identifierName,
+            'route_name'      => 'bar-conf.foo',
+            'is_collection'   => true,
+        ), $config['BarConf\FooCollection']);
+    }
 }

@@ -82,7 +82,7 @@ class CodeConnectedRest
         $routeName         = $this->createRoute($resourceName, $details->route, $details->identifierName, $controllerService);
         $this->createRestConfig($details, $controllerService, $resourceClass, $routeName);
         $this->createContentNegotiationConfig($details, $controllerService);
-        $this->createHalConfig($details, $entityClass, $collectionClass);
+        $this->createHalConfig($details, $entityClass, $collectionClass, $routeName);
 
         return $this->fetch($controllerService);
     }
@@ -297,6 +297,30 @@ class CodeConnectedRest
             $config['content_type_whitelist'] = array($controllerService => $whitelist);
         }
         $config = array('zf-content-negotiation' => $config);
+        $this->configResource->patch($config, true);
+    }
+
+    /**
+     * Create HAL configuration
+     * 
+     * @param  RestCreationEndpoint $details 
+     * @param  string $entityClass 
+     * @param  string $collectionClass 
+     * @param  string $routeName 
+     */
+    public function createHalConfig(RestCreationEndpoint $details, $entityClass, $collectionClass, $routeName)
+    {
+        $config = array('zf-hal' => array('metadata_map' => array(
+            $entityClass => array(
+                'identifier_name' => $details->identifierName,
+                'route_name'      => $routeName,
+            ),
+            $collectionClass => array(
+                'identifier_name' => $details->identifierName,
+                'route_name'      => $routeName,
+                'is_collection'   => true,
+            ),
+        )));
         $this->configResource->patch($config, true);
     }
 
