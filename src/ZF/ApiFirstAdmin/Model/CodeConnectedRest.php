@@ -68,7 +68,7 @@ class CodeConnectedRest
      * @param  string $controllerService
      * @return RestEndpointMetadata|false
      */
-    public function fetch ($controllerService)
+    public function fetch($controllerService)
     {
     }
 
@@ -251,12 +251,12 @@ class CodeConnectedRest
     /**
      * Creates REST configuration
      * 
-     * @param  RestCreationEndpoint $details 
+     * @param  RestEndpointMetadata $details 
      * @param  string $controllerService
      * @param  string $resourceClass 
      * @param  string $routeName 
      */
-    public function createRestConfig(RestCreationEndpoint $details, $controllerService, $resourceClass, $routeName)
+    public function createRestConfig(RestEndpointMetadata $details, $controllerService, $resourceClass, $routeName)
     {
         $config = array('zf-rest' => array(
             $controllerService => array(
@@ -278,10 +278,10 @@ class CodeConnectedRest
      * Create content negotiation configuration based on payload and discovered 
      * controller service name
      * 
-     * @param  RestCreationEndpoint $details 
+     * @param  RestEndpointMetadata $details 
      * @param  string $controllerService 
      */
-    public function createContentNegotiationConfig(RestCreationEndpoint $details, $controllerService)
+    public function createContentNegotiationConfig(RestEndpointMetadata $details, $controllerService)
     {
         $config = array(
             'controllers' => array(
@@ -303,12 +303,12 @@ class CodeConnectedRest
     /**
      * Create HAL configuration
      * 
-     * @param  RestCreationEndpoint $details 
+     * @param  RestEndpointMetadata $details 
      * @param  string $entityClass 
      * @param  string $collectionClass 
      * @param  string $routeName 
      */
-    public function createHalConfig(RestCreationEndpoint $details, $entityClass, $collectionClass, $routeName)
+    public function createHalConfig(RestEndpointMetadata $details, $entityClass, $collectionClass, $routeName)
     {
         $config = array('zf-hal' => array('metadata_map' => array(
             $entityClass => array(
