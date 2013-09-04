@@ -180,6 +180,42 @@ class CodeConnectedRest
     }
 
     /**
+     * Create a collection class for the resource
+     * 
+     * @param  string $resourceName 
+     * @return string The name of the newly created collection class
+     */
+    public function createCollectionClass($resourceName)
+    {
+        $module     = $this->module;
+        $srcPath    = $this->getSourcePath();
+
+        $className = sprintf('%sCollection', ucfirst($resourceName));
+        $classPath = sprintf('%s/%s.php', $srcPath, $className);
+
+        if (file_exists($classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The collection "%s" already exists',
+                $className
+            ));
+        }
+
+        $view = new ViewModel(array(
+            'module'    => $module,
+            'classname' => $className,
+        ));
+        if (!$this->createClassFile($view, 'collection', $classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                'Unable to create entity "%s"; unable to write file',
+                $className
+            ));
+        }
+
+        $fullClassName = sprintf('%s\\%s', $module, $className);
+        return $fullClassName;
+    }
+
+    /**
      * Retrieve the entity identifier name
      * 
      * @param  string $resourceName 

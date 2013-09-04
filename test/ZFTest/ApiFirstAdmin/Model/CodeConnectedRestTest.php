@@ -138,4 +138,26 @@ class CodeConnectedRestTest extends TestCase
         $this->assertInstanceOf('ReflectionClass', $r);
         $this->assertFalse($r->getParentClass());
     }
+
+    public function testCreateCollectionClassReturnsClassNameCreated()
+    {
+        $collectionClass = $this->codeRest->createCollectionClass('Foo');
+        $this->assertEquals('BarConf\FooCollection', $collectionClass);
+    }
+
+    public function testCreateCollectionClassCreatesClassFileWithNamedCollectionClass()
+    {
+        $collectionClass = $this->codeRest->createCollectionClass('Foo');
+
+        $className = str_replace($this->module . '\\', '', $collectionClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/' . $className . '.php';
+        $this->assertTrue(file_exists($path));
+
+        require_once $path;
+
+        $r = new ReflectionClass($collectionClass);
+        $this->assertInstanceOf('ReflectionClass', $r);
+        $parent = $r->getParentClass();
+        $this->assertEquals('Zend\Paginator\Paginator', $parent->getName());
+    }
 }
