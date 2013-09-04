@@ -7,6 +7,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\ApiFirstAdmin\Model\CodeConnectedRest;
+use ZF\ApiFirstAdmin\Model\RestCreationEndpoint;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -70,6 +71,26 @@ class CodeConnectedRestTest extends TestCase
     public function tearDown()
     {
         $this->cleanUpAssets();
+    }
+
+    public function getCreationPayload()
+    {
+        $payload = new RestCreationEndpoint();
+        $payload->exchangeArray(array(
+            'resource_name'              => 'foo',
+            'route'                      => '/api/foo',
+            'identifier_name'            => 'foo_id',
+            'collection_name'            => 'foo',
+            'resource_http_options'      => array('GET', 'PATCH'),
+            'collection_http_options'    => array('GET', 'POST'),
+            'collection_query_whitelist' => array('sort', 'filter'),
+            'page_size'                  => 10,
+            'page_size_param'            => 'p',
+            'selector'                   => 'HalJson',
+            'accept_whitelist'           => array('application/json', 'application/*+json'),
+            'content_type_whitelist'     => array('application/json'),
+        ));
+        return $payload;
     }
 
     public function testCanCreateControllerServiceNameFromResourceName()
@@ -179,5 +200,29 @@ class CodeConnectedRestTest extends TestCase
             ),
         );
         $this->assertEquals($expected, $routes[$routeName]);
+    }
+
+    public function testCreateRestConfigWritesRestConfiguration()
+    {
+        $details = $this->getCreationPayload();
+        $this->codeRest->createRestConfig($details, 'BarConf\Controller\Foo', 'BarConf\FooResource', 'bar-conf.foo');
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+
+        $this->assertArrayHasKey('zf-rest', $config);
+        $this->assertArrayHasKey('BarConf\Controller\Foo', $config['zf-rest']);
+        $config = $config['zf-rest']['BarConf\Controller\Foo'];
+
+        $expected = array(
+            'listener'                   => 'BarConf\FooResource',
+            'route_name'                 => 'bar-conf.foo',
+            'identifier_name'            => $details->identifierName,
+            'collection_name'            => $details->collectionName,
+            'resource_http_options'      => $details->resourceHttpOptions,
+            'collection_http_options'    => $details->collectionHttpOptions,
+            'collection_query_whitelist' => $details->collectionQueryWhitelist,
+            'page_size'                  => $details->pageSize,
+            'page_size_param'            => $details->pageSizeParam,
+        );
+        $this->assertEquals($expected, $config);
     }
 }

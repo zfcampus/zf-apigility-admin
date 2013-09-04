@@ -80,7 +80,7 @@ class CodeConnectedRest
         $entityClass       = $this->createEntityClass($resourceName);
         $collectionClass   = $this->createCollectionClass($resourceName);
         $routeName         = $this->createRoute($resourceName, $details->route, $details->identifierName, $controllerService);
-        $this->createRestConfig($details, $resourceClass, $routeName);
+        $this->createRestConfig($details, $controllerService, $resourceClass, $routeName);
         $this->createContentNegotiationConfig($details);
         $this->createHalConfig($details, $entityClass, $collectionClass);
 
@@ -246,6 +246,32 @@ class CodeConnectedRest
         )));
         $this->configResource->patch($config, true);
         return $routeName;
+    }
+
+    /**
+     * Creates REST configuration
+     * 
+     * @param  RestCreationEndpoint $details 
+     * @param  string $controllerService
+     * @param  string $resourceClass 
+     * @param  string $routeName 
+     */
+    public function createRestConfig(RestCreationEndpoint $details, $controllerService, $resourceClass, $routeName)
+    {
+        $config = array('zf-rest' => array(
+            $controllerService => array(
+                'listener'                   => $resourceClass,
+                'route_name'                 => $routeName,
+                'identifier_name'            => $details->identifierName,
+                'collection_name'            => $details->collectionName,
+                'resource_http_options'      => $details->resourceHttpOptions,
+                'collection_http_options'    => $details->collectionHttpOptions,
+                'collection_query_whitelist' => $details->collectionQueryWhitelist,
+                'page_size'                  => $details->pageSize,
+                'page_size_param'            => $details->pageSizeParam,
+            ),
+        ));
+        $this->configResource->patch($config, true);
     }
 
     /**
