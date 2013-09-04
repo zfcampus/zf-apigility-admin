@@ -61,17 +61,45 @@ class CodeConnectedRest
     }
 
     /**
-     * @todo Create a RestEndpointMetadata class - it can extend the 
-     *       RestCreationEndpoint, but compose the module, controller class name, 
-     *       etc. Munge data from all config sources and pass them to an instance
-     *       of this class.
+     * @todo Munge data from all config sources and pass them to an instance
+     *       of RestEndpointMetadata.
      * @param  string $controllerService
      * @return RestEndpointMetadata|false
      */
     public function fetch($controllerService)
     {
+        $config = $this->configResource->fetch(true);
+        if (!isset($config['zf-rest'])
+            || !isset($config['zf-rest'][$controllerService])
+        ) {
+            throw new Exception\RuntimeException(sprintf(
+                'Could not find REST resource by name of %s',
+                $controllerService
+            ), 404);
+        }
+
+        $restConfig = $config['zf-rest'][$controllerService];
+
+        $restConfig['controllerServiceName'] = $controllerService;
+        $restConfig['module']                = $this->module;
+        $restConfig['resource_class']        = $restConfig['listener'];
+        unset($restConfig['listener']);
+
+        $metadata = new RestEndpointMetadata();
+        $metadata->exchangeArray($restConfig);
+
+        $this->mergeContentNegotiationConfig($controllerService, $metadata, $config);
+        $this->mergeHalConfig($controllerService, $metadata, $config);
+
+        return $metadata;
     }
 
+    /**
+     * Create a new service endpoint using the details provided
+     * 
+     * @param  RestCreationEndpoint $details 
+     * @return RestEndpointMetadata
+     */
     public function createService(RestCreationEndpoint $details)
     {
         $resourceName      = $details->resourceName;
@@ -84,7 +112,18 @@ class CodeConnectedRest
         $this->createContentNegotiationConfig($details, $controllerService);
         $this->createHalConfig($details, $entityClass, $collectionClass, $routeName);
 
-        return $this->fetch($controllerService);
+        $metadata = new RestEndpointMetadata();
+        $metadata->exchangeArray($details->getArrayCopy());
+        $metadata->exchangeArray(array(
+            'collection_class'        => $collectionClass,
+            'controller_service_name' => $controllerService,
+            'entity_class'            => $entityClass,
+            'module'                  => $this->module,
+            'resource_class'          => $resourceClass,
+            'route_name'              => $routeName,
+        ));
+
+        return $metadata;
     }
 
     /**
@@ -96,7 +135,7 @@ class CodeConnectedRest
      */
     public function createControllerServiceName($resourceName)
     {
-        return sprintf('%s\\Controller\\%s', $this->module, $resourceName);
+        return sprintf('%s\\Controller\\%s', $this->module, ucfirst($resourceName));
     }
 
     /**
@@ -290,11 +329,11 @@ class CodeConnectedRest
         );
         $whitelist = $details->acceptWhitelist;
         if (!empty($whitelist)) {
-            $config['accept_whitelist'] = array($controllerService => $whitelist);
+            $config['accept-whitelist'] = array($controllerService => $whitelist);
         }
         $whitelist = $details->contentTypeWhitelist;
         if (!empty($whitelist)) {
-            $config['content_type_whitelist'] = array($controllerService => $whitelist);
+            $config['content-type-whitelist'] = array($controllerService => $whitelist);
         }
         $config = array('zf-content-negotiation' => $config);
         $this->configResource->patch($config, true);
@@ -427,5 +466,91 @@ class CodeConnectedRest
         $this->routeNameFilter->attachByName('Word\CamelCaseToDash')
             ->attachByName('StringToLower');
         return $this->routeNameFilter;
+    }
+
+    /**
+     * Merge the content negotiation configuration for the given controller 
+     * service into the REST metadata
+     * 
+     * @param  string $controllerServiceName 
+     * @param  RestEndpointMetadata $metadata 
+     * @param  array $config 
+     */
+    protected function mergeContentNegotiationConfig($controllerServiceName, RestEndpointMetadata $metadata, array $config)
+    {
+        if (!isset($config['zf-content-negotiation'])) {
+            return;
+        }
+        $config = $config['zf-content-negotiation'];
+
+        if (isset($config['controllers'])
+            && isset($config['controllers'][$controllerServiceName])
+        ) {
+            $metadata->exchangeArray(array(
+                'selector' => $config['controllers'][$controllerServiceName],
+            ));
+        }
+
+        if (isset($config['accept-whitelist'])
+            && isset($config['accept-whitelist'][$controllerServiceName])
+        ) {
+            $metadata->exchangeArray(array(
+                'accept_whitelist' => $config['accept-whitelist'][$controllerServiceName],
+            ));
+        }
+
+        if (isset($config['content-type-whitelist'])
+            && isset($config['content-type-whitelist'][$controllerServiceName])
+        ) {
+            $metadata->exchangeArray(array(
+                'content_type_whitelist' => $config['content-type-whitelist'][$controllerServiceName],
+            ));
+        }
+    }
+
+    /**
+     * Merge entity and collection class into metadata, if found
+     * 
+     * @param  string $controllerServiceName 
+     * @param  RestEndpointMetadata $metadata 
+     * @param  array $config 
+     */
+    protected function mergeHalConfig($controllerServiceName, RestEndpointMetadata $metadata, array $config)
+    {
+        if (!isset($config['zf-hal'])
+            || !isset($config['zf-hal']['metadata_map'])
+        ) {
+            return;
+        }
+
+        $config = $config['zf-hal']['metadata_map'];
+
+        $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata);
+        $collectionClass = sprintf('%sCollection', $entityClass);
+        $merge           = array();
+
+        if (isset($config[$entityClass])) {
+            $merge['entity_class'] = $entityClass;
+        }
+
+        if (isset($config[$collectionClass])) {
+            $merge['collection_class'] = $collectionClass;
+        }
+
+        $metadata->exchangeArray($merge);
+    }
+
+    /**
+     * Derive the name of the entity class from the controller service name
+     * 
+     * @param  string $controllerServiceName 
+     * @param  RestEndpointMetadata $metadata 
+     * @return string
+     */
+    protected function deriveEntityClass($controllerServiceName, RestEndpointMetadata $metadata)
+    {
+        $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
+        return sprintf('%s\\%s', $module, $resource);
     }
 }

@@ -96,7 +96,7 @@ class RestEndpointMetadata
                 case 'resourcehttpoptions':
                     $this->resourceHttpOptions = $value;
                     break;
-                case 'routeName':
+                case 'routename':
                     $this->routeName = $value;
                     break;
                 case 'selector':

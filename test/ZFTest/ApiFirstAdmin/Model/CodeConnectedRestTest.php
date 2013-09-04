@@ -240,15 +240,15 @@ class CodeConnectedRestTest extends TestCase
             'BarConf\Controller\Foo' => $details->selector,
         ), $config['controllers']);
 
-        $this->assertArrayHasKey('accept_whitelist', $config);
+        $this->assertArrayHasKey('accept-whitelist', $config);
         $this->assertEquals(array(
             'BarConf\Controller\Foo' => $details->acceptWhitelist,
-        ), $config['accept_whitelist'], var_export($config, 1));
+        ), $config['accept-whitelist'], var_export($config, 1));
 
-        $this->assertArrayHasKey('content_type_whitelist', $config);
+        $this->assertArrayHasKey('content-type-whitelist', $config);
         $this->assertEquals(array(
             'BarConf\Controller\Foo' => $details->contentTypeWhitelist,
-        ), $config['content_type_whitelist'], var_export($config, 1));
+        ), $config['content-type-whitelist'], var_export($config, 1));
     }
 
     public function testCreateHalConfigWritesHalConfiguration()
@@ -285,7 +285,23 @@ class CodeConnectedRestTest extends TestCase
         $this->assertEquals('BarConf\Controller\Foo', $result->controllerServiceName);
         $this->assertEquals('BarConf\FooResource', $result->resourceClass);
         $this->assertEquals('BarConf\Foo', $result->entityClass);
-        $this->assertEquals('BarConf\Collection', $result->collectionClass);
+        $this->assertEquals('BarConf\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.foo', $result->routeName);
+    }
+
+    public function testCanFetchEndpointAfterCreation()
+    {
+        $details = $this->getCreationPayload();
+        $result  = $this->codeRest->createService($details);
+
+        $endpoint = $this->codeRest->fetch('BarConf\Controller\Foo');
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointMetadata', $endpoint);
+
+        $this->assertEquals('BarConf', $endpoint->module);
+        $this->assertEquals('BarConf\Controller\Foo', $endpoint->controllerServiceName);
+        $this->assertEquals('BarConf\FooResource', $endpoint->resourceClass);
+        $this->assertEquals('BarConf\Foo', $endpoint->entityClass);
+        $this->assertEquals('BarConf\FooCollection', $endpoint->collectionClass);
+        $this->assertEquals('bar-conf.foo', $endpoint->routeName);
     }
 }
