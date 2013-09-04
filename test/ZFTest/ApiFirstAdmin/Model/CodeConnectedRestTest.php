@@ -109,4 +109,33 @@ class CodeConnectedRestTest extends TestCase
         $this->assertArrayHasKey($resourceClass, $config['service_manager']['invokables']);
         $this->assertEquals($resourceClass, $config['service_manager']['invokables'][$resourceClass]);
     }
+
+    public function testCanCreateEntityIdentifierFromResourceName()
+    {
+        $this->assertEquals(
+            'foo_bar_id',
+            $this->codeRest->getEntityIdentifier('FooBar')
+        );
+    }
+
+    public function testCreateEntityClassReturnsClassNameCreated()
+    {
+        $entityClass = $this->codeRest->createEntityClass('Foo');
+        $this->assertEquals('BarConf\Foo', $entityClass);
+    }
+
+    public function testCreateEntityClassCreatesClassFileWithNamedEntityClass()
+    {
+        $entityClass = $this->codeRest->createEntityClass('Foo');
+
+        $className = str_replace($this->module . '\\', '', $entityClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/' . $className . '.php';
+        $this->assertTrue(file_exists($path));
+
+        require_once $path;
+
+        $r = new ReflectionClass($entityClass);
+        $this->assertInstanceOf('ReflectionClass', $r);
+        $this->assertFalse($r->getParentClass());
+    }
 }

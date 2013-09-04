@@ -2,6 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
+use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
@@ -17,14 +18,34 @@ class CodeConnectedRest
     protected $configResource;
 
     /**
+     * @var FilterChain
+     */
+    protected $entityNormalizer;
+
+    /**
      * @var string
      */
     protected $module;
 
     /**
+     * @var string
+     */
+    protected $modulePath;
+
+    /**
      * @var ModuleUtils
      */
     protected $modules;
+
+    /**
+     * @var PhpRenderer
+     */
+    protected $renderer;
+
+    /**
+     * @var string
+     */
+    protected $sourcePath;
 
     /**
      * @param  string $module 
@@ -36,6 +57,7 @@ class CodeConnectedRest
         $this->module         = $module;
         $this->modules        = $modules;
         $this->configResource = $config;
+        $this->modulePath     = $modules->getModulePath($module);
     }
 
     /**
@@ -77,20 +99,16 @@ class CodeConnectedRest
         return sprintf('%s\\Controller\\%s', $this->module, $resourceName);
     }
 
+    /**
+     * Creates a new resource class based on the specified resource name
+     * 
+     * @param  string $resourceName 
+     * @return string The name of the newly created class
+     */
     public function createResourceClass($resourceName)
     {
-        $module     = $this->module;
-        $modulePath = $this->modules->getModulePath($module);
-
-        $srcPath = sprintf(
-            '%s/src/%s',
-            $modulePath,
-            str_replace('\\', '/', $module)
-        );
-
-        if (!file_exists($srcPath)) {
-            mkdir($srcPath, 0777, true);
-        }
+        $module  = $this->module;
+        $srcPath = $this->getSourcePath();
 
         $className = sprintf('%sResource', ucfirst($resourceName));
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
@@ -106,19 +124,11 @@ class CodeConnectedRest
             'module'    => $module,
             'classname' => $className,
         ));
-        $view->setTemplate('code-connected/rest-resource');
-
-        $resolver = new Resolver\TemplateMapResolver(array(
-            'code-connected/rest-resource' => __DIR__ . '/../../../../view/code-connected/rest-resource.phtml'
-        ));
-        $renderer = new PhpRenderer();
-        $renderer->setResolver($resolver);
-
-        if (!file_put_contents(
-            $classPath,
-            '<' . "?php\n" . $renderer->render($view)
-        )) {
-            return false;
+        if (!$this->createClassFile($view, 'resource', $classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                'Unable to create resource "%s"; unable to write file',
+                $className
+            ));
         }
 
         $fullClassName = sprintf('%s\\%s', $module, $className);
@@ -131,5 +141,157 @@ class CodeConnectedRest
         ), true);
 
         return $fullClassName;
+    }
+
+    /**
+     * Create an entity class for the resource
+     * 
+     * @param  string $resourceName 
+     * @return string The name of the newly created entity class
+     */
+    public function createEntityClass($resourceName)
+    {
+        $module     = $this->module;
+        $srcPath    = $this->getSourcePath();
+
+        $className = ucfirst($resourceName);
+        $classPath = sprintf('%s/%s.php', $srcPath, $className);
+
+        if (file_exists($classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The entity "%s" already exists',
+                $className
+            ));
+        }
+
+        $view = new ViewModel(array(
+            'module'    => $module,
+            'classname' => $className,
+        ));
+        if (!$this->createClassFile($view, 'entity', $classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                'Unable to create entity "%s"; unable to write file',
+                $className
+            ));
+        }
+
+        $fullClassName = sprintf('%s\\%s', $module, $className);
+        return $fullClassName;
+    }
+
+    /**
+     * Retrieve the entity identifier name
+     * 
+     * @param  string $resourceName 
+     * @return string
+     */
+    public function getEntityIdentifier($resourceName)
+    {
+        return sprintf('%s_id', $this->getEntityNormalizer()->filter($resourceName));
+    }
+
+    /**
+     * Retrieve the normalizer for entity names
+     * 
+     * @return FilterChain
+     */
+    protected function getEntityNormalizer()
+    {
+        if ($this->entityNormalizer instanceof FilterChain) {
+            return $this->entityNormalizer;
+        }
+
+        $this->entityNormalizer = new FilterChain();
+        $this->entityNormalizer->attachByName('Word\CamelCaseToUnderscore')
+            ->attachByName('StringToLower');
+        return $this->entityNormalizer;
+    }
+
+    /**
+     * Create a class file
+     *
+     * Creates a class file based on the view model passed, the type of resource, 
+     * and writes it to the path provided.
+     * 
+     * @param  ViewModel $model 
+     * @param  string $type 
+     * @param  string $classPath 
+     * @return bool
+     */
+    protected function createClassFile(ViewModel $model, $type, $classPath)
+    {
+        $renderer = $this->getRenderer();
+        $template = $this->injectResolver($renderer, $type);
+        $model->setTemplate($template);
+
+        if (file_put_contents(
+            $classPath,
+            '<' . "?php\n" . $renderer->render($model)
+        )) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get a renderer instance
+     * 
+     * @return PhpRenderer
+     */
+    protected function getRenderer()
+    {
+        if ($this->renderer instanceof PhpRenderer) {
+            return $this->renderer;
+        }
+
+        $this->renderer = new PhpRenderer();
+        return $this->renderer;
+    }
+
+    /**
+     * Inject the renderer with a resolver
+     *
+     * Seed the resolver with a template name and path based on the $type passed, and inject it
+     * into the renderer.
+     * 
+     * @param  PhpRenderer $renderer 
+     * @param  string $type 
+     * @return string Template name
+     */
+    protected function injectResolver(PhpRenderer $renderer, $type)
+    {
+        $template = sprintf('code-connected/rest-', $type);
+        $path     = sprintf('%s/../../../../view/code-connected/rest-%s.phtml', __DIR__, $type);
+        $resolver = new Resolver\TemplateMapResolver(array(
+            $template => $path,
+        ));
+        $renderer->setResolver($resolver);
+        return $template;
+    }
+
+    /**
+     * Get the source path for the module
+     * 
+     * @return string
+     */
+    protected function getSourcePath()
+    {
+        if ($this->sourcePath) {
+            return $this->sourcePath;
+        }
+
+        $sourcePath = sprintf(
+            '%s/src/%s',
+            $this->modulePath,
+            str_replace('\\', '/', $this->module)
+        );
+
+        if (!file_exists($sourcePath)) {
+            mkdir($sourcePath, 0777, true);
+        }
+
+        $this->sourcePath = $sourcePath;
+        return $sourcePath;
     }
 }
