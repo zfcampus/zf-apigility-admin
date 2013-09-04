@@ -152,4 +152,32 @@ class CodeConnectedRestTest extends TestCase
         $parent = $r->getParentClass();
         $this->assertEquals('Zend\Paginator\Paginator', $parent->getName());
     }
+
+    public function testCreateRouteReturnsNewRouteName()
+    {
+        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Controller\FooBar');
+        $this->assertEquals('bar-conf.foo-bar', $routeName);
+    }
+
+    public function testCreateRouteWritesRouteConfiguration()
+    {
+        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Controller\FooBar');
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('router', $config);
+        $this->assertArrayHasKey('routes', $config['router']);
+        $routes = $config['router']['routes'];
+
+        $this->assertArrayHasKey($routeName, $routes);
+        $expected = array(
+            'type' => 'Segment',
+            'options' => array(
+                'route' => '/foo-bar[/:foo_bar_id]',
+                'defaults' => array(
+                    'controller' => 'BarConf\Controller\FooBar',
+                ),
+            ),
+        );
+        $this->assertEquals($expected, $routes[$routeName]);
+    }
 }

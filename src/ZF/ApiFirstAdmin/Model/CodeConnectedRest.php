@@ -2,6 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
+use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
@@ -35,6 +36,11 @@ class CodeConnectedRest
      * @var PhpRenderer
      */
     protected $renderer;
+
+    /**
+     * @var FilterChain
+     */
+    protected $routeNameFilter;
 
     /**
      * @var string
@@ -73,7 +79,7 @@ class CodeConnectedRest
         $resourceClass     = $this->createResourceClass($resourceName);
         $entityClass       = $this->createEntityClass($resourceName);
         $collectionClass   = $this->createCollectionClass($resourceName);
-        $routeName         = $this->createRoute($details->route, $controllerService, $details->identifierName);
+        $routeName         = $this->createRoute($resourceName, $details->route, $details->identifierName, $controllerService);
         $this->createRestConfig($details, $resourceClass, $routeName);
         $this->createContentNegotiationConfig($details);
         $this->createHalConfig($details, $entityClass, $collectionClass);
@@ -210,6 +216,39 @@ class CodeConnectedRest
     }
 
     /**
+     * Create the route configuration
+     * 
+     * @param  string $resourceName 
+     * @param  string $route 
+     * @param  string $identifier 
+     * @param  string $controllerService 
+     * @return string
+     */
+    public function createRoute($resourceName, $route, $identifier, $controllerService)
+    {
+        $filter    = $this->getRouteNameFilter();
+        $routeName = sprintf(
+            '%s.%s',
+            $filter->filter($this->module),
+            $filter->filter($resourceName)
+        );
+
+        $config = array('router' => array('routes' => array(
+            $routeName => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => sprintf('%s[/:%s]', $route, $identifier),
+                    'defaults' => array(
+                        'controller' => $controllerService,
+                    ),
+                ),
+            ),
+        )));
+        $this->configResource->patch($config, true);
+        return $routeName;
+    }
+
+    /**
      * Create a class file
      *
      * Creates a class file based on the view model passed, the type of resource, 
@@ -295,5 +334,22 @@ class CodeConnectedRest
 
         $this->sourcePath = $sourcePath;
         return $sourcePath;
+    }
+
+    /**
+     * Retrieve the filter chain for generating the route name
+     * 
+     * @return FilterChain
+     */
+    protected function getRouteNameFilter()
+    {
+        if ($this->routeNameFilter instanceof FilterChain) {
+            return $this->routeNameFilter;
+        }
+
+        $this->routeNameFilter = new FilterChain();
+        $this->routeNameFilter->attachByName('Word\CamelCaseToDash')
+            ->attachByName('StringToLower');
+        return $this->routeNameFilter;
     }
 }
