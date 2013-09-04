@@ -2,7 +2,6 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
@@ -16,11 +15,6 @@ class CodeConnectedRest
      * @var ConfigResource
      */
     protected $configResource;
-
-    /**
-     * @var FilterChain
-     */
-    protected $entityNormalizer;
 
     /**
      * @var string
@@ -213,34 +207,6 @@ class CodeConnectedRest
 
         $fullClassName = sprintf('%s\\%s', $module, $className);
         return $fullClassName;
-    }
-
-    /**
-     * Retrieve the entity identifier name
-     * 
-     * @param  string $resourceName 
-     * @return string
-     */
-    public function getEntityIdentifier($resourceName)
-    {
-        return sprintf('%s_id', $this->getEntityNormalizer()->filter($resourceName));
-    }
-
-    /**
-     * Retrieve the normalizer for entity names
-     * 
-     * @return FilterChain
-     */
-    protected function getEntityNormalizer()
-    {
-        if ($this->entityNormalizer instanceof FilterChain) {
-            return $this->entityNormalizer;
-        }
-
-        $this->entityNormalizer = new FilterChain();
-        $this->entityNormalizer->attachByName('Word\CamelCaseToUnderscore')
-            ->attachByName('StringToLower');
-        return $this->entityNormalizer;
     }
 
     /**

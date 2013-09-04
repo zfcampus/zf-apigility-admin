@@ -110,14 +110,6 @@ class CodeConnectedRestTest extends TestCase
         $this->assertEquals($resourceClass, $config['service_manager']['invokables'][$resourceClass]);
     }
 
-    public function testCanCreateEntityIdentifierFromResourceName()
-    {
-        $this->assertEquals(
-            'foo_bar_id',
-            $this->codeRest->getEntityIdentifier('FooBar')
-        );
-    }
-
     public function testCreateEntityClassReturnsClassNameCreated()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
