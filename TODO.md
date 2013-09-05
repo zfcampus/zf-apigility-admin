@@ -4,75 +4,6 @@ TODO
 Code-Connected tasks
 --------------------
 
-### RPC
-
-- Service name (Required)
-  
-  Will be used to name the route and the controller.
-
-- Route (Required; has default)
-
-  The route to match. By default, it would be a normalized version of the service name.
-  Route name will match the service name. The dialog should not allow submitting
-  if another route with that name exists.
-
-- HTTP methods allowed (Required; has default)
-
-  What HTTP methods will this endpoint allow/handle? (**Note**: at this time,
-  we have no way to handle this!)
-
-  Default to GET. Allow multiple methods to be checked.
-
-- Content negotiation (Optional)
-
-  Capture the content-negotiation we will allow for creating a representation.
-  Should have a drop-down for already defined selectors. E.g.: "Json",
-  "HalJson".
-
-  Additionally, allow defining "accept" and "content-type" whitelists; this
-  would be a radio to enable each feature, with text input to capture each
-  mediatype the user wants to add to the whitelist.
-
-#### What to generate
-
-- A controller class with a method for processing the incoming request.
-
-  For now, this could extend the `AbstractActionController`, with the method
-  `serviceNameAction`, a camelCased version of the service name.
-
-- Controller invokable configuration.
-
-  Define a controller invokable entry for the controller service name pointing to
-  the new controller class.
-
-- Route configuration.
-
-  A Segment route. The controller matched would be the generated controller,
-  and the action would be `camelCasedService`.
-
-  The route name will be the normalized module name, a period, and the
-  normalized service name: `social.status`, `developer-garden.update`, etc.
-
-- `zf-rpc` configuration.
-
-  For now, just a controller service name/method pair:
-
-  ```php
-  'zf-rpc' => array(
-      'Api\Controller\Foo' => array(
-          'http_methods' => array('GET', 'PATCH'),
-          'route_name'   => 'foo',
-      ),
-  ),
-  ```
-
-- `zf-content-negotiation` configuration
-
-  Create a `controllers` key/value pair of controller service name => selector.
-
-  Create `accept-whitelist` and/or `content-type-whitelist` key/value pairs of
-  controller service name => array of mediatypes
-
 ### REST
 
 - Resource name (Required)
@@ -86,7 +17,7 @@ Code-Connected tasks
 
 - Route (Required; has default)
 
-  The route to match. Defaults to `/normalized_resource_name[/:normalized_resource_name_id]`.
+  The route to match. Defaults to `/normalized-resource-name[/:normalized_resource_name_id]`.
 
   The route name will be the normalized module name, a period, and the
   normalized resource name: `social.status`, `developer-garden.status-update`, etc.
@@ -137,8 +68,8 @@ Code-Connected tasks
 
 - Route configuration.
 
-  A Segment route. The controller matched would be the generated controller,
-  and the action would be `camelCasedService`.
+  A Segment route. The controller matched will be a virtual controller name,
+  specifically `ModuleName\Controller\ResourceName`.
 
   The route name will be the normalized module name, a period, and the
   normalized resource name: `social.status`, `developer-garden.status-update`,
@@ -197,3 +128,74 @@ Code-Connected tasks
 
   To specify `metadata_map` entries for both the resource and collection
   objects. Still TBD.
+
+### Completed
+
+#### RPC
+
+- Service name (Required)
+
+  Will be used to name the route and the controller.
+
+- Route (Required; has default)
+
+  The route to match. By default, it would be a normalized version of the service name.
+  Route name will match the service name. The dialog should not allow submitting
+  if another route with that name exists.
+
+- HTTP methods allowed (Required; has default)
+
+  What HTTP methods will this endpoint allow/handle? (**Note**: at this time,
+  we have no way to handle this!)
+
+  Default to GET. Allow multiple methods to be checked.
+
+- Content negotiation (Optional)
+
+  Capture the content-negotiation we will allow for creating a representation.
+  Should have a drop-down for already defined selectors. E.g.: "Json",
+  "HalJson".
+
+  Additionally, allow defining "accept" and "content-type" whitelists; this
+  would be a radio to enable each feature, with text input to capture each
+  mediatype the user wants to add to the whitelist.
+
+##### What to generate
+
+- A controller class with a method for processing the incoming request.
+
+  For now, this could extend the `AbstractActionController`, with the method
+  `serviceNameAction`, a camelCased version of the service name.
+
+- Controller invokable configuration.
+
+  Define a controller invokable entry for the controller service name pointing to
+  the new controller class.
+
+- Route configuration.
+
+  A Segment route. The controller matched would be the generated controller,
+  and the action would be `camelCasedService`.
+
+  The route name will be the normalized module name, a period, and the
+  normalized service name: `social.status`, `developer-garden.update`, etc.
+
+- `zf-rpc` configuration.
+
+  For now, just a controller service name/method pair:
+
+  ```php
+  'zf-rpc' => array(
+      'Api\Controller\Foo' => array(
+          'http_methods' => array('GET', 'PATCH'),
+          'route_name'   => 'foo',
+      ),
+  ),
+  ```
+
+- `zf-content-negotiation` configuration
+
+  Create a `controllers` key/value pair of controller service name => selector.
+
+  Create `accept-whitelist` and/or `content-type-whitelist` key/value pairs of
+  controller service name => array of mediatypes
