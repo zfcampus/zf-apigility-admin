@@ -134,7 +134,7 @@ Code-Connected tasks
 #### RPC
 
 - Service name (Required)
-  
+
   Will be used to name the route and the controller.
 
 - Route (Required; has default)
@@ -199,4 +199,3 @@ Code-Connected tasks
 
   Create `accept-whitelist` and/or `content-type-whitelist` key/value pairs of
   controller service name => array of mediatypes
-

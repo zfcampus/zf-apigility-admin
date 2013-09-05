@@ -34,7 +34,7 @@ class CodeConnectedRestTest extends TestCase
             }
         }
         return rmdir($dir);
-    } 
+    }
 
     protected function cleanUpAssets()
     {
@@ -67,7 +67,7 @@ class CodeConnectedRestTest extends TestCase
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
         $this->codeRest = new CodeConnectedRest($this->module, $this->modules, $this->resource->factory('BarConf'));
-    } 
+    }
 
     public function tearDown()
     {

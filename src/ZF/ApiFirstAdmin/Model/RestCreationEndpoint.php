@@ -81,7 +81,7 @@ class RestCreationEndpoint extends RestEndpointMetadata
 
     /**
      * Retrieve and/or initialize the normalization filter chain for identifiers
-     * 
+     *
      * @return FilterChain
      */
     protected function getIdentifierNormalizationFilter()
@@ -100,7 +100,7 @@ class RestCreationEndpoint extends RestEndpointMetadata
 
     /**
      * Retrieve and/or initialize the normalization filter chain
-     * 
+     *
      * @return FilterChain
      */
     protected function getRouteNormalizationFilter()

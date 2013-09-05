@@ -39,7 +39,7 @@ class CodeConnectedRest
 
     /**
      * Allowed REST update options that are scalars
-     * 
+     *
      * @var array
      */
     protected $restScalarUpdateOptions = array(
@@ -49,7 +49,7 @@ class CodeConnectedRest
 
     /**
      * Allowed REST update options that are arrays
-     * 
+     *
      * @var array
      */
     protected $restArrayUpdateOptions = array(
@@ -69,9 +69,9 @@ class CodeConnectedRest
     protected $sourcePath;
 
     /**
-     * @param  string $module 
-     * @param  ModuleUtils $modules 
-     * @param  ConfigResource $config 
+     * @param  string $module
+     * @param  ModuleUtils $modules
+     * @param  ConfigResource $config
      */
     public function __construct($module, ModuleUtils $modules, ConfigResource $config)
     {
@@ -118,8 +118,8 @@ class CodeConnectedRest
 
     /**
      * Create a new service endpoint using the details provided
-     * 
-     * @param  RestCreationEndpoint $details 
+     *
+     * @param  RestCreationEndpoint $details
      * @return RestEndpointMetadata
      */
     public function createService(RestCreationEndpoint $details)
@@ -150,8 +150,8 @@ class CodeConnectedRest
 
     /**
      * Update an existing service
-     * 
-     * @param RestEndpointMetadata $update 
+     *
+     * @param RestEndpointMetadata $update
      * @return RestEndpointMetadata
      */
     public function updateService(RestEndpointMetadata $update)
@@ -176,9 +176,9 @@ class CodeConnectedRest
 
     /**
      * Generate the controller service name from the module and resource name
-     * 
-     * @param  string $module 
-     * @param  string $resourceName 
+     *
+     * @param  string $module
+     * @param  string $resourceName
      * @return string
      */
     public function createControllerServiceName($resourceName)
@@ -188,8 +188,8 @@ class CodeConnectedRest
 
     /**
      * Creates a new resource class based on the specified resource name
-     * 
-     * @param  string $resourceName 
+     *
+     * @param  string $resourceName
      * @return string The name of the newly created class
      */
     public function createResourceClass($resourceName)
@@ -232,8 +232,8 @@ class CodeConnectedRest
 
     /**
      * Create an entity class for the resource
-     * 
-     * @param  string $resourceName 
+     *
+     * @param  string $resourceName
      * @return string The name of the newly created entity class
      */
     public function createEntityClass($resourceName)
@@ -268,8 +268,8 @@ class CodeConnectedRest
 
     /**
      * Create a collection class for the resource
-     * 
-     * @param  string $resourceName 
+     *
+     * @param  string $resourceName
      * @return string The name of the newly created collection class
      */
     public function createCollectionClass($resourceName)
@@ -304,11 +304,11 @@ class CodeConnectedRest
 
     /**
      * Create the route configuration
-     * 
-     * @param  string $resourceName 
-     * @param  string $route 
-     * @param  string $identifier 
-     * @param  string $controllerService 
+     *
+     * @param  string $resourceName
+     * @param  string $route
+     * @param  string $identifier
+     * @param  string $controllerService
      * @return string
      */
     public function createRoute($resourceName, $route, $identifier, $controllerService)
@@ -337,11 +337,11 @@ class CodeConnectedRest
 
     /**
      * Creates REST configuration
-     * 
-     * @param  RestEndpointMetadata $details 
+     *
+     * @param  RestEndpointMetadata $details
      * @param  string $controllerService
-     * @param  string $resourceClass 
-     * @param  string $routeName 
+     * @param  string $resourceClass
+     * @param  string $routeName
      */
     public function createRestConfig(RestEndpointMetadata $details, $controllerService, $resourceClass, $routeName)
     {
@@ -362,11 +362,11 @@ class CodeConnectedRest
     }
 
     /**
-     * Create content negotiation configuration based on payload and discovered 
+     * Create content negotiation configuration based on payload and discovered
      * controller service name
-     * 
-     * @param  RestEndpointMetadata $details 
-     * @param  string $controllerService 
+     *
+     * @param  RestEndpointMetadata $details
+     * @param  string $controllerService
      */
     public function createContentNegotiationConfig(RestEndpointMetadata $details, $controllerService)
     {
@@ -389,11 +389,11 @@ class CodeConnectedRest
 
     /**
      * Create HAL configuration
-     * 
-     * @param  RestEndpointMetadata $details 
-     * @param  string $entityClass 
-     * @param  string $collectionClass 
-     * @param  string $routeName 
+     *
+     * @param  RestEndpointMetadata $details
+     * @param  string $entityClass
+     * @param  string $collectionClass
+     * @param  string $routeName
      */
     public function createHalConfig(RestEndpointMetadata $details, $entityClass, $collectionClass, $routeName)
     {
@@ -413,9 +413,9 @@ class CodeConnectedRest
 
     /**
      * Update the route for an existing endpoint
-     * 
-     * @param  RestEndpointMetadata $original 
-     * @param  RestEndpointMetadata $update 
+     *
+     * @param  RestEndpointMetadata $original
+     * @param  RestEndpointMetadata $update
      */
     public function updateRoute(RestEndpointMetadata $original, RestEndpointMetadata $update)
     {
@@ -434,9 +434,9 @@ class CodeConnectedRest
 
     /**
      * Update REST configuration
-     * 
-     * @param  RestEndpointMetadata $original 
-     * @param  RestEndpointMetadata $update 
+     *
+     * @param  RestEndpointMetadata $original
+     * @param  RestEndpointMetadata $update
      */
     public function updateRestConfig(RestEndpointMetadata $original, RestEndpointMetadata $update)
     {
@@ -470,9 +470,9 @@ class CodeConnectedRest
 
     /**
      * Update the content negotiation configuration for the service
-     * 
-     * @param  RestEndpointMetadata $original 
-     * @param  RestEndpointMetadata $update 
+     *
+     * @param  RestEndpointMetadata $original
+     * @param  RestEndpointMetadata $update
      */
     public function updateContentNegotiationConfig(RestEndpointMetadata $original, RestEndpointMetadata $update)
     {
@@ -505,12 +505,12 @@ class CodeConnectedRest
     /**
      * Create a class file
      *
-     * Creates a class file based on the view model passed, the type of resource, 
+     * Creates a class file based on the view model passed, the type of resource,
      * and writes it to the path provided.
-     * 
-     * @param  ViewModel $model 
-     * @param  string $type 
-     * @param  string $classPath 
+     *
+     * @param  ViewModel $model
+     * @param  string $type
+     * @param  string $classPath
      * @return bool
      */
     protected function createClassFile(ViewModel $model, $type, $classPath)
@@ -531,7 +531,7 @@ class CodeConnectedRest
 
     /**
      * Get a renderer instance
-     * 
+     *
      * @return PhpRenderer
      */
     protected function getRenderer()
@@ -549,9 +549,9 @@ class CodeConnectedRest
      *
      * Seed the resolver with a template name and path based on the $type passed, and inject it
      * into the renderer.
-     * 
-     * @param  PhpRenderer $renderer 
-     * @param  string $type 
+     *
+     * @param  PhpRenderer $renderer
+     * @param  string $type
      * @return string Template name
      */
     protected function injectResolver(PhpRenderer $renderer, $type)
@@ -567,7 +567,7 @@ class CodeConnectedRest
 
     /**
      * Get the source path for the module
-     * 
+     *
      * @return string
      */
     protected function getSourcePath()
@@ -592,7 +592,7 @@ class CodeConnectedRest
 
     /**
      * Retrieve the filter chain for generating the route name
-     * 
+     *
      * @return FilterChain
      */
     protected function getRouteNameFilter()
@@ -609,9 +609,9 @@ class CodeConnectedRest
 
     /**
      * Retrieve route information for a given endpoint based on the configuration available
-     * 
-     * @param  RestEndpointMetadata $metadata 
-     * @param  array $config 
+     *
+     * @param  RestEndpointMetadata $metadata
+     * @param  array $config
      */
     protected function getRouteInfo(RestEndpointMetadata $metadata, array $config)
     {
@@ -631,12 +631,12 @@ class CodeConnectedRest
     }
 
     /**
-     * Merge the content negotiation configuration for the given controller 
+     * Merge the content negotiation configuration for the given controller
      * service into the REST metadata
-     * 
-     * @param  string $controllerServiceName 
-     * @param  RestEndpointMetadata $metadata 
-     * @param  array $config 
+     *
+     * @param  string $controllerServiceName
+     * @param  RestEndpointMetadata $metadata
+     * @param  array $config
      */
     protected function mergeContentNegotiationConfig($controllerServiceName, RestEndpointMetadata $metadata, array $config)
     {
@@ -672,10 +672,10 @@ class CodeConnectedRest
 
     /**
      * Merge entity and collection class into metadata, if found
-     * 
-     * @param  string $controllerServiceName 
-     * @param  RestEndpointMetadata $metadata 
-     * @param  array $config 
+     *
+     * @param  string $controllerServiceName
+     * @param  RestEndpointMetadata $metadata
+     * @param  array $config
      */
     protected function mergeHalConfig($controllerServiceName, RestEndpointMetadata $metadata, array $config)
     {
@@ -704,9 +704,9 @@ class CodeConnectedRest
 
     /**
      * Derive the name of the entity class from the controller service name
-     * 
-     * @param  string $controllerServiceName 
-     * @param  RestEndpointMetadata $metadata 
+     *
+     * @param  string $controllerServiceName
+     * @param  RestEndpointMetadata $metadata
      * @return string
      */
     protected function deriveEntityClass($controllerServiceName, RestEndpointMetadata $metadata)
