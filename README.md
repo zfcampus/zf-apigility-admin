@@ -14,22 +14,12 @@ API Resources
     "name": "normalized module name",
     "namespace": "PHP namespace of the module",
     "is_vendor": "boolean value indicating whether or not this is a vendor (3rd party) module",
-    "rest": [
-        "List",
-        "Of",
-        "Defined",
-        "REST",
-        "Controllers"
-    ],
-    "rpc": [
-        "List",
-        "Of",
-        "Defined",
-        "RPC",
-        "Controllers"
-    ],
 }
 ```
+
+Additionally, the `module` resource composes relational links for [RPC](#rpc)
+and [REST](#rest) resources; these use the relations "rpc" and "rest",
+respectively.
 
 ### `rpc`
 

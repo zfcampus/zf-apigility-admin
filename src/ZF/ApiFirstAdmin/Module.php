@@ -149,8 +149,8 @@ class Module
 
     /**
      * Inject links into Module resources for the service endpoints
-     * 
-     * @param  \Zend\Mvc\MvcEvent $e 
+     *
+     * @param  \Zend\Mvc\MvcEvent $e
      */
     public function onRender($e)
     {
@@ -179,9 +179,9 @@ class Module
 
     /**
      * Inject links for the service endpoints of a module
-     * 
-     * @param  Resource $resource 
-     * @param  HalJsonModel $model 
+     *
+     * @param  Resource $resource
+     * @param  HalJsonModel $model
      */
     protected function injectEndpointLinks(Resource $resource, HalJsonModel $model)
     {
@@ -201,8 +201,8 @@ class Module
 
     /**
      * Inject RPC/REST endpoint links inside module resources that are composed in collections
-     * 
-     * @param  \Zend\EventManager\Event $e 
+     *
+     * @param  \Zend\EventManager\Event $e
      */
     public function onRenderCollectionResource($e)
     {
@@ -238,10 +238,10 @@ class Module
 
     /**
      * Inject endpoint links
-     * 
+     *
      * @param  string $type "rpc" | "rest"
-     * @param  array|\Traversable $endpoints 
-     * @param  LinkCollection $links 
+     * @param  array|\Traversable $endpoints
+     * @param  LinkCollection $links
      * @param  null|string $module
      */
     protected function injectLinksForEndpointsByType($type, $endpoints, LinkCollection $links, $module = null)
