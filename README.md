@@ -117,7 +117,7 @@ API Resources
         "Request methods",
         "on individual resources"
     ],
-    "route": "(Required) String indicating Segment route to match; defaults to /resource_name[/:identifier_name]",
+    "route_match": "(Optional) String indicating Segment route to match; defaults to /resource_name[/:identifier_name]",
     "route_name": "(Only in representation) Name of route associated with endpoint",
     "selector": "(Optional) Content-Negotiation selector to use; HalJson by default"
 }
