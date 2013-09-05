@@ -4,6 +4,7 @@ namespace ZF\ApiFirstAdmin;
 
 use Zend\Mvc\MvcEvent;
 use ZF\Hal\Link\Link;
+use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Resource;
 use ZF\Hal\View\HalJsonModel;
 
@@ -146,6 +147,11 @@ class Module
         ));
     }
 
+    /**
+     * Inject links into Module resources for the service endpoints
+     * 
+     * @param  \Zend\Mvc\MvcEvent $e 
+     */
     public function onRender($e)
     {
         $matches = $e->getRouteMatch();
@@ -163,43 +169,99 @@ class Module
             $this->injectEndpointLinks($result->getPayload(), $result);
             return;
         }
+
+        if ($result->isCollection()) {
+            $viewHelpers = $this->sm->get('ViewHelperManager');
+            $halPlugin   = $viewHelpers->get('hal');
+            $halPlugin->getEventManager()->attach('renderCollection.resource', array($this, 'onRenderCollectionResource'), 10);
+        }
     }
 
+    /**
+     * Inject links for the service endpoints of a module
+     * 
+     * @param  Resource $resource 
+     * @param  HalJsonModel $model 
+     */
     protected function injectEndpointLinks(Resource $resource, HalJsonModel $model)
     {
         $module = $resource->resource;
         $links  = $resource->getLinks();
 
-        foreach ($module['rest'] as $name) {
-            $link = Link::factory(array(
-                'rel' => 'rest',
-                'route' => array(
-                    'name' => 'zf-api-first-admin/api/module/rest-endpoint',
-                    'params' => array(
-                        'controller_service_name' => $name,
-                    ),
-                ),
-            ));
-            $links->add($link);
-        }
+        $this->injectLinksForEndpointsByType('rest', $module['rest'], $links);
         unset($module['rest']);
 
-        foreach ($module['rpc'] as $name) {
-            $link = Link::factory(array(
-                'rel' => 'rpc',
-                'route' => array(
-                    'name' => 'zf-api-first-admin/api/module/rpc-endpoint',
-                    'params' => array(
-                        'controller_service_name' => $name,
-                    ),
-                ),
-            ));
-            $links->add($link);
-        }
+        $this->injectLinksForEndpointsByType('rpc', $module['rpc'], $links);
         unset($module['rpc']);
 
         $replacement = new Resource($module, $resource->id);
         $replacement->setLinks($links);
         $model->setPayload($replacement);
+    }
+
+    /**
+     * Inject RPC/REST endpoint links inside module resources that are composed in collections
+     * 
+     * @param  \Zend\EventManager\Event $e 
+     */
+    public function onRenderCollectionResource($e)
+    {
+        $resource = $e->getParam('resource');
+        if (!$resource instanceof Model\ModuleMetadata) {
+            return;
+        }
+
+        $asArray = $resource->getArrayCopy();
+        $module  = $asArray['name'];
+        $rest    = $asArray['rest'];
+        $rpc     = $asArray['rpc'];
+
+        unset($asArray['rest']);
+        unset($asArray['rpc']);
+
+        $halResource = new Resource($asArray, $module);
+        $links       = $halResource->getLinks();
+        $links->add(Link::factory(array(
+            'rel' => 'self',
+            'route' => array(
+                'name' => 'zf-api-first-admin/api/module',
+                'params' => array(
+                    'name' => $module,
+                ),
+            ),
+        )));
+        $this->injectLinksForEndpointsByType('rest', $rest, $links, $module);
+        $this->injectLinksForEndpointsByType('rpc', $rpc, $links, $module);
+
+        $e->setParam('resource', $halResource);
+    }
+
+    /**
+     * Inject endpoint links
+     * 
+     * @param  string $type "rpc" | "rest"
+     * @param  array|\Traversable $endpoints 
+     * @param  LinkCollection $links 
+     * @param  null|string $module
+     */
+    protected function injectLinksForEndpointsByType($type, $endpoints, LinkCollection $links, $module = null)
+    {
+        $routeName = sprintf('zf-api-first-admin/api/module/%s-endpoint', $type);
+        foreach ($endpoints as $name) {
+            $spec = array(
+                'rel' => $type,
+                'route' => array(
+                    'name' => $routeName,
+                    'params' => array(
+                        'controller_service_name' => $name,
+                    ),
+                ),
+            );
+            if (null !== $module) {
+                $spec['route']['params']['name'] = $module;
+            }
+            $link = Link::factory($spec);
+            $links->add($link);
+        }
     }
 }
