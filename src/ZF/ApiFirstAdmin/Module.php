@@ -3,6 +3,8 @@
 namespace ZF\ApiFirstAdmin;
 
 use Zend\Mvc\MvcEvent;
+use ZF\Hal\Link\Link;
+use ZF\Hal\View\HalJsonModel;
 
 class Module
 {
@@ -138,5 +140,56 @@ class Module
                 return new Controller\ModuleController($model);
             },
         ));
+    }
+
+    public function onRender($e)
+    {
+        $matches = $e->getRouteMatch();
+        $controller = $matches->getParam('controller', false);
+        if ($controller != 'ZF\ApiFirstAdmin\Controller\ModuleResource') {
+            return;
+        }
+
+        $result = $e->getResult();
+        if (!$result instanceof HalJsonModel) {
+            return;
+        }
+
+        if ($result->isResource()) {
+            $this->injectEndpointLinks($result->getPayload());
+            return;
+        }
+    }
+
+    protected function injectEndpointLinks(HalResource $resource)
+    {
+        $module = $resource->resource;
+        $links  = $resource->getLinks();
+
+        foreach ($module->getRestEndpoints() as $name) {
+            $link = Link::factory(array(
+                'rel' => 'rest',
+                'route' => array(
+                    'name' => 'zf-api-first-admin/api/module/rest-endpoint',
+                    'params' => array(
+                        'controller_service_name' => $name,
+                    ),
+                ),
+            ));
+            $links->add($link);
+        }
+
+        foreach ($module->getRpcEndpoints() as $name) {
+            $link = Link::factory(array(
+                'rel' => 'rpc',
+                'route' => array(
+                    'name' => 'zf-api-first-admin/api/module/rpc-endpoint',
+                    'params' => array(
+                        'controller_service_name' => $name,
+                    ),
+                ),
+            ));
+            $links->add($link);
+        }
     }
 }
