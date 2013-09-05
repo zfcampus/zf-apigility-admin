@@ -165,7 +165,7 @@ class Module
         }
     }
 
-    protected function injectEndpointLinks(HalResource $resource)
+    protected function injectEndpointLinks(Resource $resource)
     {
         $module = $resource->resource;
         $links  = $resource->getLinks();
