@@ -94,6 +94,15 @@ return array(
                                             ),
                                         ),
                                     ),
+                                    'rest-endpoint' => array(
+                                        'type' => 'segment',
+                                        'options' => array(
+                                            'route' => '/rest[/:controller_service_name]',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RestResource',
+                                            ),
+                                        ),
+                                    ),
                                 ),
                             ),
                         ),
@@ -120,6 +129,10 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
+            'ZF\ApiFirstAdmin\Controller\RestResource' => array(
+                'application/json',
+                'application/*+json',
+            ),
         ),
         'content-type-whitelist' => array(
             'ZF\ApiFirstAdmin\Controller\Module' => array(
@@ -131,6 +144,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\ApiFirstAdmin\Controller\RestResource' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -148,6 +165,11 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
+            ),
+            'ZF\ApiFirstAdmin\Model\RestEndpointMetadata' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'controller_service_name',
+                'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
             ),
         ),
     ),
@@ -169,10 +191,18 @@ return array(
             'collection_http_options' => array('GET', 'POST'),
             'collection_name'         => 'rpc',
         ),
+        'ZF\ApiFirstAdmin\Controller\RestResource' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener',
+            'route_name'              => 'zf-api-first-admin/api/module/rest-endpoint',
+            'identifier_name'         => 'controller_service_name',
+            'resource_http_options'   => array('GET', 'PATCH'),
+            'collection_http_options' => array('GET', 'POST'),
+            'collection_name'         => 'rest',
+        ),
     ),
 
     'zf-rpc' => array(
-        // Dummy entry; still handled by ControllerManager, but this will force 
+        // Dummy entry; still handled by ControllerManager, but this will force
         // it to show up in the list of RPC endpoints
         'ZF\ApiFirstAdmin\Controller\Module'      => array(
             'http_options' => array('PUT'),

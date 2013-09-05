@@ -82,8 +82,6 @@ class CodeConnectedRest
     }
 
     /**
-     * @todo Munge data from all config sources and pass them to an instance
-     *       of RestEndpointMetadata.
      * @param  string $controllerService
      * @return RestEndpointMetadata|false
      */
@@ -114,6 +112,26 @@ class CodeConnectedRest
         $this->mergeHalConfig($controllerService, $metadata, $config);
 
         return $metadata;
+    }
+
+    /**
+     * Fetch all endpoints
+     *
+     * @return RestEndpointMetadata[]
+     */
+    public function fetchAll()
+    {
+        $config = $this->configResource->fetch(true);
+        if (!isset($config['zf-rest'])) {
+            return array();
+        }
+
+        $endpoints = array();
+        foreach (array_keys($config['zf-rest']) as $controllerService) {
+            $endpoints[] = $this->fetch($controllerService);
+        }
+
+        return $endpoints;
     }
 
     /**

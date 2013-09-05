@@ -85,6 +85,18 @@ class Module implements ApiFirstModuleInterface
                 }
                 return $listener;
             },
+            'ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory' => function ($services) {
+                if (!$services->has('ZF\Configuration\ModuleUtils')
+                    || !$services->has('ZF\Configuration\ConfigResourceFactory')
+                ) {
+                    throw new ServiceNotCreatedException(
+                        'ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory is missing one or more dependencies from ZF\Configuration'
+                    );
+                }
+                $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
+                $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
+                return new Model\CodeConnectedRestFactory($moduleUtils, $configFactory);
+            },
             'ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
@@ -96,6 +108,15 @@ class Module implements ApiFirstModuleInterface
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
                 return new Model\CodeConnectedRpcFactory($moduleUtils, $configFactory);
+            },
+            'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener' => function ($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory')) {
+                    throw new ServiceNotCreatedException(
+                        'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener is missing one or more dependencies'
+                    );
+                }
+                $factory = $services->get('ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory');
+                return new Model\ApiFirstRestEndpointListener($factory);
             },
             'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener' => function ($services) {
                 if (!$services->has('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory')) {
