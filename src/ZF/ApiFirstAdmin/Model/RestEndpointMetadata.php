@@ -32,7 +32,7 @@ class RestEndpointMetadata
 
     protected $resourceHttpOptions = array('GET', 'PATCH', 'PUT', 'DELETE');
 
-    protected $route;
+    protected $routeMatch;
 
     protected $routeName;
 
@@ -98,8 +98,8 @@ class RestEndpointMetadata
                 case 'resourcehttpoptions':
                     $this->resourceHttpOptions = $value;
                     break;
-                case 'route':
-                    $this->route = $value;
+                case 'routematch':
+                    $this->routeMatch = $value;
                     break;
                 case 'routename':
                     $this->routeName = $value;
@@ -128,7 +128,7 @@ class RestEndpointMetadata
             'page_size_param'            => $this->pageSizeParam,
             'resource_class'             => $this->resourceClass,
             'resource_http_options'      => $this->resourceHttpOptions,
-            'route'                      => $this->route,
+            'route_match'                => $this->routeMatch,
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,
         );

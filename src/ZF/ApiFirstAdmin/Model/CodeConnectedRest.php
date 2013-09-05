@@ -147,7 +147,7 @@ class CodeConnectedRest
         $resourceClass     = $this->createResourceClass($resourceName);
         $entityClass       = $this->createEntityClass($resourceName);
         $collectionClass   = $this->createCollectionClass($resourceName);
-        $routeName         = $this->createRoute($resourceName, $details->route, $details->identifierName, $controllerService);
+        $routeName         = $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
         $this->createRestConfig($details, $controllerService, $resourceClass, $routeName);
         $this->createContentNegotiationConfig($details, $controllerService);
         $this->createHalConfig($details, $entityClass, $collectionClass, $routeName);
@@ -437,7 +437,7 @@ class CodeConnectedRest
      */
     public function updateRoute(RestEndpointMetadata $original, RestEndpointMetadata $update)
     {
-        $route = $update->route;
+        $route = $update->routeMatch;
         if (!$route) {
             return;
         }
@@ -644,7 +644,7 @@ class CodeConnectedRest
             return;
         }
         $metadata->exchangeArray(array(
-            'route' => $config['router']['routes'][$routeName]['options']['route'],
+            'route_match' => $config['router']['routes'][$routeName]['options']['route'],
         ));
     }
 

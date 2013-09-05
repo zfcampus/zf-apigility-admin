@@ -33,9 +33,6 @@ class RestCreationEndpoint extends RestEndpointMetadata
                 case 'resourcename':
                     $this->resourceName = $value;
                     break;
-                case 'route':
-                    $this->route = $value;
-                    break;
             }
         }
 
@@ -50,8 +47,8 @@ class RestCreationEndpoint extends RestEndpointMetadata
             );
         }
 
-        if (null === $this->route) {
-            $this->route = sprintf(
+        if (null === $this->routeMatch) {
+            $this->routeMatch = sprintf(
                 '/%s',
                 $this->normalizeResourceNameForRoute($this->resourceName)
             );

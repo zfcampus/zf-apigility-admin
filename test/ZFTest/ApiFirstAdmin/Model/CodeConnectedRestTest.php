@@ -79,7 +79,7 @@ class CodeConnectedRestTest extends TestCase
         $payload = new RestCreationEndpoint();
         $payload->exchangeArray(array(
             'resource_name'              => 'foo',
-            'route'                      => '/api/foo',
+            'route_match'                => '/api/foo',
             'identifier_name'            => 'foo_id',
             'collection_name'            => 'foo',
             'resource_http_options'      => array('GET', 'PATCH'),
@@ -304,7 +304,7 @@ class CodeConnectedRestTest extends TestCase
         $this->assertEquals('BarConf\Foo', $endpoint->entityClass);
         $this->assertEquals('BarConf\FooCollection', $endpoint->collectionClass);
         $this->assertEquals('bar-conf.foo', $endpoint->routeName);
-        $this->assertEquals('/api/foo[/:foo_id]', $endpoint->route);
+        $this->assertEquals('/api/foo[/:foo_id]', $endpoint->routeMatch);
     }
 
     public function testCanUpdateRouteForExistingEndpoint()
@@ -315,7 +315,7 @@ class CodeConnectedRestTest extends TestCase
         $patch = new RestEndpointMetadata();
         $patch->exchangeArray(array(
             'controller_service_name' => 'BarConf\Controller\Foo',
-            'route'                   => '/api/bar/foo',
+            'route_match'             => '/api/bar/foo',
         ));
 
         $this->codeRest->updateRoute($original, $patch);
@@ -395,7 +395,7 @@ class CodeConnectedRestTest extends TestCase
         $original = $this->codeRest->createService($details);
 
         $updates = array(
-            'route'                      => '/api/bar/foo',
+            'route_match'                => '/api/bar/foo',
             'page_size'                  => 30,
             'page_size_param'            => 'r',
             'collection_query_whitelist' => array('f', 's'),
@@ -417,7 +417,7 @@ class CodeConnectedRestTest extends TestCase
 
         foreach ($updates as $key => $value) {
             $this->assertArrayHasKey($key, $values);
-            if ($key === 'route') {
+            if ($key === 'route_match') {
                 $this->assertEquals(0, strpos($value, $values[$key]));
                 continue;
             }
