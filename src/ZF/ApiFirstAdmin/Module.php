@@ -15,7 +15,10 @@ class Module
 
     public function onBootstrap(MvcEvent $e)
     {
-        $this->sm = $e->getApplication()->getServiceManager();
+        $app      = $e->getApplication();
+        $this->sm = $app->getServiceManager();
+        $events   = $app->getEventManager();
+        $events->attach('render', array($this, 'onRender'), 100);
     }
 
     public function getAutoloaderConfig()
