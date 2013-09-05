@@ -4,6 +4,7 @@ namespace ZF\ApiFirstAdmin;
 
 use Zend\Mvc\MvcEvent;
 use ZF\Hal\Link\Link;
+use ZF\Hal\Resource;
 use ZF\Hal\View\HalJsonModel;
 
 class Module
