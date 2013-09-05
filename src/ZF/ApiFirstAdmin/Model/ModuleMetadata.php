@@ -165,6 +165,8 @@ class ModuleMetadata
             'name'      => $this->name,
             'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
+            'rest'      => $this->getRestEndpoints(),
+            'rpc'       => $this->getRpcEndpoints(),
         );
     }
 

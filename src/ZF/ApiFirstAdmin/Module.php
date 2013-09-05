@@ -160,17 +160,17 @@ class Module
         }
 
         if ($result->isResource()) {
-            $this->injectEndpointLinks($result->getPayload());
+            $this->injectEndpointLinks($result->getPayload(), $result);
             return;
         }
     }
 
-    protected function injectEndpointLinks(Resource $resource)
+    protected function injectEndpointLinks(Resource $resource, HalJsonModel $model)
     {
         $module = $resource->resource;
         $links  = $resource->getLinks();
 
-        foreach ($module->getRestEndpoints() as $name) {
+        foreach ($module['rest'] as $name) {
             $link = Link::factory(array(
                 'rel' => 'rest',
                 'route' => array(
@@ -182,8 +182,9 @@ class Module
             ));
             $links->add($link);
         }
+        unset($module['rest']);
 
-        foreach ($module->getRpcEndpoints() as $name) {
+        foreach ($module['rpc'] as $name) {
             $link = Link::factory(array(
                 'rel' => 'rpc',
                 'route' => array(
@@ -195,5 +196,10 @@ class Module
             ));
             $links->add($link);
         }
+        unset($module['rpc']);
+
+        $replacement = new Resource($module, $resource->id);
+        $replacement->setLinks($links);
+        $model->setPayload($replacement);
     }
 }
