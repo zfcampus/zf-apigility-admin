@@ -148,22 +148,14 @@ class CodeConnectedRest
         return $metadata;
     }
 
+    /**
+     * Update an existing service
+     * 
+     * @param RestEndpointMetadata $update 
+     * @return RestEndpointMetadata
+     */
     public function updateService(RestEndpointMetadata $update)
     {
-        // Allow updating:
-        // - route
-        // - rest configuration:
-        //   - collection HTTP options
-        //   - collection query whitelist
-        //   - resource HTTP options
-        //   - page size
-        //   - page size parameter
-        //   - identifier name (?) (if we allow this, it affects the HAL configuration)
-        //   - collection name (?)
-        // - content negotiation
-        //   - selector
-        //   - accept whitelist
-        //   - content-type whitelist
         $controllerService = $update->controllerServiceName;
 
         try {
@@ -473,6 +465,40 @@ class CodeConnectedRest
             }
             $key = sprintf('zf-rest.%s.%s', $original->controllerServiceName, $configKey);
             $this->configResource->patchKey($key, $update->$property);
+        }
+    }
+
+    /**
+     * Update the content negotiation configuration for the service
+     * 
+     * @param  RestEndpointMetadata $original 
+     * @param  RestEndpointMetadata $update 
+     */
+    public function updateContentNegotiationConfig(RestEndpointMetadata $original, RestEndpointMetadata $update)
+    {
+        $baseKey = 'zf-content-negotiation.';
+        $service = $original->controllerServiceName;
+
+        if ($update->selector) {
+            $key = $baseKey . 'controllers.' . $service;
+            $this->configResource->patchKey($key, $update->selector);
+        }
+
+        // Array dereferencing is a PITA
+        $acceptWhitelist = $update->acceptWhitelist;
+        if (is_array($acceptWhitelist)
+            && !empty($acceptWhitelist)
+        ) {
+            $key = $baseKey . 'accept-whitelist.' . $service;
+            $this->configResource->patchKey($key, $acceptWhitelist);
+        }
+
+        $contentTypeWhitelist = $update->contentTypeWhitelist;
+        if (is_array($contentTypeWhitelist)
+            && !empty($contentTypeWhitelist)
+        ) {
+            $key = $baseKey . 'content-type-whitelist.' . $service;
+            $this->configResource->patchKey($key, $contentTypeWhitelist);
         }
     }
 

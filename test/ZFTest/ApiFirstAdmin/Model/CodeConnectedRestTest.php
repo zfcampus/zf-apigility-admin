@@ -356,4 +356,72 @@ class CodeConnectedRestTest extends TestCase
             $this->assertEquals($value, $test[$key]);
         }
     }
+
+    public function testCanUpdateContentNegotiationConfigForExistingEndpoint()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'selector'               => 'Json',
+            'accept_whitelist'       => array('application/json'),
+            'content_type_whitelist' => array('application/json'),
+        );
+        $patch = new RestEndpointMetadata();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateContentNegotiationConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-content-negotiation', $config);
+        $config = $config['zf-content-negotiation'];
+
+        $this->assertArrayHasKey('controllers', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['controllers']);
+        $this->assertEquals($options['selector'], $config['controllers'][$original->controllerServiceName]);
+
+        $this->assertArrayHasKey('accept-whitelist', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['accept-whitelist']);
+        $this->assertEquals($options['accept_whitelist'], $config['accept-whitelist'][$original->controllerServiceName]);
+
+        $this->assertArrayHasKey('content-type-whitelist', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['content-type-whitelist']);
+        $this->assertEquals($options['content_type_whitelist'], $config['content-type-whitelist'][$original->controllerServiceName]);
+    }
+
+    public function testUpdateServiceReturnsUpdatedRepresentation()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $updates = array(
+            'route'                      => '/api/bar/foo',
+            'page_size'                  => 30,
+            'page_size_param'            => 'r',
+            'collection_query_whitelist' => array('f', 's'),
+            'collection_http_options'    => array('GET'),
+            'resource_http_options'      => array('GET'),
+            'selector'                   => 'Json',
+            'accept_whitelist'           => array('application/json'),
+            'content_type_whitelist'     => array('application/json'),
+        );
+        $patch = new RestEndpointMetadata();
+        $patch->exchangeArray(array_merge(array(
+            'controller_service_name'    => 'BarConf\Controller\Foo',
+        ), $updates));
+
+        $updated = $this->codeRest->updateService($patch);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointMetadata', $updated);
+
+        $values = $updated->getArrayCopy();
+
+        foreach ($updates as $key => $value) {
+            $this->assertArrayHasKey($key, $values);
+            if ($key === 'route') {
+                $this->assertEquals(0, strpos($value, $values[$key]));
+                continue;
+            }
+            $this->assertEquals($value, $values[$key]);
+        }
+    }
 }
