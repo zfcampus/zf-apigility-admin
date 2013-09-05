@@ -38,6 +38,27 @@ class CodeConnectedRest
     protected $renderer;
 
     /**
+     * Allowed REST update options that are scalars
+     * 
+     * @var array
+     */
+    protected $restScalarUpdateOptions = array(
+        'pageSize'                 => 'page_size',
+        'pageSizeParam'            => 'page_size_param',
+    );
+
+    /**
+     * Allowed REST update options that are arrays
+     * 
+     * @var array
+     */
+    protected $restArrayUpdateOptions = array(
+        'collectionHttpOptions'    => 'collection_http_options',
+        'collectionQueryWhitelist' => 'collection_query_whitelist',
+        'resourceHttpOptions'      => 'resource_http_options',
+    );
+
+    /**
      * @var FilterChain
      */
     protected $routeNameFilter;
@@ -417,6 +438,42 @@ class CodeConnectedRest
             ))
         )));
         $this->configResource->patch($config, true);
+    }
+
+    /**
+     * Update REST configuration
+     * 
+     * @param  RestEndpointMetadata $original 
+     * @param  RestEndpointMetadata $update 
+     */
+    public function updateRestConfig(RestEndpointMetadata $original, RestEndpointMetadata $update)
+    {
+        $patch = array();
+        foreach ($this->restScalarUpdateOptions as $property => $configKey) {
+            if (!$update->$property) {
+                continue;
+            }
+            $patch[$configKey] = $update->$property;
+        }
+
+        if (empty($patch)) {
+            goto updateArrayOptions;
+        }
+
+        $config = array('zf-rest' => array(
+            $original->controllerServiceName => $patch,
+        ));
+        $this->configResource->patch($config, true);
+
+        updateArrayOptions:
+
+        foreach ($this->restArrayUpdateOptions as $property => $configKey) {
+            if (!$update->$property) {
+                continue;
+            }
+            $key = sprintf('zf-rest.%s.%s', $original->controllerServiceName, $configKey);
+            $this->configResource->patchKey($key, $update->$property);
+        }
     }
 
     /**

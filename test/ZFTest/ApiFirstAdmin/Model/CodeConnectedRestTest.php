@@ -329,4 +329,31 @@ class CodeConnectedRestTest extends TestCase
         $this->assertArrayHasKey('route', $routeConfig['options']);
         $this->assertEquals('/api/bar/foo[/:foo_id]', $routeConfig['options']['route']);
     }
+
+    public function testCanUpdateRestConfigForExistingEndpoint()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'page_size'                  => 30,
+            'page_size_param'            => 'r',
+            'collection_query_whitelist' => array('f', 's'),
+            'collection_http_options'    => array('GET'),
+            'resource_http_options'      => array('GET'),
+        );
+        $patch = new RestEndpointMetadata();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateRestConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-rest', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['zf-rest']);
+        $test = $config['zf-rest'][$original->controllerServiceName];
+
+        foreach ($options as $key => $value) {
+            $this->assertEquals($value, $test[$key]);
+        }
+    }
 }
