@@ -31,6 +31,98 @@ API Resources
 }
 ```
 
+### `rpc`
+
+```javascript
+{
+    "controller_service_name": "name of the controller service; this is the identifier, and required",
+    "accept_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Accept",
+        "mediatypes"
+    ],
+    "content_type_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Content-Type",
+        "mediatypes"
+    ],
+    "http_options": [
+        "(Required)",
+        "List",
+        "of",
+        "allowed",
+        "Request methods"
+    ],
+    "route_match": "(Required) String indicating Segment route to match",
+    "route_name": "(Only in representation) Name of route associated with endpoint",
+    "selector": "(Optional) Content-Negotiation selector to use; Json by default"
+}
+```
+
+### `rest`
+
+```javascript
+{
+    "controller_service_name": "name of the controller service; this is the identifier, and required",
+    "accept_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Accept",
+        "mediatypes"
+    ],
+    "collection_class": "(Only in representation) Name of class representing collection",
+    "collection_http_options": [
+        "(Required)",
+        "List",
+        "of",
+        "allowed",
+        "Request methods",
+        "on collections"
+    ],
+    "collection_query_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "query string parameters",
+        "to pass to resource for collections"
+    ],
+    "content_type_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Content-Type",
+        "mediatypes"
+    ],
+    "entity_class": "(Only in representation) Name of class representing resource entity",
+    "identifier_name": "(Optional) Name of route parameter and entity property representing the resource identifier; defaults to resource_name + _id",
+    "module": "(Only in representation) Name of module in which resource resides",
+    "page_size": "(Optional) Integer representing number of entities to return in a given page in a collection; defaults to 25",
+    "page_size_param": "(Optional) Name of query string parameter used for pagination; defaults to 'page'",
+    "resource_class": "(Only in representation) Name of class representing resource handling operations",
+    "resource_http_options": [
+        "(Required)",
+        "List",
+        "of",
+        "allowed",
+        "Request methods",
+        "on individual resources"
+    ],
+    "route": "(Required) String indicating Segment route to match; defaults to /resource_name[/:identifier_name]",
+    "route_name": "(Only in representation) Name of route associated with endpoint",
+    "selector": "(Optional) Content-Negotiation selector to use; HalJson by default"
+}
+```
+
 API endpoints
 -------------
 
@@ -109,5 +201,62 @@ This is the canonical endpoint for [Module resources](#module).
 - Collection Methods: `GET`, `POST`
 
 - Resource Methods: `GET`
+
+- Errors: `application/api-problem+json`
+
+### `/admin/api/module[/:controller_service_name]/rpc`
+
+This is the canonical endpoint for [RPC resources](#rpc).
+
+- Accept: `application/json`
+
+  Returns either a single [RPC resource](#rpc) (when a `controller_service_name`
+  is provided) or a collection of RPC resources (when no
+  `controller_service_name` is provided) on success.
+
+- Content-Type: `application/json`
+
+  Expects an object with the property "service_name" describing the endpoint to
+  create:
+
+  ```javascript
+  {
+    "service_name": "Status"
+  }
+  ```
+
+  You may also provide any other options listed in the [RPC resource](#rpc).
+
+- Collection Methods: `GET`, `POST`
+
+- Resource Methods: `GET`, `PATCH`
+
+- Errors: `application/api-problem+json`
+
+### `/admin/api/module[/:controller_service_name]/rest`
+
+This is the canonical endpoint for [REST resources](#rest).
+
+- Accept: `application/json`
+
+  Returns either a single [REST resource](#rest) (when a `controller_service_name`
+  is provided) or a collection of REST resources (when no
+  `controller_service_name` is provided) on success.
+
+- Content-Type: `application/json`
+
+  Expects an object with the property "resource_name" describing the module to create:
+
+  ```javascript
+  {
+    "resource_name": "Status"
+  }
+  ```
+
+  You may also provide any other options listed in the [REST resource](#rest).
+
+- Collection Methods: `GET`, `POST`
+
+- Resource Methods: `GET`, `PATCH`
 
 - Errors: `application/api-problem+json`
