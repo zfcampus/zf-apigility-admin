@@ -32,6 +32,8 @@ class RestEndpointMetadata
 
     protected $resourceHttpOptions = array('GET', 'PATCH', 'PUT', 'DELETE');
 
+    protected $route;
+
     protected $routeName;
 
     protected $selector = 'HalJson';
@@ -96,6 +98,9 @@ class RestEndpointMetadata
                 case 'resourcehttpoptions':
                     $this->resourceHttpOptions = $value;
                     break;
+                case 'route':
+                    $this->route = $value;
+                    break;
                 case 'routename':
                     $this->routeName = $value;
                     break;
@@ -123,6 +128,7 @@ class RestEndpointMetadata
             'page_size_param'            => $this->pageSizeParam,
             'resource_class'             => $this->resourceClass,
             'resource_http_options'      => $this->resourceHttpOptions,
+            'route'                      => $this->route,
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,
         );

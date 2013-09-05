@@ -88,6 +88,7 @@ class CodeConnectedRest
         $metadata = new RestEndpointMetadata();
         $metadata->exchangeArray($restConfig);
 
+        $this->getRouteInfo($metadata, $config);
         $this->mergeContentNegotiationConfig($controllerService, $metadata, $config);
         $this->mergeHalConfig($controllerService, $metadata, $config);
 
@@ -124,6 +125,40 @@ class CodeConnectedRest
         ));
 
         return $metadata;
+    }
+
+    public function updateService(RestEndpointMetadata $update)
+    {
+        // Allow updating:
+        // - route
+        // - rest configuration:
+        //   - collection HTTP options
+        //   - collection query whitelist
+        //   - resource HTTP options
+        //   - page size
+        //   - page size parameter
+        //   - identifier name (?) (if we allow this, it affects the HAL configuration)
+        //   - collection name (?)
+        // - content negotiation
+        //   - selector
+        //   - accept whitelist
+        //   - content-type whitelist
+        $controllerService = $update->controllerServiceName;
+
+        try {
+            $original = $this->fetch($controllerService);
+        } catch (Exception\RuntimeException $e) {
+            throw new Exception\RuntimeException(sprintf(
+                'Cannot update REST endpoint "%s"; not found',
+                $controllerService
+            ), 404);
+        }
+
+        $this->updateRoute($original, $update);
+        $this->updateRestConfig($original, $update);
+        $this->updateContentNegotiationConfig($original, $update);
+
+        return $this->fetch($controllerService);
     }
 
     /**
@@ -364,6 +399,27 @@ class CodeConnectedRest
     }
 
     /**
+     * Update the route for an existing endpoint
+     * 
+     * @param  RestEndpointMetadata $original 
+     * @param  RestEndpointMetadata $update 
+     */
+    public function updateRoute(RestEndpointMetadata $original, RestEndpointMetadata $update)
+    {
+        $route = $update->route;
+        if (!$route) {
+            return;
+        }
+        $routeName = $original->routeName;
+        $config    = array('router' => array('routes' => array(
+            $routeName => array('options' => array(
+                'route' => sprintf('%s[/:%s]', $route, $original->identifierName),
+            ))
+        )));
+        $this->configResource->patch($config, true);
+    }
+
+    /**
      * Create a class file
      *
      * Creates a class file based on the view model passed, the type of resource, 
@@ -466,6 +522,29 @@ class CodeConnectedRest
         $this->routeNameFilter->attachByName('Word\CamelCaseToDash')
             ->attachByName('StringToLower');
         return $this->routeNameFilter;
+    }
+
+    /**
+     * Retrieve route information for a given endpoint based on the configuration available
+     * 
+     * @param  RestEndpointMetadata $metadata 
+     * @param  array $config 
+     */
+    protected function getRouteInfo(RestEndpointMetadata $metadata, array $config)
+    {
+        $routeName = $metadata->routeName;
+        if (!$routeName
+            || !isset($config['router'])
+            || !isset($config['router']['routes'])
+            || !isset($config['router']['routes'][$routeName])
+            || !isset($config['router']['routes'][$routeName]['options'])
+            || !isset($config['router']['routes'][$routeName]['options']['route'])
+        ) {
+            return;
+        }
+        $metadata->exchangeArray(array(
+            'route' => $config['router']['routes'][$routeName]['options']['route'],
+        ));
     }
 
     /**

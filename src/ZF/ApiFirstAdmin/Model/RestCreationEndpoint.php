@@ -11,8 +11,6 @@ class RestCreationEndpoint extends RestEndpointMetadata
 
     protected $resourceName;
 
-    protected $route;
-
     public function __get($name)
     {
         if ($name === 'filter') {
@@ -68,7 +66,6 @@ class RestCreationEndpoint extends RestEndpointMetadata
     {
         $return = parent::getArrayCopy();
         $return['resource_name'] = $this->resourceName;
-        $return['route'] = $this->route;
         return $return;
     }
 

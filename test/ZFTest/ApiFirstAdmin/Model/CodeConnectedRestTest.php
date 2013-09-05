@@ -8,6 +8,7 @@ use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\ApiFirstAdmin\Model\CodeConnectedRest;
 use ZF\ApiFirstAdmin\Model\RestCreationEndpoint;
+use ZF\ApiFirstAdmin\Model\RestEndpointMetadata;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -303,5 +304,29 @@ class CodeConnectedRestTest extends TestCase
         $this->assertEquals('BarConf\Foo', $endpoint->entityClass);
         $this->assertEquals('BarConf\FooCollection', $endpoint->collectionClass);
         $this->assertEquals('bar-conf.foo', $endpoint->routeName);
+        $this->assertEquals('/api/foo[/:foo_id]', $endpoint->route);
+    }
+
+    public function testCanUpdateRouteForExistingEndpoint()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $patch = new RestEndpointMetadata();
+        $patch->exchangeArray(array(
+            'controller_service_name' => 'BarConf\Controller\Foo',
+            'route'                   => '/api/bar/foo',
+        ));
+
+        $this->codeRest->updateRoute($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('router', $config);
+        $this->assertArrayHasKey('routes', $config['router']);
+        $this->assertArrayHasKey($original->routeName, $config['router']['routes']);
+        $routeConfig = $config['router']['routes'][$original->routeName];
+        $this->assertArrayHasKey('options', $routeConfig);
+        $this->assertArrayHasKey('route', $routeConfig['options']);
+        $this->assertEquals('/api/bar/foo[/:foo_id]', $routeConfig['options']['route']);
     }
 }
