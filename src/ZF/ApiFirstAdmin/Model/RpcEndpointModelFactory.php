@@ -5,7 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
-class CodeConnectedRpcFactory
+class RpcEndpointModelFactory
 {
     /**
      * @var ConfigResourceFactory
@@ -29,7 +29,7 @@ class CodeConnectedRpcFactory
 
     /**
      * @param  string $module 
-     * @return CodeConnectedRpc
+     * @return RpcEndpointModel
      */
     public function factory($module)
     {
@@ -38,7 +38,7 @@ class CodeConnectedRpcFactory
         }
 
         $config = $this->configFactory->factory($module);
-        $this->models[$module] = new CodeConnectedRpc($this->normalizeModuleName($module), $this->modules, $config);
+        $this->models[$module] = new RpcEndpointModel($this->normalizeModuleName($module), $this->modules, $config);
 
         return $this->models[$module];
     }

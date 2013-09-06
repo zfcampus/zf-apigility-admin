@@ -2,7 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-class RestEndpointModelFactory extends CodeConnectedRpcFactory
+class RestEndpointModelFactory extends RpcEndpointModelFactory
 {
     /**
      * @param  string $module

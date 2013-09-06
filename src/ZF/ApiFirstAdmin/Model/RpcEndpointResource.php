@@ -11,7 +11,7 @@ use ZF\Rest\Exception\PatchException;
 class RpcEndpointResource extends AbstractResourceListener
 {
     /**
-     * @var CodeConnectedRpc
+     * @var RpcEndpointModel
      */
     protected $model;
 
@@ -21,14 +21,14 @@ class RpcEndpointResource extends AbstractResourceListener
     protected $moduleName;
 
     /**
-     * @var CodeConnectedRpcFactory
+     * @var RpcEndpointModelFactory
      */
     protected $rpcFactory;
 
     /**
-     * @param  CodeConnectedRpcFactory $rpcFactory 
+     * @param  RpcEndpointModelFactory $rpcFactory 
      */
-    public function __construct(CodeConnectedRpcFactory $rpcFactory)
+    public function __construct(RpcEndpointModelFactory $rpcFactory)
     {
         $this->rpcFactory = $rpcFactory;
     }
@@ -55,11 +55,11 @@ class RpcEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * @return CodeConnectedRpc
+     * @return RpcEndpointModel
      */
     public function getModel()
     {
-        if ($this->model instanceof CodeConnectedRpc) {
+        if ($this->model instanceof RpcEndpointModel) {
             return $this->model;
         }
         $moduleName = $this->getModuleName();

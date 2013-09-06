@@ -5,14 +5,14 @@ namespace ZFTest\ApiFirstAdmin\Model;
 use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
-use ZF\ApiFirstAdmin\Model\CodeConnectedRpc;
+use ZF\ApiFirstAdmin\Model\RpcEndpointModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
 
 require_once __DIR__ . '/TestAsset/module/FooConf/Module.php';
 
-class CodeConnecedRpcTest extends TestCase
+class RpcEndpointModelTest extends TestCase
 {
     /**
      * Remove a directory even if not empty (recursive delete)
@@ -64,7 +64,7 @@ class CodeConnecedRpcTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRpc  = new CodeConnectedRpc($this->module, $this->modules, $this->resource->factory('FooConf'));
+        $this->codeRpc  = new RpcEndpointModel($this->module, $this->modules, $this->resource->factory('FooConf'));
     } 
 
     public function tearDown()

@@ -10,7 +10,7 @@ use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 
-class CodeConnectedRpc
+class RpcEndpointModel
 {
     /**
      * @var ConfigResource
