@@ -49,7 +49,7 @@ class CodeConnectedRpc
      * 
      * @todo   get route details?
      * @param  string $controllerServiceName 
-     * @return RpcEndpointMetadata|false
+     * @return RpcEndpoint|false
      */
     public function fetch($controllerServiceName)
     {
@@ -91,7 +91,7 @@ class CodeConnectedRpc
             }
         }
 
-        $endpoint = new RpcEndpointMetadata();
+        $endpoint = new RpcEndpoint();
         $endpoint->exchangeArray($data);
         return $endpoint;
     }
@@ -99,7 +99,7 @@ class CodeConnectedRpc
     /**
      * Fetch all endpoints
      * 
-     * @return RpcEndpointMetadata[]
+     * @return RpcEndpoint[]
      */
     public function fetchAll()
     {
@@ -126,7 +126,7 @@ class CodeConnectedRpc
      * @param  string $route 
      * @param  array $httpMethods 
      * @param  null|string $selector
-     * @return RpcEndpointMetadata
+     * @return RpcEndpoint
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {

@@ -205,7 +205,7 @@ class CodeConnecedRpcTest extends TestCase
         $httpOptions = array('GET', 'PATCH');
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions, $selector);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointMetadata', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpoint', $result);
 
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $expected   = array(

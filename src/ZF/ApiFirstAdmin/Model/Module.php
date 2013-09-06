@@ -96,11 +96,11 @@ class Module
     public function getRpcEndpoints()
     {
         foreach ($this->rpcEndpoints as $index => $identifier) {
-            if ($identifier instanceof RpcEndpointMetadata) {
+            if ($identifier instanceof RpcEndpoint) {
                 break;
             }
 
-            $endpoint = new RpcEndpointMetadata();
+            $endpoint = new RpcEndpoint();
             $endpoint->exchangeArray(array(
                 'controller_service_name' => $identifier
             ));

@@ -5,10 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use InvalidArgumentException;
 use RuntimeException;
 
-/**
- * @todo Get route details?
- */
-class RpcEndpointMetadata
+class RpcEndpoint
 {
     protected $acceptWhitelist = array();
 
