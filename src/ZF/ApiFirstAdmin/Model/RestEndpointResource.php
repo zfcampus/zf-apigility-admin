@@ -11,7 +11,7 @@ use ZF\Rest\Exception\PatchException;
 class RestEndpointResource extends AbstractResourceListener
 {
     /**
-     * @var CodeConnectedRest
+     * @var RestEndpointModel
      */
     protected $model;
 
@@ -21,14 +21,14 @@ class RestEndpointResource extends AbstractResourceListener
     protected $moduleName;
 
     /**
-     * @var CodeConnectedRestFactory
+     * @var RestEndpointModelFactory
      */
     protected $restFactory;
 
     /**
-     * @param  CodeConnectedRestFactory $restFactory
+     * @param  RestEndpointModelFactory $restFactory
      */
-    public function __construct(CodeConnectedRestFactory $restFactory)
+    public function __construct(RestEndpointModelFactory $restFactory)
     {
         $this->restFactory = $restFactory;
     }
@@ -55,11 +55,11 @@ class RestEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * @return CodeConnectedRest
+     * @return RestEndpointModel
      */
     public function getModel()
     {
-        if ($this->model instanceof CodeConnectedRest) {
+        if ($this->model instanceof RestEndpointModel) {
             return $this->model;
         }
         $moduleName = $this->getModuleName();

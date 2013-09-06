@@ -10,7 +10,7 @@ use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 
-class CodeConnectedRest
+class RestEndpointModel
 {
     /**
      * @var ConfigResource

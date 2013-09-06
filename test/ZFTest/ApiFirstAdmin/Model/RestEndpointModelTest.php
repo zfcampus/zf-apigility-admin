@@ -6,7 +6,7 @@ use BarConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
-use ZF\ApiFirstAdmin\Model\CodeConnectedRest;
+use ZF\ApiFirstAdmin\Model\RestEndpointModel;
 use ZF\ApiFirstAdmin\Model\NewRestEndpoint;
 use ZF\ApiFirstAdmin\Model\RestEndpoint;
 use ZF\Configuration\ResourceFactory;
@@ -14,7 +14,7 @@ use ZF\Configuration\ModuleUtils;
 
 require_once __DIR__ . '/TestAsset/module/BarConf/Module.php';
 
-class CodeConnectedRestTest extends TestCase
+class RestEndpointModelTest extends TestCase
 {
     /**
      * Remove a directory even if not empty (recursive delete)
@@ -66,7 +66,7 @@ class CodeConnectedRestTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRest = new CodeConnectedRest($this->module, $this->modules, $this->resource->factory('BarConf'));
+        $this->codeRest = new RestEndpointModel($this->module, $this->modules, $this->resource->factory('BarConf'));
     }
 
     public function tearDown()
