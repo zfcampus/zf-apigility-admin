@@ -9,7 +9,7 @@ use ZF\Rest\Exception\CreationException;
 class ModuleResource extends AbstractResourceListener
 {
     /**
-     * @var ApiFirstModule
+     * @var ModuleModel
      */
     protected $modules;
 
@@ -19,9 +19,9 @@ class ModuleResource extends AbstractResourceListener
     protected $modulePath = '.';
 
     /**
-     * @param ApiFirstModule $modules
+     * @param ModuleModel $modules
      */
-    public function __construct(ApiFirstModule $modules)
+    public function __construct(ModuleModel $modules)
     {
         $this->modules = $modules;
     }

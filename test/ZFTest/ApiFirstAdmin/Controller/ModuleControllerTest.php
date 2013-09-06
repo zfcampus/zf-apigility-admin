@@ -11,7 +11,7 @@ use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
 use ZF\ApiFirstAdmin\Controller\ModuleController;
-use ZF\ApiFirstAdmin\Model\ApiFirstModule;
+use ZF\ApiFirstAdmin\Model\ModuleModel;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
 class ModuleControllerTest extends TestCase
@@ -19,7 +19,7 @@ class ModuleControllerTest extends TestCase
     public function setUp()
     {
         $this->moduleManager  = new ModuleManager(array());
-        $this->moduleResource = new ApiFirstModule($this->moduleManager, array(), array());
+        $this->moduleResource = new ModuleModel($this->moduleManager, array(), array());
         $this->controller     = new ModuleController($this->moduleResource);
     }
 
@@ -68,7 +68,7 @@ class ModuleControllerTest extends TestCase
                       ->method('getLoadedModules')
                       ->will($this->returnValue(array('Foo' => new \Foo\Module)));
 
-        $moduleResource = new ApiFirstModule($moduleManager, array(), array());
+        $moduleResource = new ModuleModel($moduleManager, array(), array());
         $controller     = new ModuleController($moduleResource);
 
         $request = new Request();

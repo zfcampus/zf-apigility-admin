@@ -57,10 +57,10 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
-            'ZF\ApiFirstAdmin\Model\ApiFirstModule' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\ModuleModel' => function ($services) {
                 if (!$services->has('ModuleManager')) {
                     throw new ServiceNotCreatedException(
-                        'Cannot create ZF\ApiFirstAdmin\Model\ApiFirstModule service because ModuleManager service is not present'
+                        'Cannot create ZF\ApiFirstAdmin\Model\ModuleModel service because ModuleManager service is not present'
                     );
                 }
                 $modules    = $services->get('ModuleManager');
@@ -75,10 +75,10 @@ class Module
                         $rpcConfig = $config['zf-rpc'];
                     }
                 }
-                return new Model\ApiFirstModule($modules, $restConfig, $rpcConfig);
+                return new Model\ModuleModel($modules, $restConfig, $rpcConfig);
             },
             'ZF\ApiFirstAdmin\Model\ModuleResource' => function ($services) {
-                $moduleModel = $services->get('ZF\ApiFirstAdmin\Model\ApiFirstModule');
+                $moduleModel = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
                 $listener    = new Model\ModuleResource($moduleModel);
 
                 if ($services->has('Config')) {
@@ -141,7 +141,7 @@ class Module
         return array('factories' => array(
             'ZF\ApiFirstAdmin\Controller\Module' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
-                $model    = $services->get('ZF\ApiFirstAdmin\Model\ApiFirstModule');
+                $model    = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
                 return new Controller\ModuleController($model);
             },
         ));

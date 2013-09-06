@@ -10,7 +10,7 @@ use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ReflectionObject;
 
-class ApiFirstModule
+class ModuleModel
 {
     /**
      * Endpoints for each module

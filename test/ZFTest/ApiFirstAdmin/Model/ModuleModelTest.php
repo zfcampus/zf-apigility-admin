@@ -3,11 +3,11 @@
 namespace ZFTest\ApiFirstAdmin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\ApiFirstAdmin\Model\ApiFirstModule;
+use ZF\ApiFirstAdmin\Model\ModuleModel;
 use ZF\ApiFirstAdmin\Model\ModuleMetadata;
 use Test;
 
-class ApiFirstModuleTest extends TestCase
+class ModuleModelTest extends TestCase
 {
     public function setUp()
     {
@@ -42,7 +42,7 @@ class ApiFirstModuleTest extends TestCase
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bob\Controller\Do'  => null,
         );
 
-        $this->model         = new ApiFirstModule($this->moduleManager, $restConfig, $rpcConfig);
+        $this->model         = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
     }
 
     public function testEnabledModulesOnlyReturnsThoseThatImplementApiFirstModuleInterface()
@@ -240,7 +240,7 @@ class ApiFirstModuleTest extends TestCase
                       ->method('getLoadedModules')
                       ->will($this->returnValue($modules));
 
-        $model = new ApiFirstModule($moduleManager, array(), array());
+        $model = new ModuleModel($moduleManager, array(), array());
 
         $modules = $model->getModules();
         foreach ($modules as $module) {
