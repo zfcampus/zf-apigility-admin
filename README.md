@@ -194,7 +194,7 @@ This is the canonical endpoint for [Module resources](#module).
 
 - Errors: `application/api-problem+json`
 
-### `/admin/api/module[/:controller_service_name]/rpc`
+### `/admin/api/module/:name/rpc[/:controller_service_name]`
 
 This is the canonical endpoint for [RPC resources](#rpc).
 
@@ -223,7 +223,7 @@ This is the canonical endpoint for [RPC resources](#rpc).
 
 - Errors: `application/api-problem+json`
 
-### `/admin/api/module[/:controller_service_name]/rest`
+### `/admin/api/module/:name/rest[/:controller_service_name]`
 
 This is the canonical endpoint for [REST resources](#rest).
 
