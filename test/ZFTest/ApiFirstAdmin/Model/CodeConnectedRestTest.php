@@ -8,7 +8,7 @@ use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\ApiFirstAdmin\Model\CodeConnectedRest;
 use ZF\ApiFirstAdmin\Model\RestCreationEndpoint;
-use ZF\ApiFirstAdmin\Model\RestEndpointMetadata;
+use ZF\ApiFirstAdmin\Model\RestEndpoint;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -276,11 +276,11 @@ class CodeConnectedRestTest extends TestCase
         ), $config['BarConf\FooCollection']);
     }
 
-    public function testCreateServiceReturnsRestEndpointMetadataOnSuccess()
+    public function testCreateServiceReturnsRestEndpointOnSuccess()
     {
         $details = $this->getCreationPayload();
         $result  = $this->codeRest->createService($details);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointMetadata', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpoint', $result);
 
         $this->assertEquals('BarConf', $result->module);
         $this->assertEquals('BarConf\Controller\Foo', $result->controllerServiceName);
@@ -296,7 +296,7 @@ class CodeConnectedRestTest extends TestCase
         $result  = $this->codeRest->createService($details);
 
         $endpoint = $this->codeRest->fetch('BarConf\Controller\Foo');
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointMetadata', $endpoint);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpoint', $endpoint);
 
         $this->assertEquals('BarConf', $endpoint->module);
         $this->assertEquals('BarConf\Controller\Foo', $endpoint->controllerServiceName);
@@ -312,7 +312,7 @@ class CodeConnectedRestTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $patch = new RestEndpointMetadata();
+        $patch = new RestEndpoint();
         $patch->exchangeArray(array(
             'controller_service_name' => 'BarConf\Controller\Foo',
             'route_match'             => '/api/bar/foo',
@@ -342,7 +342,7 @@ class CodeConnectedRestTest extends TestCase
             'collection_http_options'    => array('GET'),
             'resource_http_options'      => array('GET'),
         );
-        $patch = new RestEndpointMetadata();
+        $patch = new RestEndpoint();
         $patch->exchangeArray($options);
 
         $this->codeRest->updateRestConfig($original, $patch);
@@ -367,7 +367,7 @@ class CodeConnectedRestTest extends TestCase
             'accept_whitelist'       => array('application/json'),
             'content_type_whitelist' => array('application/json'),
         );
-        $patch = new RestEndpointMetadata();
+        $patch = new RestEndpoint();
         $patch->exchangeArray($options);
 
         $this->codeRest->updateContentNegotiationConfig($original, $patch);
@@ -405,13 +405,13 @@ class CodeConnectedRestTest extends TestCase
             'accept_whitelist'           => array('application/json'),
             'content_type_whitelist'     => array('application/json'),
         );
-        $patch = new RestEndpointMetadata();
+        $patch = new RestEndpoint();
         $patch->exchangeArray(array_merge(array(
             'controller_service_name'    => 'BarConf\Controller\Foo',
         ), $updates));
 
         $updated = $this->codeRest->updateService($patch);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointMetadata', $updated);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpoint', $updated);
 
         $values = $updated->getArrayCopy();
 

@@ -5,7 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use Zend\Filter\FilterChain;
 use ZF\Rest\Exception\CreationException;
 
-class RestCreationEndpoint extends RestEndpointMetadata
+class RestCreationEndpoint extends RestEndpoint
 {
     protected $filters = array();
 

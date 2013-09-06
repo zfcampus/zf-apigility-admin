@@ -71,7 +71,7 @@ class ApiFirstRestEndpointListener extends AbstractResourceListener
      * Create a new REST endpoint
      *
      * @param  array|object $data
-     * @return RestEndpointMetadata
+     * @return RestEndpoint
      * @throws CreationException
      */
     public function create($data)
@@ -97,12 +97,12 @@ class ApiFirstRestEndpointListener extends AbstractResourceListener
      * Fetch REST metadata
      *
      * @param  string $id
-     * @return RestEndpointMetadata|ApiProblem
+     * @return RestEndpoint|ApiProblem
      */
     public function fetch($id)
     {
         $endpoint = $this->getModel()->fetch($id);
-        if (!$endpoint instanceof RestEndpointMetadata) {
+        if (!$endpoint instanceof RestEndpoint) {
             return new ApiProblem(404, 'REST endpoint not found');
         }
         return $endpoint;
@@ -112,7 +112,7 @@ class ApiFirstRestEndpointListener extends AbstractResourceListener
      * Fetch metadata for all REST endpoints
      *
      * @param  array $params
-     * @return RestEndpointMetadata[]
+     * @return RestEndpoint[]
      */
     public function fetchAll($params = array())
     {
@@ -124,7 +124,7 @@ class ApiFirstRestEndpointListener extends AbstractResourceListener
      *
      * @param  string $id
      * @param  object|array $data
-     * @return ApiProblem|RestEndpointMetadata
+     * @return ApiProblem|RestEndpoint
      * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)
@@ -142,7 +142,7 @@ class ApiFirstRestEndpointListener extends AbstractResourceListener
         }
 
         $model = $this->getModel();
-        $patch = new RestEndpointMetadata();
+        $patch = new RestEndpoint();
         $data  = array_merge(array('controller_service_name' => $id), $data);
         $patch->exchangeArray($data);
 

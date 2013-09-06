@@ -166,7 +166,7 @@ return array(
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
             ),
-            'ZF\ApiFirstAdmin\Model\RestEndpointMetadata' => array(
+            'ZF\ApiFirstAdmin\Model\RestEndpoint' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
