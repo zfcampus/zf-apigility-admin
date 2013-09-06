@@ -70,7 +70,7 @@ return array(
                                 'options' => array(
                                     'route' => '/module.enable',
                                     'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleCreation',
                                         'action'     => 'apiEnable',
                                     ),
                                 ),
@@ -80,7 +80,7 @@ return array(
                                 'options' => array(
                                     'route' => '/module[/:name]',
                                     'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleResource',
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
                                     ),
                                 ),
                                 'may_terminate' => true,
@@ -90,7 +90,7 @@ return array(
                                         'options' => array(
                                             'route' => '/rpc[/:controller_service_name]',
                                             'defaults' => array(
-                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RpcResource',
+                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RpcEndpoint',
                                             ),
                                         ),
                                     ),
@@ -99,7 +99,7 @@ return array(
                                         'options' => array(
                                             'route' => '/rest[/:controller_service_name]',
                                             'defaults' => array(
-                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RestResource',
+                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RestEndpoint',
                                             ),
                                         ),
                                     ),
@@ -114,40 +114,40 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\Module'         => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\ModuleResource' => 'HalJson',
         ),
         'accept-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+                'application/json',
+            ),
             'ZF\ApiFirstAdmin\Controller\Module' => array(
                 'application/json',
+                'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
-                'application/json',
-                'application/*+json',
-            ),
-            'ZF\ApiFirstAdmin\Controller\RestResource' => array(
+            'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
         ),
         'content-type-whitelist' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\ApiFirstAdmin\Controller\Module' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
+            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
-                'application/json',
-                'application/*+json',
-            ),
-            'ZF\ApiFirstAdmin\Controller\RestResource' => array(
+            'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -156,17 +156,17 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
-            'ZF\ApiFirstAdmin\Model\ModuleMetadata' => array(
+            'ZF\ApiFirstAdmin\Model\Module' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',
             ),
-            'ZF\ApiFirstAdmin\Model\RpcEndpointMetadata' => array(
+            'ZF\ApiFirstAdmin\Model\RpcEndpoint' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
             ),
-            'ZF\ApiFirstAdmin\Model\RestEndpointMetadata' => array(
+            'ZF\ApiFirstAdmin\Model\RestEndpoint' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
@@ -175,24 +175,24 @@ return array(
     ),
 
     'zf-rest' => array(
-        'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener',
+        'ZF\ApiFirstAdmin\Controller\Module' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\ModuleResource',
             'route_name'              => 'zf-api-first-admin/api/module',
             'identifier_name'         => 'name',
             'resource_http_options'   => array('GET'),
             'collection_http_options' => array('GET', 'POST'),
             'collection_name'         => 'module',
         ),
-        'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener',
+        'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\RpcEndpointResource',
             'route_name'              => 'zf-api-first-admin/api/module/rpc-endpoint',
             'identifier_name'         => 'controller_service_name',
             'resource_http_options'   => array('GET', 'PATCH'),
             'collection_http_options' => array('GET', 'POST'),
             'collection_name'         => 'rpc',
         ),
-        'ZF\ApiFirstAdmin\Controller\RestResource' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener',
+        'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\RestEndpointResource',
             'route_name'              => 'zf-api-first-admin/api/module/rest-endpoint',
             'identifier_name'         => 'controller_service_name',
             'resource_http_options'   => array('GET', 'PATCH'),
@@ -204,7 +204,7 @@ return array(
     'zf-rpc' => array(
         // Dummy entry; still handled by ControllerManager, but this will force
         // it to show up in the list of RPC endpoints
-        'ZF\ApiFirstAdmin\Controller\Module'      => array(
+        'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
             'http_options' => array('PUT'),
             'route_name'   => 'zf-api-first-admin/api/module-enable',
         ),

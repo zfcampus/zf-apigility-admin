@@ -8,14 +8,10 @@ use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
 
-/**
- * @todo We need to create a factory for returning a CodeConnectedRpc object based on the module name 
- *       and the configuration resource.
- */
-class ApiFirstRpcEndpointListener extends AbstractResourceListener
+class RpcEndpointResource extends AbstractResourceListener
 {
     /**
-     * @var CodeConnectedRpc
+     * @var RpcEndpointModel
      */
     protected $model;
 
@@ -25,14 +21,14 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
     protected $moduleName;
 
     /**
-     * @var CodeConnectedRpcFactory
+     * @var RpcEndpointModelFactory
      */
     protected $rpcFactory;
 
     /**
-     * @param  CodeConnectedRpcFactory $rpcFactory 
+     * @param  RpcEndpointModelFactory $rpcFactory
      */
-    public function __construct(CodeConnectedRpcFactory $rpcFactory)
+    public function __construct(RpcEndpointModelFactory $rpcFactory)
     {
         $this->rpcFactory = $rpcFactory;
     }
@@ -59,11 +55,11 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
     }
 
     /**
-     * @return CodeConnectedRpc
+     * @return RpcEndpointModel
      */
     public function getModel()
     {
-        if ($this->model instanceof CodeConnectedRpc) {
+        if ($this->model instanceof RpcEndpointModel) {
             return $this->model;
         }
         $moduleName = $this->getModuleName();
@@ -75,7 +71,7 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
      * Create a new RPC endpoint
      *
      * @param  array|object $data
-     * @return RpcEndpointMetadata
+     * @return RpcEndpoint
      * @throws CreationException
      */
     public function create($data)
@@ -142,12 +138,12 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
      * Fetch RPC metadata
      *
      * @param  string $id
-     * @return RpcEndpointMetadata|ApiProblem
+     * @return RpcEndpoint|ApiProblem
      */
     public function fetch($id)
     {
         $endpoint = $this->getModel()->fetch($id);
-        if (!$endpoint instanceof RpcEndpointMetadata) {
+        if (!$endpoint instanceof RpcEndpoint) {
             return new ApiProblem(404, 'RPC endpoint not found');
         }
         return $endpoint;
@@ -157,7 +153,7 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
      * Fetch metadata for all RPC endpoints
      *
      * @param  array $params
-     * @return RpcEndpointMetadata[]
+     * @return RpcEndpoint[]
      */
     public function fetchAll($params = array())
     {
@@ -166,10 +162,10 @@ class ApiFirstRpcEndpointListener extends AbstractResourceListener
 
     /**
      * Update an existing RPC endpoint
-     * 
-     * @param  string $id 
-     * @param  object|array $data 
-     * @return ApiProblem|RpcEndpointMetadata
+     *
+     * @param  string $id
+     * @param  object|array $data
+     * @return ApiProblem|RpcEndpoint
      * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)

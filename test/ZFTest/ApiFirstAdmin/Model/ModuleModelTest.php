@@ -3,11 +3,11 @@
 namespace ZFTest\ApiFirstAdmin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\ApiFirstAdmin\Model\ApiFirstModule;
+use ZF\ApiFirstAdmin\Model\ModuleModel;
 use ZF\ApiFirstAdmin\Model\ModuleMetadata;
 use Test;
 
-class ApiFirstModuleTest extends TestCase
+class ModuleModelTest extends TestCase
 {
     public function setUp()
     {
@@ -42,7 +42,7 @@ class ApiFirstModuleTest extends TestCase
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bob\Controller\Do'  => null,
         );
 
-        $this->model         = new ApiFirstModule($this->moduleManager, $restConfig, $rpcConfig);
+        $this->model         = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
     }
 
     public function testEnabledModulesOnlyReturnsThoseThatImplementApiFirstModuleInterface()
@@ -158,7 +158,7 @@ class ApiFirstModuleTest extends TestCase
     {
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
-        
+
         mkdir($modulePath);
         mkdir("$modulePath/module");
         mkdir("$modulePath/config");
@@ -173,7 +173,7 @@ class ApiFirstModuleTest extends TestCase
         $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
-        
+
         $this->removeDir($modulePath);
     }
 
@@ -187,12 +187,12 @@ class ApiFirstModuleTest extends TestCase
     {
         $module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Foo';
         $this->assertTrue($this->model->updateModule($module));
-        
+
         unlink(__DIR__ . '/TestAsset/Foo/Module.php');
         rename(
-            __DIR__ . '/TestAsset/Foo/Module.php.old', 
+            __DIR__ . '/TestAsset/Foo/Module.php.old',
             __DIR__ . '/TestAsset/Foo/Module.php'
-        ); 
+        );
     }
 
     public function testUpdateModuleWithOtherInterfaces()
@@ -225,7 +225,7 @@ class ApiFirstModuleTest extends TestCase
             }
         }
         return rmdir($dir);
-    } 
+    }
 
     public function testVendorModulesAreMarkedAccordingly()
     {
@@ -240,7 +240,7 @@ class ApiFirstModuleTest extends TestCase
                       ->method('getLoadedModules')
                       ->will($this->returnValue($modules));
 
-        $model = new ApiFirstModule($moduleManager, array(), array());
+        $model = new ModuleModel($moduleManager, array(), array());
 
         $modules = $model->getModules();
         foreach ($modules as $module) {

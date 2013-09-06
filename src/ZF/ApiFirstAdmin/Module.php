@@ -57,10 +57,10 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
-            'ZF\ApiFirstAdmin\Model\ApiFirstModule' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\ModuleModel' => function ($services) {
                 if (!$services->has('ModuleManager')) {
                     throw new ServiceNotCreatedException(
-                        'Cannot create ZF\ApiFirstAdmin\Model\ApiFirstModule service because ModuleManager service is not present'
+                        'Cannot create ZF\ApiFirstAdmin\Model\ModuleModel service because ModuleManager service is not present'
                     );
                 }
                 $modules    = $services->get('ModuleManager');
@@ -75,11 +75,11 @@ class Module
                         $rpcConfig = $config['zf-rpc'];
                     }
                 }
-                return new Model\ApiFirstModule($modules, $restConfig, $rpcConfig);
+                return new Model\ModuleModel($modules, $restConfig, $rpcConfig);
             },
-            'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener' => function ($services) {
-                $moduleModel = $services->get('ZF\ApiFirstAdmin\Model\ApiFirstModule');
-                $listener    = new Model\ApiFirstModuleListener($moduleModel);
+            'ZF\ApiFirstAdmin\Model\ModuleResource' => function ($services) {
+                $moduleModel = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
+                $listener    = new Model\ModuleResource($moduleModel);
 
                 if ($services->has('Config')) {
                     $config = $services->get('Config');
@@ -91,47 +91,47 @@ class Module
                 }
                 return $listener;
             },
-            'ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\RestEndpointModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
                 ) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory is missing one or more dependencies from ZF\Configuration'
+                        'ZF\ApiFirstAdmin\Model\RestEndpointModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
                 }
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                return new Model\CodeConnectedRestFactory($moduleUtils, $configFactory);
+                return new Model\RestEndpointModelFactory($moduleUtils, $configFactory);
             },
-            'ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
                 ) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory is missing one or more dependencies from ZF\Configuration'
+                        'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
                 }
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                return new Model\CodeConnectedRpcFactory($moduleUtils, $configFactory);
+                return new Model\RpcEndpointModelFactory($moduleUtils, $configFactory);
             },
-            'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener' => function ($services) {
-                if (!$services->has('ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory')) {
+            'ZF\ApiFirstAdmin\Model\RestEndpointResource' => function ($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener is missing one or more dependencies'
+                        'ZF\ApiFirstAdmin\Model\RestEndpointResource is missing one or more dependencies'
                     );
                 }
-                $factory = $services->get('ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory');
-                return new Model\ApiFirstRestEndpointListener($factory);
+                $factory = $services->get('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory');
+                return new Model\RestEndpointResource($factory);
             },
-            'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener' => function ($services) {
-                if (!$services->has('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory')) {
+            'ZF\ApiFirstAdmin\Model\RpcEndpointResource' => function ($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener is missing one or more dependencies'
+                        'ZF\ApiFirstAdmin\Model\RpcEndpointResource is missing one or more dependencies'
                     );
                 }
-                $factory = $services->get('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory');
-                return new Model\ApiFirstRpcEndpointListener($factory);
+                $factory = $services->get('ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory');
+                return new Model\RpcEndpointResource($factory);
             },
         ));
     }
@@ -139,10 +139,10 @@ class Module
     public function getControllerConfig()
     {
         return array('factories' => array(
-            'ZF\ApiFirstAdmin\Controller\Module' => function ($controllers) {
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
-                $model    = $services->get('ZF\ApiFirstAdmin\Model\ApiFirstModule');
-                return new Controller\ModuleController($model);
+                $model    = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
+                return new Controller\ModuleCreationController($model);
             },
         ));
     }
@@ -207,7 +207,7 @@ class Module
     public function onRenderCollectionResource($e)
     {
         $resource = $e->getParam('resource');
-        if (!$resource instanceof Model\ModuleMetadata) {
+        if (!$resource instanceof Model\Module) {
             return;
         }
 

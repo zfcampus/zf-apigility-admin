@@ -10,7 +10,7 @@ use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ReflectionObject;
 
-class ApiFirstModule
+class ModuleModel
 {
     /**
      * Endpoints for each module
@@ -76,7 +76,7 @@ class ApiFirstModule
     /**
      * Retrieve modules
      *
-     * @return ModuleMetadata[]
+     * @return Module[]
      */
     public function getModules()
     {
@@ -86,7 +86,7 @@ class ApiFirstModule
 
     /**
      * @param  string $moduleName
-     * @return null|ModuleMetadata
+     * @return null|Module
      */
     public function getModule($moduleName)
     {
@@ -223,7 +223,7 @@ EOD;
             }
 
             $endpoints = $this->getEndpointsByModule($moduleName);
-            $metadata  = new ModuleMetadata($moduleName, $endpoints['rest'], $endpoints['rpc']);
+            $metadata  = new Module($moduleName, $endpoints['rest'], $endpoints['rpc']);
             $this->modules[$metadata->getName()] = $metadata;
         }
 

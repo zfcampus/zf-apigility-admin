@@ -7,21 +7,21 @@ namespace ZF\ApiFirstAdmin\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\ApiFirstAdmin\Model\ApiFirstModule;
-use ZF\ApiFirstAdmin\Model\ModuleMetadata;
+use ZF\ApiFirstAdmin\Model\ModuleModel;
+use ZF\ApiFirstAdmin\Model\Module;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Resource;
 use ZF\Hal\Link\Link;
 
-class ModuleController extends AbstractActionController
+class ModuleCreationController extends AbstractActionController
 {
-    protected $moduleResource;
+    protected $moduleModel;
 
-    public function __construct(ApiFirstModule $moduleResource)
+    public function __construct(ModuleModel $moduleModel)
     {
-        $this->moduleResource = $moduleResource;
+        $this->moduleModel = $moduleModel;
     }
 
     public function apiEnableAction()
@@ -36,13 +36,13 @@ class ModuleController extends AbstractActionController
                     return new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity');
                 }
 
-                $result = $this->moduleResource->updateModule($module);
+                $result = $this->moduleModel->updateModule($module);
 
                 if (!$result) {
                     return new ApiProblem(500, 'Unable to API-First-enable the module');
                 }
 
-                $metadata = new ModuleMetadata($module);
+                $metadata = new Module($module);
                 $resource = new Resource($metadata, $module);
                 $resource->getLinks()->add(Link::factory(array(
                     'rel'   => 'self',

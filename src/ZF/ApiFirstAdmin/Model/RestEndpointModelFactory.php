@@ -2,11 +2,11 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-class CodeConnectedRestFactory extends CodeConnectedRpcFactory
+class RestEndpointModelFactory extends RpcEndpointModelFactory
 {
     /**
      * @param  string $module
-     * @return CodeConnectedRest
+     * @return RestEndpointModel
      */
     public function factory($module)
     {
@@ -15,7 +15,7 @@ class CodeConnectedRestFactory extends CodeConnectedRpcFactory
         }
 
         $config = $this->configFactory->factory($module);
-        $this->models[$module] = new CodeConnectedRest($this->normalizeModuleName($module), $this->modules, $config);
+        $this->models[$module] = new RestEndpointModel($this->normalizeModuleName($module), $this->modules, $config);
 
         return $this->models[$module];
     }

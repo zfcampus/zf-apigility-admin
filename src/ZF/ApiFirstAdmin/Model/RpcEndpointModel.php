@@ -10,7 +10,7 @@ use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 
-class CodeConnectedRpc
+class RpcEndpointModel
 {
     /**
      * @var ConfigResource
@@ -21,7 +21,7 @@ class CodeConnectedRpc
      * @var FilterChain
      */
     protected $filter;
-        
+
     /**
      * @var string
      */
@@ -33,9 +33,9 @@ class CodeConnectedRpc
     protected $modules;
 
     /**
-     * @param  string $module 
-     * @param  ModuleUtils $modules 
-     * @param  ConfigResource $config 
+     * @param  string $module
+     * @param  ModuleUtils $modules
+     * @param  ConfigResource $config
      */
     public function __construct($module, ModuleUtils $modules, ConfigResource $config)
     {
@@ -46,10 +46,10 @@ class CodeConnectedRpc
 
     /**
      * Fetch a single RPC endpoint
-     * 
+     *
      * @todo   get route details?
-     * @param  string $controllerServiceName 
-     * @return RpcEndpointMetadata|false
+     * @param  string $controllerServiceName
+     * @return RpcEndpoint|false
      */
     public function fetch($controllerServiceName)
     {
@@ -91,15 +91,15 @@ class CodeConnectedRpc
             }
         }
 
-        $endpoint = new RpcEndpointMetadata();
+        $endpoint = new RpcEndpoint();
         $endpoint->exchangeArray($data);
         return $endpoint;
     }
 
     /**
      * Fetch all endpoints
-     * 
-     * @return RpcEndpointMetadata[]
+     *
+     * @return RpcEndpoint[]
      */
     public function fetchAll()
     {
@@ -122,11 +122,11 @@ class CodeConnectedRpc
      * Creates the controller and all configuration, returning the full configuration as a tree.
      *
      * @todo   Return the controller service name
-     * @param  string $serviceName 
-     * @param  string $route 
-     * @param  array $httpMethods 
+     * @param  string $serviceName
+     * @param  string $route
+     * @param  array $httpMethods
      * @param  null|string $selector
-     * @return RpcEndpointMetadata
+     * @return RpcEndpoint
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
@@ -141,8 +141,8 @@ class CodeConnectedRpc
 
     /**
      * Create a controller in the current module named for the given service
-     * 
-     * @param  string $serviceName 
+     *
+     * @param  string $serviceName
      * @return stdClass
      */
     public function createController($serviceName)
@@ -170,7 +170,7 @@ class CodeConnectedRpc
                 $className
             ));
         }
-        
+
         $view = new ViewModel(array(
             'module'      => $module,
             'classname'   => $className,
@@ -208,10 +208,10 @@ class CodeConnectedRpc
 
     /**
      * Create the route configuration
-     * 
-     * @param  string $route 
-     * @param  string $serviceName 
-     * @param  string $controllerService 
+     *
+     * @param  string $route
+     * @param  string $serviceName
+     * @param  string $controllerService
      * @return string The newly created route name
      */
     public function createRoute($route, $serviceName, $controllerService = null)
@@ -242,11 +242,11 @@ class CodeConnectedRpc
 
     /**
      * Create the zf-rpc configuration for the controller service
-     * 
-     * @param  string $controllerService 
-     * @param  string $routeName 
-     * @param  array $httpMethods 
-     * @param  null|string|callable $callable 
+     *
+     * @param  string $controllerService
+     * @param  string $routeName
+     * @param  array $httpMethods
+     * @param  null|string|callable $callable
      * @return array
      */
     public function createRpcConfig($controllerService, $routeName, array $httpMethods = array('GET'), $callable = null)
@@ -265,9 +265,9 @@ class CodeConnectedRpc
 
     /**
      * Create the selector configuration
-     * 
-     * @param  string $controllerService 
-     * @param  string $selector 
+     *
+     * @param  string $controllerService
+     * @param  string $selector
      * @return array
      */
     public function createSelectorConfig($controllerService, $selector = null)
@@ -286,9 +286,9 @@ class CodeConnectedRpc
 
     /**
      * Update the route associated with a controller service
-     * 
-     * @param  string $controllerService 
-     * @param  string $routeMatch 
+     *
+     * @param  string $controllerService
+     * @param  string $routeMatch
      * @return true
      */
     public function updateRoute($controllerService, $routeMatch)
@@ -308,9 +308,9 @@ class CodeConnectedRpc
 
     /**
      * Update the allowed HTTP methods for a given service
-     * 
-     * @param  string $controllerService 
-     * @param  array $httpMethods 
+     *
+     * @param  string $controllerService
+     * @param  array $httpMethods
      * @return true
      */
     public function updateHttpMethods($controllerService, array $httpMethods)
@@ -323,9 +323,9 @@ class CodeConnectedRpc
 
     /**
      * Update the content-negotiation selector for the given service
-     * 
-     * @param  string $controllerService 
-     * @param  string $selector 
+     *
+     * @param  string $controllerService
+     * @param  string $selector
      * @return true
      */
     public function updateSelector($controllerService, $selector)
@@ -338,8 +338,8 @@ class CodeConnectedRpc
 
     /**
      * Normalize a service or module name to lowercase, dash-separated
-     * 
-     * @param  string $string 
+     *
+     * @param  string $string
      * @return string
      */
     protected function normalize($string)
@@ -351,7 +351,7 @@ class CodeConnectedRpc
 
     /**
      * Retrieve and/or initialize the normalization filter chain
-     * 
+     *
      * @return FilterChain
      */
     protected function getNormalizationFilter()
@@ -367,9 +367,9 @@ class CodeConnectedRpc
 
     /**
      * Retrieve the URL match for the given route name
-     * 
-     * @param  string $routeName 
-     * @param  array $config 
+     *
+     * @param  string $routeName
+     * @param  array $config
      * @return false|string
      */
     protected function getRouteMatchStringFromModuleConfig($routeName, array $config)

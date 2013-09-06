@@ -5,10 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use InvalidArgumentException;
 use RuntimeException;
 
-/**
- * @todo Get route details?
- */
-class RpcEndpointMetadata
+class RpcEndpoint
 {
     protected $acceptWhitelist = array();
 
@@ -29,7 +26,7 @@ class RpcEndpointMetadata
      * @param  array $data
      * @throws InvalidArgumentException if a particular value does not validate
      * @throws RuntimeException if the object does not have a controller service name following population
-     */ 
+     */
     public function exchangeArray(array $data)
     {
         foreach ($data as $key => $value) {
