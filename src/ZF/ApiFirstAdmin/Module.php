@@ -77,9 +77,9 @@ class Module
                 }
                 return new Model\ApiFirstModule($modules, $restConfig, $rpcConfig);
             },
-            'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\ModuleResource' => function ($services) {
                 $moduleModel = $services->get('ZF\ApiFirstAdmin\Model\ApiFirstModule');
-                $listener    = new Model\ApiFirstModuleListener($moduleModel);
+                $listener    = new Model\ModuleResource($moduleModel);
 
                 if ($services->has('Config')) {
                     $config = $services->get('Config');

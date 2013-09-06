@@ -176,7 +176,7 @@ return array(
 
     'zf-rest' => array(
         'ZF\ApiFirstAdmin\Controller\ModuleResource' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstModuleListener',
+            'listener'                => 'ZF\ApiFirstAdmin\Model\ModuleResource',
             'route_name'              => 'zf-api-first-admin/api/module',
             'identifier_name'         => 'name',
             'resource_http_options'   => array('GET'),

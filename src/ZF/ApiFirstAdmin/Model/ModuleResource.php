@@ -6,7 +6,7 @@ use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 
-class ApiFirstModuleListener extends AbstractResourceListener
+class ModuleResource extends AbstractResourceListener
 {
     /**
      * @var ApiFirstModule
