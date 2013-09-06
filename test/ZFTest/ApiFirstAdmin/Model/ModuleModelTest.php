@@ -158,7 +158,7 @@ class ModuleModelTest extends TestCase
     {
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
-        
+
         mkdir($modulePath);
         mkdir("$modulePath/module");
         mkdir("$modulePath/config");
@@ -173,7 +173,7 @@ class ModuleModelTest extends TestCase
         $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
-        
+
         $this->removeDir($modulePath);
     }
 
@@ -187,12 +187,12 @@ class ModuleModelTest extends TestCase
     {
         $module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Foo';
         $this->assertTrue($this->model->updateModule($module));
-        
+
         unlink(__DIR__ . '/TestAsset/Foo/Module.php');
         rename(
-            __DIR__ . '/TestAsset/Foo/Module.php.old', 
+            __DIR__ . '/TestAsset/Foo/Module.php.old',
             __DIR__ . '/TestAsset/Foo/Module.php'
-        ); 
+        );
     }
 
     public function testUpdateModuleWithOtherInterfaces()
@@ -225,7 +225,7 @@ class ModuleModelTest extends TestCase
             }
         }
         return rmdir($dir);
-    } 
+    }
 
     public function testVendorModulesAreMarkedAccordingly()
     {

@@ -18,8 +18,8 @@ class RpcEndpointModelFactory
     protected $modules;
 
     /**
-     * @param  ModuleUtils $modules 
-     * @param  ConfigResource $config 
+     * @param  ModuleUtils $modules
+     * @param  ConfigResource $config
      */
     public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory)
     {
@@ -28,7 +28,7 @@ class RpcEndpointModelFactory
     }
 
     /**
-     * @param  string $module 
+     * @param  string $module
      * @return RpcEndpointModel
      */
     public function factory($module)

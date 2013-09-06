@@ -26,7 +26,7 @@ class RpcEndpointResource extends AbstractResourceListener
     protected $rpcFactory;
 
     /**
-     * @param  RpcEndpointModelFactory $rpcFactory 
+     * @param  RpcEndpointModelFactory $rpcFactory
      */
     public function __construct(RpcEndpointModelFactory $rpcFactory)
     {
@@ -162,9 +162,9 @@ class RpcEndpointResource extends AbstractResourceListener
 
     /**
      * Update an existing RPC endpoint
-     * 
-     * @param  string $id 
-     * @param  object|array $data 
+     *
+     * @param  string $id
+     * @param  object|array $data
      * @return ApiProblem|RpcEndpoint
      * @throws PatchException if unable to update configuration
      */

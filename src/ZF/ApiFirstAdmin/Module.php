@@ -139,10 +139,10 @@ class Module
     public function getControllerConfig()
     {
         return array('factories' => array(
-            'ZF\ApiFirstAdmin\Controller\Module' => function ($controllers) {
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 $model    = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
-                return new Controller\ModuleController($model);
+                return new Controller\ModuleCreationController($model);
             },
         ));
     }

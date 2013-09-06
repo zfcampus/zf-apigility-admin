@@ -15,7 +15,7 @@ use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Resource;
 use ZF\Hal\Link\Link;
 
-class ModuleController extends AbstractActionController
+class ModuleCreationController extends AbstractActionController
 {
     protected $moduleModel;
 

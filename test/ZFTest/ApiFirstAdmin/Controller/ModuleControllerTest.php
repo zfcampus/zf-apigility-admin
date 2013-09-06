@@ -10,17 +10,17 @@ use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
-use ZF\ApiFirstAdmin\Controller\ModuleController;
+use ZF\ApiFirstAdmin\Controller\ModuleCreationController;
 use ZF\ApiFirstAdmin\Model\ModuleModel;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
-class ModuleControllerTest extends TestCase
+class ModuleCreationControllerTest extends TestCase
 {
     public function setUp()
     {
         $this->moduleManager  = new ModuleManager(array());
         $this->moduleResource = new ModuleModel($this->moduleManager, array(), array());
-        $this->controller     = new ModuleController($this->moduleResource);
+        $this->controller     = new ModuleCreationController($this->moduleResource);
     }
 
     public function invalidRequestMethods()
@@ -51,7 +51,7 @@ class ModuleControllerTest extends TestCase
     {
         $currentDir = getcwd();
         $tmpDir     = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
-        
+
         mkdir($tmpDir);
         mkdir("$tmpDir/module/Foo", 0777, true);
         mkdir("$tmpDir/config");
@@ -69,7 +69,7 @@ class ModuleControllerTest extends TestCase
                       ->will($this->returnValue(array('Foo' => new \Foo\Module)));
 
         $moduleResource = new ModuleModel($moduleManager, array(), array());
-        $controller     = new ModuleController($moduleResource);
+        $controller     = new ModuleCreationController($moduleResource);
 
         $request = new Request();
         $request->setMethod('put');
@@ -89,7 +89,7 @@ class ModuleControllerTest extends TestCase
         $controller->setPluginManager($plugins);
 
         $result = $controller->apiEnableAction();
-       
+
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->getVariable('payload');
         $this->assertInstanceOf('ZF\Hal\Resource', $payload);
@@ -101,13 +101,13 @@ class ModuleControllerTest extends TestCase
         $this->removeDir($tmpDir);
         chdir($currentDir);
     }
-    
-    protected function removeDir($dir) 
+
+    protected function removeDir($dir)
     {
         $files = array_diff(scandir($dir), array('.','..'));
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
         }
         return rmdir($dir);
-    } 
+    }
 }

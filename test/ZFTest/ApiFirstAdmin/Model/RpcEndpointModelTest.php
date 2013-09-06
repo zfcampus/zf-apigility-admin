@@ -32,7 +32,7 @@ class RpcEndpointModelTest extends TestCase
             }
         }
         return rmdir($dir);
-    } 
+    }
 
     protected function cleanUpAssets()
     {
@@ -65,7 +65,7 @@ class RpcEndpointModelTest extends TestCase
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
         $this->codeRpc  = new RpcEndpointModel($this->module, $this->modules, $this->resource->factory('FooConf'));
-    } 
+    }
 
     public function tearDown()
     {
