@@ -207,7 +207,7 @@ class Module
     public function onRenderCollectionResource($e)
     {
         $resource = $e->getParam('resource');
-        if (!$resource instanceof Model\ModuleMetadata) {
+        if (!$resource instanceof Model\Module) {
             return;
         }
 

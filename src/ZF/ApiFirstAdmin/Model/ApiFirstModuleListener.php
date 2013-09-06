@@ -49,7 +49,7 @@ class ApiFirstModuleListener extends AbstractResourceListener
      * Create a new API-First enabled module
      *
      * @param  array|object $data
-     * @return ModuleMetadata
+     * @return Module
      * @throws CreationException
      */
     public function create($data)
@@ -72,7 +72,7 @@ class ApiFirstModuleListener extends AbstractResourceListener
             throw new CreationException('Unable to create module; check your paths and permissions');
         }
 
-        $metadata = new ModuleMetadata($name);
+        $metadata = new Module($name);
         return $metadata;
     }
 
@@ -80,12 +80,12 @@ class ApiFirstModuleListener extends AbstractResourceListener
      * Fetch module metadata
      *
      * @param  string $id
-     * @return ModuleMetadata|ApiProblem
+     * @return Module|ApiProblem
      */
     public function fetch($id)
     {
         $module = $this->modules->getModule($id);
-        if (!$module instanceof ModuleMetadata) {
+        if (!$module instanceof Module) {
             return new ApiProblem(404, 'Module not found or is not API-First enabled');
         }
         return $module;

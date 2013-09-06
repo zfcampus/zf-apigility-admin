@@ -156,7 +156,7 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
-            'ZF\ApiFirstAdmin\Model\ModuleMetadata' => array(
+            'ZF\ApiFirstAdmin\Model\Module' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',

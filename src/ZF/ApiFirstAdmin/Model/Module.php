@@ -5,7 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use InvalidArgumentException;
 use ReflectionClass;
 
-class ModuleMetadata
+class Module
 {
     /**
      * @var string
