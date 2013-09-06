@@ -137,10 +137,10 @@ class CodeConnectedRest
     /**
      * Create a new service endpoint using the details provided
      *
-     * @param  RestCreationEndpoint $details
+     * @param  NewRestEndpoint $details
      * @return RestEndpoint
      */
-    public function createService(RestCreationEndpoint $details)
+    public function createService(NewRestEndpoint $details)
     {
         $resourceName      = $details->resourceName;
         $controllerService = $this->createControllerServiceName($resourceName);

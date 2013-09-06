@@ -7,7 +7,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\ApiFirstAdmin\Model\CodeConnectedRest;
-use ZF\ApiFirstAdmin\Model\RestCreationEndpoint;
+use ZF\ApiFirstAdmin\Model\NewRestEndpoint;
 use ZF\ApiFirstAdmin\Model\RestEndpoint;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
@@ -76,7 +76,7 @@ class CodeConnectedRestTest extends TestCase
 
     public function getCreationPayload()
     {
-        $payload = new RestCreationEndpoint();
+        $payload = new NewRestEndpoint();
         $payload->exchangeArray(array(
             'resource_name'              => 'foo',
             'route_match'                => '/api/foo',

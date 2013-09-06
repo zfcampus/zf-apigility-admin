@@ -81,7 +81,7 @@ class ApiFirstRestEndpointListener extends AbstractResourceListener
         }
 
         $model        = $this->getModel();
-        $creationData = new RestCreationEndpoint();
+        $creationData = new NewRestEndpoint();
         $creationData->exchangeArray($data);
 
         try {
