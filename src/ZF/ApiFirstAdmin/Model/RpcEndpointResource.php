@@ -8,11 +8,7 @@ use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
 
-/**
- * @todo We need to create a factory for returning a CodeConnectedRpc object based on the module name 
- *       and the configuration resource.
- */
-class ApiFirstRpcEndpointListener extends AbstractResourceListener
+class RpcEndpointResource extends AbstractResourceListener
 {
     /**
      * @var CodeConnectedRpc

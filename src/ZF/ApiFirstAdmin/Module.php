@@ -124,14 +124,14 @@ class Module
                 $factory = $services->get('ZF\ApiFirstAdmin\Model\CodeConnectedRestFactory');
                 return new Model\RestEndpointResource($factory);
             },
-            'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\RpcEndpointResource' => function ($services) {
                 if (!$services->has('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener is missing one or more dependencies'
+                        'ZF\ApiFirstAdmin\Model\RpcEndpointResource is missing one or more dependencies'
                     );
                 }
                 $factory = $services->get('ZF\ApiFirstAdmin\Model\CodeConnectedRpcFactory');
-                return new Model\ApiFirstRpcEndpointListener($factory);
+                return new Model\RpcEndpointResource($factory);
             },
         ));
     }

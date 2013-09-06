@@ -184,7 +184,7 @@ return array(
             'collection_name'         => 'module',
         ),
         'ZF\ApiFirstAdmin\Controller\RpcResource' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstRpcEndpointListener',
+            'listener'                => 'ZF\ApiFirstAdmin\Model\RpcEndpointResource',
             'route_name'              => 'zf-api-first-admin/api/module/rpc-endpoint',
             'identifier_name'         => 'controller_service_name',
             'resource_http_options'   => array('GET', 'PATCH'),
