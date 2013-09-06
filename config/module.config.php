@@ -192,7 +192,7 @@ return array(
             'collection_name'         => 'rpc',
         ),
         'ZF\ApiFirstAdmin\Controller\RestResource' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ApiFirstRestEndpointListener',
+            'listener'                => 'ZF\ApiFirstAdmin\Model\RestEndpointResource',
             'route_name'              => 'zf-api-first-admin/api/module/rest-endpoint',
             'identifier_name'         => 'controller_service_name',
             'resource_http_options'   => array('GET', 'PATCH'),

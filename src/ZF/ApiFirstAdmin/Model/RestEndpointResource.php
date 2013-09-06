@@ -8,7 +8,7 @@ use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
 
-class ApiFirstRestEndpointListener extends AbstractResourceListener
+class RestEndpointResource extends AbstractResourceListener
 {
     /**
      * @var CodeConnectedRest
