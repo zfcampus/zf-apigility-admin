@@ -12,8 +12,8 @@ module.controller(
 
 module.controller(
     'ModuleMenuController',
-    ['$scope', 'moduleFactory', function($scope, moduleFactory) {
-        moduleFactory.getAll().then(function (modules) {
+    ['$scope', 'ModuleService', function($scope, ModuleService) {
+        ModuleService.getAll().then(function (modules) {
             $scope.modules = modules;
         });
     }]
@@ -21,12 +21,12 @@ module.controller(
 
 module.controller(
     'SubnavController',
-    ['$scope', '$routeParams', 'subnavFactory', function ($scope, $routeParams, subnavFactory) {
+    ['$scope', '$routeParams', 'SubnavService', function ($scope, $routeParams, SubnavService) {
         console.log($routeParams.moduleName);
         if ($routeParams.moduleName == undefined) {
-            $scope.items = subnavFactory.getModuleNavigation($routeParams.moduleName);
+            $scope.items = SubnavService.getModuleNavigation($routeParams.moduleName);
         } else {
-            $scope.items = subnavFactory.getGlobalNavigation();
+            $scope.items = SubnavService.getGlobalNavigation();
         }
 
     }]
@@ -34,25 +34,27 @@ module.controller(
 
 module.controller(
     'CreateModuleController',
-    ['$rootScope', '$scope', '$http', '$location', 'HALParser', function($rootScope, $scope, $http, $location, HALParser) {
-        var halParser = new HALParser;
+    ['$rootScope', '$scope', '$http', '$location', 'ModuleService', function($rootScope, $scope, $http, $location, ModuleService) {
         $scope.createNewModule = function () {
-            $http.post('/admin/api/module', {name: $scope.moduleName})
-                .success(function (data) {
-                    var newModule = halParser.parse(data);
-                    $('#create-module-button').popover('hide');
-                    $rootScope.syncModuleResources();
-                    $location.path('/module/' + newModule.name + '/info');
-                });
+            ModuleService.createNewModule($scope.moduleName).then(function (module) {
+                $('#create-module-button').popover('hide');
+                $rootScope.$broadcast('UpdateModuleMenu');
+                $location.path('/module/' + module.name + '/info');
+            });
         }
     }]
 );
 
 module.controller(
     'ModuleController',
-    ['$rootScope', '$scope', '$routeParams', 'moduleFactory', function($rootScope, $scope, $routeParams, moduleFactory) {
+    ['$rootScope', '$scope', '$routeParams', 'ModuleService', function($rootScope, $scope, $routeParams, ModuleService) {
         $rootScope.pageTitle = $routeParams.moduleName;
         $rootScope.pageDescription = '';
+        $rootScope.pageTitle = '';
+        $rootScope.pageDescription = '';
+        ModuleService.getByName($routeParams.moduleName).then(function () {
+
+        });
     }]
 );
 
@@ -85,7 +87,7 @@ module.directive('popover', function($compile) {
     };
 });
 
-module.factory('subnavFactory', ['moduleFactory', function (moduleFactory) {
+module.factory('SubnavService', ['ModuleService', function (ModuleService) {
     return {
         getGlobalNavigation: function () {
             return [
@@ -108,7 +110,7 @@ module.factory('subnavFactory', ['moduleFactory', function (moduleFactory) {
     };
 }]);
 
-module.factory('moduleFactory', ['$http', 'HALParser', function ($http, HALParser) {
+module.factory('ModuleService', ['$http', 'HALParser', function ($http, HALParser) {
     var halParser = new HALParser;
     return {
         getAll: function () {
@@ -121,6 +123,12 @@ module.factory('moduleFactory', ['$http', 'HALParser', function ($http, HALParse
             return $http.get('/admin/api/module/' + name)
                 .then(function (result) {
                     return halParser.parse(result.data);
+                });
+        },
+        createNewModule: function (moduleName) {
+            $http.post('/admin/api/module', {name: moduleName})
+                .success(function (data) {
+                    return halParser.parse(data);
                 });
         }
     }
