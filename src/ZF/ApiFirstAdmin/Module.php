@@ -156,7 +156,7 @@ class Module
     {
         $matches = $e->getRouteMatch();
         $controller = $matches->getParam('controller', false);
-        if ($controller != 'ZF\ApiFirstAdmin\Controller\ModuleResource') {
+        if ($controller != 'ZF\ApiFirstAdmin\Controller\Module') {
             return;
         }
 
