@@ -3,7 +3,7 @@
 var module = angular.module('zfa1-admin', ['HALParser']);
 
 module.controller(
-    'IndexController',
+    'DashboardController',
     ['$rootScope', function($rootScope) {
         $rootScope.pageTitle = 'Dashboard';
         $rootScope.pageDescription = 'Global system configuration and configuration to be applied to all modules.';
@@ -21,45 +21,85 @@ module.controller(
 
 module.controller(
     'SubnavController',
-    ['$scope', '$routeParams', 'SubnavService', function ($scope, $routeParams, SubnavService) {
-        console.log($routeParams.moduleName);
-        if ($routeParams.moduleName == undefined) {
-            $scope.items = SubnavService.getModuleNavigation($routeParams.moduleName);
-        } else {
-            $scope.items = SubnavService.getGlobalNavigation();
-        }
+    ['$rootScope', '$scope', '$routeParams', 'SubnavService', function ($rootScope, $scope, $routeParams, SubnavService) {
 
+        var updateSubnav = function () {
+            if ($routeParams.moduleName == undefined) {
+                $scope.items = SubnavService.getGlobalNavigation();
+            } else {
+                $scope.items = SubnavService.getModuleNavigation($routeParams.moduleName);
+            }
+        };
+
+        $scope.$on('$routeChangeSuccess', function () {
+            updateSubnav();
+        });
+
+        $rootScope.$on('SubnavUpdate', function () {
+            updateSubnav();
+        });
+
+        // do first load (probably dashboard)
+        updateSubnav();
     }]
 );
 
 module.controller(
     'CreateModuleController',
-    ['$rootScope', '$scope', '$http', '$location', 'ModuleService', function($rootScope, $scope, $http, $location, ModuleService) {
+    ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
         $scope.createNewModule = function () {
             ModuleService.createNewModule($scope.moduleName).then(function (module) {
                 $('#create-module-button').popover('hide');
-                $rootScope.$broadcast('UpdateModuleMenu');
                 $location.path('/module/' + module.name + '/info');
+                $rootScope.$broadcast('SubnavUpdate');
             });
-        }
+        };
+    }]
+);
+
+module.controller(
+    'CreateRestResourceController',
+    ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
+
+        $scope.createNewRestResource = function () {
+
+            module = ModuleService.getCurrentModule();
+
+            ModuleService.createNewRestResource(module.name, $scope.restResourceName).then(function (module) {
+                $('#create-rest-resource-form').popover('hide');
+                $location.path('/module/' + module.name + '/rest-resources');
+            });
+        };
     }]
 );
 
 module.controller(
     'ModuleController',
     ['$rootScope', '$scope', '$routeParams', 'ModuleService', function($rootScope, $scope, $routeParams, ModuleService) {
-        $rootScope.pageTitle = $routeParams.moduleName;
-        $rootScope.pageDescription = '';
         $rootScope.pageTitle = '';
         $rootScope.pageDescription = '';
-        ModuleService.getByName($routeParams.moduleName).then(function () {
 
+        ModuleService.getByName($routeParams.moduleName).then(function (module) {
+            $scope.moduleResource = module;
+            $rootScope.pageTitle = module.name;
+            $rootScope.pageDescription = 'Module description tbd';
+            ModuleService.setCurrentModule(module);
         });
+
+        $scope.show = {
+            restResources: false,
+            rpcEndpoints: false
+        };
+
+        switch ($routeParams.section) {
+            case 'rest-resources': $scope.show.restResources = true; break;
+            case 'rpc-endpoints': $scope.show.rpcEndpoints = true; break;
+        }
     }]
 );
 
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-    $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'IndexController'});
+    $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
     $routeProvider.when('/module/:moduleName/:section', {templateUrl: '/zf-api-first-admin/partials/module.html', controller: 'ModuleController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
@@ -91,20 +131,20 @@ module.factory('SubnavService', ['ModuleService', function (ModuleService) {
     return {
         getGlobalNavigation: function () {
             return [
-                {name: "General Information", link: "/general-information"},
-                {name: "Media Types",         link: "/media-types"},
-                {name: "Authentication",      link: "/authentication"},
-                {name: "phpinfo()",           link: "/phpinfo"},
-                {name: "zf2info()",           link: "/zf2info"}
+                {name: "General Information", link: '/general-information'},
+                {name: "Media Types",         link: '/media-types'},
+                {name: "Authentication",      link: '/authentication'},
+                {name: "phpinfo()",           link: '/phpinfo'},
+                {name: "zf2info()",           link: '/zf2info'}
             ];
         },
         getModuleNavigation: function (moduleName) {
             return [
-                {name: "General Information",  link: 'module/' + moduleName + '/info'},
-                {name: "API Resources",        link: 'module/' + moduleName + '/api-resources'},
-                {name: "RPC Endpoints",        link: 'module/' + moduleName + '/rpc-endpoints'},
-                {name: "Authentication",       link: 'module/' + moduleName + '/authentication'},
-                {name: "Filters / Validators", link: 'module/' + moduleName + '/filters-validators'}
+                {name: "General Information",  link: '/module/' + moduleName + '/info'},
+                {name: "REST Resources",        link: '/module/' + moduleName + '/rest-resources'},
+                {name: "RPC Endpoints",        link: '/module/' + moduleName + '/rpc-endpoints'},
+                {name: "Authentication",       link: '/module/' + moduleName + '/authentication'},
+                {name: "Filters / Validators", link: '/module/' + moduleName + '/filters-validators'}
             ];
         }
     };
@@ -112,7 +152,14 @@ module.factory('SubnavService', ['ModuleService', function (ModuleService) {
 
 module.factory('ModuleService', ['$http', 'HALParser', function ($http, HALParser) {
     var halParser = new HALParser;
+    var currentModule = null;
     return {
+        getCurrentModule: function () {
+            return currentModule;
+        },
+        setCurrentModule: function (module) {
+            currentModule = module;
+        },
         getAll: function () {
             return $http.get('/admin/api/module')
                 .then(function (result) {
@@ -126,9 +173,15 @@ module.factory('ModuleService', ['$http', 'HALParser', function ($http, HALParse
                 });
         },
         createNewModule: function (moduleName) {
-            $http.post('/admin/api/module', {name: moduleName})
-                .success(function (data) {
-                    return halParser.parse(data);
+            return $http.post('/admin/api/module', {name: moduleName})
+                .then(function (result) {
+                    return halParser.parse(result.data);
+                });
+        },
+        createNewRestResource: function (moduleName, restResourceName) {
+            return $http.post('/admin/api/module/' + moduleName + '/rest/', {resource_name: restResourceName})
+                .then(function (result) {
+                    return halParser.parse(result.data);
                 });
         }
     }
