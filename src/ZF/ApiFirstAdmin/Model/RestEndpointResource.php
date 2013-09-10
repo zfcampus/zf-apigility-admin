@@ -71,7 +71,7 @@ class RestEndpointResource extends AbstractResourceListener
      * Create a new REST endpoint
      *
      * @param  array|object $data
-     * @return RestEndpoint
+     * @return RestEndpointEntity
      * @throws CreationException
      */
     public function create($data)
@@ -81,7 +81,7 @@ class RestEndpointResource extends AbstractResourceListener
         }
 
         $model        = $this->getModel();
-        $creationData = new NewRestEndpoint();
+        $creationData = new NewRestEndpointEntity();
         $creationData->exchangeArray($data);
 
         try {
@@ -97,12 +97,12 @@ class RestEndpointResource extends AbstractResourceListener
      * Fetch REST metadata
      *
      * @param  string $id
-     * @return RestEndpoint|ApiProblem
+     * @return RestEndpointEntity|ApiProblem
      */
     public function fetch($id)
     {
         $endpoint = $this->getModel()->fetch($id);
-        if (!$endpoint instanceof RestEndpoint) {
+        if (!$endpoint instanceof RestEndpointEntity) {
             return new ApiProblem(404, 'REST endpoint not found');
         }
         return $endpoint;
@@ -112,7 +112,7 @@ class RestEndpointResource extends AbstractResourceListener
      * Fetch metadata for all REST endpoints
      *
      * @param  array $params
-     * @return RestEndpoint[]
+     * @return RestEndpointEntity[]
      */
     public function fetchAll($params = array())
     {
@@ -124,7 +124,7 @@ class RestEndpointResource extends AbstractResourceListener
      *
      * @param  string $id
      * @param  object|array $data
-     * @return ApiProblem|RestEndpoint
+     * @return ApiProblem|RestEndpointEntity
      * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)
@@ -142,7 +142,7 @@ class RestEndpointResource extends AbstractResourceListener
         }
 
         $model = $this->getModel();
-        $patch = new RestEndpoint();
+        $patch = new RestEndpointEntity();
         $data  = array_merge(array('controller_service_name' => $id), $data);
         $patch->exchangeArray($data);
 

@@ -76,7 +76,7 @@ class ModuleModel
     /**
      * Retrieve modules
      *
-     * @return Module[]
+     * @return ModuleEntity[]
      */
     public function getModules()
     {
@@ -86,7 +86,7 @@ class ModuleModel
 
     /**
      * @param  string $moduleName
-     * @return null|Module
+     * @return null|ModuleEntity
      */
     public function getModule($moduleName)
     {
@@ -223,7 +223,7 @@ EOD;
             }
 
             $endpoints = $this->getEndpointsByModule($moduleName);
-            $metadata  = new Module($moduleName, $endpoints['rest'], $endpoints['rpc']);
+            $metadata  = new ModuleEntity($moduleName, $endpoints['rest'], $endpoints['rpc']);
             $this->modules[$metadata->getName()] = $metadata;
         }
 

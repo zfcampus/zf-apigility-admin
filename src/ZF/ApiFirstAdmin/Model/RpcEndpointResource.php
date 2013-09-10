@@ -71,7 +71,7 @@ class RpcEndpointResource extends AbstractResourceListener
      * Create a new RPC endpoint
      *
      * @param  array|object $data
-     * @return RpcEndpoint
+     * @return RpcEndpointEntity
      * @throws CreationException
      */
     public function create($data)
@@ -138,12 +138,12 @@ class RpcEndpointResource extends AbstractResourceListener
      * Fetch RPC metadata
      *
      * @param  string $id
-     * @return RpcEndpoint|ApiProblem
+     * @return RpcEndpointEntity|ApiProblem
      */
     public function fetch($id)
     {
         $endpoint = $this->getModel()->fetch($id);
-        if (!$endpoint instanceof RpcEndpoint) {
+        if (!$endpoint instanceof RpcEndpointEntity) {
             return new ApiProblem(404, 'RPC endpoint not found');
         }
         return $endpoint;
@@ -153,7 +153,7 @@ class RpcEndpointResource extends AbstractResourceListener
      * Fetch metadata for all RPC endpoints
      *
      * @param  array $params
-     * @return RpcEndpoint[]
+     * @return RpcEndpointEntity[]
      */
     public function fetchAll($params = array())
     {
@@ -165,7 +165,7 @@ class RpcEndpointResource extends AbstractResourceListener
      *
      * @param  string $id
      * @param  object|array $data
-     * @return ApiProblem|RpcEndpoint
+     * @return ApiProblem|RpcEndpointEntity
      * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)

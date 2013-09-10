@@ -49,7 +49,7 @@ class RpcEndpointModel
      *
      * @todo   get route details?
      * @param  string $controllerServiceName
-     * @return RpcEndpoint|false
+     * @return RpcEndpointEntity|false
      */
     public function fetch($controllerServiceName)
     {
@@ -91,7 +91,7 @@ class RpcEndpointModel
             }
         }
 
-        $endpoint = new RpcEndpoint();
+        $endpoint = new RpcEndpointEntity();
         $endpoint->exchangeArray($data);
         return $endpoint;
     }
@@ -99,7 +99,7 @@ class RpcEndpointModel
     /**
      * Fetch all endpoints
      *
-     * @return RpcEndpoint[]
+     * @return RpcEndpointEntity[]
      */
     public function fetchAll()
     {
@@ -126,7 +126,7 @@ class RpcEndpointModel
      * @param  string $route
      * @param  array $httpMethods
      * @param  null|string $selector
-     * @return RpcEndpoint
+     * @return RpcEndpointEntity
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {

@@ -7,8 +7,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\ApiFirstAdmin\Model\RestEndpointModel;
-use ZF\ApiFirstAdmin\Model\NewRestEndpoint;
-use ZF\ApiFirstAdmin\Model\RestEndpoint;
+use ZF\ApiFirstAdmin\Model\NewRestEndpointEntity;
+use ZF\ApiFirstAdmin\Model\RestEndpointEntity;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -76,7 +76,7 @@ class RestEndpointModelTest extends TestCase
 
     public function getCreationPayload()
     {
-        $payload = new NewRestEndpoint();
+        $payload = new NewRestEndpointEntity();
         $payload->exchangeArray(array(
             'resource_name'              => 'foo',
             'route_match'                => '/api/foo',
@@ -135,7 +135,7 @@ class RestEndpointModelTest extends TestCase
     public function testCreateEntityClassReturnsClassNameCreated()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
-        $this->assertEquals('BarConf\Foo', $entityClass);
+        $this->assertEquals('BarConf\FooEntity', $entityClass);
     }
 
     public function testCreateEntityClassCreatesClassFileWithNamedEntityClass()
@@ -276,32 +276,35 @@ class RestEndpointModelTest extends TestCase
         ), $config['BarConf\FooCollection']);
     }
 
-    public function testCreateServiceReturnsRestEndpointOnSuccess()
+    public function testCreateServiceReturnsRestEndpointEntityOnSuccess()
     {
         $details = $this->getCreationPayload();
         $result  = $this->codeRest->createService($details);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpoint', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointEntity', $result);
 
         $this->assertEquals('BarConf', $result->module);
         $this->assertEquals('BarConf\Controller\Foo', $result->controllerServiceName);
         $this->assertEquals('BarConf\FooResource', $result->resourceClass);
-        $this->assertEquals('BarConf\Foo', $result->entityClass);
+        $this->assertEquals('BarConf\FooEntity', $result->entityClass);
         $this->assertEquals('BarConf\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.foo', $result->routeName);
     }
 
+    /**
+     * @group fail
+     */
     public function testCanFetchEndpointAfterCreation()
     {
         $details = $this->getCreationPayload();
         $result  = $this->codeRest->createService($details);
 
         $endpoint = $this->codeRest->fetch('BarConf\Controller\Foo');
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpoint', $endpoint);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointEntity', $endpoint);
 
         $this->assertEquals('BarConf', $endpoint->module);
         $this->assertEquals('BarConf\Controller\Foo', $endpoint->controllerServiceName);
         $this->assertEquals('BarConf\FooResource', $endpoint->resourceClass);
-        $this->assertEquals('BarConf\Foo', $endpoint->entityClass);
+        $this->assertEquals('BarConf\FooEntity', $endpoint->entityClass);
         $this->assertEquals('BarConf\FooCollection', $endpoint->collectionClass);
         $this->assertEquals('bar-conf.foo', $endpoint->routeName);
         $this->assertEquals('/api/foo[/:foo_id]', $endpoint->routeMatch);
@@ -312,7 +315,7 @@ class RestEndpointModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $patch = new RestEndpoint();
+        $patch = new RestEndpointEntity();
         $patch->exchangeArray(array(
             'controller_service_name' => 'BarConf\Controller\Foo',
             'route_match'             => '/api/bar/foo',
@@ -342,7 +345,7 @@ class RestEndpointModelTest extends TestCase
             'collection_http_methods'    => array('GET'),
             'resource_http_methods'      => array('GET'),
         );
-        $patch = new RestEndpoint();
+        $patch = new RestEndpointEntity();
         $patch->exchangeArray($options);
 
         $this->codeRest->updateRestConfig($original, $patch);
@@ -367,7 +370,7 @@ class RestEndpointModelTest extends TestCase
             'accept_whitelist'       => array('application/json'),
             'content_type_whitelist' => array('application/json'),
         );
-        $patch = new RestEndpoint();
+        $patch = new RestEndpointEntity();
         $patch->exchangeArray($options);
 
         $this->codeRest->updateContentNegotiationConfig($original, $patch);
@@ -405,13 +408,13 @@ class RestEndpointModelTest extends TestCase
             'accept_whitelist'           => array('application/json'),
             'content_type_whitelist'     => array('application/json'),
         );
-        $patch = new RestEndpoint();
+        $patch = new RestEndpointEntity();
         $patch->exchangeArray(array_merge(array(
             'controller_service_name'    => 'BarConf\Controller\Foo',
         ), $updates));
 
         $updated = $this->codeRest->updateService($patch);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpoint', $updated);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointEntity', $updated);
 
         $values = $updated->getArrayCopy();
 

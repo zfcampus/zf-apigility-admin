@@ -93,7 +93,7 @@ class ModuleCreationControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->getVariable('payload');
         $this->assertInstanceOf('ZF\Hal\Resource', $payload);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\Module', $payload->resource);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\ModuleEntity', $payload->resource);
 
         $metadata = $payload->resource;
         $this->assertEquals('Foo', $metadata->getName());

@@ -8,7 +8,7 @@ namespace ZF\ApiFirstAdmin\Controller;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ApiFirstAdmin\Model\ModuleModel;
-use ZF\ApiFirstAdmin\Model\Module;
+use ZF\ApiFirstAdmin\Model\ModuleEntity;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
@@ -42,7 +42,7 @@ class ModuleCreationController extends AbstractActionController
                     return new ApiProblem(500, 'Unable to API-First-enable the module');
                 }
 
-                $metadata = new Module($module);
+                $metadata = new ModuleEntity($module);
                 $resource = new Resource($metadata, $module);
                 $resource->getLinks()->add(Link::factory(array(
                     'rel'   => 'self',

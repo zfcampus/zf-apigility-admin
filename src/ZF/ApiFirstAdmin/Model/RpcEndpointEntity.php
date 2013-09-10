@@ -5,7 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use InvalidArgumentException;
 use RuntimeException;
 
-class RpcEndpoint
+class RpcEndpointEntity
 {
     protected $acceptWhitelist = array();
 

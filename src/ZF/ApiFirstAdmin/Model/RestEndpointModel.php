@@ -83,7 +83,7 @@ class RestEndpointModel
 
     /**
      * @param  string $controllerService
-     * @return RestEndpoint|false
+     * @return RestEndpointEntity|false
      */
     public function fetch($controllerService)
     {
@@ -104,7 +104,7 @@ class RestEndpointModel
         $restConfig['resource_class']        = $restConfig['listener'];
         unset($restConfig['listener']);
 
-        $metadata = new RestEndpoint();
+        $metadata = new RestEndpointEntity();
         $metadata->exchangeArray($restConfig);
 
         $this->getRouteInfo($metadata, $config);
@@ -117,7 +117,7 @@ class RestEndpointModel
     /**
      * Fetch all endpoints
      *
-     * @return RestEndpoint[]
+     * @return RestEndpointEntity[]
      */
     public function fetchAll()
     {
@@ -137,10 +137,10 @@ class RestEndpointModel
     /**
      * Create a new service endpoint using the details provided
      *
-     * @param  NewRestEndpoint $details
-     * @return RestEndpoint
+     * @param  NewRestEndpointEntity $details
+     * @return RestEndpointEntity
      */
-    public function createService(NewRestEndpoint $details)
+    public function createService(NewRestEndpointEntity $details)
     {
         $resourceName      = $details->resourceName;
         $controllerService = $this->createControllerServiceName($resourceName);
@@ -152,7 +152,7 @@ class RestEndpointModel
         $this->createContentNegotiationConfig($details, $controllerService);
         $this->createHalConfig($details, $entityClass, $collectionClass, $routeName);
 
-        $metadata = new RestEndpoint();
+        $metadata = new RestEndpointEntity();
         $metadata->exchangeArray($details->getArrayCopy());
         $metadata->exchangeArray(array(
             'collection_class'        => $collectionClass,
@@ -169,10 +169,10 @@ class RestEndpointModel
     /**
      * Update an existing service
      *
-     * @param RestEndpoint $update
-     * @return RestEndpoint
+     * @param  RestEndpointEntity $update
+     * @return RestEndpointEntity
      */
-    public function updateService(RestEndpoint $update)
+    public function updateService(RestEndpointEntity $update)
     {
         $controllerService = $update->controllerServiceName;
 
@@ -259,7 +259,7 @@ class RestEndpointModel
         $module     = $this->module;
         $srcPath    = $this->getSourcePath();
 
-        $className = ucfirst($resourceName);
+        $className = sprintf('%sEntity', ucfirst($resourceName));
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -356,12 +356,12 @@ class RestEndpointModel
     /**
      * Creates REST configuration
      *
-     * @param  RestEndpoint $details
+     * @param  RestEndpointEntity $details
      * @param  string $controllerService
      * @param  string $resourceClass
      * @param  string $routeName
      */
-    public function createRestConfig(RestEndpoint $details, $controllerService, $resourceClass, $routeName)
+    public function createRestConfig(RestEndpointEntity $details, $controllerService, $resourceClass, $routeName)
     {
         $config = array('zf-rest' => array(
             $controllerService => array(
@@ -383,10 +383,10 @@ class RestEndpointModel
      * Create content negotiation configuration based on payload and discovered
      * controller service name
      *
-     * @param  RestEndpoint $details
+     * @param  RestEndpointEntity $details
      * @param  string $controllerService
      */
-    public function createContentNegotiationConfig(RestEndpoint $details, $controllerService)
+    public function createContentNegotiationConfig(RestEndpointEntity $details, $controllerService)
     {
         $config = array(
             'controllers' => array(
@@ -408,12 +408,12 @@ class RestEndpointModel
     /**
      * Create HAL configuration
      *
-     * @param  RestEndpoint $details
+     * @param  RestEndpointEntity $details
      * @param  string $entityClass
      * @param  string $collectionClass
      * @param  string $routeName
      */
-    public function createHalConfig(RestEndpoint $details, $entityClass, $collectionClass, $routeName)
+    public function createHalConfig(RestEndpointEntity $details, $entityClass, $collectionClass, $routeName)
     {
         $config = array('zf-hal' => array('metadata_map' => array(
             $entityClass => array(
@@ -432,10 +432,10 @@ class RestEndpointModel
     /**
      * Update the route for an existing endpoint
      *
-     * @param  RestEndpoint $original
-     * @param  RestEndpoint $update
+     * @param  RestEndpointEntity $original
+     * @param  RestEndpointEntity $update
      */
-    public function updateRoute(RestEndpoint $original, RestEndpoint $update)
+    public function updateRoute(RestEndpointEntity $original, RestEndpointEntity $update)
     {
         $route = $update->routeMatch;
         if (!$route) {
@@ -453,10 +453,10 @@ class RestEndpointModel
     /**
      * Update REST configuration
      *
-     * @param  RestEndpoint $original
-     * @param  RestEndpoint $update
+     * @param  RestEndpointEntity $original
+     * @param  RestEndpointEntity $update
      */
-    public function updateRestConfig(RestEndpoint $original, RestEndpoint $update)
+    public function updateRestConfig(RestEndpointEntity $original, RestEndpointEntity $update)
     {
         $patch = array();
         foreach ($this->restScalarUpdateOptions as $property => $configKey) {
@@ -489,10 +489,10 @@ class RestEndpointModel
     /**
      * Update the content negotiation configuration for the service
      *
-     * @param  RestEndpoint $original
-     * @param  RestEndpoint $update
+     * @param  RestEndpointEntity $original
+     * @param  RestEndpointEntity $update
      */
-    public function updateContentNegotiationConfig(RestEndpoint $original, RestEndpoint $update)
+    public function updateContentNegotiationConfig(RestEndpointEntity $original, RestEndpointEntity $update)
     {
         $baseKey = 'zf-content-negotiation.';
         $service = $original->controllerServiceName;
@@ -628,10 +628,10 @@ class RestEndpointModel
     /**
      * Retrieve route information for a given endpoint based on the configuration available
      *
-     * @param  RestEndpoint $metadata
+     * @param  RestEndpointEntity $metadata
      * @param  array $config
      */
-    protected function getRouteInfo(RestEndpoint $metadata, array $config)
+    protected function getRouteInfo(RestEndpointEntity $metadata, array $config)
     {
         $routeName = $metadata->routeName;
         if (!$routeName
@@ -653,10 +653,10 @@ class RestEndpointModel
      * service into the REST metadata
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpoint $metadata
+     * @param  RestEndpointEntity $metadata
      * @param  array $config
      */
-    protected function mergeContentNegotiationConfig($controllerServiceName, RestEndpoint $metadata, array $config)
+    protected function mergeContentNegotiationConfig($controllerServiceName, RestEndpointEntity $metadata, array $config)
     {
         if (!isset($config['zf-content-negotiation'])) {
             return;
@@ -692,10 +692,10 @@ class RestEndpointModel
      * Merge entity and collection class into metadata, if found
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpoint $metadata
+     * @param  RestEndpointEntity $metadata
      * @param  array $config
      */
-    protected function mergeHalConfig($controllerServiceName, RestEndpoint $metadata, array $config)
+    protected function mergeHalConfig($controllerServiceName, RestEndpointEntity $metadata, array $config)
     {
         if (!isset($config['zf-hal'])
             || !isset($config['zf-hal']['metadata_map'])
@@ -706,7 +706,7 @@ class RestEndpointModel
         $config = $config['zf-hal']['metadata_map'];
 
         $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata);
-        $collectionClass = sprintf('%sCollection', $entityClass);
+        $collectionClass = $this->deriveCollectionClass($controllerServiceName, $metadata);
         $merge           = array();
 
         if (isset($config[$entityClass])) {
@@ -724,13 +724,27 @@ class RestEndpointModel
      * Derive the name of the entity class from the controller service name
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpoint $metadata
+     * @param  RestEndpointEntity $metadata
      * @return string
      */
-    protected function deriveEntityClass($controllerServiceName, RestEndpoint $metadata)
+    protected function deriveEntityClass($controllerServiceName, RestEndpointEntity $metadata)
     {
         $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
         $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
-        return sprintf('%s\\%s', $module, $resource);
+        return sprintf('%s\\%sEntity', $module, $resource);
+    }
+
+    /**
+     * Derive the name of the collection class from the controller service name
+     *
+     * @param  string $controllerServiceName
+     * @param  RestEndpointEntity $metadata
+     * @return string
+     */
+    protected function deriveCollectionClass($controllerServiceName, RestEndpointEntity $metadata)
+    {
+        $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
+        return sprintf('%s\\%sCollection', $module, $resource);
     }
 }
