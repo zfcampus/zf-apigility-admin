@@ -179,7 +179,7 @@ module.factory('ModuleService', ['$http', 'HALParser', function ($http, HALParse
                 });
         },
         createNewRestResource: function (moduleName, restResourceName) {
-            return $http.post('/admin/api/module/' + moduleName + '/rest/', {resource_name: restResourceName})
+            return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: restResourceName})
                 .then(function (result) {
                     return halParser.parse(result.data);
                 });
