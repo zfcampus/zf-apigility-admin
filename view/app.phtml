@@ -49,7 +49,7 @@
         </div>
     </header>
 
-    <div class="zf1a-module-navigation" ng-controller="ModuleMenuController">
+    <div class="zf1a-module-navigation" ng-controller="ModuleListController">
         <div class="container">
             <span class="pull-left">Modules: </span>
             <ul class="nav nav-pills zfa1-nav-pills">
@@ -71,7 +71,7 @@
         <div class="row">
             <div class="col-md-3">
                 <aside class="zfa1-sidebar" role="complementary">
-                    <ul class="nav zfa1-sidenav" ng-controller="SubnavController">
+                    <ul class="nav zfa1-sidenav" ng-controller="ViewNavigationController">
                         <li ng-repeat="item in items">
                             <a ng-href="#{{ item.link }}">{{ item.name }}</a>
                         </li>

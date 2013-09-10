@@ -11,36 +11,48 @@ module.controller(
 );
 
 module.controller(
-    'ModuleMenuController',
+    'ModuleListController',
     ['$scope', 'ModuleService', function($scope, ModuleService) {
-        ModuleService.getAll().then(function (modules) {
-            $scope.modules = modules;
+
+        // initial load
+        $scope.modules = ModuleService.getAll();
+
+        // and any time its changed
+        $scope.$on('ModuleService.listUpdate', function () {
+            $scope.modules = ModuleService.getAll();
         });
+
+//
+//
+//            ModuleService.getAll().then(function (modules) {
+//                $scope.modules = modules;
+//            });
+//        };
+//        $scope.$on('UpdateModuleList', function () {
+//            updatePrimaryNavigation();
+//        });
+//        updatePrimaryNavigation();
     }]
 );
 
 module.controller(
-    'SubnavController',
-    ['$rootScope', '$scope', '$routeParams', 'SubnavService', function ($rootScope, $scope, $routeParams, SubnavService) {
+    'ViewNavigationController',
+    ['$rootScope', '$scope', '$routeParams', 'SecondaryNavigationService', function ($rootScope, $scope, $routeParams, SecondaryNavigationService) {
 
-        var updateSubnav = function () {
+        var updateSecondaryNavigation = function () {
             if ($routeParams.moduleName == undefined) {
-                $scope.items = SubnavService.getGlobalNavigation();
+                $scope.items = SecondaryNavigationService.getGlobalNavigation();
             } else {
-                $scope.items = SubnavService.getModuleNavigation($routeParams.moduleName);
+                $scope.items = SecondaryNavigationService.getModuleNavigation($routeParams.moduleName);
             }
         };
 
         $scope.$on('$routeChangeSuccess', function () {
-            updateSubnav();
-        });
-
-        $scope.$on('SubnavUpdate', function () {
-            updateSubnav();
+            updateSecondaryNavigation();
         });
 
         // do first load (probably dashboard)
-        updateSubnav();
+        updateSecondaryNavigation();
     }]
 );
 
@@ -51,7 +63,7 @@ module.controller(
             ModuleService.createNewModule($scope.moduleName).then(function (module) {
                 $('#create-module-button').popover('hide');
                 $location.path('/module/' + module.name + '/info');
-                $scope.$broadcast('SubnavUpdate');
+                $scope.$broadcast('UpdatePrimaryNavigation');
             });
         };
     }]
@@ -124,7 +136,7 @@ module.directive('popover', function($compile) {
     };
 });
 
-module.factory('SubnavService', function () {
+module.factory('SecondaryNavigationService', function () {
     return {
         getGlobalNavigation: function () {
             return [
@@ -147,10 +159,8 @@ module.factory('SubnavService', function () {
     };
 });
 
-module.factory('ModuleService', ['$http', 'HALParser', 'halClient', function ($http, HALParser, halClient) {
-    var halParser = new HALParser;
-    var currentModule = null;
-    return {
+module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($rootScope, $http, halClient) {
+    var service = {
         currentModule: null,
         getAll: function () {
             return halClient.$get('/admin/api/module')
@@ -167,30 +177,34 @@ module.factory('ModuleService', ['$http', 'HALParser', 'halClient', function ($h
         getByName: function (moduleName) {
             return halClient.$get('/admin/api/module/' + moduleName)
                 .then(function (moduleResource) {
-//                    moduleResource.rest = [];
-                    moduleResource.$get('rest').then(function (s) {
-//                        angular.forEach(s, function (x) {
-//
-//                        });
-//                        console.log(s);
-                        moduleResource.rest = s;
-                    });
+                    if (moduleResource.$has('rest')) {
+                        moduleResource.$get('rest').then(function (s) {
+                            moduleResource.rest = s;
+                        });
+                    } else {
+                        moduleResource.rest = [];
+                    }
                     return moduleResource;
                 });
         },
         createNewModule: function (moduleName) {
-            return $http.post('/admin/api/module', {name: moduleName})
-                .then(function (result) {
-                    return halParser.parse(result.data);
+            var postPromise = halClient.$post('/admin/api/module', {}, {name: moduleName})
+                .then(function (halResource) {
+                    return halResource;
                 });
+            $rootScope.$broadcast('ModuleService.listUpdate');
+            return postPromise;
         },
         createNewRestResource: function (restResourceName, moduleName) {
             if (moduleName == undefined) {
-                moduleName = this.currentModule.name;
+                console.log(service.currentModule);
+                moduleName = service.currentModule.name;
             }
+            console.log(moduleName);
             return halClient.$post('/admin/api/module/' + moduleName + '/rest', {}, {resource_name: restResourceName});
         }
-    }
+    };
+    return service;
 }]);
 
 module.run(['$rootScope', function ($rootScope) {
