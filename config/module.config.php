@@ -156,17 +156,17 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
-            'ZF\ApiFirstAdmin\Model\Module' => array(
+            'ZF\ApiFirstAdmin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',
             ),
-            'ZF\ApiFirstAdmin\Model\RpcEndpoint' => array(
+            'ZF\ApiFirstAdmin\Model\RpcEndpointEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
             ),
-            'ZF\ApiFirstAdmin\Model\RestEndpoint' => array(
+            'ZF\ApiFirstAdmin\Model\RestEndpointEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
@@ -179,6 +179,7 @@ return array(
             'listener'                => 'ZF\ApiFirstAdmin\Model\ModuleResource',
             'route_name'              => 'zf-api-first-admin/api/module',
             'identifier_name'         => 'name',
+            'entity_class'            => 'ZF\ApiFirstAdmin\Model\ModuleEntity',
             'resource_http_methods'   => array('GET'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'module',
@@ -186,6 +187,7 @@ return array(
         'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
             'listener'                => 'ZF\ApiFirstAdmin\Model\RpcEndpointResource',
             'route_name'              => 'zf-api-first-admin/api/module/rpc-endpoint',
+            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RpcEndpointEntity',
             'identifier_name'         => 'controller_service_name',
             'resource_http_methods'   => array('GET', 'PATCH'),
             'collection_http_methods' => array('GET', 'POST'),
@@ -194,6 +196,7 @@ return array(
         'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
             'listener'                => 'ZF\ApiFirstAdmin\Model\RestEndpointResource',
             'route_name'              => 'zf-api-first-admin/api/module/rest-endpoint',
+            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RestEndpointEntity',
             'identifier_name'         => 'controller_service_name',
             'resource_http_methods'   => array('GET', 'PATCH'),
             'collection_http_methods' => array('GET', 'POST'),
