@@ -1,4 +1,6 @@
-<ul ng-show="show.restResources">
+
+<div ng-show="show.restResources">
+
   <button id="create-rest-resource-button" class="btn btn-sm btn-primary pull-right" popover title="Create New REST Resource" position="bottom" content="#create-rest-resource-form">
     Create New Resource
   </button>
@@ -11,9 +13,54 @@
     </div>
   </div>
 
+  <div ng-repeat="rest in module.rest">
+    <h3>{{ rest.entity_class }}</h3>
+    <table class="table table-striped">
+      <tr>
+        <td>Collection Class</td>
+        <td>{{ rest.collection_class }}</td>
+      </tr>
+      <tr>
+        <td>Collection HTTP Methods</td>
+        <td>{{ rest.collection_http_options }}</td>
+      </tr>
+      <tr>
+        <td>Controller Service Name</td>
+        <td>{{ rest.controller_service_name }}</td>
+      </tr>
+      <tr>
+        <td>Entity Class</td>
+        <td>{{ rest.entity_class }}</td>
+      </tr>
+      <tr>
+        <td>Identifier Name</td>
+        <td>{{ rest.identifier_name }}</td>
+      </tr>
+      <tr>
+        <td>Page Size</td>
+        <td>{{ rest.page_size }}</td>
+      </tr>
+      <tr>
+        <td>Resource Class</td>
+        <td>{{ rest.resource_class }}</td>
+      </tr>
+      <tr>
+        <td>Resource HTTP Methods</td>
+        <td>{{ rest.resource_class }}</td>
+      </tr>
+      <tr>
+        <td>Route Match</td>
+        <td>{{ rest.route_match }}</td>
+      </tr>
+      <tr>
+        <td>Route Name</td>
+        <td>{{ rest.route_name }}</td>
+      </tr>
+    </table>
+    {{ restResource }}
+  </div>
 
-  <li ng-repeat="restResource in moduleResource.rest">{{ restResource }}</li>
-</ul>
+</div>
 <ul ng-show="showRpcEndpoints">
-  <li ng-repeat="rpcEndpoint in moduleResource.rpc">{{ rpcEndpoint }}</li>
+  <li ng-repeat="rpcEndpoint in module.rpc">{{ rpcEndpoint }}</li>
 </ul>

@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('zfa1-admin', ['HALParser']);
+var module = angular.module('zfa1-admin', ['HALParser', 'angular-hal']);
 
 module.controller(
     'DashboardController',
@@ -35,7 +35,7 @@ module.controller(
             updateSubnav();
         });
 
-        $rootScope.$on('SubnavUpdate', function () {
+        $scope.$on('SubnavUpdate', function () {
             updateSubnav();
         });
 
@@ -51,7 +51,7 @@ module.controller(
             ModuleService.createNewModule($scope.moduleName).then(function (module) {
                 $('#create-module-button').popover('hide');
                 $location.path('/module/' + module.name + '/info');
-                $rootScope.$broadcast('SubnavUpdate');
+                $scope.$broadcast('SubnavUpdate');
             });
         };
     }]
@@ -60,12 +60,8 @@ module.controller(
 module.controller(
     'CreateRestResourceController',
     ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
-
         $scope.createNewRestResource = function () {
-
-            module = ModuleService.getCurrentModule();
-
-            ModuleService.createNewRestResource(module.name, $scope.restResourceName).then(function (module) {
+            ModuleService.createNewRestResource($scope.restResourceName).then(function (module) {
                 $('#create-rest-resource-form').popover('hide');
                 $location.path('/module/' + module.name + '/rest-resources');
             });
@@ -80,10 +76,10 @@ module.controller(
         $rootScope.pageDescription = '';
 
         ModuleService.getByName($routeParams.moduleName).then(function (module) {
-            $scope.moduleResource = module;
+            $scope.module = module;
             $rootScope.pageTitle = module.name;
             $rootScope.pageDescription = 'Module description tbd';
-            ModuleService.setCurrentModule(module);
+            ModuleService.currentModule = module;
         });
 
         $scope.show = {
@@ -127,7 +123,7 @@ module.directive('popover', function($compile) {
     };
 });
 
-module.factory('SubnavService', ['ModuleService', function (ModuleService) {
+module.factory('SubnavService', function () {
     return {
         getGlobalNavigation: function () {
             return [
@@ -148,28 +144,32 @@ module.factory('SubnavService', ['ModuleService', function (ModuleService) {
             ];
         }
     };
-}]);
+});
 
-module.factory('ModuleService', ['$http', 'HALParser', function ($http, HALParser) {
+module.factory('ModuleService', ['$http', 'HALParser', 'halClient', function ($http, HALParser, halClient) {
     var halParser = new HALParser;
     var currentModule = null;
     return {
-        getCurrentModule: function () {
-            return currentModule;
-        },
-        setCurrentModule: function (module) {
-            currentModule = module;
-        },
+        currentModule: null,
         getAll: function () {
-            return $http.get('/admin/api/module')
-                .then(function (result) {
-                    return halParser.parse(result.data).module;
+            return halClient.$get('/admin/api/module')
+                .then(function (halResource) {
+                    var modules = [];
+                    halResource.$get('module').then(function (halResourceModule) {
+                        halResourceModule.forEach(function (mod) {
+                            modules.push(mod);
+                        });
+                    });
+                    return modules;
                 });
         },
-        getByName: function (name) {
-            return $http.get('/admin/api/module/' + name)
-                .then(function (result) {
-                    return halParser.parse(result.data);
+        getByName: function (moduleName) {
+            return halClient.$get('/admin/api/module/' + moduleName)
+                .then(function (moduleResource) {
+                    moduleResource.$get('rest').then(function (s) {
+                        moduleResource.rest = [s];
+                    });
+                    return moduleResource;
                 });
         },
         createNewModule: function (moduleName) {
@@ -178,11 +178,11 @@ module.factory('ModuleService', ['$http', 'HALParser', function ($http, HALParse
                     return halParser.parse(result.data);
                 });
         },
-        createNewRestResource: function (moduleName, restResourceName) {
-            return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: restResourceName})
-                .then(function (result) {
-                    return halParser.parse(result.data);
-                });
+        createNewRestResource: function (restResourceName, moduleName) {
+            if (moduleName == undefined) {
+                moduleName = this.currentModule.name;
+            }
+            return halClient.$post('/admin/api/module/' + moduleName + '/rest', {}, {resource_name: restResourceName});
         }
     }
 }]);
