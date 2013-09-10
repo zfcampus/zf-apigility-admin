@@ -2,7 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-class RestEndpoint
+class RestEndpointEntity
 {
     protected $acceptWhitelist = array();
 

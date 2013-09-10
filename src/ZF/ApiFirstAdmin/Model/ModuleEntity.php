@@ -5,7 +5,7 @@ namespace ZF\ApiFirstAdmin\Model;
 use InvalidArgumentException;
 use ReflectionClass;
 
-class Module
+class ModuleEntity
 {
     /**
      * @var string
@@ -95,18 +95,6 @@ class Module
      */
     public function getRpcEndpoints()
     {
-        foreach ($this->rpcEndpoints as $index => $identifier) {
-            if ($identifier instanceof RpcEndpoint) {
-                break;
-            }
-
-            $endpoint = new RpcEndpoint();
-            $endpoint->exchangeArray(array(
-                'controller_service_name' => $identifier
-            ));
-            $this->rpcEndpoints[$index] = $identifier;
-        }
-
         return $this->rpcEndpoints;
     }
 

@@ -205,7 +205,7 @@ class RpcEndpointModelTest extends TestCase
         $httpMethods = array('GET', 'PATCH');
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpoint', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointEntity', $result);
 
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $expected   = array(
