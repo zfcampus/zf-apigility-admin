@@ -3,6 +3,7 @@
 namespace ZF\ApiFirstAdmin;
 
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Resource;
@@ -155,6 +156,12 @@ class Module
     public function onRender($e)
     {
         $matches = $e->getRouteMatch();
+        if (!$matches instanceof RouteMatch) {
+            // In 404's, we do not have a route match... nor do we need to do 
+            // anything
+            return;
+        }
+
         $controller = $matches->getParam('controller', false);
         if ($controller != 'ZF\ApiFirstAdmin\Controller\Module') {
             return;
