@@ -14,24 +14,15 @@ module.controller(
     'ModuleListController',
     ['$scope', 'ModuleService', function($scope, ModuleService) {
 
-        // initial load
-        $scope.modules = ModuleService.getAll();
-
-        // and any time its changed
-        $scope.$on('ModuleService.listUpdate', function () {
+        var updateModuleList = function () {
             $scope.modules = ModuleService.getAll();
-        });
+        };
 
-//
-//
-//            ModuleService.getAll().then(function (modules) {
-//                $scope.modules = modules;
-//            });
-//        };
-//        $scope.$on('UpdateModuleList', function () {
-//            updatePrimaryNavigation();
-//        });
-//        updatePrimaryNavigation();
+        // on refresh, and initial load
+        $scope.$on('ModuleList.refresh', function () {
+            updateModuleList();
+        });
+        updateModuleList();
     }]
 );
 
@@ -47,11 +38,10 @@ module.controller(
             }
         };
 
+        // on refresh, and initial load
         $scope.$on('$routeChangeSuccess', function () {
             updateSecondaryNavigation();
         });
-
-        // do first load (probably dashboard)
         updateSecondaryNavigation();
     }]
 );
@@ -61,9 +51,9 @@ module.controller(
     ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
         $scope.createNewModule = function () {
             ModuleService.createNewModule($scope.moduleName).then(function (module) {
+                $rootScope.$broadcast('ModuleList.refresh');
                 $('#create-module-button').popover('hide');
                 $location.path('/module/' + module.name + '/info');
-                $scope.$broadcast('UpdatePrimaryNavigation');
             });
         };
     }]
@@ -73,9 +63,10 @@ module.controller(
     'CreateRestResourceController',
     ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
         $scope.createNewRestResource = function () {
-            ModuleService.createNewRestResource($scope.restResourceName).then(function (module) {
-                $('#create-rest-resource-form').popover('hide');
-                $location.path('/module/' + module.name + '/rest-resources');
+            ModuleService.createNewRestResource($scope.restResourceName).then(function (restResource) {
+                $rootScope.$broadcast('Module.refresh');
+                $('#create-rest-resource-button').popover('hide');
+                $location.path('/module/' + restResource.module + '/rest-resources');
             });
         };
     }]
@@ -87,13 +78,20 @@ module.controller(
         $rootScope.pageTitle = '';
         $rootScope.pageDescription = '';
 
-        ModuleService.getByName($routeParams.moduleName).then(function (module) {
-            console.log(module);
-            $scope.module = module;
-            $rootScope.pageTitle = module.name;
-            $rootScope.pageDescription = 'Module description tbd';
-            ModuleService.currentModule = module;
+        var updateModule = function () {
+            ModuleService.getByName($routeParams.moduleName).then(function (module) {
+                $scope.module = module;
+                $rootScope.pageTitle = module.name;
+                $rootScope.pageDescription = 'Module description tbd';
+                ModuleService.currentModule = module;
+            });
+        };
+
+        // on refresh, and initial load
+        $scope.$on('Module.refresh', function () {
+            updateModule();
         });
+        updateModule();
 
         $scope.show = {
             restResources: false,
@@ -176,31 +174,31 @@ module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($
         },
         getByName: function (moduleName) {
             return halClient.$get('/admin/api/module/' + moduleName)
-                .then(function (moduleResource) {
-                    if (moduleResource.$has('rest')) {
-                        moduleResource.$get('rest').then(function (s) {
-                            moduleResource.rest = s;
-                        });
-                    } else {
-                        moduleResource.rest = [];
-                    }
-                    return moduleResource;
+                .then(function (halResource) {
+                    console.log(halResource);
+                    halResource.$get('rest').then(function (halEmbedResource) {
+                        console.log(halEmbedResource[0]);
+                    });
+//                    if (moduleResource.$has('rest')) {
+//                        moduleResource.$get('rest').then(function (s) {
+//                            moduleResource.rest = s;
+//                        });
+//                    } else {
+//                        moduleResource.rest = [];
+//                    }
+                    return halResource;
                 });
         },
         createNewModule: function (moduleName) {
-            var postPromise = halClient.$post('/admin/api/module', {}, {name: moduleName})
+            return halClient.$post('/admin/api/module', {}, {name: moduleName})
                 .then(function (halResource) {
                     return halResource;
                 });
-            $rootScope.$broadcast('ModuleService.listUpdate');
-            return postPromise;
         },
         createNewRestResource: function (restResourceName, moduleName) {
             if (moduleName == undefined) {
-                console.log(service.currentModule);
                 moduleName = service.currentModule.name;
             }
-            console.log(moduleName);
             return halClient.$post('/admin/api/module/' + moduleName + '/rest', {}, {resource_name: restResourceName});
         }
     };
