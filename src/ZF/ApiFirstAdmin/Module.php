@@ -246,22 +246,20 @@ class Module
      */
     protected function injectLinksForEndpointsByType($type, $endpoints, LinkCollection $links, $module = null)
     {
-        $routeName = sprintf('zf-api-first-admin/api/module/%s-endpoint', $type);
-        foreach ($endpoints as $name) {
-            $spec = array(
-                'rel' => $type,
-                'route' => array(
-                    'name' => $routeName,
-                    'params' => array(
-                        'controller_service_name' => $name,
-                    ),
-                ),
-            );
-            if (null !== $module) {
-                $spec['route']['params']['name'] = $module;
-            }
-            $link = Link::factory($spec);
-            $links->add($link);
+        if (count($endpoints) < 1) {
+            return;
         }
+        $routeName = sprintf('zf-api-first-admin/api/module/%s-endpoint', $type);
+        $spec = array(
+            'rel' => $type,
+            'route' => array(
+                'name' => $routeName,
+            ),
+        );
+        if (null !== $module) {
+            $spec['route']['params']['name'] = $module;
+        }
+        $link = Link::factory($spec);
+        $links->add($link);
     }
 }
