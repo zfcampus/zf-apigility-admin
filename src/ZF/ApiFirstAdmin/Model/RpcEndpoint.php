@@ -31,10 +31,10 @@ class RpcEndpoint
     {
         foreach ($data as $key => $value) {
             $key = strtolower($key);
+            $key = str_replace('_', '', $key);
 
             switch ($key) {
                 case 'acceptwhitelist':
-                case 'accept_whitelist':
                     if (!is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
@@ -45,7 +45,6 @@ class RpcEndpoint
                     $this->acceptWhitelist = $value;
                     break;
                 case 'contenttypewhitelist':
-                case 'content_type_whitelist':
                     if (!is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
@@ -56,11 +55,9 @@ class RpcEndpoint
                     $this->contentTypeWhitelist = $value;
                     break;
                 case 'controllerservicename':
-                case 'controller_service_name':
                     $this->controllerServiceName = $value;
                     break;
-                case 'httpoptionss':
-                case 'http_options':
+                case 'httpmethods':
                     if (!is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
@@ -71,11 +68,9 @@ class RpcEndpoint
                     $this->httpMethods = $value;
                     break;
                 case 'routematch':
-                case 'route_match':
                     $this->routeMatch = $value;
                     break;
                 case 'routename':
-                case 'route_name':
                     $this->routeName = $value;
                     break;
                 case 'selector':
@@ -106,7 +101,7 @@ class RpcEndpoint
             'accept_whitelist'        => $this->acceptWhitelist,
             'content_type_whitelist'  => $this->contentTypeWhitelist,
             'controller_service_name' => $this->controllerServiceName,
-            'http_options'            => $this->httpMethods,
+            'http_methods'            => $this->httpMethods,
             'route_match'             => $this->routeMatch,
             'route_name'              => $this->routeName,
             'selector'                => $this->selector,

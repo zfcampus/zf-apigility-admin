@@ -53,9 +53,9 @@ class RestEndpointModel
      * @var array
      */
     protected $restArrayUpdateOptions = array(
-        'collectionHttpOptions'    => 'collection_http_options',
+        'collectionHttpMethods'    => 'collection_http_methods',
         'collectionQueryWhitelist' => 'collection_query_whitelist',
-        'resourceHttpOptions'      => 'resource_http_options',
+        'resourceHttpMethods'      => 'resource_http_methods',
     );
 
     /**
@@ -369,8 +369,8 @@ class RestEndpointModel
                 'route_name'                 => $routeName,
                 'identifier_name'            => $details->identifierName,
                 'collection_name'            => $details->collectionName,
-                'resource_http_options'      => $details->resourceHttpOptions,
-                'collection_http_options'    => $details->collectionHttpOptions,
+                'resource_http_methods'      => $details->resourceHttpMethods,
+                'collection_http_methods'    => $details->collectionHttpMethods,
                 'collection_query_whitelist' => $details->collectionQueryWhitelist,
                 'page_size'                  => $details->pageSize,
                 'page_size_param'            => $details->pageSizeParam,

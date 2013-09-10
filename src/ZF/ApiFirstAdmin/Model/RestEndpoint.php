@@ -8,7 +8,7 @@ class RestEndpoint
 
     protected $collectionClass;
 
-    protected $collectionHttpOptions = array('GET', 'POST');
+    protected $collectionHttpMethods = array('GET', 'POST');
 
     protected $collectionName;
 
@@ -30,7 +30,7 @@ class RestEndpoint
 
     protected $resourceClass;
 
-    protected $resourceHttpOptions = array('GET', 'PATCH', 'PUT', 'DELETE');
+    protected $resourceHttpMethods = array('GET', 'PATCH', 'PUT', 'DELETE');
 
     protected $routeMatch;
 
@@ -62,11 +62,11 @@ class RestEndpoint
                 case 'collectionclass':
                     $this->collectionClass = $value;
                     break;
-                case 'collectionhttpoptions':
-                    $this->collectionHttpOptions = $value;
+                case 'collectionhttpmethods':
+                    $this->collectionHttpMethods = $value;
                     break;
                 case 'collectionname':
-                    $this->resourceHttpOptions = $value;
+                    $this->collectionName = $value;
                     break;
                 case 'collectionquerywhitelist':
                     $this->collectionQueryWhitelist = $value;
@@ -95,8 +95,8 @@ class RestEndpoint
                 case 'resourceclass':
                     $this->resourceClass = $value;
                     break;
-                case 'resourcehttpoptions':
-                    $this->resourceHttpOptions = $value;
+                case 'resourcehttpmethods':
+                    $this->resourceHttpMethods = $value;
                     break;
                 case 'routematch':
                     $this->routeMatch = $value;
@@ -116,7 +116,7 @@ class RestEndpoint
         return array(
             'accept_whitelist'           => $this->acceptWhitelist,
             'collection_class'           => $this->collectionClass,
-            'collection_http_options'    => $this->collectionHttpOptions,
+            'collection_http_methods'    => $this->collectionHttpMethods,
             'collection_name'            => $this->collectionName,
             'collection_query_whitelist' => $this->collectionQueryWhitelist,
             'content_type_whitelist'     => $this->contentTypeWhitelist,
@@ -127,7 +127,7 @@ class RestEndpoint
             'page_size'                  => $this->pageSize,
             'page_size_param'            => $this->pageSizeParam,
             'resource_class'             => $this->resourceClass,
-            'resource_http_options'      => $this->resourceHttpOptions,
+            'resource_http_methods'      => $this->resourceHttpMethods,
             'route_match'                => $this->routeMatch,
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,

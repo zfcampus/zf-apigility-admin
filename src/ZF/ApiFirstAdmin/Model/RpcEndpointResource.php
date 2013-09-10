@@ -81,7 +81,7 @@ class RpcEndpointResource extends AbstractResourceListener
         }
 
         $creationData = array(
-            'http_options' => array('GET'),
+            'http_methods' => array('GET'),
             'selector'     => null,
         );
 
@@ -106,11 +106,11 @@ class RpcEndpointResource extends AbstractResourceListener
         }
         $creationData['route'] = $data['route'];
 
-        if (isset($data['http_options'])
-            && (is_string($data['http_options']) || is_array($data['http_options']))
-            && !empty($data['http_options'])
+        if (isset($data['http_methods'])
+            && (is_string($data['http_methods']) || is_array($data['http_methods']))
+            && !empty($data['http_methods'])
         ) {
-            $creationData['http_options'] = $data['http_options'];
+            $creationData['http_methods'] = $data['http_methods'];
         }
 
         if (isset($data['selector'])
@@ -124,7 +124,7 @@ class RpcEndpointResource extends AbstractResourceListener
             $endpoint = $model->createService(
                 $creationData['service_name'],
                 $creationData['route'],
-                $creationData['http_options'],
+                $creationData['http_methods'],
                 $creationData['selector']
             );
         } catch (\Exception $e) {
@@ -186,8 +186,8 @@ class RpcEndpointResource extends AbstractResourceListener
         foreach ($data as $key => $value) {
             try {
                 switch (strtolower($key)) {
-                    case 'httpoptions':
-                    case 'http_options':
+                    case 'httpmethods':
+                    case 'http_methods':
                         $model->updateHttpMethods($id, $value);
                         break;
                     case 'routematch':

@@ -146,7 +146,7 @@ class RpcEndpointModelTest extends TestCase
         $expected = array(
             'zf-rpc' => array(
                 'FooConf\Controller\HelloWorld' => array(
-                    'http_options' => array('GET', 'PATCH'),
+                    'http_methods' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.hello-world',
                 ),
             ),
@@ -202,9 +202,9 @@ class RpcEndpointModelTest extends TestCase
     {
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpOptions = array('GET', 'PATCH');
+        $httpMethods = array('GET', 'PATCH');
         $selector    = 'HalJson';
-        $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions, $selector);
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpoint', $result);
 
         $configFile = $this->modules->getModuleConfigPath($this->module);
@@ -226,7 +226,7 @@ class RpcEndpointModelTest extends TestCase
             )),
             'zf-rpc' => array(
                 'FooConf\Controller\HelloWorld' => array(
-                    'http_options' => array('GET', 'PATCH'),
+                    'http_methods' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.hello-world',
                 ),
             ),
@@ -264,9 +264,9 @@ class RpcEndpointModelTest extends TestCase
         // State is lost in between tests; re-seed the service
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpOptions = array('GET', 'PATCH');
+        $httpMethods = array('GET', 'PATCH');
         $selector    = 'HalJson';
-        $result      = $this->codeRpc->createService($serviceName, $route, $httpOptions, $selector);
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $endpoint    = $result->getArrayCopy();
 
         // and now do the actual work for the test
@@ -285,7 +285,7 @@ class RpcEndpointModelTest extends TestCase
         $this->writer->toFile($configData->config_file, $configData->config);
         $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
         $config = include $configData->config_file;
-        $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_options']);
+        $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_methods']);
     }
 
     public function testCanUpdateContentNegotiationSelector()
