@@ -142,7 +142,7 @@ class RestEndpointModel
      */
     public function createService(NewRestEndpointEntity $details)
     {
-        $resourceName      = $details->resourceName;
+        $resourceName      = ucfirst($details->resourceName);
         $controllerService = $this->createControllerServiceName($resourceName);
         $resourceClass     = $this->createResourceClass($resourceName);
         $entityClass       = $this->createEntityClass($resourceName);
@@ -201,7 +201,7 @@ class RestEndpointModel
      */
     public function createControllerServiceName($resourceName)
     {
-        return sprintf('%s\\Controller\\%s', $this->module, ucfirst($resourceName));
+        return sprintf('%s\\Rest\\%s\\Controller', $this->module, $resourceName);
     }
 
     /**
@@ -213,9 +213,9 @@ class RestEndpointModel
     public function createResourceClass($resourceName)
     {
         $module  = $this->module;
-        $srcPath = $this->getSourcePath();
+        $srcPath = $this->getSourcePath($resourceName);
 
-        $className = sprintf('%sResource', ucfirst($resourceName));
+        $className = sprintf('%sResource', $resourceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -227,6 +227,7 @@ class RestEndpointModel
 
         $view = new ViewModel(array(
             'module'    => $module,
+            'resource'  => $resourceName,
             'classname' => $className,
         ));
         if (!$this->createClassFile($view, 'resource', $classPath)) {
@@ -236,7 +237,7 @@ class RestEndpointModel
             ));
         }
 
-        $fullClassName = sprintf('%s\\%s', $module, $className);
+        $fullClassName = sprintf('%s\\Rest\\%s\\%s', $module, $resourceName, $className);
         $this->configResource->patch(array(
             'service_manager' => array(
                 'invokables' => array(
@@ -257,9 +258,9 @@ class RestEndpointModel
     public function createEntityClass($resourceName)
     {
         $module     = $this->module;
-        $srcPath    = $this->getSourcePath();
+        $srcPath    = $this->getSourcePath($resourceName);
 
-        $className = sprintf('%sEntity', ucfirst($resourceName));
+        $className = sprintf('%sEntity', $resourceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -271,6 +272,7 @@ class RestEndpointModel
 
         $view = new ViewModel(array(
             'module'    => $module,
+            'resource'  => $resourceName,
             'classname' => $className,
         ));
         if (!$this->createClassFile($view, 'entity', $classPath)) {
@@ -280,7 +282,7 @@ class RestEndpointModel
             ));
         }
 
-        $fullClassName = sprintf('%s\\%s', $module, $className);
+        $fullClassName = sprintf('%s\\Rest\\%s\\%s', $module, $resourceName, $className);
         return $fullClassName;
     }
 
@@ -293,9 +295,9 @@ class RestEndpointModel
     public function createCollectionClass($resourceName)
     {
         $module     = $this->module;
-        $srcPath    = $this->getSourcePath();
+        $srcPath    = $this->getSourcePath($resourceName);
 
-        $className = sprintf('%sCollection', ucfirst($resourceName));
+        $className = sprintf('%sCollection', $resourceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -307,6 +309,7 @@ class RestEndpointModel
 
         $view = new ViewModel(array(
             'module'    => $module,
+            'resource'  => $resourceName,
             'classname' => $className,
         ));
         if (!$this->createClassFile($view, 'collection', $classPath)) {
@@ -316,7 +319,7 @@ class RestEndpointModel
             ));
         }
 
-        $fullClassName = sprintf('%s\\%s', $module, $className);
+        $fullClassName = sprintf('%s\\Rest\\%s\\%s', $module, $resourceName, $className);
         return $fullClassName;
     }
 
@@ -333,7 +336,7 @@ class RestEndpointModel
     {
         $filter    = $this->getRouteNameFilter();
         $routeName = sprintf(
-            '%s.%s',
+            '%s.rest.%s',
             $filter->filter($this->module),
             $filter->filter($resourceName)
         );
@@ -586,18 +589,20 @@ class RestEndpointModel
     /**
      * Get the source path for the module
      *
+     * @param  string $resourceName
      * @return string
      */
-    protected function getSourcePath()
+    protected function getSourcePath($resourceName)
     {
         if ($this->sourcePath) {
             return $this->sourcePath;
         }
 
         $sourcePath = sprintf(
-            '%s/src/%s',
+            '%s/src/%s/Rest/%s',
             $this->modulePath,
-            str_replace('\\', '/', $this->module)
+            str_replace('\\', '/', $this->module),
+            $resourceName
         );
 
         if (!file_exists($sourcePath)) {
@@ -729,9 +734,11 @@ class RestEndpointModel
      */
     protected function deriveEntityClass($controllerServiceName, RestEndpointEntity $metadata)
     {
-        $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
-        return sprintf('%s\\%sEntity', $module, $resource);
+        $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+            return null;
+        }
+        return sprintf('%s\\Rest\\%s\\%sEntity', $module, $matches['service'], $matches['service']);
     }
 
     /**
@@ -743,8 +750,10 @@ class RestEndpointModel
      */
     protected function deriveCollectionClass($controllerServiceName, RestEndpointEntity $metadata)
     {
-        $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
-        return sprintf('%s\\%sCollection', $module, $resource);
+        $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+            return null;
+        }
+        return sprintf('%s\\Rest\\%s\\%sCollection', $module, $matches['service'], $matches['service']);
     }
 }
