@@ -135,7 +135,7 @@ class RestEndpointModelTest extends TestCase
     public function testCreateEntityClassReturnsClassNameCreated()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
-        $this->assertEquals('BarConf\Foo', $entityClass);
+        $this->assertEquals('BarConf\FooEntity', $entityClass);
     }
 
     public function testCreateEntityClassCreatesClassFileWithNamedEntityClass()
@@ -285,11 +285,14 @@ class RestEndpointModelTest extends TestCase
         $this->assertEquals('BarConf', $result->module);
         $this->assertEquals('BarConf\Controller\Foo', $result->controllerServiceName);
         $this->assertEquals('BarConf\FooResource', $result->resourceClass);
-        $this->assertEquals('BarConf\Foo', $result->entityClass);
+        $this->assertEquals('BarConf\FooEntity', $result->entityClass);
         $this->assertEquals('BarConf\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.foo', $result->routeName);
     }
 
+    /**
+     * @group fail
+     */
     public function testCanFetchEndpointAfterCreation()
     {
         $details = $this->getCreationPayload();
@@ -301,7 +304,7 @@ class RestEndpointModelTest extends TestCase
         $this->assertEquals('BarConf', $endpoint->module);
         $this->assertEquals('BarConf\Controller\Foo', $endpoint->controllerServiceName);
         $this->assertEquals('BarConf\FooResource', $endpoint->resourceClass);
-        $this->assertEquals('BarConf\Foo', $endpoint->entityClass);
+        $this->assertEquals('BarConf\FooEntity', $endpoint->entityClass);
         $this->assertEquals('BarConf\FooCollection', $endpoint->collectionClass);
         $this->assertEquals('bar-conf.foo', $endpoint->routeName);
         $this->assertEquals('/api/foo[/:foo_id]', $endpoint->routeMatch);

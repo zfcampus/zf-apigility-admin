@@ -259,7 +259,7 @@ class RestEndpointModel
         $module     = $this->module;
         $srcPath    = $this->getSourcePath();
 
-        $className = ucfirst($resourceName);
+        $className = sprintf('%sEntity', ucfirst($resourceName));
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -706,7 +706,7 @@ class RestEndpointModel
         $config = $config['zf-hal']['metadata_map'];
 
         $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata);
-        $collectionClass = sprintf('%sCollection', $entityClass);
+        $collectionClass = $this->deriveCollectionClass($controllerServiceName, $metadata);
         $merge           = array();
 
         if (isset($config[$entityClass])) {
@@ -731,6 +731,20 @@ class RestEndpointModel
     {
         $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
         $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
-        return sprintf('%s\\%s', $module, $resource);
+        return sprintf('%s\\%sEntity', $module, $resource);
+    }
+
+    /**
+     * Derive the name of the collection class from the controller service name
+     *
+     * @param  string $controllerServiceName
+     * @param  RestEndpoint $metadata
+     * @return string
+     */
+    protected function deriveCollectionClass($controllerServiceName, RestEndpoint $metadata)
+    {
+        $module   = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        $resource = str_replace($module . '\\Controller\\', '', $controllerServiceName);
+        return sprintf('%s\\%sCollection', $module, $resource);
     }
 }
