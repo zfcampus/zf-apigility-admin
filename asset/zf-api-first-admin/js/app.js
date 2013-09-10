@@ -76,6 +76,7 @@ module.controller(
         $rootScope.pageDescription = '';
 
         ModuleService.getByName($routeParams.moduleName).then(function (module) {
+            console.log(module);
             $scope.module = module;
             $rootScope.pageTitle = module.name;
             $rootScope.pageDescription = 'Module description tbd';
@@ -166,8 +167,13 @@ module.factory('ModuleService', ['$http', 'HALParser', 'halClient', function ($h
         getByName: function (moduleName) {
             return halClient.$get('/admin/api/module/' + moduleName)
                 .then(function (moduleResource) {
+//                    moduleResource.rest = [];
                     moduleResource.$get('rest').then(function (s) {
-                        moduleResource.rest = [s];
+//                        angular.forEach(s, function (x) {
+//
+//                        });
+//                        console.log(s);
+                        moduleResource.rest = s;
                     });
                     return moduleResource;
                 });
