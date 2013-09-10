@@ -130,6 +130,7 @@ class RpcEndpointModel
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
+        $serviceName       = ucfirst($serviceName);
         $controllerData    = $this->createController($serviceName);
         $controllerService = $controllerData->service;
         $routeName         = $this->createRoute($route, $serviceName, $controllerService);
@@ -151,18 +152,19 @@ class RpcEndpointModel
         $modulePath = $this->modules->getModulePath($module);
 
         $srcPath = sprintf(
-            '%s/src/%s/Controller',
+            '%s/src/%s/Rpc/%s',
             $modulePath,
-            str_replace('\\', '/', $module)
+            str_replace('\\', '/', $module),
+            $serviceName
         );
 
         if (!file_exists($srcPath)) {
             mkdir($srcPath, 0777, true);
         }
 
-        $className         = sprintf('%sController', ucfirst($serviceName));
+        $className         = sprintf('%sController', $serviceName);
         $classPath         = sprintf('%s/%s.php', $srcPath, $className);
-        $controllerService = sprintf('%s\Controller\\%s', $module, ucfirst($serviceName));
+        $controllerService = sprintf('%s\\Rpc\\%s\\Controller', $module, $serviceName);
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -174,7 +176,7 @@ class RpcEndpointModel
         $view = new ViewModel(array(
             'module'      => $module,
             'classname'   => $className,
-            'servicename' => lcfirst($serviceName)
+            'servicename' => $serviceName,
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(
@@ -190,7 +192,7 @@ class RpcEndpointModel
             return false;
         }
 
-        $fullClassName = sprintf('%s\Controller\\%s', $module, $className);
+        $fullClassName = sprintf('%s\\Rpc\\%s\\%s', $module, $serviceName, $className);
         $this->configResource->patch(array(
             'controllers' => array(
                 'invokables' => array(
@@ -217,10 +219,10 @@ class RpcEndpointModel
     public function createRoute($route, $serviceName, $controllerService = null)
     {
         if (null === $controllerService) {
-            $controllerService = sprintf('%s\Controller\\%s', $this->module, $serviceName);
+            $controllerService = sprintf('%s\\Rpc\\%s\\Controller', $this->module, $serviceName);
         }
 
-        $routeName = sprintf('%s.%s', $this->normalize($this->module), $this->normalize($serviceName));
+        $routeName = sprintf('%s.rpc.%s', $this->normalize($this->module), $this->normalize($serviceName));
         $action    = lcfirst($serviceName);
 
         $config = array('router' => array('routes' => array(

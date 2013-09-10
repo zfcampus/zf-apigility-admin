@@ -86,9 +86,9 @@ class RpcEndpointModelTest extends TestCase
         $this->assertObjectHasAttribute('file', $result);
         $this->assertObjectHasAttribute('service', $result);
 
-        $className         = sprintf("%s\Controller\%sController", $this->module, $serviceName);
-        $fileName          = sprintf("%s/TestAsset/module/%s/src/%s/Controller/%sController.php", __DIR__, $this->module, $this->module, $serviceName);
-        $controllerService = sprintf("%s\Controller\%s", $this->module, $serviceName);
+        $className         = sprintf("%s\\Rpc\\%s\\%sController", $this->module, $serviceName, $serviceName);
+        $fileName          = sprintf("%s/TestAsset/module/%s/src/%s/Rpc/%s/%sController.php", __DIR__, $this->module, $this->module, $serviceName, $serviceName);
+        $controllerService = sprintf("%s\\Rpc\\%s\\Controller", $this->module, $serviceName);
 
         $this->assertEquals($className, $result->class);
         $this->assertEquals($fileName, $result->file);
@@ -113,19 +113,19 @@ class RpcEndpointModelTest extends TestCase
 
     public function testCanCreateRouteConfiguration()
     {
-        $result = $this->codeRpc->createRoute('/foo_conf/hello_world', 'HelloWorld', 'FooConf\Controller\HelloWorld');
-        $this->assertEquals('foo-conf.hello-world', $result);
+        $result = $this->codeRpc->createRoute('/foo_conf/hello_world', 'HelloWorld', 'FooConf\Rpc\HelloWorld\Controller');
+        $this->assertEquals('foo-conf.rpc.hello-world', $result);
 
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
         $expected   = array(
             'router' => array('routes' => array(
-                'foo-conf.hello-world' => array(
+                'foo-conf.rpc.hello-world' => array(
                     'type' => 'Segment',
                     'options' => array(
                         'route' => '/foo_conf/hello_world',
                         'defaults' => array(
-                            'controller' => 'FooConf\Controller\HelloWorld',
+                            'controller' => 'FooConf\Rpc\HelloWorld\Controller',
                             'action' => 'helloWorld',
                         ),
                     ),
@@ -136,18 +136,18 @@ class RpcEndpointModelTest extends TestCase
         return (object) array(
             'config'             => $config,
             'config_file'        => $configFile,
-            'controller_service' => 'FooConf\Controller\HelloWorld',
+            'controller_service' => 'FooConf\Rpc\HelloWorld\Controller',
         );
     }
 
     public function testCanCreateRpcConfiguration()
     {
-        $result = $this->codeRpc->createRpcConfig('FooConf\Controller\HelloWorld', 'foo-conf.hello-world', array('GET', 'PATCH'));
+        $result = $this->codeRpc->createRpcConfig('FooConf\Rpc\HelloWorld\Controller', 'foo-conf.rpc.hello-world', array('GET', 'PATCH'));
         $expected = array(
             'zf-rpc' => array(
-                'FooConf\Controller\HelloWorld' => array(
+                'FooConf\Rpc\HelloWorld\Controller' => array(
                     'http_methods' => array('GET', 'PATCH'),
-                    'route_name'   => 'foo-conf.hello-world',
+                    'route_name'   => 'foo-conf.rpc.hello-world',
                 ),
             ),
         );
@@ -158,7 +158,7 @@ class RpcEndpointModelTest extends TestCase
         $this->assertEquals($expected, $config);
 
         return (object) array(
-            'controller_service' => 'FooConf\Controller\HelloWorld',
+            'controller_service' => 'FooConf\Rpc\HelloWorld\Controller',
             'config'             => $config,
             'config_file'        => $configFile,
         );
@@ -177,11 +177,11 @@ class RpcEndpointModelTest extends TestCase
      */
     public function testCanCreateContentNegotiationSelectorConfiguration($selector, $expected)
     {
-        $result = $this->codeRpc->createSelectorConfig('FooConf\Controller\HelloWorld', $selector);
+        $result = $this->codeRpc->createSelectorConfig('FooConf\Rpc\HelloWorld\Controller', $selector);
         $expected = array(
             'zf-content-negotiation' => array(
                 'controllers' => array(
-                    'FooConf\Controller\HelloWorld' => $expected,
+                    'FooConf\Rpc\HelloWorld\Controller' => $expected,
                 ),
             ),
         );
@@ -194,7 +194,7 @@ class RpcEndpointModelTest extends TestCase
         return (object) array(
             'config'             => $config,
             'config_file'        => $configFile,
-            'controller_service' => 'FooConf\Controller\HelloWorld',
+            'controller_service' => 'FooConf\Rpc\HelloWorld\Controller',
         );
     }
 
@@ -210,37 +210,37 @@ class RpcEndpointModelTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $expected   = array(
             'controllers' => array('invokables' => array(
-                'FooConf\Controller\HelloWorld' => 'FooConf\Controller\HelloWorldController',
+                'FooConf\Rpc\HelloWorld\Controller' => 'FooConf\Rpc\HelloWorld\HelloWorldController',
             )),
             'router' => array('routes' => array(
-                'foo-conf.hello-world' => array(
+                'foo-conf.rpc.hello-world' => array(
                     'type' => 'Segment',
                     'options' => array(
                         'route' => '/foo_conf/hello/world',
                         'defaults' => array(
-                            'controller' => 'FooConf\Controller\HelloWorld',
+                            'controller' => 'FooConf\Rpc\HelloWorld\Controller',
                             'action' => 'helloWorld',
                         ),
                     ),
                 ),
             )),
             'zf-rpc' => array(
-                'FooConf\Controller\HelloWorld' => array(
+                'FooConf\Rpc\HelloWorld\Controller' => array(
                     'http_methods' => array('GET', 'PATCH'),
-                    'route_name'   => 'foo-conf.hello-world',
+                    'route_name'   => 'foo-conf.rpc.hello-world',
                 ),
             ),
             'zf-content-negotiation' => array(
                 'controllers' => array(
-                    'FooConf\Controller\HelloWorld' => $selector,
+                    'FooConf\Rpc\HelloWorld\Controller' => $selector,
                 ),
             ),
         );
         $config = include $configFile;
         $this->assertEquals($expected, $config);
 
-        $class     = 'FooConf\Controller\HelloWorldController';
-        $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/Controller/HelloWorldController.php', __DIR__);
+        $class     = 'FooConf\Rpc\HelloWorld\HelloWorldController';
+        $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/Rpc/HelloWorld/HelloWorldController.php', __DIR__);
         $this->assertTrue(file_exists($classFile));
         require_once $classFile;
         $controllerClass = new ReflectionClass($class);
@@ -294,12 +294,12 @@ class RpcEndpointModelTest extends TestCase
         $this->writer->toFile($configFile, array(
             'zf-content-negotiation' => array(
                 'controllers' => array(
-                    'FooConf\Controller\HelloWorld' => 'Json',
+                    'FooConf\Rpc\HelloWorld\Controller' => 'Json',
                 ),
             ),
         ));
-        $this->assertTrue($this->codeRpc->updateSelector('FooConf\Controller\HelloWorld', 'MyCustomSelector'));
+        $this->assertTrue($this->codeRpc->updateSelector('FooConf\Rpc\HelloWorld\Controller', 'MyCustomSelector'));
         $config = include $configFile;
-        $this->assertEquals('MyCustomSelector', $config['zf-content-negotiation']['controllers']['FooConf\Controller\HelloWorld']);
+        $this->assertEquals('MyCustomSelector', $config['zf-content-negotiation']['controllers']['FooConf\Rpc\HelloWorld\Controller']);
     }
 }

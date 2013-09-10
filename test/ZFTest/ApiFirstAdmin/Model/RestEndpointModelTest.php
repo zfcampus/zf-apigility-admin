@@ -96,21 +96,21 @@ class RestEndpointModelTest extends TestCase
 
     public function testCanCreateControllerServiceNameFromResourceName()
     {
-        $this->assertEquals('BarConf\Controller\Foo', $this->codeRest->createControllerServiceName('Foo'));
+        $this->assertEquals('BarConf\Rest\Foo\Controller', $this->codeRest->createControllerServiceName('Foo'));
     }
 
     public function testCreateResourceClassReturnsClassNameCreated()
     {
         $resourceClass = $this->codeRest->createResourceClass('Foo');
-        $this->assertEquals('BarConf\FooResource', $resourceClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooResource', $resourceClass);
     }
 
     public function testCreateResourceClassCreatesClassFileWithNamedResourceClass()
     {
         $resourceClass = $this->codeRest->createResourceClass('Foo');
 
-        $className = str_replace($this->module . '\\', '', $resourceClass);
-        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/' . $className . '.php';
+        $className = str_replace($this->module . '\\Rest\\Foo\\', '', $resourceClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -135,15 +135,15 @@ class RestEndpointModelTest extends TestCase
     public function testCreateEntityClassReturnsClassNameCreated()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
-        $this->assertEquals('BarConf\FooEntity', $entityClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $entityClass);
     }
 
     public function testCreateEntityClassCreatesClassFileWithNamedEntityClass()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
 
-        $className = str_replace($this->module . '\\', '', $entityClass);
-        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/' . $className . '.php';
+        $className = str_replace($this->module . '\\Rest\\Foo\\', '', $entityClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -156,15 +156,15 @@ class RestEndpointModelTest extends TestCase
     public function testCreateCollectionClassReturnsClassNameCreated()
     {
         $collectionClass = $this->codeRest->createCollectionClass('Foo');
-        $this->assertEquals('BarConf\FooCollection', $collectionClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $collectionClass);
     }
 
     public function testCreateCollectionClassCreatesClassFileWithNamedCollectionClass()
     {
         $collectionClass = $this->codeRest->createCollectionClass('Foo');
 
-        $className = str_replace($this->module . '\\', '', $collectionClass);
-        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/' . $className . '.php';
+        $className = str_replace($this->module . '\\Rest\\Foo\\', '', $collectionClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -177,13 +177,13 @@ class RestEndpointModelTest extends TestCase
 
     public function testCreateRouteReturnsNewRouteName()
     {
-        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Controller\FooBar');
-        $this->assertEquals('bar-conf.foo-bar', $routeName);
+        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Rest\FooBar\Controller');
+        $this->assertEquals('bar-conf.rest.foo-bar', $routeName);
     }
 
     public function testCreateRouteWritesRouteConfiguration()
     {
-        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Controller\FooBar');
+        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Rest\FooBar\Controller');
 
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
         $this->assertArrayHasKey('router', $config);
@@ -196,7 +196,7 @@ class RestEndpointModelTest extends TestCase
             'options' => array(
                 'route' => '/foo-bar[/:foo_bar_id]',
                 'defaults' => array(
-                    'controller' => 'BarConf\Controller\FooBar',
+                    'controller' => 'BarConf\Rest\FooBar\Controller',
                 ),
             ),
         );
@@ -206,16 +206,16 @@ class RestEndpointModelTest extends TestCase
     public function testCreateRestConfigWritesRestConfiguration()
     {
         $details = $this->getCreationPayload();
-        $this->codeRest->createRestConfig($details, 'BarConf\Controller\Foo', 'BarConf\FooResource', 'bar-conf.foo');
+        $this->codeRest->createRestConfig($details, 'BarConf\Rest\Foo\Controller', 'BarConf\Rest\Foo\FooResource', 'bar-conf.rest.foo');
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
 
         $this->assertArrayHasKey('zf-rest', $config);
-        $this->assertArrayHasKey('BarConf\Controller\Foo', $config['zf-rest']);
-        $config = $config['zf-rest']['BarConf\Controller\Foo'];
+        $this->assertArrayHasKey('BarConf\Rest\Foo\Controller', $config['zf-rest']);
+        $config = $config['zf-rest']['BarConf\Rest\Foo\Controller'];
 
         $expected = array(
-            'listener'                   => 'BarConf\FooResource',
-            'route_name'                 => 'bar-conf.foo',
+            'listener'                   => 'BarConf\Rest\Foo\FooResource',
+            'route_name'                 => 'bar-conf.rest.foo',
             'identifier_name'            => $details->identifierName,
             'collection_name'            => $details->collectionName,
             'resource_http_methods'      => $details->resourceHttpMethods,
@@ -230,7 +230,7 @@ class RestEndpointModelTest extends TestCase
     public function testCreateContentNegotiationConfigWritesContentNegotiationConfiguration()
     {
         $details = $this->getCreationPayload();
-        $this->codeRest->createContentNegotiationConfig($details, 'BarConf\Controller\Foo');
+        $this->codeRest->createContentNegotiationConfig($details, 'BarConf\Rest\Foo\Controller');
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
 
         $this->assertArrayHasKey('zf-content-negotiation', $config);
@@ -238,42 +238,42 @@ class RestEndpointModelTest extends TestCase
 
         $this->assertArrayHasKey('controllers', $config);
         $this->assertEquals(array(
-            'BarConf\Controller\Foo' => $details->selector,
+            'BarConf\Rest\Foo\Controller' => $details->selector,
         ), $config['controllers']);
 
         $this->assertArrayHasKey('accept-whitelist', $config);
         $this->assertEquals(array(
-            'BarConf\Controller\Foo' => $details->acceptWhitelist,
+            'BarConf\Rest\Foo\Controller' => $details->acceptWhitelist,
         ), $config['accept-whitelist'], var_export($config, 1));
 
         $this->assertArrayHasKey('content-type-whitelist', $config);
         $this->assertEquals(array(
-            'BarConf\Controller\Foo' => $details->contentTypeWhitelist,
+            'BarConf\Rest\Foo\Controller' => $details->contentTypeWhitelist,
         ), $config['content-type-whitelist'], var_export($config, 1));
     }
 
     public function testCreateHalConfigWritesHalConfiguration()
     {
         $details = $this->getCreationPayload();
-        $this->codeRest->createHalConfig($details, 'BarConf\Foo', 'BarConf\FooCollection', 'bar-conf.foo');
+        $this->codeRest->createHalConfig($details, 'BarConf\Rest\Foo\FooEntity', 'BarConf\Rest\Foo\FooCollection', 'bar-conf.rest.foo');
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
 
         $this->assertArrayHasKey('zf-hal', $config);
         $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
         $config = $config['zf-hal']['metadata_map'];
 
-        $this->assertArrayHasKey('BarConf\Foo', $config);
+        $this->assertArrayHasKey('BarConf\Rest\Foo\FooEntity', $config);
         $this->assertEquals(array(
             'identifier_name' => $details->identifierName,
-            'route_name'      => 'bar-conf.foo',
-        ), $config['BarConf\Foo']);
+            'route_name'      => 'bar-conf.rest.foo',
+        ), $config['BarConf\Rest\Foo\FooEntity']);
 
-        $this->assertArrayHasKey('BarConf\FooCollection', $config);
+        $this->assertArrayHasKey('BarConf\Rest\Foo\FooCollection', $config);
         $this->assertEquals(array(
             'identifier_name' => $details->identifierName,
-            'route_name'      => 'bar-conf.foo',
+            'route_name'      => 'bar-conf.rest.foo',
             'is_collection'   => true,
-        ), $config['BarConf\FooCollection']);
+        ), $config['BarConf\Rest\Foo\FooCollection']);
     }
 
     public function testCreateServiceReturnsRestEndpointEntityOnSuccess()
@@ -283,30 +283,27 @@ class RestEndpointModelTest extends TestCase
         $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointEntity', $result);
 
         $this->assertEquals('BarConf', $result->module);
-        $this->assertEquals('BarConf\Controller\Foo', $result->controllerServiceName);
-        $this->assertEquals('BarConf\FooResource', $result->resourceClass);
-        $this->assertEquals('BarConf\FooEntity', $result->entityClass);
-        $this->assertEquals('BarConf\FooCollection', $result->collectionClass);
-        $this->assertEquals('bar-conf.foo', $result->routeName);
+        $this->assertEquals('BarConf\Rest\Foo\Controller', $result->controllerServiceName);
+        $this->assertEquals('BarConf\Rest\Foo\FooResource', $result->resourceClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $result->entityClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $result->collectionClass);
+        $this->assertEquals('bar-conf.rest.foo', $result->routeName);
     }
 
-    /**
-     * @group fail
-     */
     public function testCanFetchEndpointAfterCreation()
     {
         $details = $this->getCreationPayload();
         $result  = $this->codeRest->createService($details);
 
-        $endpoint = $this->codeRest->fetch('BarConf\Controller\Foo');
+        $endpoint = $this->codeRest->fetch('BarConf\Rest\Foo\Controller');
         $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RestEndpointEntity', $endpoint);
 
         $this->assertEquals('BarConf', $endpoint->module);
-        $this->assertEquals('BarConf\Controller\Foo', $endpoint->controllerServiceName);
-        $this->assertEquals('BarConf\FooResource', $endpoint->resourceClass);
-        $this->assertEquals('BarConf\FooEntity', $endpoint->entityClass);
-        $this->assertEquals('BarConf\FooCollection', $endpoint->collectionClass);
-        $this->assertEquals('bar-conf.foo', $endpoint->routeName);
+        $this->assertEquals('BarConf\Rest\Foo\Controller', $endpoint->controllerServiceName);
+        $this->assertEquals('BarConf\Rest\Foo\FooResource', $endpoint->resourceClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $endpoint->entityClass);
+        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $endpoint->collectionClass);
+        $this->assertEquals('bar-conf.rest.foo', $endpoint->routeName);
         $this->assertEquals('/api/foo[/:foo_id]', $endpoint->routeMatch);
     }
 
@@ -317,7 +314,7 @@ class RestEndpointModelTest extends TestCase
 
         $patch = new RestEndpointEntity();
         $patch->exchangeArray(array(
-            'controller_service_name' => 'BarConf\Controller\Foo',
+            'controller_service_name' => 'BarConf\Rest\Foo\Controller',
             'route_match'             => '/api/bar/foo',
         ));
 
@@ -410,7 +407,7 @@ class RestEndpointModelTest extends TestCase
         );
         $patch = new RestEndpointEntity();
         $patch->exchangeArray(array_merge(array(
-            'controller_service_name'    => 'BarConf\Controller\Foo',
+            'controller_service_name'    => 'BarConf\Rest\Foo\Controller',
         ), $updates));
 
         $updated = $this->codeRest->updateService($patch);
