@@ -101,8 +101,6 @@ module.controller(
         switch ($routeParams.section) {
             case 'rest-endpoints': 
                 ModuleService.getEndpointsByType("rest", $routeParams.moduleName).then(function (rest) {
-                    console.log("Retrieved REST endpoints");
-                    console.log(rest);
                     $scope.module.rest = rest;
                     $scope.show.restEndpoints = true;
                 });
@@ -172,7 +170,7 @@ module.factory('SecondaryNavigationService', function () {
     };
 });
 
-module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($rootScope, $http, halClient) {
+module.factory('ModuleService', ['$rootScope', '$http', 'halClient', 'HALParser', function ($rootScope, $http, halClient, halParser) {
     var service = {
         currentModule: null,
         getAll: function () {
@@ -194,17 +192,13 @@ module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($
                 });
         },
         getEndpointsByType: function (type, module) {
-            return halClient.$get('/admin/api/module/' + module + '/' + type)
-                .then(function (halResource) {
-                    console.log("Fetched " + type + " endpoints for module " + module);
-                    console.log(halResource);
-                    var endpoints = [];
-                    halResource.$get(type).then(function (halCollection) {
-                        halCollection.forEach(function (resource) {
-                            endpoints.push(resource);
-                        });
-                    });
-                    return endpoints;
+            var uri = '/admin/api/module/' + module + '/' + type;
+            console.log('Fetching URI ' + uri);
+            return $http.get(uri)
+                .then(function (data) {
+                    var parser   = new halParser();
+                    var resource = parser.parse(data.data);
+                    return resource[type];
                 });
         },
         createNewModule: function (moduleName) {
