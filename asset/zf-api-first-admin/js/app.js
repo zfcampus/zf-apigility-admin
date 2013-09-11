@@ -66,7 +66,6 @@ module.controller(
             ModuleService.createNewRestResource($scope.restResourceName).then(function (restResource) {
                 $rootScope.$broadcast('Module.refresh');
                 $('#create-rest-resource-button').popover('hide');
-                $location.path('/module/' + restResource.module + '/rest-endpoints');
             });
         };
     }]
