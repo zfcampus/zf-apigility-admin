@@ -100,11 +100,11 @@ module.controller(
 
         switch ($routeParams.section) {
             case 'rest-endpoints': 
-                ModuleService.getEndpointsByType("rest", module);
+                ModuleService.getEndpointsByType("rest", $scope.module);
                 $scope.show.restEndpoints = true; 
                 break;
             case 'rpc-endpoints': 
-                ModuleService.getEndpointsByType("rpc", module);
+                ModuleService.getEndpointsByType("rpc", $scope.module);
                 $scope.show.rpcEndpoints = true; 
                 break;
         }
