@@ -115,17 +115,20 @@ module.directive('moduleRestEndpoints', function () {
         controller: ['$rootScope', '$scope', 'ModulesResource', function ($rootScope, $scope, ModulesResource) {
             $scope.module = $scope.$parent.module;
 
-            $scope.restEndpoints = [];
-            $scope.module.links['rest'].fetch().then(function (restEndpoints) {
-                // update view
-                $scope.$apply(function() {
-                    $scope.restEndpoints = restEndpoints.embedded.rest;
+            function updateModuleRestEndpoints(force) {
+                $scope.restEndpoints = [];
+                $scope.module.links['rest'].fetch({force: force}).then(function (restEndpoints) {
+                    // update view
+                    $scope.$apply(function() {
+                        $scope.restEndpoints = restEndpoints.embedded.rest;
+                    });
                 });
-            });
+            }
+            updateModuleRestEndpoints(false);
 
             $scope.createNewRestEndpoint = function () {
                 ModulesResource.createNewRestEndpoint($scope.module.props.name, $scope.restEndpointName).then(function (restResource) {
-                    $rootScope.$broadcast('Module.refresh');
+                    updateModuleRestEndpoints(true);
                     $('#create-rest-endpoint-button').popover('hide');
                 });
             };
