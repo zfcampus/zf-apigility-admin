@@ -17,12 +17,24 @@
     <h3>{{ rest.entity_class }}</h3>
     <table class="table table-striped">
       <tr>
+        <td>Accept Whitelist</td>
+        <td>{{ rest.accept_whitelist }}</td>
+      </tr>
+      <tr>
         <td>Collection Class</td>
         <td>{{ rest.collection_class }}</td>
       </tr>
       <tr>
-        <td>Collection HTTP Methods</td>
+        <td>Allowed Collection HTTP Methods</td>
         <td>{{ rest.collection_http_methods }}</td>
+      </tr>
+      <tr>
+        <td>Collection Name</td>
+        <td>{{ rest.collection_name }}</td>
+      </tr>
+      <tr>
+        <td>Whitelist of Query String Parameters for Collections</td>
+        <td>{{ rest.collection_query_whitelist }}</td>
       </tr>
       <tr>
         <td>Controller Service Name</td>
@@ -49,7 +61,7 @@
         <td>{{ rest.resource_class }}</td>
       </tr>
       <tr>
-        <td>Resource HTTP Methods</td>
+        <td>Allowed Resource HTTP Methods</td>
         <td>{{ rest.resource_http_methods }}</td>
       </tr>
       <tr>
@@ -60,11 +72,56 @@
         <td>Route Name</td>
         <td>{{ rest.route_name }}</td>
       </tr>
+      <tr>
+        <td>Content Negotiation Selector</td>
+        <td>{{ rest.selector }}</td>
+      </tr>
     </table>
     {{ restResource }}
   </div>
-
 </div>
-<ul ng-show="showRpcEndpoints">
-  <li ng-repeat="rpcEndpoint in module.rpc">{{ rpcEndpoint }}</li>
-</ul>
+
+<div ng-show="showRpcEndpoints">
+  <button id="create-rest-resource-button" class="btn btn-sm btn-primary pull-right" popover title="Create New REST Resource" position="bottom" content="#create-rest-resource-form">
+    Create New Resource
+  </button>
+  <div id="create-rest-resource-form" style="display: none">
+    <div ng-controller="CreateRestResourceController">
+      <form ng-submit="createNewRestResource()">
+        <input type="text" ng-model="restResourceName" placeholder="REST Resource Name ...">
+        <button type="submit" class="btn btn-sm btn-success">Create REST Resource</button>
+      </form>
+    </div>
+  </div>
+
+  <div ng-repeat="rpc in module.rpc">
+    <h3>{{ rpc.controller_service_name }}</h3>
+    <table class="table table-striped">
+        <tr>
+            <td>Accept Whitelist</td>
+            <td>{{ rpc.accept_whitelist }}</td>
+        </tr>
+        <tr>
+            <td>Content-Type Whitelist</td>
+            <td>{{ rpc.content_type_whitelist }}</td>
+        </tr>
+        <tr>
+            <td>Allowed HTTP Methods</td>
+            <td>{{ rpc.http_methods }}</td>
+        </tr>
+        <tr>
+            <td>Route string to match</td>
+            <td>{{ rpc.route_match }}</td>
+        </tr>
+        <tr>
+            <td>Route Name</td>
+            <td>{{ rpc.route_name }}</td>
+        </tr>
+        <tr>
+            <td>Content Negotiation Selector</td>
+            <td>{{ rpc.selector }}</td>
+        </tr>
+    </table>
+    {{ rpcResource }}
+  </div>
+</div>
