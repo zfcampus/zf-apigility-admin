@@ -99,8 +99,14 @@ module.controller(
         };
 
         switch ($routeParams.section) {
-            case 'rest-endpoints': $scope.show.restEndpoints = true; break;
-            case 'rpc-endpoints': $scope.show.rpcEndpoints = true; break;
+            case 'rest-endpoints': 
+                ModuleService.getEndpointsByType("rest", module);
+                $scope.show.restEndpoints = true; 
+                break;
+            case 'rpc-endpoints': 
+                ModuleService.getEndpointsByType("rpc", module);
+                $scope.show.rpcEndpoints = true; 
+                break;
         }
     }]
 );
@@ -175,17 +181,16 @@ module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($
         getByName: function (moduleName) {
             return halClient.$get('/admin/api/module/' + moduleName)
                 .then(function (halResource) {
-                    console.log(halResource);
-                    halResource.$get('rest').then(function (halEmbedResource) {
+                    return halResource;
+                });
+        },
+        getEndpointsByType: function (type, module) {
+            return halClient.$get('/admin/api/module/' + module.name + '/' + type)
+                .then(function (halResource) {
+                    halResource.$get(type).then(function (halEmbedResource) {
                         console.log(halEmbedResource[0]);
+                        module[type] = halEmbedResource;
                     });
-//                    if (moduleResource.$has('rest')) {
-//                        moduleResource.$get('rest').then(function (s) {
-//                            moduleResource.rest = s;
-//                        });
-//                    } else {
-//                        moduleResource.rest = [];
-//                    }
                     return halResource;
                 });
         },
