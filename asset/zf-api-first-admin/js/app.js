@@ -66,7 +66,7 @@ module.controller(
             ModuleService.createNewRestResource($scope.restResourceName).then(function (restResource) {
                 $rootScope.$broadcast('Module.refresh');
                 $('#create-rest-resource-button').popover('hide');
-                $location.path('/module/' + restResource.module + '/rest-resources');
+                $location.path('/module/' + restResource.module + '/rest-endpoints');
             });
         };
     }]
@@ -82,7 +82,7 @@ module.controller(
             ModuleService.getByName($routeParams.moduleName).then(function (module) {
                 $scope.module = module;
                 $rootScope.pageTitle = module.name;
-                $rootScope.pageDescription = 'Module description tbd';
+                $rootScope.pageDescription = 'Module description TBD';
                 ModuleService.currentModule = module;
             });
         };
@@ -94,13 +94,26 @@ module.controller(
         updateModule();
 
         $scope.show = {
-            restResources: false,
+            restEndpoints: false,
             rpcEndpoints: false
         };
 
         switch ($routeParams.section) {
-            case 'rest-resources': $scope.show.restResources = true; break;
-            case 'rpc-endpoints': $scope.show.rpcEndpoints = true; break;
+            case 'rest-endpoints': 
+                ModuleService.getEndpointsByType("rest", $routeParams.moduleName).then(function (rest) {
+                    $scope.module.rest = rest;
+                    $scope.show.restEndpoints = true;
+                });
+                $scope.show.restEndpoints = true; 
+                break;
+            case 'rpc-endpoints': 
+                ModuleService.getEndpointsByType("rpc", $routeParams.moduleName).then(function (rpc) {
+                    console.log("Retrieved RPC endpoints");
+                    console.log(rpc);
+                    $scope.module.rpc = rpc;
+                    $scope.show.rpcEndpoints = true;
+                });
+                break;
         }
     }]
 );
@@ -148,7 +161,7 @@ module.factory('SecondaryNavigationService', function () {
         getModuleNavigation: function (moduleName) {
             return [
                 {name: "General Information",  link: '/module/' + moduleName + '/info'},
-                {name: "REST Resources",        link: '/module/' + moduleName + '/rest-resources'},
+                {name: "REST Endpoints",       link: '/module/' + moduleName + '/rest-endpoints'},
                 {name: "RPC Endpoints",        link: '/module/' + moduleName + '/rpc-endpoints'},
                 {name: "Authentication",       link: '/module/' + moduleName + '/authentication'},
                 {name: "Filters / Validators", link: '/module/' + moduleName + '/filters-validators'}
@@ -157,7 +170,7 @@ module.factory('SecondaryNavigationService', function () {
     };
 });
 
-module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($rootScope, $http, halClient) {
+module.factory('ModuleService', ['$rootScope', '$http', 'halClient', 'HALParser', function ($rootScope, $http, halClient, halParser) {
     var service = {
         currentModule: null,
         getAll: function () {
@@ -175,18 +188,17 @@ module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($
         getByName: function (moduleName) {
             return halClient.$get('/admin/api/module/' + moduleName)
                 .then(function (halResource) {
-                    console.log(halResource);
-                    halResource.$get('rest').then(function (halEmbedResource) {
-                        console.log(halEmbedResource[0]);
-                    });
-//                    if (moduleResource.$has('rest')) {
-//                        moduleResource.$get('rest').then(function (s) {
-//                            moduleResource.rest = s;
-//                        });
-//                    } else {
-//                        moduleResource.rest = [];
-//                    }
                     return halResource;
+                });
+        },
+        getEndpointsByType: function (type, module) {
+            var uri = '/admin/api/module/' + module + '/' + type;
+            console.log('Fetching URI ' + uri);
+            return $http.get(uri)
+                .then(function (data) {
+                    var parser   = new halParser();
+                    var resource = parser.parse(data.data);
+                    return resource[type];
                 });
         },
         createNewModule: function (moduleName) {
