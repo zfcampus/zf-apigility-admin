@@ -100,12 +100,21 @@ module.controller(
 
         switch ($routeParams.section) {
             case 'rest-endpoints': 
-                ModuleService.getEndpointsByType("rest", $scope.module);
+                ModuleService.getEndpointsByType("rest", $routeParams.moduleName).then(function (rest) {
+                    console.log("Retrieved REST endpoints");
+                    console.log(rest);
+                    $scope.module.rest = rest;
+                    $scope.show.restEndpoints = true;
+                });
                 $scope.show.restEndpoints = true; 
                 break;
             case 'rpc-endpoints': 
-                ModuleService.getEndpointsByType("rpc", $scope.module);
-                $scope.show.rpcEndpoints = true; 
+                ModuleService.getEndpointsByType("rpc", $routeParams.moduleName).then(function (rpc) {
+                    console.log("Retrieved RPC endpoints");
+                    console.log(rpc);
+                    $scope.module.rpc = rpc;
+                    $scope.show.rpcEndpoints = true;
+                });
                 break;
         }
     }]
@@ -185,13 +194,17 @@ module.factory('ModuleService', ['$rootScope', '$http', 'halClient', function ($
                 });
         },
         getEndpointsByType: function (type, module) {
-            return halClient.$get('/admin/api/module/' + module.name + '/' + type)
+            return halClient.$get('/admin/api/module/' + module + '/' + type)
                 .then(function (halResource) {
-                    halResource.$get(type).then(function (halEmbedResource) {
-                        console.log(halEmbedResource[0]);
-                        module[type] = halEmbedResource;
+                    console.log("Fetched " + type + " endpoints for module " + module);
+                    console.log(halResource);
+                    var endpoints = [];
+                    halResource.$get(type).then(function (halCollection) {
+                        halCollection.forEach(function (resource) {
+                            endpoints.push(resource);
+                        });
                     });
-                    return halResource;
+                    return endpoints;
                 });
         },
         createNewModule: function (moduleName) {
