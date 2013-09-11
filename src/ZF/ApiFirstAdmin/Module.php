@@ -214,7 +214,7 @@ class Module
     public function onRenderCollectionResource($e)
     {
         $resource = $e->getParam('resource');
-        if (!$resource instanceof Model\Module) {
+        if (!$resource instanceof Model\ModuleEntity) {
             return;
         }
 
