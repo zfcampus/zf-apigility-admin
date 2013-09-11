@@ -64,8 +64,8 @@ module.controller(
     ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
         $scope.createNewRestResource = function () {
             ModuleService.createNewRestResource($scope.restResourceName).then(function (restResource) {
-                $rootScope.$broadcast('Module.refresh');
-                $('#create-rest-resource-button').popover('hide');
+                console.log("Created new resource");
+                console.log(restResource);
             });
         };
     }]
