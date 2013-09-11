@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('zfa1-admin', ['HALParser', 'angular-hal']);
+var module = angular.module('zfa1-admin', []);
 
 module.controller(
     'DashboardController',
@@ -12,60 +12,58 @@ module.controller(
 
 module.controller(
     'ModuleListController',
-    ['$scope', 'ModuleService', function($scope, ModuleService) {
+    ['$scope', 'ModulesResource', function($scope, ModulesResource) {
+        // $scope vars
+        $scope.modules = [];
 
         var updateModuleList = function () {
-            $scope.modules = ModuleService.getAll();
+            ModulesResource.fetch().then(function (modules) {
+                $scope.$apply(function () {
+                    $scope.modules = modules.embedded.module;
+                });
+            });
         };
+        updateModuleList();
 
         // on refresh, and initial load
         $scope.$on('ModuleList.refresh', function () {
             updateModuleList();
         });
-        updateModuleList();
     }]
 );
 
+// this shoudl probably be a directive
 module.controller(
     'ViewNavigationController',
     ['$rootScope', '$scope', '$routeParams', 'SecondaryNavigationService', function ($rootScope, $scope, $routeParams, SecondaryNavigationService) {
 
-        var updateSecondaryNavigation = function () {
+        function updateSecondaryNavigation() {
             if ($routeParams.moduleName == undefined) {
                 $scope.items = SecondaryNavigationService.getGlobalNavigation();
             } else {
                 $scope.items = SecondaryNavigationService.getModuleNavigation($routeParams.moduleName);
+                $scope.section = $routeParams.section;
             }
-        };
+        }
+        updateSecondaryNavigation();
 
         // on refresh, and initial load
         $scope.$on('$routeChangeSuccess', function () {
             updateSecondaryNavigation();
         });
-        updateSecondaryNavigation();
     }]
 );
 
 module.controller(
     'CreateModuleController',
-    ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
+    ['$rootScope', '$scope', '$location', 'ModulesResource', function($rootScope, $scope, $location, ModulesResource) {
         $scope.createNewModule = function () {
-            ModuleService.createNewModule($scope.moduleName).then(function (module) {
-                $rootScope.$broadcast('ModuleList.refresh');
-                $('#create-module-button').popover('hide');
-                $location.path('/module/' + module.name + '/info');
-            });
-        };
-    }]
-);
-
-module.controller(
-    'CreateRestResourceController',
-    ['$rootScope', '$scope', '$location', 'ModuleService', function($rootScope, $scope, $location, ModuleService) {
-        $scope.createNewRestResource = function () {
-            ModuleService.createNewRestResource($scope.restResourceName).then(function (restResource) {
-                console.log("Created new resource");
-                console.log(restResource);
+            ModulesResource.createNewModule($scope.moduleName).then(function (newModule) {
+                ModulesResource.fetch({force: true}).then(function (modules) {
+                    $rootScope.$broadcast('ModuleList.refresh');
+                    $('#create-module-button').popover('hide');
+                    $location.path('/module/' + newModule.name + '/info');
+                });
             });
         };
     }]
@@ -73,49 +71,67 @@ module.controller(
 
 module.controller(
     'ModuleController',
-    ['$rootScope', '$scope', '$routeParams', 'ModuleService', function($rootScope, $scope, $routeParams, ModuleService) {
-        $rootScope.pageTitle = '';
-        $rootScope.pageDescription = '';
+    ['$rootScope', '$scope', '$routeParams', 'ModulesResource', function($rootScope, $scope, $routeParams, ModulesResource) {
 
-        var updateModule = function () {
-            ModuleService.getByName($routeParams.moduleName).then(function (module) {
-                $scope.module = module;
-                $rootScope.pageTitle = module.name;
-                $rootScope.pageDescription = 'Module description TBD';
-                ModuleService.currentModule = module;
+        $scope.module = null;
+        $scope.section = null;
+
+        function updateModule() {
+            ModulesResource.fetch().then(function (modules) {
+
+                var briefModule = _.find(modules.embedded.module, function (m) {
+                    return m.props.name === $routeParams.moduleName;
+                });
+
+
+                briefModule.links['self'].fetch().then(function (module) {
+                    // update UI immediately:
+                    $scope.$apply(function () {
+                        $scope.module = module;
+                        $rootScope.pageTitle = module.props.namespace;
+                        $rootScope.pageDescription = 'tbd';
+                        $scope.section = $routeParams.section;
+                    });
+                });
+
             });
-        };
+        }
+        updateModule();
 
-        // on refresh, and initial load
         $scope.$on('Module.refresh', function () {
             updateModule();
         });
-        updateModule();
 
-        $scope.show = {
-            restEndpoints: false,
-            rpcEndpoints: false
-        };
-
-        switch ($routeParams.section) {
-            case 'rest-endpoints': 
-                ModuleService.getEndpointsByType("rest", $routeParams.moduleName).then(function (rest) {
-                    $scope.module.rest = rest;
-                    $scope.show.restEndpoints = true;
-                });
-                $scope.show.restEndpoints = true; 
-                break;
-            case 'rpc-endpoints': 
-                ModuleService.getEndpointsByType("rpc", $routeParams.moduleName).then(function (rpc) {
-                    console.log("Retrieved RPC endpoints");
-                    console.log(rpc);
-                    $scope.module.rpc = rpc;
-                    $scope.show.rpcEndpoints = true;
-                });
-                break;
-        }
     }]
 );
+
+module.directive('moduleRestEndpoints', function () {
+    return {
+        restrict: 'E',
+        //scope: {
+        //    current: '=current'
+        //},
+        templateUrl: '/zf-api-first-admin/partials/module/rest-endpoints.html',
+        controller: ['$rootScope', '$scope', 'ModulesResource', function ($rootScope, $scope, ModulesResource) {
+            $scope.module = $scope.$parent.module;
+
+            $scope.restEndpoints = [];
+            $scope.module.links['rest'].fetch().then(function (restEndpoints) {
+                // update view
+                $scope.$apply(function() {
+                    $scope.restEndpoints = restEndpoints.embedded.rest;
+                });
+            });
+
+            $scope.createNewRestEndpoint = function () {
+                ModulesResource.createNewRestEndpoint($scope.module.props.name, $scope.restEndpointName).then(function (restResource) {
+                    $rootScope.$broadcast('Module.refresh');
+                    $('#create-rest-endpoint-button').popover('hide');
+                });
+            };
+        }]
+    }
+});
 
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
@@ -150,70 +166,44 @@ module.factory('SecondaryNavigationService', function () {
     return {
         getGlobalNavigation: function () {
             return [
-                {name: "General Information", link: '/general-information'},
-                {name: "Media Types",         link: '/media-types'},
-                {name: "Authentication",      link: '/authentication'},
-                {name: "phpinfo()",           link: '/phpinfo'},
-                {name: "zf2info()",           link: '/zf2info'}
+                {id: 'general-information', name: "General Information", link: '/general-information'},
+                {id: 'media-types', name: "Media Types", link: '/media-types'},
+                {id: 'authentication', name: "Authentication", link: '/authentication'},
+                {id: 'phpinfo', name: "phpinfo()", link: '/phpinfo'},
+                {id: 'zf2info', name: "zf2info()", link: '/zf2info'}
             ];
         },
-        getModuleNavigation: function (moduleName) {
+        getModuleNavigation: function (moduleName, section) {
             return [
-                {name: "General Information",  link: '/module/' + moduleName + '/info'},
-                {name: "REST Endpoints",       link: '/module/' + moduleName + '/rest-endpoints'},
-                {name: "RPC Endpoints",        link: '/module/' + moduleName + '/rpc-endpoints'},
-                {name: "Authentication",       link: '/module/' + moduleName + '/authentication'},
-                {name: "Filters / Validators", link: '/module/' + moduleName + '/filters-validators'}
+                {id: 'info', name: "General Information", link: '/module/' + moduleName + '/info'},
+                {id: 'rest-endpoints', name: "REST Endpoints", link: '/module/' + moduleName + '/rest-endpoints'},
+                {id: 'rpc-endpoints', name: "RPC Endpoints", link: '/module/' + moduleName + '/rpc-endpoints'},
+                {id: 'authentication', name: "Authentication", link: '/module/' + moduleName + '/authentication'},
+                {id: 'filters-validators', name: "Filters / Validators", link: '/module/' + moduleName + '/filters-validators'}
             ];
         }
     };
 });
 
-module.factory('ModuleService', ['$rootScope', '$http', 'halClient', 'HALParser', function ($rootScope, $http, halClient, halParser) {
-    var service = {
-        currentModule: null,
-        getAll: function () {
-            return halClient.$get('/admin/api/module')
-                .then(function (halResource) {
-                    var modules = [];
-                    halResource.$get('module').then(function (halResourceModule) {
-                        halResourceModule.forEach(function (mod) {
-                            modules.push(mod);
-                        });
-                    });
-                    return modules;
-                });
-        },
-        getByName: function (moduleName) {
-            return halClient.$get('/admin/api/module/' + moduleName)
-                .then(function (halResource) {
-                    return halResource;
-                });
-        },
-        getEndpointsByType: function (type, module) {
-            var uri = '/admin/api/module/' + module + '/' + type;
-            console.log('Fetching URI ' + uri);
-            return $http.get(uri)
-                .then(function (data) {
-                    var parser   = new halParser();
-                    var resource = parser.parse(data.data);
-                    return resource[type];
-                });
-        },
-        createNewModule: function (moduleName) {
-            return halClient.$post('/admin/api/module', {}, {name: moduleName})
-                .then(function (halResource) {
-                    return halResource;
-                });
-        },
-        createNewRestResource: function (restResourceName, moduleName) {
-            if (moduleName == undefined) {
-                moduleName = service.currentModule.name;
-            }
-            return halClient.$post('/admin/api/module/' + moduleName + '/rest', {}, {resource_name: restResourceName});
-        }
+module.factory('ModulesResource', ['$http', function ($http) {
+    var resource = new Hyperagent.Resource('/admin/api/module');
+
+    resource.createNewModule = function (name) {
+        return $http.post('/admin/api/module', {name: name})
+            .then(function (response) {
+                return response.data;
+            });
     };
-    return service;
+
+    resource.createNewRestEndpoint = function (moduleName, restEndpointName) {
+        console.log(moduleName, restEndpointName);
+        return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: restEndpointName})
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    return resource;
 }]);
 
 module.run(['$rootScope', function ($rootScope) {

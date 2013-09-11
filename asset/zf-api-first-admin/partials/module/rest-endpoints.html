@@ -1,0 +1,62 @@
+Hello
+<button id="create-rest-endpoint-button" class="btn btn-sm btn-primary pull-right" popover title="Create New REST Endpoint" position="bottom" content="#create-rest-endpoint-form">
+  Create New Resource
+</button>
+<div id="create-rest-endpoint-form" style="display: none">
+    <form ng-submit="$parent.createNewRestEndpoint()">
+      <input type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
+      <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
+    </form>
+</div>
+
+<div ng-repeat="restEndpoint in restEndpoints">
+
+  <h3>{{ restEndpoint.props.entity_class }}</h3>
+  <table class="table table-striped">
+    <tr>
+      <td>Collection Class</td>
+      <td>{{ restEndpoint.props.collection_class }}</td>
+    </tr>
+    <tr>
+      <td>Collection HTTP Methods</td>
+      <td>{{ restEndpoint.props.collection_http_methods }}</td>
+    </tr>
+    <tr>
+      <td>Controller Service Name</td>
+      <td>{{ restEndpoint.props.controller_service_name }}</td>
+    </tr>
+    <tr>
+      <td>Entity Class</td>
+      <td>{{ restEndpoint.props.entity_class }}</td>
+    </tr>
+    <tr>
+      <td>Identifier Name</td>
+      <td>{{ restEndpoint.props.identifier_name }}</td>
+    </tr>
+    <tr>
+      <td>Page Size</td>
+      <td>{{ restEndpoint.props.page_size }}</td>
+    </tr>
+    <tr>
+      <td>Page Size Parameter (Query string)</td>
+      <td>{{ restEndpoint.props.page_size_param }}</td>
+    </tr>
+    <tr>
+      <td>Resource Class</td>
+      <td>{{ restEndpoint.props.resource_class }}</td>
+    </tr>
+    <tr>
+      <td>Resource HTTP Methods</td>
+      <td>{{ restEndpoint.props.resource_http_methods }}</td>
+    </tr>
+    <tr>
+      <td>Route Match</td>
+      <td>{{ restEndpoint.props.route_match }}</td>
+    </tr>
+    <tr>
+      <td>Route Name</td>
+      <td>{{ restEndpoint.props.route_name }}</td>
+    </tr>
+  </table>
+
+</div>
