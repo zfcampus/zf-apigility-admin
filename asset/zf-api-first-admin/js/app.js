@@ -66,7 +66,7 @@ module.controller(
             ModuleService.createNewRestResource($scope.restResourceName).then(function (restResource) {
                 $rootScope.$broadcast('Module.refresh');
                 $('#create-rest-resource-button').popover('hide');
-                $location.path('/module/' + restResource.module + '/rest-resources');
+                $location.path('/module/' + restResource.module + '/rest-endpoints');
             });
         };
     }]
@@ -82,7 +82,7 @@ module.controller(
             ModuleService.getByName($routeParams.moduleName).then(function (module) {
                 $scope.module = module;
                 $rootScope.pageTitle = module.name;
-                $rootScope.pageDescription = 'Module description tbd';
+                $rootScope.pageDescription = 'Module description TBD';
                 ModuleService.currentModule = module;
             });
         };
@@ -94,12 +94,12 @@ module.controller(
         updateModule();
 
         $scope.show = {
-            restResources: false,
+            restEndpoints: false,
             rpcEndpoints: false
         };
 
         switch ($routeParams.section) {
-            case 'rest-resources': $scope.show.restResources = true; break;
+            case 'rest-endpoints': $scope.show.restEndpoints = true; break;
             case 'rpc-endpoints': $scope.show.rpcEndpoints = true; break;
         }
     }]
@@ -148,7 +148,7 @@ module.factory('SecondaryNavigationService', function () {
         getModuleNavigation: function (moduleName) {
             return [
                 {name: "General Information",  link: '/module/' + moduleName + '/info'},
-                {name: "REST Resources",        link: '/module/' + moduleName + '/rest-resources'},
+                {name: "REST Endpoints",       link: '/module/' + moduleName + '/rest-endpoints'},
                 {name: "RPC Endpoints",        link: '/module/' + moduleName + '/rpc-endpoints'},
                 {name: "Authentication",       link: '/module/' + moduleName + '/authentication'},
                 {name: "Filters / Validators", link: '/module/' + moduleName + '/filters-validators'}
