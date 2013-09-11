@@ -4,9 +4,14 @@
     <meta charset="utf-8">
     <script type="text/javascript" src="/zf-api-first/js/jquery.min.js"></script>
     <script type="text/javascript" src="/zf-api-first/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/lodash.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/q.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/URI.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/URITemplate.js"></script>
+    <script type="text/javascript" src="/zf-api-first-admin/js/hyperagent.js"></script>
     <script type="text/javascript" src="/zf-api-first-admin/js/angular.js"></script>
-    <script type="text/javascript" src="/zf-api-first-admin/js/angular.halparser.js"></script>
-    <script type="text/javascript" src="/zf-api-first-admin/js/angular.hal.js"></script>
+<!--    <script type="text/javascript" src="/zf-api-first-admin/js/angular.halparser.js"></script>-->
+<!--    <script type="text/javascript" src="/zf-api-first-admin/js/angular.hal.js"></script>-->
     <link rel="stylesheet" type="text/css" href="/zf-api-first/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/zf-api-first/css/main.css" />
 </head>
@@ -54,7 +59,7 @@
             <span class="pull-left">Modules: </span>
             <ul class="nav nav-pills zfa1-nav-pills">
                 <li ng-repeat="module in modules">
-                    <a href="#/module/{{ module.name }}/info">{{ module.namespace }}</a>
+                    <a href="#/module/{{ module.props.name }}/info">{{ module.props.namespace }}</a>
                 </li>
             </ul>
         </div>
@@ -72,7 +77,7 @@
             <div class="col-md-3">
                 <aside class="zfa1-sidebar" role="complementary">
                     <ul class="nav zfa1-sidenav" ng-controller="ViewNavigationController">
-                        <li ng-repeat="item in items">
+                        <li ng-repeat="item in items" ng-class="{active: section == item.id}">
                             <a ng-href="#{{ item.link }}">{{ item.name }}</a>
                         </li>
                     </ul>
