@@ -81,18 +81,7 @@
   </div>
 </div>
 
-<div ng-show="showRpcEndpoints">
-  <button id="create-rest-resource-button" class="btn btn-sm btn-primary pull-right" popover title="Create New REST Resource" position="bottom" content="#create-rest-resource-form">
-    Create New Resource
-  </button>
-  <div id="create-rest-resource-form" style="display: none">
-    <div ng-controller="CreateRestResourceController">
-      <form ng-submit="createNewRestResource()">
-        <input type="text" ng-model="restResourceName" placeholder="REST Resource Name ...">
-        <button type="submit" class="btn btn-sm btn-success">Create REST Resource</button>
-      </form>
-    </div>
-  </div>
+<div ng-show="show.rpcEndpoints">
 
   <div ng-repeat="rpc in module.rpc">
     <h3>{{ rpc.controller_service_name }}</h3>
