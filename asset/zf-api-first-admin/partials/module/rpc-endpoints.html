@@ -1,12 +1,18 @@
-<button id="create-rpc-endpoint-button" class="btn btn-sm btn-primary pull-right" popover title="Create New RPC Endpoint" position="bottom" content="#create-rpc-endpoint-form">
-  Create New RPC Endpoint
-</button>
-<div id="create-rpc-endpoint-form" style="display: none">
-    <form ng-submit="$parent.createNewRpcEndpoint()">
-      <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
-      <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="route to match">
-      <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
-    </form>
+<div ng-hide="addRpcEndpoint">
+    <button ng-click="addRpcEndpoint = true" id="create-rpc-endpoint-button" class="btn btn-default btn-primary" title="Create New rpc Endpoint" position="bottom" content="#create-rpc-endpoint-form">
+    Create New RPC Endpoint
+    </button>
+</div>
+<div ng-show="addRpcEndpoint" class="panel panel-default">
+    <div class="panel-heading">Create a new RPC endpoint</div>
+    <div class="panel-body">
+        <form ng-submit="createNewRpcEndpoint()">
+            <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
+            <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
+            <button ng-click="addRpcEndpoint = false" type="button" class="btn btn-sm btn-default">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
+        </form>
+    </div>
 </div>
 
 <div ng-repeat="rpcEndpoint in rpcEndpoints">

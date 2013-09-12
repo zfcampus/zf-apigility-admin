@@ -154,7 +154,7 @@ module.directive('moduleRpcEndpoints', function () {
             $scope.createNewRpcEndpoint = function () {
                 ModulesResource.createNewRpcEndpoint($scope.module.props.name, $scope.rpcEndpointName, $scope.rpcEndpointRoute).then(function (rpcResource) {
                     updateModuleRpcEndpoints(true);
-                    $('#create-rpc-endpoint-button').popover('hide');
+                    $scope.addRpcEndpoint = false;
                 });
             };
         }]
