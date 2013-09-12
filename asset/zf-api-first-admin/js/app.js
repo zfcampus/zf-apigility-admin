@@ -126,7 +126,7 @@ module.directive('moduleRestEndpoints', function () {
             $scope.createNewRestEndpoint = function () {
                 ModulesResource.createNewRestEndpoint($scope.module.props.name, $scope.restEndpointName).then(function (restResource) {
                     updateModuleRestEndpoints(true);
-                    $('#create-rest-endpoint-button').popover('hide');
+                    $scope.addRestEndpoint = false;
                 });
             };
         }]

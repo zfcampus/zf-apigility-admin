@@ -1,11 +1,17 @@
-<button id="create-rest-endpoint-button" class="btn btn-sm btn-primary pull-right" popover title="Create New REST Endpoint" position="bottom" content="#create-rest-endpoint-form">
-  Create New Resource
-</button>
-<div id="create-rest-endpoint-form" style="display: none">
-    <form ng-submit="$parent.createNewRestEndpoint()">
-      <input type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
-      <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
-    </form>
+<div ng-hide="addRestEndpoint">
+    <button ng-click="addRestEndpoint = true" id="create-rest-endpoint-button" class="btn btn-default btn-primary" title="Create New REST Endpoint" position="bottom" content="#create-rest-endpoint-form">
+    Create New Resource
+    </button>
+</div>
+<div ng-show="addRestEndpoint" class="panel panel-default">
+    <div class="panel-heading">Create a new REST endpoint</div>
+    <div class="panel-body">
+        <form ng-submit="createNewRestEndpoint()">
+            <input type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
+            <button ng-click="addRestEndpoint = false" type="button" class="btn btn-sm btn-default">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
+        </form>
+    </div>
 </div>
 
 <div ng-repeat="restEndpoint in restEndpoints">
