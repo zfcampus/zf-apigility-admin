@@ -192,13 +192,14 @@ class Module
      */
     protected function injectEndpointLinks(Resource $resource, HalJsonModel $model)
     {
-        $module = $resource->resource;
-        $links  = $resource->getLinks();
+        $module     = $resource->resource;
+        $links      = $resource->getLinks();
+        $moduleName = $module['name'];
 
-        $this->injectLinksForEndpointsByType('rest', $module['rest'], $links);
+        $this->injectLinksForEndpointsByType('rest', $module['rest'], $links, $moduleName);
         unset($module['rest']);
 
-        $this->injectLinksForEndpointsByType('rpc', $module['rpc'], $links);
+        $this->injectLinksForEndpointsByType('rpc', $module['rpc'], $links, $moduleName);
         unset($module['rpc']);
 
         $replacement = new Resource($module, $resource->id);
