@@ -109,9 +109,6 @@ module.controller(
 module.directive('moduleRestEndpoints', function () {
     return {
         restrict: 'E',
-        //scope: {
-        //    current: '=current'
-        //},
         templateUrl: '/zf-api-first-admin/partials/module/rest-endpoints.html',
         controller: ['$rootScope', '$scope', 'ModulesResource', function ($rootScope, $scope, ModulesResource) {
             $scope.module = $scope.$parent.module;
@@ -131,6 +128,34 @@ module.directive('moduleRestEndpoints', function () {
                 ModulesResource.createNewRestEndpoint($scope.module.props.name, $scope.restEndpointName).then(function (restResource) {
                     updateModuleRestEndpoints(true);
                     $('#create-rest-endpoint-button').popover('hide');
+                });
+            };
+        }]
+    }
+});
+
+module.directive('moduleRpcEndpoints', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/zf-api-first-admin/partials/module/rpc-endpoints.html',
+        controller: ['$rootScope', '$scope', 'ModulesResource', function ($rootScope, $scope, ModulesResource) {
+            $scope.module = $scope.$parent.module;
+
+            function updateModuleRpcEndpoints(force) {
+                $scope.rpcEndpoints = [];
+                $scope.module.links['rpc'].fetch({force: force}).then(function (rpcEndpoints) {
+                    // update view
+                    $scope.$apply(function() {
+                        $scope.rpcEndpoints = rpcEndpoints.embedded.rpc;
+                    });
+                });
+            }
+            updateModuleRpcEndpoints(false);
+
+            $scope.createNewRpcEndpoint = function () {
+                ModulesResource.createNewRpcEndpoint($scope.module.props.name, $scope.rpcEndpointName).then(function (rpcResource) {
+                    updateModuleRpcEndpoints(true);
+                    $('#create-rpc-endpoint-button').popover('hide');
                 });
             };
         }]
@@ -201,6 +226,13 @@ module.factory('ModulesResource', ['$http', function ($http) {
 
     resource.createNewRestEndpoint = function (moduleName, restEndpointName) {
         return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: restEndpointName})
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.createNewRpcEndpoint = function (moduleName, rpcEndpointName) {
+        return $http.post('/admin/api/module/' + moduleName + '/rpc', {resource_name: rpcEndpointName})
             .then(function (response) {
                 return response.data;
             });

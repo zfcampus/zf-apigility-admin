@@ -1,9 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+<button id="create-rpc-endpoint-button" class="btn btn-sm btn-primary pull-right" popover title="Create New RPC Endpoint" position="bottom" content="#create-rpc-endpoint-form">
+  Create New RPC Endpoint
+</button>
+<div id="create-rpc-endpoint-form" style="display: none">
+    <form ng-submit="$parent.createNewRpcEndpoint()">
+      <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
+      <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="route to match">
+      <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
+    </form>
+</div>
 
-</body>
-</html>
+<div ng-repeat="rpcEndpoint in rpcEndpoints">
+    <h3>{{ rpcEndpoint.props.controller_service_name }}</h3>
+    <table class="table table-striped">
+        <tr>
+            <td>Accept whitelist</td>
+            <td>{{ rpcEndpoint.props.accept_whitelist }}</td>
+        </tr>
+        <tr>
+            <td>Content-Type whitelist</td>
+            <td>{{ rpcEndpoint.props.content_type_whitelist }}</td>
+        </tr>
+        <tr>
+            <td>Controller Service Name</td>
+            <td>{{ rpcEndpoint.props.controller_service_name }}</td>
+        </tr>
+        <tr>
+            <td>Allowed HTTP Methods</td>
+            <td>{{ rpcEndpoint.props.http_methods }}</td>
+        </tr>
+        <tr>
+            <td>Route matches:</td>
+            <td>{{ rpcEndpoint.props.route_match }}</td>
+        </tr>
+        <tr>
+            <td>Route Name</td>
+            <td>{{ rpcEndpoint.props.route_name }}</td>
+        </tr>
+        <tr>
+            <td>Content Negotiation Selector</td>
+            <td>{{ rpcEndpoint.props.selector }}</td>
+        </tr>
+    </table>
+</div>
