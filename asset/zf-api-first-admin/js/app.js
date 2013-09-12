@@ -32,7 +32,7 @@ module.controller(
     }]
 );
 
-// this shoudl probably be a directive
+// this should probably be a directive
 module.controller(
     'ViewNavigationController',
     ['$rootScope', '$scope', '$routeParams', 'SecondaryNavigationService', function ($rootScope, $scope, $routeParams, SecondaryNavigationService) {
