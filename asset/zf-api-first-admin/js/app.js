@@ -12,9 +12,19 @@ module.controller(
 
 module.controller(
     'ModuleListController',
-    ['$scope', 'ModulesResource', function($scope, ModulesResource) {
+    ['$rootScope', '$scope', '$location', 'ModulesResource', function($rootScope, $scope, $location, ModulesResource) {
         // $scope vars
         $scope.modules = [];
+
+        $scope.createNewModule = function () {
+            ModulesResource.createNewModule($scope.moduleName).then(function (newModule) {
+                ModulesResource.fetch({force: true}).then(function (modules) {
+                    $scope.addModule = false;
+                    $rootScope.$broadcast('ModuleList.refresh');
+                    $location.path('/module/' + newModule.name + '/info');
+                });
+            });
+        };
 
         var updateModuleList = function () {
             ModulesResource.fetch().then(function (modules) {
@@ -51,21 +61,6 @@ module.controller(
         $scope.$on('$routeChangeSuccess', function () {
             updateSecondaryNavigation();
         });
-    }]
-);
-
-module.controller(
-    'CreateModuleController',
-    ['$rootScope', '$scope', '$location', 'ModulesResource', function($rootScope, $scope, $location, ModulesResource) {
-        $scope.createNewModule = function () {
-            ModulesResource.createNewModule($scope.moduleName).then(function (newModule) {
-                ModulesResource.fetch({force: true}).then(function (modules) {
-                    $rootScope.$broadcast('ModuleList.refresh');
-                    $('#create-module-button').popover('hide');
-                    $location.path('/module/' + newModule.name + '/info');
-                });
-            });
-        };
     }]
 );
 
@@ -166,29 +161,6 @@ module.config(['$routeProvider', '$locationProvider', function($routeProvider, $
     $routeProvider.when('/module/:moduleName/:section', {templateUrl: '/zf-api-first-admin/partials/module.html', controller: 'ModuleController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
-
-
-module.directive('popover', function($compile) {
-    return {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            var popOverContent;
-            var html = $(attrs.content).html();
-            popOverContent = $compile(html)(scope);
-            var options = {
-                content: popOverContent,
-                placement: "bottom",
-                html: true,
-                title: scope.title
-            };
-            $(element).popover(options);
-        },
-        scope: {
-            items: '=',
-            title: '@'
-        }
-    };
-});
 
 module.factory('SecondaryNavigationService', function () {
     return {

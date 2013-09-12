@@ -39,17 +39,6 @@
                         <a href="/apidoc">API Doc</a>
                     </li>
                 </ul>
-                <button id="create-module-button" class="btn btn-sm btn-primary pull-right" popover title="Create New API First Module" position="bottom" content="#create-module-form">
-                    Create New API 1st Module
-                </button>
-                <div id="create-module-form" style="display: none">
-                    <div ng-controller="CreateModuleController">
-                        <form ng-submit="createNewModule()">
-                            <input type="text" ng-model="moduleName" placeholder="Module Name ...">
-                            <button type="submit" class="btn btn-sm btn-success">Create Module</button>
-                        </form>
-                    </div>
-               </div>
             </nav>
         </div>
     </header>
@@ -57,11 +46,24 @@
     <div class="zf1a-module-navigation" ng-controller="ModuleListController">
         <div class="container">
             <span class="pull-left">Modules: </span>
+            <button ng-hide="addModule" ng-click="addModule = true" id="create-module-button" class="btn btn-sm btn-primary pull-right" title="Create New API First Module" position="bottom" content="#create-module-form">
+                Create New API 1st Module
+            </button>
             <ul class="nav nav-pills zfa1-nav-pills">
                 <li ng-repeat="module in modules">
                     <a href="#/module/{{ module.props.name }}/info">{{ module.props.namespace }}</a>
                 </li>
             </ul>
+        </div>
+        <div ng-show="addModule" id="create-module-form" class="panel panel-default pull-right">
+            <div class="panel-heading">Create A New API 1st Module</div>
+            <div class="panel-body">
+                <form ng-submit="createNewModule()">
+                    <input type="text" ng-model="moduleName" placeholder="Module Name ...">
+                    <button ng-click="addModule = false" type="button" class="btn btn-sm btn-default">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success">Create Module</button>
+                </form>
+            </div>
         </div>
     </div>
 
