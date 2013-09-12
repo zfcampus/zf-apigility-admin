@@ -85,7 +85,6 @@ module.controller(
                 });
 
                 briefModule.links['self'].fetch().then(function (module) {
-                    console.log('updating module');
                     // update UI immediately:
                     $scope.$apply(function () {
                         $scope.module = module;
@@ -153,7 +152,7 @@ module.directive('moduleRpcEndpoints', function () {
             updateModuleRpcEndpoints(false);
 
             $scope.createNewRpcEndpoint = function () {
-                ModulesResource.createNewRpcEndpoint($scope.module.props.name, $scope.rpcEndpointName).then(function (rpcResource) {
+                ModulesResource.createNewRpcEndpoint($scope.module.props.name, $scope.rpcEndpointName, $scope.rpcEndpointRoute).then(function (rpcResource) {
                     updateModuleRpcEndpoints(true);
                     $('#create-rpc-endpoint-button').popover('hide');
                 });
@@ -224,15 +223,15 @@ module.factory('ModulesResource', ['$http', function ($http) {
             });
     };
 
-    resource.createNewRestEndpoint = function (moduleName, restEndpointName) {
-        return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: restEndpointName})
+    resource.createNewRestEndpoint = function (moduleName, name) {
+        return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: name})
             .then(function (response) {
                 return response.data;
             });
     };
 
-    resource.createNewRpcEndpoint = function (moduleName, rpcEndpointName) {
-        return $http.post('/admin/api/module/' + moduleName + '/rpc', {resource_name: rpcEndpointName})
+    resource.createNewRpcEndpoint = function (moduleName, name, route) {
+        return $http.post('/admin/api/module/' + moduleName + '/rpc', {service_name: name, route: route})
             .then(function (response) {
                 return response.data;
             });
