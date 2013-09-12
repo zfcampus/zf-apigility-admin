@@ -253,9 +253,6 @@ class Module
      */
     protected function injectLinksForEndpointsByType($type, $endpoints, LinkCollection $links, $module = null)
     {
-        if (count($endpoints) < 1) {
-            return;
-        }
         $routeName = sprintf('zf-api-first-admin/api/module/%s-endpoint', $type);
         $spec = array(
             'rel' => $type,
