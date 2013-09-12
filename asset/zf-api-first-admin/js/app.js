@@ -77,14 +77,15 @@ module.controller(
         $scope.section = null;
 
         function updateModule() {
+
             ModulesResource.fetch().then(function (modules) {
 
                 var briefModule = _.find(modules.embedded.module, function (m) {
                     return m.props.name === $routeParams.moduleName;
                 });
 
-
                 briefModule.links['self'].fetch().then(function (module) {
+                    console.log('updating module');
                     // update UI immediately:
                     $scope.$apply(function () {
                         $scope.module = module;
@@ -199,7 +200,6 @@ module.factory('ModulesResource', ['$http', function ($http) {
     };
 
     resource.createNewRestEndpoint = function (moduleName, restEndpointName) {
-        console.log(moduleName, restEndpointName);
         return $http.post('/admin/api/module/' + moduleName + '/rest', {resource_name: restEndpointName})
             .then(function (response) {
                 return response.data;
