@@ -28,7 +28,7 @@ class DbAdapterResource extends AbstractResourceListener
         return $entity;
     }
 
-    public function fetchAll()
+    public function fetchAll($params = array())
     {
         return $this->model->fetchAll();
     }
