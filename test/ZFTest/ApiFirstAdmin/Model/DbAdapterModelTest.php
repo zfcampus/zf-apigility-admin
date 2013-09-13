@@ -64,10 +64,10 @@ class DbAdapterModelTest extends TestCase
 
     public function assertDbConfigExists($adapterName, array $config)
     {
-        $this->assertArrayHasKey('db', $global);
-        $this->assertArrayHasKey('adapters', $global['db']);
-        $this->assertArrayHasKey($adapterName, $global['db']['adapters']);
-        $this->assertInternalType('array', $global['db']['adapters'][$adapterName]);
+        $this->assertArrayHasKey('db', $config);
+        $this->assertArrayHasKey('adapters', $config['db']);
+        $this->assertArrayHasKey($adapterName, $config['db']['adapters']);
+        $this->assertInternalType('array', $config['db']['adapters'][$adapterName]);
     }
 
     public function assertDbConfigEquals(array $expected, $adapterName, array $config)
@@ -229,7 +229,7 @@ class DbAdapterModelTest extends TestCase
 
         // Ensure the entity returned from the update is what we expect
         $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbAdapterEntity', $entity);
-        $entity = $entity->toArray();
+        $entity = $entity->getArrayCopy();
         $expected = array_merge(array('adapter_name' => 'Db\New'), $newConfig);
         $this->assertEquals($expected, $entity);
 
@@ -246,8 +246,8 @@ class DbAdapterModelTest extends TestCase
 
         $model->remove('Db\New');
         $global = include $this->globalConfigPath;
-        $this->assertEquals(array(), $global);
+        $this->assertArrayNotHasKey('Db\New', $global['db']['adapters']);
         $local = include $this->localConfigPath;
-        $this->assertEquals(array(), $local);
+        $this->assertArrayNotHasKey('Db\New', $local['db']['adapters']);
     }
 }
