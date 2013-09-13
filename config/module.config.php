@@ -105,6 +105,15 @@ return array(
                                     ),
                                 ),
                             ),
+                            'db-adapter' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/db-adapter[/:adapter_name]',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\DbAdapter',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -114,28 +123,35 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
+            'ZF\ApiFirstAdmin\Controller\DbAdapter'      => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\ModuleCreation' => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\Module'         => 'HalJson',
+            'ZF\ApiFirstAdmin\Controller\RestEndpoint'   => 'HalJson',
+            'ZF\ApiFirstAdmin\Controller\RpcEndpoint'    => 'HalJson',
         ),
         'accept-whitelist' => array(
-            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+            'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
                 'application/json',
+                'application/*+json',
             ),
             'ZF\ApiFirstAdmin\Controller\Module' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+                'application/json',
+            ),
+            'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
         ),
         'content-type-whitelist' => array(
-            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+            'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -143,11 +159,15 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
                 'application/json',
                 'application/*+json',
             ),
             'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -156,25 +176,39 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
+            'ZF\ApiFirstAdmin\Model\DbAdapterEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'adapter_name',
+                'route_name'      => 'zf-api-first-admin/api/db-adapter',
+            ),
             'ZF\ApiFirstAdmin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',
-            ),
-            'ZF\ApiFirstAdmin\Model\RpcEndpointEntity' => array(
-                'hydrator'        => 'ArraySerializable',
-                'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
             ),
             'ZF\ApiFirstAdmin\Model\RestEndpointEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
             ),
+            'ZF\ApiFirstAdmin\Model\RpcEndpointEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'controller_service_name',
+                'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
+            ),
         ),
     ),
 
     'zf-rest' => array(
+        'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\DbAdapterResource',
+            'route_name'              => 'zf-api-first-admin/api/db-adapter',
+            'identifier_name'         => 'adapter_name',
+            'entity_class'            => 'ZF\ApiFirstAdmin\Model\DbAdapterEntity',
+            'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
+            'collection_http_methods' => array('GET', 'POST'),
+            'collection_name'         => 'db_adapter',
+        ),
         'ZF\ApiFirstAdmin\Controller\Module' => array(
             'listener'                => 'ZF\ApiFirstAdmin\Model\ModuleResource',
             'route_name'              => 'zf-api-first-admin/api/module',

@@ -2,8 +2,10 @@
 
 namespace ZF\ApiFirstAdmin;
 
+use Zend\Config\Writer\PhpArray as PhpArrayWriter;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use ZF\Configuration\ConfigResource;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Resource;
@@ -58,6 +60,28 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
+            'ZF\ApiFirstAdmin\Model\DbAdapterModel' => function($services) {
+                if (!$services->has('Config')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\ApiFirstAdmin\Model\DbAdapterModel service because Config service is not present'
+                    );
+                }
+                $config = $services->get('Config');
+                $writer = new PhpArrayWriter();
+
+                $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
+                $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
+                return new Model\DbAdapterModel($global, $local);
+            },
+            'ZF\ApiFirstAdmin\Model\DbAdapterResource' => function($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\DbAdapterModel')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\ApiFirstAdmin\Model\DbAdapterResource service because ZF\ApiFirstAdmin\Model\DbAdapterModel service is not present'
+                    );
+                }
+                $model = $services->get('ZF\ApiFirstAdmin\Model\DbAdapterModel');
+                return new Model\DbAdapterResource($model);
+            },
             'ZF\ApiFirstAdmin\Model\ModuleModel' => function ($services) {
                 if (!$services->has('ModuleManager')) {
                     throw new ServiceNotCreatedException(
