@@ -46,8 +46,8 @@
     <div class="zf1a-module-navigation" ng-controller="ModuleListController">
         <div class="container">
             <span class="pull-left">Modules: </span>
-            <button ng-hide="addModule" ng-click="addModule = true" id="create-module-button" class="btn btn-sm btn-primary pull-right" title="Create New API First Module" position="bottom" content="#create-module-form">
-                Create New API 1st Module
+            <button ng-hide="addModule" ng-click="addModule = true" id="create-module-button" class="btn btn-sm btn-primary pull-right" title="Create New API" position="bottom" content="#create-module-form">
+                Create New API
             </button>
             <ul class="nav nav-pills zfa1-nav-pills">
                 <li ng-repeat="module in modules">
@@ -56,12 +56,12 @@
             </ul>
         </div>
         <div ng-show="addModule" id="create-module-form" class="panel panel-default pull-right">
-            <div class="panel-heading">Create A New API 1st Module</div>
+            <div class="panel-heading">Create New API</div>
             <div class="panel-body">
                 <form ng-submit="createNewModule()">
                     <input type="text" ng-model="moduleName" placeholder="Module Name ...">
-                    <button ng-click="addModule = false" type="button" class="btn btn-sm btn-default">Cancel</button>
-                    <button type="submit" class="btn btn-sm btn-success">Create Module</button>
+                    <button type="submit" class="btn btn-sm btn-success">Create API</button>
+                    <button ng-click="resetForm()" type="button" class="btn btn-sm btn-default">Cancel</button>
                 </form>
             </div>
         </div>

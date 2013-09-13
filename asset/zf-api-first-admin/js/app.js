@@ -19,13 +19,17 @@ module.controller(
         $scope.createNewModule = function () {
             ModulesResource.createNewModule($scope.moduleName).then(function (newModule) {
                 ModulesResource.fetch({force: true}).then(function (modules) {
-                    $scope.addModule = false;
-                    $scope.moduleName = '';
+                    $scope.resetForm();
                     updateModuleList();
                     $location.path('/module/' + newModule.name + '/info');
                 });
             });
         };
+
+        $scope.resetForm = function () {
+            $scope.addModule = false;
+            $scope.moduleName = '';
+        }
 
         var updateModuleList = function () {
             ModulesResource.fetch().then(function (modules) {
