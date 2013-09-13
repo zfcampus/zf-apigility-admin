@@ -20,7 +20,8 @@ module.controller(
             ModulesResource.createNewModule($scope.moduleName).then(function (newModule) {
                 ModulesResource.fetch({force: true}).then(function (modules) {
                     $scope.addModule = false;
-                    $rootScope.$broadcast('ModuleList.refresh');
+                    $scope.moduleName = '';
+                    updateModuleList();
                     $location.path('/module/' + newModule.name + '/info');
                 });
             });
@@ -33,12 +34,8 @@ module.controller(
                 });
             });
         };
-        updateModuleList();
 
-        // on refresh, and initial load
-        $scope.$on('ModuleList.refresh', function () {
-            updateModuleList();
-        });
+        updateModuleList();
     }]
 );
 
@@ -122,6 +119,7 @@ module.directive('moduleRestEndpoints', function () {
                 ModulesResource.createNewRestEndpoint($scope.module.props.name, $scope.restEndpointName).then(function (restResource) {
                     updateModuleRestEndpoints(true);
                     $scope.addRestEndpoint = false;
+                    $scope.restEndpointName = '';
                 });
             };
         }]
@@ -150,6 +148,8 @@ module.directive('moduleRpcEndpoints', function () {
                 ModulesResource.createNewRpcEndpoint($scope.module.props.name, $scope.rpcEndpointName, $scope.rpcEndpointRoute).then(function (rpcResource) {
                     updateModuleRpcEndpoints(true);
                     $scope.addRpcEndpoint = false;
+                    $scope.rpcEndpointName = '';
+                    $scope.rpcEndpointRoute = '';
                 });
             };
         }]
