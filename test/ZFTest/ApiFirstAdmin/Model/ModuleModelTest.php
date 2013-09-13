@@ -4,7 +4,6 @@ namespace ZFTest\ApiFirstAdmin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use ZF\ApiFirstAdmin\Model\ModuleModel;
-use ZF\ApiFirstAdmin\Model\ModuleMetadata;
 use Test;
 
 class ModuleModelTest extends TestCase
