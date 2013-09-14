@@ -424,4 +424,25 @@ class RestEndpointModelTest extends TestCase
             $this->assertEquals($value, $values[$key]);
         }
     }
+
+    public function testFetchListenersCanReturnAlternateEntities()
+    {
+        $details = $this->getCreationPayload();
+        $this->codeRest->createService($details);
+
+        $alternateEntity = new RestEndpointEntity();
+        $this->codeRest->getEventManager()->attach('fetch', function ($e) use ($alternateEntity) {
+            return $alternateEntity;
+        });
+
+        $result = $this->codeRest->fetch('BarConf\Rest\Foo\Controller');
+        $this->assertSame($alternateEntity, $result);
+    }
+
+    public function testFetchAllCanFetchDbConnectedEntities()
+    {
+        // This is an extension of the previous test; essentially, we should be able to have a DB-connected resource in the configuration, and, when detected, the event in fetch() would replace the entity. Since fetchAll() aggregates calls to fetch(), 
+        // this should work transparently.
+        $this->markTestIncomplete();
+    }
 }
