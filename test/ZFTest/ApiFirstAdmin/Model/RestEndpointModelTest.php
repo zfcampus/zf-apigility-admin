@@ -439,10 +439,14 @@ class RestEndpointModelTest extends TestCase
         $this->assertSame($alternateEntity, $result);
     }
 
-    public function testFetchAllCanFetchDbConnectedEntities()
+    public function testCanDeleteAService()
     {
-        // This is an extension of the previous test; essentially, we should be able to have a DB-connected resource in the configuration, and, when detected, the event in fetch() would replace the entity. Since fetchAll() aggregates calls to fetch(), 
-        // this should work transparently.
-        $this->markTestIncomplete();
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName));
+
+        $this->setExpectedException('ZF\ApiFirstAdmin\Exception\RuntimeException', 'find', 404);
+        $this->codeRest->fetch($service->controllerServiceName);
     }
 }

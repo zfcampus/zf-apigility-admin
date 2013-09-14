@@ -262,6 +262,29 @@ class RestEndpointModel implements EventManagerAwareInterface
     }
 
     /**
+     * Delete a named service
+     * 
+     * @todo   Remove content-negotiation and/or HAL configuration?
+     * @param  string $controllerService 
+     * @return true
+     */
+    public function deleteService($controllerService)
+    {
+        try {
+            $service = $this->fetch($controllerService);
+        } catch (Exception\RuntimeException $e) {
+            throw new Exception\RuntimeException(sprintf(
+                'Cannot delete REST endpoint "%s"; not found',
+                $controllerService
+            ), 404);
+        }
+
+        $this->deleteRoute($service);
+        $this->deleteRestConfig($service);
+        return true;
+    }
+
+    /**
      * Generate the controller service name from the module and resource name
      *
      * @param  string $module
@@ -590,6 +613,31 @@ class RestEndpointModel implements EventManagerAwareInterface
             $key = $baseKey . 'content-type-whitelist.' . $service;
             $this->configResource->patchKey($key, $contentTypeWhitelist);
         }
+    }
+
+    /**
+     * Delete the route associated with the given endpoint
+     * 
+     * @param  RestEndpointEntity $entity 
+     */
+    public function deleteRoute(RestEndpointEntity $entity)
+    {
+        $route = $entity->routeName;
+        $key   = array('router', 'routes', $route);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete the REST configuration associated with the given 
+     * endpoint
+     * 
+     * @param  RestEndpointEntity $entity 
+     */
+    public function deleteRestConfig(RestEndpointEntity $entity)
+    {
+        $controllerService = $entity->controllerServiceName;
+        $key = array('zf-rest', $controllerService);
+        $this->configResource->deleteKey($key);
     }
 
     /**
