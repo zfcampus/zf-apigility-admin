@@ -2,7 +2,6 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-use Zend\Filter\FilterChain;
 use ZF\Rest\Exception\CreationException;
 
 class NewRestEndpointEntity extends RestEndpointEntity
