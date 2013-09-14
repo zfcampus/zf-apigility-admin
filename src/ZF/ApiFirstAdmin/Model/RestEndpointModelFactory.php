@@ -15,8 +15,10 @@ class RestEndpointModelFactory extends RpcEndpointModelFactory
         }
 
         $config = $this->configFactory->factory($module);
-        $this->models[$module] = new RestEndpointModel($this->normalizeModuleName($module), $this->modules, $config);
+        $model  = new RestEndpointModel($this->normalizeModuleName($module), $this->modules, $config);
+        $model->getEventManager()->setSharedManager($this->sharedEventManager);
+        $this->models[$module] = $model;
 
-        return $this->models[$module];
+        return $model;
     }
 }

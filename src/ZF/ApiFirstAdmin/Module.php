@@ -119,6 +119,7 @@ class Module
             'ZF\ApiFirstAdmin\Model\RestEndpointModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
+                    || !$services->has('SharedEventManager')
                 ) {
                     throw new ServiceNotCreatedException(
                         'ZF\ApiFirstAdmin\Model\RestEndpointModelFactory is missing one or more dependencies from ZF\Configuration'
@@ -126,7 +127,12 @@ class Module
                 }
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                return new Model\RestEndpointModelFactory($moduleUtils, $configFactory);
+                $sharedEvents  = $services->get('SharedEventManager');
+
+                // Wire DB-Connected fetch listener
+                $sharedEvents->attach(__NAMESPACE__ . '\Model\RestEndpointModel', 'fetch', 'ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointModel::onFetch');
+
+                return new Model\RestEndpointModelFactory($moduleUtils, $configFactory, $sharedEvents);
             },
             'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')

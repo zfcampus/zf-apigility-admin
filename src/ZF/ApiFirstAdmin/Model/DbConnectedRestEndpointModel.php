@@ -23,7 +23,7 @@ class DbConnectedRestEndpointModel
      * @param  \Zend\EventManager\Event $e 
      * @return null|DbConnectedRestEndpointEntity
      */
-    public function onFetch($e)
+    public static function onFetch($e)
     {
         $entity = $e->getParam('entity', false);
         if (!$entity) {
