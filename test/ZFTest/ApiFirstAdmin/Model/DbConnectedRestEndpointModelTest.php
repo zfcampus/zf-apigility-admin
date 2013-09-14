@@ -6,8 +6,10 @@ use BarConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
+use Zend\EventManager\Event;
 use ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointModel;
 use ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity;
+use ZF\ApiFirstAdmin\Model\RestEndpointEntity;
 use ZF\ApiFirstAdmin\Model\RestEndpointModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
@@ -132,5 +134,42 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $originalEntity = $this->getCreationPayload();
         $result         = $this->model->createService($originalEntity);
         $this->assertFalse(file_exists(__DIR__ . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/FooResource.php'));
+    }
+
+    public function testOnFetchWillRecastEntityToDbConnectedIfDbConnectedConfigurationExists()
+    {
+        $originalData = array(
+            'controller_service_name' => 'BarConf\Rest\Foo\Controller',
+            'resource_class'          => 'BarConf\Rest\Foo\FooResource',
+            'route_name'              => 'bar-conf.rest.foo',
+            'route_match'             => '/api/foo',
+            'entity_class'            => 'BarConf\Rest\Foo\FooEntity',
+        );
+        $entity = new RestEndpointEntity();
+        $entity->exchangeArray($originalData);
+        $config = array( 'zf-api-first' => array('db-connected' => array(
+            'BarConf\Rest\Foo\FooResource' => array(
+                'adapter_name'  => 'Db\Foo',
+                'table_name'    => 'foo',
+                'hydrator_name' => 'ObjectProperty',
+            ),
+        )));
+
+        $event = new Event();
+        $event->setParam('entity', $entity);
+        $event->setParam('config', $config);
+        $result = $this->model->onFetch($event);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity', $result);
+        $asArray = $result->getArrayCopy();
+        foreach ($originalData as $key => $value) {
+            $this->assertArrayHasKey($key, $asArray);
+            $this->assertEquals($value, $asArray[$key], sprintf("Failed testing key '%s'\nEntity is: %s\n", $key, var_export($asArray, 1)));
+        }
+        foreach ($config['zf-api-first']['db-connected']['BarConf\Rest\Foo\FooResource'] as $key => $value) {
+            $this->assertArrayHasKey($key, $asArray);
+            $this->assertEquals($value, $asArray[$key]);
+        }
+        $this->assertArrayHasKey('table_service', $asArray);
+        $this->assertEquals($entity->resourceClass . '\\Table', $asArray['table_service']);
     }
 }

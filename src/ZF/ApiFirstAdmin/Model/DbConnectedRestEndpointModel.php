@@ -18,6 +18,39 @@ class DbConnectedRestEndpointModel
     }
 
     /**
+     * Determine if the given entity is DB-connected, and, if so, recast to a DbConnectedRestEndpointEntity
+     * 
+     * @param  \Zend\EventManager\Event $e 
+     * @return null|DbConnectedRestEndpointEntity
+     */
+    public function onFetch($e)
+    {
+        $entity = $e->getParam('entity', false);
+        if (!$entity) {
+            // No entity; nothing to do
+            return;
+        }
+
+        $config = $e->getParam('config', array());
+        if (!isset($config['zf-api-first'])
+            || !isset($config['zf-api-first']['db-connected'])
+            || !isset($config['zf-api-first']['db-connected'][$entity->resourceClass])
+        ) {
+            // No DB-connected configuration for this service; nothing to do
+            return;
+        }
+        $config = $config['zf-api-first']['db-connected'][$entity->resourceClass];
+
+        if (!isset($config['table_service'])) {
+            $config['table_service'] = sprintf('%s\\Table', $entity->resourceClass);
+        }
+
+        $dbConnectedEntity = new DbConnectedRestEndpointEntity();
+        $dbConnectedEntity->exchangeArray(array_merge($entity->getArrayCopy(), $config));
+        return $dbConnectedEntity;
+    }
+
+    /**
      * Create a new DB-Connected REST endpoint
      * 
      * @param  DbConnectedRestEndpointEntity $entity 
