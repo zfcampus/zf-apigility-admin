@@ -38,7 +38,7 @@ class RpcEndpointModelFactory
     {
         $this->modules            = $modules;
         $this->configFactory      = $configFactory;
-        $this->sharedEventManager = $sharedEventManager;
+        $this->sharedEventManager = $sharedEvents;
     }
 
     /**
