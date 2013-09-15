@@ -14,6 +14,13 @@ class RpcEndpointModelFactory
     protected $configFactory;
 
     /**
+     * Already created model instances
+     * 
+     * @var array
+     */
+    protected $models = array();
+
+    /**
      * @var ModuleUtils
      */
     protected $modules;

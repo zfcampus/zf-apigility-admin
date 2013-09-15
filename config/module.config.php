@@ -176,6 +176,11 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
+            'ZF\ApiFirstAdmin\Model\DbConnecteedRestEndpointEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'controller_service_name',
+                'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
+            ),
             'ZF\ApiFirstAdmin\Model\DbAdapterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'adapter_name',
@@ -232,7 +237,7 @@ return array(
             'route_name'              => 'zf-api-first-admin/api/module/rest-endpoint',
             'entity_class'            => 'ZF\ApiFirstAdmin\Model\RestEndpointEntity',
             'identifier_name'         => 'controller_service_name',
-            'resource_http_methods'   => array('GET', 'PATCH'),
+            'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'rest',
         ),
