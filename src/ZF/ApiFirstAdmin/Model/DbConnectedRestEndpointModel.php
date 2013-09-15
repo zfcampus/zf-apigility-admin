@@ -10,7 +10,7 @@ class DbConnectedRestEndpointModel
     protected $restModel;
 
     /**
-     * @param RestEndpointModel $restModel 
+     * @param RestEndpointModel $restModel
      */
     public function __construct(RestEndpointModel $restModel)
     {
@@ -19,8 +19,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Determine if the given entity is DB-connected, and, if so, recast to a DbConnectedRestEndpointEntity
-     * 
-     * @param  \Zend\EventManager\Event $e 
+     *
+     * @param  \Zend\EventManager\Event $e
      * @return null|DbConnectedRestEndpointEntity
      */
     public static function onFetch($e)
@@ -52,8 +52,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Create a new DB-Connected REST endpoint
-     * 
-     * @param  DbConnectedRestEndpointEntity $entity 
+     *
+     * @param  DbConnectedRestEndpointEntity $entity
      * @return DbConnectedRestEndpointEntity
      */
     public function createService(DbConnectedRestEndpointEntity $entity)
@@ -85,8 +85,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Update a DB-Connected endpoint
-     * 
-     * @param  DbConnectedRestEndpointEntity $entity 
+     *
+     * @param  DbConnectedRestEndpointEntity $entity
      * @return DbConnectedRestEndpointEntity
      */
     public function updateService(DbConnectedRestEndpointEntity $entity)
@@ -99,8 +99,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Deelte a DB-Connected endpoint
-     * 
-     * @param  DbConnectedRestEndpointEntity $entity 
+     *
+     * @param  DbConnectedRestEndpointEntity $entity
      * @return true
      */
     public function deleteService(DbConnectedRestEndpointEntity $entity)
@@ -112,8 +112,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Create DB-Connected configuration based on entity
-     * 
-     * @param  DbConnectedRestEndpointEntity $entity 
+     *
+     * @param  DbConnectedRestEndpointEntity $entity
      */
     public function createDbConnectedConfig(DbConnectedRestEndpointEntity $entity)
     {
@@ -133,8 +133,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Update the DB-Connected configuration for the entity
-     * 
-     * @param  DbConnectedRestEndpointEntity $entity 
+     *
+     * @param  DbConnectedRestEndpointEntity $entity
      */
     public function updateDbConnectedConfig(DbConnectedRestEndpointEntity $entity)
     {
@@ -152,8 +152,8 @@ class DbConnectedRestEndpointModel
 
     /**
      * Delete the DB-Connected configuration for the entity
-     * 
-     * @param  DBConnectedRestEndpointEntity $entity 
+     *
+     * @param  DBConnectedRestEndpointEntity $entity
      */
     public function deleteDbConnectedConfig(DBConnectedRestEndpointEntity $entity)
     {

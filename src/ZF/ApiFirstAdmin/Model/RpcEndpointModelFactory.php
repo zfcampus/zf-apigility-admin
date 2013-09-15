@@ -15,7 +15,7 @@ class RpcEndpointModelFactory
 
     /**
      * Already created model instances
-     * 
+     *
      * @var array
      */
     protected $models = array();

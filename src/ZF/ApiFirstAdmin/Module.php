@@ -187,7 +187,7 @@ class Module
     {
         $matches = $e->getRouteMatch();
         if (!$matches instanceof RouteMatch) {
-            // In 404's, we do not have a route match... nor do we need to do 
+            // In 404's, we do not have a route match... nor do we need to do
             // anything
             return;
         }

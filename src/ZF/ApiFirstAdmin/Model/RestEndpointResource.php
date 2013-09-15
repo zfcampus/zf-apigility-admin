@@ -173,8 +173,8 @@ class RestEndpointResource extends AbstractResourceListener
 
     /**
      * Delete an endpoint
-     * 
-     * @param  string $id 
+     *
+     * @param  string $id
      * @return true
      */
     public function delete($id)

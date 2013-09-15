@@ -91,8 +91,8 @@ class RestEndpointModel implements EventManagerAwareInterface
 
     /**
      * Allow read-only access to properties
-     * 
-     * @param  string $name 
+     *
+     * @param  string $name
      * @return mixed
      * @throws \OutOfRangeException
      */
@@ -109,8 +109,8 @@ class RestEndpointModel implements EventManagerAwareInterface
 
     /**
      * Set the EventManager instance
-     * 
-     * @param  EventManagerInterface $events 
+     *
+     * @param  EventManagerInterface $events
      * @return self
      */
     public function setEventManager(EventManagerInterface $events)
@@ -127,7 +127,7 @@ class RestEndpointModel implements EventManagerAwareInterface
      * Retrieve the EventManager instance
      *
      * Lazy instantiates one if none currently registered
-     * 
+     *
      * @return EventManagerInterface
      */
     public function getEventManager()
@@ -168,7 +168,7 @@ class RestEndpointModel implements EventManagerAwareInterface
         $this->mergeContentNegotiationConfig($controllerService, $entity, $config);
         $this->mergeHalConfig($controllerService, $entity, $config);
 
-        // Trigger an event, allowing a listener to alter the entity and/or 
+        // Trigger an event, allowing a listener to alter the entity and/or
         // curry a new one.
         $eventResults = $this->getEventManager()->trigger(__FUNCTION__, $this, array(
             'entity' => $entity,
@@ -263,9 +263,9 @@ class RestEndpointModel implements EventManagerAwareInterface
 
     /**
      * Delete a named service
-     * 
+     *
      * @todo   Remove content-negotiation and/or HAL configuration?
-     * @param  string $controllerService 
+     * @param  string $controllerService
      * @return true
      */
     public function deleteService($controllerService)
@@ -617,8 +617,8 @@ class RestEndpointModel implements EventManagerAwareInterface
 
     /**
      * Delete the route associated with the given endpoint
-     * 
-     * @param  RestEndpointEntity $entity 
+     *
+     * @param  RestEndpointEntity $entity
      */
     public function deleteRoute(RestEndpointEntity $entity)
     {
@@ -628,10 +628,10 @@ class RestEndpointModel implements EventManagerAwareInterface
     }
 
     /**
-     * Delete the REST configuration associated with the given 
+     * Delete the REST configuration associated with the given
      * endpoint
-     * 
-     * @param  RestEndpointEntity $entity 
+     *
+     * @param  RestEndpointEntity $entity
      */
     public function deleteRestConfig(RestEndpointEntity $entity)
     {
