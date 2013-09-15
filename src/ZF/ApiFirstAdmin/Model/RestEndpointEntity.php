@@ -2,8 +2,12 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
+use Zend\Filter\FilterChain;
+
 class RestEndpointEntity
 {
+    protected $filters = array();
+
     protected $acceptWhitelist = array();
 
     protected $collectionClass;
@@ -40,6 +44,13 @@ class RestEndpointEntity
 
     public function __get($name)
     {
+        if ($name === 'filter') {
+            throw new \OutOfRangeException(sprintf(
+                '%s does not contain a property by the name of "%s"',
+                __CLASS__,
+                $name
+            ));
+        }
         if (!isset($this->{$name})) {
             throw new \OutOfRangeException(sprintf(
                 '%s does not contain a property by the name of "%s"',
@@ -132,5 +143,53 @@ class RestEndpointEntity
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,
         );
+    }
+
+    protected function normalizeResourceNameForIdentifier($resourceName)
+    {
+        return $this->getIdentifierNormalizationFilter()->filter($resourceName);
+    }
+
+    protected function normalizeResourceNameForRoute($resourceName)
+    {
+        return $this->getRouteNormalizationFilter()->filter($resourceName);
+    }
+
+    /**
+     * Retrieve and/or initialize the normalization filter chain for identifiers
+     *
+     * @return FilterChain
+     */
+    protected function getIdentifierNormalizationFilter()
+    {
+        if (isset($this->filters['identifier'])
+            && $this->filters['identifier'] instanceof FilterChain
+        ) {
+            return $this->filters['identifier'];
+        }
+        $filter = new FilterChain();
+        $filter->attachByName('WordCamelCaseToUnderscore')
+               ->attachByName('StringToLower');
+        $this->filters['identifier'] = $filter;
+        return $filter;
+    }
+
+    /**
+     * Retrieve and/or initialize the normalization filter chain
+     *
+     * @return FilterChain
+     */
+    protected function getRouteNormalizationFilter()
+    {
+        if (isset($this->filters['route'])
+            && $this->filters['route'] instanceof FilterChain
+        ) {
+            return $this->filters['route'];
+        }
+        $filter = new FilterChain();
+        $filter->attachByName('WordCamelCaseToDash')
+               ->attachByName('StringToLower');
+        $this->filters['route'] = $filter;
+        return $filter;
     }
 }

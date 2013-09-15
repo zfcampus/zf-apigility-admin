@@ -424,4 +424,29 @@ class RestEndpointModelTest extends TestCase
             $this->assertEquals($value, $values[$key]);
         }
     }
+
+    public function testFetchListenersCanReturnAlternateEntities()
+    {
+        $details = $this->getCreationPayload();
+        $this->codeRest->createService($details);
+
+        $alternateEntity = new RestEndpointEntity();
+        $this->codeRest->getEventManager()->attach('fetch', function ($e) use ($alternateEntity) {
+            return $alternateEntity;
+        });
+
+        $result = $this->codeRest->fetch('BarConf\Rest\Foo\Controller');
+        $this->assertSame($alternateEntity, $result);
+    }
+
+    public function testCanDeleteAService()
+    {
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName));
+
+        $this->setExpectedException('ZF\ApiFirstAdmin\Exception\RuntimeException', 'find', 404);
+        $this->codeRest->fetch($service->controllerServiceName);
+    }
 }

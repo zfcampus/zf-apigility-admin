@@ -57,13 +57,13 @@ class RestEndpointResource extends AbstractResourceListener
     /**
      * @return RestEndpointModel
      */
-    public function getModel()
+    public function getModel($type = RestEndpointModelFactory::TYPE_DEFAULT)
     {
         if ($this->model instanceof RestEndpointModel) {
             return $this->model;
         }
         $moduleName = $this->getModuleName();
-        $this->model = $this->restFactory->factory($moduleName);
+        $this->model = $this->restFactory->factory($moduleName, $type);
         return $this->model;
     }
 
@@ -80,9 +80,16 @@ class RestEndpointResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        $model        = $this->getModel();
-        $creationData = new NewRestEndpointEntity();
+        $type = RestEndpointModelFactory::TYPE_DEFAULT;
+        if (isset($data['table_name'])) {
+            $creationData = new DbConnectedRestEndpointEntity();
+            $type = RestEndpointModelFactory::TYPE_DB_CONNECTED;
+        } else {
+            $creationData = new NewRestEndpointEntity();
+        }
+
         $creationData->exchangeArray($data);
+        $model = $this->getModel($type);
 
         try {
             $endpoint = $model->createService($creationData);
@@ -141,17 +148,55 @@ class RestEndpointResource extends AbstractResourceListener
             return new ApiProblem(400, 'No data provided for update');
         }
 
-        $model = $this->getModel();
-        $patch = new RestEndpointEntity();
-        $data  = array_merge(array('controller_service_name' => $id), $data);
-        $patch->exchangeArray($data);
+        // Make sure we have an entity first
+        $model  = $this->getModel();
+        $entity = $model->fetch($id);
+
+        $entity->exchangeArray($data);
 
         try {
-            $updated = $model->updateService($patch);
+            switch (true) {
+                case ($entity instanceof DbConnectedRestEndpointEntity):
+                    $model   = $this->restFactory->factory($this->getModuleName(), RestEndpointModelFactory::TYPE_DB_CONNECTED);
+                    $updated = $model->updateService($entity);
+                    break;
+                case ($entity instanceof RestEndpointEntity):
+                default:
+                    $updated = $model->updateService($entity);
+            }
         } catch (\Exception $e) {
             throw new PatchException('Error updating REST endpoint', 500, $e);
         }
 
         return $updated;
+    }
+
+    /**
+     * Delete an endpoint
+     *
+     * @param  string $id
+     * @return true
+     */
+    public function delete($id)
+    {
+        // Make sure we have an entity first
+        $model  = $this->getModel();
+        $entity = $model->fetch($id);
+
+        try {
+            switch (true) {
+                case ($entity instanceof DbConnectedRestEndpointEntity):
+                    $model   = $this->restFactory->factory($this->getModuleName(), RestEndpointModelFactory::TYPE_DB_CONNECTED);
+                    $model->deleteService($entity);
+                    break;
+                case ($entity instanceof RestEndpointEntity):
+                default:
+                    $model->deleteService($entity->controllerServiceName);
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('Error deleting REST endpoint', 500, $e);
+        }
+
+        return true;
     }
 }

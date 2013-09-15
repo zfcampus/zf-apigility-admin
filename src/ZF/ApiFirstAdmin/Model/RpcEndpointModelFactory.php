@@ -2,6 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
+use Zend\EventManager\SharedEventManagerInterface;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -13,18 +14,31 @@ class RpcEndpointModelFactory
     protected $configFactory;
 
     /**
+     * Already created model instances
+     *
+     * @var array
+     */
+    protected $models = array();
+
+    /**
      * @var ModuleUtils
      */
     protected $modules;
 
     /**
+     * @var SharedEventManagerInterface
+     */
+    protected $sharedEventManager;
+
+    /**
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory)
+    public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory, SharedEventManagerInterface $sharedEvents)
     {
-        $this->modules       = $modules;
-        $this->configFactory = $configFactory;
+        $this->modules            = $modules;
+        $this->configFactory      = $configFactory;
+        $this->sharedEventManager = $sharedEvents;
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
+use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerInterface;
 use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
@@ -10,12 +13,17 @@ use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 
-class RestEndpointModel
+class RestEndpointModel implements EventManagerAwareInterface
 {
     /**
      * @var ConfigResource
      */
     protected $configResource;
+
+    /**
+     * @var EventManagerInterface
+     */
+    protected $events;
 
     /**
      * @var string
@@ -82,6 +90,55 @@ class RestEndpointModel
     }
 
     /**
+     * Allow read-only access to properties
+     *
+     * @param  string $name
+     * @return mixed
+     * @throws \OutOfRangeException
+     */
+    public function __get($name)
+    {
+        if (!isset($this->{$name})) {
+            throw new \OutOfRangeException(sprintf(
+                'Cannot locate property by name of "%s"',
+                $name
+            ));
+        }
+        return $this->{$name};
+    }
+
+    /**
+     * Set the EventManager instance
+     *
+     * @param  EventManagerInterface $events
+     * @return self
+     */
+    public function setEventManager(EventManagerInterface $events)
+    {
+        $events->setIdentifiers(array(
+            __CLASS__,
+            get_class($this),
+        ));
+        $this->events = $events;
+        return $this;
+    }
+
+    /**
+     * Retrieve the EventManager instance
+     *
+     * Lazy instantiates one if none currently registered
+     *
+     * @return EventManagerInterface
+     */
+    public function getEventManager()
+    {
+        if (!$this->events) {
+            $this->setEventManager(new EventManager());
+        }
+        return $this->events;
+    }
+
+    /**
      * @param  string $controllerService
      * @return RestEndpointEntity|false
      */
@@ -104,14 +161,26 @@ class RestEndpointModel
         $restConfig['resource_class']        = $restConfig['listener'];
         unset($restConfig['listener']);
 
-        $metadata = new RestEndpointEntity();
-        $metadata->exchangeArray($restConfig);
+        $entity = new RestEndpointEntity();
+        $entity->exchangeArray($restConfig);
 
-        $this->getRouteInfo($metadata, $config);
-        $this->mergeContentNegotiationConfig($controllerService, $metadata, $config);
-        $this->mergeHalConfig($controllerService, $metadata, $config);
+        $this->getRouteInfo($entity, $config);
+        $this->mergeContentNegotiationConfig($controllerService, $entity, $config);
+        $this->mergeHalConfig($controllerService, $entity, $config);
 
-        return $metadata;
+        // Trigger an event, allowing a listener to alter the entity and/or
+        // curry a new one.
+        $eventResults = $this->getEventManager()->trigger(__FUNCTION__, $this, array(
+            'entity' => $entity,
+            'config' => $config,
+        ), function ($r) {
+            return ($r instanceof RestEndpointEntity);
+        });
+        if ($eventResults->stopped()) {
+            return $eventResults->last();
+        }
+
+        return $entity;
     }
 
     /**
@@ -190,6 +259,29 @@ class RestEndpointModel
         $this->updateContentNegotiationConfig($original, $update);
 
         return $this->fetch($controllerService);
+    }
+
+    /**
+     * Delete a named service
+     *
+     * @todo   Remove content-negotiation and/or HAL configuration?
+     * @param  string $controllerService
+     * @return true
+     */
+    public function deleteService($controllerService)
+    {
+        try {
+            $service = $this->fetch($controllerService);
+        } catch (Exception\RuntimeException $e) {
+            throw new Exception\RuntimeException(sprintf(
+                'Cannot delete REST endpoint "%s"; not found',
+                $controllerService
+            ), 404);
+        }
+
+        $this->deleteRoute($service);
+        $this->deleteRestConfig($service);
+        return true;
     }
 
     /**
@@ -521,6 +613,31 @@ class RestEndpointModel
             $key = $baseKey . 'content-type-whitelist.' . $service;
             $this->configResource->patchKey($key, $contentTypeWhitelist);
         }
+    }
+
+    /**
+     * Delete the route associated with the given endpoint
+     *
+     * @param  RestEndpointEntity $entity
+     */
+    public function deleteRoute(RestEndpointEntity $entity)
+    {
+        $route = $entity->routeName;
+        $key   = array('router', 'routes', $route);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete the REST configuration associated with the given
+     * endpoint
+     *
+     * @param  RestEndpointEntity $entity
+     */
+    public function deleteRestConfig(RestEndpointEntity $entity)
+    {
+        $controllerService = $entity->controllerServiceName;
+        $key = array('zf-rest', $controllerService);
+        $this->configResource->deleteKey($key);
     }
 
     /**
