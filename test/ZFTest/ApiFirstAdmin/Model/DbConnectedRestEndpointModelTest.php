@@ -223,4 +223,16 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $this->assertEquals('foo', $resourceConfig['table_name']);
         $this->assertEquals($newProps['hydrator_name'], $resourceConfig['hydrator_name']);
     }
+
+    public function testDeleteServiceRemovesDbConnectedConfigurationForEntity()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $this->model->createService($originalEntity);
+        $this->model->deleteService($originalEntity);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-api-first', $config);
+        $this->assertArrayHasKey('db-connected', $config['zf-api-first']);
+        $this->assertArrayNotHasKey($originalEntity->resourceClass, $config['zf-api-first']['db-connected']);
+    }
 }

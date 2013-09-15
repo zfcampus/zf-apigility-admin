@@ -84,7 +84,7 @@ class DbConnectedRestEndpointModel
     }
 
     /**
-     * Update a DB-Connected enpoing
+     * Update a DB-Connected endpoint
      * 
      * @param  DbConnectedRestEndpointEntity $entity 
      * @return DbConnectedRestEndpointEntity
@@ -95,6 +95,19 @@ class DbConnectedRestEndpointModel
         $updatedProps  = $this->updateDbConnectedConfig($entity);
         $updatedEntity->exchangeArray($updatedProps);
         return $updatedEntity;
+    }
+
+    /**
+     * Deelte a DB-Connected endpoint
+     * 
+     * @param  DbConnectedRestEndpointEntity $entity 
+     * @return true
+     */
+    public function deleteService(DbConnectedRestEndpointEntity $entity)
+    {
+        $this->restModel->deleteService($entity->controllerServiceName);
+        $this->deleteDbConnectedConfig($entity);
+        return true;
     }
 
     /**
@@ -118,6 +131,11 @@ class DbConnectedRestEndpointModel
         $this->restModel->configResource->patch($config, true);
     }
 
+    /**
+     * Update the DB-Connected configuration for the entity
+     * 
+     * @param  DbConnectedRestEndpointEntity $entity 
+     */
     public function updateDbConnectedConfig(DbConnectedRestEndpointEntity $entity)
     {
         $properties = array('zf-api-first' => array('db-connected' => array(
@@ -130,5 +148,16 @@ class DbConnectedRestEndpointModel
         )));
         $this->restModel->configResource->patch($properties, true);
         return $properties['zf-api-first']['db-connected'][$entity->resourceClass];
+    }
+
+    /**
+     * Delete the DB-Connected configuration for the entity
+     * 
+     * @param  DBConnectedRestEndpointEntity $entity 
+     */
+    public function deleteDbConnectedConfig(DBConnectedRestEndpointEntity $entity)
+    {
+        $key = array('zf-api-first', 'db-connected', $entity->resourceClass);
+        $this->restModel->configResource->deleteKey($key);
     }
 }
