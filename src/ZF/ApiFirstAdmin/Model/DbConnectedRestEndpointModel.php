@@ -84,6 +84,20 @@ class DbConnectedRestEndpointModel
     }
 
     /**
+     * Update a DB-Connected enpoing
+     * 
+     * @param  DbConnectedRestEndpointEntity $entity 
+     * @return DbConnectedRestEndpointEntity
+     */
+    public function updateService(DbConnectedRestEndpointEntity $entity)
+    {
+        $updatedEntity = $this->restModel->updateService($entity);
+        $updatedProps  = $this->updateDbConnectedConfig($entity);
+        $updatedEntity->exchangeArray($updatedProps);
+        return $updatedEntity;
+    }
+
+    /**
      * Create DB-Connected configuration based on entity
      * 
      * @param  DbConnectedRestEndpointEntity $entity 
@@ -102,5 +116,19 @@ class DbConnectedRestEndpointModel
             ),
         )));
         $this->restModel->configResource->patch($config, true);
+    }
+
+    public function updateDbConnectedConfig(DbConnectedRestEndpointEntity $entity)
+    {
+        $properties = array('zf-api-first' => array('db-connected' => array(
+            $entity->resourceClass => array(
+                'adapter_name'  => $entity->adapterName,
+                'table_name'    => $entity->tableName,
+                'table_service' => $entity->tableService,
+                'hydrator_name' => $entity->hydratorName,
+            ),
+        )));
+        $this->restModel->configResource->patch($properties, true);
+        return $properties['zf-api-first']['db-connected'][$entity->resourceClass];
     }
 }

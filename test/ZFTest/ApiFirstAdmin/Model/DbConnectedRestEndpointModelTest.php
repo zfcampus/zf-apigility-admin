@@ -70,6 +70,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $this->resource = new ResourceFactory($this->modules, $this->writer);
         $this->codeRest = new RestEndpointModel($this->module, $this->modules, $this->resource->factory('BarConf'));
         $this->model    = new DbConnectedRestEndpointModel($this->codeRest);
+        $this->codeRest->getEventManager()->attach('fetch', array($this->model, 'onFetch'));
     }
 
     public function tearDown()
@@ -171,5 +172,55 @@ class DbConnectedRestEndpointModelTest extends TestCase
         }
         $this->assertArrayHasKey('table_service', $asArray);
         $this->assertEquals($entity->resourceClass . '\\Table', $asArray['table_service']);
+    }
+
+    public function testUpdateServiceReturnsUpdatedDbConnectedRestEndpointEntity()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $this->model->createService($originalEntity);
+
+        $newProps = array(
+            'table_service' => 'My\Custom\Table',
+            'adapter_name'  => 'My\Db',
+            'hydrator_name' => 'ClassMethods',
+        );
+        $originalEntity->exchangeArray($newProps);
+        $result = $this->model->updateService($originalEntity);
+
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity', $result);
+        $this->assertNotSame($originalEntity, $result);
+        $this->assertEquals($newProps['table_service'], $result->tableService);
+        $this->assertEquals($newProps['adapter_name'], $result->adapterName);
+        $this->assertEquals($newProps['hydrator_name'], $result->hydratorName);
+    }
+
+    public function testUpdateServiceUpdatesDbConnectedConfiguration()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $this->model->createService($originalEntity);
+
+        $newProps = array(
+            'table_service' => 'My\Custom\Table',
+            'adapter_name'  => 'My\Db',
+            'hydrator_name' => 'ClassMethods',
+        );
+        $originalEntity->exchangeArray($newProps);
+        $result = $this->model->updateService($originalEntity);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-api-first', $config);
+        $this->assertArrayHasKey('db-connected', $config['zf-api-first']);
+        $this->assertArrayHasKey($result->resourceClass, $config['zf-api-first']['db-connected']);
+
+        $resourceConfig = $config['zf-api-first']['db-connected'][$result->resourceClass];
+        $this->assertArrayHasKey('adapter_name', $resourceConfig);
+        $this->assertArrayHasKey('table_service', $resourceConfig);
+        $this->assertArrayHasKey('table_name', $resourceConfig);
+        $this->assertArrayHasKey('hydrator_name', $resourceConfig);
+
+        $this->assertEquals($newProps['adapter_name'], $resourceConfig['adapter_name']);
+        $this->assertEquals($newProps['table_service'], $resourceConfig['table_service']);
+        $this->assertEquals('foo', $resourceConfig['table_name']);
+        $this->assertEquals($newProps['hydrator_name'], $resourceConfig['hydrator_name']);
     }
 }
