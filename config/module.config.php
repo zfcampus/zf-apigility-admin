@@ -176,7 +176,7 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
-            'ZF\ApiFirstAdmin\Model\DbConnecteedRestEndpointEntity' => array(
+            'ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
