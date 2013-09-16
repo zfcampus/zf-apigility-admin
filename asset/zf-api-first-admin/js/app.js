@@ -213,6 +213,19 @@ module.factory('ApisResource', ['$http', function ($http) {
     return resource;
 }]);
 
+module.factory('DbAdapterResource', ['$http', function ($http) {
+    var resource =  new HyperagentResource('/admin/api/db-adapter');
+
+    resource.createNewAdapter = function (options) {
+        return $http.post('/admin/api/db-adapter', options)
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    return resource;
+}]);
+
 module.run(['$rootScope', '$routeParams', function ($rootScope, $routeParams) {
     $rootScope.routeParams = $routeParams;
 }]);
