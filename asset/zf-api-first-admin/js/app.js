@@ -45,6 +45,13 @@ module.controller(
 );
 
 module.controller(
+    'DbAdapterController',
+    ['$rootScope', '$scope', '$location', function () {
+
+    }]
+);
+
+module.controller(
     'ApiController',
     ['$rootScope', '$scope', '$routeParams', 'ApisResource', function($rootScope, $scope, $routeParams, ApisResource) {
 
@@ -223,6 +230,7 @@ module.directive('dbAdapters', function () {
 
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
+    $routeProvider.when('/global/db-adapters', {templateUrl: '/zf-api-first-admin/partials/global/db-adapters.html', controller: 'DbAdapterController'});
     $routeProvider.when('/api/:apiName/:section', {templateUrl: '/zf-api-first-admin/partials/api.html', controller: 'ApiController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
