@@ -1,85 +1,238 @@
-<div ng-hide="addRestEndpoint">
-    <button ng-click="addRestEndpoint = true" id="create-rest-endpoint-button" class="btn btn-default btn-primary" title="Create New REST Endpoint" position="bottom" content="#create-rest-endpoint-form">
+<div ng-hide="showNewRestEndpointForm">
+  <button ng-click="showNewRestEndpointForm = true" class="btn btn-default btn-primary" title="Create New REST Endpoint">
     Create New REST Endpoint
-    </button>
+  </button>
 </div>
-<div ng-show="addRestEndpoint" class="panel panel-default">
-    <div class="panel-heading">Create a new REST endpoint</div>
-    <div class="panel-body">
-        <form ng-submit="createNewRestEndpoint()">
-            <input type="text" ng-model="restEndpointName" placeholder="REST Endpoint Name ...">
-            <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
-          <button ng-click="addRestEndpoint = false; restEndpointName = ''" type="button" class="btn btn-sm btn-default">Cancel</button>
-        </form>
-    </div>
+<div ng-show="showNewRestEndpointForm" class="panel panel-default">
+  <div class="panel-heading">Create a New REST Endpoint</div>
+  <div class="panel-body">
+    <form ng-submit="createNewRestEndpoint()">
+      <input type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
+      <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
+      <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+    </form>
+  </div>
 </div>
 
-<div ng-repeat="restEndpoint in restEndpoints">
-  <h3>{{ restEndpoint.props.entity_class }}</h3>
-  <table class="table table-striped">
-        <tr>
-            <td>Accept whitelist</td>
-            <td>{{ restEndpoint.props.accept_whitelist }}</td>
-        </tr>
-        <tr>
-            <td>Collection Class</td>
-            <td>{{ restEndpoint.props.collection_class }}</td>
-        </tr>
-        <tr>
-            <td>Allowed Collection HTTP Methods</td>
-            <td>{{ restEndpoint.props.collection_http_methods }}</td>
-        </tr>
-        <tr>
-            <td>Collection Name</td>
-            <td>{{ restEndpoint.props.collection_name }}</td>
-        </tr>
-        <tr>
-            <td>Collection Query String whitelist</td>
-            <td>{{ restEndpoint.props.collection_query_whitelist }}</td>
-        </tr>
-        <tr>
-            <td>Content-Type whitelist</td>
-            <td>{{ restEndpoint.props.content_type_whitelist }}</td>
-        </tr>
-        <tr>
-            <td>Controller Service Name</td>
-            <td>{{ restEndpoint.props.controller_service_name }}</td>
-        </tr>
-        <tr>
-            <td>Entity Class</td>
-            <td>{{ restEndpoint.props.entity_class }}</td>
-        </tr>
-        <tr>
-            <td>Identifier Name</td>
-            <td>{{ restEndpoint.props.identifier_name }}</td>
-        </tr>
-        <tr>
-            <td>Page Size</td>
-            <td>{{ restEndpoint.props.page_size }}</td>
-        </tr>
-        <tr>
-            <td>Page Parameter (Query string)</td>
-            <td>{{ restEndpoint.props.page_size_param }}</td>
-        </tr>
-        <tr>
-            <td>Resource Class</td>
-            <td>{{ restEndpoint.props.resource_class }}</td>
-        </tr>
-        <tr>
-            <td>Allowed Resource HTTP Methods</td>
-            <td>{{ restEndpoint.props.resource_http_methods }}</td>
-        </tr>
-        <tr>
-            <td>Route matches:</td>
-            <td>{{ restEndpoint.props.route_match }}</td>
-        </tr>
-        <tr>
-            <td>Route Name</td>
-            <td>{{ restEndpoint.props.route_name }}</td>
-        </tr>
-        <tr>
-            <td>Content Negotiation Selector</td>
-            <td>{{ restEndpoint.props.selector }}</td>
-        </tr>
-  </table>
+<br clear="left">
+
+<div class="panel-group tooltip-api" id="accordion">
+  <div class="panel panel-default" ng-repeat="restEndpoint in restEndpoints">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <font color="gray" size="-1">REST</font>
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}">
+          {{ restEndpoint.entity_class }}
+        </a>
+        <div ng-hide="deleteRestEndpoint" class="pull-right">
+          <button ng-click="deleteRestEndpoint = true" id="remove-endpoint" class="btn btn-link" content="#remove-endpoint-form" title="Delete endpoint">
+            <span class="glyphicon glyphicon-trash"></span> Remove
+          </button>
+        </div>
+        <div ng-show="deleteRestEndpoint" id="remove-endpoint-form" class="panel panel-default">
+          <div class="panel-heading">Remove REST endpoint</div>
+          <div class="panel-body">
+            <form ng-submit="removeRestEndpoint()">
+              <p>Are you sure you want to delete the endpoint?</p>
+              <button type="submit" class="btn btn-sm btn-success">Yes</button>
+              <button ng-click="deleteRestEndpoint = false" type="button" class="btn btn-sm btn-default">No</button>
+            </form>
+          </div>
+        </div>
+      </h4>
+    </div>
+    <div id="collapse{{$index}}" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <ul class="nav nav-tabs" id="myTab{{$index}}">
+          <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
+          <li><a data-target="#editmode{{$index}}" data-toggle="tab">Edit</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="viewmode{{$index}}">
+            <table class="table table-striped">
+              <tr>
+                <td>Accept whitelist</td>
+                <td>{{ restEndpoint.accept_whitelist.join(', ') || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Collection Class</td>
+                <td>{{ restEndpoint.collection_class }}</td>
+              </tr>
+              <tr>
+                <td>Allowed Collection HTTP Methods</td>
+                <td>{{ restEndpoint.collection_http_methods.join(', ') }}</td>
+              </tr>
+              <tr>
+                <td>Collection Name</td>
+                <td>{{ restEndpoint.collection_name }}</td>
+              </tr>
+              <tr>
+                <td>Collection Query String whitelist</td>
+                <td>{{ restEndpoint.collection_query_whitelist.join(', ') || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Content-Type whitelist</td>
+                <td>{{ restEndpoint.content_type_whitelist.join(', ') || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Controller Service Name</td>
+                <td>{{ restEndpoint.controller_service_name }}</td>
+              </tr>
+              <tr>
+                <td>Entity Class</td>
+                <td>{{ restEndpoint.entity_class }}</td>
+              </tr>
+              <tr>
+                <td>Identifier Name</td>
+                <td>{{ restEndpoint.identifier_name || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Page Size</td>
+                <td>{{ restEndpoint.page_size }}</td>
+              </tr>
+              <tr>
+                <td>Page Parameter (Query string)</td>
+                <td>{{ restEndpoint.page_size_param }}</td>
+              </tr>
+              <tr>
+                <td>Resource Class</td>
+                <td>{{ restEndpoint.resource_class }}</td>
+              </tr>
+              <tr>
+                <td>Allowed Resource HTTP Methods</td>
+                <td>{{ restEndpoint.resource_http_methods.join(', ') }}</td>
+              </tr>
+              <tr>
+                <td>Route matches:</td>
+                <td>{{ restEndpoint.route_match }}</td>
+              </tr>
+              <tr>
+                <td>Route Name</td>
+                <td>{{ restEndpoint.route_name }}</td>
+              </tr>
+              <tr>
+                <td>Content Negotiation Selector</td>
+                <td>{{ restEndpoint.selector }}</td>
+              </tr>
+            </table>
+
+          </div>
+          <div class="tab-pane" id="editmode{{$index}}">
+
+            <form class="form-horizontal" ng-submit="saveRestEndpoint()">
+              <fieldset>
+                <!-- Text input-->
+                <div class="control-group">
+                  <label class="control-label" for="route_match">Route to match</label>
+                  <div class="controls">
+                    <input id="route_match" name="route_match" type="text" placeholder="/api/your_resource" class="input-xlarge" required="" ng-model="restEndpoint.route_match">
+                    <p class="help-block">The base URI endpoint for the resource (minus the identifier segment of the URI)</p>
+                  </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="control-group">
+                  <label class="control-label" for="identifier_name">Identifier Name</label>
+                  <div class="controls">
+                    <input id="identifier_name" name="identifier_name" type="text" placeholder="id" class="input-xlarge" required="" value="{{ restEndpoint.identifier_name }}">
+                    <p class="help-block">Name of the field representing the unique identifier</p>
+                  </div>
+                </div>
+
+                <!-- Multiple Checkboxes (inline) -->
+                <div class="control-group">
+                  <label class="control-label" for="collection_http_methods[]">HTTP methods allowed for COLLECTIONS</label>
+                  <div class="controls">
+                    <label ng-repeat="method in restEndpoint.collection_http_methods" class="checkbox inline" for="collection_http_methods[]">
+                      <input type="checkbox" name="collection_http_methods[]" ng-model="method.checked">
+                      <span>{{method.name}}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Multiple Checkboxes (inline) -->
+                <div class="control-group">
+                  <label class="control-label" for="resource_http_methods[]">HTTP methods allowed for ENTITIES</label>
+                  <div class="controls">
+                    <label ng-repeat="method in restEndpoint.resource_http_methods" class="checkbox inline" for="resource_http_methods[]">
+                      <input type="checkbox" name="resource_http_methods[]" ng-model="method.checked">
+                      <span>{{method.name}}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="control-group">
+                  <label class="control-label" for="page_size">Number of entities to display per page of a collection</label>
+                  <div class="controls">
+                    <input id="page_size" name="page_size" type="text" placeholder="25" class="input-xlarge" value="{{restEndpoint.page_size}}">
+                    <p class="help-block">Indicate the number of entities that should be displayed per page when GET requests are made to the collection.</p>
+                  </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="control-group">
+                  <label class="control-label" for="page_size_param">Page parameter</label>
+                  <div class="controls">
+                    <input id="page_size_param" name="page_size_param" type="text" placeholder="page" class="input-xlarge" value="{{restEndpoint.page_size_param}}">
+                    <p class="help-block">The query string parameter that will represent the page of results when retrieving a collection.</p>
+                  </div>
+                </div>
+
+                <!-- Select Basic -->
+                <div class="control-group">
+                  <label class="control-label" for="selector">Content Negotiation Selector</label>
+                  <div class="controls">
+                    <select name="selector" class="input-xlarge" ng-model="restEndpoint.selector" ng-options="c.value as c.text for c in content_negotiation"></select>
+                  </div>
+                </div>
+
+                <!-- Prepended checkbox -->
+                <div class="control-group">
+                  <label class="control-label" for="accept_whitelist">Accept whitelist</label>
+                  <div class="controls">
+                    <div class="input-prepend">
+                    <span class="add-on">
+                    <label class="checkbox">
+                      <input type="checkbox">
+                    </label>
+                    </span>
+                      <input id="accept_whitelist" name="accept_whitelist" class="input-xlarge" type="text" placeholder="placeholder">
+                    </div>
+                    <p class="help-block">Allow users to add input elements with additional Accept mediatypes they wish to whitelist</p>
+                  </div>
+                </div>
+
+                <!-- Prepended checkbox -->
+                <div class="control-group">
+                  <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
+                  <div class="controls">
+                    <div class="input-prepend">
+                    <span class="add-on">
+                    <label class="checkbox">
+                      <input type="checkbox">
+                    </label>
+                    </span>
+                      <input id="content_type_whitelist" name="content_type_whitelist" class="input-xlarge" type="text" placeholder="placeholder">
+                    </div>
+                    <p class="help-block">Allow users to add input elements with additional Content-Type mediatypes they wish to whitelist</p>
+                  </div>
+                </div>
+
+              </fieldset>
+              <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="saveRestEndpoint($index)">Save</button><br />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  $(function () {
+    $('#myTab a:last').tab('show')
+  })
+</script>

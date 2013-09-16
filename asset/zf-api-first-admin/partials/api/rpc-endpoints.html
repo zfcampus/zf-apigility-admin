@@ -9,42 +9,42 @@
         <form ng-submit="createNewRpcEndpoint()">
             <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
             <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
-            <button ng-click="addRpcEndpoint = false" type="button" class="btn btn-sm btn-default">Cancel</button>
             <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
+            <button ng-click="addRpcEndpoint = false; resetForm();" type="button" class="btn btn-sm btn-warning">Cancel</button>
         </form>
     </div>
 </div>
 
 <div ng-repeat="rpcEndpoint in rpcEndpoints">
-    <h3>{{ rpcEndpoint.props.controller_service_name }}</h3>
+    <h3>{{ rpcEndpoint.controller_service_name }}</h3><button><i class="icon-edit"></i></button>
     <table class="table table-striped">
         <tr>
             <td>Accept whitelist</td>
-            <td>{{ rpcEndpoint.props.accept_whitelist }}</td>
+            <td>{{ rpcEndpoint.accept_whitelist }}</td>
         </tr>
         <tr>
             <td>Content-Type whitelist</td>
-            <td>{{ rpcEndpoint.props.content_type_whitelist }}</td>
+            <td>{{ rpcEndpoint.content_type_whitelist }}</td>
         </tr>
         <tr>
             <td>Controller Service Name</td>
-            <td>{{ rpcEndpoint.props.controller_service_name }}</td>
+            <td>{{ rpcEndpoint.controller_service_name }}</td>
         </tr>
         <tr>
             <td>Allowed HTTP Methods</td>
-            <td>{{ rpcEndpoint.props.http_methods }}</td>
+            <td>{{ rpcEndpoint.http_methods }}</td>
         </tr>
         <tr>
             <td>Route matches:</td>
-            <td>{{ rpcEndpoint.props.route_match }}</td>
+            <td>{{ rpcEndpoint.route_match }}</td>
         </tr>
         <tr>
             <td>Route Name</td>
-            <td>{{ rpcEndpoint.props.route_name }}</td>
+            <td>{{ rpcEndpoint.route_name }}</td>
         </tr>
         <tr>
             <td>Content Negotiation Selector</td>
-            <td>{{ rpcEndpoint.props.selector }}</td>
+            <td>{{ rpcEndpoint.selector }}</td>
         </tr>
     </table>
 </div>

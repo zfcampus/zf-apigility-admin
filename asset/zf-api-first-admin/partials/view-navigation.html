@@ -1,0 +1,13 @@
+<aside class="ag-sidebar" role="complementary">
+  <ul ng-show="!$root.routeParams.apiName" class="nav ag-sidenav">
+    <li><a ng-href="#/general-information">General Information</a></li>
+    <li><a ng-href="#/media-types">Media Types</a></li>
+    <li><a ng-href="#/authentication">Authentication</a></li>
+    <li><a ng-href="#/services">Services</a></li>
+  </ul>
+  <ul ng-show="$root.routeParams.apiName" class="nav ag-sidenav">
+    <li ng-class="{active: ($root.routeParams.section == 'info')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/info">General Information</a></li>
+    <li ng-class="{active: ($root.routeParams.section == 'rest-endpoints')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/rest-endpoints">Rest Endpoints</a></li>
+    <li ng-class="{active: ($root.routeParams.section == 'rpc-endpoints')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/rpc-endpoints">RPC Endpoints</a></li>
+  </ul>
+</aside>

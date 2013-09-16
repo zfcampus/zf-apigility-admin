@@ -869,12 +869,12 @@
     var shimKeys = function (object) {
       var index, iterable = object, result = [];
       if (!iterable) return result;
-      if (!(objectTypes[typeof object])) return result;    
+      if (!(objectTypes[typeof object])) return result;
         for (index in iterable) {
           if (hasOwnProperty.call(iterable, index)) {
-            result.push(index);    
+            result.push(index);
           }
-        }    
+        }
       return result
     };
 
@@ -962,15 +962,15 @@
       }
       while (++argsIndex < argsLength) {
         iterable = args[argsIndex];
-        if (iterable && objectTypes[typeof iterable]) {    
+        if (iterable && objectTypes[typeof iterable]) {
         var ownIndex = -1,
             ownProps = objectTypes[typeof iterable] && keys(iterable),
             length = ownProps ? ownProps.length : 0;
 
         while (++ownIndex < length) {
           index = ownProps[ownIndex];
-          result[index] = callback ? callback(result[index], iterable[index]) : iterable[index];    
-        }    
+          result[index] = callback ? callback(result[index], iterable[index]) : iterable[index];
+        }
         }
       }
       return result
@@ -1180,15 +1180,15 @@
           argsLength = typeof guard == 'number' ? 2 : args.length;
       while (++argsIndex < argsLength) {
         iterable = args[argsIndex];
-        if (iterable && objectTypes[typeof iterable]) {    
+        if (iterable && objectTypes[typeof iterable]) {
         var ownIndex = -1,
             ownProps = objectTypes[typeof iterable] && keys(iterable),
             length = ownProps ? ownProps.length : 0;
 
         while (++ownIndex < length) {
           index = ownProps[ownIndex];
-          if (typeof result[index] == 'undefined') result[index] = iterable[index];    
-        }    
+          if (typeof result[index] == 'undefined') result[index] = iterable[index];
+        }
         }
       }
       return result
@@ -1259,10 +1259,10 @@
       var index, iterable = collection, result = iterable;
       if (!iterable) return result;
       if (!objectTypes[typeof iterable]) return result;
-      callback = callback && typeof thisArg == 'undefined' ? callback : lodash.createCallback(callback, thisArg);    
+      callback = callback && typeof thisArg == 'undefined' ? callback : lodash.createCallback(callback, thisArg);
         for (index in iterable) {
-          if (callback(iterable[index], index, collection) === false) return result;    
-        }    
+          if (callback(iterable[index], index, collection) === false) return result;
+        }
       return result
     };
 
@@ -1291,15 +1291,15 @@
       var index, iterable = collection, result = iterable;
       if (!iterable) return result;
       if (!objectTypes[typeof iterable]) return result;
-      callback = callback && typeof thisArg == 'undefined' ? callback : lodash.createCallback(callback, thisArg);    
+      callback = callback && typeof thisArg == 'undefined' ? callback : lodash.createCallback(callback, thisArg);
         var ownIndex = -1,
             ownProps = objectTypes[typeof iterable] && keys(iterable),
             length = ownProps ? ownProps.length : 0;
 
         while (++ownIndex < length) {
           index = ownProps[ownIndex];
-          if (callback(iterable[index], index, collection) === false) return result;    
-        }    
+          if (callback(iterable[index], index, collection) === false) return result;
+        }
       return result
     };
 
