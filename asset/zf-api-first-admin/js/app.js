@@ -170,6 +170,57 @@ module.directive('apiRpcEndpoints', function () {
     }
 });
 
+module.directive('dbAdapters', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/zf-api-first-admin/partials/api/db-adapters.html',
+        controller: ['$rootScope', '$scope', 'DbAdapterResource', function ($rootScope, $scope, DbAdapterResource) {
+            $scope.resetForm = function () {
+                $scope.showNewDbAdapterForm = false;
+                $scope.adapterName = '';
+                $scope.driver      = '';
+                $scope.database    = '';
+                $scope.username    = '';
+                $scope.password    = '';
+                $scope.hostname    = 'localhost';
+                $scope.port        = '';
+                $scope.charset     = 'UTF-8';
+            };
+
+            /*
+             * @todo Figure out where db adapters and the model live in the scope of the parent
+             */
+            function updateDbAdapters(force) {
+                $scope.dbAdapters = [];
+                $scope.dbAdapters.fetch({force: force}).then(function (dbAdapters) {
+                    // update view
+                    $scope.$apply(function() {
+                        $scope.dbAdapters = _.pluck(dbAdapters.embedded.db-adapter, 'props');
+                    });
+                });
+            }
+            updateDbAdapters(false);
+
+            $scope.createNewDbAdapter = function () {
+                var options = {
+                    adapter_name :  $scope.adapterName,
+                    driver       :  $scope.driver,
+                    database     :  $scope.database,
+                    username     :  $scope.username,
+                    password     :  $scope.password,
+                    hostname     :  $scope.hostname,
+                    port         :  $scope.port,
+                    charset      :  $scope.charset
+                };
+                DbAdapterResource.createNewAdapter(options).then(function (dbAdapter) {
+                    updateDbAdapters(true);
+                    $scope.resetForm();
+                });
+            };
+        }]
+    }
+});
+
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
     $routeProvider.when('/api/:apiName/:section', {templateUrl: '/zf-api-first-admin/partials/api.html', controller: 'ApiController'});
