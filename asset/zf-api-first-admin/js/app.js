@@ -230,13 +230,6 @@ module.directive('apiRpcEndpoints', function () {
     }
 });
 
-module.directive('dbAdapters', function () {
-    return {
-        restrict: 'E',
-        templateUrl: '/zf-api-first-admin/partials/api/db-adapters.html',
-    }
-});
-
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
     $routeProvider.when('/global/db-adapters', {templateUrl: '/zf-api-first-admin/partials/global/db-adapters.html', controller: 'DbAdapterController'});
