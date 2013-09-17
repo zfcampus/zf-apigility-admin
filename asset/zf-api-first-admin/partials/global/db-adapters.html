@@ -113,7 +113,7 @@
         <div ng-show="deleteDbAdapter" id="remove-adapter-form" class="panel panel-default">
           <div class="panel-heading">Remove DB Adapter</div>
           <div class="panel-body">
-            <form ng-submit="removeDbAdapter()">
+            <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
               <p>Are you sure you want to delete the Adapter</p>
               <button type="submit" class="btn btn-sm btn-success">Yes</button>
               <button ng-click="deleteDbAdapter = false" type="button" class="btn btn-sm btn-default">No</button>

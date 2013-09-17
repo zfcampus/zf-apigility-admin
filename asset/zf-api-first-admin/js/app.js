@@ -93,8 +93,8 @@ module.controller(
             console.log($scope.dbAdapters[index]);
         };
 
-        $scope.removeDbAdapter = function () {
-            DbAdapterResource.removeAdapter($scope.dbAdapter.props.adapter_name).then(function () {
+        $scope.removeDbAdapter = function (adapter_name) {
+            DbAdapterResource.removeAdapter(adapter_name).then(function () {
                 updateDbAdapters(true);
                 $scope.deleteDbAdapter = false;
             });
@@ -285,7 +285,7 @@ module.factory('DbAdapterResource', ['$http', function ($http) {
     };
 
     resource.removeAdapter = function (name) {
-        return $http.delete('/admin/api/db-adapter/' + name)
+        return $http.delete('/admin/api/db-adapter/' + encodeURIComponent(name))
             .then(function (response) {
                 return true;
             });
