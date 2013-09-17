@@ -91,6 +91,19 @@ module.controller(
 
         $scope.saveDbAdapter = function (index) {
             console.log($scope.dbAdapters[index]);
+            var dbAdapter = $scope.dbAdapters[index];
+            var options = {
+                driver   :  dbAdapter.driver,
+                database :  dbAdapter.database,
+                username :  dbAdapter.username,
+                password :  dbAdapter.password,
+                hostname :  dbAdapter.hostname,
+                port     :  dbAdapter.port,
+                charset  :  dbAdapter.charset
+            };
+            DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(function (dbAdapter) {
+                updateDbAdapters(true);
+            });
         };
 
         $scope.removeDbAdapter = function (adapter_name) {
@@ -279,6 +292,13 @@ module.factory('DbAdapterResource', ['$http', function ($http) {
 
     resource.createNewAdapter = function (options) {
         return $http.post('/admin/api/db-adapter', options)
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.saveAdapter = function (name, data) {
+        return $http({method: 'patch', url: '/admin/api/db-adapter/' + encodeURIComponent(name), data: data})
             .then(function (response) {
                 return response.data;
             });
