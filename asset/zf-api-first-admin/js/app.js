@@ -169,11 +169,19 @@ module.directive('apiRestEndpoints', function () {
 
             function updateApiRestEndpoints(force) {
                 $scope.restEndpoints = [];
+                $scope.restEndpointsEditable = [];
                 $scope.api.links['rest'].fetch({force: force}).then(function (restEndpoints) {
                     // update view
                     console.log(restEndpoints);
                     $scope.$apply(function() {
                         $scope.restEndpoints = _.pluck(restEndpoints.embedded.rest, 'props');
+                        $scope.restEndpointsEditable = _.clone($scope.restEndpoints, true);
+                        _($scope.restEndpointsEditable).forEach(function (restEndpoint) {
+                            console.log(restEndpoint);
+                            _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
+                                console.log(restEndpoint[httpItem]);
+                            });
+                        });
                     });
                 });
             }
@@ -197,15 +205,9 @@ module.directive('apiRestEndpoints', function () {
                     $scope.deleteRestEndpoint = false;
                 });
             };
-
-            $scope.foo = function () {
-                var a = $('#collapseOne');
-                console.log(a);
-                a.collapse('toggle');
-            };
         }]
-    }
-});
+    };
+);
 
 module.directive('apiRpcEndpoints', function () {
     return {
@@ -214,22 +216,22 @@ module.directive('apiRpcEndpoints', function () {
         controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
-            $scope.resetForm = function () {
-                $scope.showNewRpcEndpointForm = false;
-                $scope.rpcEndpointName = '';
-                $scope.rpcEndpointRoute = '';
-            };
+        $scope.resetForm = function () {
+            $scope.showNewRpcEndpointForm = false;
+            $scope.rpcEndpointName = '';
+            $scope.rpcEndpointRoute = '';
+        };
 
-            function updateApiRpcEndpoints(force) {
-                $scope.rpcEndpoints = [];
-                $scope.api.links['rpc'].fetch({force: force}).then(function (rpcEndpoints) {
-                    // update view
-                    $scope.$apply(function() {
-                        $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
-                    });
+        function updateApiRpcEndpoints(force) {
+            $scope.rpcEndpoints = [];
+            $scope.api.links['rpc'].fetch({force: force}).then(function (rpcEndpoints) {
+                // update view
+                $scope.$apply(function() {
+                    $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
                 });
-            }
-            updateApiRpcEndpoints(false);
+            });
+        }
+        updateApiRpcEndpoints(false);
 
             $scope.createNewRpcEndpoint = function () {
                 ApisResource.createNewRpcEndpoint($scope.api.props.name, $scope.rpcEndpointName, $scope.rpcEndpointRoute).then(function (rpcResource) {
@@ -316,4 +318,5 @@ module.factory('DbAdapterResource', ['$http', function ($http) {
 
 module.run(['$rootScope', '$routeParams', function ($rootScope, $routeParams) {
     $rootScope.routeParams = $routeParams;
+    $rootScope.httpMethods = ['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'];
 }]);

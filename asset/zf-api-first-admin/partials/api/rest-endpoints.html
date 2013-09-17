@@ -143,11 +143,11 @@
 
                 <!-- Multiple Checkboxes (inline) -->
                 <div class="control-group">
-                  <label class="control-label" for="collection_http_methods[]">HTTP methods allowed for COLLECTIONS</label>
+                  <label class="control-label" for="collection_http_methods">HTTP methods allowed for COLLECTIONS</label>
                   <div class="controls">
-                    <label ng-repeat="method in restEndpoint.collection_http_methods" class="checkbox inline" for="collection_http_methods[]">
-                      <input type="checkbox" name="collection_http_methods[]" ng-model="method.checked">
-                      <span>{{method.name}}</span>
+                    <label ng-repeat="method in $root.httpMethods" class="checkbox inline" for="collection_http_methods[]">
+                      <input type="checkbox" name="collection_http_methods[]" ng-model="method">
+                      <span>{{method}}</span>
                     </label>
                   </div>
                 </div>
