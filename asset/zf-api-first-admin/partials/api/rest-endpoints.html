@@ -6,11 +6,50 @@
 <div ng-show="showNewRestEndpointForm" class="panel panel-default">
   <div class="panel-heading">Create a New REST Endpoint</div>
   <div class="panel-body">
-    <form ng-submit="createNewRestEndpoint()">
-      <input type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
-      <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
-      <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
-    </form>
+
+    <ul class="nav nav-tabs" id="restFormTab">
+      <li class="active"><a data-target="#codeconnected" data-toggle="tab">Code-Connected</a></li>
+      <li><a data-target="#dbconnected" data-toggle="tab">DB-Connected</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="codeconnected">
+        <form class="form-horizontal" ng-submit="createNewRestEndpoint()">
+          <fieldset>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">REST Endpoint Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
+          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+        </form>
+      </div>
+
+      <div class="tab-pane" id="dbconnected">
+        <form class="form-horizontal" ng-submit="createNewDbConnectedEndpoint()">
+          <fieldset>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">DB Adapter Name</label>
+              <div class="col-lg-10">
+                <select class="form-control" ng-model="$parent.dbAdapterName" ng-repeat="dbAdapter in $parent.dbAdapters">
+                  <option>{{dbAdapter.adapter_name}}</option>
+                </select>
+              </div>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">Table Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" ng-model="$parent.dbTableName" placeholder="DB Table Name ...">
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-sm btn-success">Create DB-Connected REST Endpoint</button>
+          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -56,6 +95,10 @@
                 <td>Accept whitelist</td>
                 <td>{{ restEndpoint.accept_whitelist.join(', ') || 'n/a' }}</td>
               </tr>
+              <tr ng-if="restEndpoint.adapter_name">
+                <td>DB Adapter Name</td>
+                <td>{{ restEndpoint.adapter_name }}</td>
+              </tr>
               <tr>
                 <td>Collection Class</td>
                 <td>{{ restEndpoint.collection_class }}</td>
@@ -83,6 +126,10 @@
               <tr>
                 <td>Entity Class</td>
                 <td>{{ restEndpoint.entity_class }}</td>
+              </tr>
+              <tr ng-if="restEndpoint.hydrator_name">
+                <td>Hydrator Service Name</td>
+                <td>{{ restEndpoint.hydrator_name }}</td>
               </tr>
               <tr>
                 <td>Identifier Name</td>
@@ -116,6 +163,14 @@
                 <td>Content Negotiation Selector</td>
                 <td>{{ restEndpoint.selector }}</td>
               </tr>
+              <tr ng-if="restEndpoint.table_name">
+                <td>DB Table Name</td>
+                <td>{{ restEndpoint.table_name }}</td>
+              </tr>
+              <tr ng-if="restEndpoint.table_service">
+                <td>Table Gateway Service Name</td>
+                <td>{{ restEndpoint.table_service }}</td>
+              </tr>
             </table>
 
           </div>
@@ -123,6 +178,39 @@
 
             <form class="form-horizontal" ng-submit="saveRestEndpoint()">
               <fieldset>
+                <div ng-if="restEndpoint.adapter_name" class="control-group">
+                  <label class="control-label" for="selector">DB Adapter Name</label>
+                  <div class="controls">
+                    <select class="form-control input-xlarge" ng-model="restEndpoint.adapter_name" ng-repeat="dbAdapter in $parent.dbAdapters">
+                      <option>{{dbAdapter.adapter_name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group" ng-if="restEndpoint.table_name">
+                  <label class="control-label" for="table_name">DB Table Name</label>
+                  <div class="controls">
+                    <input id="table_name" name="table_name" type="text" placeholder="Table Name" class="input-xlarge" required="" ng-model="restEndpoint.table_name">
+                    <p class="help-block">The name of the database table used by this endpoint</p>
+                  </div>
+                </div>
+
+                <div class="control-group" ng-if="restEndpoint.hydrator_name">
+                  <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
+                  <div class="controls">
+                    <input id="hydrator_name" name="hydrator_name" type="text" placeholder="Hydrator Service Name" class="input-xlarge" required="" ng-model="restEndpoint.hydrator_name">
+                    <p class="help-block">The name of the hydrator service used to create entities from database rows</p>
+                  </div>
+                </div>
+
+                <div class="control-group" ng-if="restEndpoint.table_service">
+                  <label class="control-label" for="table_service">TableGateway Service Name</label>
+                  <div class="controls">
+                    <input id="table_service" name="table_service" type="text" placeholder="TableGateway Service Name" class="input-xlarge" required="" ng-model="restEndpoint.table_service">
+                    <p class="help-block">The name of the TableGateway service used by this endpoint; change only if you have created your own implementation.</p>
+                  </div>
+                </div>
+
                 <!-- Text input-->
                 <div class="control-group">
                   <label class="control-label" for="route_match">Route to match</label>
