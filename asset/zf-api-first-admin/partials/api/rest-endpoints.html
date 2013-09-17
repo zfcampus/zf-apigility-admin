@@ -282,7 +282,7 @@
 
                 <!-- Prepended checkbox -->
                 <div class="control-group">
-                  <label class="control-label" for="accept_whitelist">Accept whitelist</label>
+                  <label class="control-label">Accept whitelist</label>
                   <div class="controls">
                     <tags-input 
                       ng-class="form-control"
@@ -298,8 +298,8 @@
 
                 <!-- Prepended checkbox -->
                 <div class="control-group">
-                  <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
-                    <tags-input 
+                  <label class="control-label">Content-Type whitelist</label>
+                    <tags-input
                       ng-class="form-control"
                       ng-model="restEndpoint.content_type_whitelist"
                       add-on-space="true"
@@ -308,11 +308,11 @@
                       placeholder="Add a mediatype to the whitelist">
                     </tags-input>
                     <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
-                  </div>
+                  </label>
                 </div>
               </fieldset>
 
-              <button ng-click="saveRestEndpoint($index)" type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+              <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
           </div>
         </div>

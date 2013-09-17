@@ -1,16 +1,16 @@
-<div ng-hide="showRpcEndpointForm">
-  <button ng-click="showRpcEndpointForm = true" id="create-rpc-endpoint-button" class="btn btn-default btn-primary" title="Create New rpc Endpoint" position="bottom" content="#create-rpc-endpoint-form">
+<div ng-hide="showNewRpcEndpointForm">
+  <button ng-click="showNewRpcEndpointForm = true" id="create-rpc-endpoint-button" class="btn btn-default btn-primary" title="Create New rpc Endpoint" position="bottom" content="#create-rpc-endpoint-form">
     Create New RPC Endpoint
   </button>
 </div>
-<div ng-show="addRpcEndpoint" class="panel panel-default">
+<div ng-show="showNewRpcEndpointForm" class="panel panel-default">
   <div class="panel-heading">Create a new RPC endpoint</div>
   <div class="panel-body">
     <form ng-submit="createNewRpcEndpoint()">
       <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
       <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
-      <button ng-click="restForm()" type="button" class="btn btn-sm btn-default">Cancel</button>
       <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
+      <button ng-click="restForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
     </form>
   </div>
 </div>
@@ -66,7 +66,7 @@
               </tr>
               <tr>
                 <td>Allowed HTTP Methods</td>
-                <td>{{ rpcEndpoint.http_methods }}</td>
+                <td>{{ rpcEndpoint.http_methods_view }}</td>
               </tr>
               <tr>
                 <td>Route matches:</td>
@@ -99,10 +99,6 @@
                 <div class="control-group">
                   Allowed HTTP Methods
                   <div class="controls">
-                    <label ng-repeat="method in rpcEndpoint.http_methods" class="checkbox inline" for="http_methods[]">
-                      <input type="checkbox" name="http_methods[]" ng-model="method.checked">
-                      <span>{{method.name}}</span>
-                    </label>
                     <label ng-repeat="method in rpcEndpoint.http_methods" class="checkbox inline" for="http_methods{{ $index }}">
                       <input type="checkbox" name="http_methods" id="http_methods{{ $index }}" ng-model="method.checked">
                       <span>{{method.name}}</span>
@@ -151,6 +147,7 @@
                 </div>
 
               </fieldset>
+              <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
 
           </div>
