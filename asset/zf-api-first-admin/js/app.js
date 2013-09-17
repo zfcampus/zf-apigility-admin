@@ -186,7 +186,7 @@ module.directive('apiRestEndpoints', function () {
                         _($scope.restEndpoints).forEach(function (restEndpoint) {
                             _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
                                 var checkify = [];
-                                _.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
+                                _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
                                     checkify.push({name: httpMethod, checked: _.contains(restEndpoint[httpItem], httpMethod)});
                                 });
                                 restEndpoint[httpItem] = checkify;
