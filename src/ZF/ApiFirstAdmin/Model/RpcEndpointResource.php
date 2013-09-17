@@ -197,6 +197,12 @@ class RpcEndpointResource extends AbstractResourceListener
                     case 'selector':
                         $model->updateSelector($id, $value);
                         break;
+                    case 'accept_whitelist':
+                        $model->updateContentNegotiationWhitelist($id, 'accept', $value);
+                        break;
+                    case 'content_type_whitelist':
+                        $model->updateContentNegotiationWhitelist($id, 'content-type', $value);
+                        break;
                     default:
                         break;
                 }
@@ -206,5 +212,20 @@ class RpcEndpointResource extends AbstractResourceListener
         }
 
         return $model->fetch($id);
+    }
+
+    /**
+     * Delete an RPC service
+     * 
+     * @param  string $id 
+     * @return true
+     */
+    public function delete($id)
+    {
+        $entity = $this->fetch($id);
+        if ($entity instanceof ApiProblem) {
+            return $entity;
+        }
+        return $this->getModel()->deleteService($entity);
     }
 }

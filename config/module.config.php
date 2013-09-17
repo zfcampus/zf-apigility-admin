@@ -228,7 +228,7 @@ return array(
             'route_name'              => 'zf-api-first-admin/api/module/rpc-endpoint',
             'entity_class'            => 'ZF\ApiFirstAdmin\Model\RpcEndpointEntity',
             'identifier_name'         => 'controller_service_name',
-            'resource_http_methods'   => array('GET', 'PATCH'),
+            'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'rpc',
         ),

@@ -302,4 +302,53 @@ class RpcEndpointModelTest extends TestCase
         $config = include $configFile;
         $this->assertEquals('MyCustomSelector', $config['zf-content-negotiation']['controllers']['FooConf\Rpc\HelloWorld\Controller']);
     }
+
+    public function testCanUpdateContentNegotiationWhitelists()
+    {
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $this->writer->toFile($configFile, array(
+            'zf-content-negotiation' => array(
+                'accept-whitelist' => array(
+                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                        'application/json',
+                        'application/*+json',
+                    ),
+                ),
+                'content-type-whitelist' => array(
+                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                        'application/json',
+                    ),
+                ),
+            ),
+        ));
+        $this->assertTrue($this->codeRpc->updateContentNegotiationWhitelist('FooConf\Rpc\HelloWorld\Controller', 'accept', array('application/xml', 'application/*+xml')));
+        $this->assertTrue($this->codeRpc->updateContentNegotiationWhitelist('FooConf\Rpc\HelloWorld\Controller', 'content-type', array('application/xml')));
+        $config = include $configFile;
+        $this->assertEquals(array(
+            'application/xml',
+            'application/*+xml',
+        ), $config['zf-content-negotiation']['accept-whitelist']['FooConf\Rpc\HelloWorld\Controller']);
+        $this->assertEquals(array(
+            'application/xml',
+        ), $config['zf-content-negotiation']['content-type-whitelist']['FooConf\Rpc\HelloWorld\Controller']);
+    }
+
+    public function testDeleteServiceRemovesExpectedConfigurationElements()
+    {
+        // State is lost in between tests; re-seed the service
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointEntity', $result);
+
+        $this->codeRpc->deleteService($result);
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+
+        $this->assertArrayNotHasKey($result->routeName, $config['router']['routes']);
+        $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-rpc']);
+        $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-content-negotiation']['controllers']);
+    }
 }
