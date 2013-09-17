@@ -384,7 +384,7 @@ module.factory('ApisResource', ['$http', function ($http) {
     };
 
     resource.saveRpcEndpoint = function (apiName, rpcEndpoint) {
-        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(rpcEndpoint.controller_service_name);
+        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcEndpoint.controller_service_name);
         return $http({method: 'patch', url: url, data: rpcEndpoint})
             .then(function (response) {
                 return response.data;
