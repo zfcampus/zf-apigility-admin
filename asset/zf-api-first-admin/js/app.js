@@ -45,6 +45,79 @@ module.controller(
 );
 
 module.controller(
+    'DbAdapterController',
+    ['$rootScope', '$scope', '$location', 'DbAdapterResource', function ($rootScope, $scope, $location, DbAdapterResource) {
+        $scope.dbAdapters = [];
+        $scope.showNewDbAdapterForm = false;
+
+        $scope.resetForm = function () {
+            $scope.showNewDbAdapterForm = false;
+            $scope.adapterName = '';
+            $scope.driver      = '';
+            $scope.database    = '';
+            $scope.username    = '';
+            $scope.password    = '';
+            $scope.hostname    = 'localhost';
+            $scope.port        = '';
+            $scope.charset     = 'UTF-8';
+        };
+
+        function updateDbAdapters(force) {
+            $scope.dbAdapters = [];
+            DbAdapterResource.fetch({force: force}).then(function (dbAdapters) {
+                $scope.$apply(function () {
+                    $scope.dbAdapters = _.pluck(dbAdapters.embedded.db_adapter, 'props');
+                });
+            });
+        }
+        updateDbAdapters(false);
+
+        $scope.createNewDbAdapter = function () {
+            var options = {
+                adapter_name :  $scope.adapter_name,
+                driver       :  $scope.driver,
+                database     :  $scope.database,
+                username     :  $scope.username,
+                password     :  $scope.password,
+                hostname     :  $scope.hostname,
+                port         :  $scope.port,
+                charset      :  $scope.charset
+            };
+            DbAdapterResource.createNewAdapter(options).then(function (dbAdapter) {
+                updateDbAdapters(true);
+                $scope.resetForm();
+            });
+        };
+
+        $scope.saveDbAdapter = function (index) {
+            console.log($scope.dbAdapters[index]);
+            var dbAdapter = $scope.dbAdapters[index];
+            var options = {
+                driver   :  dbAdapter.driver,
+                database :  dbAdapter.database,
+                username :  dbAdapter.username,
+                password :  dbAdapter.password,
+                hostname :  dbAdapter.hostname,
+                port     :  dbAdapter.port,
+                charset  :  dbAdapter.charset
+            };
+            DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(function (dbAdapter) {
+                updateDbAdapters(true);
+            });
+        };
+
+        $scope.removeDbAdapter = function (adapter_name) {
+            DbAdapterResource.removeAdapter(adapter_name).then(function () {
+                updateDbAdapters(true);
+                $scope.deleteDbAdapter = false;
+            });
+        };
+
+
+    }]
+);
+
+module.controller(
     'ApiController',
     ['$rootScope', '$scope', '$routeParams', 'ApisResource', function($rootScope, $scope, $routeParams, ApisResource) {
 
@@ -172,6 +245,7 @@ module.directive('apiRpcEndpoints', function () {
 
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
+    $routeProvider.when('/global/db-adapters', {templateUrl: '/zf-api-first-admin/partials/global/db-adapters.html', controller: 'DbAdapterController'});
     $routeProvider.when('/api/:apiName/:section', {templateUrl: '/zf-api-first-admin/partials/api.html', controller: 'ApiController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
@@ -208,6 +282,33 @@ module.factory('ApisResource', ['$http', function ($http) {
     resource.saveRestEndpoint = function (moduleName, restEndpoint) {
         // @todo add the save rest endpoint API call
         return;
+    };
+
+    return resource;
+}]);
+
+module.factory('DbAdapterResource', ['$http', function ($http) {
+    var resource =  new Hyperagent.Resource('/admin/api/db-adapter');
+
+    resource.createNewAdapter = function (options) {
+        return $http.post('/admin/api/db-adapter', options)
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.saveAdapter = function (name, data) {
+        return $http({method: 'patch', url: '/admin/api/db-adapter/' + encodeURIComponent(name), data: data})
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.removeAdapter = function (name) {
+        return $http.delete('/admin/api/db-adapter/' + encodeURIComponent(name))
+            .then(function (response) {
+                return true;
+            });
     };
 
     return resource;
