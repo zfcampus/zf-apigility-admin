@@ -74,7 +74,7 @@ module.controller(
 
         $scope.createNewDbAdapter = function () {
             var options = {
-                adapter_name :  $scope.adapterName,
+                adapter_name :  $scope.adapter_name,
                 driver       :  $scope.driver,
                 database     :  $scope.database,
                 username     :  $scope.username,
