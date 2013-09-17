@@ -123,6 +123,10 @@ module.controller(
 
         $scope.api = null;
         $scope.section = null;
+        $scope.content_negotiation = [
+            "HalJson", 
+            "Json"
+        ];
 
         DbAdapterResource.fetch().then(function (adapters) {
             $scope.$apply(function () {
