@@ -539,7 +539,7 @@ class RestEndpointModel implements EventManagerAwareInterface
         $routeName = $original->routeName;
         $config    = array('router' => array('routes' => array(
             $routeName => array('options' => array(
-                'route' => sprintf('%s[/:%s]', $route, $original->identifierName),
+                'route' => $route,
             ))
         )));
         $this->configResource->patch($config, true);
