@@ -273,9 +273,9 @@
 
                 <!-- Select Basic -->
                 <div class="control-group">
-                  <label class="control-label" for="selector">Content Negotiation Selector</label>
+                  <label class="control-label">Content Negotiation Selector</label>
                   <div class="controls">
-                    <select name="selector" class="input-xlarge" ng-model="restEndpoint.selector" ng-options="c.value as c.text for c in content_negotiation"></select>
+                    <select class="form-control input-xlarge" ng-model="restEndpoint.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
                   </div>
                 </div>
 
