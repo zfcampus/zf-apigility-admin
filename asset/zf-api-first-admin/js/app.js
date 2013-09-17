@@ -90,7 +90,7 @@ module.controller(
         };
 
         $scope.saveDbAdapter = function (index) {
-            console.log($scope.dbAdapters[index]);
+//            console.log($scope.dbAdapters[index]);
             var dbAdapter = $scope.dbAdapters[index];
             var options = {
                 driver   :  dbAdapter.driver,
@@ -167,7 +167,7 @@ module.directive('apiRestEndpoints', function () {
         templateUrl: '/zf-api-first-admin/partials/api/rest-endpoints.html',
         controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
-	    $scope.apiName = $scope.api.props.name;
+            $scope.apiName = $scope.api.props.name;
 
             $scope.resetForm = function () {
                 $scope.showNewRestEndpointForm = false;
@@ -184,21 +184,19 @@ module.directive('apiRestEndpoints', function () {
                     $scope.$apply(function() {
                         $scope.restEndpoints = _.pluck(restEndpoints.embedded.rest, 'props');
 
-			_($scope.restEndpoints).forEach(function (restEndpoint) {
-                            console.log(restEndpoint);
+                        _($scope.restEndpoints).forEach(function (restEndpoint) {
                             _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-				var checkify = [];
-				_.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
-				    checkify.push({name: httpMethod, checked: _.contains(restEndpoint[httpItem], httpMethod)});
-				});
-				restEndpoint[httpItem] = checkify;
+                                var checkify = [];
+                                _.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
+                                    checkify.push({name: httpMethod, checked: _.contains(restEndpoint[httpItem], httpMethod)});
+                                });
+                                restEndpoint[httpItem] = checkify;
 
-				restEndpoint[httpItem + '_view'] = _.chain(restEndpoint[httpItem])
-				    .where({checked: true})
-				    .pluck('name')
-				    .valueOf()
-				    .join(', ');
-
+                                restEndpoint[httpItem + '_view'] = _.chain(restEndpoint[httpItem])
+                                    .where({checked: true})
+                                    .pluck('name')
+                                    .valueOf()
+                                    .join(', ');
                             });
 
                         });
@@ -227,17 +225,17 @@ module.directive('apiRestEndpoints', function () {
             };
 
             $scope.saveRestEndpoint = function (index) {
-		var restEndpointData = _.clone($scope.restEndpoints[index]);
+                var restEndpointData = _.clone($scope.restEndpoints[index]);
 
-		_(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-		    restEndpointData[httpItem] = _.chain(restEndpointData[httpItem])
-			.where({checked: true})
-			.pluck('name')
-			.valueOf();
-		});
+                _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
+                    restEndpointData[httpItem] = _.chain(restEndpointData[httpItem])
+                    .where({checked: true})
+                    .pluck('name')
+                    .valueOf();
+                });
 
-		ApisResource.saveRestEndpoint($scope.apiName, restEndpointData);
-		updateApiRestEndpoints(true);
+                ApisResource.saveRestEndpoint($scope.apiName, restEndpointData);
+                updateApiRestEndpoints(true);
             };
 
             $scope.removeRestEndpoint = function () {
@@ -248,7 +246,7 @@ module.directive('apiRestEndpoints', function () {
             };
         }]
     };
-);
+});
 
 module.directive('apiRpcEndpoints', function () {
     return {
@@ -257,22 +255,22 @@ module.directive('apiRpcEndpoints', function () {
         controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
-	    $scope.resetForm = function () {
-		$scope.showNewRpcEndpointForm = false;
-		$scope.rpcEndpointName = '';
-		$scope.rpcEndpointRoute = '';
-	    };
+            $scope.resetForm = function () {
+                $scope.showNewRpcEndpointForm = false;
+                $scope.rpcEndpointName = '';
+                $scope.rpcEndpointRoute = '';
+            };
 
-	    function updateApiRpcEndpoints(force) {
-		$scope.rpcEndpoints = [];
-		$scope.api.links['rpc'].fetch({force: force}).then(function (rpcEndpoints) {
-		    // update view
-		    $scope.$apply(function() {
-			$scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
-		    });
+            function updateApiRpcEndpoints(force) {
+                $scope.rpcEndpoints = [];
+                $scope.api.links['rpc'].fetch({force: force}).then(function (rpcEndpoints) {
+                    // update view
+                    $scope.$apply(function() {
+                        $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
+                    });
                 });
-	    }
-	    updateApiRpcEndpoints(false);
+            }
+            updateApiRpcEndpoints(false);
 
             $scope.createNewRpcEndpoint = function () {
                 ApisResource.createNewRpcEndpoint($scope.api.props.name, $scope.rpcEndpointName, $scope.rpcEndpointRoute).then(function (rpcResource) {
@@ -331,11 +329,11 @@ module.factory('ApisResource', ['$http', function ($http) {
     //};
 
     resource.saveRestEndpoint = function (apiName, restEndpoint) {
-	var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpoint.controller_service_name);
-	return $http({method: 'patch', url: url, data: restEndpoint})
-	    .then(function (response) {
-		return response.data;
-	    });
+        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpoint.controller_service_name);
+        return $http({method: 'patch', url: url, data: restEndpoint})
+            .then(function (response) {
+                return response.data;
+            });
     };
 
     return resource;
