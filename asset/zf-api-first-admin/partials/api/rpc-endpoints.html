@@ -7,8 +7,22 @@
   <div class="panel-heading">Create a new RPC endpoint</div>
   <div class="panel-body">
     <form class="form-horizontal" ng-submit="createNewRpcEndpoint()">
-      <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
-      <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
+      <fieldset>
+        <div class="form-group">
+          <label class="col-lg-2 control-label">RPC Service Name</label>
+          <div class="col-lg-10">
+            <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-lg-2 control-label">Route to match</label>
+          <div class="col-lg-10">
+            <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
+          </div>
+        </div>
+      </fieldset>
+
       <button ng-click="createNewRpcEndpoint()" type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
       <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
     </form>
