@@ -95,6 +95,10 @@
                 <td>Accept whitelist</td>
                 <td>{{ restEndpoint.accept_whitelist.join(', ') || 'n/a' }}</td>
               </tr>
+              <tr ng-if="restEndpoint.adapter_name">
+                <td>DB Adapter Name</td>
+                <td>{{ restEndpoint.adapter_name }}</td>
+              </tr>
               <tr>
                 <td>Collection Class</td>
                 <td>{{ restEndpoint.collection_class }}</td>
@@ -122,6 +126,10 @@
               <tr>
                 <td>Entity Class</td>
                 <td>{{ restEndpoint.entity_class }}</td>
+              </tr>
+              <tr ng-if="restEndpoint.hydrator_name">
+                <td>Hydrator Service Name</td>
+                <td>{{ restEndpoint.hydrator_name }}</td>
               </tr>
               <tr>
                 <td>Identifier Name</td>
@@ -154,6 +162,14 @@
               <tr>
                 <td>Content Negotiation Selector</td>
                 <td>{{ restEndpoint.selector }}</td>
+              </tr>
+              <tr ng-if="restEndpoint.table_name">
+                <td>DB Table Name</td>
+                <td>{{ restEndpoint.table_name }}</td>
+              </tr>
+              <tr ng-if="restEndpoint.table_service">
+                <td>Table Gateway Service Name</td>
+                <td>{{ restEndpoint.table_service }}</td>
               </tr>
             </table>
 
