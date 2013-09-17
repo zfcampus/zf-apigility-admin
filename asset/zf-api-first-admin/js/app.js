@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', []);
+var module = angular.module('ag-admin', ['tags-input']);
 
 module.controller(
     'DashboardController',
@@ -90,7 +90,6 @@ module.controller(
         };
 
         $scope.saveDbAdapter = function (index) {
-//            console.log($scope.dbAdapters[index]);
             var dbAdapter = $scope.dbAdapters[index];
             var options = {
                 driver   :  dbAdapter.driver,
