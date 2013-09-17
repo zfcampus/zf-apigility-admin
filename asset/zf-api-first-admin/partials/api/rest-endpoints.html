@@ -105,7 +105,9 @@
               </tr>
               <tr>
                 <td>Allowed Collection HTTP Methods</td>
-                <td>{{ restEndpoint.collection_http_methods.join(', ') }}</td>
+		<td>
+		  {{ restEndpoint.collection_http_methods_view }}
+		</td>
               </tr>
               <tr>
                 <td>Collection Name</td>
@@ -149,7 +151,7 @@
               </tr>
               <tr>
                 <td>Allowed Resource HTTP Methods</td>
-                <td>{{ restEndpoint.resource_http_methods.join(', ') }}</td>
+		<td>{{ restEndpoint.resource_http_methods_view }}</td>
               </tr>
               <tr>
                 <td>Route matches:</td>
@@ -176,7 +178,7 @@
           </div>
           <div class="tab-pane" id="editmode{{$index}}">
 
-            <form class="form-horizontal" ng-submit="saveRestEndpoint()">
+	    <form class="form-horizontal" ng-submit="saveRestEndpoint($index)">
               <fieldset>
                 <div ng-if="restEndpoint.adapter_name" class="control-group">
                   <label class="control-label" for="selector">DB Adapter Name</label>
@@ -224,18 +226,18 @@
                 <div class="control-group">
                   <label class="control-label" for="identifier_name">Identifier Name</label>
                   <div class="controls">
-                    <input id="identifier_name" name="identifier_name" type="text" placeholder="id" class="input-xlarge" required="" value="{{ restEndpoint.identifier_name }}">
+		    <input id="identifier_name" name="identifier_name" type="text" placeholder="id" class="input-xlarge" required="" ng-model="restEndpoint.identifier_name">
                     <p class="help-block">Name of the field representing the unique identifier</p>
                   </div>
                 </div>
 
                 <!-- Multiple Checkboxes (inline) -->
                 <div class="control-group">
-                  <label class="control-label" for="collection_http_methods">HTTP methods allowed for COLLECTIONS</label>
+		  HTTP methods allowed for COLLECTIONS
                   <div class="controls">
-                    <label ng-repeat="method in $root.httpMethods" class="checkbox inline" for="collection_http_methods[]">
-                      <input type="checkbox" name="collection_http_methods[]" ng-model="method">
-                      <span>{{method}}</span>
+		    <label ng-repeat="method in restEndpoint.collection_http_methods" class="checkbox inline" for="collection_http_methods{{ $index }}">
+		      <input type="checkbox" name="method" id="collection_http_methods{{ $index }}" ng-model="method.checked" value="{{ method.checked }}">
+		      <span>{{method.name}}</span>
                     </label>
                   </div>
                 </div>
@@ -255,7 +257,7 @@
                 <div class="control-group">
                   <label class="control-label" for="page_size">Number of entities to display per page of a collection</label>
                   <div class="controls">
-                    <input id="page_size" name="page_size" type="text" placeholder="25" class="input-xlarge" value="{{restEndpoint.page_size}}">
+		    <input id="page_size" name="page_size" type="text" placeholder="25" class="input-xlarge" ng-model="restEndpoint.page_size">
                     <p class="help-block">Indicate the number of entities that should be displayed per page when GET requests are made to the collection.</p>
                   </div>
                 </div>
@@ -264,7 +266,7 @@
                 <div class="control-group">
                   <label class="control-label" for="page_size_param">Page parameter</label>
                   <div class="controls">
-                    <input id="page_size_param" name="page_size_param" type="text" placeholder="page" class="input-xlarge" value="{{restEndpoint.page_size_param}}">
+		    <input id="page_size_param" name="page_size_param" type="text" placeholder="page" class="input-xlarge" ng-model="restEndpoint.page_size_param">
                     <p class="help-block">The query string parameter that will represent the page of results when retrieving a collection.</p>
                   </div>
                 </div>
@@ -310,7 +312,7 @@
                 </div>
 
               </fieldset>
-              <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="saveRestEndpoint($index)">Save</button><br />
+	      <button type="submit" class="btn btn-sm btn-success pull-right">Save</button><br />
             </form>
           </div>
         </div>
