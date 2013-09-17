@@ -237,9 +237,11 @@ module.directive('apiRestEndpoints', function () {
             };
 
             $scope.removeRestEndpoint = function (restEndpointName) {
-                ApisResource.removeRestEndpoint($scope.api.props.name, restEndpointName);
-                updateApiRestEndpoints(true);
-                $scope.deleteRestEndpoint = false;
+                ApisResource.removeRestEndpoint($scope.api.props.name, restEndpointName)
+                    .then(function (data) {
+                        updateApiRestEndpoints(true);
+                        $scope.deleteRestEndpoint = false;
+                    });
             };
         }]
     };
