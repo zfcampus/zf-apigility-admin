@@ -6,11 +6,50 @@
 <div ng-show="showNewRestEndpointForm" class="panel panel-default">
   <div class="panel-heading">Create a New REST Endpoint</div>
   <div class="panel-body">
-    <form ng-submit="createNewRestEndpoint()">
-      <input type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
-      <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
-      <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
-    </form>
+
+    <ul class="nav nav-tabs" id="restFormTab">
+      <li class="active"><a data-target="#codeconnected" data-toggle="tab">Code-Connected</a></li>
+      <li><a data-target="#dbconnected" data-toggle="tab">DB-Connected</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="codeconnected">
+        <form class="form-horizontal" ng-submit="createNewRestEndpoint()">
+          <fieldset>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">REST Endpoint Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" ng-model="$parent.restEndpointName" placeholder="REST Endpoint Name ...">
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-sm btn-success">Create REST Endpoint</button>
+          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+        </form>
+      </div>
+
+      <div class="tab-pane" id="dbconnected">
+        <form class="form-horizontal" ng-submit="createNewDbConnectedEndpoint()">
+          <fieldset>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">DB Adapter Name</label>
+              <div class="col-lg-10">
+                <select class="form-control" ng-model="$parent.dbAdapterName" ng-repeat="dbAdapter in $parent.dbAdapters">
+                  <option>{{dbAdapter.adapter_name}}</option>
+                </select>
+              </div>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">Table Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" ng-model="$parent.dbTableName" placeholder="DB Table Name ...">
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-sm btn-success">Create DB-Connected REST Endpoint</button>
+          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 

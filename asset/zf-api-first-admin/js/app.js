@@ -119,10 +119,16 @@ module.controller(
 
 module.controller(
     'ApiController',
-    ['$rootScope', '$scope', '$routeParams', 'ApisResource', function($rootScope, $scope, $routeParams, ApisResource) {
+    ['$rootScope', '$scope', '$routeParams', 'ApisResource', 'DbAdapterResource', function($rootScope, $scope, $routeParams, ApisResource, DbAdapterResource) {
 
         $scope.api = null;
         $scope.section = null;
+
+        DbAdapterResource.fetch().then(function (adapters) {
+            $scope.$apply(function () {
+                $scope.dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props');
+            });
+        });
 
         ApisResource.fetch().then(function (apis) {
 
@@ -165,6 +171,8 @@ module.directive('apiRestEndpoints', function () {
             $scope.resetForm = function () {
                 $scope.showNewRestEndpointForm = false;
                 $scope.restEndpointName = '';
+                $scope.dbAdapterName = '';
+                $scope.dbTableName = '';
             };
 
             function updateApiRestEndpoints(force) {
@@ -190,9 +198,19 @@ module.directive('apiRestEndpoints', function () {
             $scope.createNewRestEndpoint = function () {
                 ApisResource.createNewRestEndpoint($scope.api.props.name, $scope.restEndpointName).then(function (restResource) {
                     updateApiRestEndpoints(true);
-                    $scope.addRestEndpoint = false;
+                    $scope.showNewRestEndpointForm = false;
                     $scope.restEndpointName = '';
                 });
+            };
+
+            $scope.createNewDbConnectedEndpoint = function () {
+                ApisResource.createNewDbConnectedEndpoint($scope.api.props.name, $scope.dbAdapterName, $scope.dbTableName)
+                    .then(function (restResource) {
+                        updateApiRestEndpoints(true);
+                        $scope.showNewRestEndpointForm = false;
+                        $scope.dbAdapterName = '';
+                        $scope.dbTableName = '';
+                    });
             };
 
             $scope.saveRestEndpoint = function (index) {
@@ -264,6 +282,13 @@ module.factory('ApisResource', ['$http', function ($http) {
 
     resource.createNewRestEndpoint = function (apiName, restEndpointName) {
         return $http.post('/admin/api/module/' + apiName + '/rest', {resource_name: restEndpointName})
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.createNewDbConnectedEndpoint = function(apiName, dbAdapterName, dbTableName) {
+        return $http.post('/admin/api/module/' + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
             .then(function (response) {
                 return response.data;
             });
