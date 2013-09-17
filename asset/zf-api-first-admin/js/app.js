@@ -167,7 +167,6 @@ module.directive('apiRestEndpoints', function () {
         templateUrl: '/zf-api-first-admin/partials/api/rest-endpoints.html',
         controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
-            $scope.apiName = $scope.api.props.name;
 
             $scope.resetForm = function () {
                 $scope.showNewRestEndpointForm = false;
@@ -198,7 +197,6 @@ module.directive('apiRestEndpoints', function () {
                                     .valueOf()
                                     .join(', ');
                             });
-
                         });
 
                     });
@@ -234,7 +232,7 @@ module.directive('apiRestEndpoints', function () {
                     .valueOf();
                 });
 
-                ApisResource.saveRestEndpoint($scope.apiName, restEndpointData);
+                ApisResource.saveRestEndpoint($scope.api.props.name, restEndpointData);
                 updateApiRestEndpoints(true);
             };
 
@@ -266,6 +264,24 @@ module.directive('apiRpcEndpoints', function () {
                     // update view
                     $scope.$apply(function() {
                         $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
+
+                        _($scope.rpcEndpoints).forEach(function (rpcEndpoint) {
+                            console.log(rpcEndpoint)
+//                            _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
+//                                var checkify = [];
+//                                _.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
+//                                    checkify.push({name: httpMethod, checked: _.contains(rpcEndpoint[httpItem], httpMethod)});
+//                                });
+//                                rpcEndpoint[httpItem] = checkify;
+//
+//                                rpcEndpoint[httpItem + '_view'] = _.chain(rpcEndpoint[httpItem])
+//                                    .where({checked: true})
+//                                    .pluck('name')
+//                                    .valueOf()
+//                                    .join(', ');
+//                            });
+                        });
+
                     });
                 });
             }
@@ -278,6 +294,26 @@ module.directive('apiRpcEndpoints', function () {
                     $scope.rpcEndpointName = '';
                     $scope.rpcEndpointRoute = '';
                 });
+            };
+
+            $scope.saveRpcEndpoint = function (index) {
+                var rpcEndpointData = _.clone($scope.rpcEndpoints[index]);
+
+                _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
+                    rpcEndpointData[httpItem] = _.chain(rpcEndpointData[httpItem])
+                        .where({checked: true})
+                        .pluck('name')
+                        .valueOf();
+                });
+
+                ApisResource.saveRpcEndpoint($scope.api.props.name, rpcEndpointData);
+                updateApiRpcEndpoints(true);
+            };
+
+            $scope.removeRestEndpoint = function (rpcEndpointName) {
+                ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName);
+                updateApiRpcEndpoints(true);
+                $scope.deleteRestEndpoint = false;
             };
         }]
     }
@@ -333,6 +369,22 @@ module.factory('ApisResource', ['$http', function ($http) {
     resource.saveRestEndpoint = function (apiName, restEndpoint) {
         var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpoint.controller_service_name);
         return $http({method: 'patch', url: url, data: restEndpoint})
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.removeRpcEndpoint = function (apiName, rpcEndpointName) {
+        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcEndpointName);
+        return $http.delete(url)
+            .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.saveRpcEndpoint = function (apiName, rpcEndpoint) {
+        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(rpcEndpoint.controller_service_name);
+        return $http({method: 'patch', url: url, data: rpcEndpoint})
             .then(function (response) {
                 return response.data;
             });
