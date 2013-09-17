@@ -207,7 +207,7 @@ module.directive('apiRestEndpoints', function () {
             };
         }]
     };
-);
+});
 
 module.directive('apiRpcEndpoints', function () {
     return {
