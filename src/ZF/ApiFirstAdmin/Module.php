@@ -137,6 +137,7 @@ class Module
             'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
+                    || !$services->has('SharedEventManager')
                 ) {
                     throw new ServiceNotCreatedException(
                         'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory is missing one or more dependencies from ZF\Configuration'
@@ -144,7 +145,8 @@ class Module
                 }
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                return new Model\RpcEndpointModelFactory($moduleUtils, $configFactory);
+                $sharedEvents  = $services->get('SharedEventManager');
+                return new Model\RpcEndpointModelFactory($moduleUtils, $configFactory, $sharedEvents);
             },
             'ZF\ApiFirstAdmin\Model\RestEndpointResource' => function ($services) {
                 if (!$services->has('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory')) {
