@@ -6,11 +6,11 @@
 <div ng-show="showNewRpcEndpointForm" class="panel panel-default">
   <div class="panel-heading">Create a new RPC endpoint</div>
   <div class="panel-body">
-    <form ng-submit="createNewRpcEndpoint()">
+    <form class="form-horizontal" ng-submit="createNewRpcEndpoint()">
       <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
       <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
-      <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
-      <button ng-click="restForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+      <button ng-click="createNewRpcEndpoint()" type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
+      <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
     </form>
   </div>
 </div>
@@ -108,9 +108,9 @@
 
                 <!-- Select Basic -->
                 <div class="control-group">
-                  <label class="control-label" for="selector">Content Negotiation Selector</label>
+                  <label class="control-label">Content Negotiation Selector</label>
                   <div class="controls">
-                    <select name="selector" class="input-xlarge" ng-model="rpcEndpoint.selector" ng-options="c.value as c.text for c in content_negotiation"></select>
+                    <select class="form-control input-xlarge" ng-model="rpcEndpoint.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
                   </div>
                 </div>
 
@@ -118,15 +118,15 @@
                 <div class="control-group">
                   <label class="control-label" for="accept_whitelist">Accept whitelist</label>
                   <div class="controls">
-                    <div class="input-prepend">
-                      <span class="add-on">
-                      <label class="checkbox">
-                        <input type="checkbox">
-                      </label>
-                      </span>
-                      <input id="accept_whitelist" name="accept_whitelist" class="input-xlarge" type="text" placeholder="application/json">
-                    </div>
-                    <p class="help-block">Allow users to add input elements with additional Accept mediatypes they wish to whitelist</p>
+                    <tags-input 
+                      ng-class="form-control"
+                      ng-model="rpcEndpoint.accept_whitelist"
+                      add-on-space="true"
+                      max-length="256"
+                      allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
+                      placeholder="Add a mediatype to the whitelist">
+                    </tags-input>
+                    <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
                   </div>
                 </div>
 
@@ -134,22 +134,21 @@
                 <div class="control-group">
                   <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
                   <div class="controls">
-                    <div class="input-prepend">
-                      <span class="add-on">
-                      <label class="checkbox">
-                        <input type="checkbox">
-                      </label>
-                      </span>
-                      <input id="content_type_whitelist" name="content_type_whitelist" class="input-xlarge" type="text" placeholder="placeholder">
-                    </div>
-                    <p class="help-block">Allow users to add input elements with additional Content-Type mediatypes they wish to whitelist</p>
+                    <tags-input 
+                      ng-class="form-control"
+                      ng-model="rpcEndpoint.content_type_whitelist"
+                      add-on-space="true"
+                      max-length="256"
+                      allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
+                      placeholder="Add a mediatype to the whitelist">
+                    </tags-input>
+                    <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
                   </div>
                 </div>
-
               </fieldset>
-              <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
-            </form>
 
+              <button ng-click="saveRpcEndpoint($index)" type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+            </form>
           </div>
         </div>
       </div>
