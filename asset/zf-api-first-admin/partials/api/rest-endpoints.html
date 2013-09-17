@@ -237,7 +237,7 @@
                   HTTP methods allowed for COLLECTIONS
                   <div class="controls">
                     <label ng-repeat="method in restEndpoint.collection_http_methods" class="checkbox inline" for="collection_http_methods{{ $index }}">
-                      <input type="checkbox" name="method" id="collection_http_methods{{ $index }}" ng-model="method.checked" value="{{ method.checked }}">
+                      <input type="checkbox" name="collection_http_methods" id="collection_http_methods{{ $index }}" ng-model="method.checked">
                       <span>{{method.name}}</span>
                     </label>
                   </div>
@@ -245,10 +245,10 @@
 
                 <!-- Multiple Checkboxes (inline) -->
                 <div class="control-group">
-                  <label class="control-label" for="resource_http_methods[]">HTTP methods allowed for ENTITIES</label>
+                  HTTP methods allowed for ENTITIES
                   <div class="controls">
-                    <label ng-repeat="method in restEndpoint.resource_http_methods" class="checkbox inline" for="resource_http_methods[]">
-                      <input type="checkbox" name="resource_http_methods[]" ng-model="method.checked">
+                    <label ng-repeat="method in restEndpoint.resource_http_methods" class="checkbox inline" for="resource_http_methods{{ $index }}">
+                      <input type="checkbox" name="resource_http_methods" id="resource_http_methods{{ $index }}" ng-model="method.checked">
                       <span>{{method.name}}</span>
                     </label>
                   </div>

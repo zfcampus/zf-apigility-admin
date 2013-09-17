@@ -274,19 +274,19 @@ module.directive('apiRpcEndpoints', function () {
 
                         _($scope.rpcEndpoints).forEach(function (rpcEndpoint) {
                             console.log(rpcEndpoint)
-//                            _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-//                                var checkify = [];
-//                                _.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
-//                                    checkify.push({name: httpMethod, checked: _.contains(rpcEndpoint[httpItem], httpMethod)});
-//                                });
-//                                rpcEndpoint[httpItem] = checkify;
-//
-//                                rpcEndpoint[httpItem + '_view'] = _.chain(rpcEndpoint[httpItem])
-//                                    .where({checked: true})
-//                                    .pluck('name')
-//                                    .valueOf()
-//                                    .join(', ');
-//                            });
+                            _(['http_methods']).forEach(function (httpItem) {
+                                var checkify = [];
+                                _.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
+                                    checkify.push({name: httpMethod, checked: _.contains(rpcEndpoint[httpItem], httpMethod)});
+                                });
+                                rpcEndpoint[httpItem] = checkify;
+
+                                rpcEndpoint[httpItem + '_view'] = _.chain(rpcEndpoint[httpItem])
+                                    .where({checked: true})
+                                    .pluck('name')
+                                    .valueOf()
+                                    .join(', ');
+                            });
                         });
 
                     });
@@ -317,7 +317,7 @@ module.directive('apiRpcEndpoints', function () {
                 updateApiRpcEndpoints(true);
             };
 
-            $scope.removeRestEndpoint = function (rpcEndpointName) {
+            $scope.removeRpcEndpoint = function (rpcEndpointName) {
                 ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName);
                 updateApiRpcEndpoints(true);
                 $scope.deleteRestEndpoint = false;

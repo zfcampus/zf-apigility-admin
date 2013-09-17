@@ -1,50 +1,168 @@
-<div ng-hide="addRpcEndpoint">
-    <button ng-click="addRpcEndpoint = true" id="create-rpc-endpoint-button" class="btn btn-default btn-primary" title="Create New rpc Endpoint" position="bottom" content="#create-rpc-endpoint-form">
+<div ng-hide="showRpcEndpointForm">
+  <button ng-click="showRpcEndpointForm = true" id="create-rpc-endpoint-button" class="btn btn-default btn-primary" title="Create New rpc Endpoint" position="bottom" content="#create-rpc-endpoint-form">
     Create New RPC Endpoint
-    </button>
+  </button>
 </div>
 <div ng-show="addRpcEndpoint" class="panel panel-default">
-    <div class="panel-heading">Create a new RPC endpoint</div>
-    <div class="panel-body">
-        <form ng-submit="createNewRpcEndpoint()">
-            <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
-            <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
-            <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
-            <button ng-click="addRpcEndpoint = false; resetForm();" type="button" class="btn btn-sm btn-warning">Cancel</button>
-        </form>
+  <div class="panel-heading">Create a new RPC endpoint</div>
+  <div class="panel-body">
+    <form ng-submit="createNewRpcEndpoint()">
+      <input type="text" ng-model="$parent.rpcEndpointName" placeholder="RPC Endpoint Name ...">
+      <input type="text" ng-model="$parent.rpcEndpointRoute" placeholder="Route to match">
+      <button ng-click="restForm()" type="button" class="btn btn-sm btn-default">Cancel</button>
+      <button type="submit" class="btn btn-sm btn-success">Create RPC Endpoint</button>
+    </form>
+  </div>
+</div>
+<br clear="left">
+
+<div class="panel-group tooltip-api" id="accordion">
+  <div class="panel panel-default" ng-repeat="rpcEndpoint in rpcEndpoints">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <font color="gray" size="-1">RPC</font>
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}">
+          {{ rpcEndpoint.controller_service_name }}
+        </a>
+        <div ng-hide="deleteRpcEndpoint" class="pull-right">
+          <button ng-click="deleteRpcEndpoint = true" id="remove-endpoint" class="btn btn-link" content="#remove-endpoint-form" title="Delete endpoint">
+            <span class="glyphicon glyphicon-trash"></span> Remove
+          </button>
+        </div>
+        <div ng-show="deleteRpcEndpoint" id="remove-endpoint-form" class="panel panel-default">
+          <div class="panel-heading">Remove RPC endpoint</div>
+          <div class="panel-body">
+            <form ng-submit="removeRpcEndpoint()">
+              <p>Are you sure you want to delete the endpoint?</p>
+              <button type="submit" class="btn btn-sm btn-success">Yes</button>
+              <button ng-click="deleteRpcEndpoint = false" type="button" class="btn btn-sm btn-default">No</button>
+            </form>
+          </div>
+        </div>
+      </h4>
     </div>
+    <div id="collapse{{$index}}" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <ul class="nav nav-tabs" id="myTab{{$index}}">
+          <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
+          <li><a data-target="#editmode{{$index}}" data-toggle="tab">Edit</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="viewmode{{$index}}">
+            <table class="table table-striped">
+              <tr>
+                <td>Accept whitelist</td>
+                <td>{{ rpcEndpoint.accept_whitelist.join(', ') || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Content-Type whitelist</td>
+                <td>{{ rpcEndpoint.content_type_whitelist.join(', ') || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Controller Service Name</td>
+                <td>{{ rpcEndpoint.controller_service_name }}</td>
+              </tr>
+              <tr>
+                <td>Allowed HTTP Methods</td>
+                <td>{{ rpcEndpoint.http_methods }}</td>
+              </tr>
+              <tr>
+                <td>Route matches:</td>
+                <td>{{ rpcEndpoint.route_match }}</td>
+              </tr>
+              <tr>
+                <td>Route Name</td>
+                <td>{{ rpcEndpoint.route_name }}</td>
+              </tr>
+              <tr>
+                <td>Content Negotiation Selector</td>
+                <td>{{ rpcEndpoint.selector }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="tab-pane" id="editmode{{$index}}">
+            <form class="form-horizontal" ng-submit="saveRpcEndpoint($index)">
+              <fieldset>
+
+                <!-- Text input-->
+                <div class="control-group">
+                  <label class="control-label" for="route_match">Route to match</label>
+                  <div class="controls">
+                    <input id="route_match" name="route_match" type="text" placeholder="/api/for/your/endpoint" class="input-xlarge" required="" value="{{ rpcEndpoint.route_match }}">
+                    <p class="help-block">A literal or segment (i.e., with ":variable" placeholders) route to match</p>
+                  </div>
+                </div>
+
+                <!-- Multiple Checkboxes (inline) -->
+                <div class="control-group">
+                  Allowed HTTP Methods
+                  <div class="controls">
+                    <label ng-repeat="method in rpcEndpoint.http_methods" class="checkbox inline" for="http_methods[]">
+                      <input type="checkbox" name="http_methods[]" ng-model="method.checked">
+                      <span>{{method.name}}</span>
+                    </label>
+                    <label ng-repeat="method in rpcEndpoint.http_methods" class="checkbox inline" for="http_methods{{ $index }}">
+                      <input type="checkbox" name="http_methods" id="http_methods{{ $index }}" ng-model="method.checked">
+                      <span>{{method.name}}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Select Basic -->
+                <div class="control-group">
+                  <label class="control-label" for="selector">Content Negotiation Selector</label>
+                  <div class="controls">
+                    <select name="selector" class="input-xlarge" ng-model="rpcEndpoint.selector" ng-options="c.value as c.text for c in content_negotiation"></select>
+                  </div>
+                </div>
+
+                <!-- Prepended checkbox -->
+                <div class="control-group">
+                  <label class="control-label" for="accept_whitelist">Accept whitelist</label>
+                  <div class="controls">
+                    <div class="input-prepend">
+                      <span class="add-on">
+                      <label class="checkbox">
+                        <input type="checkbox">
+                      </label>
+                      </span>
+                      <input id="accept_whitelist" name="accept_whitelist" class="input-xlarge" type="text" placeholder="application/json">
+                    </div>
+                    <p class="help-block">Allow users to add input elements with additional Accept mediatypes they wish to whitelist</p>
+                  </div>
+                </div>
+
+                <!-- Prepended checkbox -->
+                <div class="control-group">
+                  <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
+                  <div class="controls">
+                    <div class="input-prepend">
+                      <span class="add-on">
+                      <label class="checkbox">
+                        <input type="checkbox">
+                      </label>
+                      </span>
+                      <input id="content_type_whitelist" name="content_type_whitelist" class="input-xlarge" type="text" placeholder="placeholder">
+                    </div>
+                    <p class="help-block">Allow users to add input elements with additional Content-Type mediatypes they wish to whitelist</p>
+                  </div>
+                </div>
+
+              </fieldset>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div ng-repeat="rpcEndpoint in rpcEndpoints">
-    <h3>{{ rpcEndpoint.controller_service_name }}</h3><button><i class="icon-edit"></i></button>
-    <table class="table table-striped">
-        <tr>
-            <td>Accept whitelist</td>
-            <td>{{ rpcEndpoint.accept_whitelist }}</td>
-        </tr>
-        <tr>
-            <td>Content-Type whitelist</td>
-            <td>{{ rpcEndpoint.content_type_whitelist }}</td>
-        </tr>
-        <tr>
-            <td>Controller Service Name</td>
-            <td>{{ rpcEndpoint.controller_service_name }}</td>
-        </tr>
-        <tr>
-            <td>Allowed HTTP Methods</td>
-            <td>{{ rpcEndpoint.http_methods }}</td>
-        </tr>
-        <tr>
-            <td>Route matches:</td>
-            <td>{{ rpcEndpoint.route_match }}</td>
-        </tr>
-        <tr>
-            <td>Route Name</td>
-            <td>{{ rpcEndpoint.route_name }}</td>
-        </tr>
-        <tr>
-            <td>Content Negotiation Selector</td>
-            <td>{{ rpcEndpoint.selector }}</td>
-        </tr>
-    </table>
-</div>
+<script>
+  $(function () {
+    $('#myTab a:last').tab('show')
+  })
+</script>
+
