@@ -307,8 +307,10 @@ module.directive('apiRpcEndpoints', function () {
                     .pluck('name')
                     .valueOf();
 
-                ApisResource.saveRpcEndpoint($scope.api.props.name, rpcEndpointData);
-                updateApiRpcEndpoints(true);
+                ApisResource.saveRpcEndpoint($scope.api.props.name, rpcEndpointData)
+                    .then(function (data) {
+                        updateApiRpcEndpoints(true);
+                    });
             };
 
             $scope.removeRpcEndpoint = function (rpcEndpointName) {

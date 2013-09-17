@@ -197,6 +197,12 @@ class RpcEndpointResource extends AbstractResourceListener
                     case 'selector':
                         $model->updateSelector($id, $value);
                         break;
+                    case 'accept_whitelist':
+                        $model->updateContentNegotiationWhitelist($id, 'accept', $value);
+                        break;
+                    case 'content_type_whitelist':
+                        $model->updateContentNegotiationWhitelist($id, 'content-type', $value);
+                        break;
                     default:
                         break;
                 }

@@ -9,6 +9,7 @@ use Zend\View\Resolver;
 use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
+use ZF\Rest\Exception\PatchException;
 
 class RpcEndpointModel
 {
@@ -334,6 +335,26 @@ class RpcEndpointModel
     {
         $config = $this->configResource->fetch(true);
         $config['zf-content-negotiation']['controllers'][$controllerService] = $selector;
+        $this->configResource->overwrite($config);
+        return true;
+    }
+
+    /**
+     * Update configuration for a content negotiation whitelist for a named controller service
+     * 
+     * @param  string $controllerService 
+     * @param  string $headerType 
+     * @param  array $whitelist 
+     * @return true
+     */
+    public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
+    {
+        if (!in_array($headerType, array('accept', 'content-type'))) {
+            throw new PatchException('Invalid content negotiation whitelist type provided', 422);
+        }
+        $headerType .= '-whitelist';
+        $config = $this->configResource->fetch(true);
+        $config['zf-content-negotiation'][$headerType][$controllerService] = $whitelist;
         $this->configResource->overwrite($config);
         return true;
     }
