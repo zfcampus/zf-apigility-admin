@@ -213,4 +213,19 @@ class RpcEndpointResource extends AbstractResourceListener
 
         return $model->fetch($id);
     }
+
+    /**
+     * Delete an RPC service
+     * 
+     * @param  string $id 
+     * @return true
+     */
+    public function delete($id)
+    {
+        $entity = $this->fetch($id);
+        if ($entity instanceof ApiProblem) {
+            return $entity;
+        }
+        return $this->getModel()->deleteService($entity);
+    }
 }

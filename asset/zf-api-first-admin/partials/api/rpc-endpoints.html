@@ -46,7 +46,8 @@
         <div ng-show="deleteRpcEndpoint" id="remove-endpoint-form" class="panel panel-default">
           <div class="panel-heading">Remove RPC endpoint</div>
           <div class="panel-body">
-            <form ng-submit="removeRpcEndpoint()">
+            <form
+              ng-submit="removeRpcEndpoint(rpcEndpoint.controller_service_name)">
               <p>Are you sure you want to delete the endpoint?</p>
               <button type="submit" class="btn btn-sm btn-success">Yes</button>
               <button ng-click="deleteRpcEndpoint = false" type="button" class="btn btn-sm btn-default">No</button>

@@ -314,9 +314,11 @@ module.directive('apiRpcEndpoints', function () {
             };
 
             $scope.removeRpcEndpoint = function (rpcEndpointName) {
-                ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName);
-                updateApiRpcEndpoints(true);
-                $scope.deleteRestEndpoint = false;
+                ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName)
+                    .then(function () {
+                        updateApiRpcEndpoints(true);
+                        $scope.deleteRestEndpoint = false;
+                    });
             };
         }]
     }

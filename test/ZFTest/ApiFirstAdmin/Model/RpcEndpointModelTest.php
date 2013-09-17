@@ -332,4 +332,23 @@ class RpcEndpointModelTest extends TestCase
             'application/xml',
         ), $config['zf-content-negotiation']['content-type-whitelist']['FooConf\Rpc\HelloWorld\Controller']);
     }
+
+    public function testDeleteServiceRemovesExpectedConfigurationElements()
+    {
+        // State is lost in between tests; re-seed the service
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointEntity', $result);
+
+        $this->codeRpc->deleteService($result);
+        $configFile = $this->modules->getModuleConfigPath($this->module);
+        $config     = include $configFile;
+
+        $this->assertArrayNotHasKey($result->routeName, $config['router']['routes']);
+        $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-rpc']);
+        $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-content-negotiation']['controllers']);
+    }
 }
