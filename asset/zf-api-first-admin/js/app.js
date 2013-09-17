@@ -64,7 +64,7 @@ module.controller(
 
         function updateDbAdapters(force) {
             $scope.dbAdapters = [];
-            DbAdapterResource.fetch().then(function (dbAdapters) {
+            DbAdapterResource.fetch({force: force}).then(function (dbAdapters) {
                 $scope.$apply(function () {
                     $scope.dbAdapters = _.pluck(dbAdapters.embedded.db_adapter, 'props');
                 });
