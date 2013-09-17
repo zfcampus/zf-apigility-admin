@@ -232,8 +232,10 @@ module.directive('apiRestEndpoints', function () {
                     .valueOf();
                 });
 
-                ApisResource.saveRestEndpoint($scope.api.props.name, restEndpointData);
-                updateApiRestEndpoints(true);
+                ApisResource.saveRestEndpoint($scope.api.props.name, restEndpointData)
+                    .then(function (data) {
+                        updateApiRestEndpoints(true);
+                    });
             };
 
             $scope.removeRestEndpoint = function (restEndpointName) {
