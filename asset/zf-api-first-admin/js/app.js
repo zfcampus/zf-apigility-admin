@@ -238,11 +238,10 @@ module.directive('apiRestEndpoints', function () {
                 updateApiRestEndpoints(true);
             };
 
-            $scope.removeRestEndpoint = function () {
-                ModuleResource.removeRestEndpoint($scope.api.props.name, $scope.restEndpointName).then(function (restResource) {
-                    updateApiRestEndpoints(true);
-                    $scope.deleteRestEndpoint = false;
-                });
+            $scope.removeRestEndpoint = function (restEndpointName) {
+                ApisResource.removeRestEndpoint($scope.api.props.name, restEndpointName);
+                updateApiRestEndpoints(true);
+                $scope.deleteRestEndpoint = false;
             };
         }]
     };
@@ -323,10 +322,13 @@ module.factory('ApisResource', ['$http', function ($http) {
     };
 
 
-    //resource.deleteRestEndpoint = function (moduleName, restEndpoint) {
-        // @todo add the remove rest endpoint API call
-    //    return;
-    //};
+    resource.removeRestEndpoint = function (apiName, restEndpointName) {
+        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpointName);
+        return $http.delete(url)
+            .then(function (response) {
+                return response.data;
+            });
+    };
 
     resource.saveRestEndpoint = function (apiName, restEndpoint) {
         var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpoint.controller_service_name);
