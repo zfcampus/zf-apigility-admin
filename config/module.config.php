@@ -16,7 +16,7 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'ZF\ApiFirstAdmin\Controller\App' => 'ZF\ApiFirstAdmin\Controller\AppController'
+            'ZF\ApiFirstAdmin\Controller\App'    => 'ZF\ApiFirstAdmin\Controller\AppController',
         ),
     ),
 
@@ -65,10 +65,10 @@ return array(
                                     ),
                                 ),
                             ),
-                            'source-view' => array(
-                                'type' => 'segment',
+                            'source' => array(
+                                'type' => 'literal',
                                 'options' => array(
-                                    'route' => '/source/:class',
+                                    'route' => '/source',
                                     'defaults' => array(
                                         'controller' => 'ZF\ApiFirstAdmin\Controller\Source',
                                         'action'     => 'source'
@@ -152,7 +152,7 @@ return array(
             'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
                 'application/json',
             ),
-            'ZF\ApiFirstAdmin\Controllet\Source' => array(
+            'ZF\ApiFirstAdmin\Controller\Source' => array(
                 'application/json',
             ),
             'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
@@ -270,7 +270,7 @@ return array(
         ),
         'ZF\ApiFirstAdmin\Controller\Source' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-api-first-admin/api/source-view',
+            'route_name'   => 'zf-api-first-admin/api/source',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),

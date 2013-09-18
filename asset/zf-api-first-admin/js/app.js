@@ -168,7 +168,7 @@ module.directive('apiRestEndpoints', function () {
     return {
         restrict: 'E',
         templateUrl: '/zf-api-first-admin/partials/api/rest-endpoints.html',
-        controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
+        controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
             $scope.resetForm = function () {
@@ -246,6 +246,14 @@ module.directive('apiRestEndpoints', function () {
                     .then(function (data) {
                         updateApiRestEndpoints(true);
                         $scope.deleteRestEndpoint = false;
+                    });
+            };
+
+            $scope.getSourceCode = function (index) {
+                $http.get('/admin/api/source?module=' + $scope.api.props.name + '&class=' + $scope.restEndpoints[index].entity_class)
+                    .then(function(response) {
+                        $scope.source_code = response.data.source;
+                        return true;
                     });
             };
         }]

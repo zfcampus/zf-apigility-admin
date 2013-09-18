@@ -87,6 +87,7 @@
         <ul class="nav nav-tabs" id="myTab{{$index}}">
           <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
           <li><a data-target="#editmode{{$index}}" data-toggle="tab">Edit</a></li>
+          <li><a data-target="#sourcemode{{$index}}" data-toggle="tab" ng-click="getSourceCode($index)">Source code</a></li>
         </ul>
 
         <div class="tab-content">
@@ -314,7 +315,10 @@
 
               <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
-          </div>
+            </div>
+            <div ng-bind-html-unsafe="source_code" class="tab-pane active" id="sourcemode{{$index}}">
+            </div>
+
         </div>
       </div>
     </div>
