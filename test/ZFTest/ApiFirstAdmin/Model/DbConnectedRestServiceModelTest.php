@@ -7,16 +7,16 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use Zend\EventManager\Event;
-use ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointModel;
-use ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity;
-use ZF\ApiFirstAdmin\Model\RestEndpointEntity;
-use ZF\ApiFirstAdmin\Model\RestEndpointModel;
+use ZF\ApiFirstAdmin\Model\DbConnectedRestServiceModel;
+use ZF\ApiFirstAdmin\Model\DbConnectedRestServiceEntity;
+use ZF\ApiFirstAdmin\Model\RestServiceEntity;
+use ZF\ApiFirstAdmin\Model\RestServiceModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
 require_once __DIR__ . '/TestAsset/module/BarConf/Module.php';
 
-class DbConnectedRestEndpointModelTest extends TestCase
+class DbConnectedRestServiceModelTest extends TestCase
 {
     /**
      * Remove a directory even if not empty (recursive delete)
@@ -68,8 +68,8 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRest = new RestEndpointModel($this->module, $this->modules, $this->resource->factory('BarConf'));
-        $this->model    = new DbConnectedRestEndpointModel($this->codeRest);
+        $this->codeRest = new RestServiceModel($this->module, $this->modules, $this->resource->factory('BarConf'));
+        $this->model    = new DbConnectedRestServiceModel($this->codeRest);
         $this->codeRest->getEventManager()->attach('fetch', array($this->model, 'onFetch'));
     }
 
@@ -80,7 +80,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
 
     public function getCreationPayload()
     {
-        $payload = new DbConnectedRestEndpointEntity();
+        $payload = new DbConnectedRestServiceEntity();
         $payload->exchangeArray(array(
             'adapter_name'               => 'DB\Foo',
             'table_name'                 => 'foo',
@@ -97,7 +97,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
         return $payload;
     }
 
-    public function testCreateServiceReturnsDbConnectedRestEndpointEntity()
+    public function testCreateServiceReturnsDbConnectedRestServiceEntity()
     {
         $originalEntity = $this->getCreationPayload();
         $result         = $this->model->createService($originalEntity);
@@ -146,7 +146,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
             'route_match'             => '/api/foo',
             'entity_class'            => 'BarConf\Rest\Foo\FooEntity',
         );
-        $entity = new RestEndpointEntity();
+        $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
         $config = array( 'zf-api-first' => array('db-connected' => array(
             'BarConf\Rest\Foo\FooResource' => array(
@@ -160,7 +160,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $event->setParam('entity', $entity);
         $event->setParam('config', $config);
         $result = $this->model->onFetch($event);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbConnectedRestServiceEntity', $result);
         $asArray = $result->getArrayCopy();
         foreach ($originalData as $key => $value) {
             $this->assertArrayHasKey($key, $asArray);
@@ -174,7 +174,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $this->assertEquals($entity->resourceClass . '\\Table', $asArray['table_service']);
     }
 
-    public function testUpdateServiceReturnsUpdatedDbConnectedRestEndpointEntity()
+    public function testUpdateServiceReturnsUpdatedDbConnectedRestServiceEntity()
     {
         $originalEntity = $this->getCreationPayload();
         $this->model->createService($originalEntity);
@@ -187,7 +187,7 @@ class DbConnectedRestEndpointModelTest extends TestCase
         $originalEntity->exchangeArray($newProps);
         $result = $this->model->updateService($originalEntity);
 
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\DbConnectedRestServiceEntity', $result);
         $this->assertNotSame($originalEntity, $result);
         $this->assertEquals($newProps['table_service'], $result->tableService);
         $this->assertEquals($newProps['adapter_name'], $result->adapterName);

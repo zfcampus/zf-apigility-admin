@@ -2,7 +2,7 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-class DbConnectedRestEndpointEntity extends RestEndpointEntity
+class DbConnectedRestServiceEntity extends RestServiceEntity
 {
     protected $adapterName;
 

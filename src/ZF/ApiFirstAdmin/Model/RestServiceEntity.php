@@ -4,7 +4,7 @@ namespace ZF\ApiFirstAdmin\Model;
 
 use Zend\Filter\FilterChain;
 
-class RestEndpointEntity
+class RestServiceEntity
 {
     protected $filters = array();
 

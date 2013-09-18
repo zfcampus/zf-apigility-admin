@@ -132,7 +132,7 @@ class Module
                 // Wire DB-Connected fetch listener
                 $sharedEvents->attach(__NAMESPACE__ . '\Model\RestEndpointModel', 'fetch', 'ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointModel::onFetch');
 
-                return new Model\RestEndpointModelFactory($moduleUtils, $configFactory, $sharedEvents);
+                return new Model\RestServiceModelFactory($moduleUtils, $configFactory, $sharedEvents);
             },
             'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
@@ -146,7 +146,7 @@ class Module
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
                 $sharedEvents  = $services->get('SharedEventManager');
-                return new Model\RpcEndpointModelFactory($moduleUtils, $configFactory, $sharedEvents);
+                return new Model\RpcServiceModelFactory($moduleUtils, $configFactory, $sharedEvents);
             },
             'ZF\ApiFirstAdmin\Model\RestEndpointResource' => function ($services) {
                 if (!$services->has('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory')) {
@@ -155,7 +155,7 @@ class Module
                     );
                 }
                 $factory = $services->get('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory');
-                return new Model\RestEndpointResource($factory);
+                return new Model\RestServiceResource($factory);
             },
             'ZF\ApiFirstAdmin\Model\RpcEndpointResource' => function ($services) {
                 if (!$services->has('ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory')) {
@@ -164,7 +164,7 @@ class Module
                     );
                 }
                 $factory = $services->get('ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory');
-                return new Model\RpcEndpointResource($factory);
+                return new Model\RpcServiceResource($factory);
             },
         ));
     }

@@ -13,7 +13,7 @@ use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 
-class RestEndpointModel implements EventManagerAwareInterface
+class RestServiceModel implements EventManagerAwareInterface
 {
     /**
      * @var ConfigResource
@@ -140,7 +140,7 @@ class RestEndpointModel implements EventManagerAwareInterface
 
     /**
      * @param  string $controllerService
-     * @return RestEndpointEntity|false
+     * @return RestServiceEntity|false
      */
     public function fetch($controllerService)
     {
@@ -161,7 +161,7 @@ class RestEndpointModel implements EventManagerAwareInterface
         $restConfig['resource_class']        = $restConfig['listener'];
         unset($restConfig['listener']);
 
-        $entity = new RestEndpointEntity();
+        $entity = new RestServiceEntity();
         $entity->exchangeArray($restConfig);
 
         $this->getRouteInfo($entity, $config);
@@ -174,7 +174,7 @@ class RestEndpointModel implements EventManagerAwareInterface
             'entity' => $entity,
             'config' => $config,
         ), function ($r) {
-            return ($r instanceof RestEndpointEntity);
+            return ($r instanceof RestServiceEntity);
         });
         if ($eventResults->stopped()) {
             return $eventResults->last();
@@ -186,7 +186,7 @@ class RestEndpointModel implements EventManagerAwareInterface
     /**
      * Fetch all endpoints
      *
-     * @return RestEndpointEntity[]
+     * @return RestServiceEntity[]
      */
     public function fetchAll()
     {
@@ -195,21 +195,21 @@ class RestEndpointModel implements EventManagerAwareInterface
             return array();
         }
 
-        $endpoints = array();
+        $services = array();
         foreach (array_keys($config['zf-rest']) as $controllerService) {
-            $endpoints[] = $this->fetch($controllerService);
+            $services[] = $this->fetch($controllerService);
         }
 
-        return $endpoints;
+        return $services;
     }
 
     /**
-     * Create a new service endpoint using the details provided
+     * Create a new service using the details provided
      *
-     * @param  NewRestEndpointEntity $details
-     * @return RestEndpointEntity
+     * @param  NewRestServiceEntity $details
+     * @return RestServiceEntity
      */
-    public function createService(NewRestEndpointEntity $details)
+    public function createService(NewRestServiceEntity $details)
     {
         $resourceName      = ucfirst($details->resourceName);
         $controllerService = $this->createControllerServiceName($resourceName);
@@ -221,7 +221,7 @@ class RestEndpointModel implements EventManagerAwareInterface
         $this->createContentNegotiationConfig($details, $controllerService);
         $this->createHalConfig($details, $entityClass, $collectionClass, $routeName);
 
-        $metadata = new RestEndpointEntity();
+        $metadata = new RestServiceEntity();
         $metadata->exchangeArray($details->getArrayCopy());
         $metadata->exchangeArray(array(
             'collection_class'        => $collectionClass,
@@ -238,10 +238,10 @@ class RestEndpointModel implements EventManagerAwareInterface
     /**
      * Update an existing service
      *
-     * @param  RestEndpointEntity $update
-     * @return RestEndpointEntity
+     * @param  RestServiceEntity $update
+     * @return RestServiceEntity
      */
-    public function updateService(RestEndpointEntity $update)
+    public function updateService(RestServiceEntity $update)
     {
         $controllerService = $update->controllerServiceName;
 
@@ -249,7 +249,7 @@ class RestEndpointModel implements EventManagerAwareInterface
             $original = $this->fetch($controllerService);
         } catch (Exception\RuntimeException $e) {
             throw new Exception\RuntimeException(sprintf(
-                'Cannot update REST endpoint "%s"; not found',
+                'Cannot update REST service "%s"; not found',
                 $controllerService
             ), 404);
         }
@@ -274,7 +274,7 @@ class RestEndpointModel implements EventManagerAwareInterface
             $service = $this->fetch($controllerService);
         } catch (Exception\RuntimeException $e) {
             throw new Exception\RuntimeException(sprintf(
-                'Cannot delete REST endpoint "%s"; not found',
+                'Cannot delete REST service "%s"; not found',
                 $controllerService
             ), 404);
         }
@@ -451,12 +451,12 @@ class RestEndpointModel implements EventManagerAwareInterface
     /**
      * Creates REST configuration
      *
-     * @param  RestEndpointEntity $details
+     * @param  RestServiceEntity $details
      * @param  string $controllerService
      * @param  string $resourceClass
      * @param  string $routeName
      */
-    public function createRestConfig(RestEndpointEntity $details, $controllerService, $resourceClass, $routeName)
+    public function createRestConfig(RestServiceEntity $details, $controllerService, $resourceClass, $routeName)
     {
         $config = array('zf-rest' => array(
             $controllerService => array(
@@ -478,10 +478,10 @@ class RestEndpointModel implements EventManagerAwareInterface
      * Create content negotiation configuration based on payload and discovered
      * controller service name
      *
-     * @param  RestEndpointEntity $details
+     * @param  RestServiceEntity $details
      * @param  string $controllerService
      */
-    public function createContentNegotiationConfig(RestEndpointEntity $details, $controllerService)
+    public function createContentNegotiationConfig(RestServiceEntity $details, $controllerService)
     {
         $config = array(
             'controllers' => array(
@@ -503,12 +503,12 @@ class RestEndpointModel implements EventManagerAwareInterface
     /**
      * Create HAL configuration
      *
-     * @param  RestEndpointEntity $details
+     * @param  RestServiceEntity $details
      * @param  string $entityClass
      * @param  string $collectionClass
      * @param  string $routeName
      */
-    public function createHalConfig(RestEndpointEntity $details, $entityClass, $collectionClass, $routeName)
+    public function createHalConfig(RestServiceEntity $details, $entityClass, $collectionClass, $routeName)
     {
         $config = array('zf-hal' => array('metadata_map' => array(
             $entityClass => array(
@@ -525,12 +525,12 @@ class RestEndpointModel implements EventManagerAwareInterface
     }
 
     /**
-     * Update the route for an existing endpoint
+     * Update the route for an existing service
      *
-     * @param  RestEndpointEntity $original
-     * @param  RestEndpointEntity $update
+     * @param  RestServiceEntity $original
+     * @param  RestServiceEntity $update
      */
-    public function updateRoute(RestEndpointEntity $original, RestEndpointEntity $update)
+    public function updateRoute(RestServiceEntity $original, RestServiceEntity $update)
     {
         $route = $update->routeMatch;
         if (!$route) {
@@ -548,10 +548,10 @@ class RestEndpointModel implements EventManagerAwareInterface
     /**
      * Update REST configuration
      *
-     * @param  RestEndpointEntity $original
-     * @param  RestEndpointEntity $update
+     * @param  RestServiceEntity $original
+     * @param  RestServiceEntity $update
      */
-    public function updateRestConfig(RestEndpointEntity $original, RestEndpointEntity $update)
+    public function updateRestConfig(RestServiceEntity $original, RestServiceEntity $update)
     {
         $patch = array();
         foreach ($this->restScalarUpdateOptions as $property => $configKey) {
@@ -584,10 +584,10 @@ class RestEndpointModel implements EventManagerAwareInterface
     /**
      * Update the content negotiation configuration for the service
      *
-     * @param  RestEndpointEntity $original
-     * @param  RestEndpointEntity $update
+     * @param  RestServiceEntity $original
+     * @param  RestServiceEntity $update
      */
-    public function updateContentNegotiationConfig(RestEndpointEntity $original, RestEndpointEntity $update)
+    public function updateContentNegotiationConfig(RestServiceEntity $original, RestServiceEntity $update)
     {
         $baseKey = 'zf-content-negotiation.';
         $service = $original->controllerServiceName;
@@ -616,11 +616,11 @@ class RestEndpointModel implements EventManagerAwareInterface
     }
 
     /**
-     * Delete the route associated with the given endpoint
+     * Delete the route associated with the given service
      *
-     * @param  RestEndpointEntity $entity
+     * @param  RestServiceEntity $entity
      */
-    public function deleteRoute(RestEndpointEntity $entity)
+    public function deleteRoute(RestServiceEntity $entity)
     {
         $route = $entity->routeName;
         $key   = array('router', 'routes', $route);
@@ -629,11 +629,11 @@ class RestEndpointModel implements EventManagerAwareInterface
 
     /**
      * Delete the REST configuration associated with the given
-     * endpoint
+     * service
      *
-     * @param  RestEndpointEntity $entity
+     * @param  RestServiceEntity $entity
      */
-    public function deleteRestConfig(RestEndpointEntity $entity)
+    public function deleteRestConfig(RestServiceEntity $entity)
     {
         $controllerService = $entity->controllerServiceName;
         $key = array('zf-rest', $controllerService);
@@ -748,12 +748,12 @@ class RestEndpointModel implements EventManagerAwareInterface
     }
 
     /**
-     * Retrieve route information for a given endpoint based on the configuration available
+     * Retrieve route information for a given service based on the configuration available
      *
-     * @param  RestEndpointEntity $metadata
+     * @param  RestServiceEntity $metadata
      * @param  array $config
      */
-    protected function getRouteInfo(RestEndpointEntity $metadata, array $config)
+    protected function getRouteInfo(RestServiceEntity $metadata, array $config)
     {
         $routeName = $metadata->routeName;
         if (!$routeName
@@ -775,10 +775,10 @@ class RestEndpointModel implements EventManagerAwareInterface
      * service into the REST metadata
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpointEntity $metadata
+     * @param  RestServiceEntity $metadata
      * @param  array $config
      */
-    protected function mergeContentNegotiationConfig($controllerServiceName, RestEndpointEntity $metadata, array $config)
+    protected function mergeContentNegotiationConfig($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
         if (!isset($config['zf-content-negotiation'])) {
             return;
@@ -814,10 +814,10 @@ class RestEndpointModel implements EventManagerAwareInterface
      * Merge entity and collection class into metadata, if found
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpointEntity $metadata
+     * @param  RestServiceEntity $metadata
      * @param  array $config
      */
-    protected function mergeHalConfig($controllerServiceName, RestEndpointEntity $metadata, array $config)
+    protected function mergeHalConfig($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
         if (!isset($config['zf-hal'])
             || !isset($config['zf-hal']['metadata_map'])
@@ -846,10 +846,10 @@ class RestEndpointModel implements EventManagerAwareInterface
      * Derive the name of the entity class from the controller service name
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpointEntity $metadata
+     * @param  RestServiceEntity $metadata
      * @return string
      */
-    protected function deriveEntityClass($controllerServiceName, RestEndpointEntity $metadata)
+    protected function deriveEntityClass($controllerServiceName, RestServiceEntity $metadata)
     {
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
         if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
@@ -862,10 +862,10 @@ class RestEndpointModel implements EventManagerAwareInterface
      * Derive the name of the collection class from the controller service name
      *
      * @param  string $controllerServiceName
-     * @param  RestEndpointEntity $metadata
+     * @param  RestServiceEntity $metadata
      * @return string
      */
-    protected function deriveCollectionClass($controllerServiceName, RestEndpointEntity $metadata)
+    protected function deriveCollectionClass($controllerServiceName, RestServiceEntity $metadata)
     {
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
         if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {

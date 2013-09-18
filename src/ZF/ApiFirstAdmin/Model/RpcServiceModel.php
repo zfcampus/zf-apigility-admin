@@ -11,7 +11,7 @@ use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 use ZF\Rest\Exception\PatchException;
 
-class RpcEndpointModel
+class RpcServiceModel
 {
     /**
      * @var ConfigResource
@@ -50,7 +50,7 @@ class RpcEndpointModel
      *
      * @todo   get route details?
      * @param  string $controllerServiceName
-     * @return RpcEndpointEntity|false
+     * @return RpcServiceEntity|false
      */
     public function fetch($controllerServiceName)
     {
@@ -92,15 +92,15 @@ class RpcEndpointModel
             }
         }
 
-        $endpoint = new RpcEndpointEntity();
-        $endpoint->exchangeArray($data);
-        return $endpoint;
+        $service = new RpcServiceEntity();
+        $service->exchangeArray($data);
+        return $service;
     }
 
     /**
-     * Fetch all endpoints
+     * Fetch all services
      *
-     * @return RpcEndpointEntity[]
+     * @return RpcServiceEntity[]
      */
     public function fetchAll()
     {
@@ -109,12 +109,12 @@ class RpcEndpointModel
             return array();
         }
 
-        $endpoints = array();
+        $services = array();
         foreach (array_keys($config['zf-rpc']) as $service) {
-            $endpoints[] = $this->fetch($service);
+            $services[] = $this->fetch($service);
         }
 
-        return $endpoints;
+        return $services;
     }
 
     /**
@@ -127,7 +127,7 @@ class RpcEndpointModel
      * @param  string $route
      * @param  array $httpMethods
      * @param  null|string $selector
-     * @return RpcEndpointEntity
+     * @return RpcServiceEntity
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
@@ -144,10 +144,10 @@ class RpcEndpointModel
     /**
      * Delete a service
      * 
-     * @param  RpcEndpointEntity $entity 
+     * @param  RpcServiceEntity $entity
      * @return true
      */
-    public function deleteService(RpcEndpointEntity $entity)
+    public function deleteService(RpcServiceEntity $entity)
     {
         $serviceName = $entity->controllerServiceName;
         $routeName   = $entity->routeName;
@@ -313,12 +313,12 @@ class RpcEndpointModel
      */
     public function updateRoute($controllerService, $routeMatch)
     {
-        $endpoint  = $this->fetch($controllerService);
-        if (!$endpoint) {
+        $services  = $this->fetch($controllerService);
+        if (!$services) {
             return false;
         }
-        $endpoint  = $endpoint->getArrayCopy();
-        $routeName = $endpoint['route_name'];
+        $services  = $services->getArrayCopy();
+        $routeName = $services['route_name'];
 
         $config = $this->configResource->fetch(true);
         $config['router']['routes'][$routeName]['options']['route'] = $routeMatch;
