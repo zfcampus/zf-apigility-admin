@@ -126,6 +126,7 @@ module.controller(
             "HalJson", 
             "Json"
         ];
+        $scope.source_code = [];
 
         DbAdapterResource.fetch().then(function (adapters) {
             $scope.$apply(function () {
@@ -252,7 +253,7 @@ module.directive('apiRestEndpoints', function () {
             $scope.getSourceCode = function (index) {
                 $http.get('/admin/api/source?module=' + $scope.api.props.name + '&class=' + $scope.restEndpoints[index].entity_class)
                     .then(function(response) {
-                        $scope.source_code = response.data.source;
+                        $scope.source_code[index] = response.data.source;
                         return true;
                     });
             };
