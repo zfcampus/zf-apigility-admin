@@ -9,6 +9,7 @@ use Zend\View\Resolver;
 use ZF\ApiFirstAdmin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
+use ZF\Rest\Exception\PatchException;
 
 class RpcEndpointModel
 {
@@ -138,6 +139,23 @@ class RpcEndpointModel
         $this->createSelectorConfig($controllerService, $selector);
 
         return $this->fetch($controllerService);
+    }
+
+    /**
+     * Delete a service
+     * 
+     * @param  RpcEndpointEntity $entity 
+     * @return true
+     */
+    public function deleteService(RpcEndpointEntity $entity)
+    {
+        $serviceName = $entity->controllerServiceName;
+        $routeName   = $entity->routeName;
+
+        $this->deleteRouteConfig($routeName);
+        $this->deleteRpcConfig($serviceName);
+        $this->deleteContentNegotiationConfig($serviceName);
+        return true;
     }
 
     /**
@@ -336,6 +354,66 @@ class RpcEndpointModel
         $config['zf-content-negotiation']['controllers'][$controllerService] = $selector;
         $this->configResource->overwrite($config);
         return true;
+    }
+
+    /**
+     * Update configuration for a content negotiation whitelist for a named controller service
+     * 
+     * @param  string $controllerService 
+     * @param  string $headerType 
+     * @param  array $whitelist 
+     * @return true
+     */
+    public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
+    {
+        if (!in_array($headerType, array('accept', 'content-type'))) {
+            throw new PatchException('Invalid content negotiation whitelist type provided', 422);
+        }
+        $headerType .= '-whitelist';
+        $config = $this->configResource->fetch(true);
+        $config['zf-content-negotiation'][$headerType][$controllerService] = $whitelist;
+        $this->configResource->overwrite($config);
+        return true;
+    }
+
+    /**
+     * Removes the route configuration for a named route
+     * 
+     * @param  string $routeName 
+     */
+    public function deleteRouteConfig($routeName)
+    {
+        $key = array('router', 'routes', $routeName);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete the RPC configuration for a named RPC service
+     * 
+     * @param  string $serviceName 
+     */
+    public function deleteRpcConfig($serviceName)
+    {
+        $key = array('zf-rpc', $serviceName);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete the Content Negotiation configuration for a named RPC 
+     * service
+     * 
+     * @param  string $serviceName 
+     */
+    public function deleteContentNegotiationConfig($serviceName)
+    {
+        $key = array('zf-content-negotiation', 'controllers', $serviceName);
+        $this->configResource->deleteKey($key);
+
+        $key = array('zf-content-negotiation', 'accept-whitelist', $serviceName);
+        $this->configResource->deleteKey($key);
+
+        $key = array('zf-content-negotiation', 'content-type-whitelist', $serviceName);
+        $this->configResource->deleteKey($key);
     }
 
     /**

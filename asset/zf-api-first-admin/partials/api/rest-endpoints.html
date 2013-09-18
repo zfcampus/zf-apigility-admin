@@ -237,7 +237,7 @@
                   HTTP methods allowed for COLLECTIONS
                   <div class="controls">
                     <label ng-repeat="method in restEndpoint.collection_http_methods" class="checkbox inline" for="collection_http_methods{{ $index }}">
-                      <input type="checkbox" name="method" id="collection_http_methods{{ $index }}" ng-model="method.checked" value="{{ method.checked }}">
+                      <input type="checkbox" name="collection_http_methods" id="collection_http_methods{{ $index }}" ng-model="method.checked">
                       <span>{{method.name}}</span>
                     </label>
                   </div>
@@ -245,10 +245,10 @@
 
                 <!-- Multiple Checkboxes (inline) -->
                 <div class="control-group">
-                  <label class="control-label" for="resource_http_methods[]">HTTP methods allowed for ENTITIES</label>
+                  HTTP methods allowed for ENTITIES
                   <div class="controls">
-                    <label ng-repeat="method in restEndpoint.resource_http_methods" class="checkbox inline" for="resource_http_methods[]">
-                      <input type="checkbox" name="resource_http_methods[]" ng-model="method.checked">
+                    <label ng-repeat="method in restEndpoint.resource_http_methods" class="checkbox inline" for="resource_http_methods{{ $index }}">
+                      <input type="checkbox" name="resource_http_methods" id="resource_http_methods{{ $index }}" ng-model="method.checked">
                       <span>{{method.name}}</span>
                     </label>
                   </div>
@@ -282,7 +282,7 @@
 
                 <!-- Prepended checkbox -->
                 <div class="control-group">
-                  <label class="control-label" for="accept_whitelist">Accept whitelist</label>
+                  <label class="control-label">Accept whitelist</label>
                   <div class="controls">
                     <tags-input 
                       ng-class="form-control"
@@ -298,8 +298,8 @@
 
                 <!-- Prepended checkbox -->
                 <div class="control-group">
-                  <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
-                    <tags-input 
+                  <label class="control-label">Content-Type whitelist</label>
+                    <tags-input
                       ng-class="form-control"
                       ng-model="restEndpoint.content_type_whitelist"
                       add-on-space="true"
@@ -308,11 +308,11 @@
                       placeholder="Add a mediatype to the whitelist">
                     </tags-input>
                     <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
-                  </div>
+                  </label>
                 </div>
               </fieldset>
 
-              <button ng-click="saveRestEndpoint($index)" type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+              <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
           </div>
         </div>

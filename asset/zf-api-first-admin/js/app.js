@@ -273,22 +273,18 @@ module.directive('apiRpcEndpoints', function () {
                         $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
 
                         _($scope.rpcEndpoints).forEach(function (rpcEndpoint) {
-                            console.log(rpcEndpoint)
-//                            _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-//                                var checkify = [];
-//                                _.forEach(['GET', 'POST', 'PUT', 'OPTIONS', 'PATCH'], function (httpMethod) {
-//                                    checkify.push({name: httpMethod, checked: _.contains(rpcEndpoint[httpItem], httpMethod)});
-//                                });
-//                                rpcEndpoint[httpItem] = checkify;
-//
-//                                rpcEndpoint[httpItem + '_view'] = _.chain(rpcEndpoint[httpItem])
-//                                    .where({checked: true})
-//                                    .pluck('name')
-//                                    .valueOf()
-//                                    .join(', ');
-//                            });
-                        });
+                            var checkify = [];
+                            _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
+                                checkify.push({name: httpMethod, checked: _.contains(rpcEndpoint.http_methods, httpMethod)});
+                            });
+                            rpcEndpoint.http_methods = checkify;
 
+                            rpcEndpoint.http_methods_view = _.chain(rpcEndpoint.http_methods)
+                                .where({checked: true})
+                                .pluck('name')
+                                .valueOf()
+                                .join(', ');
+                        });
                     });
                 });
             }
@@ -306,21 +302,23 @@ module.directive('apiRpcEndpoints', function () {
             $scope.saveRpcEndpoint = function (index) {
                 var rpcEndpointData = _.clone($scope.rpcEndpoints[index]);
 
-                _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-                    rpcEndpointData[httpItem] = _.chain(rpcEndpointData[httpItem])
-                        .where({checked: true})
-                        .pluck('name')
-                        .valueOf();
-                });
+                rpcEndpointData.http_methods = _.chain(rpcEndpointData.http_methods)
+                    .where({checked: true})
+                    .pluck('name')
+                    .valueOf();
 
-                ApisResource.saveRpcEndpoint($scope.api.props.name, rpcEndpointData);
-                updateApiRpcEndpoints(true);
+                ApisResource.saveRpcEndpoint($scope.api.props.name, rpcEndpointData)
+                    .then(function (data) {
+                        updateApiRpcEndpoints(true);
+                    });
             };
 
-            $scope.removeRestEndpoint = function (rpcEndpointName) {
-                ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName);
-                updateApiRpcEndpoints(true);
-                $scope.deleteRestEndpoint = false;
+            $scope.removeRpcEndpoint = function (rpcEndpointName) {
+                ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName)
+                    .then(function () {
+                        updateApiRpcEndpoints(true);
+                        $scope.deleteRestEndpoint = false;
+                    });
             };
         }]
     }
@@ -390,7 +388,7 @@ module.factory('ApisResource', ['$http', function ($http) {
     };
 
     resource.saveRpcEndpoint = function (apiName, rpcEndpoint) {
-        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(rpcEndpoint.controller_service_name);
+        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcEndpoint.controller_service_name);
         return $http({method: 'patch', url: url, data: rpcEndpoint})
             .then(function (response) {
                 return response.data;

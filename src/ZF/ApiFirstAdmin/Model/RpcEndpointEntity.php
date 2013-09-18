@@ -21,6 +21,18 @@ class RpcEndpointEntity
 
     protected $selector = 'Json';
 
+    public function __get($name)
+    {
+        if (!isset($this->{$name})) {
+            throw new \OutOfRangeException(sprintf(
+                '%s does not contain a property by the name of "%s"',
+                __CLASS__,
+                $name
+            ));
+        }
+        return $this->{$name};
+    }
+
     /**
      * @todo   validation
      * @param  array $data
