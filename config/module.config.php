@@ -16,7 +16,7 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'ZF\ApiFirstAdmin\Controller\App' => 'ZF\ApiFirstAdmin\Controller\AppController',
+            'ZF\ApiFirstAdmin\Controller\App' => 'ZF\ApiFirstAdmin\Controller\AppController'
         ),
     ),
 
@@ -64,6 +64,16 @@ return array(
                                         ),
                                     ),
                                 ),
+                            ),
+                            'source-view' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/source/:class',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Source',
+                                        'action'     => 'source'
+                                    )
+                                )
                             ),
                             'module-enable' => array(
                                 'type' => 'literal',
@@ -125,6 +135,7 @@ return array(
         'controllers' => array(
             'ZF\ApiFirstAdmin\Controller\DbAdapter'      => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\ModuleCreation' => 'HalJson',
+            'ZF\ApiFirstAdmin\Controller\Source'         => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\Module'         => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\RestEndpoint'   => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\RpcEndpoint'    => 'HalJson',
@@ -139,6 +150,9 @@ return array(
                 'application/*+json',
             ),
             'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+                'application/json',
+            ),
+            'ZF\ApiFirstAdmin\Controllet\Source' => array(
                 'application/json',
             ),
             'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
@@ -160,6 +174,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\ApiFirstAdmin\Controller\Source' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -249,6 +267,10 @@ return array(
         'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
             'route_name'   => 'zf-api-first-admin/api/module-enable',
+        ),
+        'ZF\ApiFirstAdmin\Controller\Source' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-api-first-admin/api/source-view',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),
