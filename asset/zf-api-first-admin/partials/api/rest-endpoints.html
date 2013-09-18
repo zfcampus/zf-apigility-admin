@@ -184,9 +184,8 @@
                 <div ng-if="restEndpoint.adapter_name" class="control-group">
                   <label class="control-label" for="selector">DB Adapter Name</label>
                   <div class="controls">
-                    <select class="form-control input-xlarge" ng-model="restEndpoint.adapter_name" ng-repeat="dbAdapter in $parent.dbAdapters">
-                      <option>{{dbAdapter.adapter_name}}</option>
-                    </select>
+                    <select class="form-control input-xlarge"
+                      ng-model="restEndpoint.adapter_name" ng-options="v.adapter_name as v.adapter_name for (k,v) in $parent.dbAdapters"></select>
                   </div>
                 </div>
 
