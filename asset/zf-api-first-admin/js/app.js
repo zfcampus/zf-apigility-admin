@@ -177,6 +177,16 @@ module.directive('apiRestEndpoints', function () {
                 $scope.dbTableName = '';
             };
 
+            $scope.isDbConnected = function (restEndpoint) {
+              if (typeof restEndpoint !== 'object' || restEndpoint === null) {
+                return false;
+              }
+              if ("adapter_name" in restEndpoint || "table_name" in restEndpoint || "table_service" in restEndpoint || "hydrator_name" in restEndpoint) {
+                return true;
+              }
+              return false;
+            };
+
             function updateApiRestEndpoints(force) {
                 $scope.restEndpoints = [];
                 $scope.restEndpointsEditable = [];

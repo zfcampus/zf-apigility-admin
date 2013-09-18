@@ -96,7 +96,7 @@
                 <td>Accept whitelist</td>
                 <td>{{ restEndpoint.accept_whitelist.join(', ') || 'n/a' }}</td>
               </tr>
-              <tr ng-if="restEndpoint.adapter_name">
+              <tr ng-show="restEndpoint.adapter_name">
                 <td>DB Adapter Name</td>
                 <td>{{ restEndpoint.adapter_name }}</td>
               </tr>
@@ -130,7 +130,7 @@
                 <td>Entity Class</td>
                 <td>{{ restEndpoint.entity_class }}</td>
               </tr>
-              <tr ng-if="restEndpoint.hydrator_name">
+              <tr ng-show="restEndpoint.hydrator_name">
                 <td>Hydrator Service Name</td>
                 <td>{{ restEndpoint.hydrator_name }}</td>
               </tr>
@@ -166,11 +166,11 @@
                 <td>Content Negotiation Selector</td>
                 <td>{{ restEndpoint.selector }}</td>
               </tr>
-              <tr ng-if="restEndpoint.table_name">
+              <tr ng-show="restEndpoint.table_name">
                 <td>DB Table Name</td>
                 <td>{{ restEndpoint.table_name }}</td>
               </tr>
-              <tr ng-if="restEndpoint.table_service">
+              <tr ng-show="restEndpoint.table_service">
                 <td>Table Gateway Service Name</td>
                 <td>{{ restEndpoint.table_service }}</td>
               </tr>
@@ -179,9 +179,9 @@
           </div>
           <div class="tab-pane" id="editmode{{$index}}">
 
-            <form class="form-horizontal" ng-submit="saveRestEndpoint($index)">
+            <form novalidate class="form-horizontal" ng-submit="saveRestEndpoint($index)">
               <fieldset>
-                <div ng-if="restEndpoint.adapter_name" class="control-group">
+                <div ng-show="isDbConnected(restEndpoint)" class="control-group">
                   <label class="control-label" for="selector">DB Adapter Name</label>
                   <div class="controls">
                     <select class="form-control input-xlarge"
@@ -189,7 +189,7 @@
                   </div>
                 </div>
 
-                <div class="control-group" ng-if="restEndpoint.table_name">
+                <div class="control-group" ng-show="isDbConnected(restEndpoint)">
                   <label class="control-label" for="table_name">DB Table Name</label>
                   <div class="controls">
                     <input type="text" placeholder="Table Name" class="form-control input-xlarge" required="" ng-model="restEndpoint.table_name">
@@ -197,7 +197,7 @@
                   </div>
                 </div>
 
-                <div class="control-group" ng-if="restEndpoint.hydrator_name">
+                <div class="control-group" ng-show="isDbConnected(restEndpoint)">
                   <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
                   <div class="controls">
                     <input type="text" 
@@ -207,7 +207,7 @@
                   </div>
                 </div>
 
-                <div class="control-group" ng-if="restEndpoint.table_service">
+                <div class="control-group" ng-show="isDbConnected(restEndpoint)">
                   <label class="control-label" for="table_service">TableGateway Service Name</label>
                   <div class="controls">
                     <input type="text" placeholder="TableGateway Service Name" class="form-control input-xlarge" required="" ng-model="restEndpoint.table_service">
