@@ -151,7 +151,6 @@ module.controller(
     }]
 );
 
-// this should probably be a directive
 module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
     return {
         restrict: 'E',

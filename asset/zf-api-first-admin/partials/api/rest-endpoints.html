@@ -192,7 +192,7 @@
                 <div class="control-group" ng-if="restEndpoint.table_name">
                   <label class="control-label" for="table_name">DB Table Name</label>
                   <div class="controls">
-                    <input id="table_name" name="table_name" type="text" placeholder="Table Name" class="input-xlarge" required="" ng-model="restEndpoint.table_name">
+                    <input type="text" placeholder="Table Name" class="form-control input-xlarge" required="" ng-model="restEndpoint.table_name">
                     <p class="help-block">The name of the database table used by this endpoint</p>
                   </div>
                 </div>
@@ -200,7 +200,9 @@
                 <div class="control-group" ng-if="restEndpoint.hydrator_name">
                   <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
                   <div class="controls">
-                    <input id="hydrator_name" name="hydrator_name" type="text" placeholder="Hydrator Service Name" class="input-xlarge" required="" ng-model="restEndpoint.hydrator_name">
+                    <input type="text" 
+                      class="form-control hydrator_select"
+                      ng-model="restEndpoint.hydrator_name">
                     <p class="help-block">The name of the hydrator service used to create entities from database rows</p>
                   </div>
                 </div>
@@ -208,7 +210,7 @@
                 <div class="control-group" ng-if="restEndpoint.table_service">
                   <label class="control-label" for="table_service">TableGateway Service Name</label>
                   <div class="controls">
-                    <input id="table_service" name="table_service" type="text" placeholder="TableGateway Service Name" class="input-xlarge" required="" ng-model="restEndpoint.table_service">
+                    <input type="text" placeholder="TableGateway Service Name" class="form-control input-xlarge" required="" ng-model="restEndpoint.table_service">
                     <p class="help-block">The name of the TableGateway service used by this endpoint; change only if you have created your own implementation.</p>
                   </div>
                 </div>
@@ -217,7 +219,7 @@
                 <div class="control-group">
                   <label class="control-label" for="route_match">Route to match</label>
                   <div class="controls">
-                    <input id="route_match" name="route_match" type="text" placeholder="/api/your_resource" class="input-xlarge" required="" ng-model="restEndpoint.route_match">
+                    <input type="text" placeholder="/api/your_resource" class="form-control input-xlarge" required="" ng-model="restEndpoint.route_match">
                     <p class="help-block">The base URI endpoint for the resource (minus the identifier segment of the URI)</p>
                   </div>
                 </div>
@@ -226,7 +228,7 @@
                 <div class="control-group">
                   <label class="control-label" for="identifier_name">Identifier Name</label>
                   <div class="controls">
-                    <input id="identifier_name" name="identifier_name" type="text" placeholder="id" class="input-xlarge" required="" ng-model="restEndpoint.identifier_name">
+                    <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restEndpoint.identifier_name">
                     <p class="help-block">Name of the field representing the unique identifier</p>
                   </div>
                 </div>
@@ -257,7 +259,7 @@
                 <div class="control-group">
                   <label class="control-label" for="page_size">Number of entities to display per page of a collection</label>
                   <div class="controls">
-                    <input id="page_size" name="page_size" type="text" placeholder="25" class="input-xlarge" ng-model="restEndpoint.page_size">
+                    <input type="text" placeholder="25" class="form-control input-xlarge" ng-model="restEndpoint.page_size">
                     <p class="help-block">Indicate the number of entities that should be displayed per page when GET requests are made to the collection.</p>
                   </div>
                 </div>
@@ -266,7 +268,7 @@
                 <div class="control-group">
                   <label class="control-label" for="page_size_param">Page parameter</label>
                   <div class="controls">
-                    <input id="page_size_param" name="page_size_param" type="text" placeholder="page" class="input-xlarge" ng-model="restEndpoint.page_size_param">
+                    <input type="text" placeholder="page" class="form-control input-xlarge" ng-model="restEndpoint.page_size_param">
                     <p class="help-block">The query string parameter that will represent the page of results when retrieving a collection.</p>
                   </div>
                 </div>
@@ -323,5 +325,14 @@
 <script>
   $(function () {
     $('#myTab a:last').tab('show')
-  })
+  });
+
+  $('.hydrator_select').typeahead({
+    local: [
+      "ArraySerializable",
+      "ClassMethods",
+      "ObjectProperty",
+      "Reflection"
+    ]
+  });
 </script>
