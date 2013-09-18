@@ -68,7 +68,7 @@ class RpcServiceResource extends AbstractResourceListener
     }
 
     /**
-     * Create a new RPC endpoint
+     * Create a new RPC service
      *
      * @param  array|object $data
      * @return RpcServiceEntity
@@ -161,7 +161,7 @@ class RpcServiceResource extends AbstractResourceListener
     }
 
     /**
-     * Update an existing RPC endpoint
+     * Update an existing RPC service
      *
      * @param  string $id
      * @param  object|array $data

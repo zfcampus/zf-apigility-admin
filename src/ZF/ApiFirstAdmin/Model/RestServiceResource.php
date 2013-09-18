@@ -127,7 +127,7 @@ class RestServiceResource extends AbstractResourceListener
     }
 
     /**
-     * Update an existing REST endpoint
+     * Update an existing REST service
      *
      * @param  string $id
      * @param  object|array $data

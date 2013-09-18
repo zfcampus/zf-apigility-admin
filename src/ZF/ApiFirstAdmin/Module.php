@@ -116,13 +116,13 @@ class Module
                 }
                 return $listener;
             },
-            'ZF\ApiFirstAdmin\Model\RestEndpointModelFactory' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\RestServiceModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
                     || !$services->has('SharedEventManager')
                 ) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\RestEndpointModelFactory is missing one or more dependencies from ZF\Configuration'
+                        'ZF\ApiFirstAdmin\Model\RestServiceModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
                 }
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
@@ -130,17 +130,17 @@ class Module
                 $sharedEvents  = $services->get('SharedEventManager');
 
                 // Wire DB-Connected fetch listener
-                $sharedEvents->attach(__NAMESPACE__ . '\Model\RestEndpointModel', 'fetch', 'ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointModel::onFetch');
+                $sharedEvents->attach(__NAMESPACE__ . '\Model\RestServiceModel', 'fetch', 'ZF\ApiFirstAdmin\Model\DbConnectedRestServiceModel::onFetch');
 
                 return new Model\RestServiceModelFactory($moduleUtils, $configFactory, $sharedEvents);
             },
-            'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory' => function ($services) {
+            'ZF\ApiFirstAdmin\Model\RpcServiceModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
                     || !$services->has('SharedEventManager')
                 ) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory is missing one or more dependencies from ZF\Configuration'
+                        'ZF\ApiFirstAdmin\Model\RpcServiceModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
                 }
                 $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
@@ -148,22 +148,22 @@ class Module
                 $sharedEvents  = $services->get('SharedEventManager');
                 return new Model\RpcServiceModelFactory($moduleUtils, $configFactory, $sharedEvents);
             },
-            'ZF\ApiFirstAdmin\Model\RestEndpointResource' => function ($services) {
-                if (!$services->has('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory')) {
+            'ZF\ApiFirstAdmin\Model\RestServiceResource' => function ($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\RestServiceModelFactory')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\RestEndpointResource is missing one or more dependencies'
+                        'ZF\ApiFirstAdmin\Model\RestServiceResource is missing one or more dependencies'
                     );
                 }
-                $factory = $services->get('ZF\ApiFirstAdmin\Model\RestEndpointModelFactory');
+                $factory = $services->get('ZF\ApiFirstAdmin\Model\RestServiceModelFactory');
                 return new Model\RestServiceResource($factory);
             },
-            'ZF\ApiFirstAdmin\Model\RpcEndpointResource' => function ($services) {
-                if (!$services->has('ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory')) {
+            'ZF\ApiFirstAdmin\Model\RpcServiceResource' => function ($services) {
+                if (!$services->has('ZF\ApiFirstAdmin\Model\RpcServiceModelFactory')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\ApiFirstAdmin\Model\RpcEndpointResource is missing one or more dependencies'
+                        'ZF\ApiFirstAdmin\Model\RpcServiceResource is missing one or more dependencies'
                     );
                 }
-                $factory = $services->get('ZF\ApiFirstAdmin\Model\RpcEndpointModelFactory');
+                $factory = $services->get('ZF\ApiFirstAdmin\Model\RpcServiceModelFactory');
                 return new Model\RpcServiceResource($factory);
             },
         ));
@@ -181,7 +181,7 @@ class Module
     }
 
     /**
-     * Inject links into Module resources for the service endpoints
+     * Inject links into Module resources for the service services
      *
      * @param  \Zend\Mvc\MvcEvent $e
      */
@@ -205,7 +205,7 @@ class Module
         }
 
         if ($result->isResource()) {
-            $this->injectEndpointLinks($result->getPayload(), $result);
+            $this->injectServiceLinks($result->getPayload(), $result);
             return;
         }
 
@@ -217,21 +217,21 @@ class Module
     }
 
     /**
-     * Inject links for the service endpoints of a module
+     * Inject links for the service services of a module
      *
      * @param  Resource $resource
      * @param  HalJsonModel $model
      */
-    protected function injectEndpointLinks(Resource $resource, HalJsonModel $model)
+    protected function injectServiceLinks(Resource $resource, HalJsonModel $model)
     {
         $module     = $resource->resource;
         $links      = $resource->getLinks();
         $moduleName = $module['name'];
 
-        $this->injectLinksForEndpointsByType('rest', $module['rest'], $links, $moduleName);
+        $this->injectLinksForServicesByType('rest', $module['rest'], $links, $moduleName);
         unset($module['rest']);
 
-        $this->injectLinksForEndpointsByType('rpc', $module['rpc'], $links, $moduleName);
+        $this->injectLinksForServicesByType('rpc', $module['rpc'], $links, $moduleName);
         unset($module['rpc']);
 
         $replacement = new Resource($module, $resource->id);
@@ -240,7 +240,7 @@ class Module
     }
 
     /**
-     * Inject RPC/REST endpoint links inside module resources that are composed in collections
+     * Inject RPC/REST service links inside module resources that are composed in collections
      *
      * @param  \Zend\EventManager\Event $e
      */
@@ -270,23 +270,23 @@ class Module
                 ),
             ),
         )));
-        $this->injectLinksForEndpointsByType('rest', $rest, $links, $module);
-        $this->injectLinksForEndpointsByType('rpc', $rpc, $links, $module);
+        $this->injectLinksForServicesByType('rest', $rest, $links, $module);
+        $this->injectLinksForServicesByType('rpc', $rpc, $links, $module);
 
         $e->setParam('resource', $halResource);
     }
 
     /**
-     * Inject endpoint links
+     * Inject service links
      *
      * @param  string $type "rpc" | "rest"
-     * @param  array|\Traversable $endpoints
+     * @param  array|\Traversable $services
      * @param  LinkCollection $links
      * @param  null|string $module
      */
-    protected function injectLinksForEndpointsByType($type, $endpoints, LinkCollection $links, $module = null)
+    protected function injectLinksForServicesByType($type, $services, LinkCollection $links, $module = null)
     {
-        $routeName = sprintf('zf-api-first-admin/api/module/%s-endpoint', $type);
+        $routeName = sprintf('zf-api-first-admin/api/module/%s-service', $type);
         $spec = array(
             'rel' => $type,
             'route' => array(

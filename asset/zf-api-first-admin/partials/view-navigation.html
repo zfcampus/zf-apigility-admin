@@ -8,7 +8,7 @@
   </ul>
   <ul ng-show="$root.routeParams.apiName" class="nav ag-sidenav">
     <li ng-class="{active: ($root.routeParams.section == 'info')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/info">General Information</a></li>
-    <li ng-class="{active: ($root.routeParams.section == 'rest-endpoints')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/rest-endpoints">Rest Endpoints</a></li>
-    <li ng-class="{active: ($root.routeParams.section == 'rpc-endpoints')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/rpc-endpoints">RPC Endpoints</a></li>
+    <li ng-class="{active: ($root.routeParams.section == 'rest-services')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/rest-services">REST Services</a></li>
+    <li ng-class="{active: ($root.routeParams.section == 'rpc-services')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/rpc-services">RPC Services</a></li>
   </ul>
 </aside>

@@ -46,7 +46,7 @@ class RpcServiceModel
     }
 
     /**
-     * Fetch a single RPC endpoint
+     * Fetch a single RPC service
      *
      * @todo   get route details?
      * @param  string $controllerServiceName

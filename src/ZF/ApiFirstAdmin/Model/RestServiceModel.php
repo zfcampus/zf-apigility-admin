@@ -184,7 +184,7 @@ class RestServiceModel implements EventManagerAwareInterface
     }
 
     /**
-     * Fetch all endpoints
+     * Fetch all services
      *
      * @return RestServiceEntity[]
      */
