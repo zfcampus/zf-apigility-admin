@@ -2,9 +2,9 @@
   <ul ng-show="!$root.routeParams.apiName" class="nav ag-sidenav">
     <li ng-class="{active: ($root.routeParams.section == 'general-information')}"><a ng-href="#/global/information">General Information</a></li>
     <li ng-class="{active: ($root.routeParams.section == 'db-adapters')}"><a ng-href="#/global/db-adapters">Database Adapters</a></li>
-    <li ng-class="{active: ($root.routeParams.section == 'media-types')}"><a ng-href="#/global/media-types">Media Types</a></li>
-    <li ng-class="{active: ($root.routeParams.section == 'authentication')}"><a ng-href="#/global/authentication">Authentication</a></li>
-    <li ng-class="{active: ($root.routeParams.section == 'services')}"><a ng-href="#/global/services">Services</a></li>
+    <!--<li ng-class="{active: ($root.routeParams.section == 'media-types')}"><a ng-href="#/global/media-types">Media Types</a></li>-->
+    <!--<li ng-class="{active: ($root.routeParams.section == 'authentication')}"><a ng-href="#/global/authentication">Authentication</a></li>-->
+    <!--<li ng-class="{active: ($root.routeParams.section == 'services')}"><a ng-href="#/global/services">Services</a></li>-->
   </ul>
   <ul ng-show="$root.routeParams.apiName" class="nav ag-sidenav">
     <li ng-class="{active: ($root.routeParams.section == 'info')}"><a ng-href="#/api/{{ $root.routeParams.apiName }}/info">General Information</a></li>
