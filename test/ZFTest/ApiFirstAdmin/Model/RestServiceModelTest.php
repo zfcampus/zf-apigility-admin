@@ -206,6 +206,10 @@ class RestServiceModelTest extends TestCase
     public function testCreateRestConfigWritesRestConfiguration()
     {
         $details = $this->getCreationPayload();
+        $details->exchangeArray(array(
+            'entity_class'     => 'BarConf\Rest\Foo\FooEntity',
+            'collection_class' => 'BarConf\Rest\Foo\FooCollection',
+        ));
         $this->codeRest->createRestConfig($details, 'BarConf\Rest\Foo\Controller', 'BarConf\Rest\Foo\FooResource', 'bar-conf.rest.foo');
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
 
@@ -223,6 +227,8 @@ class RestServiceModelTest extends TestCase
             'collection_query_whitelist' => $details->collectionQueryWhitelist,
             'page_size'                  => $details->pageSize,
             'page_size_param'            => $details->pageSizeParam,
+            'entity_class'               => $details->entityClass,
+            'collection_class'           => $details->collectionClass,
         );
         $this->assertEquals($expected, $config);
     }
