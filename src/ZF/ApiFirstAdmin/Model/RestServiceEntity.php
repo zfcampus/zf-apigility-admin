@@ -51,7 +51,7 @@ class RestServiceEntity
                 $name
             ));
         }
-        if (!isset($this->{$name})) {
+        if (!property_exists($this, $name)) {
             throw new \OutOfRangeException(sprintf(
                 '%s does not contain a property by the name of "%s"',
                 __CLASS__,

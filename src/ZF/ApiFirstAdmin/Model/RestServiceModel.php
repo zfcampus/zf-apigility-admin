@@ -211,18 +211,16 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function createService(NewRestServiceEntity $details)
     {
-        $resourceName      = ucfirst($details->resourceName);
+        $resourceName = ucfirst($details->resourceName);
+        $metadata     = new RestServiceEntity();
+        $metadata->exchangeArray($details->getArrayCopy());
+
         $controllerService = $this->createControllerServiceName($resourceName);
         $resourceClass     = $this->createResourceClass($resourceName);
         $entityClass       = $this->createEntityClass($resourceName);
         $collectionClass   = $this->createCollectionClass($resourceName);
         $routeName         = $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
-        $this->createRestConfig($details, $controllerService, $resourceClass, $routeName);
-        $this->createContentNegotiationConfig($details, $controllerService);
-        $this->createHalConfig($details, $entityClass, $collectionClass, $routeName);
 
-        $metadata = new RestServiceEntity();
-        $metadata->exchangeArray($details->getArrayCopy());
         $metadata->exchangeArray(array(
             'collection_class'        => $collectionClass,
             'controller_service_name' => $controllerService,
@@ -231,6 +229,10 @@ class RestServiceModel implements EventManagerAwareInterface
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
         ));
+
+        $this->createRestConfig($metadata, $controllerService, $resourceClass, $routeName);
+        $this->createContentNegotiationConfig($metadata, $controllerService);
+        $this->createHalConfig($metadata, $entityClass, $collectionClass, $routeName);
 
         return $metadata;
     }
@@ -470,6 +472,8 @@ class RestServiceModel implements EventManagerAwareInterface
                 'collection_query_whitelist' => $details->collectionQueryWhitelist,
                 'page_size'                  => $details->pageSize,
                 'page_size_param'            => $details->pageSizeParam,
+                'entity_class'               => $details->entityClass,
+                'collection_class'           => $details->collectionClass,
             ),
         ));
         $this->configResource->patch($config, true);
@@ -828,7 +832,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $config = $config['zf-hal']['metadata_map'];
 
-        $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata);
+        $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata, $config);
         $collectionClass = $this->deriveCollectionClass($controllerServiceName, $metadata);
         $merge           = array();
 
@@ -848,10 +852,18 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $controllerServiceName
      * @param  RestServiceEntity $metadata
+     * @param  array $config
      * @return string
      */
-    protected function deriveEntityClass($controllerServiceName, RestServiceEntity $metadata)
+    protected function deriveEntityClass($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
+        if (isset($config['zf-rest'])
+            && isset($config['zf-rest'][$controllerServiceName])
+            && isset($config['zf-rest'][$controllerServiceName]['entity_class'])
+        ) {
+            return $config['zf-rest'][$controllerServiceName]['entity_class'];
+        }
+
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
         if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
             return null;
@@ -864,10 +876,18 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $controllerServiceName
      * @param  RestServiceEntity $metadata
+     * @param  array $config
      * @return string
      */
-    protected function deriveCollectionClass($controllerServiceName, RestServiceEntity $metadata)
+    protected function deriveCollectionClass($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
+        if (isset($config['zf-rest'])
+            && isset($config['zf-rest'][$controllerServiceName])
+            && isset($config['zf-rest'][$controllerServiceName]['collection_class'])
+        ) {
+            return $config['zf-rest'][$controllerServiceName]['collection_class'];
+        }
+
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
         if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
             return null;
