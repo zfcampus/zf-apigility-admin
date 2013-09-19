@@ -123,9 +123,10 @@ class DbConnectedRestServiceModel
 
         $config = array('zf-api-first' => array('db-connected' => array(
             $entity->resourceClass => array(
-                'adapter_name'  => $entity->adapterName,
-                'table_name'    => $entity->tableName,
-                'hydrator_name' => $entity->hydratorName,
+                'adapter_name'            => $entity->adapterName,
+                'table_name'              => $entity->tableName,
+                'hydrator_name'           => $entity->hydratorName,
+                'controller_service_name' => $entity->controllerServiceName,
             ),
         )));
         $this->restModel->configResource->patch($config, true);
