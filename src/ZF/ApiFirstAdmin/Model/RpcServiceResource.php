@@ -8,10 +8,10 @@ use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
 
-class RpcEndpointResource extends AbstractResourceListener
+class RpcServiceResource extends AbstractResourceListener
 {
     /**
-     * @var RpcEndpointModel
+     * @var RpcServiceModel
      */
     protected $model;
 
@@ -21,14 +21,14 @@ class RpcEndpointResource extends AbstractResourceListener
     protected $moduleName;
 
     /**
-     * @var RpcEndpointModelFactory
+     * @var RpcServiceModelFactory
      */
     protected $rpcFactory;
 
     /**
-     * @param  RpcEndpointModelFactory $rpcFactory
+     * @param  RpcServiceModelFactory $rpcFactory
      */
-    public function __construct(RpcEndpointModelFactory $rpcFactory)
+    public function __construct(RpcServiceModelFactory $rpcFactory)
     {
         $this->rpcFactory = $rpcFactory;
     }
@@ -55,11 +55,11 @@ class RpcEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * @return RpcEndpointModel
+     * @return RpcServiceModel
      */
     public function getModel()
     {
-        if ($this->model instanceof RpcEndpointModel) {
+        if ($this->model instanceof RpcServiceModel) {
             return $this->model;
         }
         $moduleName = $this->getModuleName();
@@ -68,10 +68,10 @@ class RpcEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * Create a new RPC endpoint
+     * Create a new RPC service
      *
      * @param  array|object $data
-     * @return RpcEndpointEntity
+     * @return RpcServiceEntity
      * @throws CreationException
      */
     public function create($data)
@@ -89,7 +89,7 @@ class RpcEndpointResource extends AbstractResourceListener
             || !is_string($data['service_name'])
             || empty($data['service_name'])
         ) {
-            throw new CreationException('Unable to create RPC endpoint; missing service_name');
+            throw new CreationException('Unable to create RPC service; missing service_name');
         }
         $creationData['service_name'] = $data['service_name'];
 
@@ -102,7 +102,7 @@ class RpcEndpointResource extends AbstractResourceListener
             || !is_string($data['route'])
             || empty($data['route'])
         ) {
-            throw new CreationException('Unable to create RPC endpoint; missing route');
+            throw new CreationException('Unable to create RPC service; missing route');
         }
         $creationData['route'] = $data['route'];
 
@@ -121,39 +121,39 @@ class RpcEndpointResource extends AbstractResourceListener
         }
 
         try {
-            $endpoint = $model->createService(
+            $service = $model->createService(
                 $creationData['service_name'],
                 $creationData['route'],
                 $creationData['http_methods'],
                 $creationData['selector']
             );
         } catch (\Exception $e) {
-            throw new CreationException('Unable to create RPC endpoint', $e->getCode(), $e);
+            throw new CreationException('Unable to create RPC service', $e->getCode(), $e);
         }
 
-        return $endpoint;
+        return $service;
     }
 
     /**
      * Fetch RPC metadata
      *
      * @param  string $id
-     * @return RpcEndpointEntity|ApiProblem
+     * @return RpcServiceEntity|ApiProblem
      */
     public function fetch($id)
     {
-        $endpoint = $this->getModel()->fetch($id);
-        if (!$endpoint instanceof RpcEndpointEntity) {
-            return new ApiProblem(404, 'RPC endpoint not found');
+        $service = $this->getModel()->fetch($id);
+        if (!$service instanceof RpcServiceEntity) {
+            return new ApiProblem(404, 'RPC service not found');
         }
-        return $endpoint;
+        return $service;
     }
 
     /**
-     * Fetch metadata for all RPC endpoints
+     * Fetch metadata for all RPC services
      *
      * @param  array $params
-     * @return RpcEndpointEntity[]
+     * @return RpcServiceEntity[]
      */
     public function fetchAll($params = array())
     {
@@ -161,11 +161,11 @@ class RpcEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * Update an existing RPC endpoint
+     * Update an existing RPC service
      *
      * @param  string $id
      * @param  object|array $data
-     * @return ApiProblem|RpcEndpointEntity
+     * @return ApiProblem|RpcServiceEntity
      * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)
@@ -207,7 +207,7 @@ class RpcEndpointResource extends AbstractResourceListener
                         break;
                 }
             } catch (\Exception $e) {
-                throw new PatchException('Error updating RPC endpoint', 500, $e);
+                throw new PatchException('Error updating RPC service', 500, $e);
             }
         }
 

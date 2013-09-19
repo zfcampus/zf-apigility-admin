@@ -4,7 +4,7 @@ namespace ZF\ApiFirstAdmin\Model;
 
 use ZF\Rest\Exception\CreationException;
 
-class NewRestEndpointEntity extends RestEndpointEntity
+class NewRestServiceEntity extends RestServiceEntity
 {
     protected $resourceName;
 
