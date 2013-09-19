@@ -160,6 +160,22 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->assertEquals($result->collectionClass, $restConfig['collection_class']);
     }
 
+    public function testCreateServiceWritesHalConfigurationWithHydrator()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $result         = $this->model->createService($originalEntity);
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+
+        $this->assertArrayHasKey('zf-hal', $config);
+        $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
+        $this->assertArrayHasKey($result->entityClass, $config['zf-hal']['metadata_map']);
+
+        $halConfig = $config['zf-hal']['metadata_map'][$result->entityClass];
+        $this->assertArrayHasKey('hydrator', $halConfig);
+
+        $this->assertEquals($result->hydratorName, $halConfig['hydrator']);
+    }
+
     public function testCreateServiceDoesNotCreateResourceClass()
     {
         $originalEntity = $this->getCreationPayload();

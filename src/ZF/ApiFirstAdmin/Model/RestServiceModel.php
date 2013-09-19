@@ -526,6 +526,9 @@ class RestServiceModel implements EventManagerAwareInterface
                 'is_collection'   => true,
             ),
         )));
+        if (isset($details->hydratorName)) {
+            $config['zf-hal']['metadata_map'][$entityClass]['hydrator'] = $details->hydratorName;
+        }
         $this->configResource->patch($config, true);
     }
 

@@ -61,6 +61,14 @@ class RestServiceEntity
         return $this->{$name};
     }
 
+    public function __isset($name)
+    {
+        if ($name === 'filter') {
+            return false;
+        }
+        return (property_exists($this, $name));
+    }
+
     public function exchangeArray(array $data)
     {
         foreach ($data as $key => $value) {
