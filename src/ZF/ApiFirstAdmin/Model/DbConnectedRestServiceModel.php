@@ -65,9 +65,6 @@ class DbConnectedRestServiceModel
         $entityClass       = $restModel->createEntityClass($resourceName, 'entity-db-connected');
         $collectionClass   = $restModel->createCollectionClass($resourceName);
         $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->identifierName, $controllerService);
-        $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);
-        $restModel->createContentNegotiationConfig($entity, $controllerService);
-        $restModel->createHalConfig($entity, $entityClass, $collectionClass, $routeName);
 
         $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
@@ -77,6 +74,10 @@ class DbConnectedRestServiceModel
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
         ));
+
+        $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);
+        $restModel->createContentNegotiationConfig($entity, $controllerService);
+        $restModel->createHalConfig($entity, $entityClass, $collectionClass, $routeName);
 
         $this->createDbConnectedConfig($entity);
 
