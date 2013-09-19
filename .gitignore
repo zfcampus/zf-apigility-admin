@@ -1,2 +1,2 @@
 composer.lock
-test/ZFTest/ApigilityAdmin/Model/TestAsset/module/BarConf/config/module.config.php
+test/ZFTest/Apigility\Admin/Model/TestAsset/module/BarConf/config/module.config.php
