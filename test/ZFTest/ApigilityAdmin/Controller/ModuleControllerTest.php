@@ -1,0 +1,113 @@
+<?php
+/**
+ * @license   http://opensource.org/licenses/BSD-2-Clause BSD-2-Clause
+ */
+
+namespace ZFTest\ApigilityAdmin\Controller;
+
+use PHPUnit_Framework_TestCase as TestCase;
+use Zend\Http\Request;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Controller\PluginManager;
+use Zend\Mvc\MvcEvent;
+use ZF\ApigilityAdmin\Controller\ModuleCreationController;
+use ZF\ApigilityAdmin\Model\ModuleModel;
+use ZF\ContentNegotiation\ParameterDataContainer;
+
+class ModuleCreationControllerTest extends TestCase
+{
+    public function setUp()
+    {
+        $this->moduleManager  = new ModuleManager(array());
+        $this->moduleResource = new ModuleModel($this->moduleManager, array(), array());
+        $this->controller     = new ModuleCreationController($this->moduleResource);
+    }
+
+    public function invalidRequestMethods()
+    {
+        return array(
+            array('get'),
+            array('patch'),
+            array('post'),
+            array('delete'),
+        );
+    }
+
+    /**
+     * @dataProvider invalidRequestMethods
+     */
+    public function testProcessWithInvalidRequestMethodReturnsApiProblemModel($method)
+    {
+        $request = new Request();
+        $request->setMethod($method);
+        $this->controller->setRequest($request);
+        $result = $this->controller->apiEnableAction();
+        $this->assertInstanceOf('ZF\ApiProblem\View\ApiProblemModel', $result);
+        $apiProblem = $result->getApiProblem();
+        $this->assertEquals(405, $apiProblem->http_status);
+    }
+
+    public function testProcessPutRequest()
+    {
+        $currentDir = getcwd();
+        $tmpDir     = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+
+        mkdir($tmpDir);
+        mkdir("$tmpDir/module/Foo", 0777, true);
+        mkdir("$tmpDir/config");
+        file_put_contents("$tmpDir/config/application.config.php", '<' . '?php return array(\'modules\'=>array(\'Foo\'));');
+        file_put_contents("$tmpDir/module/Foo/Module.php", "<" . "?php\n\nnamespace Foo;\n\nclass Module\n{\n}");
+        chdir($tmpDir);
+
+        require 'module/Foo/Module.php';
+
+        $moduleManager  = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+                               ->disableOriginalConstructor()
+                               ->getMock();
+        $moduleManager->expects($this->any())
+                      ->method('getLoadedModules')
+                      ->will($this->returnValue(array('Foo' => new \Foo\Module)));
+
+        $moduleResource = new ModuleModel($moduleManager, array(), array());
+        $controller     = new ModuleCreationController($moduleResource);
+
+        $request = new Request();
+        $request->setMethod('put');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+
+        $parameters = new ParameterDataContainer();
+        $parameters->setBodyParam('module', 'Foo');
+        $event = new MvcEvent();
+        $event->setParam('ZFContentNegotiationParameterData', $parameters);
+
+        $plugins = new PluginManager();
+        $plugins->setInvokableClass('bodyParam', 'ZF\ContentNegotiation\ControllerPlugin\BodyParam');
+
+        $controller->setRequest($request);
+        $controller->setEvent($event);
+        $controller->setPluginManager($plugins);
+
+        $result = $controller->apiEnableAction();
+
+        $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
+        $payload = $result->getVariable('payload');
+        $this->assertInstanceOf('ZF\Hal\Resource', $payload);
+        $this->assertInstanceOf('ZF\ApigilityAdmin\Model\ModuleEntity', $payload->resource);
+
+        $metadata = $payload->resource;
+        $this->assertEquals('Foo', $metadata->getName());
+
+        $this->removeDir($tmpDir);
+        chdir($currentDir);
+    }
+
+    protected function removeDir($dir)
+    {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
+}
