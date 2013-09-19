@@ -136,9 +136,11 @@ class DbConnectedRestServiceModelTest extends TestCase
         $resourceConfig = $config['zf-api-first']['db-connected'][$result->resourceClass];
         $this->assertArrayHasKey('table_name', $resourceConfig);
         $this->assertArrayHasKey('hydrator_name', $resourceConfig);
+        $this->assertArrayHasKey('controller_service_name', $resourceConfig);
 
         $this->assertEquals('barbaz', $resourceConfig['table_name']);
         $this->assertEquals($result->hydratorName, $resourceConfig['hydrator_name']);
+        $this->assertEquals($result->controllerServiceName, $resourceConfig['controller_service_name']);
     }
 
     public function testCreateServiceDoesNotCreateResourceClass()
