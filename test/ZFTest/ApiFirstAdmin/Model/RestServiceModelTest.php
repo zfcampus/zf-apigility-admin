@@ -327,7 +327,7 @@ class RestServiceModelTest extends TestCase
         $routeConfig = $config['router']['routes'][$original->routeName];
         $this->assertArrayHasKey('options', $routeConfig);
         $this->assertArrayHasKey('route', $routeConfig['options']);
-        $this->assertEquals('/api/bar/foo[/:foo_id]', $routeConfig['options']['route']);
+        $this->assertEquals('/api/bar/foo', $routeConfig['options']['route']);
     }
 
     public function testCanUpdateRestConfigForExistingService()
