@@ -345,9 +345,10 @@ class RestServiceModel implements EventManagerAwareInterface
      * Create an entity class for the resource
      *
      * @param  string $resourceName
+     * @param  string $template Which template to use; defaults to 'entity'
      * @return string The name of the newly created entity class
      */
-    public function createEntityClass($resourceName)
+    public function createEntityClass($resourceName, $template = 'entity')
     {
         $module     = $this->module;
         $srcPath    = $this->getSourcePath($resourceName);
@@ -367,7 +368,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'resource'  => $resourceName,
             'classname' => $className,
         ));
-        if (!$this->createClassFile($view, 'entity', $classPath)) {
+        if (!$this->createClassFile($view, $template, $classPath)) {
             throw new Exception\RuntimeException(sprintf(
                 'Unable to create entity "%s"; unable to write file',
                 $className

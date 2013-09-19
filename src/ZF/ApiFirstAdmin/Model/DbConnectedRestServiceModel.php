@@ -62,7 +62,7 @@ class DbConnectedRestServiceModel
         $resourceName      = ucfirst($entity->tableName);
         $resourceClass     = sprintf('%s\\Rest\\%s\\%sResource', $this->restModel->module, $resourceName, $resourceName);
         $controllerService = $restModel->createControllerServiceName($resourceName);
-        $entityClass       = $restModel->createEntityClass($resourceName);
+        $entityClass       = $restModel->createEntityClass($resourceName, 'entity-db-connected');
         $collectionClass   = $restModel->createCollectionClass($resourceName);
         $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->identifierName, $controllerService);
         $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);

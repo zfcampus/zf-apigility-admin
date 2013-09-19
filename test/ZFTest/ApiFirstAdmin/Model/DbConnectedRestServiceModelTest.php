@@ -82,8 +82,8 @@ class DbConnectedRestServiceModelTest extends TestCase
     {
         $payload = new DbConnectedRestServiceEntity();
         $payload->exchangeArray(array(
-            'adapter_name'               => 'DB\Foo',
-            'table_name'                 => 'foo',
+            'adapter_name'               => 'DB\Barbaz',
+            'table_name'                 => 'barbaz',
             'hydrator_name'              => 'ObjectProperty',
             'resource_http_methods'      => array('GET', 'PATCH'),
             'collection_http_methods'    => array('GET', 'POST'),
@@ -103,13 +103,24 @@ class DbConnectedRestServiceModelTest extends TestCase
         $result         = $this->model->createService($originalEntity);
         $this->assertSame($originalEntity, $result);
 
-        $this->assertEquals('BarConf\Rest\Foo\Controller', $result->controllerServiceName);
-        $this->assertEquals('BarConf\Rest\Foo\FooResource', $result->resourceClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $result->entityClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $result->collectionClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooResource\Table', $result->tableService);
-        $this->assertEquals('foo', $result->tableName);
-        $this->assertEquals('bar-conf.rest.foo', $result->routeName);
+        $this->assertEquals('BarConf\Rest\Barbaz\Controller', $result->controllerServiceName);
+        $this->assertEquals('BarConf\Rest\Barbaz\BarbazResource', $result->resourceClass);
+        $this->assertEquals('BarConf\Rest\Barbaz\BarbazEntity', $result->entityClass);
+        $this->assertEquals('BarConf\Rest\Barbaz\BarbazCollection', $result->collectionClass);
+        $this->assertEquals('BarConf\Rest\Barbaz\BarbazResource\Table', $result->tableService);
+        $this->assertEquals('barbaz', $result->tableName);
+        $this->assertEquals('bar-conf.rest.barbaz', $result->routeName);
+    }
+
+    public function testEntityCreatedViaCreateServiceIsAnArrayObjectExtension()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $result         = $this->model->createService($originalEntity);
+        include __DIR__ . '/TestAsset/module/BarConf/src/BarConf/Rest/Barbaz/BarbazEntity.php';
+        $r = new ReflectionClass('BarConf\Rest\Barbaz\BarbazEntity');
+        $parent = $r->getParentClass();
+        $this->assertInstanceOf('ReflectionClass', $parent);
+        $this->assertEquals('ArrayObject', $parent->getName());
     }
 
     public function testCreateServiceWritesDbConnectedConfigurationUsingResourceClassAsKey()
@@ -126,7 +137,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->assertArrayHasKey('table_name', $resourceConfig);
         $this->assertArrayHasKey('hydrator_name', $resourceConfig);
 
-        $this->assertEquals('foo', $resourceConfig['table_name']);
+        $this->assertEquals('barbaz', $resourceConfig['table_name']);
         $this->assertEquals($result->hydratorName, $resourceConfig['hydrator_name']);
     }
 
@@ -134,24 +145,24 @@ class DbConnectedRestServiceModelTest extends TestCase
     {
         $originalEntity = $this->getCreationPayload();
         $result         = $this->model->createService($originalEntity);
-        $this->assertFalse(file_exists(__DIR__ . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/FooResource.php'));
+        $this->assertFalse(file_exists(__DIR__ . '/TestAsset/module/BarConf/src/BarConf/Rest/Barbaz/BarbazResource.php'));
     }
 
     public function testOnFetchWillRecastEntityToDbConnectedIfDbConnectedConfigurationExists()
     {
         $originalData = array(
-            'controller_service_name' => 'BarConf\Rest\Foo\Controller',
-            'resource_class'          => 'BarConf\Rest\Foo\FooResource',
-            'route_name'              => 'bar-conf.rest.foo',
-            'route_match'             => '/api/foo',
-            'entity_class'            => 'BarConf\Rest\Foo\FooEntity',
+            'controller_service_name' => 'BarConf\Rest\Barbaz\Controller',
+            'resource_class'          => 'BarConf\Rest\Barbaz\BarbazResource',
+            'route_name'              => 'bar-conf.rest.barbaz',
+            'route_match'             => '/api/barbaz',
+            'entity_class'            => 'BarConf\Rest\Barbaz\BarbazEntity',
         );
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
         $config = array( 'zf-api-first' => array('db-connected' => array(
-            'BarConf\Rest\Foo\FooResource' => array(
-                'adapter_name'  => 'Db\Foo',
-                'table_name'    => 'foo',
+            'BarConf\Rest\Barbaz\BarbazResource' => array(
+                'adapter_name'  => 'Db\Barbaz',
+                'table_name'    => 'barbaz',
                 'hydrator_name' => 'ObjectProperty',
             ),
         )));
@@ -166,7 +177,7 @@ class DbConnectedRestServiceModelTest extends TestCase
             $this->assertArrayHasKey($key, $asArray);
             $this->assertEquals($value, $asArray[$key], sprintf("Failed testing key '%s'\nEntity is: %s\n", $key, var_export($asArray, 1)));
         }
-        foreach ($config['zf-api-first']['db-connected']['BarConf\Rest\Foo\FooResource'] as $key => $value) {
+        foreach ($config['zf-api-first']['db-connected']['BarConf\Rest\Barbaz\BarbazResource'] as $key => $value) {
             $this->assertArrayHasKey($key, $asArray);
             $this->assertEquals($value, $asArray[$key]);
         }
@@ -220,7 +231,7 @@ class DbConnectedRestServiceModelTest extends TestCase
 
         $this->assertEquals($newProps['adapter_name'], $resourceConfig['adapter_name']);
         $this->assertEquals($newProps['table_service'], $resourceConfig['table_service']);
-        $this->assertEquals('foo', $resourceConfig['table_name']);
+        $this->assertEquals('barbaz', $resourceConfig['table_name']);
         $this->assertEquals($newProps['hydrator_name'], $resourceConfig['hydrator_name']);
     }
 
