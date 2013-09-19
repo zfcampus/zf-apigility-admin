@@ -833,7 +833,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $config = $config['zf-hal']['metadata_map'];
 
         $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata, $config);
-        $collectionClass = $this->deriveCollectionClass($controllerServiceName, $metadata);
+        $collectionClass = $this->deriveCollectionClass($controllerServiceName, $metadata, $config);
         $merge           = array();
 
         if (isset($config[$entityClass])) {
