@@ -143,6 +143,23 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->assertEquals($result->controllerServiceName, $resourceConfig['controller_service_name']);
     }
 
+    public function testCreateServiceWritesRestConfigurationWithEntityAndCollectionClass()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $result         = $this->model->createService($originalEntity);
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+
+        $this->assertArrayHasKey('zf-rest', $config);
+        $this->assertArrayHasKey($result->controllerServiceName, $config['zf-rest']);
+
+        $restConfig = $config['zf-rest'][$result->controllerServiceName];
+        $this->assertArrayHasKey('entity_class', $restConfig);
+        $this->assertArrayHasKey('collection_class', $restConfig);
+
+        $this->assertEquals($result->entityClass, $restConfig['entity_class']);
+        $this->assertEquals($result->collectionClass, $restConfig['collection_class']);
+    }
+
     public function testCreateServiceDoesNotCreateResourceClass()
     {
         $originalEntity = $this->getCreationPayload();
