@@ -1,7 +1,7 @@
 ZF API-1st Admin
 ================
 
-This module provides the admin interface and API endpoints for the ZF API-1st
+This module provides the admin interface and API service for the ZF API-1st
 project.
 
 API Resources
@@ -123,15 +123,15 @@ respectively.
         "on individual resources"
     ],
     "route_match": "(Optional) String indicating Segment route to match; defaults to /resource_name[/:identifier_name]",
-    "route_name": "(Only in representation) Name of route associated with endpoint",
+    "route_name": "(Only in representation) Name of route associated with api service",
     "selector": "(Optional) Content-Negotiation selector to use; HalJson by default",
     "table_name": "(Only in DB-Connected resources) Name of database table used for this resource",
     "table_service": "(Only in DB-Connected resources) Name of TableGateway service used for this resource"
 }
 ```
 
-API endpoints
--------------
+API services
+------------
 
 ### `/admin/api/config`
 

@@ -80,19 +80,19 @@ class ModuleModelTest extends TestCase
     /**
      * @dataProvider invalidModules
      */
-    public function testNullIsReturnedWhenGettingEndpointsForNonApiFirstModules($module)
+    public function testNullIsReturnedWhenGettingServicesForNonApiFirstModules($module)
     {
         $this->assertNull($this->model->getModule($module));
     }
 
-    public function testEmptyArraysAreReturnedWhenGettingEndpointsForApiFirstModulesWithNoEndpoints()
+    public function testEmptyArraysAreReturnedWhenGettingServicesForApiFirstModulesWithNoServices()
     {
         $module = $this->model->getModule('ZFTest\ApiFirstAdmin\Model\TestAsset\Baz');
-        $this->assertEquals(array(), $module->getRestEndpoints());
-        $this->assertEquals(array(), $module->getRpcEndpoints());
+        $this->assertEquals(array(), $module->getRestServices());
+        $this->assertEquals(array(), $module->getRpcServices());
     }
 
-    public function testRestAndRpcControllersAreDiscoveredWhenGettingEndpointsForApiFirstModules()
+    public function testRestAndRpcControllersAreDiscoveredWhenGettingServicesForApiFirstModules()
     {
         $expected = array(
             'rest' => array(
@@ -105,11 +105,11 @@ class ModuleModelTest extends TestCase
             ),
         );
         $module = $this->model->getModule('ZFTest\ApiFirstAdmin\Model\TestAsset\Bar');
-        $this->assertEquals($expected['rest'], $module->getRestEndpoints());
-        $this->assertEquals($expected['rpc'], $module->getRpcEndpoints());
+        $this->assertEquals($expected['rest'], $module->getRestServices());
+        $this->assertEquals($expected['rpc'], $module->getRpcServices());
     }
 
-    public function testCanRetrieveListOfAllApiFirstModulesAndTheirEndpoints()
+    public function testCanRetrieveListOfAllApiFirstModulesAndTheirServices()
     {
         $expected = array(
             'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar' => array(
@@ -147,8 +147,8 @@ class ModuleModelTest extends TestCase
             $this->assertNotContains($name, $unique);
             $expectedMetadata = $expected[$name];
             $this->assertSame($expectedMetadata['vendor'], $module->isVendor());
-            $this->assertSame($expectedMetadata['rest'], $module->getRestEndpoints());
-            $this->assertSame($expectedMetadata['rpc'], $module->getRpcEndpoints());
+            $this->assertSame($expectedMetadata['rest'], $module->getRestServices());
+            $this->assertSame($expectedMetadata['rpc'], $module->getRpcServices());
             $unique[] = $name;
         }
     }

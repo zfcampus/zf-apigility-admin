@@ -6,7 +6,7 @@ use Zend\EventManager\SharedEventManagerInterface;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
-class RpcEndpointModelFactory
+class RpcServiceModelFactory
 {
     /**
      * @var ConfigResourceFactory
@@ -43,7 +43,7 @@ class RpcEndpointModelFactory
 
     /**
      * @param  string $module
-     * @return RpcEndpointModel
+     * @return RpcServiceModel
      */
     public function factory($module)
     {
@@ -52,7 +52,7 @@ class RpcEndpointModelFactory
         }
 
         $config = $this->configFactory->factory($module);
-        $this->models[$module] = new RpcEndpointModel($this->normalizeModuleName($module), $this->modules, $config);
+        $this->models[$module] = new RpcServiceModel($this->normalizeModuleName($module), $this->modules, $config);
 
         return $this->models[$module];
     }

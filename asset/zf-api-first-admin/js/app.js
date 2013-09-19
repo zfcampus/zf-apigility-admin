@@ -163,47 +163,47 @@ module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
     }
 }]);
 
-module.directive('apiRestEndpoints', function () {
+module.directive('apiRestServices', function () {
     return {
         restrict: 'E',
-        templateUrl: '/zf-api-first-admin/partials/api/rest-endpoints.html',
+        templateUrl: '/zf-api-first-admin/partials/api/rest-services.html',
         controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
             $scope.resetForm = function () {
-                $scope.showNewRestEndpointForm = false;
-                $scope.restEndpointName = '';
+                $scope.showNewRestServiceForm = false;
+                $scope.restServiceName = '';
                 $scope.dbAdapterName = '';
                 $scope.dbTableName = '';
             };
 
-            $scope.isDbConnected = function (restEndpoint) {
-              if (typeof restEndpoint !== 'object' || restEndpoint === null) {
+            $scope.isDbConnected = function (restService) {
+              if (typeof restService !== 'object' || restService === null) {
                 return false;
               }
-              if ("adapter_name" in restEndpoint || "table_name" in restEndpoint || "table_service" in restEndpoint || "hydrator_name" in restEndpoint) {
+              if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService || "hydrator_name" in restService) {
                 return true;
               }
               return false;
             };
 
-            function updateApiRestEndpoints(force) {
-                $scope.restEndpoints = [];
-                $scope.restEndpointsEditable = [];
-                $scope.api.links['rest'].fetch({force: force}).then(function (restEndpoints) {
+            function updateApiRestServices(force) {
+                $scope.restServices = [];
+                $scope.restServicesEditable = [];
+                $scope.api.links['rest'].fetch({force: force}).then(function (restServices) {
                     // update view
                     $scope.$apply(function() {
-                        $scope.restEndpoints = _.pluck(restEndpoints.embedded.rest, 'props');
+                        $scope.restServices = _.pluck(restServices.embedded.rest, 'props');
 
-                        _($scope.restEndpoints).forEach(function (restEndpoint) {
+                        _($scope.restServices).forEach(function (restService) {
                             _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
                                 var checkify = [];
                                 _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-                                    checkify.push({name: httpMethod, checked: _.contains(restEndpoint[httpItem], httpMethod)});
+                                    checkify.push({name: httpMethod, checked: _.contains(restService[httpItem], httpMethod)});
                                 });
-                                restEndpoint[httpItem] = checkify;
+                                restService[httpItem] = checkify;
 
-                                restEndpoint[httpItem + '_view'] = _.chain(restEndpoint[httpItem])
+                                restService[httpItem + '_view'] = _.chain(restService[httpItem])
                                     .where({checked: true})
                                     .pluck('name')
                                     .valueOf()
@@ -214,81 +214,81 @@ module.directive('apiRestEndpoints', function () {
                     });
                 });
             }
-            updateApiRestEndpoints(false);
+            updateApiRestServices(false);
 
-            $scope.createNewRestEndpoint = function () {
-                ApisResource.createNewRestEndpoint($scope.api.props.name, $scope.restEndpointName).then(function (restResource) {
-                    updateApiRestEndpoints(true);
-                    $scope.showNewRestEndpointForm = false;
-                    $scope.restEndpointName = '';
+            $scope.createNewRestService = function () {
+                ApisResource.createNewRestService($scope.api.props.name, $scope.restServiceName).then(function (restResource) {
+                    updateApiRestServices(true);
+                    $scope.showNewRestServiceForm = false;
+                    $scope.restServiceName = '';
                 });
             };
 
-            $scope.createNewDbConnectedEndpoint = function () {
-                ApisResource.createNewDbConnectedEndpoint($scope.api.props.name, $scope.dbAdapterName, $scope.dbTableName)
+            $scope.createNewDbConnectedService = function () {
+                ApisResource.createNewDbConnectedService($scope.api.props.name, $scope.dbAdapterName, $scope.dbTableName)
                     .then(function (restResource) {
-                        updateApiRestEndpoints(true);
-                        $scope.showNewRestEndpointForm = false;
+                        updateApiRestServices(true);
+                        $scope.showNewRestServiceForm = false;
                         $scope.dbAdapterName = '';
                         $scope.dbTableName = '';
                     });
             };
 
-            $scope.saveRestEndpoint = function (index) {
-                var restEndpointData = _.clone($scope.restEndpoints[index]);
+            $scope.saveRestService = function (index) {
+                var restServiceData = _.clone($scope.restServices[index]);
 
                 _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-                    restEndpointData[httpItem] = _.chain(restEndpointData[httpItem])
+                    restServiceData[httpItem] = _.chain(restServiceData[httpItem])
                     .where({checked: true})
                     .pluck('name')
                     .valueOf();
                 });
 
-                ApisResource.saveRestEndpoint($scope.api.props.name, restEndpointData)
+                ApisResource.saveRestService($scope.api.props.name, restServiceData)
                     .then(function (data) {
-                        updateApiRestEndpoints(true);
+                        updateApiRestServices(true);
                     });
             };
 
-            $scope.removeRestEndpoint = function (restEndpointName) {
-                ApisResource.removeRestEndpoint($scope.api.props.name, restEndpointName)
+            $scope.removeRestService = function (restServiceName) {
+                ApisResource.removeRestService($scope.api.props.name, restServiceName)
                     .then(function (data) {
-                        updateApiRestEndpoints(true);
-                        $scope.deleteRestEndpoint = false;
+                        updateApiRestServices(true);
+                        $scope.deleteRestService = false;
                     });
             };
         }]
     };
 });
 
-module.directive('apiRpcEndpoints', function () {
+module.directive('apiRpcServices', function () {
     return {
         restrict: 'E',
-        templateUrl: '/zf-api-first-admin/partials/api/rpc-endpoints.html',
+        templateUrl: '/zf-api-first-admin/partials/api/rpc-services.html',
         controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
             $scope.resetForm = function () {
-                $scope.showNewRpcEndpointForm = false;
-                $scope.rpcEndpointName = '';
-                $scope.rpcEndpointRoute = '';
+                $scope.showNewRpcServiceForm = false;
+                $scope.rpcServiceName = '';
+                $scope.rpcServiceRoute = '';
             };
 
-            function updateApiRpcEndpoints(force) {
-                $scope.rpcEndpoints = [];
-                $scope.api.links['rpc'].fetch({force: force}).then(function (rpcEndpoints) {
+            function updateApiRpcServices(force) {
+                $scope.rpcServices = [];
+                $scope.api.links['rpc'].fetch({force: force}).then(function (rpcServices) {
                     // update view
                     $scope.$apply(function() {
-                        $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
+                        $scope.rpcServices = _.pluck(rpcServices.embedded.rpc, 'props');
 
-                        _($scope.rpcEndpoints).forEach(function (rpcEndpoint) {
+                        _($scope.rpcServices).forEach(function (rpcService) {
                             var checkify = [];
                             _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-                                checkify.push({name: httpMethod, checked: _.contains(rpcEndpoint.http_methods, httpMethod)});
+                                checkify.push({name: httpMethod, checked: _.contains(rpcService.http_methods, httpMethod)});
                             });
-                            rpcEndpoint.http_methods = checkify;
+                            rpcService.http_methods = checkify;
 
-                            rpcEndpoint.http_methods_view = _.chain(rpcEndpoint.http_methods)
+                            rpcService.http_methods_view = _.chain(rpcService.http_methods)
                                 .where({checked: true})
                                 .pluck('name')
                                 .valueOf()
@@ -297,36 +297,36 @@ module.directive('apiRpcEndpoints', function () {
                     });
                 });
             }
-            updateApiRpcEndpoints(false);
+            updateApiRpcServices(false);
 
-            $scope.createNewRpcEndpoint = function () {
-                ApisResource.createNewRpcEndpoint($scope.api.props.name, $scope.rpcEndpointName, $scope.rpcEndpointRoute).then(function (rpcResource) {
-                    updateApiRpcEndpoints(true);
-                    $scope.addRpcEndpoint = false;
-                    $scope.rpcEndpointName = '';
-                    $scope.rpcEndpointRoute = '';
+            $scope.createNewRpcService = function () {
+                ApisResource.createNewRpcService($scope.api.props.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
+                    updateApiRpcServices(true);
+                    $scope.addRpcService = false;
+                    $scope.rpcServiceName = '';
+                    $scope.rpcServiceRoute = '';
                 });
             };
 
-            $scope.saveRpcEndpoint = function (index) {
-                var rpcEndpointData = _.clone($scope.rpcEndpoints[index]);
+            $scope.saveRpcService = function (index) {
+                var rpcServiceData = _.clone($scope.rpcServices[index]);
 
-                rpcEndpointData.http_methods = _.chain(rpcEndpointData.http_methods)
+                rpcServiceData.http_methods = _.chain(rpcServiceData.http_methods)
                     .where({checked: true})
                     .pluck('name')
                     .valueOf();
 
-                ApisResource.saveRpcEndpoint($scope.api.props.name, rpcEndpointData)
+                ApisResource.saveRpcService($scope.api.props.name, rpcServiceData)
                     .then(function (data) {
-                        updateApiRpcEndpoints(true);
+                        updateApiRpcServices(true);
                     });
             };
 
-            $scope.removeRpcEndpoint = function (rpcEndpointName) {
-                ApisResource.removeRpcEndpoint($scope.api.props.name, rpcEndpointName)
+            $scope.removeRpcService = function (rpcServiceName) {
+                ApisResource.removeRpcService($scope.api.props.name, rpcServiceName)
                     .then(function () {
-                        updateApiRpcEndpoints(true);
-                        $scope.deleteRestEndpoint = false;
+                        updateApiRpcServices(true);
+                        $scope.deleteRestService = false;
                     });
             };
         }]
@@ -350,55 +350,55 @@ module.factory('ApisResource', ['$http', function ($http) {
             });
     };
 
-    resource.createNewRestEndpoint = function (apiName, restEndpointName) {
-        return $http.post('/admin/api/module/' + apiName + '/rest', {resource_name: restEndpointName})
+    resource.createNewRestService = function (apiName, restServiceName) {
+        return $http.post('/admin/api/module/' + apiName + '/rest', {resource_name: restServiceName})
             .then(function (response) {
                 return response.data;
             });
     };
 
-    resource.createNewDbConnectedEndpoint = function(apiName, dbAdapterName, dbTableName) {
+    resource.createNewDbConnectedService = function(apiName, dbAdapterName, dbTableName) {
         return $http.post('/admin/api/module/' + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
             .then(function (response) {
                 return response.data;
             });
     };
 
-    resource.createNewRpcEndpoint = function (apiName, rpcEndpointName, rpcEndpointRoute) {
-        return $http.post('/admin/api/module/' + apiName + '/rpc', {service_name: rpcEndpointName, route: rpcEndpointRoute})
+    resource.createNewRpcService = function (apiName, rpcServiceName, rpcServiceRoute) {
+        return $http.post('/admin/api/module/' + apiName + '/rpc', {service_name: rpcServiceName, route: rpcServiceRoute})
             .then(function (response) {
                 return response.data;
             });
     };
 
 
-    resource.removeRestEndpoint = function (apiName, restEndpointName) {
-        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpointName);
+    resource.removeRestService = function (apiName, restServiceName) {
+        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
         return $http.delete(url)
             .then(function (response) {
                 return response.data;
             });
     };
 
-    resource.saveRestEndpoint = function (apiName, restEndpoint) {
-        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restEndpoint.controller_service_name);
-        return $http({method: 'patch', url: url, data: restEndpoint})
+    resource.saveRestService = function (apiName, restService) {
+        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restService.controller_service_name);
+        return $http({method: 'patch', url: url, data: restService})
             .then(function (response) {
                 return response.data;
             });
     };
 
-    resource.removeRpcEndpoint = function (apiName, rpcEndpointName) {
-        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcEndpointName);
+    resource.removeRpcService = function (apiName, rpcServiceName) {
+        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
         return $http.delete(url)
             .then(function (response) {
                 return response.data;
             });
     };
 
-    resource.saveRpcEndpoint = function (apiName, rpcEndpoint) {
-        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcEndpoint.controller_service_name);
-        return $http({method: 'patch', url: url, data: rpcEndpoint})
+    resource.saveRpcService = function (apiName, rpcService) {
+        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
+        return $http({method: 'patch', url: url, data: rpcService})
             .then(function (response) {
                 return response.data;
             });
