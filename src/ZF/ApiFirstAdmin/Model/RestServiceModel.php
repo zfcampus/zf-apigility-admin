@@ -53,6 +53,8 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $restScalarUpdateOptions = array(
         'pageSize'                 => 'page_size',
         'pageSizeParam'            => 'page_size_param',
+        'entityClass'              => 'entity_class',
+        'collectionClass'          => 'collection_class',
     );
 
     /**

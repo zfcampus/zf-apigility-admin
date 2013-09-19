@@ -92,9 +92,10 @@ class DbConnectedRestServiceModel
      */
     public function updateService(DbConnectedRestServiceEntity $entity)
     {
-        $updatedEntity = $this->restModel->updateService($entity);
-        $updatedProps  = $this->updateDbConnectedConfig($entity);
+        $updatedEntity  = $this->restModel->updateService($entity);
+        $updatedProps   = $this->updateDbConnectedConfig($entity);
         $updatedEntity->exchangeArray($updatedProps);
+        $this->updateHalConfig($entity);
         return $updatedEntity;
     }
 
@@ -150,6 +151,22 @@ class DbConnectedRestServiceModel
         )));
         $this->restModel->configResource->patch($properties, true);
         return $properties['zf-api-first']['db-connected'][$entity->resourceClass];
+    }
+
+    /**
+     * Update the HAL configuration for the service
+     *
+     * @param  RestServiceEntity $original
+     * @param  RestServiceEntity $update
+     */
+    public function updateHalConfig(DbConnectedRestServiceEntity $entity)
+    {
+        $baseKey     = 'zf-hal.metadata_map';
+        $entityClass = $entity->controllerServiceName;
+        if (isset($entity->hydratorName) && $entity->hydratorName) {
+            $key = sprintf('%s.%s.hydrator', $baseKey, $entityClass);
+            $this->restModel->configResource->patchKey($key, $entity->hydratorName);
+        }
     }
 
     /**
