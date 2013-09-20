@@ -16,18 +16,18 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'ZF\ApiFirstAdmin\Controller\App'    => 'ZF\ApiFirstAdmin\Controller\AppController',
+            'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
         ),
     ),
 
     'router' => array(
         'routes' => array(
-            'zf-api-first-admin' => array(
+            'zf-apigility-admin' => array(
                 'type'  => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route' => '/admin',
                     'defaults' => array(
-                        'controller' => 'ZF\ApiFirstAdmin\Controller\App',
+                        'controller' => 'ZF\Apigility\Admin\Controller\App',
                         'action'     => 'app',
                     ),
                 ),
@@ -70,7 +70,7 @@ return array(
                                 'options' => array(
                                     'route' => '/source',
                                     'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Source',
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Source',
                                         'action'     => 'source'
                                     )
                                 )
@@ -80,7 +80,7 @@ return array(
                                 'options' => array(
                                     'route' => '/module.enable',
                                     'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\ModuleCreation',
+                                        'controller' => 'ZF\Apigility\Admin\Controller\ModuleCreation',
                                         'action'     => 'apiEnable',
                                     ),
                                 ),
@@ -90,7 +90,7 @@ return array(
                                 'options' => array(
                                     'route' => '/module[/:name]',
                                     'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\Module',
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Module',
                                     ),
                                 ),
                                 'may_terminate' => true,
@@ -100,7 +100,7 @@ return array(
                                         'options' => array(
                                             'route' => '/rpc[/:controller_service_name]',
                                             'defaults' => array(
-                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RpcService',
+                                                'controller' => 'ZF\Apigility\Admin\Controller\RpcService',
                                             ),
                                         ),
                                     ),
@@ -109,7 +109,7 @@ return array(
                                         'options' => array(
                                             'route' => '/rest[/:controller_service_name]',
                                             'defaults' => array(
-                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RestService',
+                                                'controller' => 'ZF\Apigility\Admin\Controller\RestService',
                                             ),
                                         ),
                                     ),
@@ -120,7 +120,7 @@ return array(
                                 'options' => array(
                                     'route' => '/db-adapter[/:adapter_name]',
                                     'defaults' => array(
-                                        'controller' => 'ZF\ApiFirstAdmin\Controller\DbAdapter',
+                                        'controller' => 'ZF\Apigility\Admin\Controller\DbAdapter',
                                     ),
                                 ),
                             ),
@@ -133,59 +133,58 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
-            'ZF\ApiFirstAdmin\Controller\DbAdapter'      => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\Source'         => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\Module'         => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\RestService'    => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\RpcService'     => 'HalJson',
+            'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
+            'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
+            'ZF\Apigility\Admin\Controller\RpcService'     => 'HalJson',
         ),
         'accept-whitelist' => array(
-            'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
+            'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\Module' => array(
+            'ZF\Apigility\Admin\Controller\Module' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+            'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
             ),
-            'ZF\ApiFirstAdmin\Controller\Source' => array(
+            'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RestService' => array(
+            'ZF\Apigility\Admin\Controller\RestService' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcService' => array(
+            'ZF\Apigility\Admin\Controller\RpcService' => array(
                 'application/json',
                 'application/*+json',
             ),
         ),
         'content-type-whitelist' => array(
-            'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
+            'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\Module' => array(
+            'ZF\Apigility\Admin\Controller\Module' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+            'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\Source' => array(
+            'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RestService' => array(
+            'ZF\Apigility\Admin\Controller\RestService' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcService' => array(
+            'ZF\Apigility\Admin\Controller\RpcService' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -194,66 +193,66 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
-            'ZF\ApiFirstAdmin\Model\DbConnectedRestServiceEntity' => array(
+            'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rest-service',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service',
             ),
-            'ZF\ApiFirstAdmin\Model\DbAdapterEntity' => array(
+            'ZF\Apigility\Admin\Model\DbAdapterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'adapter_name',
-                'route_name'      => 'zf-api-first-admin/api/db-adapter',
+                'route_name'      => 'zf-apigility-admin/api/db-adapter',
             ),
-            'ZF\ApiFirstAdmin\Model\ModuleEntity' => array(
+            'ZF\Apigility\Admin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'name',
-                'route_name'      => 'zf-api-first-admin/api/module',
+                'route_name'      => 'zf-apigility-admin/api/module',
             ),
-            'ZF\ApiFirstAdmin\Model\RestServiceEntity' => array(
+            'ZF\Apigility\Admin\Model\RestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rest-service',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service',
             ),
-            'ZF\ApiFirstAdmin\Model\RpcServiceEntity' => array(
+            'ZF\Apigility\Admin\Model\RpcServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rpc-service',
+                'route_name'      => 'zf-apigility-admin/api/module/rpc-service',
             ),
         ),
     ),
 
     'zf-rest' => array(
-        'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\DbAdapterResource',
-            'route_name'              => 'zf-api-first-admin/api/db-adapter',
+        'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+            'listener'                => 'ZF\Apigility\Admin\Model\DbAdapterResource',
+            'route_name'              => 'zf-apigility-admin/api/db-adapter',
             'identifier_name'         => 'adapter_name',
-            'entity_class'            => 'ZF\ApiFirstAdmin\Model\DbAdapterEntity',
+            'entity_class'            => 'ZF\Apigility\Admin\Model\DbAdapterEntity',
             'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'db_adapter',
         ),
-        'ZF\ApiFirstAdmin\Controller\Module' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\ModuleResource',
-            'route_name'              => 'zf-api-first-admin/api/module',
+        'ZF\Apigility\Admin\Controller\Module' => array(
+            'listener'                => 'ZF\Apigility\Admin\Model\ModuleResource',
+            'route_name'              => 'zf-apigility-admin/api/module',
             'identifier_name'         => 'name',
-            'entity_class'            => 'ZF\ApiFirstAdmin\Model\ModuleEntity',
+            'entity_class'            => 'ZF\Apigility\Admin\Model\ModuleEntity',
             'resource_http_methods'   => array('GET'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'module',
         ),
-        'ZF\ApiFirstAdmin\Controller\RpcService' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\RpcServiceResource',
-            'route_name'              => 'zf-api-first-admin/api/module/rpc-service',
-            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RpcServiceEntity',
+        'ZF\Apigility\Admin\Controller\RpcService' => array(
+            'listener'                => 'ZF\Apigility\Admin\Model\RpcServiceResource',
+            'route_name'              => 'zf-apigility-admin/api/module/rpc-service',
+            'entity_class'            => 'ZF\Apigility\Admin\Model\RpcServiceEntity',
             'identifier_name'         => 'controller_service_name',
             'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'rpc',
         ),
-        'ZF\ApiFirstAdmin\Controller\RestService' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\RestServiceResource',
-            'route_name'              => 'zf-api-first-admin/api/module/rest-service',
-            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RestServiceEntity',
+        'ZF\Apigility\Admin\Controller\RestService' => array(
+            'listener'                => 'ZF\Apigility\Admin\Model\RestServiceResource',
+            'route_name'              => 'zf-apigility-admin/api/module/rest-service',
+            'entity_class'            => 'ZF\Apigility\Admin\Model\RestServiceEntity',
             'identifier_name'         => 'controller_service_name',
             'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
@@ -264,21 +263,21 @@ return array(
     'zf-rpc' => array(
         // Dummy entry; still handled by ControllerManager, but this will force
         // it to show up in the list of RPC services
-        'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
+        'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
-            'route_name'   => 'zf-api-first-admin/api/module-enable',
+            'route_name'   => 'zf-apigility-admin/api/module-enable',
         ),
-        'ZF\ApiFirstAdmin\Controller\Source' => array(
+        'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-api-first-admin/api/source',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),
-            'route_name'   => 'zf-api-first-admin/api/config',
+            'route_name'   => 'zf-apigility-admin/api/config',
         ),
         'ZF\Configuration\ModuleConfigController' => array(
             'http_methods' => array('GET', 'PATCH'),
-            'route_name'   => 'zf-api-first-admin/api/config/module',
+            'route_name'   => 'zf-apigility-admin/api/config/module',
         ),
     ),
 );
