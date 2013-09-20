@@ -162,7 +162,7 @@ class DbConnectedRestServiceModel
     public function updateHalConfig(DbConnectedRestServiceEntity $entity)
     {
         $baseKey     = 'zf-hal.metadata_map';
-        $entityClass = $entity->controllerServiceName;
+        $entityClass = $entity->entityClass;
         if (isset($entity->hydratorName) && $entity->hydratorName) {
             $key = sprintf('%s.%s.hydrator', $baseKey, $entityClass);
             $this->restModel->configResource->patchKey($key, $entity->hydratorName);
