@@ -13,10 +13,10 @@ use ReflectionObject;
 class ModuleModel
 {
     /**
-     * Endpoints for each module
+     * Services for each module
      * @var array
      */
-    protected $endpoints = array();
+    protected $services = array();
 
     /**
      * @var ModuleManager
@@ -222,8 +222,8 @@ EOD;
                 continue;
             }
 
-            $endpoints = $this->getEndpointsByModule($moduleName);
-            $metadata  = new ModuleEntity($moduleName, $endpoints['rest'], $endpoints['rpc']);
+            $services = $this->getServicesByModule($moduleName);
+            $metadata  = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
             $this->modules[$metadata->getName()] = $metadata;
         }
 
@@ -231,7 +231,7 @@ EOD;
     }
 
     /**
-     * Retrieve all endpoints for a given module
+     * Retrieve all services for a given module
      *
      * Returns null if the module is not API-enabled.
      *
@@ -241,13 +241,13 @@ EOD;
      * @param  string $module
      * @return null|array
      */
-    protected function getEndpointsByModule($module)
+    protected function getServicesByModule($module)
     {
-        $endpoints = array(
-            'rest' => $this->discoverEndpointsByModule($module, $this->restConfig),
-            'rpc'  => $this->discoverEndpointsByModule($module, $this->rpcConfig),
+        $services = array(
+            'rest' => $this->discoverServicesByModule($module, $this->restConfig),
+            'rpc'  => $this->discoverServicesByModule($module, $this->rpcConfig),
         );
-        return $endpoints;
+        return $services;
     }
 
     /**
@@ -257,15 +257,15 @@ EOD;
      * @param  array $config
      * @return array
      */
-    protected function discoverEndpointsByModule($module, array $config)
+    protected function discoverServicesByModule($module, array $config)
     {
-        $endpoints = array();
+        $services = array();
         foreach ($config as $controller) {
             if (strpos($controller, $module) === 0) {
-                $endpoints[] = $controller;
+                $services[] = $controller;
             }
         }
-        return $endpoints;
+        return $services;
     }
 
     /**

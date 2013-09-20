@@ -8,10 +8,10 @@ use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
 
-class RestEndpointResource extends AbstractResourceListener
+class RestServiceResource extends AbstractResourceListener
 {
     /**
-     * @var RestEndpointModel
+     * @var RestServiceModel
      */
     protected $model;
 
@@ -21,14 +21,14 @@ class RestEndpointResource extends AbstractResourceListener
     protected $moduleName;
 
     /**
-     * @var RestEndpointModelFactory
+     * @var RestServiceModelFactory
      */
     protected $restFactory;
 
     /**
-     * @param  RestEndpointModelFactory $restFactory
+     * @param  RestServiceModelFactory $restFactory
      */
-    public function __construct(RestEndpointModelFactory $restFactory)
+    public function __construct(RestServiceModelFactory $restFactory)
     {
         $this->restFactory = $restFactory;
     }
@@ -55,11 +55,11 @@ class RestEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * @return RestEndpointModel
+     * @return RestServiceModel
      */
-    public function getModel($type = RestEndpointModelFactory::TYPE_DEFAULT)
+    public function getModel($type = RestServiceModelFactory::TYPE_DEFAULT)
     {
-        if ($this->model instanceof RestEndpointModel) {
+        if ($this->model instanceof RestServiceModel) {
             return $this->model;
         }
         $moduleName = $this->getModuleName();
@@ -68,10 +68,10 @@ class RestEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * Create a new REST endpoint
+     * Create a new REST service
      *
      * @param  array|object $data
-     * @return RestEndpointEntity
+     * @return RestServiceEntity
      * @throws CreationException
      */
     public function create($data)
@@ -80,46 +80,46 @@ class RestEndpointResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        $type = RestEndpointModelFactory::TYPE_DEFAULT;
+        $type = RestServiceModelFactory::TYPE_DEFAULT;
         if (isset($data['table_name'])) {
-            $creationData = new DbConnectedRestEndpointEntity();
-            $type = RestEndpointModelFactory::TYPE_DB_CONNECTED;
+            $creationData = new DbConnectedRestServiceEntity();
+            $type = RestServiceModelFactory::TYPE_DB_CONNECTED;
         } else {
-            $creationData = new NewRestEndpointEntity();
+            $creationData = new NewRestServiceEntity();
         }
 
         $creationData->exchangeArray($data);
         $model = $this->getModel($type);
 
         try {
-            $endpoint = $model->createService($creationData);
+            $service = $model->createService($creationData);
         } catch (\Exception $e) {
-            throw new CreationException('Unable to create REST endpoint', $e->getCode(), $e);
+            throw new CreationException('Unable to create REST service', $e->getCode(), $e);
         }
 
-        return $endpoint;
+        return $service;
     }
 
     /**
      * Fetch REST metadata
      *
      * @param  string $id
-     * @return RestEndpointEntity|ApiProblem
+     * @return RestServiceEntity|ApiProblem
      */
     public function fetch($id)
     {
-        $endpoint = $this->getModel()->fetch($id);
-        if (!$endpoint instanceof RestEndpointEntity) {
-            return new ApiProblem(404, 'REST endpoint not found');
+        $service = $this->getModel()->fetch($id);
+        if (!$service instanceof RestServiceEntity) {
+            return new ApiProblem(404, 'REST service not found');
         }
-        return $endpoint;
+        return $service;
     }
 
     /**
-     * Fetch metadata for all REST endpoints
+     * Fetch metadata for all REST services
      *
      * @param  array $params
-     * @return RestEndpointEntity[]
+     * @return RestServiceEntity[]
      */
     public function fetchAll($params = array())
     {
@@ -127,11 +127,11 @@ class RestEndpointResource extends AbstractResourceListener
     }
 
     /**
-     * Update an existing REST endpoint
+     * Update an existing REST service
      *
      * @param  string $id
      * @param  object|array $data
-     * @return ApiProblem|RestEndpointEntity
+     * @return ApiProblem|RestServiceEntity
      * @throws PatchException if unable to update configuration
      */
     public function patch($id, $data)
@@ -156,23 +156,23 @@ class RestEndpointResource extends AbstractResourceListener
 
         try {
             switch (true) {
-                case ($entity instanceof DbConnectedRestEndpointEntity):
-                    $model   = $this->restFactory->factory($this->getModuleName(), RestEndpointModelFactory::TYPE_DB_CONNECTED);
+                case ($entity instanceof DbConnectedRestServiceEntity):
+                    $model   = $this->restFactory->factory($this->getModuleName(), RestServiceModelFactory::TYPE_DB_CONNECTED);
                     $updated = $model->updateService($entity);
                     break;
-                case ($entity instanceof RestEndpointEntity):
+                case ($entity instanceof RestServiceEntity):
                 default:
                     $updated = $model->updateService($entity);
             }
         } catch (\Exception $e) {
-            throw new PatchException('Error updating REST endpoint', 500, $e);
+            throw new PatchException('Error updating REST service', 500, $e);
         }
 
         return $updated;
     }
 
     /**
-     * Delete an endpoint
+     * Delete a service
      *
      * @param  string $id
      * @return true
@@ -185,16 +185,16 @@ class RestEndpointResource extends AbstractResourceListener
 
         try {
             switch (true) {
-                case ($entity instanceof DbConnectedRestEndpointEntity):
-                    $model   = $this->restFactory->factory($this->getModuleName(), RestEndpointModelFactory::TYPE_DB_CONNECTED);
+                case ($entity instanceof DbConnectedRestServiceEntity):
+                    $model   = $this->restFactory->factory($this->getModuleName(), RestServiceModelFactory::TYPE_DB_CONNECTED);
                     $model->deleteService($entity);
                     break;
-                case ($entity instanceof RestEndpointEntity):
+                case ($entity instanceof RestServiceEntity):
                 default:
                     $model->deleteService($entity->controllerServiceName);
             }
         } catch (\Exception $e) {
-            throw new \Exception('Error deleting REST endpoint', 500, $e);
+            throw new \Exception('Error deleting REST service', 500, $e);
         }
 
         return true;

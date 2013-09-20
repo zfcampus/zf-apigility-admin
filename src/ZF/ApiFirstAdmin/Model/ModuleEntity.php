@@ -25,21 +25,21 @@ class ModuleEntity
     /**
      * @var array
      */
-    protected $restEndpoints;
+    protected $restServices;
 
     /**
      * @var array
      */
-    protected $rpcEndpoints;
+    protected $rpcServices;
 
     /**
      * @param  string $name
-     * @param  array $restEndpoints
-     * @param  array $rpcEndpoints
+     * @param  array $restServices
+     * @param  array $rpcServices
      * @param  bool $isVendor
      * @throws InvalidArgumentException for modules that do not exist
      */
-    public function __construct($namespace, array $restEndpoints = array(), array $rpcEndpoints = array(), $isVendor = null)
+    public function __construct($namespace, array $restServices = array(), array $rpcServices = array(), $isVendor = null)
     {
         if (!class_exists($namespace . '\\Module')) {
             throw new InvalidArgumentException(sprintf(
@@ -50,8 +50,8 @@ class ModuleEntity
 
         $this->name          = $this->normalizeName($namespace);
         $this->namespace     = $namespace;
-        $this->restEndpoints = $restEndpoints;
-        $this->rpcEndpoints  = $rpcEndpoints;
+        $this->restServices = $restServices;
+        $this->rpcServices  = $rpcServices;
         $this->isVendor      = is_bool($isVendor) ? $isVendor : null;
     }
 
@@ -85,17 +85,17 @@ class ModuleEntity
     /**
      * @return array
      */
-    public function getRestEndpoints()
+    public function getRestServices()
     {
-        return $this->restEndpoints;
+        return $this->restServices;
     }
 
     /**
      * @return array
      */
-    public function getRpcEndpoints()
+    public function getRpcServices()
     {
-        return $this->rpcEndpoints;
+        return $this->rpcServices;
     }
 
     /**
@@ -121,20 +121,20 @@ class ModuleEntity
                 case 'rest':
                     if (!is_array($value)) {
                         throw new InvalidArgumentException(
-                            'REST endpoints must be an array; received "%s"',
+                            'REST services must be an array; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))
                         );
                     }
-                    $this->restEndpoints = $value;
+                    $this->restServices = $value;
                     break;
                 case 'rpc':
                     if (!is_array($value)) {
                         throw new InvalidArgumentException(
-                            'RPC endpoints must be an array; received "%s"',
+                            'RPC services must be an array; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))
                         );
                     }
-                    $this->rpcEndpoints = $value;
+                    $this->rpcServices = $value;
                     break;
                 default:
                     break;
@@ -153,8 +153,8 @@ class ModuleEntity
             'name'      => $this->name,
             'namespace' => $this->namespace,
             'is_vendor' => $this->isVendor(),
-            'rest'      => $this->getRestEndpoints(),
-            'rpc'       => $this->getRpcEndpoints(),
+            'rest'      => $this->getRestServices(),
+            'rpc'       => $this->getRpcServices(),
         );
     }
 

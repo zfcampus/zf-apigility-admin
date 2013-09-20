@@ -4,14 +4,14 @@ namespace ZF\ApiFirstAdmin\Model;
 
 use ZF\ApiFirstAdmin\Exception;
 
-class RestEndpointModelFactory extends RpcEndpointModelFactory
+class RestServiceModelFactory extends RpcServiceModelFactory
 {
-    const TYPE_DEFAULT      = 'ZF\ApiFirstAdmin\Model\RestEndpointModel';
-    const TYPE_DB_CONNECTED = 'ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointModel';
+    const TYPE_DEFAULT      = 'ZF\ApiFirstAdmin\Model\RestServiceModel';
+    const TYPE_DB_CONNECTED = 'ZF\ApiFirstAdmin\Model\DbConnectedRestServiceModel';
 
     /**
      * @param  string $module
-     * @return RestEndpointModel
+     * @return RestServiceModel
      */
     public function factory($module, $type = self::TYPE_DEFAULT)
     {
@@ -22,7 +22,7 @@ class RestEndpointModelFactory extends RpcEndpointModelFactory
         }
 
         $config    = $this->configFactory->factory($module);
-        $restModel = new RestEndpointModel($this->normalizeModuleName($module), $this->modules, $config);
+        $restModel = new RestServiceModel($this->normalizeModuleName($module), $this->modules, $config);
         $restModel->getEventManager()->setSharedManager($this->sharedEventManager);
 
         switch ($type) {

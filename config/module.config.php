@@ -95,21 +95,21 @@ return array(
                                 ),
                                 'may_terminate' => true,
                                 'child_routes' => array(
-                                    'rpc-endpoint' => array(
+                                    'rpc-service' => array(
                                         'type' => 'segment',
                                         'options' => array(
                                             'route' => '/rpc[/:controller_service_name]',
                                             'defaults' => array(
-                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RpcEndpoint',
+                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RpcService',
                                             ),
                                         ),
                                     ),
-                                    'rest-endpoint' => array(
+                                    'rest-service' => array(
                                         'type' => 'segment',
                                         'options' => array(
                                             'route' => '/rest[/:controller_service_name]',
                                             'defaults' => array(
-                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RestEndpoint',
+                                                'controller' => 'ZF\ApiFirstAdmin\Controller\RestService',
                                             ),
                                         ),
                                     ),
@@ -137,8 +137,8 @@ return array(
             'ZF\ApiFirstAdmin\Controller\ModuleCreation' => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\Source'         => 'HalJson',
             'ZF\ApiFirstAdmin\Controller\Module'         => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\RestEndpoint'   => 'HalJson',
-            'ZF\ApiFirstAdmin\Controller\RpcEndpoint'    => 'HalJson',
+            'ZF\ApiFirstAdmin\Controller\RestService'    => 'HalJson',
+            'ZF\ApiFirstAdmin\Controller\RpcService'     => 'HalJson',
         ),
         'accept-whitelist' => array(
             'ZF\ApiFirstAdmin\Controller\DbAdapter' => array(
@@ -155,11 +155,11 @@ return array(
             'ZF\ApiFirstAdmin\Controller\Source' => array(
                 'application/json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\RestService' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\RpcService' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -181,11 +181,11 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\RestService' => array(
                 'application/json',
                 'application/*+json',
             ),
-            'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
+            'ZF\ApiFirstAdmin\Controller\RpcService' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -194,10 +194,10 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
-            'ZF\ApiFirstAdmin\Model\DbConnectedRestEndpointEntity' => array(
+            'ZF\ApiFirstAdmin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
+                'route_name'      => 'zf-api-first-admin/api/module/rest-service',
             ),
             'ZF\ApiFirstAdmin\Model\DbAdapterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
@@ -209,15 +209,15 @@ return array(
                 'identifier_name' => 'name',
                 'route_name'      => 'zf-api-first-admin/api/module',
             ),
-            'ZF\ApiFirstAdmin\Model\RestEndpointEntity' => array(
+            'ZF\ApiFirstAdmin\Model\RestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rest-endpoint',
+                'route_name'      => 'zf-api-first-admin/api/module/rest-service',
             ),
-            'ZF\ApiFirstAdmin\Model\RpcEndpointEntity' => array(
+            'ZF\ApiFirstAdmin\Model\RpcServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-api-first-admin/api/module/rpc-endpoint',
+                'route_name'      => 'zf-api-first-admin/api/module/rpc-service',
             ),
         ),
     ),
@@ -241,19 +241,19 @@ return array(
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'module',
         ),
-        'ZF\ApiFirstAdmin\Controller\RpcEndpoint' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\RpcEndpointResource',
-            'route_name'              => 'zf-api-first-admin/api/module/rpc-endpoint',
-            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RpcEndpointEntity',
+        'ZF\ApiFirstAdmin\Controller\RpcService' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\RpcServiceResource',
+            'route_name'              => 'zf-api-first-admin/api/module/rpc-service',
+            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RpcServiceEntity',
             'identifier_name'         => 'controller_service_name',
             'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'rpc',
         ),
-        'ZF\ApiFirstAdmin\Controller\RestEndpoint' => array(
-            'listener'                => 'ZF\ApiFirstAdmin\Model\RestEndpointResource',
-            'route_name'              => 'zf-api-first-admin/api/module/rest-endpoint',
-            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RestEndpointEntity',
+        'ZF\ApiFirstAdmin\Controller\RestService' => array(
+            'listener'                => 'ZF\ApiFirstAdmin\Model\RestServiceResource',
+            'route_name'              => 'zf-api-first-admin/api/module/rest-service',
+            'entity_class'            => 'ZF\ApiFirstAdmin\Model\RestServiceEntity',
             'identifier_name'         => 'controller_service_name',
             'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
@@ -263,7 +263,7 @@ return array(
 
     'zf-rpc' => array(
         // Dummy entry; still handled by ControllerManager, but this will force
-        // it to show up in the list of RPC endpoints
+        // it to show up in the list of RPC services
         'ZF\ApiFirstAdmin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
             'route_name'   => 'zf-api-first-admin/api/module-enable',

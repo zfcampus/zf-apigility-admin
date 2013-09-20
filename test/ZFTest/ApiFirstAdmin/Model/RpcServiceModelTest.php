@@ -5,14 +5,14 @@ namespace ZFTest\ApiFirstAdmin\Model;
 use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
-use ZF\ApiFirstAdmin\Model\RpcEndpointModel;
+use ZF\ApiFirstAdmin\Model\RpcServiceModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
 
 require_once __DIR__ . '/TestAsset/module/FooConf/Module.php';
 
-class RpcEndpointModelTest extends TestCase
+class RpcServiceModelTest extends TestCase
 {
     /**
      * Remove a directory even if not empty (recursive delete)
@@ -64,7 +64,7 @@ class RpcEndpointModelTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRpc  = new RpcEndpointModel($this->module, $this->modules, $this->resource->factory('FooConf'));
+        $this->codeRpc  = new RpcServiceModel($this->module, $this->modules, $this->resource->factory('FooConf'));
     }
 
     public function tearDown()
@@ -205,7 +205,7 @@ class RpcEndpointModelTest extends TestCase
         $httpMethods = array('GET', 'PATCH');
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointEntity', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcServiceEntity', $result);
 
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $expected   = array(
@@ -250,7 +250,7 @@ class RpcEndpointModelTest extends TestCase
         $this->assertTrue($controllerClass->hasMethod($actionMethodName), 'Expected ' . $actionMethodName . "; class:\n" . file_get_contents($classFile));
 
         return (object) array(
-            'rpc_endpoint' => $result->getArrayCopy(),
+            'rpc_service' => $result->getArrayCopy(),
             'config_file'  => $configFile,
             'config'       => $config,
         );
@@ -267,13 +267,13 @@ class RpcEndpointModelTest extends TestCase
         $httpMethods = array('GET', 'PATCH');
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
-        $endpoint    = $result->getArrayCopy();
+        $service    = $result->getArrayCopy();
 
         // and now do the actual work for the test
-        $this->assertTrue($this->codeRpc->updateRoute($endpoint['controller_service_name'], '/api/hello/world'));
+        $this->assertTrue($this->codeRpc->updateRoute($service['controller_service_name'], '/api/hello/world'));
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
-        $this->assertEquals('/api/hello/world', $config['router']['routes'][$endpoint['route_name']]['options']['route']);
+        $this->assertEquals('/api/hello/world', $config['router']['routes'][$service['route_name']]['options']['route']);
     }
 
     /**
@@ -341,7 +341,7 @@ class RpcEndpointModelTest extends TestCase
         $httpMethods = array('GET', 'PATCH');
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
-        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcEndpointEntity', $result);
+        $this->assertInstanceOf('ZF\ApiFirstAdmin\Model\RpcServiceEntity', $result);
 
         $this->codeRpc->deleteService($result);
         $configFile = $this->modules->getModuleConfigPath($this->module);

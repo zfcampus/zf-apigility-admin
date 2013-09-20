@@ -4,7 +4,7 @@ namespace ZF\ApiFirstAdmin\Model;
 
 use Zend\Filter\FilterChain;
 
-class RestEndpointEntity
+class RestServiceEntity
 {
     protected $filters = array();
 
@@ -51,7 +51,7 @@ class RestEndpointEntity
                 $name
             ));
         }
-        if (!isset($this->{$name})) {
+        if (!property_exists($this, $name)) {
             throw new \OutOfRangeException(sprintf(
                 '%s does not contain a property by the name of "%s"',
                 __CLASS__,
@@ -59,6 +59,14 @@ class RestEndpointEntity
             ));
         }
         return $this->{$name};
+    }
+
+    public function __isset($name)
+    {
+        if ($name === 'filter') {
+            return false;
+        }
+        return (property_exists($this, $name));
     }
 
     public function exchangeArray(array $data)

@@ -2,26 +2,26 @@
 
 namespace ZF\ApiFirstAdmin\Model;
 
-class DbConnectedRestEndpointModel
+class DbConnectedRestServiceModel
 {
     /**
-     * @var RestEndpointModel
+     * @var RestServiceModel
      */
     protected $restModel;
 
     /**
-     * @param RestEndpointModel $restModel
+     * @param RestServiceModel $restModel
      */
-    public function __construct(RestEndpointModel $restModel)
+    public function __construct(RestServiceModel $restModel)
     {
         $this->restModel = $restModel;
     }
 
     /**
-     * Determine if the given entity is DB-connected, and, if so, recast to a DbConnectedRestEndpointEntity
+     * Determine if the given entity is DB-connected, and, if so, recast to a DbConnectedRestServiceEntity
      *
      * @param  \Zend\EventManager\Event $e
-     * @return null|DbConnectedRestEndpointEntity
+     * @return null|DbConnectedRestServiceEntity
      */
     public static function onFetch($e)
     {
@@ -45,29 +45,26 @@ class DbConnectedRestEndpointModel
             $config['table_service'] = sprintf('%s\\Table', $entity->resourceClass);
         }
 
-        $dbConnectedEntity = new DbConnectedRestEndpointEntity();
+        $dbConnectedEntity = new DbConnectedRestServiceEntity();
         $dbConnectedEntity->exchangeArray(array_merge($entity->getArrayCopy(), $config));
         return $dbConnectedEntity;
     }
 
     /**
-     * Create a new DB-Connected REST endpoint
+     * Create a new DB-Connected REST service
      *
-     * @param  DbConnectedRestEndpointEntity $entity
-     * @return DbConnectedRestEndpointEntity
+     * @param  DbConnectedRestServiceEntity $entity
+     * @return DbConnectedRestServiceEntity
      */
-    public function createService(DbConnectedRestEndpointEntity $entity)
+    public function createService(DbConnectedRestServiceEntity $entity)
     {
         $restModel         = $this->restModel;
         $resourceName      = ucfirst($entity->tableName);
         $resourceClass     = sprintf('%s\\Rest\\%s\\%sResource', $this->restModel->module, $resourceName, $resourceName);
         $controllerService = $restModel->createControllerServiceName($resourceName);
-        $entityClass       = $restModel->createEntityClass($resourceName);
+        $entityClass       = $restModel->createEntityClass($resourceName, 'entity-db-connected');
         $collectionClass   = $restModel->createCollectionClass($resourceName);
         $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->identifierName, $controllerService);
-        $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);
-        $restModel->createContentNegotiationConfig($entity, $controllerService);
-        $restModel->createHalConfig($entity, $entityClass, $collectionClass, $routeName);
 
         $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
@@ -78,32 +75,37 @@ class DbConnectedRestEndpointModel
             'route_name'              => $routeName,
         ));
 
+        $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);
+        $restModel->createContentNegotiationConfig($entity, $controllerService);
+        $restModel->createHalConfig($entity, $entityClass, $collectionClass, $routeName);
+
         $this->createDbConnectedConfig($entity);
 
         return $entity;
     }
 
     /**
-     * Update a DB-Connected endpoint
+     * Update a DB-Connected service
      *
-     * @param  DbConnectedRestEndpointEntity $entity
-     * @return DbConnectedRestEndpointEntity
+     * @param  DbConnectedRestServiceEntity $entity
+     * @return DbConnectedRestServiceEntity
      */
-    public function updateService(DbConnectedRestEndpointEntity $entity)
+    public function updateService(DbConnectedRestServiceEntity $entity)
     {
-        $updatedEntity = $this->restModel->updateService($entity);
-        $updatedProps  = $this->updateDbConnectedConfig($entity);
+        $updatedEntity  = $this->restModel->updateService($entity);
+        $updatedProps   = $this->updateDbConnectedConfig($entity);
         $updatedEntity->exchangeArray($updatedProps);
+        $this->updateHalConfig($entity);
         return $updatedEntity;
     }
 
     /**
-     * Deelte a DB-Connected endpoint
+     * Deelte a DB-Connected service
      *
-     * @param  DbConnectedRestEndpointEntity $entity
+     * @param  DbConnectedRestServiceEntity $entity
      * @return true
      */
-    public function deleteService(DbConnectedRestEndpointEntity $entity)
+    public function deleteService(DbConnectedRestServiceEntity $entity)
     {
         $this->restModel->deleteService($entity->controllerServiceName);
         $this->deleteDbConnectedConfig($entity);
@@ -113,9 +115,9 @@ class DbConnectedRestEndpointModel
     /**
      * Create DB-Connected configuration based on entity
      *
-     * @param  DbConnectedRestEndpointEntity $entity
+     * @param  DbConnectedRestServiceEntity $entity
      */
-    public function createDbConnectedConfig(DbConnectedRestEndpointEntity $entity)
+    public function createDbConnectedConfig(DbConnectedRestServiceEntity $entity)
     {
         $entity->exchangeArray(array(
             'table_service' => sprintf('%s\\Table', $entity->resourceClass),
@@ -123,9 +125,10 @@ class DbConnectedRestEndpointModel
 
         $config = array('zf-api-first' => array('db-connected' => array(
             $entity->resourceClass => array(
-                'adapter_name'  => $entity->adapterName,
-                'table_name'    => $entity->tableName,
-                'hydrator_name' => $entity->hydratorName,
+                'adapter_name'            => $entity->adapterName,
+                'table_name'              => $entity->tableName,
+                'hydrator_name'           => $entity->hydratorName,
+                'controller_service_name' => $entity->controllerServiceName,
             ),
         )));
         $this->restModel->configResource->patch($config, true);
@@ -134,9 +137,9 @@ class DbConnectedRestEndpointModel
     /**
      * Update the DB-Connected configuration for the entity
      *
-     * @param  DbConnectedRestEndpointEntity $entity
+     * @param  DbConnectedRestServiceEntity $entity
      */
-    public function updateDbConnectedConfig(DbConnectedRestEndpointEntity $entity)
+    public function updateDbConnectedConfig(DbConnectedRestServiceEntity $entity)
     {
         $properties = array('zf-api-first' => array('db-connected' => array(
             $entity->resourceClass => array(
@@ -151,11 +154,27 @@ class DbConnectedRestEndpointModel
     }
 
     /**
+     * Update the HAL configuration for the service
+     *
+     * @param  RestServiceEntity $original
+     * @param  RestServiceEntity $update
+     */
+    public function updateHalConfig(DbConnectedRestServiceEntity $entity)
+    {
+        $baseKey     = 'zf-hal.metadata_map';
+        $entityClass = $entity->controllerServiceName;
+        if (isset($entity->hydratorName) && $entity->hydratorName) {
+            $key = sprintf('%s.%s.hydrator', $baseKey, $entityClass);
+            $this->restModel->configResource->patchKey($key, $entity->hydratorName);
+        }
+    }
+
+    /**
      * Delete the DB-Connected configuration for the entity
      *
-     * @param  DBConnectedRestEndpointEntity $entity
+     * @param  DbConnectedRestServiceEntity $entity
      */
-    public function deleteDbConnectedConfig(DBConnectedRestEndpointEntity $entity)
+    public function deleteDbConnectedConfig(DbConnectedRestServiceEntity $entity)
     {
         $key = array('zf-api-first', 'db-connected', $entity->resourceClass);
         $this->restModel->configResource->deleteKey($key);
