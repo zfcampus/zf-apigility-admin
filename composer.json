@@ -8,7 +8,7 @@
         "framework",
         "zf2"
     ],
-    "homepage": "http://framework.zend.com/",
+    "homepage": "http://apigility.org/",
     "repositories": [
         { "type": "composer", "url": "https://packages.zendframework.com/" },
         { "type": "composer", "url": "http://packages-zfcampus.rhcloud.com/" }
