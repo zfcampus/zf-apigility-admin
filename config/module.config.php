@@ -138,6 +138,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
             'ZF\Apigility\Admin\Controller\RpcService'     => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Source'         => 'Json',
         ),
         'accept-whitelist' => array(
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
