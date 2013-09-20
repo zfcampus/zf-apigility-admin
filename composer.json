@@ -1,8 +1,10 @@
 {
-    "name": "zfcampus/zf-api-first-admin",
-    "description": "ZFApiFirstAdmin module for ZF2",
+    "name": "zfcampus/zf-apigility-admin",
+    "description": "Apigility Admin module",
     "license": "BSD-3-Clause",
     "keywords": [
+        "api",
+        "apigility",
         "framework",
         "zf2"
     ],
@@ -25,7 +27,7 @@
     },
     "autoload": {
         "psr-0": {
-            "ZF\\ApiFirstAdmin\\": "src/",
+            "ZF\\Apigility\\Admin\\": "src/",
             "ZFTest\\": "test/",
             "Test\\": "vendor/"
         }
