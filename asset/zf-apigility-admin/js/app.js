@@ -156,7 +156,7 @@ module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
     return {
         restrict: 'E',
         scope: true,
-        templateUrl: '/zf-api-first-admin/partials/view-navigation.html',
+        templateUrl: '/zf-apigility-admin/partials/view-navigation.html',
         controller: ['$scope', function ($scope) {
             $scope.routeParams = $routeParams;
         }]
@@ -166,7 +166,7 @@ module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
 module.directive('apiInfo', function () {
     return {
         restrict : 'E',
-        templateUrl: '/zf-api-first-admin/partials/api/info.html',
+        templateUrl: '/zf-apigility-admin/partials/api/info.html',
         controller:  ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
             
@@ -195,7 +195,7 @@ module.directive('apiInfo', function () {
 module.directive('apiRestServices', function () {
     return {
         restrict: 'E',
-        templateUrl: '/zf-api-first-admin/partials/api/rest-services.html',
+        templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
@@ -302,7 +302,7 @@ module.directive('apiRestServices', function () {
 module.directive('apiRpcServices', function () {
     return {
         restrict: 'E',
-        templateUrl: '/zf-api-first-admin/partials/api/rpc-services.html',
+        templateUrl: '/zf-apigility-admin/partials/api/rpc-services.html',
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
@@ -385,9 +385,9 @@ module.directive('apiRpcServices', function () {
 });
 
 module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-    $routeProvider.when('/dashboard', {templateUrl: '/zf-api-first-admin/partials/index.html', controller: 'DashboardController'});
-    $routeProvider.when('/global/db-adapters', {templateUrl: '/zf-api-first-admin/partials/global/db-adapters.html', controller: 'DbAdapterController'});
-    $routeProvider.when('/api/:apiName/:section', {templateUrl: '/zf-api-first-admin/partials/api.html', controller: 'ApiController'});
+    $routeProvider.when('/dashboard', {templateUrl: '/zf-apigility-admin/partials/index.html', controller: 'DashboardController'});
+    $routeProvider.when('/global/db-adapters', {templateUrl: '/zf-apigility-admin/partials/global/db-adapters.html', controller: 'DbAdapterController'});
+    $routeProvider.when('/api/:apiName/:section', {templateUrl: '/zf-apigility-admin/partials/api.html', controller: 'ApiController'});
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
 

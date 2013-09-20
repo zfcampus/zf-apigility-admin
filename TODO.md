@@ -13,7 +13,7 @@ DB-Connected Model
 
 - [X] Test createService() functionality
 - [X] Test and write a listener for RestEndpointModel::fetch that will check for the
-  ResourceClass inside the zf-api-first configuration. The event should pass
+  ResourceClass inside the zf-apigility configuration. The event should pass
   both the discovered RestEndpointEntity as well as the application
   configuration. If db-connected configuration is found, create a
   DBConnectedRestEndpointEntity and return it.

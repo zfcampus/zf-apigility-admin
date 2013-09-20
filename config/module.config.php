@@ -269,7 +269,7 @@ return array(
         ),
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-api-first-admin/api/source',
+            'route_name'   => 'zf-apigility-admin/api/source',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),
