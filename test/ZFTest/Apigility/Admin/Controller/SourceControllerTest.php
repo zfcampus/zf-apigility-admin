@@ -3,17 +3,17 @@
  * @license   http://opensource.org/licenses/BSD-2-Clause BSD-2-Clause
  */
 
-namespace ZFTest\ApiFirstAdmin\Controller;
+namespace ZFTest\Apigility\Admin\Controller;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
-use ZF\ApiFirstAdmin\Controller\SourceController;
-use ZF\ApiFirstAdmin\Model\ModuleModel;
+use ZF\Apigility\Admin\Controller\SourceController;
+use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\ContentNegotiation\ParameterDataContainer;
-use ZFTest\ApiFirstAdmin\Model\TestAsset\Bar\Module as BarModule;
+use ZFTest\Apigility\Admin\Model\TestAsset\Bar\Module as BarModule;
 
 class SourceControllerTest extends TestCase
 {
@@ -55,15 +55,15 @@ class SourceControllerTest extends TestCase
                                ->getMock();
         $moduleManager->expects($this->any())
                       ->method('getLoadedModules')
-                      ->will($this->returnValue(array('ZFTest\ApiFirstAdmin\Model\TestAsset\Bar' => new BarModule)));
+                      ->will($this->returnValue(array('ZFTest\Apigility\Admin\Model\TestAsset\Bar' => new BarModule)));
 
         $moduleResource = new ModuleModel($moduleManager, array(), array());
         $controller     = new SourceController($moduleResource);
 
         $request = new Request();
         $request->setMethod('get');
-        $request->getQuery()->module = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar';
-        $request->getQuery()->class = 'ZFTest\ApiFirstAdmin\Model\TestAsset\Bar\Module';
+        $request->getQuery()->module = 'ZFTest\Apigility\Admin\Model\TestAsset\Bar';
+        $request->getQuery()->class = 'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Module';
 
         $controller->setRequest($request);
         $result = $controller->sourceAction();

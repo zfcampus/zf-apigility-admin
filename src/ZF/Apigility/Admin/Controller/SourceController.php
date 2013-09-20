@@ -3,12 +3,12 @@
  * @license   http://opensource.org/licenses/BSD-2-Clause BSD-2-Clause
  */
 
-namespace ZF\ApiFirstAdmin\Controller;
+namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\ApiFirstAdmin\Model\ModuleModel;
-use ZF\ApiFirstAdmin\Model\ModuleEntity;
+use ZF\Apigility\Admin\Model\ModuleModel;
+use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
