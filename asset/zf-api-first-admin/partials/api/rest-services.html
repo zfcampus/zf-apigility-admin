@@ -86,6 +86,7 @@
         <ul class="nav nav-tabs" id="myTab{{$index}}">
           <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
           <li><a data-target="#editmode{{$index}}" data-toggle="tab">Edit</a></li>
+          <li><a data-target="#sourcemode{{$index}}" data-toggle="tab">Source code</a></li>
         </ul>
 
         <div class="tab-content">
@@ -314,7 +315,40 @@
 
               <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
-          </div>
+            </div>
+            <div class="tab-pane active" id="sourcemode{{$index}}">
+                <br /><p>Click on the file name to show the source code.</p>
+                <table class="table table-striped">    
+                    <tr>
+                        <td>Collection Class</td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].collection_class, 'Collection')">{{ restService.collection_class }}.php</button></td>
+                    </tr>
+                    <tr>
+                        <td>Entity Class</td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
+                    </tr>
+                    <tr ng-hide="restService.adapter_name">
+                        <td>Resource Class</td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].resource_class, 'Resource')">{{ restService.resource_class }}.php</td>
+                    </tr>
+                </table>
+
+                <div class="modal fade" id="myModal{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">{{ class_type }}<br /><font size="-1">{{ filename }}</font></h4>
+                            </div>
+                            <div class="modal-body" style="overflow:auto;max-height:500px;" ng-bind-html-unsafe="source_code"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
       </div>
     </div>

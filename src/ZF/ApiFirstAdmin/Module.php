@@ -177,6 +177,12 @@ class Module
                 $model    = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
                 return new Controller\ModuleCreationController($model);
             },
+            'ZF\ApiFirstAdmin\Controller\Source' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $model    = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
+                return new Controller\SourceController($model);
+
+            }
         ));
     }
 
