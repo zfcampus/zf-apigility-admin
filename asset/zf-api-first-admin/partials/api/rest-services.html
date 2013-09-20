@@ -321,15 +321,15 @@
                 <table class="table table-striped">    
                     <tr>
                         <td>Collection Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restEndpoints[$index].collection_class, 'Collection')">{{ restEndpoint.collection_class }}.php</button></td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].collection_class, 'Collection')">{{ restService.collection_class }}.php</button></td>
                     </tr>
                     <tr>
                         <td>Entity Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restEndpoints[$index].entity_class, 'Entity')">{{ restEndpoint.entity_class }}.php</button></td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
                     </tr>
-                    <tr ng-hide="restEndpoint.adapter_name">
+                    <tr ng-hide="restService.adapter_name">
                         <td>Resource Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restEndpoints[$index].resource_class, 'Resource')">{{ restEndpoint.resource_class }}.php</td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].resource_class, 'Resource')">{{ restService.resource_class }}.php</td>
                     </tr>
                 </table>
 

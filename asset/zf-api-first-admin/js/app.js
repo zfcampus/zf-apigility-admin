@@ -172,19 +172,19 @@ module.directive('apiInfo', function () {
             
             console.log($scope.api);
 
-            $scope.restEndpoints = [];
-            $scope.api.links['rest'].fetch({force: true}).then(function (restEndpoints) {
+            $scope.restServices = [];
+            $scope.api.links['rest'].fetch({force: true}).then(function (restServices) {
                 // update view
                 $scope.$apply(function() {
-                    $scope.restEndpoints = _.pluck(restEndpoints.embedded.rest, 'props');
+                    $scope.restServices = _.pluck(restServices.embedded.rest, 'props');
                 });
             });
 
-            $scope.rpcEndpoints = [];
-            $scope.api.links['rpc'].fetch({force: true}).then(function (rpcEndpoints) {
+            $scope.rpcServices = [];
+            $scope.api.links['rpc'].fetch({force: true}).then(function (rpcServices) {
                 // update view
                 $scope.$apply(function() {
-                    $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
+                    $scope.rpcServices = _.pluck(rpcServices.embedded.rpc, 'props');
                 });
             });
         }]
@@ -333,7 +333,7 @@ module.directive('apiRpcServices', function () {
                                 .join(', ');
 
                             var myReg = /(([^\\]+)\\Controller)$/g;
-                            rpcEndpoint.controller_class = rpcEndpoint.controller_service_name.replace(myReg, "$2\\$2Controller");
+                            rpcService.controller_class = rpcService.controller_service_name.replace(myReg, "$2\\$2Controller");
                         });
                     });
                 });
