@@ -1,8 +1,10 @@
 {
     "name": "zfcampus/zf-apigility-admin",
-    "description": "ZF Apigility Admin module for ZF2",
+    "description": "Apigility Admin module",
     "license": "BSD-3-Clause",
     "keywords": [
+        "api",
+        "apigility",
         "framework",
         "zf2"
     ],
