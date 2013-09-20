@@ -177,9 +177,9 @@ class Module
                 $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
                 return new Controller\ModuleCreationController($model);
             },
-            'ZF\ApiFirstAdmin\Controller\Source' => function ($controllers) {
+            'ZF\Apigility\Admin\Controller\Source' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
-                $model    = $services->get('ZF\ApiFirstAdmin\Model\ModuleModel');
+                $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
                 return new Controller\SourceController($model);
 
             }

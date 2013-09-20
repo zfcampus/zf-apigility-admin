@@ -2,8 +2,8 @@
 
 namespace Test\Foo;
 
-use ZF\ApiFirst\ApiFirstModuleInterface;
+use ZF\Apigility\ApigilityModuleInterface;
 
-class Module implements ApiFirstModuleInterface
+class Module implements ApigilityModuleInterface
 {
 }

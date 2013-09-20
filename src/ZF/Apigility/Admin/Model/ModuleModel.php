@@ -3,7 +3,7 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\ModuleManager\ModuleManager;
-use ZF\ApiFirst\ApiFirstModuleInterface;
+use ZF\Apigility\ApigilityModuleInterface;
 use Zend\Code\Generator\ValueGenerator;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
@@ -163,7 +163,7 @@ EOD;
     }
 
     /**
-     * Update a module (adding the ApiFirstModule interface)
+     * Update a module (adding the ApigilityModule interface)
      *
      * @param  string $module
      * @return boolean
@@ -176,7 +176,7 @@ EOD;
             return false;
         }
 
-        if ($modules[$module] instanceof ApiFirstModuleInterface) {
+        if ($modules[$module] instanceof ApigilityModuleInterface) {
             return false;
         }
 
@@ -185,14 +185,14 @@ EOD;
 
         $replacement = preg_replace(
             '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
-            "use ZF\ApiFirst\ApiFirstModuleInterface;\n\nclass $1 implements ApiFirstModuleInterface\n{",
+            "use ZF\Apigility\ApigilityModuleInterface;\n\nclass $1 implements ApigilityModuleInterface\n{",
             $content
         );
 
         if ($replacement === $content) {
             $replacement = preg_replace(
                 '/implements\s/',
-                'implements ZF\ApiFirst\ApiFirstModuleInterface,',
+                'implements ZF\Apigility\ApigilityModuleInterface,',
                 $content
             );
         }
@@ -218,7 +218,7 @@ EOD;
 
         $this->modules = array();
         foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
-            if (!$module instanceof ApiFirstModuleInterface) {
+            if (!$module instanceof ApigilityModuleInterface) {
                 continue;
             }
 

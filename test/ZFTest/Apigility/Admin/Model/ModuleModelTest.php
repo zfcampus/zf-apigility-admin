@@ -44,7 +44,7 @@ class ModuleModelTest extends TestCase
         $this->model         = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
     }
 
-    public function testEnabledModulesOnlyReturnsThoseThatImplementApiFirstModuleInterface()
+    public function testEnabledModulesOnlyReturnsThoseThatImplementApigilityModuleInterface()
     {
         $expected = array(
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar',
@@ -80,19 +80,19 @@ class ModuleModelTest extends TestCase
     /**
      * @dataProvider invalidModules
      */
-    public function testNullIsReturnedWhenGettingServicesForNonApiFirstModules($module)
+    public function testNullIsReturnedWhenGettingServicesForNonApigilityModules($module)
     {
         $this->assertNull($this->model->getModule($module));
     }
 
-    public function testEmptyArraysAreReturnedWhenGettingServicesForApiFirstModulesWithNoServices()
+    public function testEmptyArraysAreReturnedWhenGettingServicesForApigilityModulesWithNoServices()
     {
         $module = $this->model->getModule('ZFTest\Apigility\Admin\Model\TestAsset\Baz');
         $this->assertEquals(array(), $module->getRestServices());
         $this->assertEquals(array(), $module->getRpcServices());
     }
 
-    public function testRestAndRpcControllersAreDiscoveredWhenGettingServicesForApiFirstModules()
+    public function testRestAndRpcControllersAreDiscoveredWhenGettingServicesForApigilityModules()
     {
         $expected = array(
             'rest' => array(
@@ -109,7 +109,7 @@ class ModuleModelTest extends TestCase
         $this->assertEquals($expected['rpc'], $module->getRpcServices());
     }
 
-    public function testCanRetrieveListOfAllApiFirstModulesAndTheirServices()
+    public function testCanRetrieveListOfAllApigilityModulesAndTheirServices()
     {
         $expected = array(
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar' => array(
