@@ -44,7 +44,7 @@ class ModuleEntity
         if (!class_exists($namespace . '\\Module')) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid module "%s"; no Module class exists for that module',
-                $name
+                $namespace
             ));
         }
 

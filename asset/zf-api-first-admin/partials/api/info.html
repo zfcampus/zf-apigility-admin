@@ -1,0 +1,14 @@
+<h4>REST services:</h4>
+<table class="table table-striped">
+    <tr ng-repeat="restEndpoint in restEndpoints">
+        <td width="40%"><strong>{{ restEndpoint.entity_class }}</strong></td>
+        <td width="60%">{{ restEndpoint.route_match }}</td>
+    </tr>
+</table>
+<h4>RPC services:</h4>
+<table class="table table-striped">
+    <tr ng-repeat="rpcEndpoint in rpcEndpoints">
+        <td width="40%"><strong>{{ rpcEndpoint.controller_service_name }}</strong></td>
+        <td width="60%">{{ rpcEndpoint.route_match }}</td>
+    </tr>
+</table>

@@ -156,13 +156,41 @@ module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
     return {
         restrict: 'E',
         scope: true,
-        templateUrl: '/zf-api-first-admin/partials/view-navigation.html'
-        ,
+        templateUrl: '/zf-api-first-admin/partials/view-navigation.html',
         controller: ['$scope', function ($scope) {
             $scope.routeParams = $routeParams;
         }]
     }
 }]);
+
+module.directive('apiInfo', function () {
+    return {
+        restrict : 'E',
+        templateUrl: '/zf-api-first-admin/partials/api/info.html',
+        controller:  ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
+            $scope.api = $scope.$parent.api;
+            
+            console.log($scope.api);
+
+            $scope.restEndpoints = [];
+            $scope.api.links['rest'].fetch({force: true}).then(function (restEndpoints) {
+                // update view
+                $scope.$apply(function() {
+                    $scope.restEndpoints = _.pluck(restEndpoints.embedded.rest, 'props');
+                });
+            });
+
+            $scope.rpcEndpoints = [];
+            $scope.api.links['rpc'].fetch({force: true}).then(function (rpcEndpoints) {
+                // update view
+                $scope.$apply(function() {
+                    $scope.rpcEndpoints = _.pluck(rpcEndpoints.embedded.rpc, 'props');
+                });
+            });
+        }]
+    };
+});
+
 
 module.directive('apiRestEndpoints', function () {
     return {
@@ -259,11 +287,12 @@ module.directive('apiRestEndpoints', function () {
                     });
             };
 
-            $scope.getSourceCode = function (index) {
-                $http.get('/admin/api/source?module=' + $scope.api.props.name + '&class=' + $scope.restEndpoints[index].entity_class)
-                    .then(function(response) {
-                        $scope.source_code[index] = response.data.source;
-                        return true;
+            $scope.getSourceCode = function (className, classType) {
+                ApisResource.getSourceCode ($scope.api.props.name, className)
+                    .then(function (data) {
+                        $scope.filename = className + '.php';
+                        $scope.class_type = classType + ' Class';
+                        $scope.source_code = data.source;
                     });
             };
         }]
@@ -274,7 +303,7 @@ module.directive('apiRpcEndpoints', function () {
     return {
         restrict: 'E',
         templateUrl: '/zf-api-first-admin/partials/api/rpc-endpoints.html',
-        controller: ['$rootScope', '$scope', 'ApisResource', function ($rootScope, $scope, ApisResource) {
+        controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
 
             $scope.resetForm = function () {
@@ -302,6 +331,9 @@ module.directive('apiRpcEndpoints', function () {
                                 .pluck('name')
                                 .valueOf()
                                 .join(', ');
+
+                            var myReg = /(([^\\]+)\\Controller)$/g;
+                            rpcEndpoint.controller_class = rpcEndpoint.controller_service_name.replace(myReg, "$2\\$2Controller");
                         });
                     });
                 });
@@ -338,6 +370,16 @@ module.directive('apiRpcEndpoints', function () {
                         $scope.deleteRestEndpoint = false;
                     });
             };
+            
+            $scope.getSourceCode = function (className, classType) {
+                ApisResource.getSourceCode ($scope.api.props.name, className)
+                    .then(function (data) {
+                        $scope.filename = className + '.php';
+                        $scope.class_type = classType + ' Class';
+                        $scope.source_code = data.source;
+                    });
+            };
+
         }]
     }
 });
@@ -409,6 +451,13 @@ module.factory('ApisResource', ['$http', function ($http) {
         var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcEndpoint.controller_service_name);
         return $http({method: 'patch', url: url, data: rpcEndpoint})
             .then(function (response) {
+                return response.data;
+            });
+    };
+
+    resource.getSourceCode = function (apiName, className) {
+        return $http.get('/admin/api/source?module=' + apiName + '&class=' + className)
+            .then(function(response) {
                 return response.data;
             });
     };
