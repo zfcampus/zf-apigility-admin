@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "dev-develop",
-        "zfcampus/zf-api-first": "dev-master",
+        "zfcampus/zf-apigility": "dev-master",
         "rwoverdijk/assetmanager": "dev-master",
         "zfcampus/zf-api-problem": "dev-master",
         "zfcampus/zf-configuration": "dev-master"
