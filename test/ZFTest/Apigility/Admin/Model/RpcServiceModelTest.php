@@ -177,11 +177,22 @@ class RpcServiceModelTest extends TestCase
      */
     public function testCanCreateContentNegotiationSelectorConfiguration($selector, $expected)
     {
-        $result = $this->codeRpc->createSelectorConfig('FooConf\Rpc\HelloWorld\Controller', $selector);
+        $result = $this->codeRpc->createContentNegotiationConfig('FooConf\Rpc\HelloWorld\Controller', $selector);
         $expected = array(
             'zf-content-negotiation' => array(
                 'controllers' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => $expected,
+                ),
+                'accept-whitelist' => array(
+                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                        'application/json',
+                        'application/*+json',
+                    ),
+                ),
+                'content-type-whitelist' => array(
+                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                        'application/json',
+                    ),
                 ),
             ),
         );
@@ -233,6 +244,17 @@ class RpcServiceModelTest extends TestCase
             'zf-content-negotiation' => array(
                 'controllers' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => $selector,
+                ),
+                'accept-whitelist' => array(
+                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                        'application/json',
+                        'application/*+json',
+                    ),
+                ),
+                'content-type-whitelist' => array(
+                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                        'application/json',
+                    ),
                 ),
             ),
         );

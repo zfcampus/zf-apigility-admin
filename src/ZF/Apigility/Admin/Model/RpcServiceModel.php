@@ -136,7 +136,7 @@ class RpcServiceModel
         $controllerService = $controllerData->service;
         $routeName         = $this->createRoute($route, $serviceName, $controllerService);
         $this->createRpcConfig($controllerService, $routeName, $httpMethods);
-        $this->createSelectorConfig($controllerService, $selector);
+        $this->createContentNegotiationConfig($controllerService, $selector);
 
         return $this->fetch($controllerService);
     }
@@ -290,7 +290,7 @@ class RpcServiceModel
      * @param  string $selector
      * @return array
      */
-    public function createSelectorConfig($controllerService, $selector = null)
+    public function createContentNegotiationConfig($controllerService, $selector = null)
     {
         if (null === $selector) {
             $selector = 'Json';
@@ -299,6 +299,17 @@ class RpcServiceModel
         $config = array('zf-content-negotiation' => array(
             'controllers' => array(
                 $controllerService => $selector,
+            ),
+            'accept-whitelist' => array(
+                $controllerService => array(
+                    'application/json',
+                    'application/*+json',
+                ),
+            ),
+            'content-type-whitelist' => array(
+                $controllerService => array(
+                    'application/json',
+                ),
             ),
         ));
         return $this->configResource->patch($config, true);

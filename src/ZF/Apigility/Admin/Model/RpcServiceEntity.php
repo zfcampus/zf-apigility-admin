@@ -7,9 +7,14 @@ use RuntimeException;
 
 class RpcServiceEntity
 {
-    protected $acceptWhitelist = array();
+    protected $acceptWhitelist = array(
+        'application/json',
+        'application/*+json',
+    );
 
-    protected $contentTypeWhitelist = array();
+    protected $contentTypeWhitelist = array(
+        'application/json',
+    );
 
     protected $controllerServiceName;
 
