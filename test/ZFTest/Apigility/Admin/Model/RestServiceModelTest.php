@@ -294,6 +294,20 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals('BarConf\Rest\Foo\FooEntity', $result->entityClass);
         $this->assertEquals('BarConf\Rest\Foo\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $result->routeName);
+        $this->assertEquals(array('application/json', 'application/*+json'), $result->acceptWhitelist);
+        $this->assertEquals(array('application/json'), $result->contentTypeWhitelist);
+    }
+
+    public function testCreateServiceUsesDefaultContentNegotiation()
+    {
+        $payload = new NewRestServiceEntity();
+        $payload->exchangeArray(array(
+            'resource_name' => 'foo',
+        ));
+        $result  = $this->codeRest->createService($payload);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
+        $this->assertEquals(array('application/json', 'application/*+json'), $result->acceptWhitelist);
+        $this->assertEquals(array('application/json'), $result->contentTypeWhitelist);
     }
 
     public function testCanFetchServiceAfterCreation()
