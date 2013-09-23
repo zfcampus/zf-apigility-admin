@@ -30,7 +30,7 @@ class RestServiceEntity
 
     protected $pageSize = 25;
 
-    protected $pageSizeParam = 'page';
+    protected $pageSizeParam;
 
     protected $resourceClass;
 
