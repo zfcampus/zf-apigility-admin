@@ -8,7 +8,10 @@ class RestServiceEntity
 {
     protected $filters = array();
 
-    protected $acceptWhitelist = array();
+    protected $acceptWhitelist = array(
+        'application/json',
+        'application/*+json',
+    );
 
     protected $collectionClass;
 
@@ -18,7 +21,9 @@ class RestServiceEntity
 
     protected $collectionQueryWhitelist = array();
 
-    protected $contentTypeWhitelist = array();
+    protected $contentTypeWhitelist = array(
+        'application/json',
+    );
 
     protected $controllerServiceName;
 
