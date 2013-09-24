@@ -48,11 +48,11 @@ class ModuleEntity
             ));
         }
 
-        $this->name          = $this->normalizeName($namespace);
-        $this->namespace     = $namespace;
+        $this->name         = $this->normalizeName($namespace);
+        $this->namespace    = $namespace;
         $this->restServices = $restServices;
         $this->rpcServices  = $rpcServices;
-        $this->isVendor      = is_bool($isVendor) ? $isVendor : null;
+        $this->isVendor     = is_bool($isVendor) ? $isVendor : null;
     }
 
     /**

@@ -62,17 +62,18 @@ class ModuleResource extends AbstractResourceListener
             throw new CreationException('Missing module name');
         }
 
+        $ver  = isset($data['version']) ? $data['version'] : 1;
         $name = $data['name'];
         $name = str_replace('.', '\\', $name);
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\+[a-zA-Z][a-zA-Z0-9_]*)?$/', $name)) {
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }
 
-        if (false === $this->modules->createModule($name, $this->modulePath)) {
+        if (false === $this->modules->createModule($name, $this->modulePath, $ver)) {
             throw new CreationException('Unable to create module; check your paths and permissions');
         }
 
-        $metadata = new ModuleEntity($name);
+        $metadata = new ModuleEntity($name . '\\V' . $ver);
         return $metadata;
     }
 

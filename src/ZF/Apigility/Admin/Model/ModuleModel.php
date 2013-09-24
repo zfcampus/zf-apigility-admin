@@ -101,13 +101,14 @@ class ModuleModel
     /**
      * Create a module
      *
-     * @param string $module
-     * @param string $path
+     * @param  string $module
+     * @param  string $path
+     * @param  integer $ver
      * @return boolen
      */
-    public function createModule($module, $path = '.')
+    public function createModule($module, $path = '.', $ver = 1)
     {
-        $modulePath = sprintf('%s/module/%s', $path, $module);
+        $modulePath = sprintf('%s/module/%s/V%s', $path, $module, $ver);
         if (file_exists($modulePath)) {
             return false;
         }
@@ -121,7 +122,8 @@ class ModuleModel
         }
 
         $view = new ViewModel(array(
-            'module' => $module
+            'module'  => $module,
+            'version' => $ver
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(

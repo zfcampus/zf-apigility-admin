@@ -165,15 +165,40 @@ class ModuleModelTest extends TestCase
 
         $this->assertTrue($this->model->createModule($module, $modulePath));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/config"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/view"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/src"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/src/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/config"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/view"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/src/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V1/config/module.config.php"));
 
         $this->removeDir($modulePath);
+    }
+
+    public function testCreateModuleVersion()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+        $ver        = 2;
+
+        mkdir($modulePath);
+        mkdir("$modulePath/module");
+        mkdir("$modulePath/config");
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
+
+        $this->assertTrue($this->model->createModule($module, $modulePath, $ver));
+        $this->assertTrue(file_exists("$modulePath/module/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/src"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/src/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/config"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/view"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/src/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/V$ver/config/module.config.php"));
+
+        $this->removeDir($modulePath);
+
     }
 
     public function testUpdateExistingApiModule()
