@@ -157,10 +157,25 @@ class VersioningModel
                 }
             }
         }
+
+        // update zf-apigility
+        if (isset($config['zf-apigility']['db-connected'])) {
+            $newValues = $this->changeVersionArray($config['zf-apigility']['db-connected'], $previous, $version);
+            $this->configResource->patch(array(
+                'zf-apigility' => array('db-connected' => $newValues)
+            ), true);
+        }
+
+        // update service_manager
+        if (isset($config['service_manager'])) {
+            $newValues = $this->changeVersionArray($config['service_manager'], $previous, $version);
+            $this->configResource->patch(array(
+                'service_manager' => $newValues
+            ), true);
+        }
         
         return true;
     }
-    
 
     /**
      * Change version in a string

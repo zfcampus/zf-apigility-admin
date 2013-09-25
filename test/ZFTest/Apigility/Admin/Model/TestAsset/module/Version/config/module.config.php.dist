@@ -156,7 +156,7 @@ return array (
   'service_manager' => 
   array (
         'factories' => array(
-            'Version\Comment\Model' => 'Version\V1\Rest\Comment\CommentModelFactory',
+            'Version\V1\Rest\Comment\Model' => 'Version\V1\Rest\Comment\CommentModelFactory',
             'Version\V1\Rest\Comment\CommentResource' => 'Version\V1\Rest\Comment\CommentResourceFactory',
         ),
   ),

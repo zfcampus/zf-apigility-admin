@@ -129,10 +129,10 @@ class VersioningModelTest extends TestCase
         $this->assertEquals('Version\\V2\\Rest\\Message\\MessageResource\\Table', $config['zf-apigility']['db-connected']['Version\\V2\\Rest\\Message\\MessageResource']['table_service']);
 
         $this->assertArrayHasKey('service_manager', $config);
-        $this->assertEquals('Version\V1\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\Comment\Model']);
-        $this->assertEquals('Version\V1\Rest\Comment\CommentResourceFactory', 'Version\V1\Rest\Comment\CommentResource');
-        $this->assertEquals('Version\V2\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\Comment\Model']);
-        $this->assertEquals('Version\V2\Rest\Comment\CommentResourceFactory', 'Version\V2\Rest\Comment\CommentResource');
+        $this->assertEquals('Version\V1\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\V1\Rest\Comment\Model']);
+        $this->assertEquals('Version\V1\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V1\Rest\Comment\CommentResource']);
+        $this->assertEquals('Version\V2\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\Model']);
+        $this->assertEquals('Version\V2\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\CommentResource']);
         
         $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
     } 
