@@ -12,7 +12,7 @@ class VersioningModelTest extends TestCase
     public function setUp()
     {
         $modules = array(
-            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1' => new TestAsset\Version\V1\Module(),
+            'ZFTest\Apigility\Admin\Model\TestAsset\Version' => new TestAsset\Version\Module,
         );
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
@@ -22,37 +22,33 @@ class VersioningModelTest extends TestCase
                             ->will($this->returnValue($modules));
 
         $restConfig           = array(
-            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1\Controller\Version' => null, // this should never be returned
+            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1\Rest' => null, // this should never be returned
         );
 
         $rpcConfig          = array(
             // controller => empty pairs
-            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1\Controller\Version' => null, // this should never be returned
+            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1\Rpc' => null, // this should never be returned
         );
 
         $this->moduleModel = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
         $this->model       = new VersioningModel($this->moduleModel);
     }
 
+    public function testGetModuleVersions()
+    {
+        $versions = $this->model->getModuleVersions('ZFTest\Apigility\Admin\Model\TestAsset\Version');
+        $this->assertEquals(array(1), $versions);
+    }
+
     public function testCreateVersion()
     {
-        $result = $this->model->createVersion('ZFTest\Apigility\Admin\Model\TestAsset\Version\V1', 2);
+        $result = $this->model->createVersion('ZFTest\Apigility\Admin\Model\TestAsset\Version', 2);
 
         $this->assertTrue($result);
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/config"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/src"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/Module.php"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/src/Version/V2"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/src/Version/V2/Module.php"));
-        $this->assertContains(
-            '/V2/Module.php', 
-            file_get_contents(__DIR__ . "/TestAsset/Version/V2/Module.php")
-        );
-        $this->assertContains(
-            'namespace ZFTest\Apigility\Admin\Model\TestAsset\Version\V2;', 
-            file_get_contents(__DIR__ . "/TestAsset/Version/V2/src/Version/V2/Module.php")
-        );
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/Rpc"));
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/Rest"));
+        
         $this->removeDir(__DIR__ . "/TestAsset/Version/V2");
     } 
 
