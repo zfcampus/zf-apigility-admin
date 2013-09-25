@@ -38,7 +38,10 @@ class VersioningModel
 
         $srcPath = sprintf("%s/src/%s", $modulePath, $module);
         $this->recursiveCopy($srcPath . '/V'. $prev, $srcPath . '/V' . $ver);
-        
+
+        foreach (glob($modulePath . '/config/*.config.php') as $file) {
+            $this->updateConfigVersion($file, $prev, $ver);
+        }
         return true;
     }
 
@@ -87,28 +90,73 @@ class VersioningModel
         closedir($dir); 
     }
 
+
     /**
-     * Update the version of the PHP source code
+     * Update a PHP configuration file from $prev to $ver version
      *
-     * @param  string $dir
-     * @param  integer $ver
+     * @param string $file
+     * @param integer $prev
+     * @param integer $ver
      * @return boolean
      */
-    protected function updateVersionSourceCode($dir, $ver) 
+    protected function updateConfigVersion($file, $prev, $ver)
     {
-        foreach (glob($dir) as $file) {
-            if (is_dir($file)) {
-                $this->updateVersionSourceCode($file, $ver);
-            }
-            $content = file_get_contents($file);
-            if (false !== $content) {
-                // Update version on namespace and Windows path
-                $content = str_replace('\\V' . ($ver - 1), '\\V' . $ver, $content);
-                // Update version on Unix path
-                $content = str_replace('/V' . ($ver - 1), '/V' . $ver, $content);
-                // Update file
-                file_put_contents($file, $content);
+        $config = include($file);
+        if (empty($config)) {
+            return false;
+        }
+        $prev = (int) $ver - 1;
+        
+        // update zf-hal.metadata_map
+        if (isset($config['zf-hal']['metadata_map'])) {
+            $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $prev, $ver);
+            $config['zf-hal']['metadata_map'] = array_merge($config['zf-hal']['metadata_map'], $newValues);
+        }
+        
+        // @todo update zf-rpc
+
+        // @todo update zf-rest
+        
+        // @todo update zf-content-negotiation
+        
+        copy($file, $file . '.V' . $prev . '.old');
+        return (false !== file_put_contents($file, '<?php return ' . var_export($config, true)));
+    }
+    
+
+    /**
+     * Change version in a string
+     *
+     * @param  string $string
+     * @param  integer $prev
+     * @param  integer $prev
+     * @return string
+     */
+    protected function changeVersionString($string, $prev, $ver)
+    {
+        return str_replace('\\V' . $prev . '\\', '\\V' . $ver . '\\', $string);
+    }
+
+    /**
+     * Change version in an array
+     *
+     * @param  array $data
+     * @param  integer $prev
+     * @param  integer $ver
+     * @return array
+     */
+    protected function changeVersionArray($data, $prev, $ver)
+    {
+        $result = array();
+        foreach ($data as $key => $value) {
+            $newKey = $this->changeVersionString($key, $prev, $ver); 
+            if (is_array($value)) {
+                $result[$newKey] = $this->changeVersionArray($value, $prev, $ver);
+            } else {
+                $result[$newKey] = $this->changeVersionString($value, $prev, $ver);
             }
         }
+        return $result; 
     }
+    
 }

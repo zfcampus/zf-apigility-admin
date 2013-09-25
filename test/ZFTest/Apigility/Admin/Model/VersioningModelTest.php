@@ -29,6 +29,12 @@ class VersioningModelTest extends TestCase
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rest"));
         
         $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
+        unlink(__DIR__ . "/TestAsset/module/Version/config/module.config.php");
+        rename(
+            __DIR__ . "/TestAsset/module/Version/config/module.config.php.V1.old",
+            __DIR__ . "/TestAsset/module/Version/config/module.config.php"
+        );
+
     } 
 
     /**
