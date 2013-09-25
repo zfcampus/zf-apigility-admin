@@ -5,51 +5,30 @@ namespace ZFTest\Apigility\Admin\Model;
 use PHPUnit_Framework_TestCase as TestCase;
 use ZF\Apigility\Admin\Model\VersioningModel;
 use Test;
-use ZF\Apigility\Admin\Model\ModuleModel;
 
 class VersioningModelTest extends TestCase
 {
     public function setUp()
     {
-        $modules = array(
-            'ZFTest\Apigility\Admin\Model\TestAsset\Version' => new TestAsset\Version\Module,
-        );
-        $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
-                                    ->disableOriginalConstructor()
-                                    ->getMock();
-        $this->moduleManager->expects($this->any())
-                            ->method('getLoadedModules')
-                            ->will($this->returnValue($modules));
-
-        $restConfig           = array(
-            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1\Rest' => null, // this should never be returned
-        );
-
-        $rpcConfig          = array(
-            // controller => empty pairs
-            'ZFTest\Apigility\Admin\Model\TestAsset\Version\V1\Rpc' => null, // this should never be returned
-        );
-
-        $this->moduleModel = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
-        $this->model       = new VersioningModel($this->moduleModel);
+        $this->model = new VersioningModel();
     }
 
     public function testGetModuleVersions()
     {
-        $versions = $this->model->getModuleVersions('ZFTest\Apigility\Admin\Model\TestAsset\Version');
+        $versions = $this->model->getModuleVersions('Version', __DIR__ . '/TestAsset');
         $this->assertEquals(array(1), $versions);
     }
 
     public function testCreateVersion()
     {
-        $result = $this->model->createVersion('ZFTest\Apigility\Admin\Model\TestAsset\Version', 2);
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset');
 
         $this->assertTrue($result);
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/Rpc"));
-        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/Version/V2/Rest"));
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2"));
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc"));
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rest"));
         
-        $this->removeDir(__DIR__ . "/TestAsset/Version/V2");
+        $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
     } 
 
     /**

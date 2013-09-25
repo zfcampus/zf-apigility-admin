@@ -1,50 +1,34 @@
 <?php
 namespace ZF\Apigility\Admin\Model;
 
-use ReflectionClass;
-use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Exception;
 
 class VersioningModel
 {
     /**
-     * @var ModuleModel
-     */
-    protected $moduleModel;
-    
-    /**
-     * @param  ModuleModel $moduleModel
-     */
-    public function __construct(ModuleModel $moduleModel)
-    {
-        $this->moduleModel = $moduleModel;
-    }
-
-    /**
      * Create a new version for a module
      *
      * @param  string $module
      * @param  integer $ver
-     * @param  boolean $copy
+     * @param  string $path
      * @return boolen
      */
-    public function createVersion($module, $ver, $copy = true, $path = '.')
+    public function createVersion($module, $ver, $path = '.')
     {
-        if (!$this->moduleModel->getModule($module)) {
+        $modulePath = sprintf("%s/module/%s", $path, $module);
+        if (!file_exists($modulePath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The module %s doesn\'t exist', $module
             ));
         }
-        $versions = $this->getModuleVersions($module);
+
+        $versions = $this->getModuleVersions($module, $path);
         if (in_array($ver, $versions)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The API version %d of the module %s already exists', $ver, $module
             ));
         }
 
-        if (!$copy) {
-            return $this->moduleModel->createModule($name, $path);
-        } 
         $prev = (int) $ver - 1;
         if (!in_array($prev, $versions)) {
             throw new Exception\RuntimeException(sprintf(
@@ -52,10 +36,9 @@ class VersioningModel
             ));
         }
 
-        $class     = new ReflectionClass($module . '\Module');
-        $moduleDir = dirname($class->getFileName());
+        $srcPath = sprintf("%s/src/%s", $modulePath, $module);
+        $this->recursiveCopy($srcPath . '/V'. $prev, $srcPath . '/V' . $ver);
         
-        $this->recursiveCopy($moduleDir . '/V'. $prev, $moduleDir . '/V' . $ver);
         return true;
     }
 
@@ -63,17 +46,18 @@ class VersioningModel
      * Get the versions of a module
      *
      * @param  string $module
+     * @param  string $path
      * @return array|boolean
      */ 
-    public function getModuleVersions($module)
+    public function getModuleVersions($module, $path = '.')
     {
-        $class = new ReflectionClass($module . '\Module');
-        if (empty($class)) {
+        $srcPath = sprintf('%s/module/%s/src/%s', $path, $module, $module);
+        if (!file_exists($srcPath)) {
             return false;
         }
+
         $versions  = array();
-        $moduleDir = dirname($class->getFileName());
-        foreach (glob($moduleDir . DIRECTORY_SEPARATOR . 'V*') as $dir) {
+        foreach (glob($srcPath . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(\d+)$/', $dir, $match)) {
                 $versions[] = (int) $match[1];
             }

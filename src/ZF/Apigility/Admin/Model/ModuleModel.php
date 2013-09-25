@@ -114,10 +114,9 @@ class ModuleModel
         
         }
         mkdir("$modulePath/config", 0777, true);
-        mkdir("$modulePath/V1", 0777, true);
-        mkdir("$modulePath/V1/Rest", 0777, true);
-        mkdir("$modulePath/V1/Rpc", 0777, true);
-        mkdir("$modulePath/view");
+        mkdir("$modulePath/view", 0777, true);
+        mkdir("$modulePath/src/$module/V1/Rest", 0777, true);
+        mkdir("$modulePath/src/$module/V1/Rpc", 0777, true);
 
         if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
@@ -135,7 +134,10 @@ class ModuleModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) {
+            return false;
+        }
+        if (!file_put_contents("$modulePath/src/$module/Module.php", "<" . "?php\n" . $renderer->render($view))) {
             return false;
         }
 

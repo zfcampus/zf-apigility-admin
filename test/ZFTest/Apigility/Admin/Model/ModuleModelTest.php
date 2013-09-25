@@ -165,11 +165,11 @@ class ModuleModelTest extends TestCase
 
         $this->assertTrue($this->model->createModule($module, $modulePath));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/V1"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/V1/Rpc"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/V1/Rest"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rpc"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rest"));
         $this->assertTrue(file_exists("$modulePath/module/$module/view"));
         $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
 
         $this->removeDir($modulePath);

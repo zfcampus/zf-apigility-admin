@@ -1,6 +1,6 @@
 <?php
 
-namespace ZFTest\Apigility\Admin\Model\TestAsset\Version;
+namespace Version;
 
 use ZF\Apigility\ApigilityModuleInterface;
 
