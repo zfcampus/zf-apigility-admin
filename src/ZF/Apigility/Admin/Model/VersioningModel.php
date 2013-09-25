@@ -2,45 +2,61 @@
 namespace ZF\Apigility\Admin\Model;
 
 use ZF\Apigility\Admin\Exception;
+use ZF\Configuration\ConfigResource;
 
 class VersioningModel
 {
+    protected $configResource;
+
+    /**
+     * @param  ConfigResource $config 
+     */
+    public function __construct(ConfigResource $config)
+    {
+        $this->configResource = $config;
+    }
+
     /**
      * Create a new version for a module
      *
      * @param  string $module
-     * @param  integer $ver
+     * @param  integer $version
      * @param  string $path
-     * @return boolen
+     * @return boolean
      */
-    public function createVersion($module, $ver, $path = '.')
+    public function createVersion($module, $version, $path = '.')
     {
         $modulePath = sprintf("%s/module/%s", $path, $module);
         if (!file_exists($modulePath)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'The module %s doesn\'t exist', $module
+                'The module %s doesn\'t exist', 
+                $module
             ));
         }
 
         $versions = $this->getModuleVersions($module, $path);
-        if (in_array($ver, $versions)) {
+        if (in_array($version, $versions)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'The API version %d of the module %s already exists', $ver, $module
+                'The API version %d of the module %s already exists',
+                $version,
+                $module
             ));
         }
 
-        $prev = (int) $ver - 1;
-        if (!in_array($prev, $versions)) {
+        $previous = (int) $version - 1;
+        if (!in_array($previous, $versions)) {
             throw new Exception\RuntimeException(sprintf(
-                'The previous API version %d doesn\'t exist, I cannot create version %d', $prev, $ver
+                'The previous API version %d doesn\'t exist, I cannot create version %d',
+                $previous,
+                $version
             ));
         }
 
         $srcPath = sprintf("%s/src/%s", $modulePath, $module);
-        $this->recursiveCopy($srcPath . '/V'. $prev, $srcPath . '/V' . $ver);
+        $this->recursiveCopy($srcPath . '/V'. $previous, $srcPath . '/V' . $version);
 
         foreach (glob($modulePath . '/config/*.config.php') as $file) {
-            $this->updateConfigVersion($file, $prev, $ver);
+            $this->updateConfigVersion($file, $previous, $version);
         }
         return true;
     }
@@ -92,35 +108,57 @@ class VersioningModel
 
 
     /**
-     * Update a PHP configuration file from $prev to $ver version
+     * Update a PHP configuration file from $previous to $version version
      *
-     * @param string $file
-     * @param integer $prev
-     * @param integer $ver
+     * @param  string $file
+     * @param  integer $previous
+     * @param  integer $version
      * @return boolean
      */
-    protected function updateConfigVersion($file, $prev, $ver)
+    protected function updateConfigVersion($file, $previous, $version)
     {
-        $config = include($file);
+        $config = $this->configResource->fetch(true);
         if (empty($config)) {
             return false;
         }
-        $prev = (int) $ver - 1;
         
         // update zf-hal.metadata_map
         if (isset($config['zf-hal']['metadata_map'])) {
-            $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $prev, $ver);
-            $config['zf-hal']['metadata_map'] = array_merge($config['zf-hal']['metadata_map'], $newValues);
+            $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $previous, $version);
+            $this->configResource->patch(array(
+                'zf-hal' => array('metadata_map' => $newValues)
+            ), true);
         }
         
-        // @todo update zf-rpc
+        // update zf-rpc
+        if (isset($config['zf-rpc'])) {
+            $newValues = $this->changeVersionArray($config['zf-rpc'], $previous, $version);
+            $this->configResource->patch(array(
+                'zf-rpc' => $newValues
+            ), true);
+        }
 
-        // @todo update zf-rest
+        // update zf-rest
+        if (isset($config['zf-rest'])) {
+            $newValues = $this->changeVersionArray($config['zf-rest'], $previous, $version);
+            $this->configResource->patch(array(
+                'zf-rest' => $newValues
+            ), true);
+        }
         
-        // @todo update zf-content-negotiation
+        // update zf-content-negotiation
+        if (isset($config['zf-content-negotiation'])) {
+            foreach (array('controllers', 'accept-whitelist', 'content-type-whitelist') as $key) {
+                if (isset($config['zf-content-negotiation'][$key])) {
+                    $newValues = $this->changeVersionArray($config['zf-content-negotiation'][$key], $previous, $version);
+                    $this->configResource->patch(array(
+                        'zf-content-negotiation' => array($key => $newValues)
+                    ), true);
+                }
+            }
+        }
         
-        copy($file, $file . '.V' . $prev . '.old');
-        return (false !== file_put_contents($file, '<?php return ' . var_export($config, true)));
+        return true;
     }
     
 
@@ -128,35 +166,34 @@ class VersioningModel
      * Change version in a string
      *
      * @param  string $string
-     * @param  integer $prev
-     * @param  integer $prev
+     * @param  integer $previous
+     * @param  integer $version
      * @return string
      */
-    protected function changeVersionString($string, $prev, $ver)
+    protected function changeVersionString($string, $previous, $version)
     {
-        return str_replace('\\V' . $prev . '\\', '\\V' . $ver . '\\', $string);
+        return str_replace('\\V' . $previous . '\\', '\\V' . $version . '\\', $string);
     }
 
     /**
      * Change version in an array
      *
      * @param  array $data
-     * @param  integer $prev
-     * @param  integer $ver
+     * @param  integer $previous
+     * @param  integer $version
      * @return array
      */
-    protected function changeVersionArray($data, $prev, $ver)
+    protected function changeVersionArray($data, $previous, $version)
     {
         $result = array();
         foreach ($data as $key => $value) {
-            $newKey = $this->changeVersionString($key, $prev, $ver); 
+            $newKey = $this->changeVersionString($key, $previous, $version); 
             if (is_array($value)) {
-                $result[$newKey] = $this->changeVersionArray($value, $prev, $ver);
+                $result[$newKey] = $this->changeVersionArray($value, $previous, $version);
             } else {
-                $result[$newKey] = $this->changeVersionString($value, $prev, $ver);
+                $result[$newKey] = $this->changeVersionString($value, $previous, $version);
             }
         }
         return $result; 
     }
-    
 }
