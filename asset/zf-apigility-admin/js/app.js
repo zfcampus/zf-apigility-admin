@@ -141,6 +141,11 @@ module.controller(
             });
 
             $scope.$apply(function () {
+                $rootScope.currentApi = api.props;
+                $rootScope.currentApi.version = {
+                    all: ['v3', 'v2', 'v1'],
+                    current: 'v3'
+                };
                 $scope.api = api;
                 $scope.section = $routeParams.section;
                 $rootScope.pageTitle = api.props.namespace;
@@ -157,8 +162,23 @@ module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
         restrict: 'E',
         scope: true,
         templateUrl: '/zf-apigility-admin/partials/view-navigation.html',
-        controller: ['$scope', function ($scope) {
+        controller: ['$rootScope', '$scope', function ($rootScope, $scope) {
             $scope.routeParams = $routeParams;
+            $scope.currentVersion = null;
+
+            $rootScope.$watch('currentApi', function () {
+                if ($rootScope.currentApi == null) {
+                    return;
+                }
+                $scope.currentVersion = $rootScope.currentApi.version.current;
+            });
+
+            $scope.switchApiVersion = function () {
+                console.log($scope.currentVersion);
+            };
+            $scope.createNewApiVersion = function () {
+                console.log('creating new api version');
+            }
         }]
     }
 }]);
@@ -169,9 +189,6 @@ module.directive('apiInfo', function () {
         templateUrl: '/zf-apigility-admin/partials/api/info.html',
         controller:  ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
             $scope.api = $scope.$parent.api;
-            
-            console.log($scope.api);
-
             $scope.restServices = [];
             $scope.api.links['rest'].fetch({force: true}).then(function (restServices) {
                 // update view
@@ -207,13 +224,13 @@ module.directive('apiRestServices', function () {
             };
 
             $scope.isDbConnected = function (restService) {
-              if (typeof restService !== 'object' || restService === null) {
+                if (typeof restService !== 'object' || restService === null) {
+                    return false;
+                }
+                if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService || "hydrator_name" in restService) {
+                    return true;
+                }
                 return false;
-              }
-              if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService || "hydrator_name" in restService) {
-                return true;
-              }
-              return false;
             };
 
             function updateApiRestServices(force) {
@@ -494,4 +511,5 @@ module.factory('DbAdapterResource', ['$http', function ($http) {
 
 module.run(['$rootScope', '$routeParams', function ($rootScope, $routeParams) {
     $rootScope.routeParams = $routeParams;
+    $rootScope.currentApi = null;
 }]);
