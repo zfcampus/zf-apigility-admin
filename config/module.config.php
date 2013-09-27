@@ -85,6 +85,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'versioning' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/versioning',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Versioning',
+                                        'action'     => 'versioning',
+                                    ),
+                                ),
+                            ),
                             'module' => array(
                                 'type' => 'segment',
                                 'options' => array(
@@ -139,6 +149,7 @@ return array(
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
             'ZF\Apigility\Admin\Controller\RpcService'     => 'HalJson',
             'ZF\Apigility\Admin\Controller\Source'         => 'Json',
+            'ZF\Apigility\Admin\Controller\Versioning'     => 'Json',
         ),
         'accept-whitelist' => array(
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
@@ -151,9 +162,15 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Versioning' => array(
+                'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\RestService' => array(
                 'application/json',
@@ -175,11 +192,12 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
-                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
-                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Versioning' => array(
+                'application/json',
             ),
             'ZF\Apigility\Admin\Controller\RestService' => array(
                 'application/json',
@@ -242,22 +260,24 @@ return array(
             'collection_name'         => 'module',
         ),
         'ZF\Apigility\Admin\Controller\RpcService' => array(
-            'listener'                => 'ZF\Apigility\Admin\Model\RpcServiceResource',
-            'route_name'              => 'zf-apigility-admin/api/module/rpc-service',
-            'entity_class'            => 'ZF\Apigility\Admin\Model\RpcServiceEntity',
-            'identifier_name'         => 'controller_service_name',
-            'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
-            'collection_http_methods' => array('GET', 'POST'),
-            'collection_name'         => 'rpc',
+            'listener'                   => 'ZF\Apigility\Admin\Model\RpcServiceResource',
+            'route_name'                 => 'zf-apigility-admin/api/module/rpc-service',
+            'entity_class'               => 'ZF\Apigility\Admin\Model\RpcServiceEntity',
+            'identifier_name'            => 'controller_service_name',
+            'resource_http_methods'      => array('GET', 'PATCH', 'DELETE'),
+            'collection_http_methods'    => array('GET', 'POST'),
+            'collection_name'            => 'rpc',
+            'collection_query_whitelist' => array('version'),
         ),
         'ZF\Apigility\Admin\Controller\RestService' => array(
-            'listener'                => 'ZF\Apigility\Admin\Model\RestServiceResource',
-            'route_name'              => 'zf-apigility-admin/api/module/rest-service',
-            'entity_class'            => 'ZF\Apigility\Admin\Model\RestServiceEntity',
-            'identifier_name'         => 'controller_service_name',
-            'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
-            'collection_http_methods' => array('GET', 'POST'),
-            'collection_name'         => 'rest',
+            'listener'                   => 'ZF\Apigility\Admin\Model\RestServiceResource',
+            'route_name'                 => 'zf-apigility-admin/api/module/rest-service',
+            'entity_class'               => 'ZF\Apigility\Admin\Model\RestServiceEntity',
+            'identifier_name'            => 'controller_service_name',
+            'resource_http_methods'      => array('GET', 'PATCH', 'DELETE'),
+            'collection_http_methods'    => array('GET', 'POST'),
+            'collection_name'            => 'rest',
+            'collection_query_whitelist' => array('version'),
         ),
     ),
 
@@ -271,6 +291,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility-admin/api/source',
+        ),
+        'ZF\Apigility\Admin\Controller\Versioning' => array(
+            'http_methods' => array('PATCH'),
+            'route_name'   => 'zf-apigility-admin/api/versioning',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),

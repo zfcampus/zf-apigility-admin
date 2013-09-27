@@ -6,9 +6,10 @@ use BarConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
-use ZF\Apigility\Admin\Model\RestServiceModel;
+use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\NewRestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
+use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -56,6 +57,7 @@ class RestServiceModelTest extends TestCase
             'BarConf' => new BarConf\Module()
         );
 
+        $this->moduleEntity  = new ModuleEntity($this->module, array(), array(), false);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -66,7 +68,7 @@ class RestServiceModelTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRest = new RestServiceModel($this->module, $this->modules, $this->resource->factory('BarConf'));
+        $this->codeRest = new RestServiceModel($this->moduleEntity, $this->modules, $this->resource->factory('BarConf'));
     }
 
     public function tearDown()
@@ -96,21 +98,21 @@ class RestServiceModelTest extends TestCase
 
     public function testCanCreateControllerServiceNameFromResourceName()
     {
-        $this->assertEquals('BarConf\Rest\Foo\Controller', $this->codeRest->createControllerServiceName('Foo'));
+        $this->assertEquals('BarConf\V1\Rest\Foo\Controller', $this->codeRest->createControllerServiceName('Foo'));
     }
 
     public function testCreateResourceClassReturnsClassNameCreated()
     {
         $resourceClass = $this->codeRest->createResourceClass('Foo');
-        $this->assertEquals('BarConf\Rest\Foo\FooResource', $resourceClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooResource', $resourceClass);
     }
 
     public function testCreateResourceClassCreatesClassFileWithNamedResourceClass()
     {
         $resourceClass = $this->codeRest->createResourceClass('Foo');
 
-        $className = str_replace($this->module . '\\Rest\\Foo\\', '', $resourceClass);
-        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/' . $className . '.php';
+        $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $resourceClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -135,15 +137,15 @@ class RestServiceModelTest extends TestCase
     public function testCreateEntityClassReturnsClassNameCreated()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
-        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $entityClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooEntity', $entityClass);
     }
 
     public function testCreateEntityClassCreatesClassFileWithNamedEntityClass()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
 
-        $className = str_replace($this->module . '\\Rest\\Foo\\', '', $entityClass);
-        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/' . $className . '.php';
+        $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $entityClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -156,15 +158,15 @@ class RestServiceModelTest extends TestCase
     public function testCreateCollectionClassReturnsClassNameCreated()
     {
         $collectionClass = $this->codeRest->createCollectionClass('Foo');
-        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $collectionClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $collectionClass);
     }
 
     public function testCreateCollectionClassCreatesClassFileWithNamedCollectionClass()
     {
         $collectionClass = $this->codeRest->createCollectionClass('Foo');
 
-        $className = str_replace($this->module . '\\Rest\\Foo\\', '', $collectionClass);
-        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/Rest/Foo/' . $className . '.php';
+        $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $collectionClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -289,10 +291,10 @@ class RestServiceModelTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
 
         $this->assertEquals('BarConf', $result->module);
-        $this->assertEquals('BarConf\Rest\Foo\Controller', $result->controllerServiceName);
-        $this->assertEquals('BarConf\Rest\Foo\FooResource', $result->resourceClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $result->entityClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $result->collectionClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\Controller', $result->controllerServiceName);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooResource', $result->resourceClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooEntity', $result->entityClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $result->routeName);
         $this->assertEquals(array('application/json', 'application/*+json'), $result->acceptWhitelist);
         $this->assertEquals(array('application/json'), $result->contentTypeWhitelist);
@@ -315,14 +317,14 @@ class RestServiceModelTest extends TestCase
         $details = $this->getCreationPayload();
         $result  = $this->codeRest->createService($details);
 
-        $service = $this->codeRest->fetch('BarConf\Rest\Foo\Controller');
+        $service = $this->codeRest->fetch('BarConf\V1\Rest\Foo\Controller');
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $service);
 
         $this->assertEquals('BarConf', $service->module);
-        $this->assertEquals('BarConf\Rest\Foo\Controller', $service->controllerServiceName);
-        $this->assertEquals('BarConf\Rest\Foo\FooResource', $service->resourceClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooEntity', $service->entityClass);
-        $this->assertEquals('BarConf\Rest\Foo\FooCollection', $service->collectionClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\Controller', $service->controllerServiceName);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooResource', $service->resourceClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooEntity', $service->entityClass);
+        $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $service->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $service->routeName);
         $this->assertEquals('/api/foo[/:foo_id]', $service->routeMatch);
     }
@@ -427,7 +429,7 @@ class RestServiceModelTest extends TestCase
         );
         $patch = new RestServiceEntity();
         $patch->exchangeArray(array_merge(array(
-            'controller_service_name'    => 'BarConf\Rest\Foo\Controller',
+            'controller_service_name'    => 'BarConf\V1\Rest\Foo\Controller',
         ), $updates));
 
         $updated = $this->codeRest->updateService($patch);
@@ -455,7 +457,7 @@ class RestServiceModelTest extends TestCase
             return $alternateEntity;
         });
 
-        $result = $this->codeRest->fetch('BarConf\Rest\Foo\Controller');
+        $result = $this->codeRest->fetch('BarConf\V1\Rest\Foo\Controller');
         $this->assertSame($alternateEntity, $result);
     }
 

@@ -21,6 +21,11 @@ class RpcServiceModelFactory
     protected $models = array();
 
     /**
+     * @var ModuleModel
+     */
+    protected $moduleModel;
+
+    /**
      * @var ModuleUtils
      */
     protected $modules;
@@ -34,11 +39,12 @@ class RpcServiceModelFactory
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory, SharedEventManagerInterface $sharedEvents)
+    public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory, SharedEventManagerInterface $sharedEvents, ModuleModel $moduleModel)
     {
         $this->modules            = $modules;
         $this->configFactory      = $configFactory;
         $this->sharedEventManager = $sharedEvents;
+        $this->moduleModel        = $moduleModel;
     }
 
     /**
@@ -51,8 +57,11 @@ class RpcServiceModelFactory
             return $this->models[$module];
         }
 
-        $config = $this->configFactory->factory($module);
-        $this->models[$module] = new RpcServiceModel($this->normalizeModuleName($module), $this->modules, $config);
+        $moduleName   = $this->normalizeModuleName($module);
+        $moduleEntity = $this->moduleModel->getModule($moduleName);
+        $config       = $this->configFactory->factory($module);
+
+        $this->models[$module] = new RpcServiceModel($moduleEntity, $this->modules, $config);
 
         return $this->models[$module];
     }

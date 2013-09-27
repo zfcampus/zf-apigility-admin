@@ -158,22 +158,21 @@ class ModuleModelTest extends TestCase
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
 
-        mkdir($modulePath);
-        mkdir("$modulePath/module");
-        mkdir("$modulePath/config");
+        mkdir("$modulePath/module", 0777, true);
+        mkdir("$modulePath/config", 0777, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
 
         $this->assertTrue($this->model->createModule($module, $modulePath));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/config"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rpc"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rest"));
         $this->assertTrue(file_exists("$modulePath/module/$module/view"));
         $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
 
         $this->removeDir($modulePath);
+        return true;
     }
 
     public function testUpdateExistingApiModule()

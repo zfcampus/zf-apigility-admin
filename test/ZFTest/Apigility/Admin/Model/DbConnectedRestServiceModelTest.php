@@ -9,6 +9,7 @@ use Zend\Config\Writer\PhpArray;
 use Zend\EventManager\Event;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity;
+use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Configuration\ResourceFactory;
@@ -58,6 +59,7 @@ class DbConnectedRestServiceModelTest extends TestCase
             'BarConf' => new BarConf\Module()
         );
 
+        $this->moduleEntity  = new ModuleEntity($this->module, array(), array(), false);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -68,7 +70,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRest = new RestServiceModel($this->module, $this->modules, $this->resource->factory('BarConf'));
+        $this->codeRest = new RestServiceModel($this->moduleEntity, $this->modules, $this->resource->factory('BarConf'));
         $this->model    = new DbConnectedRestServiceModel($this->codeRest);
         $this->codeRest->getEventManager()->attach('fetch', array($this->model, 'onFetch'));
     }
@@ -103,11 +105,11 @@ class DbConnectedRestServiceModelTest extends TestCase
         $result         = $this->model->createService($originalEntity);
         $this->assertSame($originalEntity, $result);
 
-        $this->assertEquals('BarConf\Rest\Barbaz\Controller', $result->controllerServiceName);
-        $this->assertEquals('BarConf\Rest\Barbaz\BarbazResource', $result->resourceClass);
-        $this->assertEquals('BarConf\Rest\Barbaz\BarbazEntity', $result->entityClass);
-        $this->assertEquals('BarConf\Rest\Barbaz\BarbazCollection', $result->collectionClass);
-        $this->assertEquals('BarConf\Rest\Barbaz\BarbazResource\Table', $result->tableService);
+        $this->assertEquals('BarConf\V1\Rest\Barbaz\Controller', $result->controllerServiceName);
+        $this->assertEquals('BarConf\V1\Rest\Barbaz\BarbazResource', $result->resourceClass);
+        $this->assertEquals('BarConf\V1\Rest\Barbaz\BarbazEntity', $result->entityClass);
+        $this->assertEquals('BarConf\V1\Rest\Barbaz\BarbazCollection', $result->collectionClass);
+        $this->assertEquals('BarConf\V1\Rest\Barbaz\BarbazResource\Table', $result->tableService);
         $this->assertEquals('barbaz', $result->tableName);
         $this->assertEquals('bar-conf.rest.barbaz', $result->routeName);
     }
@@ -116,8 +118,8 @@ class DbConnectedRestServiceModelTest extends TestCase
     {
         $originalEntity = $this->getCreationPayload();
         $result         = $this->model->createService($originalEntity);
-        include __DIR__ . '/TestAsset/module/BarConf/src/BarConf/Rest/Barbaz/BarbazEntity.php';
-        $r = new ReflectionClass('BarConf\Rest\Barbaz\BarbazEntity');
+        include __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Barbaz/BarbazEntity.php';
+        $r = new ReflectionClass('BarConf\V1\Rest\Barbaz\BarbazEntity');
         $parent = $r->getParentClass();
         $this->assertInstanceOf('ReflectionClass', $parent);
         $this->assertEquals('ArrayObject', $parent->getName());

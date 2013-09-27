@@ -62,17 +62,21 @@ class ModuleResource extends AbstractResourceListener
             throw new CreationException('Missing module name');
         }
 
-        $name = $data['name'];
-        $name = str_replace('.', '\\', $name);
+        $version = isset($data['version']) ? $data['version'] : 1;
+        $name    = $data['name'];
+        $name    = str_replace('.', '\\', $name);
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\+[a-zA-Z][a-zA-Z0-9_]*)?$/', $name)) {
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }
 
-        if (false === $this->modules->createModule($name, $this->modulePath)) {
+        if (false === $this->modules->createModule($name, $this->modulePath, $version)) {
             throw new CreationException('Unable to create module; check your paths and permissions');
         }
 
         $metadata = new ModuleEntity($name);
+        $metadata->exchangeArray(array(
+            'versions' => array($version),
+        ));
         return $metadata;
     }
 
@@ -86,7 +90,7 @@ class ModuleResource extends AbstractResourceListener
     {
         $module = $this->modules->getModule($id);
         if (!$module instanceof ModuleEntity) {
-            return new ApiProblem(404, 'Module not found or is not Apigilified');
+            return new ApiProblem(404, 'Module not found or is not apigility-enabled');
         }
         return $module;
     }

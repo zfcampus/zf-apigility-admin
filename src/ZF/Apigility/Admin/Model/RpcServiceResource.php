@@ -157,7 +157,8 @@ class RpcServiceResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
-        return $this->getModel()->fetchAll();
+        $version = $this->getEvent()->getQueryParam('version', null);
+        return $this->getModel()->fetchAll($version);
     }
 
     /**
