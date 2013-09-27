@@ -170,6 +170,15 @@ class Module
                 $factory = $services->get('ZF\Apigility\Admin\Model\RpcServiceModelFactory');
                 return new Model\RpcServiceResource($factory);
             },
+            'ZF\Apigility\Admin\Model\VersioningModelFactory' => function ($services) {
+                if (!$services->has('ZF\Configuration\ConfigResourceFactory')) {
+                    throw new ServiceNotCreatedException(
+                        'ZF\Apigility\Admin\Model\VersioningModelFactory is missing one or more dependencies from ZF\Configuration'
+                    );
+                }
+                $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
+                return new Model\VersioningModelFactory($configFactory);
+            },
         ));
     }
 
@@ -185,8 +194,12 @@ class Module
                 $services = $controllers->getServiceLocator();
                 $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
                 return new Controller\SourceController($model);
-
-            }
+            },
+            'ZF\Apigility\Admin\Controller\Versioning' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $factory  = $services->get('ZF\Apigility\Admin\Model\VersioningModelFactory');
+                return new Controller\VersioningController($factory);
+            },
         ));
     }
 

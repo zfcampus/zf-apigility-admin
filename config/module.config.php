@@ -85,6 +85,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'versioning' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/versioning',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Versioning',
+                                        'action'     => 'versioning',
+                                    ),
+                                ),
+                            ),
                             'module' => array(
                                 'type' => 'segment',
                                 'options' => array(
@@ -139,6 +149,7 @@ return array(
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
             'ZF\Apigility\Admin\Controller\RpcService'     => 'HalJson',
             'ZF\Apigility\Admin\Controller\Source'         => 'Json',
+            'ZF\Apigility\Admin\Controller\Versioning'     => 'Json',
         ),
         'accept-whitelist' => array(
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
@@ -151,9 +162,15 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Versioning' => array(
+                'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\RestService' => array(
                 'application/json',
@@ -175,11 +192,12 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
-                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
-                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Versioning' => array(
+                'application/json',
             ),
             'ZF\Apigility\Admin\Controller\RestService' => array(
                 'application/json',
@@ -273,6 +291,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility-admin/api/source',
+        ),
+        'ZF\Apigility\Admin\Controller\Versioning' => array(
+            'http_methods' => array('PATCH'),
+            'route_name'   => 'zf-apigility-admin/api/versioning',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),
