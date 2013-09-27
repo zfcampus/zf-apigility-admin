@@ -33,6 +33,11 @@ class ModuleEntity
     protected $rpcServices;
 
     /**
+     * @var array
+     */
+    protected $versions = array();
+
+    /**
      * @param  string $name
      * @param  array $restServices
      * @param  array $rpcServices
@@ -99,6 +104,14 @@ class ModuleEntity
     }
 
     /**
+     * @return array
+     */
+    public function getVersions()
+    {
+        return $this->versions;
+    }
+
+    /**
      * Populate object from array
      *
      * @param  array $data
@@ -136,6 +149,15 @@ class ModuleEntity
                     }
                     $this->rpcServices = $value;
                     break;
+                case 'versions':
+                    if (!is_array($value)) {
+                        throw new InvalidArgumentException(
+                            'Versions must be an array; received "%s"',
+                            (is_object($value) ? get_class($value) : gettype($value))
+                        );
+                    }
+                    $this->versions = $value;
+                    break;
                 default:
                     break;
             }
@@ -155,6 +177,7 @@ class ModuleEntity
             'is_vendor' => $this->isVendor(),
             'rest'      => $this->getRestServices(),
             'rpc'       => $this->getRpcServices(),
+            'versions'  => $this->versions,
         );
     }
 

@@ -104,7 +104,7 @@ class ModuleModel
      * @param  string $module
      * @param  string $path
      * @param  integer $ver
-     * @return boolen
+     * @return boolean
      */
     public function createModule($module, $path = '.')
     {
