@@ -136,4 +136,27 @@ class VersioningModelTest extends TestCase
         
         $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
     } 
+
+    public function testCreateVersionRenamesNamespacesInCopiedClasses()
+    {
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset');
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc/Bar/BarController.php"));
+        $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rest/Foo/FooEntity.php"));
+
+        $nsSep      = preg_quote('\\');
+        $pattern1 = sprintf(
+            '#Version%sV1%s#',
+            $nsSep,
+            $nsSep
+        );
+        $pattern2 = str_replace('1', '2', $pattern1);
+
+        $controller = file_get_contents(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc/Bar/BarController.php");
+        $this->assertNotRegExp($pattern1, $controller);
+        $this->assertRegExp($pattern2, $controller);
+
+        $entity = file_get_contents(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rest/Foo/FooEntity.php");
+        $this->assertNotRegExp($pattern1, $entity);
+        $this->assertRegExp($pattern2, $entity);
+    }
 }

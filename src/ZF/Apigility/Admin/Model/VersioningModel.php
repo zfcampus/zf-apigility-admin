@@ -54,7 +54,7 @@ class VersioningModel
         }
 
         $srcPath = sprintf("%s/src/%s", $modulePath, $module);
-        $this->recursiveCopy($srcPath . '/V'. $previous, $srcPath . '/V' . $version);
+        $this->recursiveCopy($srcPath . '/V'. $previous, $srcPath . '/V' . $version, $previous, $version);
 
         foreach (Glob::glob($modulePath . '/config/*.config.php') as $file) {
             $this->updateConfigVersion($file, $previous, $version);
@@ -88,21 +88,38 @@ class VersioningModel
     /** 
      * Copy file and folder recursively
      *
-     * @param string $src
-     * @param string $dst
+     * @param string $source
+     * @param string $target
+     * @param int $previous
+     * @param int $version
      */
-    protected function recursiveCopy($src, $dst) 
+    protected function recursiveCopy($source, $target, $previous, $version) 
     { 
-        $dir = opendir($src);
-        @mkdir($dst); 
+        $dir = opendir($source);
+        @mkdir($target); 
+        $nsSep   = preg_quote('\\');
+        $pattern = sprintf(
+            '#%sV%s%s#',
+            $nsSep,
+            $previous,
+            $nsSep
+        );
         while(false !== ( $file = readdir($dir)) ) { 
-            if (( $file != '.' ) && ( $file != '..' )) { 
-                if ( is_dir($src . '/' . $file) ) { 
-                    $this->recursiveCopy($src . '/' . $file, $dst . '/' . $file); 
-                } else { 
-                    copy($src . '/' . $file, $dst . '/' . $file); 
-                } 
+            if (($file == '.') || ($file == '..')) {
+                continue;
+            }
+
+            $origin      = sprintf('%s/%s', $source, $file);
+            $destination = sprintf('%s/%s', $target, $file);
+
+            if (is_dir($origin)) { 
+                $this->recursiveCopy($origin, $destination, $previous, $version); 
+                continue;
             } 
+
+            $contents    = file_get_contents($origin);
+            $newContents = preg_replace($pattern, '\V' . $version . '\\', $contents);
+            file_put_contents($destination, $newContents);
         } 
         closedir($dir); 
     }
