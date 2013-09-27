@@ -95,6 +95,7 @@ class ModuleModel
         if (!array_key_exists($moduleName, $modules)) {
             return null;
         }
+
         return $modules[$moduleName];
     }
 
@@ -225,7 +226,12 @@ EOD;
             }
 
             $services = $this->getServicesByModule($moduleName);
+            $versions = $this->getVersionsByModule($moduleName, $services);
             $entity   = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
+            $entity->exchangeArray(array(
+                'versions' => $versions,
+            ));
+
             $this->modules[$entity->getName()] = $entity;
         }
 
@@ -250,6 +256,40 @@ EOD;
             'rpc'  => $this->discoverServicesByModule($module, $this->rpcConfig),
         );
         return $services;
+    }
+
+    /**
+     * Retrieve versions by module
+     *
+     * Checks each REST and RPC service name for a 
+     * version subnamespace; if found, that version 
+     * is added to the list.
+     * 
+     * @param  string $moduleName 
+     * @param  array $services 
+     * @return array
+     */
+    protected function getVersionsByModule($moduleName, array $services)
+    {
+        $versions           = array();
+        $namespaceSeparator = preg_quote('\\');
+        $pattern            = sprintf(
+            '/%s%sV(?P<version>\d+)%s/',
+            $moduleName,
+            $namespaceSeparator,
+            $namespaceSeparator
+        );
+        foreach (array('rest', 'rpc') as $type) {
+            foreach ($services[$type] as $service) {
+                if (!preg_match($pattern, $service, $matches)) {
+                    continue;
+                }
+                $versions[] = (int) $matches['version'];
+            }
+        }
+        $versions = array_unique($versions, SORT_NUMERIC);
+        sort($versions);
+        return $versions;
     }
 
     /**

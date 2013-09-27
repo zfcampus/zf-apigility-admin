@@ -103,4 +103,36 @@ class ModuleResourceTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $module);
         $this->assertEquals(array(2), $module->getVersions());
     }
+
+    public function testFetchModuleInjectsVersions()
+    {
+        $moduleName = uniqid('Foo');
+        $module = $this->resource->create(array(
+            'name'    => $moduleName,
+            'version' => '2'
+        ));
+        $moduleClass = $module->getNamespace() . '\Module';
+
+        $modules = array(
+            $moduleName => new $moduleClass,
+        );
+        $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $moduleManager->expects($this->any())
+            ->method('getLoadedModules')
+            ->will($this->returnValue($modules));
+
+        $model    = new ModuleModel($moduleManager, array(
+            sprintf('%s\\V1\\Rest\\Foo\\Controller', $moduleName) => true,
+            sprintf('%s\\V3\\Rest\\Bar\\Controller', $moduleName) => true,
+        ), array(
+            sprintf('%s\\V1\\Rpc\\Baz\\Controller', $moduleName) => true,
+            sprintf('%s\\V2\\Rpc\\Bat\\Controller', $moduleName) => true,
+        ));
+        $resource = new ModuleResource($model);
+        $module   = $resource->fetch($moduleName);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $module);
+        $this->assertEquals(array(1, 2, 3), $module->getVersions());
+    }
 }

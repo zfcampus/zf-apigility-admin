@@ -90,7 +90,7 @@ class ModuleResource extends AbstractResourceListener
     {
         $module = $this->modules->getModule($id);
         if (!$module instanceof ModuleEntity) {
-            return new ApiProblem(404, 'Module not found or is not Apigilified');
+            return new ApiProblem(404, 'Module not found or is not apigility-enabled');
         }
         return $module;
     }
