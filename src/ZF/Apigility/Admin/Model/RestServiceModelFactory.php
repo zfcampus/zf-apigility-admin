@@ -21,8 +21,11 @@ class RestServiceModelFactory extends RpcServiceModelFactory
             return $this->models[$type][$module];
         }
 
-        $config    = $this->configFactory->factory($module);
-        $restModel = new RestServiceModel($this->normalizeModuleName($module), $this->modules, $config);
+        $moduleName   = $this->normalizeModuleName($module);
+        $config       = $this->configFactory->factory($module);
+        $moduleEntity = $this->moduleModel->getModule($moduleName);
+
+        $restModel = new RestServiceModel($moduleEntity, $this->modules, $config);
         $restModel->getEventManager()->setSharedManager($this->sharedEventManager);
 
         switch ($type) {

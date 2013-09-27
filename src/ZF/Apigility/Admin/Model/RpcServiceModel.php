@@ -29,6 +29,11 @@ class RpcServiceModel
     protected $module;
 
     /**
+     * @var ModuleEntity
+     */
+    protected $moduleEntity;
+
+    /**
      * @var ModuleUtils
      */
     protected $modules;
@@ -38,9 +43,10 @@ class RpcServiceModel
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct($module, ModuleUtils $modules, ConfigResource $config)
+    public function __construct(ModuleEntity $moduleEntity, ModuleUtils $modules, ConfigResource $config)
     {
-        $this->module         = $module;
+        $this->module         = $moduleEntity->getName();
+        $this->moduleEntity   = $moduleEntity;
         $this->modules        = $modules;
         $this->configResource = $config;
     }
@@ -102,7 +108,7 @@ class RpcServiceModel
      *
      * @return RpcServiceEntity[]
      */
-    public function fetchAll()
+    public function fetchAll($version = null)
     {
         $config = $this->configResource->fetch(true);
         if (!isset($config['zf-rpc'])) {
@@ -110,8 +116,35 @@ class RpcServiceModel
         }
 
         $services = array();
+        $pattern  = false;
+
+        // Initialize pattern if a version was passed and it's valid
+        if (null !== $version) {
+            if (!in_array($version, $this->moduleEntity->getVersions())) {
+                throw new Exception\RuntimeException(sprintf(
+                    'Invalid version "%s" provided',
+                    $version
+                ), 400);
+            }
+            $namespaceSep = preg_quote('\\');
+            $pattern = sprintf(
+                '%s%sV%s',
+                $this->module,
+                $namespaceSep,
+                $version
+            );
+        }
+
         foreach (array_keys($config['zf-rpc']) as $service) {
-            $services[] = $this->fetch($service);
+            if (!$pattern) {
+                $services[] = $this->fetch($controllerService);
+                continue;
+            }
+
+            if (preg_match($pattern, $controllerService)) {
+                $services[] = $this->fetch($controllerService);
+                continue;
+            }
         }
 
         return $services;
@@ -168,11 +201,13 @@ class RpcServiceModel
     {
         $module     = $this->module;
         $modulePath = $this->modules->getModulePath($module);
+        $version    = $this->moduleEntity->getLatestVersion();
 
         $srcPath = sprintf(
-            '%s/src/%s/Rpc/%s',
+            '%s/src/%s/V%s/Rpc/%s',
             $modulePath,
             str_replace('\\', '/', $module),
+            $version,
             $serviceName
         );
 
@@ -182,7 +217,7 @@ class RpcServiceModel
 
         $className         = sprintf('%sController', $serviceName);
         $classPath         = sprintf('%s/%s.php', $srcPath, $className);
-        $controllerService = sprintf('%s\\Rpc\\%s\\Controller', $module, $serviceName);
+        $controllerService = sprintf('%s\\V%s\\Rpc\\%s\\Controller', $module, $version, $serviceName);
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -195,6 +230,7 @@ class RpcServiceModel
             'module'      => $module,
             'classname'   => $className,
             'servicename' => $serviceName,
+            'version'     => $version,
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(
@@ -210,7 +246,7 @@ class RpcServiceModel
             return false;
         }
 
-        $fullClassName = sprintf('%s\\Rpc\\%s\\%s', $module, $serviceName, $className);
+        $fullClassName = sprintf('%s\\V%s\\Rpc\\%s\\%s', $module, $version, $serviceName, $className);
         $this->configResource->patch(array(
             'controllers' => array(
                 'invokables' => array(

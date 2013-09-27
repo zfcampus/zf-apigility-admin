@@ -31,6 +31,11 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $module;
 
     /**
+     * @var ModuleEntity
+     */
+    protected $moduleEntity;
+
+    /**
      * @var string
      */
     protected $modulePath;
@@ -79,16 +84,17 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $sourcePath;
 
     /**
-     * @param  string $module
+     * @param  ModuleEntity $moduleEntity
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct($module, ModuleUtils $modules, ConfigResource $config)
+    public function __construct(ModuleEntity $moduleEntity, ModuleUtils $modules, ConfigResource $config)
     {
-        $this->module         = $module;
+        $this->module         = $moduleEntity->getName();
+        $this->moduleEntity   = $moduleEntity;
         $this->modules        = $modules;
         $this->configResource = $config;
-        $this->modulePath     = $modules->getModulePath($module);
+        $this->modulePath     = $modules->getModulePath($this->module);
     }
 
     /**
@@ -190,7 +196,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @return RestServiceEntity[]
      */
-    public function fetchAll()
+    public function fetchAll($version = null)
     {
         $config = $this->configResource->fetch(true);
         if (!isset($config['zf-rest'])) {
@@ -198,8 +204,35 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $services = array();
+        $pattern  = false;
+
+        // Initialize pattern if a version was passed and it's valid
+        if (null !== $version) {
+            if (!in_array($version, $this->moduleEntity->getVersions())) {
+                throw new Exception\RuntimeException(sprintf(
+                    'Invalid version "%s" provided',
+                    $version
+                ), 400);
+            }
+            $namespaceSep = preg_quote('\\');
+            $pattern = sprintf(
+                '%s%sV%s',
+                $this->module,
+                $namespaceSep,
+                $version
+            );
+        }
+
         foreach (array_keys($config['zf-rest']) as $controllerService) {
-            $services[] = $this->fetch($controllerService);
+            if (!$pattern) {
+                $services[] = $this->fetch($controllerService);
+                continue;
+            }
+
+            if (preg_match($pattern, $controllerService)) {
+                $services[] = $this->fetch($controllerService);
+                continue;
+            }
         }
 
         return $services;
@@ -297,7 +330,12 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function createControllerServiceName($resourceName)
     {
-        return sprintf('%s\\Rest\\%s\\Controller', $this->module, $resourceName);
+        return sprintf(
+            '%s\\V%s\\Rest\\%s\\Controller',
+            $this->module,
+            $this->moduleEntity->getLatestVersion(),
+            $resourceName
+        );
     }
 
     /**
@@ -325,6 +363,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'module'    => $module,
             'resource'  => $resourceName,
             'classname' => $className,
+            'version'   => $this->moduleEntity->getLatestVersion(),
         ));
         if (!$this->createClassFile($view, 'resource', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -333,7 +372,14 @@ class RestServiceModel implements EventManagerAwareInterface
             ));
         }
 
-        $fullClassName = sprintf('%s\\Rest\\%s\\%s', $module, $resourceName, $className);
+        $fullClassName = sprintf(
+            '%s\\V%s\\Rest\\%s\\%s',
+            $module,
+            $this->moduleEntity->getLatestVersion(),
+            $resourceName,
+            $className
+        );
+
         $this->configResource->patch(array(
             'service_manager' => array(
                 'invokables' => array(
@@ -371,6 +417,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'module'    => $module,
             'resource'  => $resourceName,
             'classname' => $className,
+            'version'   => $this->moduleEntity->getLatestVersion(),
         ));
         if (!$this->createClassFile($view, $template, $classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -379,7 +426,13 @@ class RestServiceModel implements EventManagerAwareInterface
             ));
         }
 
-        $fullClassName = sprintf('%s\\Rest\\%s\\%s', $module, $resourceName, $className);
+        $fullClassName = sprintf(
+            '%s\\V%s\\Rest\\%s\\%s',
+            $module,
+            $this->moduleEntity->getLatestVersion(),
+            $resourceName,
+            $className
+        );
         return $fullClassName;
     }
 
@@ -408,6 +461,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'module'    => $module,
             'resource'  => $resourceName,
             'classname' => $className,
+            'version'   => $this->moduleEntity->getLatestVersion(),
         ));
         if (!$this->createClassFile($view, 'collection', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -416,7 +470,13 @@ class RestServiceModel implements EventManagerAwareInterface
             ));
         }
 
-        $fullClassName = sprintf('%s\\Rest\\%s\\%s', $module, $resourceName, $className);
+        $fullClassName = sprintf(
+            '%s\\V%s\\Rest\\%s\\%s',
+            $module,
+            $this->moduleEntity->getLatestVersion(),
+            $resourceName,
+            $className
+        );
         return $fullClassName;
     }
 
@@ -726,9 +786,10 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $sourcePath = sprintf(
-            '%s/src/%s/Rest/%s',
+            '%s/src/%s/V%s/Rest/%s',
             $this->modulePath,
             str_replace('\\', '/', $this->module),
+            $this->moduleEntity->getLatestVersion(),
             $resourceName
         );
 

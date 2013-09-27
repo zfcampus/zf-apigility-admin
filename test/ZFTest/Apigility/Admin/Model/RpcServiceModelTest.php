@@ -5,10 +5,11 @@ namespace ZFTest\Apigility\Admin\Model;
 use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
+use Zend\Config\Writer\PhpArray;
+use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\RpcServiceModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
-use Zend\Config\Writer\PhpArray;
 
 require_once __DIR__ . '/TestAsset/module/FooConf/Module.php';
 
@@ -54,6 +55,7 @@ class RpcServiceModelTest extends TestCase
             'FooConf' => new FooConf\Module()
         );
 
+        $this->moduleEntity  = new ModuleEntity($this->module);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -64,7 +66,7 @@ class RpcServiceModelTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->codeRpc  = new RpcServiceModel($this->module, $this->modules, $this->resource->factory('FooConf'));
+        $this->codeRpc  = new RpcServiceModel($this->moduleEntity, $this->modules, $this->resource->factory($this->module));
     }
 
     public function tearDown()
@@ -86,9 +88,9 @@ class RpcServiceModelTest extends TestCase
         $this->assertObjectHasAttribute('file', $result);
         $this->assertObjectHasAttribute('service', $result);
 
-        $className         = sprintf("%s\\Rpc\\%s\\%sController", $this->module, $serviceName, $serviceName);
-        $fileName          = sprintf("%s/TestAsset/module/%s/src/%s/Rpc/%s/%sController.php", __DIR__, $this->module, $this->module, $serviceName, $serviceName);
-        $controllerService = sprintf("%s\\Rpc\\%s\\Controller", $this->module, $serviceName);
+        $className         = sprintf("%s\\V1\\Rpc\\%s\\%sController", $this->module, $serviceName, $serviceName);
+        $fileName          = sprintf("%s/TestAsset/module/%s/src/%s/V1/Rpc/%s/%sController.php", __DIR__, $this->module, $this->module, $serviceName, $serviceName);
+        $controllerService = sprintf("%s\\V1\\Rpc\\%s\\Controller", $this->module, $serviceName);
 
         $this->assertEquals($className, $result->class);
         $this->assertEquals($fileName, $result->file);
@@ -210,7 +212,7 @@ class RpcServiceModelTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $expected   = array(
             'controllers' => array('invokables' => array(
-                'FooConf\Rpc\HelloWorld\Controller' => 'FooConf\Rpc\HelloWorld\HelloWorldController',
+                'FooConf\V1\Rpc\HelloWorld\Controller' => 'FooConf\V1\Rpc\HelloWorld\HelloWorldController',
             )),
             'router' => array('routes' => array(
                 'foo-conf.rpc.hello-world' => array(
@@ -218,29 +220,29 @@ class RpcServiceModelTest extends TestCase
                     'options' => array(
                         'route' => '/foo_conf/hello/world',
                         'defaults' => array(
-                            'controller' => 'FooConf\Rpc\HelloWorld\Controller',
+                            'controller' => 'FooConf\V1\Rpc\HelloWorld\Controller',
                             'action' => 'helloWorld',
                         ),
                     ),
                 ),
             )),
             'zf-rpc' => array(
-                'FooConf\Rpc\HelloWorld\Controller' => array(
+                'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                     'http_methods' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.rpc.hello-world',
                 ),
             ),
             'zf-content-negotiation' => array(
                 'controllers' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => $selector,
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => $selector,
                 ),
             ),
         );
         $config = include $configFile;
         $this->assertEquals($expected, $config);
 
-        $class     = 'FooConf\Rpc\HelloWorld\HelloWorldController';
-        $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/Rpc/HelloWorld/HelloWorldController.php', __DIR__);
+        $class     = 'FooConf\V1\Rpc\HelloWorld\HelloWorldController';
+        $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/V1/Rpc/HelloWorld/HelloWorldController.php', __DIR__);
         $this->assertTrue(file_exists($classFile));
         require_once $classFile;
         $controllerClass = new ReflectionClass($class);

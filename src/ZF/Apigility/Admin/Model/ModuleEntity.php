@@ -112,6 +112,17 @@ class ModuleEntity
     }
 
     /**
+     * @return int
+     */
+    public function getLatestVersion()
+    {
+        if (empty($this->versions)) {
+            return 1;
+        }
+        return max($this->versions);
+    }
+
+    /**
      * Populate object from array
      *
      * @param  array $data
