@@ -225,8 +225,8 @@ EOD;
             }
 
             $services = $this->getServicesByModule($moduleName);
-            $metadata  = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
-            $this->modules[$metadata->getName()] = $metadata;
+            $entity   = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
+            $this->modules[$entity->getName()] = $entity;
         }
 
         return $this->modules;
