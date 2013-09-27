@@ -2,13 +2,15 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\ModuleManager\ModuleManager;
-use ZF\Apigility\ApigilityModuleInterface;
+use ReflectionObject;
 use Zend\Code\Generator\ValueGenerator;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Stdlib\Glob;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
-use ReflectionObject;
+use ZF\Apigility\Admin\Exception;
+use ZF\Apigility\ApigilityModuleInterface;
 
 class ModuleModel
 {
@@ -226,7 +228,7 @@ EOD;
             }
 
             $services = $this->getServicesByModule($moduleName);
-            $versions = $this->getVersionsByModule($moduleName, $services);
+            $versions = $this->getVersionsByModule($moduleName, $module);
             $entity   = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
             $entity->exchangeArray(array(
                 'versions' => $versions,
@@ -269,25 +271,32 @@ EOD;
      * @param  array $services 
      * @return array
      */
-    protected function getVersionsByModule($moduleName, array $services)
+    protected function getVersionsByModule($moduleName, ApigilityModuleInterface $module)
     {
-        $versions           = array();
-        $namespaceSeparator = preg_quote('\\');
-        $pattern            = sprintf(
-            '/%s%sV(?P<version>\d+)%s/',
+        $r        = new ReflectionObject($module);
+        $path     = dirname($r->getFileName());
+        $dirSep   = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
+        $pattern  = sprintf(
+            '#%s%s%ssrc%s%s#',
+            $dirSep,
             $moduleName,
-            $namespaceSeparator,
-            $namespaceSeparator
+            $dirSep,
+            $dirSep,
+            $moduleName
         );
-        foreach (array('rest', 'rpc') as $type) {
-            foreach ($services[$type] as $service) {
-                if (!preg_match($pattern, $service, $matches)) {
-                    continue;
-                }
+        if (!preg_match($pattern, $path)) {
+            $path = sprintf('%s/src/%s', $path, $moduleName);
+        }
+        if (!file_exists($path)) {
+            return array();
+        }
+
+        $versions  = array();
+        foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
+            if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
                 $versions[] = (int) $matches['version'];
             }
         }
-        $versions = array_unique($versions, SORT_NUMERIC);
         sort($versions);
         return $versions;
     }

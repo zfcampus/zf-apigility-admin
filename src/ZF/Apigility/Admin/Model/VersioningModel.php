@@ -1,6 +1,7 @@
 <?php
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\Stdlib\Glob;
 use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 
@@ -55,7 +56,7 @@ class VersioningModel
         $srcPath = sprintf("%s/src/%s", $modulePath, $module);
         $this->recursiveCopy($srcPath . '/V'. $previous, $srcPath . '/V' . $version);
 
-        foreach (glob($modulePath . '/config/*.config.php') as $file) {
+        foreach (Glob::glob($modulePath . '/config/*.config.php') as $file) {
             $this->updateConfigVersion($file, $previous, $version);
         }
         return true;
@@ -76,9 +77,9 @@ class VersioningModel
         }
 
         $versions  = array();
-        foreach (glob($srcPath . DIRECTORY_SEPARATOR . 'V*') as $dir) {
-            if (preg_match('/\\V(\d+)$/', $dir, $match)) {
-                $versions[] = (int) $match[1];
+        foreach (Glob::glob($srcPath . DIRECTORY_SEPARATOR . 'V*') as $dir) {
+            if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
+                $versions[] = (int) $matches['version'];
             }
         }
         return $versions;
