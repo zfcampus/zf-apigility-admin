@@ -27,6 +27,11 @@ instance may be composed: e.g., "username", "password", etc.
     "name": "normalized module name",
     "namespace": "PHP namespace of the module",
     "is_vendor": "boolean value indicating whether or not this is a vendor (3rd party) module",
+    "versions": [
+        "Array",
+        "of",
+        "available versions"
+    ]
 }
 ```
 
@@ -206,6 +211,33 @@ This endpoint is for API-1st-enabling an existing module.
 
 - Errors: `application/api-problem+json`
 
+### `/admin/api/versioning`
+
+This endpoint is for adding a new version to an existing API. If no version is
+passed in the payload, the version number is simply incremented.
+
+- Accept: `application/json`
+
+  Returns the response `{ "success": true }` on success, an API-Problem payload
+  on error.
+
+- Content-Type: `application/json`
+
+  Expects an object with the property "module", providing the name of a ZF2,
+  Apigility-enabled module; optionally, a "version" property may also be
+  provided to indicate the specific version string to use.
+
+  ```javascript
+  {
+    "module": "Status",
+    "version": 10
+  }
+  ```
+
+- Methods: `PATCH`
+
+- Errors: `application/api-problem+json`
+
 ### `/admin/api/module[/:name]`
 
 This is the canonical endpoint for [Module resources](#module).
@@ -258,6 +290,9 @@ This is the canonical endpoint for [RPC resources](#rpc).
 
 - Resource Methods: `GET`, `PATCH`
 
+- The query string variable `version` may be passed to the collection to filter
+  results by version: e.g., `/admin/api/module/:name/rpc?version=2`.
+
 - Errors: `application/api-problem+json`
 
 ### `/admin/api/module/:name/rest[/:controller_service_name]`
@@ -298,5 +333,8 @@ return them as well):
 - Collection Methods: `GET`, `POST`, `DELETE`
 
 - Resource Methods: `GET`, `PATCH`
+
+- The query string variable `version` may be passed to the collection to filter
+  results by version: e.g., `/admin/api/module/:name/rest?version=2`.
 
 - Errors: `application/api-problem+json`
