@@ -13,29 +13,30 @@
     <script type="text/javascript" src="/zf-apigility-admin/js/vendor/angular.js"></script>
     <script type="text/javascript" src="/zf-apigility-admin/js/vendor/ng-tags-input.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/zf-apigility/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/zf-apigility-admin/css/ng-tags-input.min.css" />
     <link rel="stylesheet" type="text/css" href="/zf-apigility/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/zf-apigility-admin/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/zf-apigility-admin/css/ng-tags-input.min.css" />
     <link rel="stylesheet" type="text/css" href="/zf-apigility-admin/css/bootstrap-glyphicons.css" />
     <link rel="stylesheet" type="text/css" href="/zf-apigility-admin/css/typeahead.css" />
 </head>
 <body id="ng-app" ng-app="ag-admin">
     <a class="sr-only" href="#content"> … </a>
-    <header class="navbar navbar-inverse navbar-fixed-top ag-nav" role="banner">
+    <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
         <div class="container">
             <div class="navbar-header">
                 <a href="/admin" class="navbar-brand">
                     <img src="/zf-apigility/img/ag-logo.png">
                 </a>
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-navbar-collapse">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <nav class="collapse navbar-collapse ag-navbar-collapse" role="navigation">
+            <nav class="collapse navbar-collapse ag-admin-navbar-collapse" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li class="ag-nav-dashboard active">
+                    <li class="ag-admin-nav-dashboard active">
                         <a href="#">Dashboard</a>
                     </li>
                     <li>
@@ -46,13 +47,13 @@
         </div>
     </header>
 
-    <div class="ag-module-navigation" ng-controller="ApiListController">
+    <div class="ag-admin-module-navigation" ng-controller="ApiListController">
         <div class="container">
             <span class="pull-left">APIs: </span>
             <button ng-hide="showNewApiForm" ng-click="showNewApiForm = true" id="create-module-button" class="btn btn-sm btn-primary pull-right" title="Create New API" position="bottom" content="#create-api-form">
                 Create New API
             </button>
-            <ul class="nav nav-pills ag-nav-pills">
+            <ul class="nav nav-pills ag-admin-nav-pills">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
                     <a href="#/api/{{ api.name }}/info">{{ api.namespace }}</a>
                 </li>
@@ -70,10 +71,9 @@
         </div>
     </div>
 
-    <div class="ag-header" id="content">
+    <div class="ag-admin-header" id="content">
         <div class="container">
             <h1>{{ pageTitle }}</h1>
-            <p>{{ pageDescription }}</p>
         </div>
     </div>
 
