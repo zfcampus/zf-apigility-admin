@@ -1,6 +1,7 @@
 <?php
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
 use Zend\Stdlib\Glob;
 use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
@@ -25,14 +26,11 @@ class VersioningModel
      * @param  string $path
      * @return boolean
      */
-    public function createVersion($module, $version, $path = '.')
+    public function createVersion($module, $version, $path = false)
     {
-        $modulePath = sprintf("%s/module/%s", $path, $module);
-        if (!file_exists($modulePath)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'The module %s doesn\'t exist',
-                $module
-            ));
+        $module  = $this->normalizeModule($module);
+        if (!$path) {
+            $path = $this->getModuleSourcePath($module);
         }
 
         $versions = $this->getModuleVersions($module, $path);
@@ -53,12 +51,15 @@ class VersioningModel
             ));
         }
 
-        $srcPath = sprintf("%s/src/%s", $modulePath, $module);
-        $this->recursiveCopy($srcPath . '/V'. $previous, $srcPath . '/V' . $version, $previous, $version);
+        $this->recursiveCopy($path . '/V'. $previous, $path . '/V' . $version, $previous, $version);
 
-        foreach (Glob::glob($modulePath . '/config/*.config.php') as $file) {
-            $this->updateConfigVersion($module, $file, $previous, $version);
+        $configPath = $this->locateConfigPath($path);
+        if ($configPath !== false) {
+            foreach (Glob::glob($configPath . '/*.config.php') as $file) {
+                $this->updateConfigVersion($module, $file, $previous, $version);
+            }
         }
+
         return true;
     }
 
@@ -69,16 +70,20 @@ class VersioningModel
      * @param  string $path
      * @return array|boolean
      */
-    public function getModuleVersions($module, $path = '.')
+    public function getModuleVersions($module, $path = false)
     {
-        $srcPath = sprintf('%s/module/%s/src/%s', $path, $module, $module);
-        if (!file_exists($srcPath)) {
-            return false;
+printf("In %s\n", __METHOD__);
+        $module       = $this->normalizeModule($module);
+
+        if (!$path) {
+            $this->getModuleSourcePath($module);
         }
 
         $versions  = array();
-        foreach (Glob::glob($srcPath . DIRECTORY_SEPARATOR . 'V*') as $dir) {
+printf("    Searching for versions under path\n");
+        foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
+printf("    Version '%s' found\n", $matches['version']);
                 $versions[] = (int) $matches['version'];
             }
         }
@@ -238,5 +243,75 @@ class VersioningModel
             }
         }
         return $result;
+    }
+
+    /**
+     * Normalize a module name
+     *
+     * Module names come over the wire dot-separated; make them namespaced.
+     * 
+     * @param  string $module 
+     * @return string
+     */
+    protected function normalizeModule($module)
+    {
+        return str_replace('.', '\\', $module);
+    }
+
+    /**
+     * Determine the source path for the module
+     *
+     * Usually, this is the "src/{modulename}" subdirectory of the 
+     * module.
+     * 
+     * @param  string $module 
+     * @return string
+     */
+    protected function getModuleSourcePath($module)
+    {
+        $moduleClass = sprintf('%s\\Module', $module);
+
+        if (!class_exists($moduleClass)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The module %s doesn\'t exist',
+                $module
+            ));
+        }
+
+        $r = new ReflectionClass($moduleClass);
+        $moduleClassPath = $r->getFileName();
+        $srcPath = sprintf('%s/src', $moduleClassPath);
+        if (file_exists($srcPath) && is_dir($srcPath)) {
+            $srcPath = sprintf('%s/%s', $srcPath, str_replace('\\', '/', $moduleClass));
+        }
+
+        if (!file_exists($srcPath) && !is_dir($srcPath)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The module "%s" has a malformed directory structure; cannot determine source path',
+                $module
+            ));
+        }
+
+        return $srcPath;
+    }
+
+    /**
+     * Locate the config path for this module
+     * 
+     * @param  string $srcPath 
+     * @return string|false
+     */
+    protected function locateConfigPath($srcPath)
+    {
+        $config = sprintf('%s/config', $srcPath);
+        if (file_exists($config) && is_dir($config)) {
+            return $config;
+        }
+
+        if ($srcPath == '.' || $srcPath == '/') {
+            return false;
+        }
+
+        return $this->locateConfigPath(dirname($srcPath));
     }
 }

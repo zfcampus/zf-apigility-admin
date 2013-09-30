@@ -68,13 +68,13 @@ class VersioningModelTest extends TestCase
 
     public function testGetModuleVersions()
     {
-        $versions = $this->model->getModuleVersions('Version', __DIR__ . '/TestAsset');
+        $versions = $this->model->getModuleVersions('Version', __DIR__ . '/TestAsset/module/Version/src/Version');
         $this->assertEquals(array(1), $versions);
     }
 
     public function testCreateVersion()
     {
-        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset');
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset/module/Version/src/Version');
 
         $this->assertTrue($result);
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2"));
@@ -145,7 +145,7 @@ class VersioningModelTest extends TestCase
 
     public function testCreateVersionRenamesNamespacesInCopiedClasses()
     {
-        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset');
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset/module/Version/src/Version');
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc/Bar/BarController.php"));
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rest/Foo/FooEntity.php"));
 
