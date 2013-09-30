@@ -110,6 +110,12 @@ class VersioningModelTest extends TestCase
         $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\Controller', $config['zf-content-negotiation']['content-type-whitelist']);
         $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\Controller', $config['zf-content-negotiation']['content-type-whitelist']);
 
+        // Check if the mediatype of the new version is correct
+        $acceptWhitelist = $config['zf-content-negotiation']['accept-whitelist'];
+        $this->assertContains('application/version.v2+json', $acceptWhitelist['Version\\V2\\Rest\\Message\\Controller']);
+        $contentTypeWhitelist = $config['zf-content-negotiation']['content-type-whitelist'];
+        $this->assertContains('application/version.v2+json', $contentTypeWhitelist['Version\\V2\\Rest\\Message\\Controller']);
+
         $this->assertArrayHasKey('zf-hal', $config);
         $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\MessageEntity', $config['zf-hal']['metadata_map']);
         $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\MessageEntity', $config['zf-hal']['metadata_map']);
@@ -133,9 +139,9 @@ class VersioningModelTest extends TestCase
         $this->assertEquals('Version\V1\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V1\Rest\Comment\CommentResource']);
         $this->assertEquals('Version\V2\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\Model']);
         $this->assertEquals('Version\V2\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\CommentResource']);
-        
+
         $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
-    } 
+    }
 
     public function testCreateVersionRenamesNamespacesInCopiedClasses()
     {

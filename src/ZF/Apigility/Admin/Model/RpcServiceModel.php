@@ -176,7 +176,7 @@ class RpcServiceModel
 
     /**
      * Delete a service
-     * 
+     *
      * @param  RpcServiceEntity $entity
      * @return true
      */
@@ -279,24 +279,33 @@ class RpcServiceModel
         $routeName = sprintf('%s.rpc.%s', $this->normalize($this->module), $this->normalize($serviceName));
         $action    = lcfirst($serviceName);
 
-        $config = array('router' => array('routes' => array(
-            $routeName => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => $route,
-                    'defaults' => array(
-                        'controller' => $controllerService,
-                        'action'     => $action,
+        $config = array(
+            'router' => array(
+                'routes' => array(
+                    $routeName => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => $route,
+                            'defaults' => array(
+                                'controller' => $controllerService,
+                                'action'     => $action,
+                            ),
+                        ),
                     ),
-                ),
+                )
             ),
-        )));
+            'zf-versioning' => array(
+                'uri' => array (
+                    $routeName
+                )
+            )
+        );
 
         $this->configResource->patch($config, true);
         return $routeName;
     }
 
-    /**
+    /*
      * Create the zf-rpc configuration for the controller service
      *
      * @param  string $controllerService
@@ -405,10 +414,10 @@ class RpcServiceModel
 
     /**
      * Update configuration for a content negotiation whitelist for a named controller service
-     * 
-     * @param  string $controllerService 
-     * @param  string $headerType 
-     * @param  array $whitelist 
+     *
+     * @param  string $controllerService
+     * @param  string $headerType
+     * @param  array $whitelist
      * @return true
      */
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
@@ -425,8 +434,8 @@ class RpcServiceModel
 
     /**
      * Removes the route configuration for a named route
-     * 
-     * @param  string $routeName 
+     *
+     * @param  string $routeName
      */
     public function deleteRouteConfig($routeName)
     {
@@ -436,8 +445,8 @@ class RpcServiceModel
 
     /**
      * Delete the RPC configuration for a named RPC service
-     * 
-     * @param  string $serviceName 
+     *
+     * @param  string $serviceName
      */
     public function deleteRpcConfig($serviceName)
     {
@@ -446,10 +455,10 @@ class RpcServiceModel
     }
 
     /**
-     * Delete the Content Negotiation configuration for a named RPC 
+     * Delete the Content Negotiation configuration for a named RPC
      * service
-     * 
-     * @param  string $serviceName 
+     *
+     * @param  string $serviceName
      */
     public function deleteContentNegotiationConfig($serviceName)
     {

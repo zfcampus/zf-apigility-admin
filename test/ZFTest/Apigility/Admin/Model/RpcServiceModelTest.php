@@ -133,6 +133,11 @@ class RpcServiceModelTest extends TestCase
                     ),
                 ),
             )),
+            'zf-versioning' => array(
+                'uri' => array(
+                    'foo-conf.rpc.hello-world'
+                )
+            )
         );
         $this->assertEquals($expected, $config);
         return (object) array(
@@ -248,17 +253,22 @@ class RpcServiceModelTest extends TestCase
                     'FooConf\V1\Rpc\HelloWorld\Controller' => $selector,
                 ),
                 'accept-whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                         'application/*+json',
                     ),
                 ),
                 'content-type-whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                     ),
                 ),
             ),
+            'zf-versioning' => array(
+                'uri' => array(
+                    'foo-conf.rpc.hello-world'
+                )
+            )
         );
         $config = include $configFile;
         $this->assertEquals($expected, $config);

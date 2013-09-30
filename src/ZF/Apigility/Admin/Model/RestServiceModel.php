@@ -498,18 +498,28 @@ class RestServiceModel implements EventManagerAwareInterface
             $filter->filter($resourceName)
         );
 
-        $config = array('router' => array('routes' => array(
-            $routeName => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => sprintf('%s[/:%s]', $route, $identifier),
-                    'defaults' => array(
-                        'controller' => $controllerService,
+        $config = array(
+            'router' => array(
+                'routes' => array(
+                    $routeName => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => sprintf('%s[/:%s]', $route, $identifier),
+                            'defaults' => array(
+                                'controller' => $controllerService,
+                            ),
+                        ),
                     ),
-                ),
+                )
             ),
-        )));
+            'zf-versioning' => array(
+                'uri' => array(
+                    $routeName
+                )
+            )
+        );
         $this->configResource->patch($config, true);
+
         return $routeName;
     }
 
