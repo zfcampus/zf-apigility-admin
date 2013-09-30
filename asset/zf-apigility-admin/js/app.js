@@ -127,6 +127,8 @@ module.controller(
             "Json"
         ];
         $scope.source_code = [];
+        $scope.currentApiVersion = 0;
+        $scope.currentApiVersions = [];
 
         DbAdapterResource.fetch().then(function (adapters) {
             $scope.$apply(function () {
@@ -134,25 +136,41 @@ module.controller(
             });
         });
 
-        ApisResource.fetch().then(function (apis) {
+        var updateApi = function (forceUpdate, newApiVersion) {
+            if (forceUpdate === undefined) {
+                forceUpdate = false;
+            }
 
-            var api = _.find(apis.embedded.module, function (m) {
-                return m.props.name === $routeParams.apiName;
+            ApisResource.fetch({force: forceUpdate}).then(function (apis) {
+console.log(apis);
+                var api = _.find(apis.embedded.module, function (m) {
+                    return m.props.name === $routeParams.apiName;
+                });
+console.log(api);
+                $scope.$apply(function () {
+                    $scope.api = api;
+                    $scope.section = $routeParams.section;
+                    $rootScope.pageTitle = api.props.namespace;
+                    $rootScope.pageDescription = 'tbd';
+
+                    if (newApiVersion) {
+                        $scope.currentApiVersion = newApiVersion;
+                    } else if (newApiVersion === undefined && $scope.currentApiVersion == 0) {
+                        $scope.currentApiVersion = api.props.versions[0];
+                    }
+
+                    $scope.currentApiVersions = api.props.versions.reverse();
+                });
+
             });
+        };
+        updateApi();
 
-            $scope.$apply(function () {
-                $rootScope.currentApi = api.props;
-                $rootScope.currentApi.version = {
-                    all: ['v3', 'v2', 'v1'],
-                    current: 'v3'
-                };
-                $scope.api = api;
-                $scope.section = $routeParams.section;
-                $rootScope.pageTitle = api.props.namespace;
-                $rootScope.pageDescription = 'tbd';
+        $scope.createNewApiVersion = function () {
+            ApisResource.createNewVersion($scope.api.props.name).then(function (data) {
+                updateApi(true, data.version);
             });
-
-        });
+        };
 
     }]
 );
@@ -164,21 +182,6 @@ module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
         templateUrl: '/zf-apigility-admin/partials/view-navigation.html',
         controller: ['$rootScope', '$scope', function ($rootScope, $scope) {
             $scope.routeParams = $routeParams;
-            $scope.currentVersion = null;
-
-            $rootScope.$watch('currentApi', function () {
-                if ($rootScope.currentApi == null) {
-                    return;
-                }
-                $scope.currentVersion = $rootScope.currentApi.version.current;
-            });
-
-            $scope.switchApiVersion = function () {
-                console.log($scope.currentVersion);
-            };
-            $scope.createNewApiVersion = function () {
-                console.log('creating new api version');
-            }
         }]
     }
 }]);
@@ -188,22 +191,53 @@ module.directive('apiInfo', function () {
         restrict : 'E',
         templateUrl: '/zf-apigility-admin/partials/api/info.html',
         controller:  ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
-            $scope.api = $scope.$parent.api;
             $scope.restServices = [];
-            $scope.api.links['rest'].fetch({force: true}).then(function (restServices) {
-                // update view
-                $scope.$apply(function() {
-                    $scope.restServices = _.pluck(restServices.embedded.rest, 'props');
-                });
+            $scope.rpcServices = [];
+
+            $scope.$parent.$watch('currentApiVersion', function () {
+                updateApi();
             });
 
-            $scope.rpcServices = [];
-            $scope.api.links['rpc'].fetch({force: true}).then(function (rpcServices) {
-                // update view
-                $scope.$apply(function() {
-                    $scope.rpcServices = _.pluck(rpcServices.embedded.rpc, 'props');
+            var updateApi = function () {
+
+                $scope.api = $scope.$parent.api;
+                var version = $scope.$parent.currentApiVersion;
+
+console.log($scope.api.links['rest']);
+
+                var restLink = _.chain($scope.api.links['rest'])
+                    .filter(function (item) {
+                        return item.props.version === version;
+                    })
+                    .first()
+                    .valueOf();
+
+                restLink.fetch({force: true}).then(function (restServices) {
+                    // update view
+                    $scope.$apply(function() {
+                        $scope.restServices = _.pluck(restServices.embedded.rest, 'props');
+                    });
                 });
-            });
+
+                var rpcLink = _.chain($scope.api.links['rpc'])
+                    .filter(function (item) {
+                        return item.props.version === version;
+                    })
+                    .first()
+                    .valueOf();
+
+
+
+                rpcLink.fetch({force: true}).then(function (rpcServices) {
+                    // update view
+                    $scope.$apply(function() {
+                        $scope.rpcServices = _.pluck(rpcServices.embedded.rpc, 'props');
+                    });
+                });
+            };
+
+            updateApi();
+
         }]
     };
 });
@@ -475,6 +509,13 @@ module.factory('ApisResource', ['$http', function ($http) {
     resource.getSourceCode = function (apiName, className) {
         return $http.get('/admin/api/source?module=' + apiName + '&class=' + className)
             .then(function(response) {
+                return response.data;
+            });
+    };
+
+    resource.createNewVersion = function (apiName) {
+        return $http({method: 'patch', url: '/admin/api/versioning', data: {module: apiName}})
+            .then(function (response) {
                 return response.data;
             });
     };

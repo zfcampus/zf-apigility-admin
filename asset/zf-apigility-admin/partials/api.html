@@ -1,7 +1,7 @@
 <div id="api-version" class="pull-right">
-  <div>Current Version: {{ currentVersion }}</div>
+  <div>Current Version: {{ currentApiVersion }}</div>
   <div>
-    <select ng-change="switchApiVersion()" ng-model="currentVersion" ng-options="version for version in $root.currentApi.version.all"></select>
+    <select ng-model="currentApiVersion" ng-options="ver for ver in currentApiVersions"></select>
     <button class="btn btn-primary btn-sm" ng-click="createNewApiVersion()">Create New Version</button>
   </div>
 </div>
