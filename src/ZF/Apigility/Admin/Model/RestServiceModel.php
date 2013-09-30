@@ -208,7 +208,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
         // Initialize pattern if a version was passed and it's valid
         if (null !== $version) {
-            if (!in_array($version, $this->moduleEntity->getVersions())) {
+            $version = (int) $version;
+            if (!in_array($version, $this->moduleEntity->getVersions(), true)) {
                 throw new Exception\RuntimeException(sprintf(
                     'Invalid version "%s" provided',
                     $version
