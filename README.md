@@ -206,6 +206,33 @@ This endpoint is for API-1st-enabling an existing module.
 
 - Errors: `application/api-problem+json`
 
+### `/admin/api/versioning`
+
+This endpoint is for adding a new version to an existing API. If no version is
+passed in the payload, the version number is simply incremented.
+
+- Accept: `application/json`
+
+  Returns the response `{ "success": true }` on success, an API-Problem payload
+  on error.
+
+- Content-Type: `application/json`
+
+  Expects an object with the property "module", providing the name of a ZF2,
+  Apigility-enabled module; optionally, a "version" property may also be
+  provided to indicate the specific version string to use.
+
+  ```javascript
+  {
+    "module": "Status",
+    "version": 10
+  }
+  ```
+
+- Methods: `PATCH`
+
+- Errors: `application/api-problem+json`
+
 ### `/admin/api/module[/:name]`
 
 This is the canonical endpoint for [Module resources](#module).
