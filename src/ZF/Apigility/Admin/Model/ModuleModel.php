@@ -276,16 +276,14 @@ EOD;
         $r        = new ReflectionObject($module);
         $path     = dirname($r->getFileName());
         $dirSep   = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
-        $pattern  = sprintf(
-            '#%s%s%ssrc%s%s#',
-            $dirSep,
-            $moduleName,
+        $pattern = sprintf(
+            '#%ssrc%s%s#',
             $dirSep,
             $dirSep,
-            $moduleName
+            str_replace('\\', $dirSep, $moduleName)
         );
         if (!preg_match($pattern, $path)) {
-            $path = sprintf('%s/src/%s', $path, $moduleName);
+            $path = sprintf('%s/src/%s', $path, str_replace('\\', '/', $moduleName));
         }
         if (!file_exists($path)) {
             return array();
