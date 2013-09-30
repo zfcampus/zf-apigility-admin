@@ -35,9 +35,13 @@ class VersioningController extends AbstractActionController
 
         $version = $this->bodyParam('version', false);
         if (!$version) {
-            $versions = $model->getModuleVersions($module);
-            if (!$versions) {
+            try {
+                $versions = $model->getModuleVersions($module);
+            } catch (Exception\ExceptionInterface $ex) {
                 return new ApiProblemModel(new ApiProblem(404, 'Module not found'));
+            }
+            if (!$versions) {
+                return new ApiProblemModel(new ApiProblem(500, 'Module cannot be versioned'));
             }
             sort($versions);
             $version = array_pop($versions);

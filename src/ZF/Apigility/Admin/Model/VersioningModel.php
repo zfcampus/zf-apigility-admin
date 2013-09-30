@@ -72,18 +72,15 @@ class VersioningModel
      */
     public function getModuleVersions($module, $path = false)
     {
-printf("In %s\n", __METHOD__);
         $module       = $this->normalizeModule($module);
 
         if (!$path) {
-            $this->getModuleSourcePath($module);
+            $path = $this->getModuleSourcePath($module);
         }
 
         $versions  = array();
-printf("    Searching for versions under path\n");
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
-printf("    Version '%s' found\n", $matches['version']);
                 $versions[] = (int) $matches['version'];
             }
         }
@@ -278,11 +275,10 @@ printf("    Version '%s' found\n", $matches['version']);
             ));
         }
 
-        $r = new ReflectionClass($moduleClass);
-        $moduleClassPath = $r->getFileName();
-        $srcPath = sprintf('%s/src', $moduleClassPath);
-        if (file_exists($srcPath) && is_dir($srcPath)) {
-            $srcPath = sprintf('%s/%s', $srcPath, str_replace('\\', '/', $moduleClass));
+        $r       = new ReflectionClass($moduleClass);
+        $srcPath = dirname($r->getFileName());
+        if (file_exists($srcPath . '/src') && is_dir($srcPath . '/src')) {
+            $srcPath = sprintf('%s/src/%s', $srcPath, str_replace('\\', '/', $moduleClass));
         }
 
         if (!file_exists($srcPath) && !is_dir($srcPath)) {
