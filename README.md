@@ -27,6 +27,11 @@ instance may be composed: e.g., "username", "password", etc.
     "name": "normalized module name",
     "namespace": "PHP namespace of the module",
     "is_vendor": "boolean value indicating whether or not this is a vendor (3rd party) module",
+    "versions": [
+        "Array",
+        "of",
+        "available versions"
+    ]
 }
 ```
 
