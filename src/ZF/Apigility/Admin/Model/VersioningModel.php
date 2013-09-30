@@ -57,7 +57,7 @@ class VersioningModel
         $this->recursiveCopy($srcPath . '/V'. $previous, $srcPath . '/V' . $version, $previous, $version);
 
         foreach (Glob::glob($modulePath . '/config/*.config.php') as $file) {
-            $this->updateConfigVersion($file, $previous, $version);
+            $this->updateConfigVersion($module, $file, $previous, $version);
         }
         return true;
     }
@@ -128,12 +128,13 @@ class VersioningModel
     /**
      * Update a PHP configuration file from $previous to $version version
      *
-     * @param  string $file
+     * @param  string  $module
+     * @param  string  $file
      * @param  integer $previous
      * @param  integer $version
      * @return boolean
      */
-    protected function updateConfigVersion($file, $previous, $version)
+    protected function updateConfigVersion($module, $file, $previous, $version)
     {
         $config = $this->configResource->fetch(true);
         if (empty($config)) {
@@ -169,6 +170,15 @@ class VersioningModel
             foreach (array('controllers', 'accept-whitelist', 'content-type-whitelist') as $key) {
                 if (isset($config['zf-content-negotiation'][$key])) {
                     $newValues = $this->changeVersionArray($config['zf-content-negotiation'][$key], $previous, $version);
+                    // change version in mediatype
+                    if (in_array($key, array('accept-whitelist', 'content-type-whitelist'))) {
+                        foreach ($newValues as $k => $v){
+                            $newValues[$k] = array(
+                                'application/' . strtolower($module) . '.v' . $version . '+json'
+                            );
+                        }
+                    }
+
                     $this->configResource->patch(array(
                         'zf-content-negotiation' => array($key => $newValues)
                     ), true);
@@ -196,14 +206,14 @@ class VersioningModel
     }
 
     /**
-     * Change version in a string
+     * Change version in a namespace
      *
      * @param  string $string
      * @param  integer $previous
      * @param  integer $version
      * @return string
      */
-    protected function changeVersionString($string, $previous, $version)
+    protected function changeVersionNamespace($string, $previous, $version)
     {
         return str_replace('\\V' . $previous . '\\', '\\V' . $version . '\\', $string);
     }
@@ -220,11 +230,11 @@ class VersioningModel
     {
         $result = array();
         foreach ($data as $key => $value) {
-            $newKey = $this->changeVersionString($key, $previous, $version); 
+            $newKey = $this->changeVersionNamespace($key, $previous, $version); 
             if (is_array($value)) {
                 $result[$newKey] = $this->changeVersionArray($value, $previous, $version);
             } else {
-                $result[$newKey] = $this->changeVersionString($value, $previous, $version);
+                $result[$newKey] = $this->changeVersionNamespace($value, $previous, $version);
             }
         }
         return $result; 

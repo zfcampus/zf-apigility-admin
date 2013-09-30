@@ -248,13 +248,13 @@ class RpcServiceModelTest extends TestCase
                     'FooConf\V1\Rpc\HelloWorld\Controller' => $selector,
                 ),
                 'accept-whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                         'application/*+json',
                     ),
                 ),
                 'content-type-whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                     ),
                 ),
