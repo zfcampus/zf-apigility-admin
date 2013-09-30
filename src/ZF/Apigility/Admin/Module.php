@@ -14,6 +14,11 @@ use ZF\Hal\View\HalJsonModel;
 class Module
 {
     /**
+     * @var \Closure
+     */
+    protected $urlHelper;
+
+    /**
      * @var \Zend\ServiceManager\ServiceLocatorInterface
      */
     protected $sm;
@@ -236,6 +241,16 @@ class Module
             $viewHelpers = $this->sm->get('ViewHelperManager');
             $halPlugin   = $viewHelpers->get('hal');
             $halPlugin->getEventManager()->attach('renderCollection.resource', array($this, 'onRenderCollectionResource'), 10);
+
+            $urlHelper       = $viewHelpers->get('Url');
+            $serverUrlHelper = $viewHelpers->get('ServerUrl');
+            $this->urlHelper = function ($routeName, $routeParams, $routeOptions, $reUseMatchedParams) use ($urlHelper, $serverUrlHelper) {
+                $url = call_user_func($urlHelper, $routeName, $routeParams, $routeOptions, $reUseMatchedParams);
+                if (substr($url, 0, 4) == 'http') {
+                    return $url;
+                }
+                return call_user_func($serverUrlHelper, $url);
+            };
         }
     }
 
@@ -250,12 +265,11 @@ class Module
         $module     = $resource->resource;
         $links      = $resource->getLinks();
         $moduleName = $module['name'];
-        $versions   = $module['versions'];
 
-        $this->injectLinksForServicesByType('rest', $module['rest'], $versions, $links, $moduleName);
+        $this->injectLinksForServicesByType('rest', $module['rest'], $links, $moduleName);
         unset($module['rest']);
 
-        $this->injectLinksForServicesByType('rpc', $module['rpc'], $versions, $links, $moduleName);
+        $this->injectLinksForServicesByType('rpc', $module['rpc'], $links, $moduleName);
         unset($module['rpc']);
 
         $replacement = new Resource($module, $resource->id);
@@ -277,7 +291,6 @@ class Module
 
         $asArray  = $resource->getArrayCopy();
         $module   = $asArray['name'];
-        $versions = $asArray['versions'];
         $rest     = $asArray['rest'];
         $rpc      = $asArray['rpc'];
 
@@ -295,8 +308,8 @@ class Module
                 ),
             ),
         )));
-        $this->injectLinksForServicesByType('rest', $rest, $versions, $links, $module);
-        $this->injectLinksForServicesByType('rpc', $rpc, $versions, $links, $module);
+        $this->injectLinksForServicesByType('rest', $rest, $links, $module);
+        $this->injectLinksForServicesByType('rpc', $rpc, $links, $module);
 
         $e->setParam('resource', $halResource);
     }
@@ -306,55 +319,31 @@ class Module
      *
      * @param  string $type "rpc" | "rest"
      * @param  array|\Traversable $services
-     * @param  array $versions
      * @param  LinkCollection $links
      * @param  null|string $module
      */
-    protected function injectLinksForServicesByType($type, $services, array $versions, LinkCollection $links, $module = null)
+    protected function injectLinksForServicesByType($type, $services, LinkCollection $links, $module = null)
     {
-        if (empty($versions)) {
-            $routeName = sprintf('zf-apigility-admin/api/module/%s-service', $type);
-            $spec = array(
-                'rel' => $type,
-                'route' => array(
-                    'name' => $routeName,
-                ),
-                'props' => array(
-                    'latest' => true,
-                ),
-            );
-            if (null !== $module) {
-                $spec['route']['params']['name'] = $module;
-            }
-            $link = Link::factory($spec);
-            $links->add($link);
-            return;
-        }
+        $urlHelper    = $this->urlHelper;
 
-        $max = max($versions);
-        foreach ($versions as $version) {
-            $routeName = sprintf('zf-apigility-admin/api/module/%s-service', $type);
-            $isLatest  = ($version === $max);
-            $spec = array(
-                'rel' => $type,
-                'route' => array(
-                    'name' => $routeName,
-                    'options' => array(
-                        'query' => array(
-                            'version' => $version,
-                        ),
-                    ),
-                ),
-                'props' => array(
-                    'version' => $version,
-                    'latest'  => $isLatest,
-                ),
-            );
-            if (null !== $module) {
-                $spec['route']['params']['name'] = $module;
-            }
-            $link = Link::factory($spec);
-            $links->add($link);
+        $routeName    = sprintf('zf-apigility-admin/api/module/%s-service', $type);
+        $routeParams  = array();
+        $routeOptions = array();
+        if (null !== $module) {
+            $routeParams['name'] = $module;
         }
+        $url  = $urlHelper($routeName, $routeParams, $routeOptions, false);
+        $url .= '{?version}';
+
+        $spec = array(
+            'rel'   => $type,
+            'url'   => $url,
+            'props' => array(
+                'templated' => true,
+            ),
+        );
+
+        $link = Link::factory($spec);
+        $links->add($link);
     }
 }
