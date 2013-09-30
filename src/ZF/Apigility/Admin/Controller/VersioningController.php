@@ -48,6 +48,9 @@ class VersioningController extends AbstractActionController
             return new ApiProblem(422, 'Invalid module and/or version', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity');
         }
 
-        return array('success' => true);
+        return array(
+            'success' => true,
+            'version' => $version,
+        );
     }
 }

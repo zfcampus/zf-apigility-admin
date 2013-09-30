@@ -218,8 +218,8 @@ passed in the payload, the version number is simply incremented.
 
 - Accept: `application/json`
 
-  Returns the response `{ "success": true }` on success, an API-Problem payload
-  on error.
+  Returns the response `{ "success": true, "version": :version: }` on success,
+  an API-Problem payload on error.
 
 - Content-Type: `application/json`
 
