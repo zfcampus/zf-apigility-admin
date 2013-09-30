@@ -133,6 +133,11 @@ class RpcServiceModelTest extends TestCase
                     ),
                 ),
             )),
+            'zf-versioning' => array(
+                'uri' => array(
+                    'foo-conf.rpc.hello-world'
+                )
+            )
         );
         $this->assertEquals($expected, $config);
         return (object) array(
@@ -259,6 +264,11 @@ class RpcServiceModelTest extends TestCase
                     ),
                 ),
             ),
+            'zf-versioning' => array(
+                'uri' => array(
+                    'foo-conf.rpc.hello-world'
+                )
+            )
         );
         $config = include $configFile;
         $this->assertEquals($expected, $config);

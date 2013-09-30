@@ -279,24 +279,33 @@ class RpcServiceModel
         $routeName = sprintf('%s.rpc.%s', $this->normalize($this->module), $this->normalize($serviceName));
         $action    = lcfirst($serviceName);
 
-        $config = array('router' => array('routes' => array(
-            $routeName => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => $route,
-                    'defaults' => array(
-                        'controller' => $controllerService,
-                        'action'     => $action,
+        $config = array(
+            'router' => array(
+                'routes' => array(
+                    $routeName => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => $route,
+                            'defaults' => array(
+                                'controller' => $controllerService,
+                                'action'     => $action,
+                            ),
+                        ),
                     ),
-                ),
+                )
             ),
-        )));
+            'zf-versioning' => array(
+                'uri' => array (
+                    $routeName
+                )
+            )
+        );
 
         $this->configResource->patch($config, true);
         return $routeName;
     }
 
-    /**
+    /*
      * Create the zf-rpc configuration for the controller service
      *
      * @param  string $controllerService

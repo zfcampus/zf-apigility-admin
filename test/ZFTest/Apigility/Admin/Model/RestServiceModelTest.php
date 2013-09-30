@@ -205,6 +205,18 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals($expected, $routes[$routeName]);
     }
 
+    public function testCreareRouteWritesVersioningConfiguration()
+    {
+        $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Rest\FooBar\Controller');
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('router', $config);
+        $this->assertArrayHasKey('routes', $config['router']);
+        $routes = $config['zf-versioning']['uri'];
+
+        $this->assertContains($routeName, $routes);
+    }
+
     public function testCreateRestConfigWritesRestConfiguration()
     {
         $details = $this->getCreationPayload();
