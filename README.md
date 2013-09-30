@@ -285,6 +285,9 @@ This is the canonical endpoint for [RPC resources](#rpc).
 
 - Resource Methods: `GET`, `PATCH`
 
+- The query string variable `version` may be passed to the collection to filter
+  results by version: e.g., `/admin/api/module/:name/rpc?version=2`.
+
 - Errors: `application/api-problem+json`
 
 ### `/admin/api/module/:name/rest[/:controller_service_name]`
@@ -325,5 +328,8 @@ return them as well):
 - Collection Methods: `GET`, `POST`, `DELETE`
 
 - Resource Methods: `GET`, `PATCH`
+
+- The query string variable `version` may be passed to the collection to filter
+  results by version: e.g., `/admin/api/module/:name/rest?version=2`.
 
 - Errors: `application/api-problem+json`
