@@ -10,7 +10,7 @@ class VersioningModel
     protected $configResource;
 
     /**
-     * @param  ConfigResource $config 
+     * @param  ConfigResource $config
      */
     public function __construct(ConfigResource $config)
     {
@@ -30,7 +30,7 @@ class VersioningModel
         $modulePath = sprintf("%s/module/%s", $path, $module);
         if (!file_exists($modulePath)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'The module %s doesn\'t exist', 
+                'The module %s doesn\'t exist',
                 $module
             ));
         }
@@ -68,7 +68,7 @@ class VersioningModel
      * @param  string $module
      * @param  string $path
      * @return array|boolean
-     */ 
+     */
     public function getModuleVersions($module, $path = '.')
     {
         $srcPath = sprintf('%s/module/%s/src/%s', $path, $module, $module);
@@ -85,7 +85,7 @@ class VersioningModel
         return $versions;
     }
 
-    /** 
+    /**
      * Copy file and folder recursively
      *
      * @param string $source
@@ -93,10 +93,10 @@ class VersioningModel
      * @param int $previous
      * @param int $version
      */
-    protected function recursiveCopy($source, $target, $previous, $version) 
-    { 
+    protected function recursiveCopy($source, $target, $previous, $version)
+    {
         $dir = opendir($source);
-        @mkdir($target); 
+        @mkdir($target);
         $nsSep   = preg_quote('\\');
         $pattern = sprintf(
             '#%sV%s%s#',
@@ -104,7 +104,7 @@ class VersioningModel
             $previous,
             $nsSep
         );
-        while(false !== ( $file = readdir($dir)) ) { 
+        while(false !== ( $file = readdir($dir)) ) {
             if (($file == '.') || ($file == '..')) {
                 continue;
             }
@@ -112,16 +112,16 @@ class VersioningModel
             $origin      = sprintf('%s/%s', $source, $file);
             $destination = sprintf('%s/%s', $target, $file);
 
-            if (is_dir($origin)) { 
-                $this->recursiveCopy($origin, $destination, $previous, $version); 
+            if (is_dir($origin)) {
+                $this->recursiveCopy($origin, $destination, $previous, $version);
                 continue;
-            } 
+            }
 
             $contents    = file_get_contents($origin);
             $newContents = preg_replace($pattern, '\V' . $version . '\\', $contents);
             file_put_contents($destination, $newContents);
-        } 
-        closedir($dir); 
+        }
+        closedir($dir);
     }
 
 
@@ -140,7 +140,7 @@ class VersioningModel
         if (empty($config)) {
             return false;
         }
-        
+
         // update zf-hal.metadata_map
         if (isset($config['zf-hal']['metadata_map'])) {
             $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $previous, $version);
@@ -148,7 +148,7 @@ class VersioningModel
                 'zf-hal' => array('metadata_map' => $newValues)
             ), true);
         }
-        
+
         // update zf-rpc
         if (isset($config['zf-rpc'])) {
             $newValues = $this->changeVersionArray($config['zf-rpc'], $previous, $version);
@@ -164,7 +164,7 @@ class VersioningModel
                 'zf-rest' => $newValues
             ), true);
         }
-        
+
         // update zf-content-negotiation
         if (isset($config['zf-content-negotiation'])) {
             foreach (array('controllers', 'accept-whitelist', 'content-type-whitelist') as $key) {
@@ -201,7 +201,7 @@ class VersioningModel
                 'service_manager' => $newValues
             ), true);
         }
-        
+
         return true;
     }
 
@@ -230,13 +230,13 @@ class VersioningModel
     {
         $result = array();
         foreach ($data as $key => $value) {
-            $newKey = $this->changeVersionNamespace($key, $previous, $version); 
+            $newKey = $this->changeVersionNamespace($key, $previous, $version);
             if (is_array($value)) {
                 $result[$newKey] = $this->changeVersionArray($value, $previous, $version);
             } else {
                 $result[$newKey] = $this->changeVersionNamespace($value, $previous, $version);
             }
         }
-        return $result; 
+        return $result;
     }
 }

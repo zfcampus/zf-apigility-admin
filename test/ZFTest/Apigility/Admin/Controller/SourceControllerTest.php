@@ -67,11 +67,11 @@ class SourceControllerTest extends TestCase
 
         $controller->setRequest($request);
         $result = $controller->sourceAction();
-        
+
         $this->assertTrue($result->getVariable('source') != '');
         $this->assertTrue($result->getVariable('file') != '');
         $this->assertEquals($result->getVariable('module'), $request->getQuery()->module);
-        $this->assertEquals($result->getVariable('class'), $request->getQuery()->class);        
+        $this->assertEquals($result->getVariable('class'), $request->getQuery()->class);
     }
 
 }

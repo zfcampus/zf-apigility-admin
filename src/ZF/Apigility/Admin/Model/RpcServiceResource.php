@@ -217,8 +217,8 @@ class RpcServiceResource extends AbstractResourceListener
 
     /**
      * Delete an RPC service
-     * 
-     * @param  string $id 
+     *
+     * @param  string $id
      * @return true
      */
     public function delete($id)

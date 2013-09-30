@@ -139,9 +139,9 @@ class VersioningModelTest extends TestCase
         $this->assertEquals('Version\V1\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V1\Rest\Comment\CommentResource']);
         $this->assertEquals('Version\V2\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\Model']);
         $this->assertEquals('Version\V2\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\CommentResource']);
-        
+
         $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
-    } 
+    }
 
     public function testCreateVersionRenamesNamespacesInCopiedClasses()
     {

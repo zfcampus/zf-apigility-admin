@@ -114,7 +114,7 @@ class ModuleModel
         $modulePath = sprintf('%s/module/%s', $path, $module);
         if (file_exists($modulePath)) {
             return false;
-        
+
         }
         mkdir("$modulePath/config", 0777, true);
         mkdir("$modulePath/view", 0777, true);
@@ -263,12 +263,12 @@ EOD;
     /**
      * Retrieve versions by module
      *
-     * Checks each REST and RPC service name for a 
-     * version subnamespace; if found, that version 
+     * Checks each REST and RPC service name for a
+     * version subnamespace; if found, that version
      * is added to the list.
-     * 
-     * @param  string $moduleName 
-     * @param  array $services 
+     *
+     * @param  string $moduleName
+     * @param  array $services
      * @return array
      */
     protected function getVersionsByModule($moduleName, ApigilityModuleInterface $module)

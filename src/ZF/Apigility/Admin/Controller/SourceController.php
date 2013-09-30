@@ -44,7 +44,7 @@ class SourceController extends AbstractActionController
                         new ApiProblem(422, 'The module specified doesn\'t exist', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
                     );
                 }
-   
+
                 $class = urldecode($this->params()->fromQuery('class', false));
                 if (!$class) {
                     return new ApiProblemModel(
@@ -59,11 +59,11 @@ class SourceController extends AbstractActionController
 
                 $reflector = new ReflectionClass($class);
                 $fileName = $reflector->getFileName();
-                
+
                 $metadata = array(
                     'module' => $module,
                     'class'  => $class,
-                    'file'   => $fileName, 
+                    'file'   => $fileName,
                     'source' => $this->highlight_file_with_num($fileName)
                 );
 
@@ -84,7 +84,8 @@ class SourceController extends AbstractActionController
      * @param  string $file
      * @return string
      */
-    protected function highlight_file_with_num($file) {
+    protected function highlight_file_with_num($file)
+    {
         $code      = substr(highlight_file($file, true), 36, -15);
         $lines     = explode('<br />', $code);
         $lineCount = count($lines);
