@@ -203,58 +203,6 @@ module.directive('apiInfo', function () {
                 });
             });
 
-
-//            $scope.$watch(ApisResource.currentApi, function () {
-//                $scope.restServices = ApisResource.currentApi.restServices;
-//                console.log($scope.restServices);
-//            });
-
-//            $scope.rpcServices = [];
-//
-//            $scope.$parent.$watch('currentApiVersion', function () {
-//                updateApi();
-//            });
-//
-//            var updateApi = function () {
-//
-//                $scope.api = $scope.$parent.api;
-//                var version = $scope.$parent.currentApiVersion;
-//
-//console.log($scope.api.links['rest']);
-//
-//                var restLink = _.chain($scope.api.links['rest'])
-//                    .filter(function (item) {
-//                        return item.props.version === version;
-//                    })
-//                    .first()
-//                    .valueOf();
-//
-//                restLink.fetch({force: true}).then(function (restServices) {
-//                    // update view
-//                    $scope.$apply(function() {
-//                        $scope.restServices = _.pluck(restServices.embedded.rest, 'props');
-//                    });
-//                });
-//
-//                var rpcLink = _.chain($scope.api.links['rpc'])
-//                    .filter(function (item) {
-//                        return item.props.version === version;
-//                    })
-//                    .first()
-//                    .valueOf();
-//
-//
-//
-//                rpcLink.fetch({force: true}).then(function (rpcServices) {
-//                    // update view
-//                    $scope.$apply(function() {
-//                        $scope.rpcServices = _.pluck(rpcServices.embedded.rpc, 'props');
-//                    });
-//                });
-//            };
-//
-//            updateApi();
-
         }]
     };
 });
@@ -266,15 +214,24 @@ module.directive('apiRestServices', function () {
         templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
 
-//            ApisResource.getCurrentApi.then(function (apiModel) {
-//                $scope.$apply(function () {
-//                    $scope.api = apiModel;
-//                });
-//            });
-
             $rootScope.$on('api.updated', function (event, data) {
                 $scope.$apply(function () {
                     $scope.api = data.apiModel;
+                    _($scope.api.restServices).forEach(function (restService) {
+                        _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
+                            var checkify = [];
+                            _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
+                                checkify.push({name: httpMethod, checked: _.contains(restService[httpItem], httpMethod)});
+                            });
+                            restService[httpItem] = checkify;
+
+                            restService[httpItem + '_view'] = _.chain(restService[httpItem])
+                                .where({checked: true})
+                                .pluck('name')
+                                .valueOf()
+                                .join(', ');
+                        });
+                    });
                 });
             });
 
@@ -295,35 +252,6 @@ module.directive('apiRestServices', function () {
                 return false;
             };
 
-//            function updateApiRestServices(force) {
-//                $scope.restServices = [];
-//                $scope.restServicesEditable = [];
-//                $scope.api.links['rest'].fetch({force: force}).then(function (restServices) {
-//                    // update view
-//                    $scope.$apply(function() {
-//                        $scope.restServices = _.pluck(restServices.embedded.rest, 'props');
-//
-//                        _($scope.restServices).forEach(function (restService) {
-//                            _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-//                                var checkify = [];
-//                                _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-//                                    checkify.push({name: httpMethod, checked: _.contains(restService[httpItem], httpMethod)});
-//                                });
-//                                restService[httpItem] = checkify;
-//
-//                                restService[httpItem + '_view'] = _.chain(restService[httpItem])
-//                                    .where({checked: true})
-//                                    .pluck('name')
-//                                    .valueOf()
-//                                    .join(', ');
-//                            });
-//                        });
-//
-//                    });
-//                });
-//            }
-//            updateApiRestServices(false);
-//
             $scope.createNewRestService = function () {
                 ApisResource.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
                     ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
@@ -391,6 +319,24 @@ module.directive('apiRpcServices', function () {
             $rootScope.$on('api.updated', function (event, data) {
                 $scope.$apply(function () {
                     $scope.api = data.apiModel;
+
+                    _($scope.api.rpcServices).forEach(function (rpcService) {
+                        var checkify = [];
+                        _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
+                            checkify.push({name: httpMethod, checked: _.contains(rpcService.http_methods, httpMethod)});
+                        });
+                        rpcService.http_methods = checkify;
+
+                        rpcService.http_methods_view = _.chain(rpcService.http_methods)
+                            .where({checked: true})
+                            .pluck('name')
+                            .valueOf()
+                            .join(', ');
+
+                        var myReg = /(([^\\]+)\\Controller)$/g;
+                        rpcService.controller_class = rpcService.controller_service_name.replace(myReg, "$2\\$2Controller");
+                    });
+
                 });
             });
 
@@ -399,35 +345,7 @@ module.directive('apiRpcServices', function () {
                 $scope.rpcServiceName = '';
                 $scope.rpcServiceRoute = '';
             };
-//
-//            function updateApiRpcServices(force) {
-//                $scope.rpcServices = [];
-//                $scope.api.links['rpc'].fetch({force: force}).then(function (rpcServices) {
-//                    // update view
-//                    $scope.$apply(function() {
-//                        $scope.rpcServices = _.pluck(rpcServices.embedded.rpc, 'props');
-//
-//                        _($scope.rpcServices).forEach(function (rpcService) {
-//                            var checkify = [];
-//                            _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-//                                checkify.push({name: httpMethod, checked: _.contains(rpcService.http_methods, httpMethod)});
-//                            });
-//                            rpcService.http_methods = checkify;
-//
-//                            rpcService.http_methods_view = _.chain(rpcService.http_methods)
-//                                .where({checked: true})
-//                                .pluck('name')
-//                                .valueOf()
-//                                .join(', ');
-//
-//                            var myReg = /(([^\\]+)\\Controller)$/g;
-//                            rpcService.controller_class = rpcService.controller_service_name.replace(myReg, "$2\\$2Controller");
-//                        });
-//                    });
-//                });
-//            }
-//            updateApiRpcServices(false);
-//
+
             $scope.createNewRpcService = function () {
                 ApisResource.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
                     updateApiRpcServices(true);
