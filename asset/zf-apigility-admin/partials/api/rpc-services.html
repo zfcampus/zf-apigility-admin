@@ -31,7 +31,7 @@
 <br clear="left">
 
 <div class="panel-group tooltip-api" id="accordion">
-  <div class="panel panel-default" ng-repeat="rpcService in rpcServices">
+  <div class="panel panel-default" ng-repeat="rpcService in api.rpcServices">
     <div class="panel-heading">
       <h4 class="panel-title">
         <font color="gray" size="-1">RPC</font>
@@ -171,7 +171,7 @@
             <table class="table table-striped">    
                 <tr>
                     <td>Controller Service Class</td>
-                    <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(rpcServices[$index].controller_class, 'Controller Service')">{{ rpcService.controller_class }}.php</button></td>
+                    <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.rpcServices[$index].controller_class, 'Controller Service')">{{ rpcService.controller_class }}.php</button></td>
                 </tr>
             </table>
 

@@ -266,11 +266,11 @@ module.directive('apiRestServices', function () {
         templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
 
-            ApisResource.getCurrentApi.then(function (apiModel) {
-                $scope.$apply(function () {
-                    $scope.api = apiModel;
-                });
-            });
+//            ApisResource.getCurrentApi.then(function (apiModel) {
+//                $scope.$apply(function () {
+//                    $scope.api = apiModel;
+//                });
+//            });
 
             $rootScope.$on('api.updated', function (event, data) {
                 $scope.$apply(function () {
@@ -388,15 +388,17 @@ module.directive('apiRpcServices', function () {
         templateUrl: '/zf-apigility-admin/partials/api/rpc-services.html',
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
 
+            $rootScope.$on('api.updated', function (event, data) {
+                $scope.$apply(function () {
+                    $scope.api = data.apiModel;
+                });
+            });
 
-
-//            $scope.api = $scope.$parent.api;
-//
-//            $scope.resetForm = function () {
-//                $scope.showNewRpcServiceForm = false;
-//                $scope.rpcServiceName = '';
-//                $scope.rpcServiceRoute = '';
-//            };
+            $scope.resetForm = function () {
+                $scope.showNewRpcServiceForm = false;
+                $scope.rpcServiceName = '';
+                $scope.rpcServiceRoute = '';
+            };
 //
 //            function updateApiRpcServices(force) {
 //                $scope.rpcServices = [];
@@ -426,45 +428,45 @@ module.directive('apiRpcServices', function () {
 //            }
 //            updateApiRpcServices(false);
 //
-//            $scope.createNewRpcService = function () {
-//                ApisResource.createNewRpcService($scope.api.props.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
-//                    updateApiRpcServices(true);
-//                    $scope.addRpcService = false;
-//                    $scope.rpcServiceName = '';
-//                    $scope.rpcServiceRoute = '';
-//                });
-//            };
-//
-//            $scope.saveRpcService = function (index) {
-//                var rpcServiceData = _.clone($scope.rpcServices[index]);
-//
-//                rpcServiceData.http_methods = _.chain(rpcServiceData.http_methods)
-//                    .where({checked: true})
-//                    .pluck('name')
-//                    .valueOf();
-//
-//                ApisResource.saveRpcService($scope.api.props.name, rpcServiceData)
-//                    .then(function (data) {
-//                        updateApiRpcServices(true);
-//                    });
-//            };
-//
-//            $scope.removeRpcService = function (rpcServiceName) {
-//                ApisResource.removeRpcService($scope.api.props.name, rpcServiceName)
-//                    .then(function () {
-//                        updateApiRpcServices(true);
-//                        $scope.deleteRestService = false;
-//                    });
-//            };
-//
-//            $scope.getSourceCode = function (className, classType) {
-//                ApisResource.getSourceCode ($scope.api.props.name, className)
-//                    .then(function (data) {
-//                        $scope.filename = className + '.php';
-//                        $scope.class_type = classType + ' Class';
-//                        $scope.source_code = data.source;
-//                    });
-//            };
+            $scope.createNewRpcService = function () {
+                ApisResource.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
+                    updateApiRpcServices(true);
+                    $scope.addRpcService = false;
+                    $scope.rpcServiceName = '';
+                    $scope.rpcServiceRoute = '';
+                });
+            };
+
+            $scope.saveRpcService = function (index) {
+                var rpcServiceData = _.clone($scope.rpcServices[index]);
+
+                rpcServiceData.http_methods = _.chain(rpcServiceData.http_methods)
+                    .where({checked: true})
+                    .pluck('name')
+                    .valueOf();
+
+                ApisResource.saveRpcService($scope.api.name, rpcServiceData)
+                    .then(function (data) {
+                        updateApiRpcServices(true);
+                    });
+            };
+
+            $scope.removeRpcService = function (rpcServiceName) {
+                ApisResource.removeRpcService($scope.api.name, rpcServiceName)
+                    .then(function () {
+                        updateApiRpcServices(true);
+                        $scope.deleteRestService = false;
+                    });
+            };
+
+            $scope.getSourceCode = function (className, classType) {
+                ApisResource.getSourceCode($scope.api.name, className)
+                    .then(function (data) {
+                        $scope.filename = className + '.php';
+                        $scope.class_type = classType + ' Class';
+                        $scope.source_code = data.source;
+                    });
+            };
 
         }]
     }
@@ -507,12 +509,7 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', function ($rootScop
                 resource.currentApiVersion = version;
             }
 
-            if (!api) {
-                deferred.reject('No API by name ' + name + ' was found');
-            } else {
-                return api;
-            }
-            return false;
+            return api;
         }).then(function (api) {
             // now load REST + RPC endpoints
             return api.link('rest', {version: version}).fetch().then(function (restServices) {
@@ -524,13 +521,23 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', function ($rootScop
                 return api;
             });
         }).then(function (api) {
+            // now load REST + RPC endpoints
+            return api.link('rpc', {version: version}).fetch().then(function (rpcServices) {
+                _.chain(rpcServices.embedded.rpc)
+                    .pluck('props')
+                    .forEach(function (item) {
+                        apiModel.rpcServices.push(item);
+                    });
+                return api;
+            });
+
+        }).then(function (api) {
             $rootScope.$broadcast('api.updated', {apiModel: apiModel});
             return apiModel;
         });
 
         if (makeCurrent == true) {
             resource.getCurrentApi = result;
-            resource.currentApiVersion = 0;
         }
 
         return result;
