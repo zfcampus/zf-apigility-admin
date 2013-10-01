@@ -110,18 +110,15 @@
                 <td>DB Adapter Name</td>
                 <td>{{ restService.adapter_name }}</td>
               </tr>
-              <tr>
-                  <td>
-                      <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
-                          <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
-                      </button>
-                      <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
-                          <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
-                      </button>
-                  </td>
-                  <td></td>
-              </tr>
             </table>  
+            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
+                <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
+            </button>
+            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
+                <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
+            </button>
+            <br />
+            <br />
             <table class="table table-striped" ng-show="showAdvanced{{$index}}">
               <tr>
                 <td>Accept whitelist</td>

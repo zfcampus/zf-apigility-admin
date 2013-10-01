@@ -76,19 +76,16 @@
                 <td>Allowed HTTP Methods</td>
                 <td>{{ rpcService.http_methods_view }}</td>
               </tr>   
-              <tr>
-                  <td>
-                      <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
-                          <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
-                      </button>
-                      <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
-                          <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
-                      </button>
-                  </td>
-                  <td></td>
-              </tr>
-              </table>
-              <table class="table table-striped" ng-show="showAdvanced{{$index}}">
+            </table>
+            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
+                <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
+            </button>
+            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
+                <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
+            </button>
+            <br />
+            <br />
+            <table class="table table-striped" ng-show="showAdvanced{{$index}}">
               <tr>
                 <td>Accept whitelist</td>
                 <td>{{ rpcService.accept_whitelist.join(', ') || 'n/a' }}</td>
