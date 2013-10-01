@@ -56,7 +56,7 @@
 <br clear="left">
 
 <div class="panel-group tooltip-api" id="accordion">
-  <div class="panel panel-default" ng-repeat="restService in restServices">
+  <div class="panel panel-default" ng-repeat="restService in api.restServices">
     <div class="panel-heading">
       <h4 class="panel-title">
         <font color="gray" size="-1">REST</font>
@@ -321,15 +321,15 @@
                 <table class="table table-striped">    
                     <tr>
                         <td>Collection Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].collection_class, 'Collection')">{{ restService.collection_class }}.php</button></td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.restServices[$index].collection_class, 'Collection')">{{ restService.collection_class }}.php</button></td>
                     </tr>
                     <tr>
                         <td>Entity Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.restServices[$index].entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
                     </tr>
                     <tr ng-hide="restService.adapter_name">
                         <td>Resource Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(restServices[$index].resource_class, 'Resource')">{{ restService.resource_class }}.php</td>
+                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.restServices[$index].resource_class, 'Resource')">{{ restService.resource_class }}.php</td>
                     </tr>
                 </table>
 

@@ -1,0 +1,63 @@
+.ag-admin-navbar-collapse {
+  font-size: 1.1em;
+}
+.ag-admin-navbar-collapse button {
+  margin-top: 5px;
+}
+.ag-admin-header {
+  font-size: 21px;
+  text-align: left;
+  padding: 10px 30px 40px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.ag-admin-header h1 {
+  color: #004000;
+  font-size: 60px;
+}
+.ag-admin-nav {
+  background: #0c0c56;
+  border-color: #463265;
+}
+.ag-admin-nav .navbar-nav > li > a {
+  color: #B7D9FF;
+}
+.ag-admin-nav .navbar-nav > li.ag-nav-dashboard a {
+  color: #fff;
+}
+.ag-admin-module-navigation {
+  border-bottom: 1px solid #ccc;
+  font-size: 16px;
+}
+.ag-admin-module-navigation span {
+  padding: 5px 10px;
+}
+.ag-admin-module-navigation .ag-admin-nav-pills li > a {
+  padding: 5px 10px;
+}
+.ag-admin-sidebar {
+  display: block;
+}
+.ag-admin-sidenav {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-shadow: 0px 1px 0px #ffffff;
+  background-color: #f7f5fa;
+  border-radius: 5px 5px 5px 5px;
+}
+.ag-admin-sidebar .nav li > a {
+  display: block;
+  color: #716b7a;
+  padding: 5px 20px;
+}
+.ag-admin-sidebar .nav .active > a,
+.ag-admin-sidebar .nav .active:hover > a .active:focus > a {
+  font-weight: bold;
+  color: #563d7c;
+  background-color: transparent;
+  border-right: 1px solid #563d7c;
+}
+#api-version {
+  margin-top: -100px;
+}
