@@ -233,25 +233,31 @@ class Module
         }
 
         if ($result->isResource()) {
+            $this->initializeUrlHelper();
             $this->injectServiceLinks($result->getPayload(), $result);
             return;
         }
 
         if ($result->isCollection()) {
+            $this->initializeUrlHelper();
             $viewHelpers = $this->sm->get('ViewHelperManager');
             $halPlugin   = $viewHelpers->get('hal');
             $halPlugin->getEventManager()->attach('renderCollection.resource', array($this, 'onRenderCollectionResource'), 10);
-
-            $urlHelper       = $viewHelpers->get('Url');
-            $serverUrlHelper = $viewHelpers->get('ServerUrl');
-            $this->urlHelper = function ($routeName, $routeParams, $routeOptions, $reUseMatchedParams) use ($urlHelper, $serverUrlHelper) {
-                $url = call_user_func($urlHelper, $routeName, $routeParams, $routeOptions, $reUseMatchedParams);
-                if (substr($url, 0, 4) == 'http') {
-                    return $url;
-                }
-                return call_user_func($serverUrlHelper, $url);
-            };
         }
+    }
+
+    protected function initializeUrlHelper()
+    {
+        $viewHelpers     = $this->sm->get('ViewHelperManager');
+        $urlHelper       = $viewHelpers->get('Url');
+        $serverUrlHelper = $viewHelpers->get('ServerUrl');
+        $this->urlHelper = function ($routeName, $routeParams, $routeOptions, $reUseMatchedParams) use ($urlHelper, $serverUrlHelper) {
+            $url = call_user_func($urlHelper, $routeName, $routeParams, $routeOptions, $reUseMatchedParams);
+            if (substr($url, 0, 4) == 'http') {
+                return $url;
+            }
+            return call_user_func($serverUrlHelper, $url);
+        };
     }
 
     /**
@@ -332,7 +338,7 @@ class Module
         if (null !== $module) {
             $routeParams['name'] = $module;
         }
-        $url  = $urlHelper($routeName, $routeParams, $routeOptions, false);
+        $url  = call_user_func($urlHelper, $routeName, $routeParams, $routeOptions, false);
         $url .= '{?version}';
 
         $spec = array(
