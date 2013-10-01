@@ -193,8 +193,6 @@ module.directive('apiInfo', function () {
             ApisResource.getCurrentApi.then(function (apiModel) {
                 $scope.$apply(function () {
                     $scope.api = apiModel;
-//                    $scope.restServices = apiModel.restServices;
-//                    $scope.rpcServices = apiModel.rpcServices;
                 });
             });
 
@@ -358,14 +356,14 @@ module.directive('apiRestServices', function () {
                     .valueOf();
                 });
 
-                ApisResource.saveRestService($scope.api.props.name, restServiceData)
+                ApisResource.saveRestService($scope.api.name, restServiceData)
                     .then(function (data) {
                         updateApiRestServices(true);
                     });
             };
 
             $scope.removeRestService = function (restServiceName) {
-                ApisResource.removeRestService($scope.api.props.name, restServiceName)
+                ApisResource.removeRestService($scope.api.name, restServiceName)
                     .then(function (data) {
                         updateApiRestServices(true);
                         $scope.deleteRestService = false;
@@ -373,7 +371,7 @@ module.directive('apiRestServices', function () {
             };
 
             $scope.getSourceCode = function (className, classType) {
-                ApisResource.getSourceCode ($scope.api.props.name, className)
+                ApisResource.getSourceCode ($scope.api.name, className)
                     .then(function (data) {
                         $scope.filename = className + '.php';
                         $scope.class_type = classType + ' Class';
