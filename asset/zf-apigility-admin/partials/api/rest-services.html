@@ -93,22 +93,43 @@
           <div class="tab-pane active" id="viewmode{{$index}}">
             <table class="table table-striped">
               <tr>
-                <td>Accept whitelist</td>
-                <td>{{ restService.accept_whitelist.join(', ') || 'n/a' }}</td>
-              </tr>
-              <tr ng-show="restService.adapter_name">
-                <td>DB Adapter Name</td>
-                <td>{{ restService.adapter_name }}</td>
+                <td>Route matches:</td>
+                <td>{{ restService.route_match }}</td>
               </tr>
               <tr>
-                <td>Collection Class</td>
-                <td>{{ restService.collection_class }}</td>
+                <td>Allowed Resource HTTP Methods</td>
+                <td>{{ restService.resource_http_methods_view }}</td>
               </tr>
               <tr>
                 <td>Allowed Collection HTTP Methods</td>
                 <td>
                   {{ restService.collection_http_methods_view }}
                 </td>
+              </tr>
+              <tr ng-show="restService.adapter_name">
+                <td>DB Adapter Name</td>
+                <td>{{ restService.adapter_name }}</td>
+              </tr>
+              <tr>
+                  <td>
+                      <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
+                          <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
+                      </button>
+                      <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
+                          <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
+                      </button>
+                  </td>
+                  <td></td>
+              </tr>
+            </table>  
+            <table class="table table-striped" ng-show="showAdvanced{{$index}}">
+              <tr>
+                <td>Accept whitelist</td>
+                <td>{{ restService.accept_whitelist.join(', ') || 'n/a' }}</td>
+              </tr>
+              <tr>
+                <td>Collection Class</td>
+                <td>{{ restService.collection_class }}</td>
               </tr>
               <tr>
                 <td>Collection Name</td>
@@ -149,14 +170,6 @@
               <tr>
                 <td>Resource Class</td>
                 <td>{{ restService.resource_class }}</td>
-              </tr>
-              <tr>
-                <td>Allowed Resource HTTP Methods</td>
-                <td>{{ restService.resource_http_methods_view }}</td>
-              </tr>
-              <tr>
-                <td>Route matches:</td>
-                <td>{{ restService.route_match }}</td>
               </tr>
               <tr>
                 <td>Route Name</td>
@@ -316,7 +329,7 @@
               <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
             </div>
-            <div class="tab-pane active" id="sourcemode{{$index}}">
+            <div class="tab-pane" id="sourcemode{{$index}}">
                 <br /><p>Click on the file name to show the source code.</p>
                 <table class="table table-striped">    
                     <tr>
@@ -348,7 +361,7 @@
                     </div>
                 </div>
             </div>
-
+          
         </div>
       </div>
     </div>
