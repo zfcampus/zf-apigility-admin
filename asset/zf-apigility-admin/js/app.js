@@ -265,13 +265,16 @@ module.directive('apiRestServices', function () {
             };
 
             $scope.createNewDbConnectedService = function () {
-                ApisResource.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName)
-                    .then(function (restResource) {
-                        updateApiRestServices(true);
-                        $scope.showNewRestServiceForm = false;
-                        $scope.dbAdapterName = '';
-                        $scope.dbTableName = '';
+                ApisResource.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                        $scope.$apply(function () {
+                            $scope.api = apiModel;
+                        });
                     });
+                    $scope.showNewRestServiceForm = false;
+                    $scope.dbAdapterName = '';
+                    $scope.dbTableName = '';
+                });
             };
 
             $scope.saveRestService = function (index) {
@@ -284,18 +287,24 @@ module.directive('apiRestServices', function () {
                     .valueOf();
                 });
 
-                ApisResource.saveRestService($scope.api.name, restServiceData)
-                    .then(function (data) {
-                        updateApiRestServices(true);
+                ApisResource.saveRestService($scope.api.name, restServiceData).then(function (data) {
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                        $scope.$apply(function () {
+                            $scope.api = apiModel;
+                        });
                     });
+                });
             };
 
             $scope.removeRestService = function (restServiceName) {
-                ApisResource.removeRestService($scope.api.name, restServiceName)
-                    .then(function (data) {
-                        updateApiRestServices(true);
-                        $scope.deleteRestService = false;
+                ApisResource.removeRestService($scope.api.name, restServiceName).then(function (data) {
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                        $scope.$apply(function () {
+                            $scope.api = apiModel;
+                        });
                     });
+                    $scope.deleteRestService = false;
+                });
             };
 
             $scope.getSourceCode = function (className, classType) {
@@ -348,7 +357,11 @@ module.directive('apiRpcServices', function () {
 
             $scope.createNewRpcService = function () {
                 ApisResource.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
-                    updateApiRpcServices(true);
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                        $scope.$apply(function () {
+                            $scope.api = apiModel;
+                        });
+                    });
                     $scope.addRpcService = false;
                     $scope.rpcServiceName = '';
                     $scope.rpcServiceRoute = '';
@@ -363,27 +376,32 @@ module.directive('apiRpcServices', function () {
                     .pluck('name')
                     .valueOf();
 
-                ApisResource.saveRpcService($scope.api.name, rpcServiceData)
-                    .then(function (data) {
-                        updateApiRpcServices(true);
+                ApisResource.saveRpcService($scope.api.name, rpcServiceData).then(function (data) {
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                        $scope.$apply(function () {
+                            $scope.api = apiModel;
+                        });
                     });
+                });
             };
 
             $scope.removeRpcService = function (rpcServiceName) {
-                ApisResource.removeRpcService($scope.api.name, rpcServiceName)
-                    .then(function () {
-                        updateApiRpcServices(true);
-                        $scope.deleteRestService = false;
+                ApisResource.removeRpcService($scope.api.name, rpcServiceName).then(function () {
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                        $scope.$apply(function () {
+                            $scope.api = apiModel;
+                        });
                     });
+                    $scope.deleteRestService = false;
+                });
             };
 
             $scope.getSourceCode = function (className, classType) {
-                ApisResource.getSourceCode($scope.api.name, className)
-                    .then(function (data) {
-                        $scope.filename = className + '.php';
-                        $scope.class_type = classType + ' Class';
-                        $scope.source_code = data.source;
-                    });
+                ApisResource.getSourceCode($scope.api.name, className).then(function (data) {
+                    $scope.filename = className + '.php';
+                    $scope.class_type = classType + ' Class';
+                    $scope.source_code = data.source;
+                });
             };
 
         }]
