@@ -254,11 +254,7 @@ module.directive('apiRestServices', function () {
 
             $scope.createNewRestService = function () {
                 ApisResource.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                     $scope.showNewRestServiceForm = false;
                     $scope.restServiceName = '';
                 });
@@ -266,11 +262,7 @@ module.directive('apiRestServices', function () {
 
             $scope.createNewDbConnectedService = function () {
                 ApisResource.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                     $scope.showNewRestServiceForm = false;
                     $scope.dbAdapterName = '';
                     $scope.dbTableName = '';
@@ -278,7 +270,7 @@ module.directive('apiRestServices', function () {
             };
 
             $scope.saveRestService = function (index) {
-                var restServiceData = _.clone($scope.restServices[index]);
+                var restServiceData = _.clone($scope.api.restServices[index]);
 
                 _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
                     restServiceData[httpItem] = _.chain(restServiceData[httpItem])
@@ -288,21 +280,13 @@ module.directive('apiRestServices', function () {
                 });
 
                 ApisResource.saveRestService($scope.api.name, restServiceData).then(function (data) {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                 });
             };
 
             $scope.removeRestService = function (restServiceName) {
                 ApisResource.removeRestService($scope.api.name, restServiceName).then(function (data) {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                     $scope.deleteRestService = false;
                 });
             };
@@ -357,11 +341,7 @@ module.directive('apiRpcServices', function () {
 
             $scope.createNewRpcService = function () {
                 ApisResource.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                     $scope.addRpcService = false;
                     $scope.rpcServiceName = '';
                     $scope.rpcServiceRoute = '';
@@ -369,7 +349,7 @@ module.directive('apiRpcServices', function () {
             };
 
             $scope.saveRpcService = function (index) {
-                var rpcServiceData = _.clone($scope.rpcServices[index]);
+                var rpcServiceData = _.clone($scope.api.rpcServices[index]);
 
                 rpcServiceData.http_methods = _.chain(rpcServiceData.http_methods)
                     .where({checked: true})
@@ -377,21 +357,13 @@ module.directive('apiRpcServices', function () {
                     .valueOf();
 
                 ApisResource.saveRpcService($scope.api.name, rpcServiceData).then(function (data) {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                 });
             };
 
             $scope.removeRpcService = function (rpcServiceName) {
                 ApisResource.removeRpcService($scope.api.name, rpcServiceName).then(function () {
-                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                        $scope.$apply(function () {
-                            $scope.api = apiModel;
-                        });
-                    });
+                    ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
                     $scope.deleteRestService = false;
                 });
             };
