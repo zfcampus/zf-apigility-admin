@@ -135,7 +135,7 @@ class RpcServiceModel
             );
         }
 
-        foreach (array_keys($config['zf-rpc']) as $service) {
+        foreach (array_keys($config['zf-rpc']) as $controllerService) {
             if (!$pattern) {
                 $services[] = $this->fetch($controllerService);
                 continue;
