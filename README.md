@@ -1,8 +1,8 @@
-ZF API-1st Admin
-================
+Apigility Admin
+===============
 
-This module provides the admin interface and API service for the ZF API-1st
-project.
+This module provides the admin interface and API service for the
+[Apigility](http://apigility.org) project.
 
 API Resources
 -------------
