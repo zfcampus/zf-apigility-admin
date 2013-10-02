@@ -176,7 +176,7 @@ class VersioningModel
                     if (in_array($key, array('accept-whitelist', 'content-type-whitelist'))) {
                         foreach ($newValues as $k => $v){
                             $newValues[$k] = array(
-                                'application/' . strtolower($module) . '.v' . $version . '+json'
+                                'application/vnd.' . strtolower($module) . '.v' . $version . '+json'
                             );
                         }
                     }
