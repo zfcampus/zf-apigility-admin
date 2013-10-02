@@ -55,7 +55,7 @@
             </button>
             <ul class="nav nav-pills ag-admin-nav-pills">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
-                    <a href="#/api/{{ api.name }}/info">{{ api.namespace }}</a>
+                    <a href="#/api/{{ api.name }}/info" ng-bind="api.namespace"></a>
                 </li>
             </ul>
         </div>
@@ -73,7 +73,7 @@
 
     <div class="ag-admin-header" id="content">
         <div class="container">
-            <h1>{{ pageTitle }}</h1>
+            <h1 ng-bind="pageTitle"></h1>
         </div>
     </div>
 
@@ -83,7 +83,7 @@
                 <view-navigation></view-navigation>
             </div>
             <main class="col-md-9" role="main">
-                <h1>{{ view.title }}</h1>
+                <h1 ng-bind="view.title"></h1>
                 <div id="content" ng-view></div>
             </main>
         </div>
