@@ -2,6 +2,7 @@
 namespace ZF\Apigility\Admin\Model;
 
 use ReflectionClass;
+use Zend\Filter\FilterChain;
 use Zend\Stdlib\Glob;
 use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
@@ -9,6 +10,8 @@ use ZF\Configuration\ConfigResource;
 class VersioningModel
 {
     protected $configResource;
+
+    protected $moduleNameFilter;
 
     /**
      * @param  ConfigResource $config
@@ -172,12 +175,15 @@ class VersioningModel
             foreach (array('controllers', 'accept-whitelist', 'content-type-whitelist') as $key) {
                 if (isset($config['zf-content-negotiation'][$key])) {
                     $newValues = $this->changeVersionArray($config['zf-content-negotiation'][$key], $previous, $version);
+
                     // change version in mediatype
                     if (in_array($key, array('accept-whitelist', 'content-type-whitelist'))) {
                         foreach ($newValues as $k => $v){
-                            $newValues[$k] = array(
-                                'application/vnd.' . strtolower($module) . '.v' . $version . '+json'
-                            );
+                            foreach ($v as $index => $mediatype) {
+                                if (strstr($mediatype, '.v' . $previous . '+')) {
+                                    $newValues[$k][$index] = 'application/vnd.' . $this->getModuleNameFilter()->filter($module) . '.v' . $version . '+json';
+                                }
+                            }
                         }
                     }
 
@@ -309,5 +315,22 @@ class VersioningModel
         }
 
         return $this->locateConfigPath(dirname($srcPath));
+    }
+
+    /**
+     * Filter for module names
+     * 
+     * @return FilterChain
+     */
+    protected function getModuleNameFilter()
+    {
+        if ($this->moduleNameFilter instanceof FilterChain) {
+            return $this->moduleNameFilter;
+        }
+
+        $this->moduleNameFilter = new FilterChain();
+        $this->moduleNameFilter->attachByName('Word\CamelCaseToDash')
+            ->attachByName('StringToLower');
+        return $this->moduleNameFilter;
     }
 }

@@ -102,20 +102,6 @@ class VersioningModelTest extends TestCase
         $this->assertEquals('Version\\V1\\Rest\\Comment\\CommentCollection', $config['zf-rest']['Version\\V1\\Rest\\Comment\\Controller']['collection_class']);
         $this->assertEquals('Version\\V2\\Rest\\Comment\\CommentCollection', $config['zf-rest']['Version\\V2\\Rest\\Comment\\Controller']['collection_class']);
 
-        $this->assertArrayHasKey('zf-content-negotiation', $config);
-        $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\Controller', $config['zf-content-negotiation']['controllers']);
-        $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\Controller', $config['zf-content-negotiation']['controllers']);
-        $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\Controller', $config['zf-content-negotiation']['accept-whitelist']);
-        $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\Controller', $config['zf-content-negotiation']['accept-whitelist']);
-        $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\Controller', $config['zf-content-negotiation']['content-type-whitelist']);
-        $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\Controller', $config['zf-content-negotiation']['content-type-whitelist']);
-
-        // Check if the mediatype of the new version is correct
-        $acceptWhitelist = $config['zf-content-negotiation']['accept-whitelist'];
-        $this->assertContains('application/version.v2+json', $acceptWhitelist['Version\\V2\\Rest\\Message\\Controller']);
-        $contentTypeWhitelist = $config['zf-content-negotiation']['content-type-whitelist'];
-        $this->assertContains('application/version.v2+json', $contentTypeWhitelist['Version\\V2\\Rest\\Message\\Controller']);
-
         $this->assertArrayHasKey('zf-hal', $config);
         $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\MessageEntity', $config['zf-hal']['metadata_map']);
         $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\MessageEntity', $config['zf-hal']['metadata_map']);
