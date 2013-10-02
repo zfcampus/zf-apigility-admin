@@ -91,26 +91,33 @@
 
         <div class="tab-content">
           <div class="tab-pane active" id="viewmode{{$index}}">
-            <table class="table table-striped">
-              <tr>
-                <td>Route matches:</td>
-                <td>{{ restService.route_match }}</td>
-              </tr>
-              <tr>
-                <td>Allowed Resource HTTP Methods</td>
-                <td>{{ restService.resource_http_methods_view }}</td>
-              </tr>
-              <tr>
-                <td>Allowed Collection HTTP Methods</td>
-                <td>
-                  {{ restService.collection_http_methods_view }}
-                </td>
-              </tr>
-              <tr ng-show="restService.adapter_name">
-                <td>DB Adapter Name</td>
-                <td>{{ restService.adapter_name }}</td>
-              </tr>
-            </table>  
+            <div class="panel panel-default">
+              <div class="panel-heading">General Settings</div>
+              <div class="panel-body list-group">
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Route matches:</h4>
+                  <p class="list-group-item-text">{{ restService.route_match }}</p>
+                </div>
+
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Page Size</h4>
+                  <p class="list-group-item-text">{{ restService.page_size }}</p>
+                </div>
+                
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Allowed Resource HTTP Methods</h4>
+                  <p class="list-group-item-text">{{ restService.resource_http_methods_view }}</p>
+                </div>
+                
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Allowed Collection HTTP Methods</h4>
+                  <p class="list-group-item-text">
+                    {{ restService.collection_http_methods_view }}
+                  </p>
+                </div>
+              </div>  
+            </div>
+
             <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
                 <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
             </button>
@@ -118,75 +125,110 @@
                 <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
             </button>
             <br />
-            <br />
-            <table class="table table-striped" ng-show="showAdvanced{{$index}}">
-              <tr>
-                <td>Accept whitelist</td>
-                <td>{{ restService.accept_whitelist.join(', ') || 'n/a' }}</td>
-              </tr>
-              <tr>
-                <td>Collection Class</td>
-                <td>{{ restService.collection_class }}</td>
-              </tr>
-              <tr>
-                <td>Collection Name</td>
-                <td>{{ restService.collection_name }}</td>
-              </tr>
-              <tr>
-                <td>Collection Query String whitelist</td>
-                <td>{{ restService.collection_query_whitelist.join(', ') || 'n/a' }}</td>
-              </tr>
-              <tr>
-                <td>Content-Type whitelist</td>
-                <td>{{ restService.content_type_whitelist.join(', ') || 'n/a' }}</td>
-              </tr>
-              <tr>
-                <td>Controller Service Name</td>
-                <td>{{ restService.controller_service_name }}</td>
-              </tr>
-              <tr>
-                <td>Entity Class</td>
-                <td>{{ restService.entity_class }}</td>
-              </tr>
-              <tr ng-show="restService.hydrator_name">
-                <td>Hydrator Service Name</td>
-                <td>{{ restService.hydrator_name }}</td>
-              </tr>
-              <tr>
-                <td>Identifier Name</td>
-                <td>{{ restService.identifier_name || 'n/a' }}</td>
-              </tr>
-              <tr>
-                <td>Page Size</td>
-                <td>{{ restService.page_size }}</td>
-              </tr>
-              <tr>
-                <td>Page Size Parameter (Query string)</td>
-                <td>{{ restService.page_size_param }}</td>
-              </tr>
-              <tr>
-                <td>Resource Class</td>
-                <td>{{ restService.resource_class }}</td>
-              </tr>
-              <tr>
-                <td>Route Name</td>
-                <td>{{ restService.route_name }}</td>
-              </tr>
-              <tr>
-                <td>Content Negotiation Selector</td>
-                <td>{{ restService.selector }}</td>
-              </tr>
-              <tr ng-show="restService.table_name">
-                <td>DB Table Name</td>
-                <td>{{ restService.table_name }}</td>
-              </tr>
-              <tr ng-show="restService.table_service">
-                <td>Table Gateway Service Name</td>
-                <td>{{ restService.table_service }}</td>
-              </tr>
-            </table>
 
+            <div ng-show="showAdvanced{{$index}}">
+              <div ng-show="restService.adapter_name" class="panel panel-default">
+                <div class="panel-heading">Database Settings</div>
+                <div class="panel-body list-group">
+                  <div ng-show="restService.adapter_name" class="list-group-item">
+                    <h4 class="list-group-item-heading">DB Adapter Name</h4>
+                    <p class="list-group-item-text">{{ restService.adapter_name }}</p>
+                  </div>
+                  
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">DB Table Name</h4>
+                    <p class="list-group-item-text">{{ restService.table_name }}</p>
+                  </div>
+
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Table Gateway Service Name</h4>
+                    <p class="list-group-item-text">{{ restService.table_service }}</p>
+                  </div>
+
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Hydrator Service Name</h4>
+                    <p class="list-group-item-text">{{ restService.hydrator_name }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Content Negotiation</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Content Negotiation Selector</h4>
+                    <p class="list-group-item-text">{{ restService.selector }}</p>
+                  </div>
+                  
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Accept whitelist</h4>
+                    <p class="list-group-item-text">{{ restService.accept_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Content-Type whitelist</h4>
+                    <p class="list-group-item-text">{{ restService.content_type_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">REST Parameters</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Identifier Name</h4>
+                    <p class="list-group-item-text">{{ restService.identifier_name || 'n/a' }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Collection Name</h4>
+                    <p class="list-group-item-text">{{ restService.collection_name }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Page Size Parameter (Query string)</h4>
+                    <p class="list-group-item-text">{{ restService.page_size_param }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Collection Query String whitelist</h4>
+                    <p class="list-group-item-text">{{ restService.collection_query_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Service/Class/Route Names</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Controller Service Name</h4>
+                    <p class="list-group-item-text">{{ restService.controller_service_name }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Resource Class</h4>
+                    <p class="list-group-item-text">{{ restService.resource_class }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Entity Class</h4>
+                    <p class="list-group-item-text">{{ restService.entity_class }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Collection Class</h4>
+                    <p class="list-group-item-text">{{ restService.collection_class }}</p>
+                  </div>
+                      
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Route Name</h4>
+                    <p class="list-group-item-text">{{ restService.route_name }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="tab-pane" id="editmode{{$index}}">
 
             <form novalidate class="form-horizontal" ng-submit="saveRestService($index)">
