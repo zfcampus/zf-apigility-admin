@@ -127,10 +127,10 @@
             <br />
 
             <div ng-show="showAdvanced{{$index}}">
-              <div ng-show="restService.adapter_name" class="panel panel-default">
+              <div ng-show="isDbConnected(restService)" class="panel panel-default">
                 <div class="panel-heading">Database Settings</div>
                 <div class="panel-body list-group">
-                  <div ng-show="restService.adapter_name" class="list-group-item">
+                  <div class="list-group-item">
                     <h4 class="list-group-item-heading">DB Adapter Name</h4>
                     <p class="list-group-item-text">{{ restService.adapter_name }}</p>
                   </div>
@@ -148,26 +148,6 @@
                   <div class="list-group-item">
                     <h4 class="list-group-item-heading">Hydrator Service Name</h4>
                     <p class="list-group-item-text">{{ restService.hydrator_name }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel panel-default">
-                <div class="panel-heading">Content Negotiation</div>
-                <div class="panel-body list-group">
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Content Negotiation Selector</h4>
-                    <p class="list-group-item-text">{{ restService.selector }}</p>
-                  </div>
-                  
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Accept whitelist</h4>
-                    <p class="list-group-item-text">{{ restService.accept_whitelist.join(', ') || 'n/a' }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Content-Type whitelist</h4>
-                    <p class="list-group-item-text">{{ restService.content_type_whitelist.join(', ') || 'n/a' }}</p>
                   </div>
                 </div>
               </div>
@@ -193,6 +173,26 @@
                   <div class="list-group-item">
                     <h4 class="list-group-item-heading">Collection Query String whitelist</h4>
                     <p class="list-group-item-text">{{ restService.collection_query_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Content Negotiation</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Content Negotiation Selector</h4>
+                    <p class="list-group-item-text">{{ restService.selector }}</p>
+                  </div>
+                  
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Accept whitelist</h4>
+                    <p class="list-group-item-text">{{ restService.accept_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Content-Type whitelist</h4>
+                    <p class="list-group-item-text">{{ restService.content_type_whitelist.join(', ') || 'n/a' }}</p>
                   </div>
                 </div>
               </div>
@@ -233,143 +233,182 @@
 
             <form novalidate class="form-horizontal" ng-submit="saveRestService($index)">
               <fieldset>
-                <div ng-show="isDbConnected(restService)" class="control-group">
-                  <label class="control-label" for="selector">DB Adapter Name</label>
-                  <div class="controls">
-                    <select class="form-control input-xlarge"
-                      ng-model="restService.adapter_name" ng-options="v.adapter_name as v.adapter_name for (k,v) in $parent.dbAdapters"></select>
+                <div class="panel panel-default">
+                  <div class="panel-heading">General Settings</div>
+                  <div class="panel-body">
+                    <div class="control-group">
+                      <label class="control-label">Route to match</label>
+                      <div class="controls">
+                        <input type="text" placeholder="/api/your_resource" class="form-control input-xlarge" required="" ng-model="restService.route_match">
+                        <p class="help-block">The base URI for the resource (minus the identifier segment of the URI)</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">Number of entities to display per page of a collection</label>
+                      <div class="controls">
+                        <input type="text" placeholder="25" class="form-control input-xlarge" ng-model="restService.page_size">
+                        <p class="help-block">Indicate the number of entities that should be displayed per page when GET requests are made to the collection.</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">HTTP methods allowed for ENTITIES</label>
+                      <div class="controls">
+                        <label ng-repeat="method in restService.resource_http_methods" class="checkbox inline" for="resource_http_methods{{ $index }}">
+                          <input type="checkbox" name="resource_http_methods" id="resource_http_methods{{ $index }}" ng-model="method.checked">
+                          <span>{{method.name}}</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">HTTP methods allowed for COLLECTIONS</label>
+                      <div class="controls">
+                        <label ng-repeat="method in restService.collection_http_methods" class="checkbox inline" for="collection_http_methods{{ $index }}">
+                          <input type="checkbox" name="collection_http_methods" id="collection_http_methods{{ $index }}" ng-model="method.checked">
+                          <span>{{method.name}}</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="control-group" ng-show="isDbConnected(restService)">
-                  <label class="control-label" for="table_name">DB Table Name</label>
-                  <div class="controls">
-                    <input type="text" placeholder="Table Name" class="form-control input-xlarge" required="" ng-model="restService.table_name">
-                    <p class="help-block">The name of the database table used by this endpoint</p>
+                <div ng-show="isDbConnected(restService)" class="panel panel-default">
+                  <div class="panel-heading">Database Settings</div>
+                  <div class="panel-body">
+                    <div class="control-group">
+                      <label class="control-label" for="selector">DB Adapter Name</label>
+                      <div class="controls">
+                        <select class="form-control input-xlarge"
+                          ng-model="restService.adapter_name" ng-options="v.adapter_name as v.adapter_name for (k,v) in $parent.dbAdapters"></select>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="table_name">DB Table Name</label>
+                      <div class="controls">
+                        <input type="text" placeholder="Table Name" class="form-control input-xlarge" required="" ng-model="restService.table_name">
+                        <p class="help-block">The name of the database table used by this endpoint</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
+                      <div class="controls">
+                        <input type="text" 
+                          class="form-control hydrator_select"
+                          ng-model="restService.hydrator_name">
+                        <p class="help-block">The name of the hydrator service used to create entities from database rows</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="table_service">TableGateway Service Name</label>
+                      <div class="controls">
+                        <input type="text" placeholder="TableGateway Service Name" class="form-control input-xlarge" required="" ng-model="restService.table_service">
+                        <p class="help-block">The name of the TableGateway service used by this endpoint; change only if you have created your own implementation.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="control-group" ng-show="isDbConnected(restService)">
-                  <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
-                  <div class="controls">
-                    <input type="text" 
-                      class="form-control hydrator_select"
-                      ng-model="restService.hydrator_name">
-                    <p class="help-block">The name of the hydrator service used to create entities from database rows</p>
+                <div class="panel panel-default">
+                  <div class="panel-heading">REST Parameters</div>
+                  <div class="panel-body">
+                    <div class="control-group">
+                      <label class="control-label">Identifier Name</label>
+                      <div class="controls">
+                        <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.identifier_name">
+                        <p class="help-block">Name of the field representing the unique identifier</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">Collection Name</label>
+                      <div class="controls">
+                        <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.collection_name">
+                        <p class="help-block">Name of the field representing the collection in the response.</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="page_size_param">Page size parameter</label>
+                      <div class="controls">
+                        <input type="text" placeholder="" class="form-control input-xlarge" ng-model="restService.page_size_param">
+                        <p class="help-block">The query string parameter that will represent the number of results per page when retrieving a collection.</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">Collection Query String whitelist</label>
+                      <div class="controls">
+                        <tags-input 
+                          ng-class="form-control"
+                          ng-model="restService.collection_query_whitelist"
+                          add-on-space="true"
+                          max-length="256"
+                          allowed-tags-pattern="^[a-zA-Z0-9_+.-]+$"
+                          placeholder="Add a variable to the whitelist">
+                        </tags-input>
+                        <p class="help-block">Specify query string variables that
+                        should be represented in relational links for collections
+                        of this resource (e.g., "filter", "sort", "version").</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="control-group" ng-show="isDbConnected(restService)">
-                  <label class="control-label" for="table_service">TableGateway Service Name</label>
-                  <div class="controls">
-                    <input type="text" placeholder="TableGateway Service Name" class="form-control input-xlarge" required="" ng-model="restService.table_service">
-                    <p class="help-block">The name of the TableGateway service used by this endpoint; change only if you have created your own implementation.</p>
-                  </div>
-                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading">Content Negotiation</div>
+                  <div class="panel-body">
+                    <div class="control-group">
+                      <label class="control-label">Content Negotiation Selector</label>
+                      <div class="controls">
+                        <select class="form-control input-xlarge" ng-model="restService.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
+                      </div>
+                    </div>
 
-                <!-- Text input-->
-                <div class="control-group">
-                  <label class="control-label" for="route_match">Route to match</label>
-                  <div class="controls">
-                    <input type="text" placeholder="/api/your_resource" class="form-control input-xlarge" required="" ng-model="restService.route_match">
-                    <p class="help-block">The base URI for the resource (minus the identifier segment of the URI)</p>
-                  </div>
-                </div>
+                    <div class="control-group">
+                      <label class="control-label">Accept whitelist</label>
+                      <div class="controls">
+                        <tags-input 
+                          ng-class="form-control"
+                          ng-model="restService.accept_whitelist"
+                          add-on-space="true"
+                          max-length="256"
+                          allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
+                          placeholder="Add a mediatype to the whitelist">
+                        </tags-input>
+                        <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
+                      </div>
+                    </div>
 
-                <!-- Text input-->
-                <div class="control-group">
-                  <label class="control-label" for="identifier_name">Identifier Name</label>
-                  <div class="controls">
-                    <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.identifier_name">
-                    <p class="help-block">Name of the field representing the unique identifier</p>
+                    <div class="control-group">
+                      <label class="control-label">Content-Type whitelist</label>
+                        <tags-input
+                          ng-class="form-control"
+                          ng-model="restService.content_type_whitelist"
+                          add-on-space="true"
+                          max-length="256"
+                          allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
+                          placeholder="Add a mediatype to the whitelist">
+                        </tags-input>
+                        <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
+                      </label>
+                    </div>
                   </div>
-                </div>
-
-                <!-- Multiple Checkboxes (inline) -->
-                <div class="control-group">
-                  HTTP methods allowed for COLLECTIONS
-                  <div class="controls">
-                    <label ng-repeat="method in restService.collection_http_methods" class="checkbox inline" for="collection_http_methods{{ $index }}">
-                      <input type="checkbox" name="collection_http_methods" id="collection_http_methods{{ $index }}" ng-model="method.checked">
-                      <span>{{method.name}}</span>
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Multiple Checkboxes (inline) -->
-                <div class="control-group">
-                  HTTP methods allowed for ENTITIES
-                  <div class="controls">
-                    <label ng-repeat="method in restService.resource_http_methods" class="checkbox inline" for="resource_http_methods{{ $index }}">
-                      <input type="checkbox" name="resource_http_methods" id="resource_http_methods{{ $index }}" ng-model="method.checked">
-                      <span>{{method.name}}</span>
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Text input-->
-                <div class="control-group">
-                  <label class="control-label" for="page_size">Number of entities to display per page of a collection</label>
-                  <div class="controls">
-                    <input type="text" placeholder="25" class="form-control input-xlarge" ng-model="restService.page_size">
-                    <p class="help-block">Indicate the number of entities that should be displayed per page when GET requests are made to the collection.</p>
-                  </div>
-                </div>
-
-                <!-- Text input-->
-                <div class="control-group">
-                  <label class="control-label" for="page_size_param">Page size parameter</label>
-                  <div class="controls">
-                    <input type="text" placeholder="" class="form-control input-xlarge" ng-model="restService.page_size_param">
-                    <p class="help-block">The query string parameter that will represent the number of results per page when retrieving a collection.</p>
-                  </div>
-                </div>
-
-                <!-- Select Basic -->
-                <div class="control-group">
-                  <label class="control-label">Content Negotiation Selector</label>
-                  <div class="controls">
-                    <select class="form-control input-xlarge" ng-model="restService.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
-                  </div>
-                </div>
-
-                <!-- Prepended checkbox -->
-                <div class="control-group">
-                  <label class="control-label">Accept whitelist</label>
-                  <div class="controls">
-                    <tags-input 
-                      ng-class="form-control"
-                      ng-model="restService.accept_whitelist"
-                      add-on-space="true"
-                      max-length="256"
-                      allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                      placeholder="Add a mediatype to the whitelist">
-                    </tags-input>
-                    <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
-                  </div>
-                </div>
-
-                <!-- Prepended checkbox -->
-                <div class="control-group">
-                  <label class="control-label">Content-Type whitelist</label>
-                    <tags-input
-                      ng-class="form-control"
-                      ng-model="restService.content_type_whitelist"
-                      add-on-space="true"
-                      max-length="256"
-                      allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                      placeholder="Add a mediatype to the whitelist">
-                    </tags-input>
-                    <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
-                  </label>
                 </div>
               </fieldset>
 
               <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
             </div>
+
             <div class="tab-pane" id="sourcemode{{$index}}">
-                <br /><p>Click on the file name to show the source code.</p>
+                <br />
+                <p>Click on the file name to show the source code.</p>
+
                 <table class="table table-striped">    
                     <tr>
                         <td>Collection Class</td>
