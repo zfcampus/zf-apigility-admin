@@ -25,7 +25,7 @@
         <div class="container">
             <div class="navbar-header">
                 <a href="/admin" class="navbar-brand">
-<!--                    <img src="/zf-apigility/img/ag-logo.png">-->
+                    <img src="/zf-apigility/img/ag-logo.png">
                 </a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -34,25 +34,15 @@
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <nav class="collapse navbar-collapse ag-admin-navbar-collapse" role="navigation">
-                <ul class="nav navbar-nav">
-                    <li class="ag-admin-nav-dashboard active">
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="/apidoc">API Doc</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </header>
 
     <div class="ag-admin-module-navigation" ng-controller="ApiListController">
         <div class="container">
-            <span class="pull-left">APIs: </span>
             <button ng-hide="showNewApiForm" ng-click="showNewApiForm = true" id="create-module-button" class="btn btn-sm btn-primary pull-right" title="Create New API" position="bottom" content="#create-api-form">
                 Create New API
             </button>
+            <span class="pull-left">APIs: </span>
             <ul class="nav nav-pills ag-admin-nav-pills">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
                     <a href="#/api/{{ api.name }}/info" ng-bind="api.namespace"></a>
