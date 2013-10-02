@@ -170,6 +170,8 @@ module.controller(
             });
         };
 
+//        $scope.currentApiVersion = null;
+
     }]
 );
 
@@ -197,7 +199,6 @@ module.directive('apiInfo', function () {
             });
 
             $rootScope.$on('api.updated', function (event, data) {
-                console.log('updated?');
                 $scope.$apply(function () {
                     $scope.api = data.apiModel;
                 });
@@ -387,14 +388,14 @@ module.config(['$routeProvider', '$locationProvider', function($routeProvider, $
     $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
 
-module.factory('ApisResource', ['$rootScope', '$q', '$http', function ($rootScope, $q, $http) {
+module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $http) {
     var resource = new Hyperagent.Resource('/admin/api/module');
 
     resource.getCurrentApi = null;
+    resource.lastApi = null;
     resource.currentApiVersion = 0;
 
     resource.setApiModel = function (name, version, makeCurrent) {
-        var deferred = $q.defer();
         var apiModel = {};
 
         var result = this.fetch({force: true}).then(function (apis) {
@@ -409,11 +410,22 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', function ($rootScop
             apiModel.restServices = [];
             apiModel.rpcServices = [];
 
-            if (!version) {
-                version = api.props.versions[api.props.versions.length - 1]
+            var latestVersion = api.props.versions[api.props.versions.length - 1];
+
+            if (resource.lastApi && resource.lastApi.name != name) {
+                console.log('old name: ' + resource.lastApi.name);
+                console.log('new name: ' + name);
+                resource.lastApi = null;
+                resource.currentApiVersion = 0;
             }
 
-            if (makeCurrent == true) {
+            if (version === null && resource.currentApiVersion > 0) {
+                version = resource.currentApiVersion;
+            } else if (typeof version != 'number') {
+                version = latestVersion;
+            }
+
+            if (makeCurrent) {
                 resource.currentApiVersion = version;
             }
 
@@ -441,6 +453,7 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', function ($rootScop
 
         }).then(function (api) {
             $rootScope.$broadcast('api.updated', {apiModel: apiModel});
+            resource.lastApi = apiModel;
             return apiModel;
         });
 
