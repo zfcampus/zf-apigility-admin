@@ -67,98 +67,134 @@
 
         <div class="tab-content">
           <div class="tab-pane active" id="viewmode{{$index}}">
-            <table class="table table-striped">
-              <tr>
-                <td>Accept whitelist</td>
-                <td>{{ rpcService.accept_whitelist.join(', ') || 'n/a' }}</td>
-              </tr>
-              <tr>
-                <td>Content-Type whitelist</td>
-                <td>{{ rpcService.content_type_whitelist.join(', ') || 'n/a' }}</td>
-              </tr>
-              <tr>
-                <td>Controller Service Name</td>
-                <td>{{ rpcService.controller_service_name }}</td>
-              </tr>
-              <tr>
-                <td>Allowed HTTP Methods</td>
-                <td>{{ rpcService.http_methods_view }}</td>
-              </tr>
-              <tr>
-                <td>Route matches:</td>
-                <td>{{ rpcService.route_match }}</td>
-              </tr>
-              <tr>
-                <td>Route Name</td>
-                <td>{{ rpcService.route_name }}</td>
-              </tr>
-              <tr>
-                <td>Content Negotiation Selector</td>
-                <td>{{ rpcService.selector }}</td>
-              </tr>
-            </table>
+            <div class="tab-pane active" id="viewmode{{$index}}">
+              <div class="panel panel-default">
+                <div class="panel-heading">General Settings</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Route matches:</h4>
+                    <p class="list-group-item-text">{{ rpcService.route_match }}</p>
+                  </div>
+              
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Allowed HTTP Methods</h4>
+                    <p class="list-group-item-text">{{ rpcService.http_methods_view }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
+                <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
+            </button>
+            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
+                <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
+            </button>
+            <br />
+            
+            <div ng-show="showAdvanced{{$index}}">
+              <div class="panel panel-default">
+                <div class="panel-heading">Content Negotiation</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Content Negotiation Selector</h4>
+                    <p class="list-group-item-text">{{ rpcService.selector }}</p>
+                  </div>
+                  
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Accept whitelist</h4>
+                    <p class="list-group-item-text">{{ rpcService.accept_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Content-Type whitelist</h4>
+                    <p class="list-group-item-text">{{ rpcService.content_type_whitelist.join(', ') || 'n/a' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Service/Route Names</div>
+                <div class="panel-body list-group">
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Controller Service Name</h4>
+                    <p class="list-group-item-text">{{ rpcService.controller_service_name }}</p>
+                  </div>
+
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Route Name</h4>
+                    <p class="list-group-item-text">{{ rpcService.route_name }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="tab-pane" id="editmode{{$index}}">
             <form class="form-horizontal" ng-submit="saveRpcService($index)">
               <fieldset>
+                <div class="panel panel-default">
+                  <div class="panel-heading">General Settings</div>
+                  <div class="panel-body">
+                    <div class="control-group">
+                      <label class="control-label">Route to match</label>
+                      <div class="controls">
+                        <input type="text" placeholder="/api/for/your/service" class="form-control input-xlarge" required="" value="{{ rpcService.route_match }}">
+                        <p class="help-block">A literal or segment (i.e., with ":variable" placeholders) route to match</p>
+                      </div>
+                    </div>
 
-                <!-- Text input-->
-                <div class="control-group">
-                  <label class="control-label" for="route_match">Route to match</label>
-                  <div class="controls">
-                    <input type="text" placeholder="/api/for/your/service" class="form-control input-xlarge" required="" value="{{ rpcService.route_match }}">
-                    <p class="help-block">A literal or segment (i.e., with ":variable" placeholders) route to match</p>
+                    <div class="control-group">
+                      <label class="control-label">Allowed HTTP Methods</label>
+                      <div class="controls">
+                        <label ng-repeat="method in rpcService.http_methods" class="checkbox inline" for="http_methods{{ $index }}">
+                          <input type="checkbox" name="http_methods" id="http_methods{{ $index }}" ng-model="method.checked">
+                          <span>{{method.name}}</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Multiple Checkboxes (inline) -->
-                <div class="control-group">
-                  Allowed HTTP Methods
-                  <div class="controls">
-                    <label ng-repeat="method in rpcService.http_methods" class="checkbox inline" for="http_methods{{ $index }}">
-                      <input type="checkbox" name="http_methods" id="http_methods{{ $index }}" ng-model="method.checked">
-                      <span>{{method.name}}</span>
-                    </label>
-                  </div>
-                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading">Content Negotiation</div>
+                  <div class="panel-body">
+                    <div class="control-group">
+                      <label class="control-label">Content Negotiation Selector</label>
+                      <div class="controls">
+                        <select class="form-control input-xlarge" ng-model="rpcService.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
+                      </div>
+                    </div>
 
-                <!-- Select Basic -->
-                <div class="control-group">
-                  <label class="control-label">Content Negotiation Selector</label>
-                  <div class="controls">
-                    <select class="form-control input-xlarge" ng-model="rpcService.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
-                  </div>
-                </div>
+                    <div class="control-group">
+                      <label class="control-label" for="accept_whitelist">Accept whitelist</label>
+                      <div class="controls">
+                        <tags-input 
+                          ng-class="form-control"
+                          ng-model="rpcService.accept_whitelist"
+                          add-on-space="true"
+                          max-length="256"
+                          allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
+                          placeholder="Add a mediatype to the whitelist">
+                        </tags-input>
+                        <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
+                      </div>
+                    </div>
 
-                <!-- Prepended checkbox -->
-                <div class="control-group">
-                  <label class="control-label" for="accept_whitelist">Accept whitelist</label>
-                  <div class="controls">
-                    <tags-input 
-                      ng-class="form-control"
-                      ng-model="rpcService.accept_whitelist"
-                      add-on-space="true"
-                      max-length="256"
-                      allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                      placeholder="Add a mediatype to the whitelist">
-                    </tags-input>
-                    <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
-                  </div>
-                </div>
-
-                <!-- Prepended checkbox -->
-                <div class="control-group">
-                  <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
-                  <div class="controls">
-                    <tags-input 
-                      ng-class="form-control"
-                      ng-model="rpcService.content_type_whitelist"
-                      add-on-space="true"
-                      max-length="256"
-                      allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                      placeholder="Add a mediatype to the whitelist">
-                    </tags-input>
-                    <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
+                    <div class="control-group">
+                      <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
+                      <div class="controls">
+                        <tags-input 
+                          ng-class="form-control"
+                          ng-model="rpcService.content_type_whitelist"
+                          add-on-space="true"
+                          max-length="256"
+                          allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
+                          placeholder="Add a mediatype to the whitelist">
+                        </tags-input>
+                        <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -166,8 +202,11 @@
               <button ng-click="saveRpcService($index)" type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
           </div>
-          <div class="tab-pane active" id="sourcemode{{$index}}">
-            <br /><p>Click on the file name to show the source code.</p>
+
+          <div class="tab-pane" id="sourcemode{{$index}}">
+            <br />
+            <p>Click on the file name to show the source code.</p>
+
             <table class="table table-striped">    
                 <tr>
                     <td>Controller Service Class</td>
