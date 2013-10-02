@@ -71,6 +71,7 @@ class DbConnectedRestServiceModel
         $entityClass       = $restModel->createEntityClass($resourceName, 'entity-db-connected');
         $collectionClass   = $restModel->createCollectionClass($resourceName);
         $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->identifierName, $controllerService);
+        $mediaType         = $restModel->createMediaType();
 
         $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
@@ -79,6 +80,14 @@ class DbConnectedRestServiceModel
             'module'                  => $restModel->module,
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
+            'accept_whitelist'        => array(
+                'application/json',
+                $mediaType,
+            ),
+            'content_type_whitelist'  => array(
+                'application/json',
+                $mediaType,
+            ),
         ));
 
         $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);

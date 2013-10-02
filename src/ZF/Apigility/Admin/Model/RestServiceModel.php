@@ -248,29 +248,38 @@ class RestServiceModel implements EventManagerAwareInterface
     public function createService(NewRestServiceEntity $details)
     {
         $resourceName = ucfirst($details->resourceName);
-        $metadata     = new RestServiceEntity();
-        $metadata->exchangeArray($details->getArrayCopy());
+        $entity       = new RestServiceEntity();
+        $entity->exchangeArray($details->getArrayCopy());
 
         $controllerService = $this->createControllerServiceName($resourceName);
         $resourceClass     = $this->createResourceClass($resourceName);
         $entityClass       = $this->createEntityClass($resourceName);
         $collectionClass   = $this->createCollectionClass($resourceName);
         $routeName         = $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
+        $mediatype         = $this->createMediaType();
 
-        $metadata->exchangeArray(array(
+        $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
             'controller_service_name' => $controllerService,
             'entity_class'            => $entityClass,
             'module'                  => $this->module,
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
+            'accept_whitelist'        => array(
+                'application/json',
+                $mediaType,
+            ),
+            'content_type_whitelist'  => array(
+                'application/json',
+                $mediaType,
+            ),
         ));
 
-        $this->createRestConfig($metadata, $controllerService, $resourceClass, $routeName);
-        $this->createContentNegotiationConfig($metadata, $controllerService);
-        $this->createHalConfig($metadata, $entityClass, $collectionClass, $routeName);
+        $this->createRestConfig($entity, $controllerService, $resourceClass, $routeName);
+        $this->createContentNegotiationConfig($entity, $controllerService);
+        $this->createHalConfig($entity, $entityClass, $collectionClass, $routeName);
 
-        return $metadata;
+        return $entity;
     }
 
     /**
@@ -525,6 +534,23 @@ class RestServiceModel implements EventManagerAwareInterface
     }
 
     /**
+     * Create the mediatype for this
+     *
+     * Based on the module and the latest module version.
+     * 
+     * @return string
+     */
+    public function createMediaType()
+    {
+        $filter = $this->getRouteNameFilter();
+        return sprintf(
+            'application/vnd.%s.v%s+json',
+            $filter->filter($this->module),
+            $this->moduleEntity->getLatestVersion()
+        );
+    }
+
+    /**
      * Creates REST configuration
      *
      * @param  RestServiceEntity $details
@@ -561,6 +587,7 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function createContentNegotiationConfig(RestServiceEntity $details, $controllerService)
     {
+printf("In %s\n", __METHOD__);
         $config = array(
             'controllers' => array(
                 $controllerService => $details->selector,
@@ -568,13 +595,16 @@ class RestServiceModel implements EventManagerAwareInterface
         );
         $whitelist = $details->acceptWhitelist;
         if (!empty($whitelist)) {
+printf("    Found accept whitelist:\n%s\n", var_export($whitelist, 1));
             $config['accept-whitelist'] = array($controllerService => $whitelist);
         }
         $whitelist = $details->contentTypeWhitelist;
         if (!empty($whitelist)) {
+printf("    Found content-type whitelist:\n%s\n", var_export($whitelist, 1));
             $config['content-type-whitelist'] = array($controllerService => $whitelist);
         }
         $config = array('zf-content-negotiation' => $config);
+printf("    Writing content negotiation config:\n%s\n", var_export($config, 1));
         $this->configResource->patch($config, true);
     }
 
