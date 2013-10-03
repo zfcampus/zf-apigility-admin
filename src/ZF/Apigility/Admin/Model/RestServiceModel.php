@@ -270,12 +270,13 @@ class RestServiceModel implements EventManagerAwareInterface
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
             'accept_whitelist'        => array(
-                'application/json',
                 $mediaType,
+                'application/hal+json',
+                'application/json',
             ),
             'content_type_whitelist'  => array(
-                'application/json',
                 $mediaType,
+                'application/json',
             ),
         ));
 
