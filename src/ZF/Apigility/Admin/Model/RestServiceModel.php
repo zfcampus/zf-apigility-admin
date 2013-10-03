@@ -260,7 +260,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $entityClass       = $this->createEntityClass($resourceName);
         $collectionClass   = $this->createCollectionClass($resourceName);
         $routeName         = $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
-        $mediatype         = $this->createMediaType();
+        $mediaType         = $this->createMediaType();
 
         $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
