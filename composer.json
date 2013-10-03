@@ -1,6 +1,7 @@
 {
     "name": "zfcampus/zf-apigility-admin",
     "description": "Apigility Admin module",
+    "type": "library",
     "license": "BSD-3-Clause",
     "keywords": [
         "api",
@@ -9,9 +10,14 @@
         "zf2"
     ],
     "homepage": "http://apigility.org/",
+    "support": {
+        "email": "apigility-users@zend.com",
+        "irc": "irc://irc.freenode.net/apigility",
+        "source": "https://github.com/zfcampus/zf-apigility-admin",
+        "issues": "https://github.com/zfcampus/zf-apigility-admin/issues"
+    },
     "repositories": [
-        { "type": "composer", "url": "https://packages.zendframework.com/" },
-        { "type": "composer", "url": "http://packages-zfcampus.rhcloud.com/" }
+        { "type": "composer", "url": "https://packages.zendframework.com/" }
     ],
     "minimum-stability": "dev",
     "require": {
