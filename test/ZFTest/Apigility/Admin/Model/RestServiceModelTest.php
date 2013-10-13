@@ -312,8 +312,8 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals('BarConf\V1\Rest\Foo\FooEntity', $result->entityClass);
         $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $result->routeName);
-        $this->assertEquals(array('application/json', 'application/*+json'), $result->acceptWhitelist);
-        $this->assertEquals(array('application/json'), $result->contentTypeWhitelist);
+        $this->assertEquals(array('application/vnd.bar-conf.v1+json', 'application/hal+json', 'application/json'), $result->acceptWhitelist);
+        $this->assertEquals(array('application/vnd.bar-conf.v1+json', 'application/json'), $result->contentTypeWhitelist);
     }
 
     public function testCreateServiceUsesDefaultContentNegotiation()
@@ -324,8 +324,8 @@ class RestServiceModelTest extends TestCase
         ));
         $result  = $this->codeRest->createService($payload);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
-        $this->assertEquals(array('application/json', 'application/*+json'), $result->acceptWhitelist);
-        $this->assertEquals(array('application/json'), $result->contentTypeWhitelist);
+        $this->assertEquals(array('application/vnd.bar-conf.v1+json', 'application/hal+json', 'application/json'), $result->acceptWhitelist);
+        $this->assertEquals(array('application/vnd.bar-conf.v1+json', 'application/json'), $result->contentTypeWhitelist);
     }
 
     public function testCanFetchServiceAfterCreation()
