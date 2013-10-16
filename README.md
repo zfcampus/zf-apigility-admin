@@ -191,7 +191,7 @@ configuration file for that module.
 
 ### `/admin/api/module.enable`
 
-This endpoint is for API-1st-enabling (Apigilify) an existing module.
+This endpoint is for API-1st-enabling (Apigilify-enable) an existing module.
 
 - Accept: `application/json`
 
