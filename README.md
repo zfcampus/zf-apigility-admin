@@ -199,11 +199,11 @@ This endpoint is for API-1st-enabling (Apigilify) an existing module.
 
 - Content-Type: `application/json`
 
-  Expects an object with the property "name" describing an existing ZF2 module.
+  Expects an object with the property "module" describing an existing ZF2 module.
 
   ```javascript
   {
-  "name": "Status"
+  "module": "Status"
   }
   ```
 
