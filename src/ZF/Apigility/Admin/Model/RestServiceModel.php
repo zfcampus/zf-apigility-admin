@@ -592,7 +592,6 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function createContentNegotiationConfig(RestServiceEntity $details, $controllerService)
     {
-printf("In %s\n", __METHOD__);
         $config = array(
             'controllers' => array(
                 $controllerService => $details->selector,
@@ -600,16 +599,13 @@ printf("In %s\n", __METHOD__);
         );
         $whitelist = $details->acceptWhitelist;
         if (!empty($whitelist)) {
-printf("    Found accept whitelist:\n%s\n", var_export($whitelist, 1));
             $config['accept-whitelist'] = array($controllerService => $whitelist);
         }
         $whitelist = $details->contentTypeWhitelist;
         if (!empty($whitelist)) {
-printf("    Found content-type whitelist:\n%s\n", var_export($whitelist, 1));
             $config['content-type-whitelist'] = array($controllerService => $whitelist);
         }
         $config = array('zf-content-negotiation' => $config);
-printf("    Writing content negotiation config:\n%s\n", var_export($config, 1));
         $this->configResource->patch($config, true);
     }
 
