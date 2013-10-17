@@ -254,7 +254,7 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $resourceName = ucfirst($details->resourceName);
         
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\+[a-zA-Z][a-zA-Z0-9_]*)?$/', $resourceName)) {
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $resourceName)) {
             throw new CreationException('Invalid resource name; must be a valid PHP namespace name.');
         }
         

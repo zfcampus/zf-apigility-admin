@@ -102,7 +102,7 @@ class RpcServiceModelTest extends TestCase
     public function testCanCreateControllerServiceNameFromResourceNameSpace()
     {
         /** @todo is this the expected behavior? */
-        $this->assertEquals('FooConf\V1\Rpc\Baz\Bat\Baz\BatController', $this->codeRpc->createController('Baz\Bat')->class);
+        $this->assertEquals('FooConf\V1\Rpc\Baz\Bat\Foo\Baz\Bat\FooController', $this->codeRpc->createController('Baz\Bat\Foo')->class);
     }
 
     public function testCreateControllerRpc()

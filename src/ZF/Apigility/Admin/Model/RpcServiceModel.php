@@ -171,7 +171,7 @@ class RpcServiceModel
     {
         $serviceName       = ucfirst($serviceName);
 
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\+[a-zA-Z][a-zA-Z0-9_]*)?$/', $serviceName)) {
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
             /** @todo define exception in Rpc namespace */
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }

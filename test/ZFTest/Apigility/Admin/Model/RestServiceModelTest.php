@@ -126,7 +126,7 @@ class RestServiceModelTest extends TestCase
 
     public function testCanCreateControllerServiceNameFromResourceNameSpace()
     {
-        $this->assertEquals('BarConf\V1\Rest\Foo\Bar\Controller', $this->codeRest->createControllerServiceName('Foo\Bar'));
+        $this->assertEquals('BarConf\V1\Rest\Foo\Bar\Baz\Controller', $this->codeRest->createControllerServiceName('Foo\Bar\Baz'));
     }
 
     public function testCanCreateControllerServiceNameFromResourceName()
