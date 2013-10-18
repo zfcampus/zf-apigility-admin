@@ -14,6 +14,7 @@ use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 use ZF\Rest\Exception\PatchException;
+use ZF\Rest\Exception\CreationException;
 
 class RpcServiceModel
 {
@@ -169,6 +170,12 @@ class RpcServiceModel
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
         $serviceName       = ucfirst($serviceName);
+
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
+            /** @todo define exception in Rpc namespace */
+            throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
+        }
+        
         $controllerData    = $this->createController($serviceName);
         $controllerService = $controllerData->service;
         $routeName         = $this->createRoute($route, $serviceName, $controllerService);
@@ -427,6 +434,7 @@ class RpcServiceModel
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
     {
         if (!in_array($headerType, array('accept', 'content-type'))) {
+            /** @todo define exception in Rpc namespace */
             throw new PatchException('Invalid content negotiation whitelist type provided', 422);
         }
         $headerType .= '-whitelist';
