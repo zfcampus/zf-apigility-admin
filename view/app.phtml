@@ -53,7 +53,7 @@
             <div class="panel-heading">Create New API</div>
             <div class="panel-body">
                 <form ng-submit="createNewApi()">
-                    <input type="text" ng-model="apiName" placeholder="API Name ...">
+                    <input type="text" ng-model="apiName" placeholder="API Name ..." required="">
                     <button type="submit" class="btn btn-sm btn-success">Create API</button>
                     <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
                 </form>
