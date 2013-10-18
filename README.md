@@ -191,7 +191,7 @@ configuration file for that module.
 
 ### `/admin/api/module.enable`
 
-This endpoint is for API-1st-enabling an existing module.
+This endpoint will Apigility-enable (Apigilify) an existing module.
 
 - Accept: `application/json`
 
@@ -199,11 +199,11 @@ This endpoint is for API-1st-enabling an existing module.
 
 - Content-Type: `application/json`
 
-  Expects an object with the property "name" describing an existing ZF2 module.
+  Expects an object with the property "module" describing an existing ZF2 module.
 
   ```javascript
   {
-  "name": "Status"
+  "module": "Status"
   }
   ```
 
