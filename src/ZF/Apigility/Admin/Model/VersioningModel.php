@@ -257,8 +257,8 @@ class VersioningModel
      * Normalize a module name
      *
      * Module names come over the wire dot-separated; make them namespaced.
-     * 
-     * @param  string $module 
+     *
+     * @param  string $module
      * @return string
      */
     protected function normalizeModule($module)
@@ -269,10 +269,10 @@ class VersioningModel
     /**
      * Determine the source path for the module
      *
-     * Usually, this is the "src/{modulename}" subdirectory of the 
+     * Usually, this is the "src/{modulename}" subdirectory of the
      * module.
-     * 
-     * @param  string $module 
+     *
+     * @param  string $module
      * @return string
      */
     protected function getModuleSourcePath($module)
@@ -304,8 +304,8 @@ class VersioningModel
 
     /**
      * Locate the config path for this module
-     * 
-     * @param  string $srcPath 
+     *
+     * @param  string $srcPath
      * @return string|false
      */
     protected function locateConfigPath($srcPath)
@@ -324,7 +324,7 @@ class VersioningModel
 
     /**
      * Filter for module names
-     * 
+     *
      * @return FilterChain
      */
     protected function getModuleNameFilter()

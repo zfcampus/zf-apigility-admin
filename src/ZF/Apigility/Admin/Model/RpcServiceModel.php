@@ -175,7 +175,7 @@ class RpcServiceModel
             /** @todo define exception in Rpc namespace */
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
-        
+
         $controllerData    = $this->createController($serviceName);
         $controllerService = $controllerData->service;
         $routeName         = $this->createRoute($route, $serviceName, $controllerService);

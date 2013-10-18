@@ -253,11 +253,11 @@ class RestServiceModel implements EventManagerAwareInterface
     public function createService(NewRestServiceEntity $details)
     {
         $resourceName = ucfirst($details->resourceName);
-        
+
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $resourceName)) {
             throw new CreationException('Invalid resource name; must be a valid PHP namespace name.');
         }
-        
+
         $entity       = new RestServiceEntity();
         $entity->exchangeArray($details->getArrayCopy());
 
@@ -548,7 +548,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * Create the mediatype for this
      *
      * Based on the module and the latest module version.
-     * 
+     *
      * @return string
      */
     public function createMediaType()

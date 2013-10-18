@@ -98,7 +98,7 @@ class RpcServiceModelTest extends TestCase
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo/Bar', 'route', array());
     }
-    
+
     public function testCanCreateControllerServiceNameFromResourceNameSpace()
     {
         /** @todo is this the expected behavior? */

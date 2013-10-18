@@ -99,7 +99,7 @@ class RestServiceModelTest extends TestCase
         ));
         return $payload;
     }
-    
+
     public function testRejectInvalidRestResourceName1()
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
@@ -107,7 +107,7 @@ class RestServiceModelTest extends TestCase
         $restServiceEntity->exchangeArray(array('resourcename' => 'Foo Bar'));
         $this->codeRest->createService($restServiceEntity);
     }
-    
+
     public function testRejectInvalidRestResourceName2()
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
@@ -115,7 +115,7 @@ class RestServiceModelTest extends TestCase
         $restServiceEntity->exchangeArray(array('resourcename' => 'Foo:Bar'));
         $this->codeRest->createService($restServiceEntity);
     }
-    
+
     public function testRejectInvalidRestResourceName3()
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
