@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility-admin/css/bootstrap-glyphicons.css') ?>" />
     <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility-admin/css/typeahead.css') ?>" />
 </head>
-<body id="ng-app" ng-app="ag-admin">
+<body id="ng-app" ng-app="ag-admin" data-base-path="<?= $this->basePath() ?>">
     <a class="sr-only" href="#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
         <div class="container">
@@ -45,7 +45,7 @@
             <span class="pull-left">APIs: </span>
             <ul class="nav nav-pills ag-admin-nav-pills">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
-                    <a href="<?= $this->basePath('#/api/{{ api.name }}/info') ?>" ng-bind="api.namespace"></a>
+                    <a href="#/api/{{ api.name }}/info" ng-bind="api.namespace"></a>
                 </li>
             </ul>
         </div>
