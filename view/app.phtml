@@ -2,30 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility/js/jquery.min.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility/js/bootstrap.min.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/lodash.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/q.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/URI.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/URITemplate.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/hyperagent.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/typeahead.min.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/angular.js') ?>"></script>
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/vendor/ng-tags-input.min.js') ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility/css/bootstrap.min.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility/css/main.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility-admin/css/main.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility-admin/css/ng-tags-input.min.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility-admin/css/bootstrap-glyphicons.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?= $this->basePath('/zf-apigility-admin/css/typeahead.css') ?>" />
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility/js/jquery.min.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility/js/bootstrap.min.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/lodash.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/q.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/URI.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/URITemplate.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/hyperagent.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/typeahead.min.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/angular.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/ng-tags-input.min.js') ?>"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility/css/bootstrap.min.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility/css/main.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/main.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/ng-tags-input.min.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/bootstrap-glyphicons.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/typeahead.css') ?>" />
 </head>
-<body id="ng-app" ng-app="ag-admin" data-base-path="<?= $this->basePath() ?>">
+<body id="ng-app" ng-app="ag-admin" data-base-path="<?php echo $this->basePath() ?>">
     <a class="sr-only" href="#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
         <div class="container">
             <div class="navbar-header">
-                <a href="<?= $this->url('zf-apigility-admin') ?>" class="navbar-brand">
-                    <img src="<?= $this->basePath('/zf-apigility/img/ag-logo.png') ?>">
+                <a href="<?php echo $this->url('zf-apigility-admin') ?>" class="navbar-brand">
+                    <img src="<?php echo $this->basePath('/zf-apigility/img/ag-logo.png') ?>">
                 </a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -79,6 +79,6 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="<?= $this->basePath('/zf-apigility-admin/js/app.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/app.js') ?>"></script>
     </body>
 </html>
