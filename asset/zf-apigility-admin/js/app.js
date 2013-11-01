@@ -2,6 +2,23 @@
 
 var module = angular.module('ag-admin', ['tags-input']);
 
+module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
+    var basePathHelper = function(url) {
+        var basePath = angular.element('body').data('base-path');
+        return basePath.replace(/\/$/, '') + '/' + url.replace(/^\//, '');
+    };
+
+    $provide.decorator('$location', ['$delegate', function($delegate) {
+        $delegate.basePath = basePathHelper;
+        return $delegate;
+    }]);
+
+    $routeProvider.when('/dashboard', {templateUrl: basePathHelper('/zf-apigility-admin/partials/index.html'), controller: 'DashboardController'});
+    $routeProvider.when('/global/db-adapters', {templateUrl: basePathHelper('/zf-apigility-admin/partials/global/db-adapters.html'), controller: 'DbAdapterController'});
+    $routeProvider.when('/api/:apiName/:section', {templateUrl: basePathHelper('/zf-apigility-admin/partials/api.html'), controller: 'ApiController'});
+    $routeProvider.otherwise({redirectTo: '/dashboard'});
+}]);
+
 module.controller(
     'DashboardController',
     ['$rootScope', function($rootScope) {
@@ -22,7 +39,7 @@ module.controller(
                 ApisResource.fetch({force: true}).then(function (apis) {
                     $scope.resetForm();
                     updateApiList();
-                    $location.path('/api/' + newApi.name + '/info');
+                    $location.path($location.basePath('/api/' + newApi.name + '/info'));
                 });
             });
         };
@@ -123,7 +140,7 @@ module.controller(
         $scope.api = null;
         $scope.section = null;
         $scope.content_negotiation = [
-            "HalJson", 
+            "HalJson",
             "Json"
         ];
         $scope.source_code = [];
@@ -175,21 +192,21 @@ module.controller(
     }]
 );
 
-module.directive('viewNavigation', ['$routeParams', function ($routeParams) {
+module.directive('viewNavigation', ['$routeParams', '$location', function ($routeParams, $location) {
     return {
         restrict: 'E',
         scope: true,
-        templateUrl: '/zf-apigility-admin/partials/view-navigation.html',
+        templateUrl: $location.basePath('/zf-apigility-admin/partials/view-navigation.html'),
         controller: ['$rootScope', '$scope', function ($rootScope, $scope) {
             $scope.routeParams = $routeParams;
         }]
     }
 }]);
 
-module.directive('apiInfo', function () {
+module.directive('apiInfo', ['$location', function ($location) {
     return {
         restrict : 'E',
-        templateUrl: '/zf-apigility-admin/partials/api/info.html',
+        templateUrl: $location.basePath('/zf-apigility-admin/partials/api/info.html'),
         controller:  ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
 
             ApisResource.getCurrentApi.then(function (apiModel) {
@@ -206,13 +223,13 @@ module.directive('apiInfo', function () {
 
         }]
     };
-});
+}]);
 
 
-module.directive('apiRestServices', function () {
+module.directive('apiRestServices', ['$location', function ($location) {
     return {
         restrict: 'E',
-        templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
+        templateUrl: $location.basePath('/zf-apigility-admin/partials/api/rest-services.html'),
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
 
             $rootScope.$on('api.updated', function (event, data) {
@@ -302,12 +319,12 @@ module.directive('apiRestServices', function () {
             };
         }]
     };
-});
+}]);
 
-module.directive('apiRpcServices', function () {
+module.directive('apiRpcServices', ['$location', function ($location) {
     return {
         restrict: 'E',
-        templateUrl: '/zf-apigility-admin/partials/api/rpc-services.html',
+        templateUrl: $location.basePath('/zf-apigility-admin/partials/api/rpc-services.html'),
         controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
 
             $rootScope.$on('api.updated', function (event, data) {
@@ -379,17 +396,10 @@ module.directive('apiRpcServices', function () {
 
         }]
     }
-});
-
-module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-    $routeProvider.when('/dashboard', {templateUrl: '/zf-apigility-admin/partials/index.html', controller: 'DashboardController'});
-    $routeProvider.when('/global/db-adapters', {templateUrl: '/zf-apigility-admin/partials/global/db-adapters.html', controller: 'DbAdapterController'});
-    $routeProvider.when('/api/:apiName/:section', {templateUrl: '/zf-apigility-admin/partials/api.html', controller: 'ApiController'});
-    $routeProvider.otherwise({redirectTo: '/dashboard'})
 }]);
 
-module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $http) {
-    var resource = new Hyperagent.Resource('/admin/api/module');
+module.factory('ApisResource', ['$rootScope', '$http', '$location', function ($rootScope, $http, $location) {
+    var resource = new Hyperagent.Resource($location.basePath('/admin/api/module'));
 
     resource.getCurrentApi = null;
     resource.lastApi = null;
@@ -465,28 +475,28 @@ module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $ht
     };
 
     resource.createNewApi = function (name) {
-        return $http.post('/admin/api/module', {name: name})
+        return $http.post($location.basePath('/admin/api/module'), {name: name})
             .then(function (response) {
                 return response.data;
             });
     };
 
     resource.createNewRestService = function (apiName, restServiceName) {
-        return $http.post('/admin/api/module/' + apiName + '/rest', {resource_name: restServiceName})
+        return $http.post($location.basePath('/admin/api/module/') + apiName + '/rest', {resource_name: restServiceName})
             .then(function (response) {
                 return response.data;
             });
     };
 
     resource.createNewDbConnectedService = function(apiName, dbAdapterName, dbTableName) {
-        return $http.post('/admin/api/module/' + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
+        return $http.post($location.basePath('/admin/api/module/') + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
             .then(function (response) {
                 return response.data;
             });
     };
 
     resource.createNewRpcService = function (apiName, rpcServiceName, rpcServiceRoute) {
-        return $http.post('/admin/api/module/' + apiName + '/rpc', {service_name: rpcServiceName, route: rpcServiceRoute})
+        return $http.post($location.basePath('/admin/api/module/') + apiName + '/rpc', {service_name: rpcServiceName, route: rpcServiceRoute})
             .then(function (response) {
                 return response.data;
             });
@@ -494,7 +504,7 @@ module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $ht
 
 
     resource.removeRestService = function (apiName, restServiceName) {
-        var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
+        var url = $location.basePath('/admin/api/module/') + apiName + '/rest/' + encodeURIComponent(restServiceName);
         return $http.delete(url)
             .then(function (response) {
                 return response.data;
@@ -510,7 +520,7 @@ module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $ht
     };
 
     resource.removeRpcService = function (apiName, rpcServiceName) {
-        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
+        var url = $location.basePath('/admin/api/module/') + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
         return $http.delete(url)
             .then(function (response) {
                 return response.data;
@@ -518,7 +528,7 @@ module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $ht
     };
 
     resource.saveRpcService = function (apiName, rpcService) {
-        var url = '/admin/api/module/' + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
+        var url = $location.basePath('/admin/api/module/') + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
         return $http({method: 'patch', url: url, data: rpcService})
             .then(function (response) {
                 return response.data;
@@ -526,14 +536,14 @@ module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $ht
     };
 
     resource.getSourceCode = function (apiName, className) {
-        return $http.get('/admin/api/source?module=' + apiName + '&class=' + className)
+        return $http.get($location.basePath('/admin/api/source?module=') + apiName + '&class=' + className)
             .then(function(response) {
                 return response.data;
             });
     };
 
     resource.createNewVersion = function (apiName) {
-        return $http({method: 'patch', url: '/admin/api/versioning', data: {module: apiName}})
+        return $http({method: 'patch', url: $location.basePath('/admin/api/versioning'), data: {module: apiName}})
             .then(function (response) {
                 return response.data;
             });
@@ -542,25 +552,25 @@ module.factory('ApisResource', ['$rootScope', '$http', function ($rootScope, $ht
     return resource;
 }]);
 
-module.factory('DbAdapterResource', ['$http', function ($http) {
-    var resource =  new Hyperagent.Resource('/admin/api/db-adapter');
+module.factory('DbAdapterResource', ['$http', '$location', function ($http, $location) {
+    var resource =  new Hyperagent.Resource($location.basePath('/admin/api/db-adapter'));
 
     resource.createNewAdapter = function (options) {
-        return $http.post('/admin/api/db-adapter', options)
+        return $http.post($location.basePath('/admin/api/db-adapter'), options)
             .then(function (response) {
                 return response.data;
             });
     };
 
     resource.saveAdapter = function (name, data) {
-        return $http({method: 'patch', url: '/admin/api/db-adapter/' + encodeURIComponent(name), data: data})
+        return $http({method: 'patch', url: $location.basePath('/admin/api/db-adapter/') + encodeURIComponent(name), data: data})
             .then(function (response) {
                 return response.data;
             });
     };
 
     resource.removeAdapter = function (name) {
-        return $http.delete('/admin/api/db-adapter/' + encodeURIComponent(name))
+        return $http.delete($location.basePath('/admin/api/db-adapter/') + encodeURIComponent(name))
             .then(function (response) {
                 return true;
             });
