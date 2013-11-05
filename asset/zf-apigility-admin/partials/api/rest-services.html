@@ -105,16 +105,32 @@
                 </div>
                 
                 <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Allowed Resource HTTP Methods</h4>
-                  <p class="list-group-item-text">{{ restService.resource_http_methods_view }}</p>
+                  <h4 class="list-group-item-heading">Enabled Resource HTTP Methods</h4>
+                  <p class="list-group-item-text">{{ restService.resource_http_methods_view }}{{ $log.log(restService) }}</p>
                 </div>
                 
                 <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Allowed Collection HTTP Methods</h4>
+                  <h4 class="list-group-item-heading">Enabled Collection HTTP Methods</h4>
                   <p class="list-group-item-text">
                     {{ restService.collection_http_methods_view }}
                   </p>
                 </div>
+
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Authorization, Ex1</h4>
+                  <p class="list-group-item-text">
+                    <u>Everyone</u> <b>allowed</b> to <u>all HTTP methods</u>
+                  </p>
+                </div>
+
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Authorization, Ex2</h4>
+                  <p class="list-group-item-text">
+                    <u>Authenticated</u> <b>allowed</b> to <u>POST, PUT, DELETE</u><br>
+                    <u>Everyone</u> <b>allowed</b> to <u>GET</u>
+                  </p>
+                </div>
+
               </div>  
             </div>
 

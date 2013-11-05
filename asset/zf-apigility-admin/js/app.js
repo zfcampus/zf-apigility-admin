@@ -230,7 +230,9 @@ module.directive('apiRestServices', ['$location', function ($location) {
     return {
         restrict: 'E',
         templateUrl: $location.basePath('/zf-apigility-admin/partials/api/rest-services.html'),
-        controller: ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
+        controller: ['$http', '$rootScope', '$scope', 'ApisResource', '$log', function ($http, $rootScope, $scope, ApisResource, $log) {
+
+            $scope.$log = $log;
 
             $rootScope.$on('api.updated', function (event, data) {
                 $scope.$apply(function () {
