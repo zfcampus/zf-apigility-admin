@@ -130,6 +130,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'authentication' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/authentication',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
+                                        'action'     => 'authentication',
+                                    ),
+                                ),
+                            ),
                             'db-adapter' => array(
                                 'type' => 'segment',
                                 'options' => array(
@@ -148,6 +158,7 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
+            'ZF\Apigility\Admin\Controller\Authentication' => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
             'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
@@ -157,6 +168,10 @@ return array(
             'ZF\Apigility\Admin\Controller\Versioning'     => 'Json',
         ),
         'accept-whitelist' => array(
+            'ZF\Apigility\Admin\Controller\Authentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
@@ -187,6 +202,10 @@ return array(
             ),
         ),
         'content-type-whitelist' => array(
+            'ZF\Apigility\Admin\Controller\Authentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
@@ -217,6 +236,11 @@ return array(
 
     'zf-hal' => array(
         'metadata_map' => array(
+            'ZF\Apigility\Admin\Model\AuthenticationEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'id', // not necessary; it's a singular endpoint
+                'route_name'      => 'zf-apigility-admin/api/authentication',
+            ),
             'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
@@ -289,6 +313,10 @@ return array(
     'zf-rpc' => array(
         // Dummy entry; still handled by ControllerManager, but this will force
         // it to show up in the list of RPC services
+        'ZF\Apigility\Admin\Controller\Authentication' => array(
+            'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
+            'route_name'   => 'zf-apigility-admin/api/authentication',
+        ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
             'route_name'   => 'zf-apigility-admin/api/module-enable',

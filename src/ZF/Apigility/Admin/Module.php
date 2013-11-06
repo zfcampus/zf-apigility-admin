@@ -69,6 +69,19 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
+            'ZF\Apigility\Admin\Model\AuthenticationModel' => function($services) {
+                if (!$services->has('Config')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\AuthenticationModel service because Config service is not present'
+                    );
+                }
+                $config = $services->get('Config');
+                $writer = new PhpArrayWriter();
+
+                $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
+                $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
+                return new Model\AuthenticationModel($global, $local);
+            },
             'ZF\Apigility\Admin\Model\DbAdapterModel' => function($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
@@ -194,6 +207,11 @@ class Module
     public function getControllerConfig()
     {
         return array('factories' => array(
+            'ZF\Apigility\Admin\Controller\Authentication' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $model    = $services->get('ZF\Apigility\Admin\Model\AuthenticationModel');
+                return new Controller\AuthenticationController($model);
+            },
             'ZF\Apigility\Admin\Controller\ModuleCreation' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
