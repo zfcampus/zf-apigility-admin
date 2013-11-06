@@ -84,11 +84,6 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $routeNameFilter;
 
     /**
-     * @var string
-     */
-    protected $sourcePath;
-
-    /**
      * @param  ModuleEntity $moduleEntity
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
@@ -261,18 +256,19 @@ class RestServiceModel implements EventManagerAwareInterface
         $entity       = new RestServiceEntity();
         $entity->exchangeArray($details->getArrayCopy());
 
-        $controllerService = $this->createControllerServiceName($resourceName);
-        $resourceClass     = $this->createResourceClass($resourceName);
-        $entityClass       = $this->createEntityClass($resourceName);
-        $collectionClass   = $this->createCollectionClass($resourceName);
-        $routeName         = $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
         $mediaType         = $this->createMediaType();
+        $routeName         = ($details->routeName) ? $details->routeName: $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
+        $controllerService = ($details->controllerServiceName) ? $details->controllerServiceName: $this->createControllerServiceName($resourceName);
+        $resourceClass     = ($details->resourceClass) ? $details->resourceClass: $this->createResourceClass($resourceName);
+        $collectionClass   = ($details->collectionClass) ? $details->collectionClass: $this->createCollectionClass($resourceName);
+        $entityClass       = ($details->entityClass) ? $details->entityClass: $this->createEntityClass($resourceName);
+        $module            = ($details->module) ? $details->module: $this->module;
 
         $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
             'controller_service_name' => $controllerService,
             'entity_class'            => $entityClass,
-            'module'                  => $this->module,
+            'module'                  => $module,
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
             'accept_whitelist'        => array(
@@ -829,10 +825,6 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function getSourcePath($resourceName)
     {
-        if ($this->sourcePath) {
-            return $this->sourcePath;
-        }
-
         $sourcePath = sprintf(
             '%s/src/%s/V%s/Rest/%s',
             $this->modulePath,
@@ -845,7 +837,6 @@ class RestServiceModel implements EventManagerAwareInterface
             mkdir($sourcePath, 0777, true);
         }
 
-        $this->sourcePath = $sourcePath;
         return $sourcePath;
     }
 
