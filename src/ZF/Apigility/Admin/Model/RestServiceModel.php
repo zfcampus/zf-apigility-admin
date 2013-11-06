@@ -84,11 +84,6 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $routeNameFilter;
 
     /**
-     * @var string
-     */
-    protected $sourcePath;
-
-    /**
      * @param  ModuleEntity $moduleEntity
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
@@ -830,10 +825,6 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function getSourcePath($resourceName)
     {
-        if ($this->sourcePath) {
-            return $this->sourcePath;
-        }
-
         $sourcePath = sprintf(
             '%s/src/%s/V%s/Rest/%s',
             $this->modulePath,
@@ -846,7 +837,6 @@ class RestServiceModel implements EventManagerAwareInterface
             mkdir($sourcePath, 0777, true);
         }
 
-        $this->sourcePath = $sourcePath;
         return $sourcePath;
     }
 
