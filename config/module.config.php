@@ -238,8 +238,6 @@ return array(
         'metadata_map' => array(
             'ZF\Apigility\Admin\Model\AuthenticationEntity' => array(
                 'hydrator'        => 'ArraySerializable',
-                'identifier_name' => 'id', // not necessary; it's a singular endpoint
-                'route_name'      => 'zf-apigility-admin/api/authentication',
             ),
             'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',

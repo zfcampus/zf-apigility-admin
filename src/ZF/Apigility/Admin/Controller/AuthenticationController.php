@@ -10,6 +10,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
+use ZF\ContentNegotiation\ViewModel;
+use ZF\Hal\Resource;
+use ZF\Hal\Link\Link;
 
 class AuthenticationController extends AbstractActionController
 {
@@ -26,20 +29,40 @@ class AuthenticationController extends AbstractActionController
 
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
-                return $this->model->fetch();
+                $entity = $this->model->fetch();
+                if (!$entity) {
+                    return new ApiProblemResponse(
+                        new ApiProblem(404, 'No authentication configuration found')
+                    );
+                }
+                break;
             case $request::METHOD_POST:
-                $data = $this->bodyParams();
-                return $this->model->create($data);
+                $entity = $this->model->create($this->bodyParams());
+                break;
             case $request::METHOD_PATCH:
-                $data = $this->bodyParams();
-                return $this->model->update($data);
+                $entity = $this->model->update($this->bodyParams());
+                break;
             case $request::METHOD_DELETE:
-                return $this->model->remove();
+                if ($this->model->remove()) {
+                    return $this->getResponse()->setStatusCode(204);
+                }
+                return new ApiProblemResponse(
+                    new ApiProblem(404, 'No authentication configuration found')
+                );
             default:
                 return new ApiProblemResponse(
                     new ApiProblem(405, 'Only the methods GET, POST, PATCH, and DELETE are allowed for this URI')
                 );
         }
+
+        $resource = new Resource($entity, null);
+        $resource->getLinks()->add(Link::factory(array(
+            'rel' => 'self',
+            'route' => 'zf-apigility-admin/api/authentication',
+        )));
+        $model = new ViewModel(array('payload' => $resource));
+        $model->setTerminal(true);
+        return $model;
     }
 
     /**
