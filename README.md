@@ -7,6 +7,28 @@ This module provides the admin interface and API service for the
 API Resources
 -------------
 
+### `authentication`
+
+- HTTP basic authentication:
+  ```javascript
+  {
+      "accept_schemes": [ "basic" ],
+      "realm": "The HTTP authentication realm to use",
+      "htpasswd": "path on filesystem to htpasswd file"
+  }
+  ```
+
+- HTTP digest authentication:
+  ```javascript
+  {
+      "accept_schemes": [ "digest" ],
+      "realm": "The HTTP authentication realm to use",
+      "htdigest": "path on filesystem to htdigest file",
+      "nonce_timeout": "integer; seconds",
+      "digest_domains": "Space-separated list of URIs under authentication"
+  }
+  ```
+
 ### `db-adapter`
 
 ```javascript
@@ -160,6 +182,29 @@ configuration via the `zf-configuration/config-file` key.
   The second expects a nested array/object of configuration.
 
 - Methods: `GET`, `PATCH`
+
+- Errors: `application/api-problem+json`
+
+### `/admin/api/authentication`
+
+This REST endpoint is for creating, updating, and deleting the authentication
+configuration for your application. It uses the [authentication
+resource](#authentication).
+
+- Accept `application/json`
+
+  Returns an [authentication resource](#authentication) on success.
+
+- Content-Type: `application/json`
+
+  Expects an [authentication resource](#authentication) with all details
+  necessary for establishing HTTP authentication.
+
+- HTTP methods: `GET`, `POST`, `PATCH`, `DELETE`
+
+  `GET` returns a `404` response if no authentication has previously been setup.
+  `POST` will return a `201` response on success. `PATCH` will return a `200`
+  response on success. `DELETE` will return a `204` response on success.
 
 - Errors: `application/api-problem+json`
 
