@@ -19,7 +19,7 @@ class AuthenticationEntity
     protected $htpasswd;
 
 
-    public function __construct($type = TYPE_BASIC, $realm = 'api', array $params = array())
+    public function __construct($type = self::TYPE_BASIC, $realm = 'api', array $params = array())
     {
         $this->type = in_array($type, array(self::TYPE_BASIC, self::TYPE_DIGEST)) ? $type : self::TYPE_BASIC;
         $this->realm = $realm;
@@ -52,7 +52,7 @@ class AuthenticationEntity
             case self::TYPE_BASIC:
                 $allowedKeys = array('realm', 'htpasswd');
                 break;
-            case self::TYPE_BASIC:
+            case self::TYPE_DIGEST:
                 $allowedKeys = array('realm', 'htdigest', 'digestdomains', 'noncetimeout');
                 break;
         }
@@ -80,5 +80,15 @@ class AuthenticationEntity
                     break;
             }
         }
+    }
+
+    public function isBasic()
+    {
+        return ($this->type === self::TYPE_BASIC);
+    }
+
+    public function isDigest()
+    {
+        return ($this->type === self::TYPE_DIGEST);
     }
 }
