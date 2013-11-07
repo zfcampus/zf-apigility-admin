@@ -37,6 +37,18 @@ class AuthorizationEntity implements IteratorAggregate
         }
     }
 
+    public function getArrayCopy()
+    {
+        return $this->servicePrivileges;
+    }
+
+    public function exchangeArray(array $services)
+    {
+        foreach ($services as $serviceName => $privileges) {
+            $this->servicePrivileges[$serviceName] = $this->filterPrivileges($privileges);
+        }
+    }
+
     public function getIterator()
     {
         return new ArrayIterator($this->servicePrivileges);
