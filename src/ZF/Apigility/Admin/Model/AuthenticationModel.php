@@ -64,7 +64,7 @@ class AuthenticationModel
     public function update(array $authenticationConfig)
     {
         $current = $this->fetch();
-        if ($current instanceof AuthenticationEntity) {
+        if (! $current instanceof AuthenticationEntity) {
             return $this->create($authenticationConfig);
         }
 
