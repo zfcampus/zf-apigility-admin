@@ -1,0 +1,196 @@
+<?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ */
+
+namespace ZFTest\Apigility\Admin\Model;
+
+use PHPUnit_Framework_TestCase as TestCase;
+use Zend\Config\Writer\PhpArray as ConfigWriter;
+use Zend\Stdlib\ArrayUtils;
+use ZF\Apigility\Admin\Model\AuthenticationModel;
+use ZF\Configuration\ConfigResource;
+
+class AuthenticationModelTest extends TestCase
+{
+    public function setUp()
+    {
+        $this->configPath       = sys_get_temp_dir() . '/zf-apigility-admin/config';
+        $this->globalConfigPath = $this->configPath . '/global.php';
+        $this->localConfigPath  = $this->configPath . '/local.php';
+        $this->removeConfigMocks();
+        $this->createConfigMocks();
+        $this->configWriter     = new ConfigWriter();
+    }
+
+    public function tearDown()
+    {
+        $this->removeConfigMocks();
+    }
+
+    public function createConfigMocks()
+    {
+        if (!is_dir($this->configPath)) {
+            mkdir($this->configPath, 0777, true);
+        }
+
+        $contents = "<" . "?php\nreturn array();";
+        file_put_contents($this->globalConfigPath, $contents);
+        file_put_contents($this->localConfigPath, $contents);
+    }
+
+    public function removeConfigMocks()
+    {
+        if (file_exists($this->globalConfigPath)) {
+            unlink($this->globalConfigPath);
+        }
+        if (file_exists($this->localConfigPath)) {
+            unlink($this->localConfigPath);
+        }
+        if (is_dir($this->configPath)) {
+            rmdir($this->configPath);
+        }
+        if (is_dir(dirname($this->configPath))) {
+            rmdir(dirname($this->configPath));
+        }
+    }
+
+    public function createModelFromConfigArrays(array $global, array $local)
+    {
+        $this->configWriter->toFile($this->globalConfigPath, $global);
+        $this->configWriter->toFile($this->localConfigPath, $local);
+        $mergedConfig = ArrayUtils::merge($global, $local);
+        $globalConfig = new ConfigResource($mergedConfig, $this->globalConfigPath, $this->configWriter);
+        $localConfig  = new ConfigResource($mergedConfig, $this->localConfigPath, $this->configWriter);
+        return new AuthenticationModel($globalConfig, $localConfig);
+    }
+
+    public function assertAuthenticationConfigExists(array $config)
+    {
+        $this->assertArrayHasKey('zf-mvc-auth', $config);
+        $this->assertArrayHasKey('authentication', $config['zf-mvc-auth']);
+        $this->assertArrayHasKey('http', $config['zf-mvc-auth']['authentication']);
+    }
+
+    public function assertAuthenticationConfigEquals(array $expected, array $config)
+    {
+        $this->assertAuthenticationConfigExists($config);
+        $config = $config['zf-mvc-auth']['authentication']['http'];
+        $this->assertEquals($expected, $config);
+    }
+
+    public function assertAuthenticationConfigContains(array $expected, array $config)
+    {
+        $this->assertAuthenticationConfigExists($config);
+        $config = $config['zf-mvc-auth']['authentication']['http'];
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $config);
+            $this->assertEquals($value, $config[$key]);
+        }
+    }
+
+    public function testCreatesBothGlobalAndLocalConfigWhenNoneExistedPreviously()
+    {
+        $toCreate = array(
+            'accept_schemes' => array('basic'),
+            'realm'          => 'zendcon',
+            'htpasswd'       => __DIR__ . '/htpasswd',
+        );
+
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $global = include($this->globalConfigPath);
+        $this->assertAuthenticationConfigEquals(array(
+            'accept_schemes' => array('basic'),
+            'realm'          => 'zendcon',
+        ), $global);
+
+        $local  = include($this->localConfigPath);
+        $this->assertAuthenticationConfigEquals(array(
+            'htpasswd'       => __DIR__ . '/htpasswd',
+        ), $local);
+    }
+
+    public function testCanRetrieveAuthenticationConfig()
+    {
+        $globalSeedConfig = array(
+            'zf-mvc-auth' => array(
+                'authentication' => array(
+                    'http' => array(
+                        'accept_schemes' => array('basic'),
+                        'realm'          => 'zendcon',
+                    ),
+                ),
+            ),
+        );
+        $localSeedConfig = array(
+            'zf-mvc-auth' => array(
+                'authentication' => array(
+                    'http' => array(
+                        'htpasswd' => __DIR__ . '/htpasswd',
+                    ),
+                ),
+            ),
+        );
+        $model  = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
+        $entity = $model->fetch();
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
+        $expected = array_merge(
+            $globalSeedConfig['zf-mvc-auth']['authentication']['http'],
+            $localSeedConfig['zf-mvc-auth']['authentication']['http']
+        );
+        $this->assertEquals($expected, $entity->getArrayCopy());
+    }
+
+    public function testUpdatesGlobalAndLocalConfigWhenUpdating()
+    {
+        $toCreate = array(
+            'accept_schemes' => array('basic'),
+            'realm'          => 'zendcon',
+            'htpasswd'       => __DIR__ . '/htpasswd',
+        );
+        $model = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $newConfig = array(
+            'realm'    => 'api',
+            'htpasswd' => sys_get_temp_dir() . '/htpasswd',
+        );
+        $entity = $model->update($newConfig);
+
+        // Ensure the entity returned from the update is what we expect
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
+        $expected = array_merge($toCreate, $newConfig);
+        $this->assertEquals($expected, $entity->getArrayCopy());
+
+        // Ensure fetching the entity after an update will return what we expect
+        $config = include $this->globalConfigPath;
+        $this->assertAuthenticationConfigEquals(array(
+            'accept_schemes' => array('basic'),
+            'realm'          => 'api',
+        ), $config);
+
+        $config = include $this->localConfigPath;
+        $this->assertAuthenticationConfigEquals(array('htpasswd' => sys_get_temp_dir() . '/htpasswd'), $config);
+    }
+
+    public function testRemoveDeletesConfigurationFromBothLocalAndGlobalConfigFiles()
+    {
+        $toCreate = array(
+            'accept_schemes' => array('basic'),
+            'realm'          => 'zendcon',
+            'htpasswd'       => __DIR__ . '/htpasswd',
+        );
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $model->remove();
+        $global = include $this->globalConfigPath;
+        $this->assertArrayNotHasKey('http', $global['zf-mvc-auth']['authentication']);
+        $local = include $this->localConfigPath;
+        $this->assertArrayNotHasKey('http', $local['zf-mvc-auth']['authentication']);
+    }
+
+}

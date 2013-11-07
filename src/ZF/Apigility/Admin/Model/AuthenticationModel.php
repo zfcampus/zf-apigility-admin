@@ -44,10 +44,11 @@ class AuthenticationModel
             throw new CreationException('Authentication already exists', 409);
         }
 
-        $entity = $this->createAuthenticationEntityFromConfig($authenticationConfig);
-        $global = $entity->getArrayCopy();
-        $local  = $this->removeSensitiveConfig($global);
-        $key    = 'zf-mvc-auth.authentication.http';
+        $entity  = $this->createAuthenticationEntityFromConfig($authenticationConfig);
+        $allData = $entity->getArrayCopy();
+        $global  = $this->removeSensitiveConfig($allData);
+        $local   = array_diff($allData, $global);
+        $key     = 'zf-mvc-auth.authentication.http';
 
         $this->globalConfig->patchKey($key, $global);
         $this->localConfig->patchKey($key, $local);
@@ -69,8 +70,9 @@ class AuthenticationModel
         }
 
         $current->exchangeArray($authenticationConfig);
-        $global = $current->getArrayCopy();
-        $local  = $this->removeSensitiveConfig($global);
+        $allData = $current->getArrayCopy();
+        $global  = $this->removeSensitiveConfig($allData);
+        $local   = array_diff($allData, $global);
         $key    = 'zf-mvc-auth.authentication.http';
 
         $this->globalConfig->patchKey($key, $global);
@@ -99,7 +101,7 @@ class AuthenticationModel
      */
     public function fetch()
     {
-        $config = $this->localConfig->fetch(true);
+        $config = $this->globalConfig->fetch(true);
         if (!isset($config['zf-mvc-auth'])
             || !isset($config['zf-mvc-auth']['authentication'])
             || !is_array($config['zf-mvc-auth']['authentication'])
@@ -112,6 +114,17 @@ class AuthenticationModel
         }
 
         $config = $config['zf-mvc-auth']['authentication']['http'];
+
+        $localConfig = $this->localConfig->fetch(true);
+        if (isset($localConfig['zf-mvc-auth'])
+            && isset($localConfig['zf-mvc-auth']['authentication'])
+            && is_array($localConfig['zf-mvc-auth']['authentication'])
+            && isset($localConfig['zf-mvc-auth']['authentication']['http'])
+            && is_array($localConfig['zf-mvc-auth']['authentication']['http'])
+        ) {
+            $config = array_merge($config, $localConfig['zf-mvc-auth']['authentication']['http']);
+        }
+
         return $this->createAuthenticationEntityFromConfig($config);
     }
 
