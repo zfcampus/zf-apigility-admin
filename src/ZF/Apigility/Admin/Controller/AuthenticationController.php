@@ -38,6 +38,12 @@ class AuthenticationController extends AbstractActionController
                 break;
             case $request::METHOD_POST:
                 $entity = $this->model->create($this->bodyParams());
+                $response = $this->getResponse();
+                $response->setStatusCode(201);
+                $response->getHeaders()->addHeaderLine(
+                    'Location',
+                    $this->plugin('hal')->createLink('zf-apigility-admin/api/authentication')
+                );
                 break;
             case $request::METHOD_PATCH:
                 $entity = $this->model->update($this->bodyParams());
