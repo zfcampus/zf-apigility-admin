@@ -110,6 +110,16 @@ return array(
                                 ),
                                 'may_terminate' => true,
                                 'child_routes' => array(
+                                    'authorization' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/authorization',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\Authorization',
+                                                'action'     => 'authorization',
+                                            ),
+                                        ),
+                                    ),
                                     'rpc-service' => array(
                                         'type' => 'segment',
                                         'options' => array(
@@ -159,6 +169,7 @@ return array(
     'zf-content-negotiation' => array(
         'controllers' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
             'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
@@ -169,6 +180,10 @@ return array(
         ),
         'accept-whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Authorization' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -206,6 +221,10 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
+            'ZF\Apigility\Admin\Controller\Authorization' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
@@ -237,6 +256,9 @@ return array(
     'zf-hal' => array(
         'metadata_map' => array(
             'ZF\Apigility\Admin\Model\AuthenticationEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+            ),
+            'ZF\Apigility\Admin\Model\AuthorizationEntity' => array(
                 'hydrator'        => 'ArraySerializable',
             ),
             'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
@@ -314,6 +336,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Authentication' => array(
             'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
             'route_name'   => 'zf-apigility-admin/api/authentication',
+        ),
+        'ZF\Apigility\Admin\Controller\Authorization' => array(
+            'http_methods' => array('GET', 'PUT'),
+            'route_name'   => 'zf-apigility-admin/api/module/authorization',
         ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),

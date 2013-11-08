@@ -82,6 +82,21 @@ class Module
                 $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
                 return new Model\AuthenticationModel($global, $local);
             },
+            'ZF\Apigility\Admin\Model\AuthorizationModelFactory' => function ($services) {
+                if (!$services->has('ZF\Configuration\ModuleUtils')
+                    || !$services->has('ZF\Configuration\ConfigResourceFactory')
+                    || !$services->has('ZF\Apigility\Admin\Model\ModuleModel')
+                ) {;
+                    throw new ServiceNotCreatedException(
+                        'ZF\Apigility\Admin\Model\AuthorizationModelFactory is missing one or more dependencies from ZF\Configuration'
+                    );
+                }
+                $moduleModel   = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
+                $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
+                $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
+
+                return new Model\AuthorizationModelFactory($moduleUtils, $configFactory, $moduleModel);
+            },
             'ZF\Apigility\Admin\Model\DbAdapterModel' => function($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
@@ -211,6 +226,11 @@ class Module
                 $services = $controllers->getServiceLocator();
                 $model    = $services->get('ZF\Apigility\Admin\Model\AuthenticationModel');
                 return new Controller\AuthenticationController($model);
+            },
+            'ZF\Apigility\Admin\Controller\Authorization' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $factory  = $services->get('ZF\Apigility\Admin\Model\AuthorizationModelFactory');
+                return new Controller\AuthorizationController($factory);
             },
             'ZF\Apigility\Admin\Controller\ModuleCreation' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
