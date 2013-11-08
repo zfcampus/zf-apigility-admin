@@ -199,6 +199,14 @@ class VersioningModel
             }
         }
 
+        // update zf-mvc-auth
+        if (isset($config['zf-mvc-auth']['authorization'])) {
+            $newValues = $this->changeVersionArray($config['zf-mvc-auth']['authorization'], $previous, $version);
+            $this->configResource->patch(array(
+                'zf-mvc-auth' => array('authorization' => $newValues)
+            ), true);
+        }
+
         // update zf-apigility
         if (isset($config['zf-apigility']['db-connected'])) {
             $newValues = $this->changeVersionArray($config['zf-apigility']['db-connected'], $previous, $version);
