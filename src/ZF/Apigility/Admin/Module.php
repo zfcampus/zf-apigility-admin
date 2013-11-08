@@ -314,6 +314,8 @@ class Module
         $links      = $resource->getLinks();
         $moduleName = $module['name'];
 
+        $this->injectLinksForServicesByType('authorization', array(), $links, $moduleName);
+
         $this->injectLinksForServicesByType('rest', $module['rest'], $links, $moduleName);
         unset($module['rest']);
 
@@ -356,6 +358,7 @@ class Module
                 ),
             ),
         )));
+        $this->injectLinksForServicesByType('authorization', array(), $links, $module);
         $this->injectLinksForServicesByType('rest', $rest, $links, $module);
         $this->injectLinksForServicesByType('rpc', $rpc, $links, $module);
 
@@ -365,7 +368,7 @@ class Module
     /**
      * Inject service links
      *
-     * @param  string $type "rpc" | "rest"
+     * @param  string $type "rpc" | "rest" | "authorization"
      * @param  array|\Traversable $services
      * @param  LinkCollection $links
      * @param  null|string $module
@@ -374,7 +377,11 @@ class Module
     {
         $urlHelper    = $this->urlHelper;
 
-        $routeName    = sprintf('zf-apigility-admin/api/module/%s-service', $type);
+        $linkType     = $type;
+        if (in_array($type, array('rpc', 'rest'))) {
+            $linkType .= '-service';
+        }
+        $routeName    = sprintf('zf-apigility-admin/api/module/%s', $linkType);
         $routeParams  = array();
         $routeOptions = array();
         if (null !== $module) {
