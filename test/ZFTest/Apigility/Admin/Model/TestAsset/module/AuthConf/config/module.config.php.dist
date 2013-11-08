@@ -1,0 +1,61 @@
+<?php
+return array(
+    'zf-rest' => array(
+        'AuthConf\V1\Rest\Foo\Controller' => array(),
+        'AuthConf\V1\Rest\Bar\Controller' => array(),
+        'AuthConf\V2\Rest\Foo\Controller' => array(),
+        'AuthConf\V2\Rest\Bar\Controller' => array(),
+        'AuthConf\V2\Rest\New\Controller' => array(),
+    ),
+    'zf-rpc' => array(
+        'AuthConf\V1\Rpc\Baz\Controller' => array(
+            'route_name' => 'auth-conf.rpc.baz',
+        ),
+        'AuthConf\V1\Rpc\Bat\Controller' => array(
+            'route_name' => 'auth-conf.rpc.bat',
+        ),
+        'AuthConf\V2\Rpc\Baz\Controller' => array(
+            'route_name' => 'auth-conf.rpc.baz',
+        ),
+        'AuthConf\V2\Rpc\Bat\Controller' => array(
+            'route_name' => 'auth-conf.rpc.bat',
+        ),
+        'AuthConf\V2\Rpc\New\Controller' => array(
+            'route_name' => 'auth-conf.rpc.new',
+        ),
+    ),
+    'router' => array(
+        'routes' => array(
+            'auth-conf.rpc.baz' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/baz',
+                    'defaults' => array(
+                        'controller' => 'AuthConf\V1\Rpc\Baz\Controller',
+                        'action'     => 'baz',
+                    ),
+                ),
+            ),
+            'auth-conf.rpc.bat' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/bat',
+                    'defaults' => array(
+                        'controller' => 'AuthConf\V1\Rpc\Bat\Controller',
+                        'action'     => 'bat',
+                    ),
+                ),
+            ),
+            'auth-conf.rpc.new' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/new',
+                    'defaults' => array(
+                        'controller' => 'AuthConf\V2\Rpc\New\Controller',
+                        'action'     => 'new',
+                    ),
+                ),
+            ),
+        ),
+    ),
+);

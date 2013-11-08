@@ -7,10 +7,13 @@
 namespace ZF\Apigility\Admin\Model;
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 use ZF\Apigility\Admin\Exception;
 
-class AuthorizationEntity implements IteratorAggregate
+class AuthorizationEntity implements 
+    Countable,
+    IteratorAggregate
 {
     const TYPE_RESOURCE   = 'resource';
     const TYPE_COLLECTION = 'collection';
@@ -37,6 +40,16 @@ class AuthorizationEntity implements IteratorAggregate
         }
     }
 
+    public function count()
+    {
+        return count($this->servicePrivileges);
+    }
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->servicePrivileges);
+    }
+
     public function getArrayCopy()
     {
         return $this->servicePrivileges;
@@ -47,11 +60,6 @@ class AuthorizationEntity implements IteratorAggregate
         foreach ($services as $serviceName => $privileges) {
             $this->servicePrivileges[$serviceName] = $this->filterPrivileges($privileges);
         }
-    }
-
-    public function getIterator()
-    {
-        return new ArrayIterator($this->servicePrivileges);
     }
 
     public function addRestService($serviceName, $resourceOrCollection, array $privileges = null)

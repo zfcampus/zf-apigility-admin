@@ -1,0 +1,28 @@
+<?php
+return array(
+    'zf-rest' => array(
+        'AuthConfDefaults\V1\Rest\Foo\Controller' => array(),
+        'AuthConfDefaults\V1\Rest\Bar\Controller' => array(),
+    ),
+    'zf-rpc' => array(
+        'AuthConfDefaults\V1\Rpc\Baz\Controller' => array(
+            'route_name' => 'auth-conf.rpc.baz',
+        ),
+        'AuthConfDefaults\V1\Rpc\Bat\Controller' => array(
+        ),
+    ),
+    'router' => array(
+        'routes' => array(
+            'auth-conf.rpc.baz' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/baz',
+                    'defaults' => array(
+                        'controller' => 'AuthConfDefaults\V1\Rpc\Baz\Controller',
+                        'action'     => 'baz',
+                    ),
+                ),
+            ),
+        ),
+    ),
+);
