@@ -29,6 +29,44 @@ API Resources
   }
   ```
 
+### `authorization`
+
+```javascript
+{
+    "Rest\Controller\Service\Name::__resource__": {
+        "GET": bool,
+        "POST": bool,
+        "PUT": bool,
+        "PATCH": bool,
+        "DELETE": bool
+    },
+    "Rest\Controller\Service\Name::__collection__": {
+        "GET": bool,
+        "POST": bool,
+        "PUT": bool,
+        "PATCH": bool,
+        "DELETE": bool
+    },
+    "Rpc\Controller\Service\Name::actionName": {
+        "GET": bool,
+        "POST": bool,
+        "PUT": bool,
+        "PATCH": bool,
+        "DELETE": bool
+    }
+}
+```
+
+REST services have an entry for each of their resource and collection instances.
+RPC services have an entry per action name that is exposed (this will typically
+only be one). Each service has a list of HTTP methods, with a flag. A `false`
+value indicates that no authorization is required; a `true` value indicates that
+authorization is required.
+
+**Note**: If the `deny_by_default` flag is set in the application, then the
+meaning of the flags is reversed; `true` then means the method is public,
+`false` means it requires authentication.
+
 ### `db-adapter`
 
 ```javascript
@@ -227,6 +265,53 @@ adapters; it uses the [db-adapter resource](#db-adapter).
 - Resource Methods: `GET`, `PATCH`, `DELETE`
 
 - Errors: `application/api-problem+json`
+
+### `/admin/api/module/:name/authorization?version=:version`
+
+This REST endpoint is for fetching and updating the authorization
+configuration for your application. It uses the [authorization
+resource](#authorization).
+
+- Accept `application/json`
+
+  Returns an [authorization resource](#authorization) on success.
+
+- Content-Type: `application/json`
+
+  Expects an [authorization resource](#authorization) with all details
+  necessary for establishing HTTP authentication.
+
+- HTTP methods: `GET`, `PUT`
+
+  `GET` will always return an entity; if no configuration existed previously
+  for the module, or if any given service at the given version was not listed
+  in the configuration, it will provide the default values.
+
+  `PUT` will return a `200` response on success, along with the updated
+  entity.
+
+- Errors: `application/api-problem+json`
+
+### `/admin/api/db-adapter[/:adapter_name]`
+
+This REST endpoint is for creating, updating, and deleting named `Zend\Db`
+adapters; it uses the [db-adapter resource](#db-adapter).
+
+- Accept `application/json`
+
+  Returns a [db-adapter resource](#db-adapter) on success.
+
+- Content-Type: `application/json`
+
+  Expects [db-adapter resource](#db-adapter) with all details necessary for
+  creating a DB connection.
+
+- Collection Methods: `GET`, `POST`
+
+- Resource Methods: `GET`, `PATCH`, `DELETE`
+
+- Errors: `application/api-problem+json`
+
 
 ### `/admin/api/config/module?module={module name}`
 
