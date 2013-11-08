@@ -130,8 +130,8 @@ class AuthenticationModel
 
     /**
      * Create an AuthenticationEntity based on the configuration given
-     * 
-     * @param  array $config 
+     *
+     * @param  array $config
      * @return AuthenticationEntity
      */
     protected function createAuthenticationEntityFromConfig(array $config)
@@ -146,8 +146,8 @@ class AuthenticationModel
      * Remove sensitive information from the configuration
      *
      * Currently only "htpasswd" and "htdigest" entries are stripped.
-     * 
-     * @param  array $config 
+     *
+     * @param  array $config
      * @return array
      */
     protected function removeSensitiveConfig(array $config)

@@ -53,8 +53,8 @@ class AuthorizationModel
 
     /**
      * Fetch authorization list for a given module by version
-     * 
-     * @param int $version 
+     *
+     * @param int $version
      * @return AuthorizationEntity
      */
     public function fetch($version = 1)
@@ -76,7 +76,7 @@ class AuthorizationModel
         $config = $this->remapRestServiceNamesForPayload($config);
         $entity = new AuthorizationEntity($config);
 
-        // Determine if we have any services missing, and create default 
+        // Determine if we have any services missing, and create default
         // entries for them
         $this->injectServicesWithoutPrivileges($entity, $version, $allConfig);
 
@@ -85,9 +85,9 @@ class AuthorizationModel
 
     /**
      * Update the authorization list for a given module by version
-     * 
-     * @param array $privileges 
-     * @param int $version 
+     *
+     * @param array $privileges
+     * @param int $version
      * @return AuthorizationEntity
      */
     public function update(array $privileges, $version = 1)
@@ -99,9 +99,9 @@ class AuthorizationModel
 
     /**
      * Create default privileges for all services of a specific version in the module
-     * 
-     * @param int $version 
-     * @param array $config 
+     *
+     * @param int $version
+     * @param array $config
      * @return AuthorizationEntity
      */
     protected function createDefaultPrivileges($version, array $config)
@@ -125,10 +125,10 @@ class AuthorizationModel
 
     /**
      * Create default privileges for a list of REST services of the specified version
-     * 
-     * @param array $services 
-     * @param AuthorizationEntity $entity 
-     * @param int $version 
+     *
+     * @param array $services
+     * @param AuthorizationEntity $entity
+     * @param int $version
      */
     protected function createDefaultPrivilegesForRestServices(array $services, AuthorizationEntity $entity, $version)
     {
@@ -143,11 +143,11 @@ class AuthorizationModel
 
     /**
      * Create default privileges for a list of RPC services of the specified version
-     * 
-     * @param array $services 
-     * @param AuthorizationEntity $entity 
+     *
+     * @param array $services
+     * @param AuthorizationEntity $entity
      * @param array $config Used to determine action associated with RPC service (via route config)
-     * @param int $version 
+     * @param int $version
      */
     protected function createDefaultPrivilegesForRpcServices(array $services, AuthorizationEntity $entity, array $config, $version)
     {
@@ -156,7 +156,7 @@ class AuthorizationModel
                 continue;
             }
             $action = $this->discoverActionForRpcService($serviceName, $serviceConfig, $config);
-            $entity->addRpcService($serviceName, $action); 
+            $entity->addRpcService($serviceName, $action);
         }
     }
 
@@ -166,12 +166,12 @@ class AuthorizationModel
      * Looks for an "action" default in the route options associated with the
      * RPC service.
      *
-     * If no route name is provided, or no "action" default is found, returns 
+     * If no route name is provided, or no "action" default is found, returns
      * "index".
-     * 
-     * @param string $serviceName 
-     * @param array $serviceConfig 
-     * @param array $config 
+     *
+     * @param string $serviceName
+     * @param array $serviceConfig
+     * @param array $config
      * @return string
      */
     protected function discoverActionForRpcService($serviceName, array $serviceConfig, array $config)
@@ -197,9 +197,9 @@ class AuthorizationModel
 
     /**
      * Removes any services that do not match the current version
-     * 
-     * @param array $config 
-     * @param int $version 
+     *
+     * @param array $config
+     * @param int $version
      * @return array
      */
     protected function filterServicesByVersion(array $config, $version)
@@ -214,8 +214,8 @@ class AuthorizationModel
 
     /**
      * Translate service names for REST services to match the payload expectations.
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      * @return array
      */
     protected function remapRestServiceNamesForPayload(array $config)
@@ -234,8 +234,8 @@ class AuthorizationModel
 
     /**
      * Translate service names for REST services to match the storage expectations.
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      * @return array
      */
     protected function remapRestServiceNamesForStorage(array $config)
@@ -254,10 +254,10 @@ class AuthorizationModel
 
     /**
      * Identify services in the current version without authorization configuration and inject them into the entity
-     * 
-     * @param AuthorizationEntity $entity 
-     * @param int $version 
-     * @param array $config 
+     *
+     * @param AuthorizationEntity $entity
+     * @param int $version
+     * @param array $config
      */
     protected function injectServicesWithoutPrivileges(AuthorizationEntity $entity, $version, array $config)
     {
@@ -297,8 +297,8 @@ class AuthorizationModel
 
     /**
      * Determine the base service name for authorization service keys
-     * 
-     * @param AuthorizationEntity $entity 
+     *
+     * @param AuthorizationEntity $entity
      * @return array
      */
     protected function getBaseServiceNamesFromEntity(AuthorizationEntity $entity)

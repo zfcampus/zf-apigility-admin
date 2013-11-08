@@ -69,7 +69,7 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
-            'ZF\Apigility\Admin\Model\AuthenticationModel' => function($services) {
+            'ZF\Apigility\Admin\Model\AuthenticationModel' => function ($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
                         'Cannot create ZF\Apigility\Admin\Model\AuthenticationModel service because Config service is not present'
@@ -97,7 +97,7 @@ class Module
 
                 return new Model\AuthorizationModelFactory($moduleUtils, $configFactory, $moduleModel);
             },
-            'ZF\Apigility\Admin\Model\DbAdapterModel' => function($services) {
+            'ZF\Apigility\Admin\Model\DbAdapterModel' => function ($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
                         'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service because Config service is not present'
@@ -110,7 +110,7 @@ class Module
                 $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
                 return new Model\DbAdapterModel($global, $local);
             },
-            'ZF\Apigility\Admin\Model\DbAdapterResource' => function($services) {
+            'ZF\Apigility\Admin\Model\DbAdapterResource' => function ($services) {
                 if (!$services->has('ZF\Apigility\Admin\Model\DbAdapterModel')) {
                     throw new ServiceNotCreatedException(
                         'Cannot create ZF\Apigility\Admin\Model\DbAdapterResource service because ZF\Apigility\Admin\Model\DbAdapterModel service is not present'

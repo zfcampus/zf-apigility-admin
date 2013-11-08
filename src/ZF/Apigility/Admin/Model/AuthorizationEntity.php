@@ -11,7 +11,7 @@ use Countable;
 use IteratorAggregate;
 use ZF\Apigility\Admin\Exception;
 
-class AuthorizationEntity implements 
+class AuthorizationEntity implements
     Countable,
     IteratorAggregate
 {
