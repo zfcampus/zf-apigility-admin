@@ -1,10 +1,10 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['tags-input']);
+var module = angular.module('ag-admin', ['ngRoute', 'tags-input']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
-    // setup the API Base Path
+    // setup the API Base Path (this should come from initial ui load/php)
     $provide.value('apiBasePath', '/admin/api');
 
     $routeProvider.when('/dashboard', {
@@ -15,22 +15,33 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         templateUrl: '/zf-apigility-admin/partials/global/db-adapters.html',
         controller: 'DbAdapterController'
     });
-    $routeProvider.when('/api/:apiName/info', {
+    $routeProvider.when('/api/:apiName/:version/info', {
         templateUrl: '/zf-apigility-admin/partials/api.html',
         controller: 'ApiInfoController',
         resolve: {
-            api: ['$route', '$q', 'ApisResource', function ($route, $q, ApisResource) {
-                return ApisResource.getApi($route.current.params.apiName);
+            api: ['$route', '$q', 'ApiRepository', function ($route, $q, ApiRepostiory) {
+                console.log('resolving');
+                return ApiRepostiory.getApi($route.current.params.apiName, $route.current.params.version);
             }]
         }
     });
-    $routeProvider.when('/api/:apiName/rest-services', {
+    $routeProvider.when('/api/:apiName/:version/rest-services', {
         templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
-        controller: 'ApiRestServicesController'
+        controller: 'ApiRestServicesController',
+        resolve: {
+            api: ['$route', '$q', 'ApiRepository', function ($route, $q, ApiRepostiory) {
+                return ApiRepostiory.getApi($route.current.params.apiName, $route.current.params.version);
+            }]
+        }
     });
-    $routeProvider.when('/api/:apiName/rpc-services', {
+    $routeProvider.when('/api/:apiName/:version/rpc-services', {
         templateUrl: '/zf-apigility-admin/partials/api/rpc-services.html',
-        controller: 'ApiRpcServicesController'
+        controller: 'ApiRpcServicesController',
+        resolve: {
+            api: ['$route', '$q', 'ApiRepository', function ($route, $q, ApiRepostiory) {
+                return ApiRepostiory.getApi($route.current.params.apiName, $route.current.params.version);
+            }]
+        }
     });
     $routeProvider.otherwise({redirectTo: '/dashboard'});
 }]);
@@ -45,18 +56,19 @@ module.controller(
 
 module.controller(
     'ApiListController',
-    ['$rootScope', '$scope', '$location', 'ApisResource', function($rootScope, $scope, $location, ApisResource) {
+    ['$rootScope', '$scope', '$location', 'ApiRepository', function($rootScope, $scope, $location, ApiRepository) {
 
         $scope.apis = [];
         $scope.showNewApiForm = false;
 
+        ApiRepository.getList().then(function (apis) { $scope.apis = apis; });
+
         $scope.createNewApi = function () {
-            ApisResource.createNewApi($scope.apiName).then(function (newApi) {
-                ApisResource.fetch({force: true}).then(function (apis) {
-                    $scope.resetForm();
-//                    updateApiList();
-                    $location.path('/api/' + newApi.name + '/info');
-                });
+            ApiRepository.createNewApi($scope.apiName).then(function (newApi) {
+                // reset form, repopulate, redirect to new
+                $scope.resetForm();
+                ApiRepository.getList(true).then(function (apis) { $scope.apis = apis; });
+                $location.path('/api/' + newApi.name + '/v1/info');
             });
         };
 
@@ -65,24 +77,6 @@ module.controller(
             $scope.apiName = '';
         };
 
-        ApisResource.getApis().then(function (apis) {
-            $scope.apis = apis;
-        });
-
-
-//        ApisResource.getApis().then(function (apis) {
-//            return apis;
-//        });
-
-//        var updateApiList = function () {
-//            ApisResource.fetch().then(function (apis) {
-//                $scope.$apply(function () {
-//                    $scope.apis = _.pluck(apis.embedded.module, 'props');
-//                });
-//            });
-//        };
-//
-//        updateApiList();
     }]
 );
 
@@ -158,23 +152,12 @@ module.controller(
     }]
 );
 
-module.controller('ApiInfoController', ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
-
-//    ApisResource.getCurrentApi.then(function (apiModel) {
-//        $scope.$apply(function () {
-//            $scope.api = apiModel;
-//        });
-//    });
-//
-//    $rootScope.$on('api.updated', function (event, data) {
-//        $scope.$apply(function () {
-//            $scope.api = data.apiModel;
-//        });
-//    });
-
+module.controller('ApiInfoController', ['$http', '$rootScope', '$scope', 'api', function ($http, $rootScope, $scope, api) {
+    $scope.api = api;
+    console.log('in api info controller');
 }]);
 
-module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApisResource', '$log', function ($http, $rootScope, $scope, ApisResource, $log) {
+module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApiRepository', '$log', function ($http, $rootScope, $scope, ApiRepository, $log) {
 
     $scope.$log = $log;
 
@@ -217,16 +200,16 @@ module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApisRe
     };
 
     $scope.createNewRestService = function () {
-        ApisResource.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.showNewRestServiceForm = false;
             $scope.restServiceName = '';
         });
     };
 
     $scope.createNewDbConnectedService = function () {
-        ApisResource.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.showNewRestServiceForm = false;
             $scope.dbAdapterName = '';
             $scope.dbTableName = '';
@@ -243,20 +226,20 @@ module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApisRe
                 .valueOf();
         });
 
-        ApisResource.saveRestService($scope.api.name, restServiceData).then(function (data) {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.saveRestService($scope.api.name, restServiceData).then(function (data) {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
         });
     };
 
     $scope.removeRestService = function (restServiceName) {
-        ApisResource.removeRestService($scope.api.name, restServiceName).then(function (data) {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.removeRestService($scope.api.name, restServiceName).then(function (data) {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.deleteRestService = false;
         });
     };
 
     $scope.getSourceCode = function (className, classType) {
-        ApisResource.getSourceCode ($scope.api.name, className)
+        ApiRepository.getSourceCode ($scope.api.name, className)
             .then(function (data) {
                 $scope.filename = className + '.php';
                 $scope.class_type = classType + ' Class';
@@ -265,7 +248,7 @@ module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApisRe
     };
 }]);
 
-module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisResource', function ($http, $rootScope, $scope, ApisResource) {
+module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApiRepository', function ($http, $rootScope, $scope, ApiRepository) {
 
     $rootScope.$on('api.updated', function (event, data) {
         $scope.$apply(function () {
@@ -298,8 +281,8 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisRes
     };
 
     $scope.createNewRpcService = function () {
-        ApisResource.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.addRpcService = false;
             $scope.rpcServiceName = '';
             $scope.rpcServiceRoute = '';
@@ -314,20 +297,20 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisRes
             .pluck('name')
             .valueOf();
 
-        ApisResource.saveRpcService($scope.api.name, rpcServiceData).then(function (data) {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.saveRpcService($scope.api.name, rpcServiceData).then(function (data) {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
         });
     };
 
     $scope.removeRpcService = function (rpcServiceName) {
-        ApisResource.removeRpcService($scope.api.name, rpcServiceName).then(function () {
-            ApisResource.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+        ApiRepository.removeRpcService($scope.api.name, rpcServiceName).then(function () {
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.deleteRestService = false;
         });
     };
 
     $scope.getSourceCode = function (className, classType) {
-        ApisResource.getSourceCode($scope.api.name, className).then(function (data) {
+        ApiRepository.getSourceCode($scope.api.name, className).then(function (data) {
             $scope.filename = className + '.php';
             $scope.class_type = classType + ' Class';
             $scope.source_code = data.source;
@@ -347,7 +330,7 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisRes
 
 //module.controller(
 //    'ApiController',
-//    ['$rootScope', '$scope', '$routeParams', 'ApisResource', 'DbAdapterResource', function($rootScope, $scope, $routeParams, ApisResource, DbAdapterResource) {
+//    ['$rootScope', '$scope', '$routeParams', 'ApiRepository', 'DbAdapterResource', function($rootScope, $scope, $routeParams, ApiRepository, DbAdapterResource) {
 //
 //        $scope.api = null;
 //        $scope.section = null;
@@ -364,11 +347,11 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisRes
 //        });
 //
 //        // first run
-//        ApisResource.setApiModel($routeParams.apiName, null, true).then(function (api) {
+//        ApiRepository.setApiModel($routeParams.apiName, null, true).then(function (api) {
 //            $scope.$apply(function () {
 //                // controller scope
 //                $scope.api = api;
-//                $scope.currentApiVersion = ApisResource.currentApiVersion;
+//                $scope.currentApiVersion = ApiRepository.currentApiVersion;
 //                $scope.section = $routeParams.section;
 //
 //                // root scope page elements
@@ -380,7 +363,7 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisRes
 //
 //        $scope.$watch('currentApiVersion', function () {
 //            if ($scope.currentApiVersion != null) {
-//                ApisResource.setApiModel($scope.api.name, $scope.currentApiVersion, true).then(function (apiModel) {
+//                ApiRepository.setApiModel($scope.api.name, $scope.currentApiVersion, true).then(function (apiModel) {
 //                    $scope.$apply(function () {
 //                        $scope.api = apiModel;
 //                    })
@@ -389,8 +372,8 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApisRes
 //        });
 //
 //        $scope.createNewApiVersion = function () {
-//            ApisResource.createNewVersion($scope.api.name).then(function (data) {
-//                ApisResource.setApiModel($scope.api.name, data.version, true).then(function (apiModel) {
+//            ApiRepository.createNewVersion($scope.api.name).then(function (data) {
+//                ApiRepository.setApiModel($scope.api.name, data.version, true).then(function (apiModel) {
 //                    $scope.$apply(function () {
 //                        $scope.api = apiModel;
 //                        $scope.currentApiVersion = data.version;
@@ -415,7 +398,31 @@ module.directive('viewNavigation', ['$routeParams', '$location', function ($rout
     }
 }]);
 
-module.factory('ApisResource', ['$rootScope', '$q', '$http', '$location', 'apiBasePath', '$timeout', function ($rootScope, $q, $http, $location, apiBasePath, $timeout) {
+//module.factory('ApiList', ['$rootScope', '$q', 'apiBasePath', function ($rootScope, $q, apiBasePath) {
+//    var apiList = [];
+//
+//    apiList.update = function () {
+//        var hyperagentResource = new Hyperagent.Resource(apiBasePath + '/module');
+//        var apiModels = [];
+//        var deferred = $q.defer();
+//        hyperagentResource.fetch({force: true}).then(function (apis) {
+//            _.forEach(apis.embedded.module, function (value, key) {
+//                apiModels.push(value.props);
+//            });
+//
+//            $rootScope.$apply(function () {
+//                deferred.resolve(apiModels);
+//            });
+//        });
+//        return deferred.promise;
+//    };
+//
+//    return {
+//
+//    };
+//}]);
+
+module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiBasePath', function ($rootScope, $q, $http, $location, apiBasePath) {
     var moduleApiPath = apiBasePath + '/module';
 
     return {
@@ -424,7 +431,7 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', '$location', 'apiBa
 
         currentApiModel: null,
 
-        getApis: function (force) {
+        getList: function (force) {
             var apisModel = [];
             var deferred = $q.defer();
             this.hyperagentResource.fetch({force: !!force}).then(function (apis) {
@@ -440,6 +447,10 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', '$location', 'apiBa
         getApi: function (name, version, force) {
             var apiModel = {};
             var deferred = $q.defer();
+
+            if (typeof version == 'string') {
+                version = version.match(/\d/g)[0];
+            }
 
             this.hyperagentResource.fetch({force: !!force}).then(function (apis) {
                 var api = _.find(apis.embedded.module, function (m) {
@@ -479,6 +490,7 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', '$location', 'apiBa
                 });
             }).then(function (api) {
                 // now load REST + RPC endpoints
+                    console.log('loading rpc');
                 return api.link('rpc', {version: version}).fetch().then(function (rpcServices) {
                     _.chain(rpcServices.embedded.rpc)
                         .pluck('props')
@@ -489,7 +501,8 @@ module.factory('ApisResource', ['$rootScope', '$q', '$http', '$location', 'apiBa
                 });
 
             }).then(function (api) {
-                this.currentApiModel = apiModel;
+//                this.currentApiModel = apiModel;
+                console.log('about to resolve promise');
                 // make $q and Q play nice together
                 $rootScope.$apply(function () {
                     deferred.resolve(apiModel);

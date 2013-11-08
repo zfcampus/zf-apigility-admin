@@ -12,6 +12,7 @@
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/hyperagent.js') ?>"></script>
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/typeahead.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/angular.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/angular-route.js') ?>"></script>
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/ng-tags-input.min.js') ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility/css/bootstrap.min.css') ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility/css/main.css') ?>" />
@@ -46,7 +47,7 @@
             <span class="pull-left">APIs: </span>
             <ul class="nav nav-pills ag-admin-nav-pills">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
-                    <a href="#/api/{{ api.name }}/info" ng-bind="api.namespace"></a>
+                    <a href="#/api/{{ api.name }}/v{{ api.versions[0] }}/info" ng-bind="api.namespace"></a>
                 </li>
             </ul>
         </div>
