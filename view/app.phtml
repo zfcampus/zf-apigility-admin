@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <base href="<?php echo $this->basePath() ?>" />
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility/js/jquery.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility/js/bootstrap.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/lodash.js') ?>"></script>
@@ -19,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/bootstrap-glyphicons.css') ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/typeahead.css') ?>" />
 </head>
-<body id="ng-app" ng-app="ag-admin" data-base-path="<?php echo $this->basePath() ?>">
+<body id="ng-app" ng-app="ag-admin">
     <a class="sr-only" href="#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
         <div class="container">
