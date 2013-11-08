@@ -155,4 +155,33 @@ class VersioningModelTest extends TestCase
         $this->assertNotRegExp($pattern1, $entity);
         $this->assertRegExp($pattern2, $entity);
     }
+
+    public function testCreateNewVersionClonesAuthorizationConfigurationForNewVersion()
+    {
+        $originalConfig = include __DIR__ . '/TestAsset/module/Version/config/module.config.php';
+        $this->assertArrayHasKey('zf-mvc-auth', $originalConfig);
+        $this->assertArrayHasKey('authorization', $originalConfig['zf-mvc-auth']);
+        $this->assertEquals(4, count($originalConfig['zf-mvc-auth']['authorization']));
+        $originalAuthorization = $originalConfig['zf-mvc-auth']['authorization'];
+
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset/module/Version/src/Version');
+
+        $updatedConfig = include __DIR__ . '/TestAsset/module/Version/config/module.config.php';
+        $this->assertArrayHasKey('zf-mvc-auth', $updatedConfig);
+        $this->assertArrayHasKey('authorization', $updatedConfig['zf-mvc-auth']);
+
+        $updatedAuthorization = $updatedConfig['zf-mvc-auth']['authorization'];
+
+        // loop through all services, ensure for any V1 versions, we also have V2 variants
+        foreach (array_keys($originalAuthorization) as $serviceName) {
+            // Should have the old configuration
+            $this->assertArrayHasKey($serviceName, $updatedAuthorization);
+            $this->assertEquals($originalAuthorization[$serviceName], $updatedAuthorization[$serviceName]);
+
+            // AND the new configuration
+            $newServiceName = str_replace('V1', 'V2', $serviceName);
+            $this->assertArrayHasKey($newServiceName, $updatedAuthorization);
+            $this->assertEquals($originalAuthorization[$serviceName], $updatedAuthorization[$newServiceName]);
+        }
+    }
 }

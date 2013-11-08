@@ -1,163 +1,158 @@
 <?php
 return array (
-  'router' => 
-  array (
-    'routes' => 
-    array (
-      'version.rest.message' => 
-      array (
-        'type' => 'Segment',
-        'options' => 
-        array (
-          'route' => '/api/message[/:message_id]',
-          'defaults' => 
-          array (
-            'controller' => 'Version\\V1\\Rest\\Message\\Controller',
-          ),
+    'router' => array (
+        'routes' => array (
+            'version.rest.message' => array (
+                'type' => 'Segment',
+                'options' => array (
+                    'route' => '/api/message[/:message_id]',
+                    'defaults' => array (
+                        'controller' => 'Version\\V1\\Rest\\Message\\Controller',
+                    ),
+                ),
+            ),
+            'version.rest.comment' => array (
+                'type' => 'Segment',
+                'options' => array (
+                    'route' => '/api/comment[/:comment_id]',
+                    'defaults' => array (
+                        'controller' => 'Version\\V1\\Rest\\Comment\\Controller',
+                    ),
+                ),
+            ),
         ),
-      ),
-      'version.rest.comment' => 
-      array (
-        'type' => 'Segment',
-        'options' => 
-        array (
-          'route' => '/api/comment[/:comment_id]',
-          'defaults' => 
-          array (
-            'controller' => 'Version\\V1\\Rest\\Comment\\Controller',
-          ),
+    ),
+    'zf-mvc-auth' => array(
+        'authorization' => array(
+            'Version\\V1\\Rest\\Message\\Controller::resource' => array(
+                'GET' => false,
+                'POST' => false,
+                'PUT' => true,
+                'PATCH' => true,
+                'DELETE' => true,
+            ),
+            'Version\\V1\\Rest\\Message\\Controller::collection' => array(
+                'GET' => false,
+                'POST' => true,
+                'PUT' => false,
+                'PATCH' => false,
+                'DELETE' => false,
+            ),
+            'Version\\V1\\Rest\\Comment\\Controller::resource' => array(
+                'GET' => false,
+                'POST' => false,
+                'PUT' => true,
+                'PATCH' => true,
+                'DELETE' => true,
+            ),
+            'Version\\V1\\Rest\\Comment\\Controller::collection' => array(
+                'GET' => false,
+                'POST' => true,
+                'PUT' => false,
+                'PATCH' => false,
+                'DELETE' => false,
+            ),
+        )
+    ),
+    'zf-rest' => array (
+        'Version\\V1\\Rest\\Message\\Controller' => array (
+            'listener' => 'Version\\V1\\Rest\\Message\\MessageResource',
+            'route_name' => 'version.rest.message',
+            'identifier_name' => 'message_id',
+            'collection_name' => 'message',
+            'resource_http_methods' => array (
+                0 => 'GET',
+            ),
+            'collection_http_methods' => array (
+                0 => 'GET',
+            ),
+            'collection_query_whitelist' => array (),
+            'page_size' => '10',
+            'page_size_param' => NULL,
+            'entity_class' => 'Version\\V1\\Rest\\Message\\MessageEntity',
+            'collection_class' => 'Version\\V1\\Rest\\Message\\MessageCollection',
         ),
-      ),
+        'Version\\V1\\Rest\\Comment\\Controller' => array (
+            'listener' => 'Version\\V1\\Rest\\Comment\\CommentResource',
+            'route_name' => 'version.rest.comment',
+            'identifier_name' => 'comment_id',
+            'collection_name' => 'comment',
+            'resource_http_methods' => array (
+                0 => 'GET',
+            ),
+            'collection_http_methods' => array (
+                0 => 'GET',
+            ),
+            'collection_query_whitelist' => array (),
+            'page_size' => 25,
+            'page_size_param' => NULL,
+            'entity_class' => 'Version\\V1\\Rest\\Comment\\CommentEntity',
+            'collection_class' => 'Version\\V1\\Rest\\Comment\\CommentCollection',
+        ),
     ),
-  ),
-  'zf-rest' => 
-  array (
-    'Version\\V1\\Rest\\Message\\Controller' => 
-    array (
-      'listener' => 'Version\\V1\\Rest\\Message\\MessageResource',
-      'route_name' => 'version.rest.message',
-      'identifier_name' => 'message_id',
-      'collection_name' => 'message',
-      'resource_http_methods' => 
-      array (
-        0 => 'GET',
-      ),
-      'collection_http_methods' => 
-      array (
-        0 => 'GET',
-      ),
-      'collection_query_whitelist' => 
-      array (
-      ),
-      'page_size' => '10',
-      'page_size_param' => NULL,
-      'entity_class' => 'Version\\V1\\Rest\\Message\\MessageEntity',
-      'collection_class' => 'Version\\V1\\Rest\\Message\\MessageCollection',
+    'zf-content-negotiation' => array (
+        'controllers' => array (
+            'Version\\V1\\Rest\\Message\\Controller' => 'HalJson',
+            'Version\\V1\\Rest\\Comment\\Controller' => 'HalJson',
+        ),
+        'accept-whitelist' => array (
+            'Version\\V1\\Rest\\Message\\Controller' => array (
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+            'Version\\V1\\Rest\\Comment\\Controller' => array (
+                0 => 'application/json',
+                1 => 'application/*+json',
+            ),
+        ),
+        'content-type-whitelist' => array (
+            'Version\\V1\\Rest\\Message\\Controller' => array (
+                0 => 'application/json',
+            ),
+            'Version\\V1\\Rest\\Comment\\Controller' => array (
+                0 => 'application/json',
+            ),
+        ),
     ),
-    'Version\\V1\\Rest\\Comment\\Controller' => 
-    array (
-      'listener' => 'Version\\V1\\Rest\\Comment\\CommentResource',
-      'route_name' => 'version.rest.comment',
-      'identifier_name' => 'comment_id',
-      'collection_name' => 'comment',
-      'resource_http_methods' => 
-      array (
-        0 => 'GET',
-      ),
-      'collection_http_methods' => 
-      array (
-        0 => 'GET',
-      ),
-      'collection_query_whitelist' => 
-      array (
-      ),
-      'page_size' => 25,
-      'page_size_param' => NULL,
-      'entity_class' => 'Version\\V1\\Rest\\Comment\\CommentEntity',
-      'collection_class' => 'Version\\V1\\Rest\\Comment\\CommentCollection',
+    'zf-hal' => array (
+        'metadata_map' => array (
+            'Version\\V1\\Rest\\Message\\MessageEntity' => array (
+                'identifier_name' => 'message_id',
+                'route_name' => 'version.rest.message',
+                'hydrator' => 'ArraySerializable',
+            ),
+            'Version\\V1\\Rest\\Message\\MessageCollection' => array (
+                'identifier_name' => 'message_id',
+                'route_name' => 'version.rest.message',
+                'is_collection' => true,
+            ),
+            'Version\\V1\\Rest\\Comment\\CommentEntity' => array (
+                'identifier_name' => 'comment_id',
+                'route_name' => 'version.rest.comment',
+                'hydrator' => 'ObjectProperty',
+            ),
+            'Version\\V1\\Rest\\Comment\\CommentCollection' => array (
+                'identifier_name' => 'comment_id',
+                'route_name' => 'version.rest.comment',
+                'is_collection' => true,
+            ),
+        ),
     ),
-  ),
-  'zf-content-negotiation' => 
-  array (
-    'controllers' => 
-    array (
-      'Version\\V1\\Rest\\Message\\Controller' => 'HalJson',
-      'Version\\V1\\Rest\\Comment\\Controller' => 'HalJson',
+    'zf-apigility' => array (
+        'db-connected' => array (
+            'Version\\V1\\Rest\\Message\\MessageResource' => array (
+                'adapter_name' => 'Db\\Version',
+                'table_name' => 'message',
+                'hydrator_name' => 'ArraySerializable',
+                'controller_service_name' => 'Version\\V1\\Rest\\Message\\Controller',
+                'table_service' => 'Version\\V1\\Rest\\Message\\MessageResource\\Table',
+            ),
+        ),
     ),
-    'accept-whitelist' => 
-    array (
-      'Version\\V1\\Rest\\Message\\Controller' => 
-      array (
-        0 => 'application/json',
-        1 => 'application/*+json',
-      ),
-      'Version\\V1\\Rest\\Comment\\Controller' => 
-      array (
-        0 => 'application/json',
-        1 => 'application/*+json',
-      ),
-    ),
-    'content-type-whitelist' => 
-    array (
-      'Version\\V1\\Rest\\Message\\Controller' => 
-      array (
-        0 => 'application/json',
-      ),
-      'Version\\V1\\Rest\\Comment\\Controller' => 
-      array (
-        0 => 'application/json',
-      ),
-    ),
-  ),
-  'zf-hal' => 
-  array (
-    'metadata_map' => 
-    array (
-      'Version\\V1\\Rest\\Message\\MessageEntity' => 
-      array (
-        'identifier_name' => 'message_id',
-        'route_name' => 'version.rest.message',
-        'hydrator' => 'ArraySerializable',
-      ),
-      'Version\\V1\\Rest\\Message\\MessageCollection' => 
-      array (
-        'identifier_name' => 'message_id',
-        'route_name' => 'version.rest.message',
-        'is_collection' => true,
-      ),
-      'Version\\V1\\Rest\\Comment\\CommentEntity' => 
-      array (
-        'identifier_name' => 'comment_id',
-        'route_name' => 'version.rest.comment',
-        'hydrator' => 'ObjectProperty',
-      ),
-      'Version\\V1\\Rest\\Comment\\CommentCollection' => 
-      array (
-        'identifier_name' => 'comment_id',
-        'route_name' => 'version.rest.comment',
-        'is_collection' => true,
-      ),
-    ),
-  ),
-  'zf-apigility' => 
-  array (
-    'db-connected' => 
-    array (
-      'Version\\V1\\Rest\\Message\\MessageResource' => 
-      array (
-        'adapter_name' => 'Db\\Version',
-        'table_name' => 'message',
-        'hydrator_name' => 'ArraySerializable',
-        'controller_service_name' => 'Version\\V1\\Rest\\Message\\Controller',
-        'table_service' => 'Version\\V1\\Rest\\Message\\MessageResource\\Table',
-      ),
-    ),
-  ),
-  'service_manager' => 
-  array (
+    'service_manager' => array (
         'factories' => array(
             'Version\V1\Rest\Comment\Model' => 'Version\V1\Rest\Comment\CommentModelFactory',
             'Version\V1\Rest\Comment\CommentResource' => 'Version\V1\Rest\Comment\CommentResourceFactory',
         ),
-  ),
+    ),
 );
