@@ -47,7 +47,7 @@ class AuthenticationModel
         $entity  = $this->createAuthenticationEntityFromConfig($authenticationConfig);
         $allData = $entity->getArrayCopy();
         $global  = $this->removeSensitiveConfig($allData);
-        $local   = array_diff($allData, $global);
+        $local   = array_udiff_assoc($allData, $global, sprintf('%s::arrayDiffRecursive', __CLASS__));
         $key     = 'zf-mvc-auth.authentication.http';
 
         $this->globalConfig->patchKey($key, $global);
@@ -72,8 +72,8 @@ class AuthenticationModel
         $current->exchangeArray($authenticationConfig);
         $allData = $current->getArrayCopy();
         $global  = $this->removeSensitiveConfig($allData);
-        $local   = array_diff($allData, $global);
-        $key    = 'zf-mvc-auth.authentication.http';
+        $local   = array_udiff_assoc($allData, $global, sprintf('%s::arrayDiffRecursive', __CLASS__));
+        $key     = 'zf-mvc-auth.authentication.http';
 
         $this->globalConfig->patchKey($key, $global);
         $this->localConfig->patchKey($key, $local);
@@ -102,12 +102,7 @@ class AuthenticationModel
     public function fetch()
     {
         $config = $this->globalConfig->fetch(true);
-        if (!isset($config['zf-mvc-auth'])
-            || !isset($config['zf-mvc-auth']['authentication'])
-            || !is_array($config['zf-mvc-auth']['authentication'])
-            || !isset($config['zf-mvc-auth']['authentication']['http'])
-            || !is_array($config['zf-mvc-auth']['authentication']['http'])
-            || !isset($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
+        if (!isset($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
             || !is_array($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
         ) {
             return false;
@@ -159,5 +154,25 @@ class AuthenticationModel
             unset($config['htdigest']);
         }
         return $config;
+    }
+
+    /**
+     * Perform a recursive array diff
+     *
+     * Necessary starting in PHP 5.4; see https://bugs.php.net/bug.php?id=60278
+     * 
+     * @param  mixed $a 
+     * @param  mixed $b 
+     * @return int
+     */
+    public static function arrayDiffRecursive($a, $b)
+    {
+        if (is_array($a) && is_array($b)) {
+            return array_diff_uassoc($a, $b, sprintf('%s::arrayDiffRecursive', __CLASS__));
+        }
+        if ($a === $b) {
+            return 0;
+        }
+        return ($a > $b) ? 1 : -1;
     }
 }
