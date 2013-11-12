@@ -177,9 +177,9 @@ class AuthenticationModel
      * Perform a recursive array diff
      *
      * Necessary starting in PHP 5.4; see https://bugs.php.net/bug.php?id=60278
-     * 
-     * @param  mixed $a 
-     * @param  mixed $b 
+     *
+     * @param  mixed $a
+     * @param  mixed $b
      * @return int
      */
     public static function arrayDiffRecursive($a, $b)
@@ -195,8 +195,8 @@ class AuthenticationModel
 
     /**
      * Determine the configuration key based on the entity
-     * 
-     * @param AuthenticationEntity $entity 
+     *
+     * @param AuthenticationEntity $entity
      * @return string
      */
     protected function getConfigKey(AuthenticationEntity $entity)
@@ -216,8 +216,8 @@ class AuthenticationModel
 
     /**
      * Fetch HTTP Authentication configuration
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      * @return array|false
      */
     protected function fetchHttpAuthConfiguration(array $config)
@@ -242,8 +242,8 @@ class AuthenticationModel
 
     /**
      * Fetch all OAuth2 configuration from global and local files
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      * @return array|false
      */
     protected function fetchOAuth2Configuration(array $config)
@@ -269,10 +269,10 @@ class AuthenticationModel
 
     /**
      * Patch the HTTP Authentication configuration
-     * 
-     * @param AuthenticationEntity $entity 
-     * @param array $global 
-     * @param array $local 
+     *
+     * @param AuthenticationEntity $entity
+     * @param array $global
+     * @param array $local
      */
     protected function patchHttpAuthConfig(AuthenticationEntity $entity, array $global, array $local)
     {
@@ -283,10 +283,10 @@ class AuthenticationModel
 
     /**
      * Patch the OAuth2 configuration
-     * 
-     * @param AuthenticationEntity $entity 
-     * @param array $global 
-     * @param array $local 
+     *
+     * @param AuthenticationEntity $entity
+     * @param array $global
+     * @param array $local
      * @return void
      */
     protected function patchOAuth2Config(AuthenticationEntity $entity, array $global, array $local)

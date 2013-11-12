@@ -14,70 +14,70 @@ class AuthenticationEntity
 
     /**
      * Digest domains for HTTP digest authentication (space-separated list of paths)
-     * 
+     *
      * @var string
      */
     protected $digestDomains = '/';
 
     /**
      * PDO DSN of database for use with zf-oauth2
-     * 
+     *
      * @var string
      */
     protected $dsn;
 
     /**
      * Path to file containing HTTP digest credentials
-     * 
+     *
      * @var string
      */
     protected $htdigest;
 
     /**
      * Path to file containing HTTP basic credentials
-     * 
+     *
      * @var string
      */
     protected $htpasswd;
 
     /**
      * Nonce timeout for HTTP digest authentication
-     * 
+     *
      * @var int
      */
     protected $nonceTimeout = 3600;
 
     /**
      * Database password for zf-oauth2
-     * 
+     *
      * @var string
      */
     protected $password;
 
     /**
      * Realm to use with either HTTP basic or digest authentication
-     * 
+     *
      * @var string
      */
     protected $realm;
 
     /**
      * Literal URI path to match for OAuth2 authentication endpoint
-     * 
+     *
      * @var string
      */
     protected $routeMatch;
 
     /**
      * Authentication type
-     * 
+     *
      * @var string
      */
     protected $type;
 
     /**
      * Database username for zf-oauth2
-     * 
+     *
      * @var string
      */
     protected $username;
