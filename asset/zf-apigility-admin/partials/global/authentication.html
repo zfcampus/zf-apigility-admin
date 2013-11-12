@@ -1,25 +1,12 @@
-<div ng-hide="showNewDbAdapterForm">
-  <button ng-click="showNewDbAdapterForm = true" class="btn btn-default btn-primary" title="Create New DB Adapter">
-    Create New Authentication Adapter
-  </button>
+<div ng-hide="showAuthenticationSetup">
+    There is currently NO Authentication, select a method below to setup authentication:<br><br>
+    <button ng-click="setupAuthenticationBasic()" class="btn btn-default btn-primary" title="Create New DB Adapter">
+        Setup HTTP Basic Authentication
+    </button><br><br>
+    <button ng-click="setupAuthenticationDigest()" class="btn btn-default btn-primary" title="Create New DB Adapter">
+        Setup HTTP Digest Authentication
+    </button><br><br>
+    <button ng-click="setupAuthenticationOAuth2()" class="btn btn-default btn-primary" title="Create New DB Adapter">
+        Setup OAuth2 Authentication
+    </button>
 </div>
-<div ng-show="showNewDbAdapterForm" class="panel panel-default">
-  <div class="panel-heading">Create a Authentication Adapter</div>
-  <div class="panel-body">
-    <form class="form-horizontal" ng-submit="createNewDbAdapter()">
-
-    </form>
-  </div>
-</div>
-
-<br clear="left">
-
-<div class="panel-group tooltip-api" id="accordion">
-
-</div>
-
-<script>
-  $(function () {
-    $('#myTab a:last').tab('show')
-  })
-</script>
