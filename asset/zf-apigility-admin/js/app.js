@@ -15,13 +15,26 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         templateUrl: '/zf-apigility-admin/partials/global/db-adapters.html',
         controller: 'DbAdapterController'
     });
-    $routeProvider.when('/api/:apiName/:version/info', {
-        templateUrl: '/zf-apigility-admin/partials/api.html',
-        controller: 'ApiInfoController',
+    $routeProvider.when('/global/authentication', {
+        templateUrl: '/zf-apigility-admin/partials/global/authentication.html',
+        controller: 'AuthenticationController'
+    });
+    $routeProvider.when('/api/:apiName/:version/overview', {
+        templateUrl: '/zf-apigility-admin/partials/api/overview.html',
+        controller: 'ApiOverviewController',
         resolve: {
-            api: ['$route', '$q', 'ApiRepository', function ($route, $q, ApiRepostiory) {
-                console.log('resolving');
-                return ApiRepostiory.getApi($route.current.params.apiName, $route.current.params.version);
+            api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
+                return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+            }]
+        }
+    });
+    $routeProvider.when('/api/:apiName/:version/authorization', {
+        templateUrl: '/zf-apigility-admin/partials/api/authorization.html',
+        controller: 'ApiAuthorizationController',
+        resolve: {
+            apiAuthorization: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
+                // @todo
+                // return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
             }]
         }
     });
@@ -29,8 +42,8 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
         controller: 'ApiRestServicesController',
         resolve: {
-            api: ['$route', '$q', 'ApiRepository', function ($route, $q, ApiRepostiory) {
-                return ApiRepostiory.getApi($route.current.params.apiName, $route.current.params.version);
+            api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
+                return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
             }]
         }
     });
@@ -38,8 +51,8 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         templateUrl: '/zf-apigility-admin/partials/api/rpc-services.html',
         controller: 'ApiRpcServicesController',
         resolve: {
-            api: ['$route', '$q', 'ApiRepository', function ($route, $q, ApiRepostiory) {
-                return ApiRepostiory.getApi($route.current.params.apiName, $route.current.params.version);
+            api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
+                return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
             }]
         }
     });
@@ -56,19 +69,23 @@ module.controller(
 
 module.controller(
     'ApiListController',
-    ['$rootScope', '$scope', '$location', 'ApiRepository', function($rootScope, $scope, $location, ApiRepository) {
+    ['$rootScope', '$scope', '$location', 'ApiRepository', '$timeout', function($rootScope, $scope, $location, ApiRepository, $timeout) {
 
         $scope.apis = [];
         $scope.showNewApiForm = false;
 
-        ApiRepository.getList().then(function (apis) { $scope.apis = apis; });
+        $scope.refreshApiList = function () {
+            ApiRepository.getList(true).then(function (apis) { $scope.apis = apis; });
+        };
 
         $scope.createNewApi = function () {
             ApiRepository.createNewApi($scope.apiName).then(function (newApi) {
                 // reset form, repopulate, redirect to new
                 $scope.resetForm();
-                ApiRepository.getList(true).then(function (apis) { $scope.apis = apis; });
-                $location.path('/api/' + newApi.name + '/v1/info');
+                $scope.refreshApiList();
+                $timeout(function () {
+                    $location.path('/api/' + newApi.name + '/v1/overview');
+                }, 500);
             });
         };
 
@@ -77,12 +94,13 @@ module.controller(
             $scope.apiName = '';
         };
 
+        $rootScope.$on('refreshApiList', function () { $scope.refreshApiList() });
     }]
 );
 
 module.controller(
     'DbAdapterController',
-    ['$rootScope', '$scope', '$location', 'DbAdapterResource', function ($rootScope, $scope, $location, DbAdapterResource) {
+    ['$scope', '$location', 'DbAdapterResource', function ($scope, $location, DbAdapterResource) {
         $scope.dbAdapters = [];
         $scope.showNewDbAdapterForm = false;
 
@@ -152,35 +170,21 @@ module.controller(
     }]
 );
 
-module.controller('ApiInfoController', ['$http', '$rootScope', '$scope', 'api', function ($http, $rootScope, $scope, api) {
-    $scope.api = api;
-    console.log('in api info controller');
+module.controller('AuthenticationController', [function () {
+
 }]);
 
-module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApiRepository', '$log', function ($http, $rootScope, $scope, ApiRepository, $log) {
+module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'api', function ($http, $rootScope, $scope, api) {
+    $scope.api = api;
+}]);
 
-    $scope.$log = $log;
+module.controller('ApiAuthorizationController', ['$http', '$rootScope', '$scope', function ($http, $rootScope, $scope) {
+    // $scope.api = api;
+}]);
 
-    $rootScope.$on('api.updated', function (event, data) {
-        $scope.$apply(function () {
-            $scope.api = data.apiModel;
-            _($scope.api.restServices).forEach(function (restService) {
-                _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-                    var checkify = [];
-                    _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-                        checkify.push({name: httpMethod, checked: _.contains(restService[httpItem], httpMethod)});
-                    });
-                    restService[httpItem] = checkify;
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', 'ApiRepository', 'api', function ($http, $rootScope, $scope, ApiRepository, api) {
 
-                    restService[httpItem + '_view'] = _.chain(restService[httpItem])
-                        .where({checked: true})
-                        .pluck('name')
-                        .valueOf()
-                        .join(', ');
-                });
-            });
-        });
-    });
+    $scope.api = api;
 
     $scope.resetForm = function () {
         $scope.showNewRestServiceForm = false;
@@ -248,7 +252,7 @@ module.controller('ApiRestController', ['$http', '$rootScope', '$scope', 'ApiRep
     };
 }]);
 
-module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApiRepository', function ($http, $rootScope, $scope, ApiRepository) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 'ApiRepository', function ($http, $rootScope, $scope, ApiRepository) {
 
     $rootScope.$on('api.updated', function (event, data) {
         $scope.$apply(function () {
@@ -319,108 +323,35 @@ module.controller('ApiRpcController', ['$http', '$rootScope', '$scope', 'ApiRepo
 
 }]);
 
+module.controller(
+    'ApiVersionController',
+    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'ApiRepository', function($rootScope, $scope, $location, $timeout, $routeParams, ApiRepository) {
 
 
 
+        ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
+            $scope.api = api;
+            $scope.currentVersion = api.version;
+        });
 
+        $scope.createNewApiVersion = function () {
+            ApiRepository.createNewVersion($scope.api.name).then(function (data) {
 
+                $rootScope.$broadcast('refreshApiList');
+                $timeout(function () {
+                    $location.path('/api/' + $scope.api.name + '/v' + data.version + '/overview');
+                }, 500);
+            });
+        };
 
+        $scope.updateVersion = function () {
+            $timeout(function () {
+                $location.path('/api/' + $scope.api.name + '/v' + $scope.currentVersion + '/overview');
+            }, 500);
+        };
 
-
-
-//module.controller(
-//    'ApiController',
-//    ['$rootScope', '$scope', '$routeParams', 'ApiRepository', 'DbAdapterResource', function($rootScope, $scope, $routeParams, ApiRepository, DbAdapterResource) {
-//
-//        $scope.api = null;
-//        $scope.section = null;
-//        $scope.content_negotiation = [
-//            "HalJson",
-//            "Json"
-//        ];
-//        $scope.source_code = [];
-//
-//        DbAdapterResource.fetch().then(function (adapters) {
-//            $scope.$apply(function () {
-//                $scope.dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props');
-//            });
-//        });
-//
-//        // first run
-//        ApiRepository.setApiModel($routeParams.apiName, null, true).then(function (api) {
-//            $scope.$apply(function () {
-//                // controller scope
-//                $scope.api = api;
-//                $scope.currentApiVersion = ApiRepository.currentApiVersion;
-//                $scope.section = $routeParams.section;
-//
-//                // root scope page elements
-//                $rootScope.pageTitle = api.namespace;
-//                $rootScope.pageDescription = 'tbd';
-//            });
-//
-//        });
-//
-//        $scope.$watch('currentApiVersion', function () {
-//            if ($scope.currentApiVersion != null) {
-//                ApiRepository.setApiModel($scope.api.name, $scope.currentApiVersion, true).then(function (apiModel) {
-//                    $scope.$apply(function () {
-//                        $scope.api = apiModel;
-//                    })
-//                });
-//            }
-//        });
-//
-//        $scope.createNewApiVersion = function () {
-//            ApiRepository.createNewVersion($scope.api.name).then(function (data) {
-//                ApiRepository.setApiModel($scope.api.name, data.version, true).then(function (apiModel) {
-//                    $scope.$apply(function () {
-//                        $scope.api = apiModel;
-//                        $scope.currentApiVersion = data.version;
-//                    })
-//                });
-//            });
-//        };
-//
-////        $scope.currentApiVersion = null;
-//
-//    }]
-//);
-
-module.directive('viewNavigation', ['$routeParams', '$location', function ($routeParams, $location) {
-    return {
-        restrict: 'E',
-        scope: true,
-        templateUrl: '/zf-apigility-admin/partials/view-navigation.html',
-        controller: ['$rootScope', '$scope', function ($rootScope, $scope) {
-            $scope.routeParams = $routeParams;
-        }]
-    }
-}]);
-
-//module.factory('ApiList', ['$rootScope', '$q', 'apiBasePath', function ($rootScope, $q, apiBasePath) {
-//    var apiList = [];
-//
-//    apiList.update = function () {
-//        var hyperagentResource = new Hyperagent.Resource(apiBasePath + '/module');
-//        var apiModels = [];
-//        var deferred = $q.defer();
-//        hyperagentResource.fetch({force: true}).then(function (apis) {
-//            _.forEach(apis.embedded.module, function (value, key) {
-//                apiModels.push(value.props);
-//            });
-//
-//            $rootScope.$apply(function () {
-//                deferred.resolve(apiModels);
-//            });
-//        });
-//        return deferred.promise;
-//    };
-//
-//    return {
-//
-//    };
-//}]);
+    }]
+);
 
 module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiBasePath', function ($rootScope, $q, $http, $location, apiBasePath) {
     var moduleApiPath = apiBasePath + '/module';
@@ -448,8 +379,16 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
             var apiModel = {};
             var deferred = $q.defer();
 
+            // localize this for future use
+            var self = this;
+
             if (typeof version == 'string') {
-                version = version.match(/\d/g)[0];
+                version = parseInt(version.match(/\d/g)[0]);
+            }
+
+            if (self.currentApiModel && version && self.currentApiModel.name == name && self.currentApiModel.version == version) {
+                deferred.resolve(self.currentApiModel);
+                return deferred.promise;
             }
 
             this.hyperagentResource.fetch({force: !!force}).then(function (apis) {
@@ -464,18 +403,9 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
                 apiModel.restServices = [];
                 apiModel.rpcServices = [];
 
-                var latestVersion = api.props.versions[api.props.versions.length - 1];
-//
-//                if (resource.lastApi && resource.lastApi.name != name) {
-//                    resource.lastApi = null;
-//                    resource.currentApiVersion = 0;
-//                }
-//
-//                if (version === null && resource.currentApiVersion > 0) {
-//                    version = resource.currentApiVersion;
-//                } else if (typeof version != 'number') {
-//                    version = latestVersion;
-//                }
+                if (!version) {
+                    var version = api.props.versions[api.props.versions.length - 1];
+                }
 
                 return api;
             }).then(function (api) {
@@ -490,7 +420,6 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
                 });
             }).then(function (api) {
                 // now load REST + RPC endpoints
-                    console.log('loading rpc');
                 return api.link('rpc', {version: version}).fetch().then(function (rpcServices) {
                     _.chain(rpcServices.embedded.rpc)
                         .pluck('props')
@@ -501,13 +430,10 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
                 });
 
             }).then(function (api) {
-//                this.currentApiModel = apiModel;
-                console.log('about to resolve promise');
-                // make $q and Q play nice together
-                $rootScope.$apply(function () {
-                    deferred.resolve(apiModel);
-                });
-            });
+                deferred.resolve(apiModel);
+                self.currentApiModel = apiModel;
+                self.currentApiModel.version = version;
+             });
 
             return deferred.promise;
         },
@@ -589,6 +515,12 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
 
 }]);
 
+module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', '$location', 'apiBasePath', function ($rootScope, $q, $http, $location, apiBasePath) {
+    var authApiPath = apiBasePath + '/authorization';
+
+    return {};
+}]);
+
 module.factory('DbAdapterResource', ['$http', '$location', 'apiBasePath', function ($http, $location, apiBasePath) {
 
     var dbAdapterApiPath = apiBasePath + '/db-adapter';
@@ -619,15 +551,19 @@ module.factory('DbAdapterResource', ['$http', '$location', 'apiBasePath', functi
     return resource;
 }]);
 
-module.run(['$rootScope', '$routeParams', '$q', function ($rootScope, $routeParams, $q) {
+module.factory('AuthenticationRepository', ['$http', '$location', 'apiBasePath', function ($http, $location, apiBasePath) {
+
+    var authPath = apiBasePath + '/db-adapter';
+
+    // @todo
+}]);
+
+module.run(['$rootScope', '$routeParams', '$q', function ($rootScope, $routeParams) {
     $rootScope.routeParams = $routeParams;
-    $rootScope.currentApi = null;
 
     $rootScope.$on('$routeChangeSuccess', function(scope, next, current){
-        console.log('Changing from '+angular.toJson(current)+' to '+angular.toJson(next));
+        if (next.locals.api && scope.targetScope.$root.pageTitle != next.locals.api.name) {
+            scope.targetScope.$root.pageTitle = next.locals.api.name;
+        }
     });
-    $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) {
-        console.log('error be found');
-    });
-
 }]);
