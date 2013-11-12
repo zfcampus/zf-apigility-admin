@@ -1,1 +1,22 @@
+<ng-include src="'zf-apigility-admin/partials/api/version.html'"></ng-include>
+
 Authorization
+
+<table class="table table-bordered">
+    <tr>
+        <td>Name</td>
+        <td>GET</td>
+        <td>POST</td>
+        <td>PATCH</td>
+        <td>PUT</td>
+        <td>DELETE</td>
+    </tr>
+    <tr ng-repeat="(apiAuthorizationName, apiAuthorizationData) in apiAuthorizations">
+        <td>{{apiAuthorizationName}}</td>
+        <td>{{apiAuthorizationData.GET}}</td>
+        <td>{{apiAuthorizationData.POST}}</td>
+        <td>{{apiAuthorizationData.PATCH}}</td>
+        <td>{{apiAuthorizationData.PUT}}</td>
+        <td>{{apiAuthorizationData.DELETE}}</td>
+    </tr>
+</table>

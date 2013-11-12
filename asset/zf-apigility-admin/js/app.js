@@ -32,9 +32,8 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         templateUrl: '/zf-apigility-admin/partials/api/authorization.html',
         controller: 'ApiAuthorizationController',
         resolve: {
-            apiAuthorization: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
-                // @todo
-                // return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
+            apiAuthorizations: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
+                return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
             }]
         }
     });
@@ -178,11 +177,11 @@ module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'ap
     $scope.api = api;
 }]);
 
-module.controller('ApiAuthorizationController', ['$http', '$rootScope', '$scope', function ($http, $rootScope, $scope) {
-    // $scope.api = api;
+module.controller('ApiAuthorizationController', ['$http', '$rootScope', '$scope', 'apiAuthorizations', function ($http, $rootScope, $scope, apiAuthorizations) {
+    $scope.apiAuthorizations = apiAuthorizations;
 }]);
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', 'ApiRepository', 'api', function ($http, $rootScope, $scope, ApiRepository, api) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, ApiRepository, api) {
 
     $scope.api = api;
 
@@ -205,7 +204,13 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.createNewRestService = function () {
         ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+            console.log('calling get');
+            $timeout(function () {
+                ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
+                    console.log(api);
+                    $scope.api = api;
+                });
+            }, 500);
             $scope.showNewRestServiceForm = false;
             $scope.restServiceName = '';
         });
@@ -353,7 +358,7 @@ module.controller(
     }]
 );
 
-module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiBasePath', function ($rootScope, $q, $http, $location, apiBasePath) {
+module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
     var moduleApiPath = apiBasePath + '/module';
 
     return {
@@ -386,7 +391,7 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
                 version = parseInt(version.match(/\d/g)[0]);
             }
 
-            if (self.currentApiModel && version && self.currentApiModel.name == name && self.currentApiModel.version == version) {
+            if (!force && self.currentApiModel && version && self.currentApiModel.name == name && self.currentApiModel.version == version) {
                 deferred.resolve(self.currentApiModel);
                 return deferred.promise;
             }
@@ -515,10 +520,29 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', '$location', 'apiB
 
 }]);
 
-module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', '$location', 'apiBasePath', function ($rootScope, $q, $http, $location, apiBasePath) {
-    var authApiPath = apiBasePath + '/authorization';
+module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $location, apiBasePath) {
 
-    return {};
+    return {
+        getApiAuthorization: function (name, version, force) {
+
+            var apiAuthorizationsModel = [];
+            var deferred = $q.defer();
+
+            if (typeof version == 'string') {
+                version = parseInt(version.match(/\d/g)[0]);
+            }
+
+            var hyperagentResource = new Hyperagent.Resource(apiBasePath + '/module/' + name + '/authorization?version=' + version);
+
+            hyperagentResource.fetch({force: !!force}).then(function (authorizationData) {
+                apiAuthorizationsModel = authorizationData.props;
+                deferred.resolve(apiAuthorizationsModel);
+            });
+
+            return deferred.promise;
+
+        }
+    };
 }]);
 
 module.factory('DbAdapterResource', ['$http', '$location', 'apiBasePath', function ($http, $location, apiBasePath) {
