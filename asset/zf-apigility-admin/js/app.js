@@ -177,9 +177,18 @@ module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'ap
     $scope.api = api;
 }]);
 
-module.controller('ApiAuthorizationController', ['$http', '$rootScope', '$scope', 'apiAuthorizations', function ($http, $rootScope, $scope, apiAuthorizations) {
-    $scope.apiAuthorizations = apiAuthorizations;
-}]);
+module.controller(
+    'ApiAuthorizationController',
+    ['$http', '$rootScope', '$scope', '$routeParams', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, apiAuthorizations, ApiAuthorizationRepository) {
+        $scope.apiAuthorizations = apiAuthorizations;
+        $scope.showModel = function () {
+            console.log($scope.apiAuthorizations);
+        };
+        $scope.saveAuthorization = function () {
+            ApiAuthorizationRepository.saveApiAuthorizations($routeParams.apiName, $scope.apiAuthorizations);
+        };
+    }]
+);
 
 module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, ApiRepository, api) {
 
@@ -204,7 +213,6 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.createNewRestService = function () {
         ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
-            console.log('calling get');
             $timeout(function () {
                 ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
                     console.log(api);
@@ -331,8 +339,6 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 module.controller(
     'ApiVersionController',
     ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'ApiRepository', function($rootScope, $scope, $location, $timeout, $routeParams, ApiRepository) {
-
-
 
         ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
             $scope.api = api;
@@ -520,7 +526,7 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
 
 }]);
 
-module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $location, apiBasePath) {
+module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
 
     return {
         getApiAuthorization: function (name, version, force) {
@@ -541,6 +547,11 @@ module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiB
 
             return deferred.promise;
 
+        },
+
+        saveApiAuthorizations: function (apiName, apiAuthorizationsModel) {
+            var url = apiBasePath + '/module/' + apiName + '/authorization';
+            return $http.put(url, apiAuthorizationsModel);
         }
     };
 }]);

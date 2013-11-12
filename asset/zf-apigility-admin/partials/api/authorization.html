@@ -1,6 +1,9 @@
 <ng-include src="'zf-apigility-admin/partials/api/version.html'"></ng-include>
 
-Authorization
+Authorization - a check means authorization is required
+
+<button ng-click="showModel()">Dump</button>
+<button ng-click="saveAuthorization()">Save</button>
 
 <table class="table table-bordered">
     <tr>
@@ -11,12 +14,13 @@ Authorization
         <td>PUT</td>
         <td>DELETE</td>
     </tr>
-    <tr ng-repeat="(apiAuthorizationName, apiAuthorizationData) in apiAuthorizations">
-        <td>{{apiAuthorizationName}}</td>
-        <td>{{apiAuthorizationData.GET}}</td>
-        <td>{{apiAuthorizationData.POST}}</td>
-        <td>{{apiAuthorizationData.PATCH}}</td>
-        <td>{{apiAuthorizationData.PUT}}</td>
-        <td>{{apiAuthorizationData.DELETE}}</td>
+    <tr ng-repeat="(name, data) in apiAuthorizations">
+        <td>{{name}} </td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].GET"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].POST"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].PATCH"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].PUT"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].DELETE"></td>
     </tr>
 </table>
+
