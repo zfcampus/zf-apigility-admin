@@ -1,17 +1,119 @@
 <h2>Authentication</h2>
 
-<div ng-hide="showAuthenticationSetup">
+<div ng-show="showAuthenticationSetup()">
   <p>There is currently NO Authentication. Select a method below to setup authentication:</p>
     
   <div class="center-block">
-    <button ng-click="setupAuthenticationBasic()" class="btn btn-default btn-primary" title="Create New DB Adapter">
+    <button ng-click="showHttpBasicAuthenticationForm = true" class="btn btn-default btn-primary" title="Setup HTTP Basic Authentication">
       Setup HTTP Basic Authentication
     </button>
-    <button ng-click="setupAuthenticationDigest()" class="btn btn-default btn-primary" title="Create New DB Adapter">
+    <button ng-click="showHttpDigestAuthenticationForm = true" class="btn btn-default btn-primary" title="Setup HTTP Digest Authentication">
       Setup HTTP Digest Authentication
     </button>
-    <button ng-click="setupAuthenticationOAuth2()" class="btn btn-default btn-primary" title="Create New DB Adapter">
+    <button ng-click="showOAuth2AuthenticationForm = true" class="btn btn-default btn-primary" title="Setup OAuth2 Authentication">
       Setup OAuth2 Authentication
     </button>
+  </div>
+  <br /><br />
+</div>
+<div ng-show="showHttpBasicAuthenticationForm" class="panel panel-default">
+  <div class="panel-heading">Setup HTTP Basic Authentication</div>
+  <div class="panel-body">
+    <form class="form-horizontal" ng-submit="createHttpBasicAuthentication()">
+      <fieldset>
+        <!-- Text input-->
+        <div class="control-group">
+          <label class="control-label" for="realm">Authentication Realm</label>
+          <div class="controls">
+            <input type="text" placeholder="api" class="input-xlarge" required="required" ng-model="realm">
+            <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+          </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="control-group">
+          <label class="control-label" for="htpasswd">Location of htpasswd file</label>
+          <div class="controls">
+            <input type="text" placeholder="data/htpasswd" class="input-xlarge" required="required" ng-model="htpasswd">
+            <p class="help-block">Location on the filesystem of the htpasswd file</p>
+          </div>
+        </div>
+      </fieldset>
+
+      <button class="btn btn-sm btn-success" type="submit">Save</button>
+      <button class="btn btn-sm btn-warning" type="button" ng-click="resetForm()">Cancel</button>
+    </form>
+  </div>
+</div>
+<div ng-show="showHttpBasicAuthentication" class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <font color="gray" size="-1">HTTP Basic Authentication</font>
+      <div ng-hide="removeAuthenticationForm" class="pull-right">
+        <button ng-click="removeAuthenticationForm = true" class="btn btn-link"
+          id="remove-authentication" content="#remove-authentication-form"
+          title="Remove Authentication">
+          <span class="glyphicon glyphicon-trash"></span> Remove
+        </button>
+      </div>
+      <div ng-show="removeAuthenticationForm" id="remove-authentication-form" class="panel panel-default">
+        <div class="panel-heading">Remove Authentication</div>
+        <div class="panel-body">
+          <form ng-submit="removeAuthentication()">
+            <p>Are you sure you want to remove authentication?</p>
+            <button ng-click="removeAuthentication()" type="submit" class="btn btn-sm btn-success">Yes</button>
+            <button ng-click="removeAuthenticationForm = false" type="button" class="btn btn-sm btn-default">No</button>
+          </form>
+        </div>
+      </div>
+    </h4>
+  </div>
+  <div class="panel-body">
+    <ul class="nav nav-tabs" id="AuthHttpBasicTab">
+      <li class="active"><a data-target="#viewmodeAuthHttpBasicTab" data-toggle="tab">View</a></li>
+      <li><a data-target="#editmodeAuthHttpBasicTab" data-toggle="tab">Edit</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="viewmodeAuthHttpBasicTab">
+        <table class="table table-striped">
+          <tr>
+            <td>Realm</td>
+            <td>{{httpBasic.realm}}</td>
+          </tr>
+          <tr>
+            <td>htpasswd Location</td>
+            <td>{{httpBasic.htpasswd}}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="tab-pane" id="editmodeAuthHttpBasicTab">
+        <form class="form-horizontal" ng-submit="updateHttpBasicAuthentication()">
+          <fieldset>
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="realm">Authentication Realm</label>
+              <div class="controls">
+                <input type="text" placeholder="api" class="input-xlarge" required="required" ng-model="httpBasic.realm">
+                <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+              </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="htpasswd">Location of htpasswd file</label>
+              <div class="controls">
+                <input type="text" placeholder="data/htpasswd" class="input-xlarge" required="required" ng-model="httpBasic.htpasswd">
+                <p class="help-block">Location on the filesystem of the htpasswd file</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <button class="btn btn-sm btn-success" type="submit"
+            ng-click="updateHttpBasicAuthentication()">Save</button><br />
+        </form>
+      </div>
+    </div>
   </div>
 </div>
