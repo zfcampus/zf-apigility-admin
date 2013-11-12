@@ -181,6 +181,7 @@ module.controller(
     $scope.showOAuth2AuthenticationForm     = false;
     $scope.showOAuth2Authentication         = false;
     $scope.httpBasic                        = null;
+    $scope.httpDigest                       = null;
 
     var fetchAuthenticationDetails = function (force) {
       AuthenticationRepository.fetch({force: force})
@@ -196,6 +197,7 @@ module.controller(
             $scope.$apply(function () {
               $scope.showSetupButtons = false;
               $scope.showHttpDigestAuthentication = true;
+              data.digest_domains = data.digest_domains.split(" ");
               $scope.httpDigest = data;
             });
           } else if (data.oauth2) {
@@ -206,7 +208,6 @@ module.controller(
             });
           }
         }, function (err) {
-          console.log("No authentication found!");
           $scope.$apply(function () {
             $scope.showSetupButtons             = true;
             $scope.showHttpBasicAuthentication  = false;
@@ -237,6 +238,9 @@ module.controller(
       $scope.showOAuth2AuthenticationForm     = false;
       $scope.realm                            = '';
       $scope.htpasswd                         = '';
+      $scope.htdigest                         = '';
+      $scope.digest_domains                   = '';
+      $scope.nonce_timeout                    = '';
     };
 
     $scope.showAuthenticationSetup = function () {
@@ -249,8 +253,19 @@ module.controller(
     $scope.createHttpBasicAuthentication = function () {
       var options = {
         accept_schemes : [ "basic" ],
-        realm          :  $scope.realm,
-        htpasswd       :  $scope.htpasswd
+        realm          : $scope.realm,
+        htpasswd       : $scope.htpasswd
+      };
+      createAuthentication(options);
+    };
+
+    $scope.createHttpDigestAuthentication = function () {
+      var options = {
+        accept_schemes : [ "digest" ],
+        realm          : $scope.realm,
+        htdigest       : $scope.htdigest,
+        digest_domains : $scope.digest_domains.join(" "),
+        nonce_timeout  : $scope.nonce_timeout
       };
       createAuthentication(options);
     };
@@ -259,6 +274,16 @@ module.controller(
       var options = {
         realm          :  $scope.httpBasic.realm,
         htpasswd       :  $scope.httpBasic.htpasswd
+      };
+      updateAuthentication(options);
+    };
+
+    $scope.updateHttpDigestAuthentication = function () {
+      var options = {
+        realm          : $scope.httpDigest.realm,
+        htdigest       : $scope.httpDigest.htdigest,
+        digest_domains : $scope.httpDigest.digest_domains.join(" "),
+        nonce_timeout  : $scope.httpDigest.nonce_timeout
       };
       updateAuthentication(options);
     };
@@ -315,7 +340,6 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
         ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
             $timeout(function () {
                 ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
-                    console.log(api);
                     $scope.api = api;
                 });
             }, 500);
@@ -713,7 +737,6 @@ module.factory(
         .then(function (response) {
           return true;
         }, function (error) {
-          console.log(error);
           return false;
         });
     };
