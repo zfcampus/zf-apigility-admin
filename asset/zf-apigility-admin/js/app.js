@@ -407,7 +407,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
         ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
             flash.success = 'New REST Service created';
             $timeout(function () {
-                ApiRepository.getApi(restResource.module, $scope.api.version, true).then(function (api) {
+                ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
                 });
             }, 500);
@@ -419,9 +419,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     $scope.createNewDbConnectedService = function () {
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
             flash.success = 'New DB Connected Service created';
-            console.log(restResource);
             $timeout(function () {
-                ApiRepository.getApi(restResource.module, $scope.api.version, true).then(function (api) {
+                ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
                 });
             }, 500);
@@ -433,7 +432,6 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
-        console.log(restServiceData);
         ApiRepository.saveRestService($scope.api.name, restServiceData).then(function (data) {
             flash.success = 'REST Service updated';
         });
@@ -496,13 +494,12 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
             flash.success = 'New RPC Service created';
             $timeout(function () {
-                ApiRepository.getApi(rpcResource.module, $scope.api.version, true).then(function (api) {
+                ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
                 });
             }, 500);
             $scope.addRpcService = false;
-            $scope.rpcServiceName = '';
-            $scope.rpcServiceRoute = '';
+            $scope.resetForm();
         });
     };
 
@@ -768,8 +765,7 @@ module.factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', 
         var deferred = $q.defer();
 
         this.fetch().then(function (adapters) {
-            var dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props')
-//            console.log(stuff);
+            var dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props');
             deferred.resolve(dbAdapters);
         });
 
