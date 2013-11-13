@@ -46,9 +46,6 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         resolve: {
             dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
                 return DbAdapterResource.getList();
-//                DbAdapterResource.fetch().then(function (adapters) {
-//                    $scope.dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props');
-//                });
             }],
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
@@ -380,10 +377,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.dbAdapters = dbAdapters;
 
-    $scope.contentNegotiation = [
-        "HalJson",
-        "Json"
-    ];
+    $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
     $scope.sourceCode = [];
 
     $scope.toggleSelection = function (model, $event) {
@@ -412,7 +407,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
         ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
             flash.success = 'New REST Service created';
             $timeout(function () {
-                ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
+                ApiRepository.getApi(restResource.module, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
                 });
             }, 500);
@@ -422,13 +417,11 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 
     $scope.createNewDbConnectedService = function () {
-        console.log($scope.api.name);
-        console.log($scope.dbAdapterName);
-        console.log($scope.dbTableName);
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
             flash.success = 'New DB Connected Service created';
+            console.log(restResource);
             $timeout(function () {
-                ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
+                ApiRepository.getApi(restResource.module, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
                 });
             }, 500);
@@ -462,31 +455,35 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 'ApiRepository', function ($http, $rootScope, $scope, ApiRepository) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api) {
 
-    $rootScope.$on('api.updated', function (event, data) {
-        $scope.$apply(function () {
-            $scope.api = data.apiModel;
+    $scope.api = api;
 
-            _($scope.api.rpcServices).forEach(function (rpcService) {
-                var checkify = [];
-                _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-                    checkify.push({name: httpMethod, checked: _.contains(rpcService.http_methods, httpMethod)});
-                });
-                rpcService.http_methods = checkify;
+    $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
-                rpcService.http_methods_view = _.chain(rpcService.http_methods)
-                    .where({checked: true})
-                    .pluck('name')
-                    .valueOf()
-                    .join(', ');
-
-                var myReg = /(([^\\]+)\\Controller)$/g;
-                rpcService.controller_class = rpcService.controller_service_name.replace(myReg, "$2\\$2Controller");
-            });
-
-        });
-    });
+//    $rootScope.$on('api.updated', function (event, data) {
+//        $scope.$apply(function () {
+//            $scope.api = data.apiModel;
+//
+//            _($scope.api.rpcServices).forEach(function (rpcService) {
+//                var checkify = [];
+//                _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
+//                    checkify.push({name: httpMethod, checked: _.contains(rpcService.http_methods, httpMethod)});
+//                });
+//                rpcService.http_methods = checkify;
+//
+//                rpcService.http_methods_view = _.chain(rpcService.http_methods)
+//                    .where({checked: true})
+//                    .pluck('name')
+//                    .valueOf()
+//                    .join(', ');
+//
+//                var myReg = /(([^\\]+)\\Controller)$/g;
+//                rpcService.controller_class = rpcService.controller_service_name.replace(myReg, "$2\\$2Controller");
+//            });
+//
+//        });
+//    });
 
     $scope.resetForm = function () {
         $scope.showNewRpcServiceForm = false;
@@ -495,8 +492,14 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     };
 
     $scope.createNewRpcService = function () {
+
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+            flash.success = 'New RPC Service created';
+            $timeout(function () {
+                ApiRepository.getApi(rpcResource.module, $scope.api.version, true).then(function (api) {
+                    $scope.api = api;
+                });
+            }, 500);
             $scope.addRpcService = false;
             $scope.rpcServiceName = '';
             $scope.rpcServiceRoute = '';
@@ -544,7 +547,7 @@ module.controller(
 
         $scope.createNewApiVersion = function () {
             ApiRepository.createNewVersion($scope.api.name).then(function (data) {
-                flash.success = 'A new version of this API was created'
+                flash.success = 'A new version of this API was created';
                 $rootScope.$broadcast('refreshApiList');
                 $timeout(function () {
                     $location.path('/api/' + $scope.api.name + '/v' + data.version + '/overview');
