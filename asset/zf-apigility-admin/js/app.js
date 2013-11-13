@@ -346,9 +346,8 @@ module.controller(
     ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, ApiAuthorizationRepository) {
         $scope.apiAuthorizations = apiAuthorizations;
 
-        var version = $routeParams.version.match(/\d/)[0];
+        var version = $routeParams.version.match(/\d/g)[0] || 1;
         $scope.editable = (version == api.versions[api.versions.length - 1]);
-        console.log($scope.editable);
 
         $scope.saveAuthorization = function () {
             flash.success = 'Authorization settings saved';
@@ -397,6 +396,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.createNewRestService = function () {
         ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
+            flash.success = 'New REST Service created';
             $timeout(function () {
                 ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
                     $scope.api = api;
@@ -409,6 +409,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.createNewDbConnectedService = function () {
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
+            flash.success = 'New DB Connected Service created';
             $scope.showNewRestServiceForm = false;
             $scope.dbAdapterName = '';
             $scope.dbTableName = '';
@@ -512,7 +513,7 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
 module.controller(
     'ApiVersionController',
-    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'ApiRepository', function($rootScope, $scope, $location, $timeout, $routeParams, ApiRepository) {
+    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository', function($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
 
         ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
             $scope.api = api;
@@ -521,7 +522,7 @@ module.controller(
 
         $scope.createNewApiVersion = function () {
             ApiRepository.createNewVersion($scope.api.name).then(function (data) {
-
+                flash.success = 'A new version of this API was created'
                 $rootScope.$broadcast('refreshApiList');
                 $timeout(function () {
                     $location.path('/api/' + $scope.api.name + '/v' + data.version + '/overview');
