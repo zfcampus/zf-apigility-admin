@@ -179,7 +179,7 @@ module.controller(
 
 module.controller(
     'AuthenticationController',
-    ['$scope', 'AuthenticationRepository', function ($scope, AuthenticationRepository) {
+    ['$scope', '$timeout', 'flash', 'AuthenticationRepository', function ($scope, $timeout, flash, AuthenticationRepository) {
 
     $scope.showSetupButtons                 = false;
     $scope.showHttpBasicAuthenticationForm  = false;
@@ -188,6 +188,7 @@ module.controller(
     $scope.showHttpDigestAuthentication     = false;
     $scope.showOAuth2AuthenticationForm     = false;
     $scope.showOAuth2Authentication         = false;
+    $scope.removeAuthenticationForm         = false;
     $scope.httpBasic                        = null;
     $scope.httpDigest                       = null;
     $scope.oauth2                           = null;
@@ -198,6 +199,7 @@ module.controller(
             $scope.showHttpBasicAuthentication  = false;
             $scope.showHttpDigestAuthentication = false;
             $scope.showOAuth2Authentication     = false;
+            $scope.removeAuthenticationForm     = false;
             $scope.httpBasic                    = null;
             $scope.httpDigest                   = null;
             $scope.oauth2                       = null;
@@ -239,13 +241,16 @@ module.controller(
 
     var createAuthentication = function (options) {
         AuthenticationRepository.createAuthentication(options).then(function (authentication) {
+            flash.success = 'Authentication created';
             fetchAuthenticationDetails(true);
+            $scope.removeAuthenticationForm = false;
             $scope.resetForm();
         });
     };
 
     var updateAuthentication = function (options) {
         AuthenticationRepository.updateAuthentication(options).then(function (authentication) {
+            flash.success = 'Authentication updated';
             fetchAuthenticationDetails(true);
         });
     };
@@ -333,6 +338,7 @@ module.controller(
     $scope.removeAuthentication = function () {
         AuthenticationRepository.removeAuthentication()
             .then(function (response) {
+              flash.success = 'Authentication removed';
                 fetchAuthenticationDetails(true);
             });
     };
