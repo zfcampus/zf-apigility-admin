@@ -29,6 +29,16 @@ API Resources
   }
   ```
 
+- OAuth2 authentication:
+  ```javascript
+  {
+      "dsn": "PDO DSN of database containing OAuth2 schema",
+      "username": "Username associated with DSN",
+      "password": "Password associated with DSN",
+      "route_match": "Literal route to match indicating where OAuth2 login/authorization exists"
+  }
+  ```
+
 ### `authorization`
 
 ```javascript

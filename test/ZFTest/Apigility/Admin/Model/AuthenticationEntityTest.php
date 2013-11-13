@@ -16,6 +16,7 @@ class AuthenticationEntityTest extends TestCase
         $entity = new AuthenticationEntity();
         $this->assertTrue($entity->isBasic());
         $this->assertFalse($entity->isDigest());
+        $this->assertFalse($entity->isOAuth2());
     }
 
     public function testRealmHasADefaultValue()
@@ -29,6 +30,15 @@ class AuthenticationEntityTest extends TestCase
         $entity = new AuthenticationEntity(AuthenticationEntity::TYPE_DIGEST);
         $this->assertFalse($entity->isBasic());
         $this->assertTrue($entity->isDigest());
+        $this->assertFalse($entity->isOAuth2());
+    }
+
+    public function testCanSpecifyOauth2TypeDuringInstantiation()
+    {
+        $entity = new AuthenticationEntity(AuthenticationEntity::TYPE_OAUTH2);
+        $this->assertFalse($entity->isBasic());
+        $this->assertFalse($entity->isDigest());
+        $this->assertTrue($entity->isOAuth2());
     }
 
     public function testCanSpecifyRealmDuringInstantiation()
@@ -61,6 +71,23 @@ class AuthenticationEntityTest extends TestCase
         $this->assertAttributeEquals('/api', 'digestDomains', $entity);
     }
 
+    public function testCanSetOAuth2ParametersDuringInstantiation()
+    {
+        $entity = new AuthenticationEntity(AuthenticationEntity::TYPE_OAUTH2, array(
+            'dsn'         => 'sqlite::memory:',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
+        ));
+        $this->assertAttributeEmpty('htpasswd', $entity);
+        $this->assertAttributeEmpty('htdigest', $entity);
+        $this->assertAttributeEmpty('realm', $entity);
+        $this->assertAttributeEquals('sqlite::memory:', 'dsn', $entity);
+        $this->assertAttributeEquals('me', 'username', $entity);
+        $this->assertAttributeEquals('too', 'password', $entity);
+        $this->assertAttributeEquals('/api/oauth', 'routeMatch', $entity);
+    }
+
     public function testSerializationOfBasicAuthReturnsOnlyKeysSpecificToType()
     {
         $entity = new AuthenticationEntity(AuthenticationEntity::TYPE_BASIC, 'zendcon', array(
@@ -88,6 +115,22 @@ class AuthenticationEntityTest extends TestCase
             'htdigest'       => __DIR__ . '/htdigest',
             'nonce_timeout'  => 3600,
             'digest_domains' => '/api',
+        ), $entity->getArrayCopy());
+    }
+
+    public function testSerializationOfOauth2AuthReturnsOnlyKeysSpecificToType()
+    {
+        $entity = new AuthenticationEntity(AuthenticationEntity::TYPE_OAUTH2, array(
+            'dsn'         => 'sqlite::memory:',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
+        ));
+        $this->assertEquals(array(
+            'dsn'         => 'sqlite::memory:',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
         ), $entity->getArrayCopy());
     }
 }

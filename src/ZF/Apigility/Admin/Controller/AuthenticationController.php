@@ -31,9 +31,9 @@ class AuthenticationController extends AbstractActionController
             case $request::METHOD_GET:
                 $entity = $this->model->fetch();
                 if (!$entity) {
-                    return new ApiProblemResponse(
-                        new ApiProblem(404, 'No authentication configuration found')
-                    );
+                    $response = $this->getResponse();
+                    $response->setStatusCode(204);
+                    return $response;
                 }
                 break;
             case $request::METHOD_POST:
