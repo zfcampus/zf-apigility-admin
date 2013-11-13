@@ -8,11 +8,12 @@ Authorization - a check means authorization is required
 <table class="table table-bordered">
     <tr>
         <td>Name</td>
-        <td>GET</td>
-        <td>POST</td>
-        <td>PATCH</td>
-        <td>PUT</td>
-        <td>DELETE</td>
+        <td>GET <input type="checkbox" ng-click="updateColumn($event, 'GET')"> </td>
+        <td>POST <input type="checkbox" ng-click="updateColumn($event, 'POST')"></td>
+        <td>PATCH <input type="checkbox" ng-click="updateColumn($event, 'PATCH')"></td>
+        <td>PUT <input type="checkbox" ng-click="updateColumn($event, 'PUT')"></td>
+        <td>DELETE <input type="checkbox" ng-click="updateColumn($event, 'DELETE')"></td>
+        <td></td>
     </tr>
     <tr ng-repeat="(name, data) in apiAuthorizations">
         <td>{{name}} </td>
@@ -21,6 +22,7 @@ Authorization - a check means authorization is required
         <td><input type="checkbox" ng-model="apiAuthorizations[name].PATCH"></td>
         <td><input type="checkbox" ng-model="apiAuthorizations[name].PUT"></td>
         <td><input type="checkbox" ng-model="apiAuthorizations[name].DELETE"></td>
+        <td><input type="checkbox" ng-click="updateRow($event, name)"></td>
     </tr>
 </table>
 
