@@ -2,27 +2,31 @@
 
 Authorization - a check means authorization is required
 
-<button ng-click="showModel()">Dump</button>
-<button ng-click="saveAuthorization()">Save</button>
+<div class="pull-right">
+    <button class="btn btn-primary btn-small" ng-click="saveAuthorization()" ng-disabled="!editable">Save</button>
+</div>
 
 <table class="table table-bordered">
     <tr>
         <td>Name</td>
-        <td>GET <input type="checkbox" ng-click="updateColumn($event, 'GET')"> </td>
-        <td>POST <input type="checkbox" ng-click="updateColumn($event, 'POST')"></td>
-        <td>PATCH <input type="checkbox" ng-click="updateColumn($event, 'PATCH')"></td>
-        <td>PUT <input type="checkbox" ng-click="updateColumn($event, 'PUT')"></td>
-        <td>DELETE <input type="checkbox" ng-click="updateColumn($event, 'DELETE')"></td>
+        <td>GET <input type="checkbox" ng-click="updateColumn($event, 'GET')" ng-disabled="!editable"> </td>
+        <td>POST <input type="checkbox" ng-click="updateColumn($event, 'POST')" ng-disabled="!editable"></td>
+        <td>PATCH <input type="checkbox" ng-click="updateColumn($event, 'PATCH')" ng-disabled="!editable"></td>
+        <td>PUT <input type="checkbox" ng-click="updateColumn($event, 'PUT')" ng-disabled="!editable"></td>
+        <td>DELETE <input type="checkbox" ng-click="updateColumn($event, 'DELETE')" ng-disabled="!editable"></td>
         <td></td>
     </tr>
     <tr ng-repeat="(name, data) in apiAuthorizations">
-        <td>{{name}} </td>
-        <td><input type="checkbox" ng-model="apiAuthorizations[name].GET"></td>
-        <td><input type="checkbox" ng-model="apiAuthorizations[name].POST"></td>
-        <td><input type="checkbox" ng-model="apiAuthorizations[name].PATCH"></td>
-        <td><input type="checkbox" ng-model="apiAuthorizations[name].PUT"></td>
-        <td><input type="checkbox" ng-model="apiAuthorizations[name].DELETE"></td>
-        <td><input type="checkbox" ng-click="updateRow($event, name)"></td>
+        <td>{{name | servicename}} </td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].GET" ng-disabled="!editable"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].POST" ng-disabled="!editable"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].PATCH" ng-disabled="!editable"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].PUT" ng-disabled="!editable"></td>
+        <td><input type="checkbox" ng-model="apiAuthorizations[name].DELETE" ng-disabled="!editable"></td>
+        <td><input type="checkbox" ng-click="updateRow($event, name)" ng-disabled="!editable"></td>
     </tr>
 </table>
 
+<div class="pull-right">
+    <button class="btn btn-primary btn-small" ng-click="saveAuthorization()">Save</button>
+</div>

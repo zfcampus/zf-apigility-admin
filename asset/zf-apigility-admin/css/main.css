@@ -61,3 +61,8 @@
 #api-version {
   margin-top: -100px;
 }
+div.alert {
+  position: fixed;
+  top: 120px;
+  left: 45%;
+}

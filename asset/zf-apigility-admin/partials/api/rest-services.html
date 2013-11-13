@@ -106,29 +106,14 @@
                 </div>
                 
                 <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Enabled Resource HTTP Methods</h4>
-                  <p class="list-group-item-text">{{ restService.resource_http_methods_view }}{{ $log.log(restService) }}</p>
+                  <h4 class="list-group-item-heading">HTTP Allowed Resource Methods</h4>
+                  <p class="list-group-item-text">{{ restService.resource_http_methods.join(', ') }}</p>
                 </div>
                 
                 <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Enabled Collection HTTP Methods</h4>
+                  <h4 class="list-group-item-heading">HTTP Allowed Collection Methods</h4>
                   <p class="list-group-item-text">
-                    {{ restService.collection_http_methods_view }}
-                  </p>
-                </div>
-
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Authorization, Ex1</h4>
-                  <p class="list-group-item-text">
-                    <u>Everyone</u> <b>allowed</b> to <u>all HTTP methods</u>
-                  </p>
-                </div>
-
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Authorization, Ex2</h4>
-                  <p class="list-group-item-text">
-                    <u>Authenticated</u> <b>allowed</b> to <u>POST, PUT, DELETE</u><br>
-                    <u>Everyone</u> <b>allowed</b> to <u>GET</u>
+                    {{ restService.collection_http_methods.join(', ') }}
                   </p>
                 </div>
 
@@ -272,9 +257,9 @@
                     <div class="control-group">
                       <label class="control-label">HTTP methods allowed for ENTITIES</label>
                       <div class="controls">
-                        <label ng-repeat="method in restService.resource_http_methods" class="checkbox inline" for="resource_http_methods{{ $index }}">
-                          <input type="checkbox" name="resource_http_methods" id="resource_http_methods{{ $index }}" ng-model="method.checked">
-                          <span>{{method.name}}</span>
+                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline" for="resource_http_methods{{ $index }}">
+                          <input type="checkbox" name="resource_http_methods_test" value="{{method}}" id="resource_http_methods{{ $index }}" ng-checked="restService.resource_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.resource_http_methods, $event)">
+                          <span>{{method}}</span>
                         </label>
                       </div>
                     </div>
@@ -282,9 +267,9 @@
                     <div class="control-group">
                       <label class="control-label">HTTP methods allowed for COLLECTIONS</label>
                       <div class="controls">
-                        <label ng-repeat="method in restService.collection_http_methods" class="checkbox inline" for="collection_http_methods{{ $index }}">
-                          <input type="checkbox" name="collection_http_methods" id="collection_http_methods{{ $index }}" ng-model="method.checked">
-                          <span>{{method.name}}</span>
+                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline" for="collection_http_methods{{ $index }}">
+                          <input type="checkbox" name="resource_http_methods_test" value="{{method}}" id="collection_http_methods{{ $index }}" ng-checked="restService.collection_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.collection_http_methods, $event)">
+                          <span>{{method}}</span>
                         </label>
                       </div>
                     </div>

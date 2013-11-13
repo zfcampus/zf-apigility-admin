@@ -1,26 +1,26 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'tags-input']);
+var module = angular.module('ag-admin', ['ngRoute', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
     // setup the API Base Path (this should come from initial ui load/php)
-    $provide.value('apiBasePath', '/admin/api');
+    $provide.value('apiBasePath', angular.element('body').data('api-base-path') || '/admin/api');
 
     $routeProvider.when('/dashboard', {
-        templateUrl: '/zf-apigility-admin/partials/index.html',
+        templateUrl: 'zf-apigility-admin/partials/index.html',
         controller: 'DashboardController'
     });
     $routeProvider.when('/global/db-adapters', {
-        templateUrl: '/zf-apigility-admin/partials/global/db-adapters.html',
+        templateUrl: 'zf-apigility-admin/partials/global/db-adapters.html',
         controller: 'DbAdapterController'
     });
     $routeProvider.when('/global/authentication', {
-        templateUrl: '/zf-apigility-admin/partials/global/authentication.html',
+        templateUrl: 'zf-apigility-admin/partials/global/authentication.html',
         controller: 'AuthenticationController'
     });
     $routeProvider.when('/api/:apiName/:version/overview', {
-        templateUrl: '/zf-apigility-admin/partials/api/overview.html',
+        templateUrl: 'zf-apigility-admin/partials/api/overview.html',
         controller: 'ApiOverviewController',
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
@@ -29,16 +29,19 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         }
     });
     $routeProvider.when('/api/:apiName/:version/authorization', {
-        templateUrl: '/zf-apigility-admin/partials/api/authorization.html',
+        templateUrl: 'zf-apigility-admin/partials/api/authorization.html',
         controller: 'ApiAuthorizationController',
         resolve: {
+            api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
+                return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+            }],
             apiAuthorizations: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
                 return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
             }]
         }
     });
     $routeProvider.when('/api/:apiName/:version/rest-services', {
-        templateUrl: '/zf-apigility-admin/partials/api/rest-services.html',
+        templateUrl: 'zf-apigility-admin/partials/api/rest-services.html',
         controller: 'ApiRestServicesController',
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
@@ -60,7 +63,7 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
 
 module.controller(
     'DashboardController',
-    ['$rootScope', function($rootScope) {
+    ['$rootScope', 'flash', function($rootScope, flash) {
         $rootScope.pageTitle = 'Dashboard';
         $rootScope.pageDescription = 'Global system configuration and configuration to be applied to all APIs.';
     }]
@@ -68,7 +71,7 @@ module.controller(
 
 module.controller(
     'ApiListController',
-    ['$rootScope', '$scope', '$location', 'ApiRepository', '$timeout', function($rootScope, $scope, $location, ApiRepository, $timeout) {
+    ['$rootScope', '$scope', '$location', '$timeout', 'flash', 'ApiRepository', function($rootScope, $scope, $location, $timeout, flash, ApiRepository) {
 
         $scope.apis = [];
         $scope.showNewApiForm = false;
@@ -82,6 +85,8 @@ module.controller(
                 // reset form, repopulate, redirect to new
                 $scope.resetForm();
                 $scope.refreshApiList();
+
+                flash.success = 'New API Created';
                 $timeout(function () {
                     $location.path('/api/' + newApi.name + '/v1/overview');
                 }, 500);
@@ -185,149 +190,148 @@ module.controller(
     $scope.oauth2                           = null;
 
     var enableSetupButtons = function () {
-      $scope.$apply(function () {
-        $scope.showSetupButtons             = true;
-        $scope.showHttpBasicAuthentication  = false;
-        $scope.showHttpDigestAuthentication = false;
-        $scope.showOAuth2Authentication     = false;
-        $scope.httpBasic                    = null;
-        $scope.httpDigest                   = null;
-        $scope.oauth2                       = null;
-      });
+        $scope.$apply(function () {
+            $scope.showSetupButtons             = true;
+            $scope.showHttpBasicAuthentication  = false;
+            $scope.showHttpDigestAuthentication = false;
+            $scope.showOAuth2Authentication     = false;
+            $scope.httpBasic                    = null;
+            $scope.httpDigest                   = null;
+            $scope.oauth2                       = null;
+        });
     };
 
     var fetchAuthenticationDetails = function (force) {
-      AuthenticationRepository.fetch({force: force})
-        .then(function (authentication) {
-          console.log(authentication);
-          var data = authentication.props;
-          if (data.htpasswd) {
-            $scope.$apply(function () {
-              $scope.showSetupButtons = false;
-              $scope.showHttpBasicAuthentication = true;
-              $scope.httpBasic = data;
-            });
-          } else if (data.htdigest) {
-            $scope.$apply(function () {
-              $scope.showSetupButtons = false;
-              $scope.showHttpDigestAuthentication = true;
-              data.digest_domains = data.digest_domains.split(" ");
-              $scope.httpDigest = data;
-            });
-          } else if (data.dsn) {
-            $scope.$apply(function () {
-              $scope.showSetupButtons = false;
-              $scope.showOAuth2Authentication = true;
-              $scope.oauth2 = data;
-            });
-          } else {
-            enableSetupButtons();
-          }
-        }, function (err) {
-          enableSetupButtons();
-          return false;
-        }
-      );
+        AuthenticationRepository.fetch({force: force})
+            .then(function (authentication) {
+                var data = authentication.props;
+                if (data.htpasswd) {
+                    $scope.$apply(function () {
+                        $scope.showSetupButtons = false;
+                        $scope.showHttpBasicAuthentication = true;
+                        $scope.httpBasic = data;
+                    });
+                } else if (data.htdigest) {
+                    $scope.$apply(function () {
+                        $scope.showSetupButtons = false;
+                        $scope.showHttpDigestAuthentication = true;
+                        data.digest_domains = data.digest_domains.split(" ");
+                        $scope.httpDigest = data;
+                    });
+                } else if (data.dsn) {
+                    $scope.$apply(function () {
+                        $scope.showSetupButtons = false;
+                        $scope.showOAuth2Authentication = true;
+                        $scope.oauth2 = data;
+                    });
+                } else {
+                    enableSetupButtons();
+                }
+            }, function (err) {
+                enableSetupButtons();
+                return false;
+            }
+        );
     };
 
     var createAuthentication = function (options) {
-      AuthenticationRepository.createAuthentication(options).then(function (authentication) {
-        fetchAuthenticationDetails(true);
-        $scope.resetForm();
-      });
+        AuthenticationRepository.createAuthentication(options).then(function (authentication) {
+            fetchAuthenticationDetails(true);
+            $scope.resetForm();
+        });
     };
 
     var updateAuthentication = function (options) {
-      AuthenticationRepository.updateAuthentication(options).then(function (authentication) {
-        fetchAuthenticationDetails(true);
-      });
+        AuthenticationRepository.updateAuthentication(options).then(function (authentication) {
+            fetchAuthenticationDetails(true);
+        });
     };
 
     $scope.resetForm = function () {
-      $scope.showHttpBasicAuthenticationForm  = false;
-      $scope.showHttpDigestAuthenticationForm = false;
-      $scope.showOAuth2AuthenticationForm     = false;
-      $scope.digest_domains                   = '';
-      $scope.dsn                              = '';
-      $scope.htdigest                         = '';
-      $scope.htpasswd                         = '';
-      $scope.nonce_timeout                    = '';
-      $scope.password                         = '';
-      $scope.realm                            = '';
-      $scope.route_match                      = '';
-      $scope.username                         = '';
+        $scope.showHttpBasicAuthenticationForm  = false;
+        $scope.showHttpDigestAuthenticationForm = false;
+        $scope.showOAuth2AuthenticationForm     = false;
+        $scope.digest_domains                   = '';
+        $scope.dsn                              = '';
+        $scope.htdigest                         = '';
+        $scope.htpasswd                         = '';
+        $scope.nonce_timeout                    = '';
+        $scope.password                         = '';
+        $scope.realm                            = '';
+        $scope.route_match                      = '';
+        $scope.username                         = '';
     };
 
     $scope.showAuthenticationSetup = function () {
-      if ($scope.showHttpBasicAuthenticationForm || $scope.showHttpDigestAuthenticationForm || $scope.showOAuth2AuthenticationForm) {
-        return false;
-      }
-      return $scope.showSetupButtons;
+        if ($scope.showHttpBasicAuthenticationForm || $scope.showHttpDigestAuthenticationForm || $scope.showOAuth2AuthenticationForm) {
+            return false;
+        }
+        return $scope.showSetupButtons;
     };
 
     $scope.createHttpBasicAuthentication = function () {
-      var options = {
-        accept_schemes : [ "basic" ],
-        realm          : $scope.realm,
-        htpasswd       : $scope.htpasswd
-      };
-      createAuthentication(options);
+        var options = {
+            accept_schemes : [ "basic" ],
+            realm          : $scope.realm,
+            htpasswd       : $scope.htpasswd
+        };
+        createAuthentication(options);
     };
 
     $scope.createHttpDigestAuthentication = function () {
-      var options = {
-        accept_schemes : [ "digest" ],
-        realm          : $scope.realm,
-        htdigest       : $scope.htdigest,
-        digest_domains : $scope.digest_domains.join(" "),
-        nonce_timeout  : $scope.nonce_timeout
-      };
-      createAuthentication(options);
+        var options = {
+            accept_schemes : [ "digest" ],
+            realm          : $scope.realm,
+            htdigest       : $scope.htdigest,
+            digest_domains : $scope.digest_domains.join(" "),
+            nonce_timeout  : $scope.nonce_timeout
+        };
+        createAuthentication(options);
     };
 
     $scope.createOAuth2Authentication = function () {
-      var options = {
-        dsn         : $scope.dsn,
-        username    : $scope.username,
-        password    : $scope.password,
-        route_match : $scope.route_match
-      };
-      createAuthentication(options);
+        var options = {
+            dsn         : $scope.dsn,
+            username    : $scope.username,
+            password    : $scope.password,
+            route_match : $scope.route_match
+        };
+        createAuthentication(options);
     };
 
     $scope.updateHttpBasicAuthentication = function () {
-      var options = {
-        realm          :  $scope.httpBasic.realm,
-        htpasswd       :  $scope.httpBasic.htpasswd
-      };
-      updateAuthentication(options);
+        var options = {
+            realm          :  $scope.httpBasic.realm,
+            htpasswd       :  $scope.httpBasic.htpasswd
+        };
+        updateAuthentication(options);
     };
 
     $scope.updateHttpDigestAuthentication = function () {
-      var options = {
-        realm          : $scope.httpDigest.realm,
-        htdigest       : $scope.httpDigest.htdigest,
-        digest_domains : $scope.httpDigest.digest_domains.join(" "),
-        nonce_timeout  : $scope.httpDigest.nonce_timeout
-      };
-      updateAuthentication(options);
+        var options = {
+            realm          : $scope.httpDigest.realm,
+            htdigest       : $scope.httpDigest.htdigest,
+            digest_domains : $scope.httpDigest.digest_domains.join(" "),
+            nonce_timeout  : $scope.httpDigest.nonce_timeout
+        };
+        updateAuthentication(options);
     };
 
     $scope.updateOAuth2Authentication = function () {
-      var options = {
-        dsn         : $scope.oauth2.dsn,
-        username    : $scope.oauth2.username,
-        password    : $scope.oauth2.password,
-        route_match : $scope.oauth2.route_match
-      };
-      updateAuthentication(options);
+        var options = {
+            dsn         : $scope.oauth2.dsn,
+            username    : $scope.oauth2.username,
+            password    : $scope.oauth2.password,
+            route_match : $scope.oauth2.route_match
+        };
+        updateAuthentication(options);
     };
 
     $scope.removeAuthentication = function () {
-      AuthenticationRepository.removeAuthentication()
-        .then(function (response) {
-          fetchAuthenticationDetails(true);
-        });
+        AuthenticationRepository.removeAuthentication()
+            .then(function (response) {
+                fetchAuthenticationDetails(true);
+            });
     };
 
     fetchAuthenticationDetails(true);
@@ -339,12 +343,15 @@ module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'ap
 
 module.controller(
     'ApiAuthorizationController',
-    ['$http', '$rootScope', '$scope', '$routeParams', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, apiAuthorizations, ApiAuthorizationRepository) {
+    ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, ApiAuthorizationRepository) {
         $scope.apiAuthorizations = apiAuthorizations;
-        $scope.showModel = function () {
-            console.log($scope.apiAuthorizations);
-        };
+
+        var version = $routeParams.version.match(/\d/)[0];
+        $scope.editable = (version == api.versions[api.versions.length - 1]);
+        console.log($scope.editable);
+
         $scope.saveAuthorization = function () {
+            flash.success = 'Authorization settings saved';
             ApiAuthorizationRepository.saveApiAuthorizations($routeParams.apiName, $scope.apiAuthorizations);
         };
 
@@ -362,9 +369,14 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, ApiRepository, api) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api) {
 
     $scope.api = api;
+
+    $scope.toggleSelection = function (model, $event) {
+        var element = $event.target;
+        (element.checked) ? model.push(element.value) : model.splice(model.indexOf(element.value), 1);
+    };
 
     $scope.resetForm = function () {
         $scope.showNewRestServiceForm = false;
@@ -397,7 +409,6 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.createNewDbConnectedService = function () {
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.showNewRestServiceForm = false;
             $scope.dbAdapterName = '';
             $scope.dbTableName = '';
@@ -406,22 +417,14 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
-
-        _(['collection_http_methods', 'resource_http_methods']).forEach(function (httpItem) {
-            restServiceData[httpItem] = _.chain(restServiceData[httpItem])
-                .where({checked: true})
-                .pluck('name')
-                .valueOf();
-        });
-
+        console.log(restServiceData);
         ApiRepository.saveRestService($scope.api.name, restServiceData).then(function (data) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+            flash.success = 'REST Service updated';
         });
     };
 
     $scope.removeRestService = function (restServiceName) {
         ApiRepository.removeRestService($scope.api.name, restServiceName).then(function (data) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
             $scope.deleteRestService = false;
         });
     };
@@ -794,7 +797,20 @@ module.factory(
     }]
 );
 
-module.run(['$rootScope', '$routeParams', '$q', function ($rootScope, $routeParams) {
+module.filter('servicename', function () {
+    return function (input) {
+        var parts = input.split('::');
+        var newServiceName = parts[0] + ' (';
+        switch (parts[1]) {
+            case '__collection__': newServiceName += 'Collection)'; break;
+            case '__resource__': newServiceName += 'Entity)'; break;
+            default: newServiceName += parts[1]; break;
+        }
+        return newServiceName;
+    }
+});
+
+module.run(['$rootScope', '$routeParams', '$location', function ($rootScope, $routeParams, $location) {
     $rootScope.routeParams = $routeParams;
 
     $rootScope.$on('$routeChangeSuccess', function(scope, next, current){
