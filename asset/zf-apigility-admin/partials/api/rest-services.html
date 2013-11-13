@@ -36,13 +36,13 @@
               <label class="col-lg-2 control-label">DB Adapter Name</label>
               <div class="col-lg-10">
                 <select class="form-control input-xlarge"
-                    ng-model="$parent.dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in $parent.dbAdapters"></select>
+                    ng-model="dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
               </div>
             </div>
             <div class="form-group">
               <label class="col-lg-2 control-label">Table Name</label>
               <div class="col-lg-10">
-                <input class="form-control" type="text" ng-model="$parent.dbTableName" placeholder="DB Table Name ...">
+                <input class="form-control" type="text" ng-model="dbTableName" placeholder="DB Table Name ...">
               </div>
             </div>
           </fieldset>
@@ -283,7 +283,7 @@
                       <label class="control-label" for="selector">DB Adapter Name</label>
                       <div class="controls">
                         <select class="form-control input-xlarge"
-                          ng-model="restService.adapter_name" ng-options="v.adapter_name as v.adapter_name for (k,v) in $parent.dbAdapters"></select>
+                          ng-model="restService.adapter_name" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
                       </div>
                     </div>
 
@@ -367,7 +367,7 @@
                     <div class="control-group">
                       <label class="control-label">Content Negotiation Selector</label>
                       <div class="controls">
-                        <select class="form-control input-xlarge" ng-model="restService.selector" ng-options="v as v for (k,v) in $parent.content_negotiation"></select>
+                        <select class="form-control input-xlarge" ng-model="restService.selector" ng-options="v as v for (k,v) in contentNegotiation"></select>
                       </div>
                     </div>
 
@@ -431,9 +431,9 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">{{ class_type }}<br /><font size="-1">{{ filename }}</font></h4>
+                                <h4 class="modal-title">{{ classType }}<br /><font size="-1">{{ filename }}</font></h4>
                             </div>
-                            <div class="modal-body" style="overflow:auto;max-height:500px;" ng-bind-html-unsafe="source_code"></div>
+                            <div class="modal-body" style="overflow:auto;max-height:500px;" ng-bind-html-unsafe="sourceCode"></div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             </div>

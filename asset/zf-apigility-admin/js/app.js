@@ -44,6 +44,12 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         templateUrl: 'zf-apigility-admin/partials/api/rest-services.html',
         controller: 'ApiRestServicesController',
         resolve: {
+            dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
+                return DbAdapterResource.getList();
+//                DbAdapterResource.fetch().then(function (adapters) {
+//                    $scope.dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props');
+//                });
+            }],
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
             }]
@@ -368,9 +374,17 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api, dbAdapters) {
 
     $scope.api = api;
+
+    $scope.dbAdapters = dbAdapters;
+
+    $scope.contentNegotiation = [
+        "HalJson",
+        "Json"
+    ];
+    $scope.sourceCode = [];
 
     $scope.toggleSelection = function (model, $event) {
         var element = $event.target;
@@ -408,8 +422,16 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 
     $scope.createNewDbConnectedService = function () {
+        console.log($scope.api.name);
+        console.log($scope.dbAdapterName);
+        console.log($scope.dbTableName);
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
             flash.success = 'New DB Connected Service created';
+            $timeout(function () {
+                ApiRepository.getApi(restResource.module, 1, true).then(function (api) {
+                    $scope.api = api;
+                });
+            }, 500);
             $scope.showNewRestServiceForm = false;
             $scope.dbAdapterName = '';
             $scope.dbTableName = '';
@@ -434,8 +456,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
         ApiRepository.getSourceCode ($scope.api.name, className)
             .then(function (data) {
                 $scope.filename = className + '.php';
-                $scope.class_type = classType + ' Class';
-                $scope.source_code = data.source;
+                $scope.classType = classType + ' Class';
+                $scope.sourceCode = data.source;
             });
     };
 }]);
@@ -641,21 +663,21 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
         },
 
         createNewDbConnectedService: function(apiName, dbAdapterName, dbTableName) {
-            return $http.post(moduleApiPath + '/' +  + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
+            return $http.post(moduleApiPath + '/' + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
                 .then(function (response) {
                     return response.data;
                 });
         },
 
         createNewRpcService: function (apiName, rpcServiceName, rpcServiceRoute) {
-            return $http.post(moduleApiPath + '/' +  + apiName + '/rpc', {service_name: rpcServiceName, route: rpcServiceRoute})
+            return $http.post(moduleApiPath + '/' + apiName + '/rpc', {service_name: rpcServiceName, route: rpcServiceRoute})
                 .then(function (response) {
                     return response.data;
                 });
         },
 
         removeRestService: function (apiName, restServiceName) {
-            var url = moduleApiPath + '/' +  + apiName + '/rest/' + encodeURIComponent(restServiceName);
+            var url = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
             return $http.delete(url)
                 .then(function (response) {
                     return response.data;
@@ -671,7 +693,7 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
         },
 
         removeRpcService: function (apiName, rpcServiceName) {
-            var url = moduleApiPath + '/' +  + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
+            var url = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
             return $http.delete(url)
                 .then(function (response) {
                     return response.data;
@@ -733,11 +755,23 @@ module.factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiB
     };
 }]);
 
-module.factory('DbAdapterResource', ['$http', '$location', 'apiBasePath', function ($http, $location, apiBasePath) {
+module.factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', function ($http, $q, $location, apiBasePath) {
 
     var dbAdapterApiPath = apiBasePath + '/db-adapter';
 
     var resource =  new Hyperagent.Resource(dbAdapterApiPath);
+
+    resource.getList = function () {
+        var deferred = $q.defer();
+
+        this.fetch().then(function (adapters) {
+            var dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props')
+//            console.log(stuff);
+            deferred.resolve(dbAdapters);
+        });
+
+        return deferred.promise;
+    };
 
     resource.createNewAdapter = function (options) {
         return $http.post(dbAdapterApiPath, options)
@@ -798,6 +832,7 @@ module.factory(
     }]
 );
 
+// @todo refactor the naming of this at some point
 module.filter('servicename', function () {
     return function (input) {
         var parts = input.split('::');
