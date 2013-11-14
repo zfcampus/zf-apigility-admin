@@ -92,8 +92,12 @@ class AuthorizationModel
      */
     public function update(array $privileges, $version = 1)
     {
-        $toStore = $this->remapRestServiceNamesForStorage($privileges);
-        $this->configResource->patchKey(array('zf-mvc-auth', 'authorization'), $toStore);
+        $toStore = array(
+            'zf-mvc-auth' => array(
+                'authorization' => $this->remapRestServiceNamesForStorage($privileges),
+            ),
+        );
+        $this->configResource->patch($toStore, true);
         return $this->fetch($version);
     }
 
