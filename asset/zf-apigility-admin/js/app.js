@@ -214,7 +214,7 @@ module.controller(
                 var data = authentication.props;
                 console.log("Successfully fetched authentication");
                 console.log(data);
-                if (data.htpasswd) {
+                if (data.type == "http_basic") {
                     console.log("Showing HTTP Basic authentication");
                     $scope.$apply(function () {
                         $scope.showSetupButtons             = false;
@@ -225,7 +225,7 @@ module.controller(
                         $scope.httpDigest                   = null;
                         $scope.oauth2                       = null;
                     });
-                } else if (data.htdigest) {
+                } else if (data.type == "http_digest") {
                     console.log("Showing HTTP Digest authentication");
                     $scope.$apply(function () {
                         $scope.showSetupButtons             = false;
@@ -237,7 +237,7 @@ module.controller(
                         $scope.httpBasic                    = null;
                         $scope.oauth2                       = null;
                     });
-                } else if (data.dsn) {
+                } else if (data.type == "oauth2") {
                     console.log("Showing OAuth2 authentication");
                     $scope.$apply(function () {
                         $scope.showSetupButtons             = false;
