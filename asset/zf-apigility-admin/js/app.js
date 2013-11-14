@@ -209,27 +209,44 @@ module.controller(
     };
 
     var fetchAuthenticationDetails = function (force) {
-        AuthenticationRepository.fetch({force: force})
+        AuthenticationRepository.fetch({force: true})
             .then(function (authentication) {
                 var data = authentication.props;
+                console.log("Successfully fetched authentication");
+                console.log(data);
                 if (data.htpasswd) {
+                    console.log("Showing HTTP Basic authentication");
                     $scope.$apply(function () {
-                        $scope.showSetupButtons = false;
-                        $scope.showHttpBasicAuthentication = true;
-                        $scope.httpBasic = data;
+                        $scope.showSetupButtons             = false;
+                        $scope.showHttpBasicAuthentication  = true;
+                        $scope.showHttpDigestAuthentication = false;
+                        $scope.showOAuth2Authentication     = false;
+                        $scope.httpBasic                    = data;
+                        $scope.httpDigest                   = null;
+                        $scope.oauth2                       = null;
                     });
                 } else if (data.htdigest) {
+                    console.log("Showing HTTP Digest authentication");
                     $scope.$apply(function () {
-                        $scope.showSetupButtons = false;
+                        $scope.showSetupButtons             = false;
                         $scope.showHttpDigestAuthentication = true;
-                        data.digest_domains = data.digest_domains.split(" ");
-                        $scope.httpDigest = data;
+                        $scope.showHttpBasicAuthentication  = false;
+                        $scope.showOAuth2Authentication     = false;
+                        data.digest_domains                 = data.digest_domains.split(" ");
+                        $scope.httpDigest                   = data;
+                        $scope.httpBasic                    = null;
+                        $scope.oauth2                       = null;
                     });
                 } else if (data.dsn) {
+                    console.log("Showing OAuth2 authentication");
                     $scope.$apply(function () {
-                        $scope.showSetupButtons = false;
-                        $scope.showOAuth2Authentication = true;
-                        $scope.oauth2 = data;
+                        $scope.showSetupButtons             = false;
+                        $scope.showOAuth2Authentication     = true;
+                        $scope.showHttpDigestAuthentication = false;
+                        $scope.showHttpBasicAuthentication  = false;
+                        $scope.oauth2                       = data;
+                        $scope.httpDigest                   = null;
+                        $scope.httpBasic                    = null;
                     });
                 } else {
                     enableSetupButtons();
@@ -340,7 +357,7 @@ module.controller(
     $scope.removeAuthentication = function () {
         AuthenticationRepository.removeAuthentication()
             .then(function (response) {
-              flash.success = 'Authentication removed';
+                flash.success = 'Authentication removed';
                 fetchAuthenticationDetails(true);
             });
     };
