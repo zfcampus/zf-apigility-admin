@@ -128,8 +128,9 @@ class AuthorizationModelTest extends TestCase
             preg_match('/^(?P<service>[^:]+)(::(?P<action>.*))?$/', $spec, $matches);
             if (!isset($matches['action'])) {
                 $normalized[$matches['service']]['actions']['index'] = $privileges;
-            } elseif (in_array($matches['action'], array('collection', 'resource'))) {
-                $normalized[$matches['service']][$matches['action']] = $privileges;
+            } elseif (preg_match('/^__(?P<type>collection|resource)__$/', $matches['action'], $actionMatches)) {
+                $type = $actionMatches['type'];
+                $normalized[$matches['service']][$type] = $privileges;
             } else {
                 $normalized[$matches['service']]['actions'][$matches['action']] = $privileges;
             }
@@ -207,12 +208,13 @@ class AuthorizationModelTest extends TestCase
 
         // Get config as it exists to begin
         $config = $this->resource->factory($this->module)->fetch(true);
-        $config = $this->mapConfigToPayload($config['zf-mvc-auth']['authorization']);
+        $config = $config['zf-mvc-auth']['authorization'];
 
         // Have the model fetch it
         $entity = $this->model->fetch();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthorizationEntity', $entity);
-        $this->assertEquals($config, $this->mapEntityToConfig($entity));
+        $entity = $this->mapEntityToConfig($entity);
+        $this->assertEquals($config, $entity);
     }
 
     public function testCanUpdatePrivileges()
@@ -221,10 +223,9 @@ class AuthorizationModelTest extends TestCase
 
         // Get config as it exists to begin
         $config = $this->resource->factory($this->module)->fetch(true);
-        $config = $this->mapConfigToPayload($config['zf-mvc-auth']['authorization']);
 
         // Toggle all privileges
-        $newPrivileges = $config;
+        $newPrivileges = $this->mapConfigToPayload($config['zf-mvc-auth']['authorization']);
         foreach ($newPrivileges as $serviceName => $privileges) {
             foreach ($privileges as $method => $flag) {
                 $newPrivileges[$serviceName][$method] = ! $flag;
@@ -239,7 +240,7 @@ class AuthorizationModelTest extends TestCase
 
         // Test that the stored configuration has been updated as well
         $config = $this->resource->factory($this->module)->fetch(true);
-        $config = $this->mapConfigToPayload($config['zf-mvc-auth']['authorization']);
+        $config = $config['zf-mvc-auth']['authorization'];
 
         $expected = $this->mapEntityToConfig($entity);
 
