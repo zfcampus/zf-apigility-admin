@@ -95,6 +95,7 @@ class AuthenticationEntityTest extends TestCase
             'htdigest' => __DIR__ . '/htdigest',
         ));
         $this->assertEquals(array(
+            'type'           => 'http_basic',
             'accept_schemes' => array('basic'),
             'realm'          => 'zendcon',
             'htpasswd'       => __DIR__ . '/htpasswd',
@@ -110,6 +111,7 @@ class AuthenticationEntityTest extends TestCase
             'digest_domains' => '/api',
         ));
         $this->assertEquals(array(
+            'type'           => 'http_digest',
             'accept_schemes' => array('digest'),
             'realm'          => 'zendcon',
             'htdigest'       => __DIR__ . '/htdigest',
@@ -127,6 +129,7 @@ class AuthenticationEntityTest extends TestCase
             'route_match' => '/api/oauth',
         ));
         $this->assertEquals(array(
+            'type'        => 'oauth2',
             'dsn'         => 'sqlite::memory:',
             'username'    => 'me',
             'password'    => 'too',

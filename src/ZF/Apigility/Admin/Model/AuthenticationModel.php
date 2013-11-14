@@ -46,6 +46,7 @@ class AuthenticationModel
 
         $entity  = $this->createAuthenticationEntityFromConfig($authenticationConfig);
         $allData = $entity->getArrayCopy();
+        unset($allData['type']);
         $global  = $this->removeSensitiveConfig($allData);
         $local   = array_udiff_assoc($allData, $global, sprintf('%s::arrayDiffRecursive', __CLASS__));
         switch (true) {
@@ -76,6 +77,7 @@ class AuthenticationModel
 
         $current->exchangeArray($authenticationConfig);
         $allData = $current->getArrayCopy();
+        unset($allData['type']);
         $global  = $this->removeSensitiveConfig($allData);
         $local   = array_udiff_assoc($allData, $global, sprintf('%s::arrayDiffRecursive', __CLASS__));
         switch (true) {

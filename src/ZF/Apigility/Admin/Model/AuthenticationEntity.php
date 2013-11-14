@@ -102,12 +102,14 @@ class AuthenticationEntity
         switch ($this->type) {
             case self::TYPE_BASIC:
                 return array(
+                    'type'           => 'http_basic',
                     'accept_schemes' => array(self::TYPE_BASIC),
                     'realm'          => $this->realm,
                     'htpasswd'       => $this->htpasswd,
                 );
             case self::TYPE_DIGEST:
                 return array(
+                    'type'           => 'http_digest',
                     'accept_schemes' => array(self::TYPE_DIGEST),
                     'realm'          => $this->realm,
                     'htdigest'       => $this->htdigest,
@@ -116,6 +118,7 @@ class AuthenticationEntity
                 );
             case self::TYPE_OAUTH2:
                 return array(
+                    'type'        => 'oauth2',
                     'dsn'         => $this->dsn,
                     'username'    => $this->username,
                     'password'    => $this->password,

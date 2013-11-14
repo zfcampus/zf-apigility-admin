@@ -138,6 +138,7 @@ class AuthenticationModelTest extends TestCase
         $entity = $model->fetch();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
         $expected = array_merge(
+            array('type' => 'http_basic'),
             $globalSeedConfig['zf-mvc-auth']['authentication']['http'],
             $localSeedConfig['zf-mvc-auth']['authentication']['http']
         );
@@ -162,7 +163,7 @@ class AuthenticationModelTest extends TestCase
 
         // Ensure the entity returned from the update is what we expect
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
-        $expected = array_merge($toCreate, $newConfig);
+        $expected = array_merge(array('type' => 'http_basic'), $toCreate, $newConfig);
         $this->assertEquals($expected, $entity->getArrayCopy());
 
         // Ensure fetching the entity after an update will return what we expect
