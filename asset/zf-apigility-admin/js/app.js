@@ -212,10 +212,7 @@ module.controller(
         AuthenticationRepository.fetch({force: true})
             .then(function (authentication) {
                 var data = authentication.props;
-                console.log("Successfully fetched authentication");
-                console.log(data);
                 if (data.type == "http_basic") {
-                    console.log("Showing HTTP Basic authentication");
                     $scope.$apply(function () {
                         $scope.showSetupButtons             = false;
                         $scope.showHttpBasicAuthentication  = true;
@@ -226,7 +223,6 @@ module.controller(
                         $scope.oauth2                       = null;
                     });
                 } else if (data.type == "http_digest") {
-                    console.log("Showing HTTP Digest authentication");
                     $scope.$apply(function () {
                         $scope.showSetupButtons             = false;
                         $scope.showHttpDigestAuthentication = true;
@@ -238,7 +234,6 @@ module.controller(
                         $scope.oauth2                       = null;
                     });
                 } else if (data.type == "oauth2") {
-                    console.log("Showing OAuth2 authentication");
                     $scope.$apply(function () {
                         $scope.showSetupButtons             = false;
                         $scope.showOAuth2Authentication     = true;
