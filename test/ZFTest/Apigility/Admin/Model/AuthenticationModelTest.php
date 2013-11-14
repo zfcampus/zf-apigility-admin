@@ -215,9 +215,11 @@ class AuthenticationModelTest extends TestCase
 
         $local  = include($this->localConfigPath);
         $this->assertAuthenticationConfigEquals('oauth2', array(
-            'dsn'         => 'sqlite::memory:',
-            'username'    => 'me',
-            'password'    => 'too',
+            'db' => array(
+                'dsn'         => 'sqlite::memory:',
+                'username'    => 'me',
+                'password'    => 'too',
+            ),
         ), $local);
     }
 

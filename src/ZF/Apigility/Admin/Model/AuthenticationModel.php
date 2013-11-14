@@ -208,7 +208,7 @@ class AuthenticationModel
                 $key .= 'http';
                 break;
             case $entity->isOAuth2():
-                $key .= 'oauth2';
+                $key .= 'oauth2.db';
                 break;
         }
         return $key;
@@ -256,13 +256,13 @@ class AuthenticationModel
         }
 
         $localConfig = $this->localConfig->fetch(true);
-        if (!isset($localConfig['zf-mvc-auth']['authentication']['oauth2'])
-            || !is_array($localConfig['zf-mvc-auth']['authentication']['oauth2'])
+        if (!isset($localConfig['zf-mvc-auth']['authentication']['oauth2']['db'])
+            || !is_array($localConfig['zf-mvc-auth']['authentication']['oauth2']['db'])
         ) {
             return false;
         }
 
-        $oauth2Config = array_merge($oauth2Config, $localConfig['zf-mvc-auth']['authentication']['oauth2']);
+        $oauth2Config = array_merge($oauth2Config, $localConfig['zf-mvc-auth']['authentication']['oauth2']['db']);
 
         return $oauth2Config;
     }
