@@ -12,6 +12,7 @@ use AuthConfWithConfig;
 use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray;
+use ZF\Apigility\Admin\Model\AuthorizationEntity;
 use ZF\Apigility\Admin\Model\AuthorizationModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Configuration\ResourceFactory;
@@ -101,14 +102,39 @@ class AuthorizationModelTest extends TestCase
     {
         foreach ($config as $key => $value) {
             // Replace keys to match what the API is going to send back and forth
-            if (preg_match('/::(resource|collection)$/', $key)) {
-                $newKey = preg_replace('/(::)(resource|collection)$/', '$1__$2__', $key);
-                $config[$newKey] = $value;
-                unset($config[$key]);
-                continue;
+            if (isset($value['actions'])) {
+                foreach ($value['actions'] as $action => $privileges) {
+                    $newKey = sprintf('%s::%s', $key, $action);
+                    $config[$newKey] = $privileges;
+                }
             }
+            if (isset($value['resource'])) {
+                $newKey = sprintf('%s::__resource__', $key);
+                $config[$newKey] = $value['resource'];
+            }
+            if (isset($value['collection'])) {
+                $newKey = sprintf('%s::__collection__', $key);
+                $config[$newKey] = $value['collection'];
+            }
+            unset ($config[$key]);
         }
         return $config;
+    }
+
+    protected function mapEntityToConfig(AuthorizationEntity $entity)
+    {
+        $normalized = array();
+        foreach ($entity->getArrayCopy() as $spec => $privileges) {
+            preg_match('/^(?P<service>[^:]+)(::(?P<action>.*))?$/', $spec, $matches);
+            if (!isset($matches['action'])) {
+                $normalized[$matches['service']]['actions']['index'] = $privileges;
+            } elseif (in_array($matches['action'], array('collection', 'resource'))) {
+                $normalized[$matches['service']][$matches['action']] = $privileges;
+            } else {
+                $normalized[$matches['service']]['actions'][$matches['action']] = $privileges;
+            }
+        }
+        return $normalized;
     }
 
     public function testFetchReturnsEmptyAuthorizationEntityWhenNoServicesPresent()
@@ -186,7 +212,7 @@ class AuthorizationModelTest extends TestCase
         // Have the model fetch it
         $entity = $this->model->fetch();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthorizationEntity', $entity);
-        $this->assertEquals($config, $entity->getArrayCopy());
+        $this->assertEquals($config, $this->mapEntityToConfig($entity));
     }
 
     public function testCanUpdatePrivileges()
@@ -214,6 +240,9 @@ class AuthorizationModelTest extends TestCase
         // Test that the stored configuration has been updated as well
         $config = $this->resource->factory($this->module)->fetch(true);
         $config = $this->mapConfigToPayload($config['zf-mvc-auth']['authorization']);
-        $this->assertEquals($entity->getArrayCopy(), $config);
+
+        $expected = $this->mapEntityToConfig($entity);
+
+        $this->assertEquals($expected, $config);
     }
 }
