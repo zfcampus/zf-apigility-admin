@@ -66,24 +66,24 @@ class AuthenticationModelTest extends TestCase
         return new AuthenticationModel($globalConfig, $localConfig);
     }
 
-    public function assertAuthenticationConfigExists(array $config)
+    public function assertAuthenticationConfigExists($key, array $config)
     {
         $this->assertArrayHasKey('zf-mvc-auth', $config);
         $this->assertArrayHasKey('authentication', $config['zf-mvc-auth']);
-        $this->assertArrayHasKey('http', $config['zf-mvc-auth']['authentication']);
+        $this->assertArrayHasKey($key, $config['zf-mvc-auth']['authentication']);
     }
 
-    public function assertAuthenticationConfigEquals(array $expected, array $config)
+    public function assertAuthenticationConfigEquals($key, array $expected, array $config)
     {
-        $this->assertAuthenticationConfigExists($config);
-        $config = $config['zf-mvc-auth']['authentication']['http'];
+        $this->assertAuthenticationConfigExists($key, $config);
+        $config = $config['zf-mvc-auth']['authentication'][$key];
         $this->assertEquals($expected, $config);
     }
 
-    public function assertAuthenticationConfigContains(array $expected, array $config)
+    public function assertAuthenticationConfigContains($authKey, array $expected, array $config)
     {
-        $this->assertAuthenticationConfigExists($config);
-        $config = $config['zf-mvc-auth']['authentication']['http'];
+        $this->assertAuthenticationConfigExists($authKey, $config);
+        $config = $config['zf-mvc-auth']['authentication'][$authKey];
         foreach ($expected as $key => $value) {
             $this->assertArrayHasKey($key, $config);
             $this->assertEquals($value, $config[$key]);
@@ -102,13 +102,13 @@ class AuthenticationModelTest extends TestCase
         $model->create($toCreate);
 
         $global = include($this->globalConfigPath);
-        $this->assertAuthenticationConfigEquals(array(
+        $this->assertAuthenticationConfigEquals('http', array(
             'accept_schemes' => array('basic'),
             'realm'          => 'zendcon',
         ), $global);
 
         $local  = include($this->localConfigPath);
-        $this->assertAuthenticationConfigEquals(array(
+        $this->assertAuthenticationConfigEquals('http', array(
             'htpasswd'       => __DIR__ . '/htpasswd',
         ), $local);
     }
@@ -138,6 +138,7 @@ class AuthenticationModelTest extends TestCase
         $entity = $model->fetch();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
         $expected = array_merge(
+            array('type' => 'http_basic'),
             $globalSeedConfig['zf-mvc-auth']['authentication']['http'],
             $localSeedConfig['zf-mvc-auth']['authentication']['http']
         );
@@ -162,18 +163,18 @@ class AuthenticationModelTest extends TestCase
 
         // Ensure the entity returned from the update is what we expect
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
-        $expected = array_merge($toCreate, $newConfig);
+        $expected = array_merge(array('type' => 'http_basic'), $toCreate, $newConfig);
         $this->assertEquals($expected, $entity->getArrayCopy());
 
         // Ensure fetching the entity after an update will return what we expect
         $config = include $this->globalConfigPath;
-        $this->assertAuthenticationConfigEquals(array(
+        $this->assertAuthenticationConfigEquals('http', array(
             'accept_schemes' => array('basic'),
             'realm'          => 'api',
         ), $config);
 
         $config = include $this->localConfigPath;
-        $this->assertAuthenticationConfigEquals(array('htpasswd' => sys_get_temp_dir() . '/htpasswd'), $config);
+        $this->assertAuthenticationConfigEquals('http', array('htpasswd' => sys_get_temp_dir() . '/htpasswd'), $config);
     }
 
     public function testRemoveDeletesConfigurationFromBothLocalAndGlobalConfigFiles()
@@ -193,4 +194,53 @@ class AuthenticationModelTest extends TestCase
         $this->assertArrayNotHasKey('http', $local['zf-mvc-auth']['authentication']);
     }
 
+    public function testCreatingOAuth2ConfigurationWritesToEachConfigFile()
+    {
+        $toCreate = array(
+            'dsn'         => 'sqlite::memory:',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
+        );
+
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $global = include($this->globalConfigPath);
+        $this->assertArrayHasKey('router', $global);
+        $this->assertArrayHasKey('routes', $global['router']);
+        $this->assertArrayHasKey('oauth', $global['router']['routes']);
+        $this->assertArrayHasKey('options', $global['router']['routes']['oauth']);
+        $this->assertArrayHasKey('route', $global['router']['routes']['oauth']['options']);
+        $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
+
+        $local  = include($this->localConfigPath);
+        $this->assertAuthenticationConfigEquals('oauth2', array(
+            'db' => array(
+                'dsn'         => 'sqlite::memory:',
+                'username'    => 'me',
+                'password'    => 'too',
+            ),
+        ), $local);
+    }
+
+    public function testRemovingOAuth2ConfigurationRemovesConfigurationFromEachFile()
+    {
+        $toCreate = array(
+            'dsn'         => 'sqlite::memory:',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
+        );
+
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $model->remove();
+
+        $global = include $this->globalConfigPath;
+        $this->assertArrayNotHasKey('oauth', $global['router']['routes']);
+        $local = include $this->localConfigPath;
+        $this->assertArrayNotHasKey('http', $local['zf-mvc-auth']['authentication']);
+    }
 }

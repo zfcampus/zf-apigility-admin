@@ -2,47 +2,59 @@
 return array(
     'zf-mvc-auth' => array(
         'authorization' => array(
-            'AuthConfWithConfig\V1\Rest\Foo\Controller::resource' => array(
-                'GET' => false,
-                'POST' => false,
-                'PUT' => true,
-                'PATCH' => true,
-                'DELETE' => true,
+            'AuthConfWithConfig\V1\Rest\Foo\Controller' => array(
+                'resource' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PUT' => true,
+                    'PATCH' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PUT' => false,
+                    'PATCH' => false,
+                    'DELETE' => false,
+                ),
             ),
-            'AuthConfWithConfig\V1\Rest\Foo\Controller::collection' => array(
-                'GET' => false,
-                'POST' => true,
-                'PUT' => false,
-                'PATCH' => false,
-                'DELETE' => false,
+            'AuthConfWithConfig\V1\Rest\Bar\Controller' => array(
+                'resource' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PUT' => true,
+                    'PATCH' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PUT' => false,
+                    'PATCH' => false,
+                    'DELETE' => false,
+                ),
             ),
-            'AuthConfWithConfig\V1\Rest\Bar\Controller::resource' => array(
-                'GET' => false,
-                'POST' => false,
-                'PUT' => true,
-                'PATCH' => true,
-                'DELETE' => true,
+            'AuthConfWithConfig\V1\Rpc\Baz\Controller' => array(
+                'actions' => array(
+                    'baz' => array(
+                        'GET' => true,
+                        'POST' => true,
+                        'PUT' => false,
+                        'PATCH' => false,
+                        'DELETE' => false,
+                    ),
+                ),
             ),
-            'AuthConfWithConfig\V1\Rest\Bar\Controller::collection' => array(
-                'GET' => false,
-                'POST' => true,
-                'PUT' => false,
-                'PATCH' => false,
-                'DELETE' => false,
-            ),
-            'AuthConfWithConfig\V1\Rpc\Baz\Controller::baz' => array(
-                'GET' => true,
-                'POST' => true,
-                'PUT' => false,
-                'PATCH' => false,
-                'DELETE' => false,
-            ),
-            'AuthConfWithConfig\V1\Rpc\Bat\Controller::index' => array(
-                'GET' => true,
-                'POST' => false,
-                'PUT' => false,
-                'PATCH' => true,
-                'DELETE' => true,
+            'AuthConfWithConfig\V1\Rpc\Bat\Controller' => array(
+                'actions' => array(
+                    'index' => array(
+                        'GET' => true,
+                        'POST' => false,
+                        'PUT' => false,
+                        'PATCH' => true,
+                        'DELETE' => true,
+                    ),
+                ),
             ),
         ),
     ),

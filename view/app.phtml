@@ -2,25 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility/js/jquery.min.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility/js/bootstrap.min.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/lodash.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/q.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/URI.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/URITemplate.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/hyperagent.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/typeahead.min.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/angular.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/vendor/ng-tags-input.min.js') ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility/css/bootstrap.min.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility/css/main.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/main.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/ng-tags-input.min.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/bootstrap-glyphicons.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('/zf-apigility-admin/css/typeahead.css') ?>" />
+    <base href="<?php echo $this->basePath() ?>/" />
+    <script type="text/javascript" src="zf-apigility/js/jquery.min.js"></script>
+    <script type="text/javascript" src="zf-apigility/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/lodash.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/q.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/URI.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/URITemplate.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/hyperagent.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/typeahead.min.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/angular.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/angular-route.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/angular-flash.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/js/vendor/ng-tags-input.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="zf-apigility/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/css/ng-tags-input.min.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/css/bootstrap-glyphicons.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/css/typeahead.css" />
 </head>
-<body id="ng-app" ng-app="ag-admin" data-base-path="<?php echo $this->basePath() ?>">
-    <a class="sr-only" href="#content"> … </a>
+<body id="ng-app" ng-app="ag-admin" data-api-base-path="<?php echo preg_replace('/\/config$/', '', $this->url('zf-apigility-admin/api/config')) ?>">
+    <a class="sr-only" href="admin#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
         <div class="container">
             <div class="navbar-header">
@@ -37,7 +40,7 @@
         </div>
     </header>
 
-    <div class="ag-admin-module-navigation" ng-controller="ApiListController">
+    <div class="ag-admin-module-navigation" ng-controller="ApiListController" ng-init="refreshApiList();">
         <div class="container">
             <button ng-hide="showNewApiForm" ng-click="showNewApiForm = true" id="create-module-button" class="btn btn-sm btn-primary pull-right" title="Create New API" position="bottom" content="#create-api-form">
                 Create New API
@@ -45,7 +48,7 @@
             <span class="pull-left">APIs: </span>
             <ul class="nav nav-pills ag-admin-nav-pills">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
-                    <a href="#/api/{{ api.name }}/info" ng-bind="api.namespace"></a>
+                    <a ng-href="admin#/api/{{ api.name }}/v{{ api.versions[api.versions.length-1] }}/overview" ng-bind="api.namespace"></a>
                 </li>
             </ul>
         </div>
@@ -65,18 +68,39 @@
         <div class="container">
             <h1 ng-bind="pageTitle"></h1>
         </div>
+
     </div>
 
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <view-navigation></view-navigation>
+                <aside class="ag-sidebar" role="complementary">
+                    <div ng-show="!$root.routeParams.apiName">
+                        <ul class="nav ag-sidenav">
+                            <li ng-class="{active: ($root.routeParams.section == 'general-information')}"><a ng-href="admin#/global/information">General Information</a></li>
+                            <li ng-class="{active: ($root.routeParams.section == 'db-adapters')}"><a ng-href="admin#/global/db-adapters">Database Adapters</a></li>
+                            <li ng-class="{active: ($root.routeParams.section == 'authentication')}"><a ng-href="admin#/global/authentication">Authentication</a></li>
+                        </ul>
+                    </div>
+                    <div ng-show="$root.routeParams.apiName">
+                        <ul class="nav ag-sidenav">
+                            <li ng-class="{active: ($root.routeParams.section == 'overview')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
+                            <li ng-class="{active: ($root.routeParams.section == 'authorization')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/authorization">Authorization</a></li>
+                            <li ng-class="{active: ($root.routeParams.section == 'rest-services')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
+                            <li ng-class="{active: ($root.routeParams.section == 'rpc-services')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
+                        </ul>
+                    </div>
+                </aside>
             </div>
             <main class="col-md-9" role="main">
                 <h1 ng-bind="view.title"></h1>
                 <div id="content" ng-view></div>
             </main>
         </div>
+    </div>
+
+    <div flash-alert active-class="in" class="alert fade fade-out">
+        <span class="alert-message">{{flash.message}}</span>
     </div>
 
     <script type="text/javascript" src="<?php echo $this->basePath('/zf-apigility-admin/js/app.js') ?>"></script>

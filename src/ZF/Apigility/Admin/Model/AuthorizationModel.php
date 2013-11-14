@@ -60,9 +60,7 @@ class AuthorizationModel
     public function fetch($version = 1)
     {
         $allConfig = $this->configResource->fetch(true);
-        if (!isset($allConfig['zf-mvc-auth'])
-            || !isset($allConfig['zf-mvc-auth']['authorization'])
-        ) {
+        if (! isset($allConfig['zf-mvc-auth']['authorization'])) {
             // Determine existing services, and return defaults for them
             return $this->createDefaultPrivileges($version, $allConfig);
         }
@@ -72,8 +70,8 @@ class AuthorizationModel
         // Strip out any services that are not for the current $version
         $config = $this->filterServicesByVersion($config, $version);
 
-        // Ensure REST services are mapped correctly, and create entity
-        $config = $this->remapRestServiceNamesForPayload($config);
+        // Ensure services are mapped correctly, and create entity
+        $config = $this->remapServiceNamesForPayload($config);
         $entity = new AuthorizationEntity($config);
 
         // Determine if we have any services missing, and create default
@@ -92,8 +90,13 @@ class AuthorizationModel
      */
     public function update(array $privileges, $version = 1)
     {
-        $toStore = $this->remapRestServiceNamesForStorage($privileges);
-        $this->configResource->patchKey(array('zf-mvc-auth', 'authorization'), $toStore);
+        $toStore = array(
+            'zf-mvc-auth' => array(
+                'authorization' => $this->remapServiceNamesForStorage($privileges),
+            ),
+        );
+
+        $this->configResource->patch($toStore, true);
         return $this->fetch($version);
     }
 
@@ -213,41 +216,56 @@ class AuthorizationModel
     }
 
     /**
-     * Translate service names for REST services to match the payload expectations.
+     * Translate service names to match the payload expectations.
      *
      * @param array $config
      * @return array
      */
-    protected function remapRestServiceNamesForPayload(array $config)
+    protected function remapServiceNamesForPayload(array $config)
     {
-        foreach ($config as $key => $value) {
-            // Replace keys to match what the API is going to send back and forth
-            if (preg_match('/::(resource|collection)$/', $key)) {
-                $newKey = preg_replace('/(::)(resource|collection)$/', '$1__$2__', $key);
-                $config[$newKey] = $value;
-                unset($config[$key]);
-                continue;
+        foreach ($config as $service => $value) {
+            if (isset($value['actions'])) {
+                foreach ($value['actions'] as $action => $privileges) {
+                    $newKey = sprintf('%s::%s', $service, $action);
+                    $config[$newKey] = $privileges;
+                }
             }
+            if (isset($value['resource'])) {
+                $newKey = sprintf('%s::__resource__', $service);
+                $config[$newKey] = $value['resource'];
+            }
+            if (isset($value['collection'])) {
+                $newKey = sprintf('%s::__collection__', $service);
+                $config[$newKey] = $value['collection'];
+            }
+            unset($config[$service]);
         }
         return $config;
     }
 
     /**
-     * Translate service names for REST services to match the storage expectations.
+     * Translate service names to match the storage expectations.
      *
      * @param array $config
      * @return array
      */
-    protected function remapRestServiceNamesForStorage(array $config)
+    protected function remapServiceNamesForStorage(array $config)
     {
-        foreach ($config as $key => $value) {
+        foreach ($config as $serviceSpec => $privileges) {
             // Replace keys to match what the API is going to send back and forth
-            if (preg_match('/::__(resource|collection)__$/', $key)) {
-                $newKey = preg_replace('/(::)__(resource|collection)__$/', '$1$2', $key);
-                $config[$newKey] = $value;
-                unset($config[$key]);
+            if (!preg_match('/^(?P<service>[^:]+)::(?P<action>.*)$/', $serviceSpec, $matches)) {
+                // Invalid format; toss
+                unset($config[$serviceSpec]);
                 continue;
             }
+            if (preg_match('/^__(?P<type>collection|resource)__$/', $matches['action'], $actionMatches)) {
+                // REST collection or resource
+                $config[$matches['service']][$actionMatches['type']] = $privileges;
+            } else {
+                // RPC action
+                $config[$matches['service']]['actions'][$matches['action']] = $privileges;
+            }
+            unset($config[$serviceSpec]);
         }
         return $config;
     }
