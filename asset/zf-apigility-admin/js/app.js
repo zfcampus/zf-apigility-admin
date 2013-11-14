@@ -107,7 +107,7 @@ module.controller(
 
 module.controller(
     'DbAdapterController',
-    ['$scope', '$location', 'DbAdapterResource', function ($scope, $location, DbAdapterResource) {
+    ['$scope', '$location', 'flash', 'DbAdapterResource', function ($scope, $location, flash, DbAdapterResource) {
         $scope.dbAdapters = [];
         $scope.showNewDbAdapterForm = false;
 
@@ -145,6 +145,7 @@ module.controller(
                 charset      :  $scope.charset
             };
             DbAdapterResource.createNewAdapter(options).then(function (dbAdapter) {
+                flash.success = 'Database adapter created';
                 updateDbAdapters(true);
                 $scope.resetForm();
             });
@@ -162,24 +163,25 @@ module.controller(
                 charset  :  dbAdapter.charset
             };
             DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(function (dbAdapter) {
+                flash.success = 'Database adapter ' + dbAdapter.adapter_name + ' updated';
                 updateDbAdapters(true);
             });
         };
 
         $scope.removeDbAdapter = function (adapter_name) {
             DbAdapterResource.removeAdapter(adapter_name).then(function () {
+                flash.success = 'Database adapter ' + adapter_name + ' removed';
                 updateDbAdapters(true);
                 $scope.deleteDbAdapter = false;
             });
         };
-
 
     }]
 );
 
 module.controller(
     'AuthenticationController',
-    ['$scope', '$timeout', 'flash', 'AuthenticationRepository', function ($scope, $timeout, flash, AuthenticationRepository) {
+    ['$scope', 'flash', 'AuthenticationRepository', function ($scope, flash, AuthenticationRepository) {
 
     $scope.showSetupButtons                 = false;
     $scope.showHttpBasicAuthenticationForm  = false;
