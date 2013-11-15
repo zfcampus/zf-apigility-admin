@@ -66,3 +66,14 @@ div.alert {
   top: 120px;
   left: 45%;
 }
+table.ag thead {
+  background-color: #428bca;
+}
+table.ag thead th {
+  color: white;
+}
+table.ag th.action,
+table.ag td.action,
+table.table-striped.ag td.action {
+  background-color: #428bca;
+}
