@@ -388,6 +388,10 @@ module.controller(
                 $scope.apiAuthorizations[name][method] = $event.target.checked;
             });
         };
+
+        $scope.showTopSaveButton = function () {
+            return (Object.keys(apiAuthorizations).length > 10);
+        };
     }]
 );
 
