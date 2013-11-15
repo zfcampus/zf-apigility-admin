@@ -479,30 +479,6 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
-//    $rootScope.$on('api.updated', function (event, data) {
-//        $scope.$apply(function () {
-//            $scope.api = data.apiModel;
-//
-//            _($scope.api.rpcServices).forEach(function (rpcService) {
-//                var checkify = [];
-//                _.forEach(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], function (httpMethod) {
-//                    checkify.push({name: httpMethod, checked: _.contains(rpcService.http_methods, httpMethod)});
-//                });
-//                rpcService.http_methods = checkify;
-//
-//                rpcService.http_methods_view = _.chain(rpcService.http_methods)
-//                    .where({checked: true})
-//                    .pluck('name')
-//                    .valueOf()
-//                    .join(', ');
-//
-//                var myReg = /(([^\\]+)\\Controller)$/g;
-//                rpcService.controller_class = rpcService.controller_service_name.replace(myReg, "$2\\$2Controller");
-//            });
-//
-//        });
-//    });
-
     $scope.resetForm = function () {
         $scope.showNewRpcServiceForm = false;
         $scope.rpcServiceName = '';
@@ -859,7 +835,7 @@ module.filter('servicename', function () {
         switch (parts[1]) {
             case '__collection__': newServiceName += 'Collection)'; break;
             case '__resource__': newServiceName += 'Entity)'; break;
-            default: newServiceName += parts[1]; break;
+            default: newServiceName += parts[1] + ")"; break;
         }
         return newServiceName;
     }
