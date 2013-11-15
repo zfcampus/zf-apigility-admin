@@ -102,7 +102,7 @@ class AuthenticationModel
     {
         $configKeys = array(
             'zf-mvc-auth.authentication.http',
-            'zf-mvc-auth.authentication.oauth2',
+            'zf-oauth2.db',
             'router.routes.oauth',
         );
         foreach ($configKeys as $key) {
@@ -196,27 +196,6 @@ class AuthenticationModel
     }
 
     /**
-     * Determine the configuration key based on the entity
-     *
-     * @param AuthenticationEntity $entity
-     * @return string
-     */
-    protected function getConfigKey(AuthenticationEntity $entity)
-    {
-        $key = 'zf-mvc-auth.authentication.';
-        switch (true) {
-            case $entity->isBasic():
-            case $entity->isDigest():
-                $key .= 'http';
-                break;
-            case $entity->isOAuth2():
-                $key .= 'oauth2.db';
-                break;
-        }
-        return $key;
-    }
-
-    /**
      * Fetch HTTP Authentication configuration
      *
      * @param array $config
@@ -258,13 +237,13 @@ class AuthenticationModel
         }
 
         $localConfig = $this->localConfig->fetch(true);
-        if (!isset($localConfig['zf-mvc-auth']['authentication']['oauth2']['db'])
-            || !is_array($localConfig['zf-mvc-auth']['authentication']['oauth2']['db'])
+        if (!isset($localConfig['zf-oauth2']['db'])
+            || !is_array($localConfig['zf-oauth2']['db'])
         ) {
             return false;
         }
 
-        $oauth2Config = array_merge($oauth2Config, $localConfig['zf-mvc-auth']['authentication']['oauth2']['db']);
+        $oauth2Config = array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);
 
         return $oauth2Config;
     }
@@ -278,7 +257,7 @@ class AuthenticationModel
      */
     protected function patchHttpAuthConfig(AuthenticationEntity $entity, array $global, array $local)
     {
-        $key = $this->getConfigKey($entity);
+        $key = 'zf-mvc-auth.authentication.http';
         $this->globalConfig->patchKey($key, $global);
         $this->localConfig->patchKey($key, $local);
     }
@@ -297,7 +276,7 @@ class AuthenticationModel
             $this->globalConfig->patchKey('router.routes.oauth.options.route', $global['route_match']);
         }
 
-        $key = $this->getConfigKey($entity);
+        $key = 'zf-oauth2.db';
         $this->localConfig->patchKey($key, $local);
     }
 }

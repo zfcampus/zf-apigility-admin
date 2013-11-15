@@ -215,13 +215,13 @@ class AuthenticationModelTest extends TestCase
         $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
 
         $local  = include($this->localConfigPath);
-        $this->assertAuthenticationConfigEquals('oauth2', array(
+        $this->assertEquals(array(
             'db' => array(
                 'dsn'         => 'sqlite::memory:',
                 'username'    => 'me',
                 'password'    => 'too',
             ),
-        ), $local);
+        ), $local['zf-oauth2']);
     }
 
     public function testRemovingOAuth2ConfigurationRemovesConfigurationFromEachFile()
@@ -241,6 +241,6 @@ class AuthenticationModelTest extends TestCase
         $global = include $this->globalConfigPath;
         $this->assertArrayNotHasKey('oauth', $global['router']['routes']);
         $local = include $this->localConfigPath;
-        $this->assertArrayNotHasKey('http', $local['zf-mvc-auth']['authentication']);
+        $this->assertArrayNotHasKey('db', $local['zf-oauth2']);
     }
 }
