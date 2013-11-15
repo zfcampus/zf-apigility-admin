@@ -90,16 +90,16 @@ class RpcServiceModel
                 $data['selector'] = $contentNegotiationConfig['controllers'][$controllerServiceName];
             }
 
-            if (isset($contentNegotiationConfig['accept-whitelist'])
-                && isset($contentNegotiationConfig['accept-whitelist'][$controllerServiceName])
+            if (isset($contentNegotiationConfig['accept_whitelist'])
+                && isset($contentNegotiationConfig['accept_whitelist'][$controllerServiceName])
             ) {
-                $data['accept_whitelist'] = $contentNegotiationConfig['accept-whitelist'][$controllerServiceName];
+                $data['accept_whitelist'] = $contentNegotiationConfig['accept_whitelist'][$controllerServiceName];
             }
 
-            if (isset($contentNegotiationConfig['content-type-whitelist'])
-                && isset($contentNegotiationConfig['content-type-whitelist'][$controllerServiceName])
+            if (isset($contentNegotiationConfig['content_type_whitelist'])
+                && isset($contentNegotiationConfig['content_type_whitelist'][$controllerServiceName])
             ) {
-                $data['content_type_whitelist'] = $contentNegotiationConfig['content-type-whitelist'][$controllerServiceName];
+                $data['content_type_whitelist'] = $contentNegotiationConfig['content_type_whitelist'][$controllerServiceName];
             }
         }
 
@@ -356,13 +356,13 @@ class RpcServiceModel
             'controllers' => array(
                 $controllerService => $selector,
             ),
-            'accept-whitelist' => array(
+            'accept_whitelist' => array(
                 $controllerService => array(
                     'application/json',
                     'application/*+json',
                 ),
             ),
-            'content-type-whitelist' => array(
+            'content_type_whitelist' => array(
                 $controllerService => array(
                     'application/json',
                 ),
@@ -433,11 +433,11 @@ class RpcServiceModel
      */
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
     {
-        if (!in_array($headerType, array('accept', 'content-type'))) {
+        if (!in_array($headerType, array('accept', 'content_type'))) {
             /** @todo define exception in Rpc namespace */
             throw new PatchException('Invalid content negotiation whitelist type provided', 422);
         }
-        $headerType .= '-whitelist';
+        $headerType .= '_whitelist';
         $config = $this->configResource->fetch(true);
         $config['zf-content-negotiation'][$headerType][$controllerService] = $whitelist;
         $this->configResource->overwrite($config);
@@ -477,10 +477,10 @@ class RpcServiceModel
         $key = array('zf-content-negotiation', 'controllers', $serviceName);
         $this->configResource->deleteKey($key);
 
-        $key = array('zf-content-negotiation', 'accept-whitelist', $serviceName);
+        $key = array('zf-content-negotiation', 'accept_whitelist', $serviceName);
         $this->configResource->deleteKey($key);
 
-        $key = array('zf-content-negotiation', 'content-type-whitelist', $serviceName);
+        $key = array('zf-content-negotiation', 'content_type_whitelist', $serviceName);
         $this->configResource->deleteKey($key);
     }
 

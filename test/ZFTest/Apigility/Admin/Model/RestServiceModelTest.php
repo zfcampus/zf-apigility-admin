@@ -294,15 +294,15 @@ class RestServiceModelTest extends TestCase
             'BarConf\Rest\Foo\Controller' => $details->selector,
         ), $config['controllers']);
 
-        $this->assertArrayHasKey('accept-whitelist', $config);
+        $this->assertArrayHasKey('accept_whitelist', $config);
         $this->assertEquals(array(
             'BarConf\Rest\Foo\Controller' => $details->acceptWhitelist,
-        ), $config['accept-whitelist'], var_export($config, 1));
+        ), $config['accept_whitelist'], var_export($config, 1));
 
-        $this->assertArrayHasKey('content-type-whitelist', $config);
+        $this->assertArrayHasKey('content_type_whitelist', $config);
         $this->assertEquals(array(
             'BarConf\Rest\Foo\Controller' => $details->contentTypeWhitelist,
-        ), $config['content-type-whitelist'], var_export($config, 1));
+        ), $config['content_type_whitelist'], var_export($config, 1));
     }
 
     public function testCreateHalConfigWritesHalConfiguration()
@@ -447,13 +447,13 @@ class RestServiceModelTest extends TestCase
         $this->assertArrayHasKey($original->controllerServiceName, $config['controllers']);
         $this->assertEquals($options['selector'], $config['controllers'][$original->controllerServiceName]);
 
-        $this->assertArrayHasKey('accept-whitelist', $config);
-        $this->assertArrayHasKey($original->controllerServiceName, $config['accept-whitelist']);
-        $this->assertEquals($options['accept_whitelist'], $config['accept-whitelist'][$original->controllerServiceName]);
+        $this->assertArrayHasKey('accept_whitelist', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['accept_whitelist']);
+        $this->assertEquals($options['accept_whitelist'], $config['accept_whitelist'][$original->controllerServiceName]);
 
-        $this->assertArrayHasKey('content-type-whitelist', $config);
-        $this->assertArrayHasKey($original->controllerServiceName, $config['content-type-whitelist']);
-        $this->assertEquals($options['content_type_whitelist'], $config['content-type-whitelist'][$original->controllerServiceName]);
+        $this->assertArrayHasKey('content_type_whitelist', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['content_type_whitelist']);
+        $this->assertEquals($options['content_type_whitelist'], $config['content_type_whitelist'][$original->controllerServiceName]);
     }
 
     public function testUpdateServiceReturnsUpdatedRepresentation()

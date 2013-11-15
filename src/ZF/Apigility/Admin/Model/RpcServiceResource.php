@@ -206,7 +206,7 @@ class RpcServiceResource extends AbstractResourceListener
                         $model->updateContentNegotiationWhitelist($id, 'accept', $value);
                         break;
                     case 'content_type_whitelist':
-                        $model->updateContentNegotiationWhitelist($id, 'content-type', $value);
+                        $model->updateContentNegotiationWhitelist($id, 'content_type', $value);
                         break;
                     default:
                         break;
