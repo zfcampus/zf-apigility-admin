@@ -2,6 +2,7 @@
 @agBlue: #0c0c56;
 @agLightBlue: #4B70A2;
 @agGreen: #004000;
+@agBlueHighlight: #428BCA;
 
 .ag-admin-navbar-collapse {
   font-size: 1.1em;
@@ -90,4 +91,15 @@ div.alert {
   position: fixed;
   top: 120px;
   left: 45%;
+}
+
+table.ag thead {
+    background-color: @agBlueHighlight;
+    th {
+        color: white;
+    }
+}
+
+table.ag th.action, table.ag td.action, table.table-striped.ag td.action {
+    background-color: @agBlueHighlight;
 }
