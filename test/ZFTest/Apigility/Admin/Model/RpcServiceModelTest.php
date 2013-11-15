@@ -221,13 +221,13 @@ class RpcServiceModelTest extends TestCase
                 'controllers' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => $expected,
                 ),
-                'accept-whitelist' => array(
+                'accept_whitelist' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                         'application/*+json',
                     ),
                 ),
-                'content-type-whitelist' => array(
+                'content_type_whitelist' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                     ),
@@ -283,13 +283,13 @@ class RpcServiceModelTest extends TestCase
                 'controllers' => array(
                     'FooConf\V1\Rpc\HelloWorld\Controller' => $selector,
                 ),
-                'accept-whitelist' => array(
+                'accept_whitelist' => array(
                     'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                         'application/*+json',
                     ),
                 ),
-                'content-type-whitelist' => array(
+                'content_type_whitelist' => array(
                     'FooConf\V1\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                     ),
@@ -373,13 +373,13 @@ class RpcServiceModelTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $this->writer->toFile($configFile, array(
             'zf-content-negotiation' => array(
-                'accept-whitelist' => array(
+                'accept_whitelist' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                         'application/*+json',
                     ),
                 ),
-                'content-type-whitelist' => array(
+                'content_type_whitelist' => array(
                     'FooConf\Rpc\HelloWorld\Controller' => array(
                         'application/json',
                     ),
@@ -387,15 +387,15 @@ class RpcServiceModelTest extends TestCase
             ),
         ));
         $this->assertTrue($this->codeRpc->updateContentNegotiationWhitelist('FooConf\Rpc\HelloWorld\Controller', 'accept', array('application/xml', 'application/*+xml')));
-        $this->assertTrue($this->codeRpc->updateContentNegotiationWhitelist('FooConf\Rpc\HelloWorld\Controller', 'content-type', array('application/xml')));
+        $this->assertTrue($this->codeRpc->updateContentNegotiationWhitelist('FooConf\Rpc\HelloWorld\Controller', 'content_type', array('application/xml')));
         $config = include $configFile;
         $this->assertEquals(array(
             'application/xml',
             'application/*+xml',
-        ), $config['zf-content-negotiation']['accept-whitelist']['FooConf\Rpc\HelloWorld\Controller']);
+        ), $config['zf-content-negotiation']['accept_whitelist']['FooConf\Rpc\HelloWorld\Controller']);
         $this->assertEquals(array(
             'application/xml',
-        ), $config['zf-content-negotiation']['content-type-whitelist']['FooConf\Rpc\HelloWorld\Controller']);
+        ), $config['zf-content-negotiation']['content_type_whitelist']['FooConf\Rpc\HelloWorld\Controller']);
     }
 
     public function testDeleteServiceRemovesExpectedConfigurationElements()
