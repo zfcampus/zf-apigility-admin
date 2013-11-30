@@ -258,7 +258,7 @@ module.controller(
                 // controller scope
                 $scope.api = api;
                 $scope.currentApiVersion = ApisResource.currentApiVersion;
-                $scope.defaultApiVersion = $scope.currentApiVersion;
+                $scope.defaultApiVersion = api.default_version;
                 $scope.section = $routeParams.section;
 
                 // root scope page elements
