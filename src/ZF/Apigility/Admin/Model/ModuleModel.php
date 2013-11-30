@@ -15,6 +15,7 @@ use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\ApigilityModuleInterface;
+use ZF\Configuration\Module;
 
 class ModuleModel
 {
@@ -235,13 +236,26 @@ EOD;
             $versions = $this->getVersionsByModule($moduleName, $module);
             $entity   = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
             $entity->exchangeArray(array(
-                'versions' => $versions,
+                'versions'        => $versions,
+                'default_version' => $this->getModuleDefaultVersion($module),
             ));
 
             $this->modules[$entity->getName()] = $entity;
         }
 
         return $this->modules;
+    }
+
+    /**
+     * Retrieves the configured default version for the specified module.
+     *
+     * @param  ApigilityModuleInterface $module
+     * @return int
+     */
+    protected function getModuleDefaultVersion(ApigilityModuleInterface $module)
+    {
+        $config = $module->getConfig();
+        return isset($config['zf-versioning']['default-version']) ? $config['zf-versioning']['default-version'] : 1;
     }
 
     /**
