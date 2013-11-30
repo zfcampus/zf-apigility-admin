@@ -253,6 +253,19 @@ module.controller(
         );
     };
 
+        ApiRepository.setApiModel($routeParams.apiName, null, true).then(function (api) {
+            $scope.$apply(function () {
+                // controller scope
+                $scope.api = api;
+                $scope.currentApiVersion = ApisResource.currentApiVersion;
+                $scope.defaultApiVersion = $scope.currentApiVersion;
+                $scope.section = $routeParams.section;
+
+                // root scope page elements
+                $rootScope.pageTitle = api.namespace;
+                $rootScope.pageDescription = 'tbd';
+            });
+
     var createAuthentication = function (options) {
         AuthenticationRepository.createAuthentication(options).then(function (authentication) {
             flash.success = 'Authentication created';
@@ -309,6 +322,12 @@ module.controller(
             nonce_timeout  : $scope.nonce_timeout
         };
         createAuthentication(options);
+    };
+
+    $scope.setDefaultApiVersion = function () {
+        ApisResource.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
+            $scope.defaultApiVersion = data.version;
+        });
     };
 
     $scope.createOAuth2Authentication = function () {
@@ -540,6 +559,7 @@ module.controller(
         ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
             $scope.api = api;
             $scope.currentVersion = api.version;
+            $scope.defaultApiVersion = $scope.currentVersion;
         });
 
         $scope.createNewApiVersion = function () {
@@ -790,6 +810,13 @@ module.factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', 
         return $http.delete(dbAdapterApiPath + '/' + encodeURIComponent(name))
             .then(function (response) {
                 return true;
+            });
+    };
+
+    resource.setDefaultApiVersion = function (apiName, defaultApiVersion) {
+        return $http({method: 'patch', url: '/admin/api/default-version', data: {module: apiName, version: defaultApiVersion}})
+            .then(function (response) {
+                return response.data;
             });
     };
 

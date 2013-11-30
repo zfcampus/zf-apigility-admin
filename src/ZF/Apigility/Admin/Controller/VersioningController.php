@@ -48,7 +48,7 @@ class VersioningController extends AbstractActionController
             );
         }
     }
- 
+
     public function versioningAction()
     {
         $request = $this->getRequest();
