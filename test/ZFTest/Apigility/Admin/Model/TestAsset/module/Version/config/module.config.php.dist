@@ -138,6 +138,9 @@ return array (
             ),
         ),
     ),
+    'zf-versioning' => array (
+        'default-version' => 1,
+    ),
     'zf-apigility' => array (
         'db-connected' => array (
             'Version\\V1\\Rest\\Message\\MessageResource' => array (

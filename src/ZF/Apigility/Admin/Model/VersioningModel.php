@@ -96,6 +96,29 @@ class VersioningModel
     }
 
     /**
+     * Updates the default version of a module that will be used if no version is
+     * specified by the API consumer.
+     *
+     * @param  integer $defaultVersion
+     * @return boolean
+     */
+    public function setDefaultVersion($defaultVersion)
+    {
+        $defaultVersion = (int) $defaultVersion;
+
+        $this->configResource->patch(array(
+            'zf-versioning' => array(
+                'default-version' => $defaultVersion
+            )
+        ), true);
+
+        $config = $this->configResource->fetch(true);
+
+        return isset($config['zf-versioning']['default-version'])
+            && $config['zf-versioning']['default-version'] === $defaultVersion;
+    }
+
+    /**
      * Copy file and folder recursively
      *
      * @param string $source

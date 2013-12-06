@@ -264,4 +264,33 @@ class ModuleModelTest extends TestCase
             $this->assertTrue($module->isVendor());
         }
     }
+
+    public function testDefaultApiVersionIsSetProperly()
+    {
+        $modules = array(
+            'Test\Bar' => new Test\Bar\Module(),
+            'Test\Foo' => new Test\Foo\Module(),
+        );
+        $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+                              ->disableOriginalConstructor()
+                              ->getMock();
+        $moduleManager->expects($this->any())
+                      ->method('getLoadedModules')
+                      ->will($this->returnValue($modules));
+
+        $model = new ModuleModel($moduleManager, array(), array());
+
+        $modules = $model->getModules();
+
+        $this->assertSame(
+            1,
+            $modules[0]->getDefaultVersion(),
+            'Did not default to version 1 as the default version for unconfigured default version of Test\Bar!'
+        );
+        $this->assertSame(
+            123,
+            $modules[1]->getDefaultVersion(),
+            'Did not read configured default version 123 for Test\Foo!'
+        );
+    }
 }
