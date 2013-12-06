@@ -100,6 +100,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'default-version' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/default-version',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Versioning',
+                                        'action'     => 'defaultVersion',
+                                    ),
+                                ),
+                            ),
                             'module' => array(
                                 'type' => 'segment',
                                 'options' => array(

@@ -12,6 +12,11 @@ use ReflectionClass;
 class ModuleEntity
 {
     /**
+     * @var int
+     */
+    protected $defaultVersion = 1;
+
+    /**
      * @var string
      */
     protected $name;
@@ -62,6 +67,14 @@ class ModuleEntity
         $this->restServices = $restServices;
         $this->rpcServices  = $rpcServices;
         $this->isVendor     = is_bool($isVendor) ? $isVendor : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultVersion()
+    {
+        return $this->defaultVersion;
     }
 
     /**
@@ -173,6 +186,9 @@ class ModuleEntity
                     }
                     $this->versions = $value;
                     break;
+                case 'default_version':
+                    $this->defaultVersion = (int) $value;
+                    break;
                 default:
                     break;
             }
@@ -187,12 +203,13 @@ class ModuleEntity
     public function getArrayCopy()
     {
         return array(
-            'name'      => $this->name,
-            'namespace' => $this->namespace,
-            'is_vendor' => $this->isVendor(),
-            'rest'      => $this->getRestServices(),
-            'rpc'       => $this->getRpcServices(),
-            'versions'  => $this->versions,
+            'name'            => $this->name,
+            'namespace'       => $this->namespace,
+            'is_vendor'       => $this->isVendor(),
+            'rest'            => $this->getRestServices(),
+            'rpc'             => $this->getRpcServices(),
+            'versions'        => $this->versions,
+            'default_version' => $this->defaultVersion,
         );
     }
 

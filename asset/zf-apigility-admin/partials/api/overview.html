@@ -1,4 +1,15 @@
 <ng-include src="'zf-apigility-admin/partials/api/version.html'"></ng-include>
+
+<h4>Current Default API Version</h4>
+<div>
+    <label for="default-api-version">Default Version:</label>
+    <select
+        id="default-api-version"
+        ng-model="defaultApiVersion"
+        ng-options="ver for ver in api.versions"
+        ng-change="setDefaultApiVersion()"></select>
+</div>
+
 <h4>REST services:</h4>
 <table class="table table-striped">
     <tr ng-repeat="restService in api.restServices">

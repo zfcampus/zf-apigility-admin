@@ -184,4 +184,15 @@ class VersioningModelTest extends TestCase
             $this->assertEquals($originalAuthorization[$serviceName], $updatedAuthorization[$newServiceName]);
         }
     }
+
+    public function testSettingTheApiDefaultVersion()
+    {
+        $config = include $this->moduleConfigFile;
+        $this->assertSame(1, $config['zf-versioning']['default_version']);
+
+        $this->assertTrue($this->model->setDefaultVersion(1337));
+
+        $newConfig = include $this->moduleConfigFile;
+        $this->assertSame(1337, $newConfig['zf-versioning']['default_version']);
+    }
 }

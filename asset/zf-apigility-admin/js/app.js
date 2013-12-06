@@ -360,8 +360,16 @@ module.controller(
     fetchAuthenticationDetails(true);
 }]);
 
-module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'api', function ($http, $rootScope, $scope, api) {
+module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'flash', 'api', 'ApiRepository', function ($http, $rootScope, $scope, flash, api, ApiRepository) {
     $scope.api = api;
+    $scope.defaultApiVersion = api.default_version;
+    $scope.setDefaultApiVersion = function () {
+        flash.info = 'Setting the default API version to ' + $scope.defaultApiVersion;
+        ApiRepository.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
+            flash.success = 'Default API version updated';
+            $scope.defaultApiVersion = data.version;
+        });
+    };
 }]);
 
 module.controller(
@@ -433,6 +441,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
             $timeout(function () {
                 ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
+                    $scope.currentVersion = api.currentVersion;
                 });
             }, 500);
             $scope.showNewRestServiceForm = false;
@@ -540,6 +549,7 @@ module.controller(
         ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
             $scope.api = api;
             $scope.currentVersion = api.version;
+            $scope.defaultApiVersion = api.default_version;
         });
 
         $scope.createNewApiVersion = function () {
@@ -549,6 +559,14 @@ module.controller(
                 $timeout(function () {
                     $location.path('/api/' + $scope.api.name + '/v' + data.version + '/overview');
                 }, 500);
+            });
+        };
+
+        $scope.setDefaultApiVersion = function () {
+            flash.info = 'Setting the default API version to ' + $scope.defaultApiVersion;
+            ApiRepository.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
+                flash.success = 'Default API version updated';
+                $scope.defaultApiVersion = data.version;
             });
         };
 
@@ -717,6 +735,13 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
 
         createNewVersion: function (apiName) {
             return $http({method: 'patch', url: apiBasePath + '/versioning', data: {module: apiName}})
+                .then(function (response) {
+                    return response.data;
+                });
+        },
+
+        setDefaultApiVersion: function (apiName, defaultApiVersion) {
+            return $http({method: 'patch', url: '/admin/api/default-version', data: {module: apiName, version: defaultApiVersion}})
                 .then(function (response) {
                     return response.data;
                 });

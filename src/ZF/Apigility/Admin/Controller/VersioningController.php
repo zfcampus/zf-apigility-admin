@@ -21,6 +21,34 @@ class VersioningController extends AbstractActionController
         $this->modelFactory = $modelFactory;
     }
 
+    public function defaultVersionAction()
+    {
+        $module = $this->bodyParam('module', false);
+        if (!$module) {
+            return new ApiProblemModel(
+                new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+            );
+        }
+
+        $version = $this->bodyParam('version', false);
+
+        if (!$version || !is_numeric($version)) {
+            return new ApiProblemModel(
+                new ApiProblem(422, 'Missing or invalid version', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+            );
+        }
+
+        $model = $this->modelFactory->factory($module);
+
+        if ($model->setDefaultVersion($version)) {
+            return array('success' => true, 'version' => $version);
+        } else {
+            return new ApiProblemModel(
+                new ApiProblem(500, 'An unexpected error occurred while attempting to set the default version')
+            );
+        }
+    }
+
     public function versioningAction()
     {
         $request = $this->getRequest();
