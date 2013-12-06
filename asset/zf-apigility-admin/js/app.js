@@ -808,7 +808,7 @@ module.factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', 
             });
     };
 
-   return resource;
+    return resource;
 }]);
 
 module.factory(
