@@ -114,8 +114,8 @@ class VersioningModel
 
         $config = $this->configResource->fetch(true);
 
-        return isset($config['zf-versioning']['default-version']) &&
-            $config['zf-versioning']['default-version'] === $defaultVersion;
+        return isset($config['zf-versioning']['default-version'])
+            && $config['zf-versioning']['default-version'] === $defaultVersion;
     }
 
     /**
