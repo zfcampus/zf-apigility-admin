@@ -360,8 +360,16 @@ module.controller(
     fetchAuthenticationDetails(true);
 }]);
 
-module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'api', function ($http, $rootScope, $scope, api) {
+module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'flash', 'api', 'ApiRepository', function ($http, $rootScope, $scope, flash, api, ApiRepository) {
     $scope.api = api;
+    $scope.defaultApiVersion = api.default_version;
+    $scope.setDefaultApiVersion = function () {
+        flash.info = 'Setting the default API version to ' + $scope.defaultApiVersion;
+        ApiRepository.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
+            flash.success = 'Default API version updated';
+            $scope.defaultApiVersion = data.version;
+        });
+    };
 }]);
 
 module.controller(
@@ -555,7 +563,9 @@ module.controller(
         };
 
         $scope.setDefaultApiVersion = function () {
+            flash.info = 'Setting the default API version to ' + $scope.defaultApiVersion;
             ApiRepository.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
+                flash.success = 'Default API version updated';
                 $scope.defaultApiVersion = data.version;
             });
         };

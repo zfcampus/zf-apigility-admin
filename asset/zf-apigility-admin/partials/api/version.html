@@ -5,11 +5,6 @@
               ng-change="changeVersion()"></select>
   </div>
   <div>
-      <label for="default-api-version">Default Version:</label>
-      <select id="default-api-version" ng-model="defaultApiVersion" ng-options="ver for ver in api.versions"
-              ng-change="setDefaultApiVersion()"></select>
-  </div>
-  <div>
     <button class="btn btn-primary btn-sm" ng-click="createNewApiVersion()">Create New Version</button>
   </div>
 </div>
