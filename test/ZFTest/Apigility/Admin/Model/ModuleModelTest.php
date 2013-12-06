@@ -179,6 +179,21 @@ class ModuleModelTest extends TestCase
         return true;
     }
 
+    /**
+     * @group 22
+     */
+    public function testReturnFalseWhenTryingToCreateAModuleThatAlreadyExistsInConfiguration()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+
+        mkdir("$modulePath/module", 0777, true);
+        mkdir("$modulePath/config", 0777, true);
+        file_put_contents("$modulePath/config/application.config.php", '<' . "?php return array(\n    'modules' => array(\n        'Foo',\n    )\n);");
+
+        $this->assertFalse($this->model->createModule($module, $modulePath));
+    }
+
     public function testUpdateExistingApiModule()
     {
         $module = 'ZFTest\Apigility\Admin\Model\TestAsset\Bar';

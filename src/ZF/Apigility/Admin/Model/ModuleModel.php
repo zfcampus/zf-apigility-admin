@@ -115,8 +115,18 @@ class ModuleModel
      */
     public function createModule($module, $path = '.')
     {
+        $application = require "$path/config/application.config.php";
+        if (is_array($application)
+            && isset($application['modules'])
+            && in_array($module, $application['modules'])
+        ) {
+            // Module already exists in configuration
+            return false;
+        }
+
         $modulePath = sprintf('%s/module/%s', $path, $module);
         if (file_exists($modulePath)) {
+            // Module already exists on this path
             return false;
 
         }
@@ -149,7 +159,6 @@ class ModuleModel
         }
 
         // Add the module in application.config.php
-        $application = require "$path/config/application.config.php";
         if (isset($application['modules']) && !in_array($module, $application['modules'])) {
             $application['modules'][] = $module;
             copy ("$path/config/application.config.php", "$path/config/application.config.old");
