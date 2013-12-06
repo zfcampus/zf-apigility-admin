@@ -33,6 +33,8 @@ class RestServiceEntity
 
     protected $entityClass;
 
+    protected $hydratorName = 'ArraySerializable';
+
     protected $identifierName;
 
     protected $module;
@@ -108,6 +110,9 @@ class RestServiceEntity
                 case 'entityclass':
                     $this->entityClass = $value;
                     break;
+                case 'hydratorname':
+                    $this->hydratorName = $value;
+                    break;
                 case 'identifiername':
                     $this->identifierName = $value;
                     break;
@@ -151,6 +156,7 @@ class RestServiceEntity
             'controller_service_name'    => $this->controllerServiceName,
             'entity_class'               => $this->entityClass,
             'identifier_name'            => $this->identifierName,
+            'hydrator_name'              => $this->hydratorName,
             'module'                     => $this->module,
             'page_size'                  => $this->pageSize,
             'page_size_param'            => $this->pageSizeParam,
