@@ -253,19 +253,6 @@ module.controller(
         );
     };
 
-        ApiRepository.setApiModel($routeParams.apiName, null, true).then(function (api) {
-            $scope.$apply(function () {
-                // controller scope
-                $scope.api = api;
-                $scope.currentApiVersion = ApisResource.currentApiVersion;
-                $scope.defaultApiVersion = api.default_version;
-                $scope.section = $routeParams.section;
-
-                // root scope page elements
-                $rootScope.pageTitle = api.namespace;
-                $rootScope.pageDescription = 'tbd';
-            });
-
     var createAuthentication = function (options) {
         AuthenticationRepository.createAuthentication(options).then(function (authentication) {
             flash.success = 'Authentication created';
@@ -322,12 +309,6 @@ module.controller(
             nonce_timeout  : $scope.nonce_timeout
         };
         createAuthentication(options);
-    };
-
-    $scope.setDefaultApiVersion = function () {
-        ApisResource.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
-            $scope.defaultApiVersion = data.version;
-        });
     };
 
     $scope.createOAuth2Authentication = function () {
@@ -452,6 +433,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
             $timeout(function () {
                 ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
+                    $scope.currentVersion = api.currentVersion;
                 });
             }, 500);
             $scope.showNewRestServiceForm = false;
@@ -559,7 +541,7 @@ module.controller(
         ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
             $scope.api = api;
             $scope.currentVersion = api.version;
-            $scope.defaultApiVersion = $scope.currentVersion;
+            $scope.defaultApiVersion = api.default_version;
         });
 
         $scope.createNewApiVersion = function () {
@@ -569,6 +551,12 @@ module.controller(
                 $timeout(function () {
                     $location.path('/api/' + $scope.api.name + '/v' + data.version + '/overview');
                 }, 500);
+            });
+        };
+
+        $scope.setDefaultApiVersion = function () {
+            ApiRepository.setDefaultApiVersion($scope.api.name, $scope.defaultApiVersion).then(function (data) {
+                $scope.defaultApiVersion = data.version;
             });
         };
 
@@ -740,6 +728,13 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                 .then(function (response) {
                     return response.data;
                 });
+        },
+
+        setDefaultApiVersion: function (apiName, defaultApiVersion) {
+            return $http({method: 'patch', url: '/admin/api/default-version', data: {module: apiName, version: defaultApiVersion}})
+                .then(function (response) {
+                    return response.data;
+                });
         }
     };
 
@@ -813,14 +808,7 @@ module.factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', 
             });
     };
 
-    resource.setDefaultApiVersion = function (apiName, defaultApiVersion) {
-        return $http({method: 'patch', url: '/admin/api/default-version', data: {module: apiName, version: defaultApiVersion}})
-            .then(function (response) {
-                return response.data;
-            });
-    };
-
-    return resource;
+   return resource;
 }]);
 
 module.factory(
