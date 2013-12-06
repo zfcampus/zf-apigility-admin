@@ -319,6 +319,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals(array(
             'identifier_name' => $details->identifierName,
             'route_name'      => 'bar-conf.rest.foo',
+            'hydrator'        => 'ArraySerializable',
         ), $config['BarConf\Rest\Foo\FooEntity']);
 
         $this->assertArrayHasKey('BarConf\Rest\Foo\FooCollection', $config);
