@@ -262,7 +262,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
         $resourceClass     = ($details->resourceClass)         ? $details->resourceClass         : $this->createResourceClass($resourceName);
         $collectionClass   = ($details->collectionClass)       ? $details->collectionClass       : $this->createCollectionClass($resourceName);
-        $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($resourceName);
+        $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($resourceName, 'entity', $details);
         $module            = ($details->module)                ? $details->module                : $this->module;
 
         $entity->exchangeArray(array(
@@ -416,7 +416,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * @param  string $template Which template to use; defaults to 'entity'
      * @return string The name of the newly created entity class
      */
-    public function createEntityClass($resourceName, $template = 'entity')
+    public function createEntityClass($resourceName, $template = 'entity', $details = null)
     {
         $module     = $this->module;
         $srcPath    = $this->getSourcePath($resourceName);
@@ -436,6 +436,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'resource'  => $resourceName,
             'classname' => $className,
             'version'   => $this->moduleEntity->getLatestVersion(),
+            'details'   => $details,
         ));
         if (!$this->createClassFile($view, $template, $classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -633,7 +634,7 @@ class RestServiceModel implements EventManagerAwareInterface
                 'is_collection'   => true,
             ),
         )));
-        if (isset($details->hydratorName)) {
+        if (isset($details->hydratorName) && $details->hydratorName) {
             $config['zf-hal']['metadata_map'][$entityClass]['hydrator'] = $details->hydratorName;
         }
         $this->configResource->patch($config, true);
