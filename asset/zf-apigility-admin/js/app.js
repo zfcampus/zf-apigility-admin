@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -395,7 +395,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, ApiRepository, api, dbAdapters) {
 
     $scope.api = api;
 
@@ -472,7 +472,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
             .then(function (data) {
                 $scope.filename = className + '.php';
                 $scope.classType = classType + ' Class';
-                $scope.sourceCode = data.source;
+                $scope.sourceCode = $sce.trustAsHtml(data.source);
             });
     };
 }]);
