@@ -276,7 +276,12 @@ class AuthenticationModel
             $this->globalConfig->patchKey('router.routes.oauth.options.route', $global['route_match']);
         }
 
-        $key = 'zf-oauth2.db';
-        $this->localConfig->patchKey($key, $local);
+        $toSet = array(
+            'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
+            'db'      => $local,
+        );
+
+        $key = 'zf-oauth2';
+        $this->localConfig->patchKey($key, $toSet);
     }
 }

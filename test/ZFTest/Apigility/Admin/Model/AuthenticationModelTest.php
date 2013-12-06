@@ -216,6 +216,7 @@ class AuthenticationModelTest extends TestCase
 
         $local  = include($this->localConfigPath);
         $this->assertEquals(array(
+            'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
             'db' => array(
                 'dsn'         => 'sqlite::memory:',
                 'username'    => 'me',
