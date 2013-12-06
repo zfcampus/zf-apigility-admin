@@ -158,7 +158,7 @@ class Module
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
                     || !$services->has('ZF\Apigility\Admin\Model\ModuleModel')
                     || !$services->has('SharedEventManager')
-                ) {;
+                ) {
                     throw new ServiceNotCreatedException(
                         'ZF\Apigility\Admin\Model\RestServiceModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
