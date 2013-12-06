@@ -188,11 +188,11 @@ class VersioningModelTest extends TestCase
     public function testSettingTheApiDefaultVersion()
     {
         $config = include $this->moduleConfigFile;
-        $this->assertSame(1, $config['zf-versioning']['default-version']);
+        $this->assertSame(1, $config['zf-versioning']['default_version']);
 
         $this->assertTrue($this->model->setDefaultVersion(1337));
 
         $newConfig = include $this->moduleConfigFile;
-        $this->assertSame(1337, $newConfig['zf-versioning']['default-version']);
+        $this->assertSame(1337, $newConfig['zf-versioning']['default_version']);
     }
 }
