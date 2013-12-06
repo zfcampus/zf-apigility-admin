@@ -85,7 +85,7 @@ class AuthenticationModel
             case $current->isDigest():
                 $this->patchHttpAuthConfig($current, $global, $local);
                 break;
-            case $entity->isOAuth2():
+            case $current->isOAuth2():
                 $this->patchOAuth2Config($current, $global, $local);
                 break;
         }
