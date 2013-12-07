@@ -263,6 +263,10 @@ EOD;
      */
     protected function getModuleDefaultVersion(ApigilityModuleInterface $module)
     {
+        if (! method_exists($module, 'getConfig')) {
+            return 1;
+        }
+
         $config = $module->getConfig();
         return isset($config['zf-versioning']['default_version']) ? $config['zf-versioning']['default_version'] : 1;
     }

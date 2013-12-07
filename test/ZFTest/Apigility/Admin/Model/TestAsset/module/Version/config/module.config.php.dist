@@ -139,7 +139,7 @@ return array (
         ),
     ),
     'zf-versioning' => array (
-        'default-version' => 1,
+        'default_version' => 1,
     ),
     'zf-apigility' => array (
         'db-connected' => array (

@@ -10,7 +10,7 @@ class Module implements ApigilityModuleInterface
     {
         return array(
             'zf-versioning' => array(
-                'default-version' => 123,
+                'default_version' => 123,
             ),
         );
     }

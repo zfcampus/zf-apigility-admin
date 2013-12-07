@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZFTest;
+namespace ZFTest\Apigility\Admin;
 
 use Zend\Loader\AutoloaderFactory;
 use RuntimeException;
@@ -49,8 +49,8 @@ class Bootstrap
                 'Zend\Loader\StandardAutoloader' => array(
                     'autoregister_zf' => true,
                     'namespaces' => array(
-                        'ZF\Apigility\Admin' => __DIR__ . '/../src/ZF/Apigility\Admin/',
-                        __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
+                        'ZF\Apigility\Admin' => __DIR__ . '/../src/ZF/Apigility/Admin/',
+                        __NAMESPACE__ => __DIR__ . '/ZFTest/Apigility/Admin/',
                         'Test' => __DIR__ . '/../vendor/Test/',
                     ),
                 ),
