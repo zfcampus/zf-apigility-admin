@@ -14,6 +14,7 @@ use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Resource;
 use ZF\Hal\View\HalJsonModel;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 
 class Module
 {
