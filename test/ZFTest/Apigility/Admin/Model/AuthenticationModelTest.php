@@ -241,7 +241,9 @@ class AuthenticationModelTest extends TestCase
 
         $global = include $this->globalConfigPath;
         $this->assertArrayNotHasKey('oauth', $global['router']['routes']);
+        $this->assertFalse(isset($global['router']['routes']['oauth']));
         $local = include $this->localConfigPath;
+        $this->assertFalse(isset($local['router']['routes']['oauth']));
         $this->assertArrayNotHasKey('db', $local['zf-oauth2']);
         $this->assertArrayNotHasKey('storage', $local['zf-oauth2']);
     }
