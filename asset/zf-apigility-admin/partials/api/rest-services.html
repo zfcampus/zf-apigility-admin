@@ -298,10 +298,10 @@
                     <div class="control-group">
                       <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
                       <div class="controls">
-                        <input type="text" 
-                          class="form-control hydrator_select"
-                          ng-model="restService.hydrator_name">
-                        <p class="help-block">The name of the hydrator service used to create entities from database rows</p>
+                        <select class="form-control input-xlarge"
+                          ng-model="restService.hydrator_name"
+                          ng-options="v as v for (k,v) in hydrators"></select>
+                        <p class="help-block">The name of the hydrator service used to hydrate entities</p>
                       </div>
                     </div>
 
@@ -451,14 +451,5 @@
 <script>
   $(function () {
     $('#myTab a:last').tab('show')
-  });
-
-  $('.hydrator_select').typeahead({
-    local: [
-      "ArraySerializable",
-      "ClassMethods",
-      "ObjectProperty",
-      "Reflection"
-    ]
   });
 </script>

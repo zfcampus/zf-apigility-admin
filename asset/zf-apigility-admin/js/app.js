@@ -403,7 +403,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ApiRepository, api, dbAdapters) {
 
     $scope.api = api;
 
@@ -411,7 +411,15 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
+    $scope.hydrators = [];
+
     $scope.sourceCode = [];
+
+    (function () {
+        HydratorServicesRepository.getList().then(function(response) {
+            $scope.hydrators = response.data.hydrators;
+        });
+    })();
 
     $scope.toggleSelection = function (model, $event) {
         var element = $event.target;
@@ -820,6 +828,22 @@ module.factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', 
 
     return resource;
 }]);
+
+module.factory(
+    'HydratorServicesRepository',
+    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+        var servicePath = apiBasePath + '/hydrators';
+        
+        return {
+            getList: function () {
+                return $http({method: 'GET', url: servicePath}).
+                    error(function(data, status, headers, config) {
+                        flash.error = 'Unable to fetch hydrators for hydrator dropdown; you may need to reload the page';
+                    });
+            }
+        };
+    }]
+);
 
 module.factory(
     'AuthenticationRepository',
