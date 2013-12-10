@@ -156,7 +156,7 @@ class RestServiceEntity
             'controller_service_name'    => $this->controllerServiceName,
             'entity_class'               => $this->entityClass,
             'identifier_name'            => $this->identifierName,
-            'hydrator_name'              => $this->hydratorName,
+            'hydrator_name'              => strtolower($this->hydratorName),
             'module'                     => $this->module,
             'page_size'                  => $this->pageSize,
             'page_size_param'            => $this->pageSizeParam,
