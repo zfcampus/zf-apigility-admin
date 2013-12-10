@@ -6,23 +6,23 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\Validator\ValidatorPluginManager;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Stdlib\Hydrator\HydratorPluginManager;
 use ZF\Apigility\Admin\Exception;
 
-class ValidatorsModel extends AbstractPluginManagerModel
+class HydratorsModel extends AbstractPluginManagerModel
 {
     /**
      * $pluginManager should be an instance of 
-     * Zend\Validator\ValidatorPluginManager.
+     * Zend\Stdlib\Hydrator\HydratorPluginManager.
      * 
      * @param ServiceManager $pluginManager 
      */
     public function __construct(ServiceManager $pluginManager)
     {
-        if (! $pluginManager instanceof ValidatorPluginManager) {
+        if (! $pluginManager instanceof HydratorPluginManager) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an instance of Zend\Validator\ValidatorPluginManager; received "%s"',
+                '%s expects an instance of Zend\Stdlib\Hydrator\HydratorPluginManager; received "%s"',
                 __CLASS__,
                 get_class($pluginManager)
             ));

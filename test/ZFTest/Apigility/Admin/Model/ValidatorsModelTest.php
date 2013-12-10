@@ -6,27 +6,14 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Validator\ValidatorPluginManager;
 use ZF\Apigility\Admin\Model\ValidatorsModel;
 
-class ValidatorsModelTest extends TestCase
+class ValidatorsModelTest extends AbstractPluginManagerModelTest
 {
     public function setUp()
     {
         $this->plugins = new ValidatorPluginManager();
         $this->model = new ValidatorsModel($this->plugins);
-    }
-
-    public function testFetchAllReturnsListOfAvailablePlugins()
-    {
-        $allServices = $this->plugins->getRegisteredServices();
-        $validators  = [];
-        foreach ($allServices as $key => $services) {
-            $validators += $services;
-        }
-        sort($validators, SORT_STRING);
-
-        $this->assertEquals($validators, $this->model->fetchAll());
     }
 }

@@ -6,18 +6,18 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use ZF\Apigility\Admin\Model\ValidatorsModel;
+use ZF\Apigility\Admin\Model\HydratorsModel;
 
-class ValidatorsController extends AbstractPluginManagerController
+class HydratorsController extends AbstractPluginManagerController
 {
-    protected $property = 'validators';
+    protected $property = 'hydrators';
 
-    public function __construct(ValidatorsModel $model)
+    public function __construct(HydratorsModel $model)
     {
         $this->model = $model;
     }
 
-    public function validatorsAction()
+    public function hydratorsAction()
     {
         return $this->handleRequest();
     }

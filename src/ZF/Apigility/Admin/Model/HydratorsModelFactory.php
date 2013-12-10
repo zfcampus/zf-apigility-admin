@@ -6,15 +6,15 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-class ValidatorsModelFactory extends AbstractPluginManagerModelFactory
+class HydratorsModelFactory extends AbstractPluginManagerModelFactory
 {
     /**
      * @var string
      */
-    protected $pluginManagerService = 'ValidatorManager';
+    protected $pluginManagerService = 'HydratorManager';
 
     /**
      * @var string
      */
-    protected $pluginManagerModel = 'ZF\Apigility\Admin\Model\ValidatorsModel';
+    protected $pluginManagerModel = 'ZF\Apigility\Admin\Model\HydratorsModel';
 }

@@ -21,6 +21,7 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
+            'ZF\Apigility\Admin\Model\HydratorsModel' => 'ZF\Apigility\Admin\Model\HydratorsModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorsModel' => 'ZF\Apigility\Admin\Model\ValidatorsModelFactory',
         ),
     ),
@@ -30,6 +31,7 @@ return array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
         ),
         'factories' => array(
+            'ZF\Apigility\Admin\Controller\Hydrators' => 'ZF\Apigility\Admin\Controller\HydratorsControllerFactory',
             'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
         ),
     ),
@@ -86,6 +88,16 @@ return array(
                                     'defaults' => array(
                                         'controller' => 'ZF\Apigility\Admin\Controller\Source',
                                         'action'     => 'source',
+                                    ),
+                                ),
+                            ),
+                            'hydrators' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/hydrators',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Hydrators',
+                                        'action'     => 'hydrators',
                                     ),
                                 ),
                             ),
@@ -200,6 +212,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Authentication' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Hydrators'      => 'Json',
             'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
@@ -218,6 +231,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Hydrators' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -262,6 +279,9 @@ return array(
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Hydrators' => array(
+                'application/json',
             ),
             'ZF\Apigility\Admin\Controller\Module' => array(
                 'application/json',
@@ -377,6 +397,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Authorization' => array(
             'http_methods' => array('GET', 'PUT'),
             'route_name'   => 'zf-apigility-admin/api/module/authorization',
+        ),
+        'ZF\Apigility\Admin\Controller\Hydrators' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility-admin/api/hydrators',
         ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
