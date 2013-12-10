@@ -312,6 +312,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $this->updateRoute($original, $update);
         $this->updateRestConfig($original, $update);
         $this->updateContentNegotiationConfig($original, $update);
+        $this->updateHalConfig($original, $update);
 
         return $this->fetch($controllerService);
     }
@@ -728,6 +729,42 @@ class RestServiceModel implements EventManagerAwareInterface
         ) {
             $key = $baseKey . 'content_type_whitelist.' . $service;
             $this->configResource->patchKey($key, $contentTypeWhitelist);
+        }
+    }
+
+    /**
+     * Update HAL configuration
+     *
+     * @param  RestServiceEntity $original
+     * @param  RestServiceEntity $update
+     */
+    public function updateHalConfig(RestServiceEntity $original, RestServiceEntity $update)
+    {
+        $service = $original->controllerServiceName;
+        $baseKey = 'zf-hal.metadata_map.';
+
+        $entityUpdate     = [];
+        $collectionUpdate = [];
+        if ($update->identifierName) {
+            $entityUpdate['identifier_name']     = $update->identifierName;
+            $collectionUpdate['identifier_name'] = $update->identifierName;
+        }
+        if ($update->routeName) {
+            $entityUpdate['route_name']     = $update->routeName;
+            $collectionUpdate['route_name'] = $update->routeName;
+        }
+        if ($update->hydratorName) {
+            $entityUpdate['hydrator'] = $update->hydratorName;
+        }
+
+        if (!empty($entityUpdate)) {
+            $key = $baseKey . $original->entityClass;
+            $this->configResource->patchKey($key, $entityUpdate);
+        }
+
+        if (!empty($collectionUpdate)) {
+            $key = $baseKey . $original->collectionClass;
+            $this->configResource->patchKey($key, $collectionUpdate);
         }
     }
 

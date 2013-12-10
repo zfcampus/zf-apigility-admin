@@ -457,6 +457,49 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals($options['content_type_whitelist'], $config['content_type_whitelist'][$original->controllerServiceName]);
     }
 
+    public function testCanUpdateHalConfigForExistingService()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'hydrator_name'   => 'objectproperty',
+            'identifier_name' => 'custom_foo_id',
+            'route_name'      => 'my/custom/route',
+        );
+        $patch = new RestServiceEntity();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateHalConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-hal', $config);
+        $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
+        $config = $config['zf-hal']['metadata_map'];
+
+        $entityName     = $original->entityClass;
+        $collectionName = $original->collectionClass;
+        $this->assertArrayHasKey($entityName, $config);
+        $this->assertArrayHasKey($collectionName, $config);
+
+        $entityConfig     = $config[$entityName];
+        $collectionConfig = $config[$collectionName];
+
+        $this->assertArrayHasKey('identifier_name', $entityConfig);
+        $this->assertEquals($options['identifier_name'], $entityConfig['identifier_name']);
+        $this->assertArrayHasKey('identifier_name', $collectionConfig);
+        $this->assertEquals($options['identifier_name'], $collectionConfig['identifier_name']);
+
+        $this->assertArrayHasKey('route_name', $entityConfig);
+        $this->assertEquals($options['route_name'], $entityConfig['route_name']);
+        $this->assertArrayHasKey('route_name', $collectionConfig);
+        $this->assertEquals($options['route_name'], $collectionConfig['route_name']);
+
+        $this->assertArrayHasKey('hydrator', $entityConfig);
+        $this->assertEquals($options['hydrator_name'], $entityConfig['hydrator']);
+        $this->assertArrayNotHasKey('hydrator', $collectionConfig);
+    }
+
     public function testUpdateServiceReturnsUpdatedRepresentation()
     {
         $details  = $this->getCreationPayload();
