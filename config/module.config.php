@@ -19,9 +19,18 @@ return array(
         )
     ),
 
+    'service_manager' => array(
+        'factories' => array(
+            'ZF\Apigility\Admin\Model\ValidatorsModel' => 'ZF\Apigility\Admin\Model\ValidatorsModelFactory',
+        ),
+    ),
+
     'controllers' => array(
         'invokables' => array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
+        ),
+        'factories' => array(
+            'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
         ),
     ),
 
@@ -76,9 +85,19 @@ return array(
                                     'route' => '/source',
                                     'defaults' => array(
                                         'controller' => 'ZF\Apigility\Admin\Controller\Source',
-                                        'action'     => 'source'
-                                    )
-                                )
+                                        'action'     => 'source',
+                                    ),
+                                ),
+                            ),
+                            'validators' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/validators',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Validators',
+                                        'action'     => 'validators',
+                                    ),
+                                ),
                             ),
                             'module-enable' => array(
                                 'type' => 'literal',
@@ -186,6 +205,7 @@ return array(
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
             'ZF\Apigility\Admin\Controller\RpcService'     => 'HalJson',
             'ZF\Apigility\Admin\Controller\Source'         => 'Json',
+            'ZF\Apigility\Admin\Controller\Validators'     => 'Json',
             'ZF\Apigility\Admin\Controller\Versioning'     => 'Json',
         ),
         'accept-whitelist' => array(
@@ -210,6 +230,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Validators' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -247,6 +271,9 @@ return array(
                 'application/json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
+                'application/json',
+            ),
+            'ZF\Apigility\Admin\Controller\Validators' => array(
                 'application/json',
             ),
             'ZF\Apigility\Admin\Controller\Versioning' => array(
@@ -358,6 +385,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility-admin/api/source',
+        ),
+        'ZF\Apigility\Admin\Controller\Validators' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility-admin/api/validators',
         ),
         'ZF\Apigility\Admin\Controller\Versioning' => array(
             'http_methods' => array('PATCH'),

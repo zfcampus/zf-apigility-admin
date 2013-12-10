@@ -351,6 +351,30 @@ This endpoint will Apigility-enable (Apigilify) an existing module.
 
 - Errors: `application/api-problem+json`
 
+### `/admin/api/validators`
+
+This endpoint provides a sorted list of all registered validator plugins; the
+use case is for building a drop-down of available plugins when creating an
+input filter for a service.
+
+- Accept: `application/json`
+  
+  Returns an `application/json` response with the following format on success:
+
+  ```javascript
+  {
+    "validators": [
+      "list",
+      "of",
+      "validators"
+    ]
+  }
+  ```
+
+- Methods: `GET`
+
+- Errors: `application/api-problem+json`
+
 ### `/admin/api/versioning`
 
 This endpoint is for adding a new version to an existing API. If no version is
