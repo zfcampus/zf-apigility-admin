@@ -24,8 +24,8 @@ class AbstractPluginManagerModelFactory implements FactoryInterface
 
     /**
      * Return one of the plugin manager model instances
-     * 
-     * @param ServiceLocatorInterface $services 
+     *
+     * @param ServiceLocatorInterface $services
      * @return object
      */
     public function createService(ServiceLocatorInterface $services)

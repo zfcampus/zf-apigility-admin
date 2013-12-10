@@ -13,10 +13,10 @@ use ZF\Apigility\Admin\Exception;
 class ValidatorsModel extends AbstractPluginManagerModel
 {
     /**
-     * $pluginManager should be an instance of 
+     * $pluginManager should be an instance of
      * Zend\Validator\ValidatorPluginManager.
-     * 
-     * @param ServiceManager $pluginManager 
+     *
+     * @param ServiceManager $pluginManager
      */
     public function __construct(ServiceManager $pluginManager)
     {

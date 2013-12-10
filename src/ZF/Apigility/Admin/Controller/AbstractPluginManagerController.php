@@ -25,7 +25,7 @@ abstract class AbstractPluginManagerController extends AbstractActionController
 
     /**
      * Call this method from the appropriate action method
-     * 
+     *
      * @return ApiProblemResponse|JsonModel
      */
     public function handleRequest()

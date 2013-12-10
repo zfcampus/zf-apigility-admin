@@ -21,10 +21,10 @@ class AbstractPluginManagerModel
     protected $pluginManager;
 
     /**
-     * $pluginManager should typically be an instance of 
+     * $pluginManager should typically be an instance of
      * Zend\ServiceManager\AbstractPluginManager.
-     * 
-     * @param ServiceManager $pluginManager 
+     *
+     * @param ServiceManager $pluginManager
      */
     public function __construct(ServiceManager $pluginManager)
     {
