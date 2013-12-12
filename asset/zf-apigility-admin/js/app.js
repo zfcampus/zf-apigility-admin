@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -554,6 +554,41 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
             $scope.class_type = classType + ' Class';
             $scope.source_code = data.source;
         });
+    };
+
+}]);
+
+module.controller('ApiServiceInputController', ['$scope', function ($scope) {
+
+    $scope.service = $scope.$parent.restService;
+
+    $scope.service['inputs'] = [];
+
+    $scope.newValidator = {};
+
+    $scope.addInput = function() {
+        $scope.service.inputs.push({
+            name: $scope.newInput,
+            validators: []
+        });
+        $scope.newInput = '';
+    };
+
+    $scope.addValidator = function (index) {
+        $scope.service.inputs[index].validators.push({name: $scope.newValidator[index]});
+        $scope.newValidator[index] = '';
+    };
+
+    $scope.removeInput = function (inputIndex) {
+        $scope.service.inputs.splice(inputIndex, 1);
+    };
+
+    $scope.removeValidator = function (inputIndex, validatorIndex) {
+        $scope.service.inputs[inputIndex].validators.splice(validatorIndex, 1);
+    };
+
+    $scope.saveInput = function () {
+        console.log($scope.service);
     };
 
 }]);

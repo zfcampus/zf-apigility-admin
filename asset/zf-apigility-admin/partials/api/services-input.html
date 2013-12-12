@@ -1,0 +1,22 @@
+<div ng-controller="ApiServiceInputController">
+
+    <form id="input-form" ng-submit="addInput()">
+        <input type="text" ng-model="newInput">
+        <button type="submit" class="btn btn-sm btn-success">Create New Input</button>
+    </form>
+
+    <ol>
+        <li ng-repeat="input in service.inputs">
+            {{input.name}} <a ng-click="removeInput($index)">[x]</a>
+            <form id="input-validator-form" ng-submit="addValidator($index)">
+                <input type="text" ng-model="$parent.newValidator[$index]">
+                <button type="submit" class="btn btn-sm btn-success">Create New Validator</button>
+            </form>
+            <ol ui-sortable ng-model="input.validators">
+                <li ng-repeat="validator in input.validators">{{validator}} <a ng-click="removeValidator($parent.$index, $index)">[x]</a></li>
+            </ol>
+        </li>
+    </ol>
+
+    <button type="submit" class="btn btn-sm btn-primary" ng-click="saveInput()">Save Changes</button>
+</div>
