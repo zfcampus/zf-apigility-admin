@@ -403,7 +403,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ValidatorsServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ValidatorsServicesRepository, ApiRepository, api, dbAdapters) {
 
     $scope.api = api;
 
@@ -413,11 +413,19 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.hydrators = [];
 
+    $scope.validators = [];
+
     $scope.sourceCode = [];
 
     (function () {
         HydratorServicesRepository.getList().then(function(response) {
             $scope.hydrators = response.data.hydrators;
+        });
+    })();
+
+    (function () {
+        ValidatorsServicesRepository.getList().then(function(response) {
+            $scope.validators = response.data.validators;
         });
     })();
 
@@ -839,6 +847,22 @@ module.factory(
                 return $http({method: 'GET', url: servicePath}).
                     error(function(data, status, headers, config) {
                         flash.error = 'Unable to fetch hydrators for hydrator dropdown; you may need to reload the page';
+                    });
+            }
+        };
+    }]
+);
+
+module.factory(
+    'ValidatorsServicesRepository',
+    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+        var servicePath = apiBasePath + '/validators';
+
+        return {
+            getList: function () {
+                return $http({method: 'GET', url: servicePath}).
+                    error(function(data, status, headers, config) {
+                        flash.error = 'Unable to fetch validators for hydrator dropdown; you may need to reload the page';
                     });
             }
         };
