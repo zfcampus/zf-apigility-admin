@@ -514,4 +514,286 @@ return array(
             'route_name'   => 'zf-apigility-admin/api/config/module',
         ),
     ),
+
+    /*
+     * Metadata for scalar validator options.
+     *
+     * Each key in the map is a validator plugin name. The value is an array of
+     * option key/type pairs. If more than one type is possible, the types are
+     * OR'd.
+     *
+     * The "__all__" key is a set of options that are true/available for all
+     * validators.
+     */
+    'validator_metadata' => array(
+        '__all__' => array(
+            'message' => 'string',
+            'messagelength' => 'int',
+            'valueobscured' => 'bool',
+            'translatortextdomain' => 'string',
+            'translatorenabled' => 'bool',
+        ),
+        'barcodecodabar' => array(),
+        'barcodecode128' => array(),
+        'barcodecode25interleaved' => array(),
+        'barcodecode25' => array(),
+        'barcodecode39ext' => array(),
+        'barcodecode39' => array(),
+        'barcodecode93ext' => array(),
+        'barcodecode93' => array(),
+        'barcodeean12' => array(),
+        'barcodeean13' => array(),
+        'barcodeean14' => array(),
+        'barcodeean18' => array(),
+        'barcodeean2' => array(),
+        'barcodeean5' => array(),
+        'barcodeean8' => array(),
+        'barcodegtin12' => array(),
+        'barcodegtin13' => array(),
+        'barcodegtin14' => array(),
+        'barcodeidentcode' => array(),
+        'barcodeintelligentmail' => array(),
+        'barcodeissn' => array(),
+        'barcodeitf14' => array(),
+        'barcodeleitcode' => array(),
+        'barcode' => array(
+            'adapter' => 'string', // this is the validator adapter name to use
+            'useChecksum' => 'bool',
+        ),
+        'barcodeplanet' => array(),
+        'barcodepostnet' => array(),
+        'barcoderoyalmail' => array(),
+        'barcodesscc' => array(),
+        'barcodeupca' => array(),
+        'barcodeupce' => array(),
+        'between' => array(
+            'inclusive' => 'bool',
+            'max' => 'int',
+            'min' => 'int',
+        ),
+        'bitwise' => array(
+            'control' => 'int',
+            'operator' => 'string',
+            'strict' => 'bool',
+        ),
+        'callback' => array(
+            'callback' => 'string',
+        ),
+        'creditcard' => array(
+            'type' => 'string',
+            'service' => 'string',
+        ),
+        'csrf' => array(
+            'name' => 'string',
+            'salt' => 'string',
+            'timeout' => 'int',
+        ),
+        'date' => array(
+            'format' => 'string',
+        ),
+        'datestep' => array(
+            'format' => 'string',
+            'basevalue' => 'string|int',
+        ),
+        'dbnorecordexists' => array(
+            'table' => 'string',
+            'schema' => 'string',
+            'field' => 'string',
+            'exclude' => 'string',
+        ),
+        'dbrecordexists' => array(
+            'table' => 'string',
+            'schema' => 'string',
+            'field' => 'string',
+            'exclude' => 'string',
+        ),
+        'digits' => array(),
+        'emailaddress' => array(
+            'allow' => 'int',
+            'useMxCheck' => 'bool',
+            'useDeepMxCheck' => 'bool',
+            'useDomainCheck' => 'bool',
+        ),
+        'explode' => array(
+            'valuedelimiter' => 'string',
+            'breakonfirstfailure' => 'bool',
+        ),
+        'filecount' => array(
+            'max' => 'int',
+            'min' => 'int',
+        ),
+        'filecrc32' => array(
+            'algorithm' => 'string',
+            'hash' => 'string',
+            'crc32' => 'string',
+        ),
+        'fileexcludeextension' => array(
+            'case' => 'bool',
+            'extension' => 'string',
+        ),
+        'fileexcludemimetype' => array(
+            'disableMagicFile' => 'bool',
+            'magicFile' => 'string',
+            'enableHeaderCheck' => 'bool',
+            'mimeType' => 'string',
+        ),
+        'fileexists' => array(
+            'directory' => 'string',
+        ),
+        'fileextension' => array(
+            'case' => 'bool',
+            'extension' => 'string',
+        ),
+        'filefilessize' => array(
+            'max' => 'int',
+            'min' => 'int',
+            'size' => 'int',
+            'useByteString' => 'bool',
+        ),
+        'filehash' => array(
+            'algorithm' => 'string',
+            'hash' => 'string',
+        ),
+        'fileimagesize' => array(
+            'maxHeight' => 'int',
+            'minHeight' => 'int',
+            'maxWidth' => 'int',
+            'minWidth' => 'int',
+        ),
+        'fileiscompressed' => array(
+            'disableMagicFile' => 'bool',
+            'magicFile' => 'string',
+            'enableHeaderCheck' => 'bool',
+            'mimeType' => 'string',
+        ),
+        'fileisimage' => array(
+            'disableMagicFile' => 'bool',
+            'magicFile' => 'string',
+            'enableHeaderCheck' => 'bool',
+            'mimeType' => 'string',
+        ),
+        'filemd5' => array(
+            'algorithm' => 'string',
+            'hash' => 'string',
+            'md5' => 'string',
+        ),
+        'filemimetype' => array(
+            'disableMagicFile' => 'bool',
+            'magicFile' => 'string',
+            'enableHeaderCheck' => 'bool',
+            'mimeType' => 'string',
+        ),
+        'filenotexists' => array(
+            'directory' => 'string',
+        ),
+        'filesha1' => array(
+            'algorithm' => 'string',
+            'hash' => 'string',
+            'sha1' => 'string',
+        ),
+        'filesize' => array(
+            'max' => 'int',
+            'min' => 'int',
+            'size' => 'int',
+            'useByteString' => 'bool',
+        ),
+        'fileuploadfile' => array(),
+        'fileupload' => array(),
+        'filewordcount' => array(
+            'max' => 'int',
+            'min' => 'int',
+        ),
+        'greaterthan' => array(
+            'inclusive' => 'bool',
+            'min' => 'int',
+        ),
+        'hex' => array(),
+        'hostname' => array(
+            'allow' => 'int',
+            'useIdnCheck' => 'bool',
+            'useTldCheck' => 'bool',
+        ),
+        'iban' => array(
+            'country_code' => 'string',
+            'allow_non_sepa' => 'bool',
+        ),
+        'identical' => array(
+            'literal' => 'bool',
+            'strict' => 'bool',
+            'token' => 'string',
+        ),
+        'inarray' => array(
+            'strict' => 'bool',
+            'recursive' => 'bool',
+        ),
+        'ip' => array(
+            'allowipv4' => 'bool',
+            'allowipv6' => 'bool',
+            'allowipvfuture' => 'bool',
+            'allowliteral' => 'bool',
+        ),
+        'isbn' => array(
+            'type' => 'string',
+            'separator' => 'string',
+        ),
+        'isinstanceof' => array(
+            'classname' => 'string',
+        ),
+        'lessthan' => array(
+            'inclusive' => 'bool',
+            'max' => 'int',
+        ),
+        'notempty' => array(
+            'type' => int,
+        ),
+        'regex' => array(
+            'pattern' => 'string',
+        ),
+        'sitemapchangefreq' => array(),
+        'sitemaplastmod' => array(),
+        'sitemaploc' => array(),
+        'sitemappriority' => array(),
+        'step' => array(
+            'baseValue' => 'int|float',
+            'step' => 'float',
+        ),
+        'stringlength' => array(
+            'max' => 'int',
+            'min' => 'int',
+            'encoding' => 'string',
+        ),
+        'uri' => array(
+            'allowAbsolute' => 'bool',
+            'allowRelative' => 'bool',
+        ),
+        'alnum' => array(
+            'allowwhitespace' => 'bool',
+        ),
+        'alpha' => array(
+            'allowwhitespace' => 'bool',
+        ),
+        'datetime' => array(
+            'calendar' => 'int',
+            'datetype' => 'int',
+            'pattern' => 'string',
+            'timetype' => 'int',
+            'timezone' => 'string',
+            'locale' => 'string',
+        ),
+        'float' => array(
+            'locale' => 'string',
+        ),
+        'int' => array(
+            'locale' => 'string',
+        ),
+        'phonenumber' => array(
+            'country' => 'string',
+            'allow_possible' => 'bool',
+        ),
+        'postcode' => array(
+            'locale' => 'string',
+            'format' => 'string',
+            'service' => 'string',
+        ),
+    ),
 );
