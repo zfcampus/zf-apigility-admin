@@ -528,6 +528,8 @@ return array(
      */
     'validator_metadata' => array(
         '__all__' => array(
+            'breakchainonfailure' => 'bool',
+            'break_chain_on_failure' => 'bool',
             'message' => 'string',
             'messagelength' => 'int',
             'valueobscured' => 'bool',
