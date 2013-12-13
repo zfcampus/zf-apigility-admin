@@ -502,11 +502,19 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ValidatorsServicesRepository, ApiRepository, api) {
 
     $scope.api = api;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
+    $scope.validators = [];
+
+    (function () {
+        ValidatorsServicesRepository.getList().then(function(response) {
+            $scope.validators = response.data.validators;
+        });
+    })();
 
     $scope.resetForm = function () {
         $scope.showNewRpcServiceForm = false;
