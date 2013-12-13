@@ -41,6 +41,19 @@ class InputFilterModel
     }
 
     /**
+     * Update a specific controller with a new inputfilter (validator)
+     *
+     * @param  string $module
+     * @param  string $controller
+     * @param  array $inputfilter
+     * @return array
+     */
+    public function update($module, $controller, $inputfilter)
+    {
+        return $this->addInputFilter($module, $controller, $inputfilter);
+    }
+
+    /**
      * Get input filter of a module and controller
      *
      * @param  string $module
@@ -51,12 +64,12 @@ class InputFilterModel
     protected function getInputFilter($module, $controller, $inputname = null)
     {
         $configModule = $this->configFactory->factory($module);
-        $config       = $configModule->fetch();
+        $config       = $configModule->fetch(true);
         if (! array_key_exists($controller, $config['zf-content-validation'])) {
             return false;
         }
 
-        $validator = $config['zf-content-validation']['input_filter'];
+        $validator = $config['zf-content-validation'][$controller]['input_filter'];
         if ($inputname && !array_key_exists($inputname, $config['input_filters'][$validator])) {
             return false;
         }
@@ -68,12 +81,51 @@ class InputFilterModel
         }
     }
 
-    protected function addInputfilter($module, $service, $inputfilter)
+    protected function addInputfilter($module, $controller, $inputfilter, $validatorname = null)
     {
+        $configModule = $this->configFactory->factory($module);
+        $config       = $configModule->fetch(true);
+
+        if (!isset($config['zf-content-validation'][$controller])) {
+            if (!$this->controllerExists($module, $controller)) {
+                return false;
+            }
+            $config['zf-content-validation'][$controller] = [
+                'input_filter' => empty($validatorname) ? $this->generateValidatorName($controller) : $validatorname
+            ];
+        }
+        
+        $validator = $config['zf-content-validation'][$controller]['input_filter'];
+        if (!isset($config['input_filters'])) {
+            $config['input_filters'] = [
+                $validator => []
+            ];
+        }
+        $config['input_filters'][$validator] = array_merge(
+            $config['input_filters'][$validator], 
+            $inputfilter
+        );
+        
+        return $configModule->patch($config);
     }
 
-    protected function removeInputfilter($module, $service, $inputfilter)
+    protected function removeInputfilter($module, $controller, $inputfilter)
     {
+        // @todo
+    }
+
+    /**
+     * Generates the validator name based on controller name
+     *
+     * @param string $controller
+     * @return string
+     */
+    protected function generateValidatorName($controller)
+    {
+        if (strtolower(substr($controller, -11)) === '\controller' ) {
+            return substr($controller, 0, strlen($controller)-11) . '\Validator';
+        }
+        return $controlle . '\Validator';
     }
 
     /**
@@ -106,8 +158,10 @@ class InputFilterModel
         } catch (InvalidArgumentConfiguration $e) {
             return false;
         }
-        if (!array_key_exists($controller, $configModule['zf-rest']) &&
-            !array_key_exists($controller, $configModule['zf-rpc'])) {
+        $config = $configModule->fetch(true);
+        if ((!isset($config['zf-rest']) && !isset($config['zf-rpc'])) ||
+            (!array_key_exists($controller, $config['zf-rest']) &&
+            !array_key_exists($controller, $config['zf-rpc']))) {
             return false;
         }
         return true;
