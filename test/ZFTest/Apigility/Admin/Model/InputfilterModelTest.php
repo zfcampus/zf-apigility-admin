@@ -21,12 +21,12 @@ class InputfilterModelTest extends TestCase
         $modules = array(
             'InputFilter' => new \InputFilter\Module()
         );
-        
+
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
-        
+
         $this->moduleManager->expects($this->any())
                             ->method('getLoadedModules')
                             ->will($this->returnValue($modules));
@@ -87,7 +87,7 @@ class InputfilterModelTest extends TestCase
         $controller = 'InputFilter\V1\Rest\Bar\Controller';
         $result = $this->model->update('InputFilter', $controller, $inputfilter);
         $this->assertEquals('InputFilter\V1\Rest\Bar\Validator', $result['zf-content-validation'][$controller]['input_filter']);
-        $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Bar\Validator']['bar']);  
+        $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Bar\Validator']['bar']);
     }
 
     public function testRemoveInputfilter()

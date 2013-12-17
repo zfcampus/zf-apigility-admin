@@ -11,7 +11,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class InputfilterControllerFactory implements FactoryInterface
 {
-    function createService(ServiceLocatorInterface $controllers)
+    public function createService(ServiceLocatorInterface $controllers)
     {
         $services = $controllers->getServiceLocator();
         return new InputfilterController($services->get('ZF\Apigility\Admin\Model\InputfilterModel'));

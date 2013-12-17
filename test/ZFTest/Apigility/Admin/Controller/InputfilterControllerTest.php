@@ -26,7 +26,7 @@ class InputfilterControllerTest extends TestCase
         $modules = array(
             'InputFilter' => new \InputFilter\Module()
         );
-      
+
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -43,9 +43,9 @@ class InputfilterControllerTest extends TestCase
         $this->basePath      = __DIR__ . '/../Model/TestAsset/module/InputFilter/config';
         $this->config        = include $this->basePath . '/module.config.php';
 
-        copy($this->basePath . '/module.config.php', $this->basePath . '/module.config.php.old'); 
+        copy($this->basePath . '/module.config.php', $this->basePath . '/module.config.php.old');
     }
-    
+
     public function tearDown()
     {
         copy($this->basePath .'/module.config.php.old', $this->basePath . '/module.config.php');
@@ -56,53 +56,53 @@ class InputfilterControllerTest extends TestCase
     {
         $request = new Request();
         $request->setMethod('get');
-        $request->getHeaders()->addHeaderLine('Accept', 'application/json');                                                         
-        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');  
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
 
         $module     = 'InputFilter';
-        $controller = 'InputFilter\V1\Rest\Foo\Controller'; 
+        $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = array(
             'name' => $module,
             'controller_service_name' => $controller
         );
-        $routeMatch = new RouteMatch($params);    
+        $routeMatch = new RouteMatch($params);
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
         $this->controller->setRequest($request);
         $this->controller->setEvent($event);
- 
+
         $result    = $this->controller->indexAction();
         $validator = $this->config['zf-content-validation'][$controller]['input_filter'];
 
         $this->assertEquals($result->input_filters[0], $this->config['input_filters'][$validator]['foo']);
     }
-    
+
     public function testGetInputFilter()
     {
         $request = new Request();
         $request->setMethod('get');
-        $request->getHeaders()->addHeaderLine('Accept', 'application/json');                                                         
-        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');  
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
 
         $module     = 'InputFilter';
-        $controller = 'InputFilter\V1\Rest\Foo\Controller'; 
+        $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $inputname  = 'foo';
         $params = array(
             'name' => $module,
             'controller_service_name' => $controller,
             'inputname' => $inputname
         );
-        $routeMatch = new RouteMatch($params);    
+        $routeMatch = new RouteMatch($params);
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
         $this->controller->setRequest($request);
         $this->controller->setEvent($event);
- 
+
         $result    = $this->controller->indexAction();
         $validator = $this->config['zf-content-validation'][$controller]['input_filter'];
-        
+
         $this->assertTrue(!empty($result->input_filters));
         $this->assertTrue(is_array($result->input_filters));
         $this->assertEquals($result->input_filters, $this->config['input_filters'][$validator]['foo']);
@@ -127,20 +127,20 @@ class InputfilterControllerTest extends TestCase
                 ]
             ]
         ];
-        
+
         $request = new Request();
         $request->setMethod('put');
         $request->setContent(json_encode($inputfilter));
-        $request->getHeaders()->addHeaderLine('Accept', 'application/json');                                                         
-        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');  
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
 
         $module     = 'InputFilter';
-        $controller = 'InputFilter\V1\Rest\Foo\Controller'; 
+        $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = array(
             'name' => $module,
             'controller_service_name' => $controller
         );
-        $routeMatch = new RouteMatch($params);    
+        $routeMatch = new RouteMatch($params);
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
@@ -166,23 +166,23 @@ class InputfilterControllerTest extends TestCase
     {
         $request = new Request();
         $request->setMethod('delete');
-        $request->getHeaders()->addHeaderLine('Accept', 'application/json');                                                         
-        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');  
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
 
         $module     = 'InputFilter';
-        $controller = 'InputFilter\V1\Rest\Foo\Controller'; 
+        $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = array(
             'name' => $module,
             'controller_service_name' => $controller,
-            'inputname' => 'foo' 
+            'inputname' => 'foo'
         );
-        $routeMatch = new RouteMatch($params);    
+        $routeMatch = new RouteMatch($params);
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
         $this->controller->setRequest($request);
         $this->controller->setEvent($event);
-    
+
         $result = $this->controller->indexAction();
         $this->assertEquals(204, $result->getStatusCode());
     }

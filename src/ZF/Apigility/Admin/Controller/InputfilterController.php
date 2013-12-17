@@ -41,16 +41,16 @@ class InputfilterController extends AbstractActionController
                 new ApiProblem(404, 'The controller specified doesn\'t exist')
             );
         }
-        
+
         switch ($request->getMethod()) {
 
-            case $request::METHOD_GET:                
+            case $request::METHOD_GET:
                 $inputfilter = $this->model->fetch($module, $controller, $inputname);
                 if (false === $inputfilter) {
                     return new ApiProblemResponse(
                         new ApiProblem(404, 'The input filter specified doesn\'t exist')
                     );
-                } 
+                }
                 $result = array();
                 if ($inputname && !empty($inputfilter)) {
                     $result = $inputfilter;
@@ -85,7 +85,7 @@ class InputfilterController extends AbstractActionController
                     return new ApiProblemResponse(
                         new ApiProblem(404, 'The inputname specified doesn\'t exist')
                     );
-                } 
+                }
                 return $this->getResponse()->setStatusCode(204);
                 break;
         }
@@ -104,7 +104,7 @@ class InputfilterController extends AbstractActionController
         $result = array();
         foreach ($inputfilter as $key => $value) {
             $result[] = $value;
-        } 
+        }
         return $result;
     }
 

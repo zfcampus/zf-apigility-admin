@@ -1,6 +1,6 @@
 <?php
 namespace InputFilter;
 
-class Module 
+class Module
 {
 }

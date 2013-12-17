@@ -9,7 +9,7 @@ namespace ZF\Apigility\Admin\Model;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
 
-class InputFilterModel
+class InputfilterModel
 {
     /**
      * @var ConfigResourceFactory
@@ -17,10 +17,10 @@ class InputFilterModel
     protected $configFactory;
 
     /**
-     * $validatorPlugins should typically be an instance of 
+     * $validatorPlugins should typically be an instance of
      * Zend\Validator\ValidatorPluginManager.
-     * 
-     * @param ServiceManager $validatorPlugins 
+     *
+     * @param ServiceManager $validatorPlugins
      */
     public function __construct(ConfigResourceFactory $configFactory)
     {
@@ -78,7 +78,7 @@ class InputFilterModel
     {
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
-        
+
         if (!isset($config['zf-content-validation'][$controller]['input_filter'])) {
             return array();
         }
@@ -108,7 +108,7 @@ class InputFilterModel
         if (!$this->controllerExists($module, $controller)) {
             return false;
         }
-        
+
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
 
@@ -128,10 +128,10 @@ class InputFilterModel
             $config['input_filters'][$validator] = array();
         }
         $config['input_filters'][$validator] = array_merge(
-            $config['input_filters'][$validator], 
+            $config['input_filters'][$validator],
             $inputfilter
         );
-        
+
         return $configModule->patch($config);
     }
 
@@ -157,7 +157,7 @@ class InputFilterModel
             return false;
         }
         unset($config['input_filters'][$validator][$inputname]);
-       
+
         if (empty($config['input_filters'][$validator])) {
             unset($config['input_filters'][$validator]);
             unset($config['zf-content-validation'][$controller]);
