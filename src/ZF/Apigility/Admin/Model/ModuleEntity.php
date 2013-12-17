@@ -242,9 +242,4 @@ class ModuleEntity
     {
         return str_replace('\\', '.', $namespace);
     }
-
-    protected function deriveNamespace($name)
-    {
-        return str_replace('.', '\\', $namespace);
-    }
 }
