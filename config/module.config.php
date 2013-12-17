@@ -176,7 +176,7 @@ return array(
                                             'rpc_input_filter' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/inputfilter[/:inputname]',
+                                                    'route' => '/inputfilter[/:input_filter_name]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\InputFilter',
                                                         'action'     => 'index',
@@ -198,7 +198,7 @@ return array(
                                             'rpc_input_filter' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/inputfilter[/:inputname]',
+                                                    'route' => '/inputfilter[/:input_filter_name]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\InputFilter',
                                                         'action'     => 'index',
@@ -241,7 +241,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
             'ZF\Apigility\Admin\Controller\Hydrators'      => 'Json',
-            'ZF\Apigility\Admin\Controller\InputFilter'    => 'Json',
+            'ZF\Apigility\Admin\Controller\InputFilter'    => 'HalJson',
             'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
@@ -318,6 +318,7 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\InputFilter' => array(
                 'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Module' => array(
                 'application/json',
