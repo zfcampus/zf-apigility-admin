@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -425,7 +425,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     (function () {
         ValidatorsServicesRepository.getList().then(function(response) {
-            $scope.validators = response.data.validators;
+            $scope.validatorOptions = response.data.validators;
         });
     })();
 
@@ -568,35 +568,52 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
 module.controller('ApiServiceInputController', ['$scope', function ($scope) {
 
+    // get services from $parent
     $scope.service = $scope.$parent.restService;
+    $scope.validatorOptions = $scope.$parent.validatorOptions;
 
+    // setup inputs array on service (is this already here?)
     $scope.service['inputs'] = [];
 
-    $scope.newValidator = {};
-
     $scope.addInput = function() {
-        $scope.service.inputs.push({
-            name: $scope.newInput,
-            validators: []
-        });
+        $scope.service.inputs.push({name: $scope.newInput, validators: []});
         $scope.newInput = '';
     };
 
-    $scope.addValidator = function (index) {
-        $scope.service.inputs[index].validators.push({name: $scope.newValidator[index]});
-        $scope.newValidator[index] = '';
+    $scope.addValidator = function (input) {
+        input.validators.push({name: input._newValidatorName, options: {}});
+        input._newValidatorName = '';
+    };
+
+    $scope.addOption = function (validator) {
+        validator.options[validator._newOptionName] = validator._newOptionValue;
+        validator._newOptionName = '';
+        validator._newOptionValue = '';
     };
 
     $scope.removeInput = function (inputIndex) {
         $scope.service.inputs.splice(inputIndex, 1);
     };
 
-    $scope.removeValidator = function (inputIndex, validatorIndex) {
-        $scope.service.inputs[inputIndex].validators.splice(validatorIndex, 1);
+    $scope.removeValidator = function (input, validatorIndex) {
+        input.validators.splice(validatorIndex, 1);
+    };
+
+    $scope.removeOption = function (options, name) {
+        delete options[name];
     };
 
     $scope.saveInput = function () {
-        console.log($scope.service);
+        function removeUnderscoreProperties (value, key, collection) {
+            if (typeof key == 'string' && ['_', '$'].indexOf(key.charAt(0)) != -1) {
+                delete collection[key];
+            } else if (value instanceof Object) {
+                _.forEach(value, removeUnderscoreProperties);
+            }
+        }
+        var modelInputs = _.cloneDeep($scope.service.inputs);
+        _.forEach(modelInputs, removeUnderscoreProperties);
+        console.log(modelInputs);
     };
 
 }]);
