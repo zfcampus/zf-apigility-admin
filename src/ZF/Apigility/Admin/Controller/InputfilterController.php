@@ -7,7 +7,6 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
 use ZF\Apigility\Admin\Model\InputfilterModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
@@ -90,7 +89,9 @@ class InputfilterController extends AbstractActionController
                 break;
         }
 
-        return new ViewModel(['input_filters' => $result]);
+        $viewModel = new ViewModel(['input_filters' => $result]);
+        $viewModel->setTerminal(true);
+        return $viewModel;
     }
 
     /**
