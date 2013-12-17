@@ -6,6 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\Filter\StaticFilter;
+
 class DbConnectedRestServiceModel
 {
     /**
@@ -63,7 +65,7 @@ class DbConnectedRestServiceModel
     public function createService(DbConnectedRestServiceEntity $entity)
     {
         $restModel         = $this->restModel;
-        $resourceName      = ucfirst($entity->tableName);
+        $resourceName      = StaticFilter::execute($entity->tableName, 'WordUnderscoreToCamelCase');
         $resourceClass     = sprintf(
             '%s\\V%s\\Rest\\%s\\%sResource',
             $this->restModel->module,

@@ -287,4 +287,21 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->assertArrayHasKey('db-connected', $config['zf-apigility']);
         $this->assertArrayNotHasKey($originalEntity->resourceClass, $config['zf-apigility']['db-connected']);
     }
+
+    public function testCreateServiceWithUnderscoreInNameNormalizesClassNamesToCamelCase()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $originalEntity->exchangeArray(['table_name' => 'bar_baz']);
+
+        $result = $this->model->createService($originalEntity);
+        $this->assertSame($originalEntity, $result);
+
+        $this->assertEquals('BarConf\V1\Rest\BarBaz\Controller', $result->controllerServiceName);
+        $this->assertEquals('BarConf\V1\Rest\BarBaz\BarBazResource', $result->resourceClass);
+        $this->assertEquals('BarConf\V1\Rest\BarBaz\BarBazEntity', $result->entityClass);
+        $this->assertEquals('BarConf\V1\Rest\BarBaz\BarBazCollection', $result->collectionClass);
+        $this->assertEquals('BarConf\V1\Rest\BarBaz\BarBazResource\Table', $result->tableService);
+        $this->assertEquals('bar_baz', $result->tableName);
+        $this->assertEquals('bar-conf.rest.bar-baz', $result->routeName);
+    }
 }
