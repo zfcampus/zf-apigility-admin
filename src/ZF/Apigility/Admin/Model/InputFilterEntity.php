@@ -6,6 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-class InputFilterEntity
+use ArrayObject;
+
+class InputFilterEntity extends ArrayObject
 {
 }

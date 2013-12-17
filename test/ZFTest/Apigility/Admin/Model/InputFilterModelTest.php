@@ -72,7 +72,7 @@ class InputFilterModelTest extends TestCase
         ];
         $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputfilter);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
-        $this->assertEquals($inputfilter['bar'], $result['bar']);
+        $this->assertEquals($inputfilter['bar'], $result['bar'], sprintf("Updates: %s\n\nResult: %s\n", var_export($inputfilter, 1), var_export($result, 1)));
     }
 
     public function testAddInputFilterNewController()
@@ -91,13 +91,15 @@ class InputFilterModelTest extends TestCase
         $controller = 'InputFilter\V1\Rest\Bar\Controller';
         $result = $this->model->update('InputFilter', $controller, $inputfilter);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
-        $this->assertEquals('InputFilter\V1\Rest\Bar\Validator', $result['zf-content-validation'][$controller]['input_filter']);
         $this->assertEquals($inputfilter['bar'], $result['bar']);
+
+        $config = include $this->basePath . '/module.config.php';
+        $this->assertEquals('InputFilter\V1\Rest\Bar\Validator', $config['zf-content-validation'][$controller]['input_filter']);
     }
 
     public function testRemoveInputFilter()
     {
-        $this->assertTrue($this->model->remove('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', 'foo'));
+        $this->assertTrue($this->model->remove('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', 'InputFilter\V1\Rest\Foo\Validator'));
     }
 
     public function testModuleExists()
