@@ -241,6 +241,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
             'ZF\Apigility\Admin\Controller\Hydrators'      => 'Json',
+            'ZF\Apigility\Admin\Controller\Inputfilter'    => 'Json',
             'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
             'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
@@ -263,6 +264,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Hydrators' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Inputfilter' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -309,6 +314,9 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Hydrators' => array(
+                'application/json',
+            ),
+            'ZF\Apigility\Admin\Controller\Inputfilter' => array(
                 'application/json',
             ),
             'ZF\Apigility\Admin\Controller\Module' => array(
@@ -429,6 +437,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Hydrators' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility-admin/api/hydrators',
+        ),
+        'ZF\Apigility\Admin\Controller\Inputfilter' => array(
+            'http_methods' => array('GET', 'PUT', 'DELETE'),
+            'route_name'   => 'zf-apigility-admin/api/rpc-service/rpc_input_filter',
         ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
