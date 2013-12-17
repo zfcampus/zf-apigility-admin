@@ -55,7 +55,7 @@ class InputfilterModelTest extends TestCase
         $this->assertEquals($this->config['input_filters']['InputFilter\V1\Rest\Foo\Validator']['foo'], $result['foo']);
     }
 
-    public function testAddInputfilter()
+    public function testAddInputfilterExistingController()
     {
         $inputfilter = [
             'bar' => [
@@ -69,6 +69,30 @@ class InputfilterModelTest extends TestCase
         ];
         $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputfilter);
         $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Foo\Validator']['bar']);
+    }
+
+    public function testAddInputfilterNewController()
+    {
+        $inputfilter = [
+            'bar' => [
+                'name' => 'bar',
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty'
+                    ]
+                ]
+            ]
+        ];
+        // new controller
+        $controller = 'InputFilter\V1\Rest\Bar\Controller';
+        $result = $this->model->update('InputFilter', $controller, $inputfilter);
+        $this->assertEquals('InputFilter\V1\Rest\Bar\Validator', $result['zf-content-validation'][$controller]['input_filter']);
+        $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Bar\Validator']['bar']);  
+    }
+
+    public function testRemoveInputfilter()
+    {
+        $this->assertTrue($this->model->remove('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', 'foo'));
     }
 
     public function testModuleExists()

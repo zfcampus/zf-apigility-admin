@@ -22,6 +22,7 @@ return [
         ],
     ],
     'zf-rest' => [
-        'InputFilter\V1\Rest\Foo\Controller' => []
+        'InputFilter\V1\Rest\Foo\Controller' => [],
+        'InputFilter\V1\Rest\Bar\Controller' => []
     ]
 ];

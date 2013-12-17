@@ -54,6 +54,19 @@ class InputFilterModel
     }
 
     /**
+     * Remove an inputfilter by name
+     *
+     * @param  string $module
+     * @param  string $controlller
+     * @param  string $inputname
+     * @return boolean
+     */
+    public function remove($module, $controller, $inputname)
+    {
+        return $this->removeinputfilter($module, $controller, $inputname);
+    }
+
+    /**
      * Get input filter of a module and controller
      *
      * @param  string $module
@@ -65,10 +78,10 @@ class InputFilterModel
     {
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
-        if (! array_key_exists($controller, $config['zf-content-validation'])) {
-            return false;
+        
+        if (!isset($config['zf-content-validation'][$controller]['input_filter'])) {
+            return array();
         }
-
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
         if ($inputname && !array_key_exists($inputname, $config['input_filters'][$validator])) {
             return false;
@@ -81,25 +94,38 @@ class InputFilterModel
         }
     }
 
+    /**
+     * Add input filter
+     *
+     * @param  string $module
+     * @param  string $contoller
+     * @param  array  $inputfilter
+     * @param  string $validatorname
+     * @return array!boolean
+     */
     protected function addInputfilter($module, $controller, $inputfilter, $validatorname = null)
     {
+        if (!$this->controllerExists($module, $controller)) {
+            return false;
+        }
+        
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
 
+        if (!isset($config['zf-content-validation'])) {
+            $config['zf-content-validation'] = array();
+        }
         if (!isset($config['zf-content-validation'][$controller])) {
-            if (!$this->controllerExists($module, $controller)) {
-                return false;
-            }
             $config['zf-content-validation'][$controller] = [
                 'input_filter' => empty($validatorname) ? $this->generateValidatorName($controller) : $validatorname
             ];
         }
-        
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
         if (!isset($config['input_filters'])) {
-            $config['input_filters'] = [
-                $validator => []
-            ];
+            $config['input_filters'] = array();
+        }
+        if (!isset($config['input_filters'][$validator])) {
+            $config['input_filters'][$validator] = array();
         }
         $config['input_filters'][$validator] = array_merge(
             $config['input_filters'][$validator], 
@@ -109,9 +135,41 @@ class InputFilterModel
         return $configModule->patch($config);
     }
 
-    protected function removeInputfilter($module, $controller, $inputfilter)
+    /**
+     * Remove input filter
+     *
+     * @param  string $module
+     * @param  string $controller
+     * @param  string $inputname
+     * @return boolean
+     */
+    protected function removeInputfilter($module, $controller, $inputname)
     {
-        // @todo
+        if (!$this->controllerExists($module, $controller)) {
+            return false;
+        }
+
+        $configModule = $this->configFactory->factory($module);
+        $config       = $configModule->fetch(true);
+        $validator    = $config['zf-content-validation'][$controller]['input_filter'];
+
+        if (!isset($config['input_filters'][$validator][$inputname])) {
+            return false;
+        }
+        unset($config['input_filters'][$validator][$inputname]);
+       
+        if (empty($config['input_filters'][$validator])) {
+            unset($config['input_filters'][$validator]);
+            unset($config['zf-content-validation'][$controller]);
+        }
+        if (empty($config['input_filters'])) {
+            unset($config['input_filters']);
+        }
+        if (empty($config['zf-content-validation'])) {
+            unset($config['zf-content-validation']);
+        }
+
+        return ($configModule->patch($config) != false);
     }
 
     /**
