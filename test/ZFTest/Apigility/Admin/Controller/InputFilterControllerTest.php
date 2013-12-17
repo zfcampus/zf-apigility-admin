@@ -11,14 +11,14 @@ use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Controller\PluginManager;
-use ZF\Apigility\Admin\Controller\InputfilterController;
-use ZF\Apigility\Admin\Model\InputfilterModel;
+use ZF\Apigility\Admin\Controller\InputFilterController;
+use ZF\Apigility\Admin\Model\InputFilterModel;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
-class InputfilterControllerTest extends TestCase
+class InputFilterControllerTest extends TestCase
 {
     public function setUp()
     {
@@ -37,8 +37,8 @@ class InputfilterControllerTest extends TestCase
         $this->writer        = new PhpArray();
         $moduleUtils         = new ModuleUtils($this->moduleManager);
         $this->configFactory = new ConfigResourceFactory($moduleUtils, $this->writer);
-        $this->model         = new InputfilterModel($this->configFactory);
-        $this->controller    = new InputfilterController($this->model);
+        $this->model         = new InputFilterModel($this->configFactory);
+        $this->controller    = new InputFilterController($this->model);
 
         $this->basePath      = __DIR__ . '/../Model/TestAsset/module/InputFilter/config';
         $this->config        = include $this->basePath . '/module.config.php';

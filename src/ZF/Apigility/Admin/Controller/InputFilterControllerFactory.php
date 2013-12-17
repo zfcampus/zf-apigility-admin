@@ -9,11 +9,11 @@ namespace ZF\Apigility\Admin\Controller;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class InputfilterControllerFactory implements FactoryInterface
+class InputFilterControllerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $controllers)
     {
         $services = $controllers->getServiceLocator();
-        return new InputfilterController($services->get('ZF\Apigility\Admin\Model\InputfilterModel'));
+        return new InputFilterController($services->get('ZF\Apigility\Admin\Model\InputFilterModel'));
     }
 }

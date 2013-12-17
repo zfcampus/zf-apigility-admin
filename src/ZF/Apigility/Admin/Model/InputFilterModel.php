@@ -9,7 +9,7 @@ namespace ZF\Apigility\Admin\Model;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
 
-class InputfilterModel
+class InputFilterModel
 {
     /**
      * @var ConfigResourceFactory
@@ -103,7 +103,7 @@ class InputfilterModel
      * @param  string $validatorname
      * @return array!boolean
      */
-    protected function addInputfilter($module, $controller, $inputfilter, $validatorname = null)
+    protected function addInputFilter($module, $controller, $inputfilter, $validatorname = null)
     {
         if (!$this->controllerExists($module, $controller)) {
             return false;
@@ -143,7 +143,7 @@ class InputfilterModel
      * @param  string $inputname
      * @return boolean
      */
-    protected function removeInputfilter($module, $controller, $inputname)
+    protected function removeInputFilter($module, $controller, $inputname)
     {
         if (!$this->controllerExists($module, $controller)) {
             return false;

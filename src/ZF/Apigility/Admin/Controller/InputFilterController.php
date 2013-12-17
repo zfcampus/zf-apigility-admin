@@ -7,17 +7,17 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\Apigility\Admin\Model\InputfilterModel;
+use ZF\Apigility\Admin\Model\InputFilterModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use Zend\Http\Request;
 use ZF\ContentNegotiation\ViewModel;
 
-class InputfilterController extends AbstractActionController
+class InputFilterController extends AbstractActionController
 {
     protected $model;
 
-    public function __construct(InputfilterModel $model)
+    public function __construct(InputFilterModel $model)
     {
         $this->model = $model;
     }

@@ -10,16 +10,16 @@ use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class InputfilterModelFactory implements FactoryInterface
+class InputFilterModelFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $services)
     {
         if (! $services->has('ZF\Configuration\ConfigResourceFactory')) {
             throw new ServiceNotCreatedException(sprintf(
-                '%s\\InputfilterModel requires that the ZF\Configuration\ConfigResourceFactory service be present; service not found',
+                '%s\\InputFilterModel requires that the ZF\Configuration\ConfigResourceFactory service be present; service not found',
                 __NAMESPACE__
             ));
         }
-        return new InputfilterModel($services->get('ZF\Configuration\ConfigResourceFactory'));
+        return new InputFilterModel($services->get('ZF\Configuration\ConfigResourceFactory'));
     }
 }

@@ -7,14 +7,14 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\Model\InputfilterModel;
+use ZF\Apigility\Admin\Model\InputFilterModel;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
 
 require_once __DIR__ . '/TestAsset/module/InputFilter/Module.php';
 
-class InputfilterModelTest extends TestCase
+class InputFilterModelTest extends TestCase
 {
     public function setUp()
     {
@@ -34,7 +34,7 @@ class InputfilterModelTest extends TestCase
         $this->writer        = new PhpArray();
         $moduleUtils         = new ModuleUtils($this->moduleManager);
         $this->configFactory = new ConfigResourceFactory($moduleUtils, $this->writer);
-        $this->model         = new InputfilterModel($this->configFactory);
+        $this->model         = new InputFilterModel($this->configFactory);
 
         $this->basePath      = __DIR__ . '/TestAsset/module/InputFilter/config';
         $this->config        = include $this->basePath . '/module.config.php';
@@ -55,7 +55,7 @@ class InputfilterModelTest extends TestCase
         $this->assertEquals($this->config['input_filters']['InputFilter\V1\Rest\Foo\Validator']['foo'], $result['foo']);
     }
 
-    public function testAddInputfilterExistingController()
+    public function testAddInputFilterExistingController()
     {
         $inputfilter = [
             'bar' => [
@@ -71,7 +71,7 @@ class InputfilterModelTest extends TestCase
         $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Foo\Validator']['bar']);
     }
 
-    public function testAddInputfilterNewController()
+    public function testAddInputFilterNewController()
     {
         $inputfilter = [
             'bar' => [
@@ -90,7 +90,7 @@ class InputfilterModelTest extends TestCase
         $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Bar\Validator']['bar']);
     }
 
-    public function testRemoveInputfilter()
+    public function testRemoveInputFilter()
     {
         $this->assertTrue($this->model->remove('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', 'foo'));
     }
