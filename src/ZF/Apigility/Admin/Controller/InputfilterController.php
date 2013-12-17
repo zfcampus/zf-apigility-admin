@@ -12,6 +12,7 @@ use ZF\Apigility\Admin\Model\InputfilterModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use Zend\Http\Request;
+use ZF\ContentNegotiation\ViewModel;
 
 class InputfilterController extends AbstractActionController
 {
@@ -45,27 +46,27 @@ class InputfilterController extends AbstractActionController
 
             case $request::METHOD_GET:                
                 $inputfilter = $this->model->fetch($module, $controller, $inputname);
+                if (false === $inputfilter) {
+                    return new ApiProblemResponse(
+                        new ApiProblem(404, 'The input filter specified doesn\'t exist')
+                    );
+                } 
                 $result = array();
                 if ($inputname && !empty($inputfilter)) {
                     $result = $inputfilter;
                 } elseif (!empty($inputfilter)) {
                     $result = $this->removeKey($inputfilter);
                 }
-                if (false === $inputfilter) {
-                    return new ApiProblemResponse(
-                        new ApiProblem(404, 'The input filter specified doesn\'t exist')
-                    );
-                }
                 break;
 
             case $request::METHOD_PUT:
-                $inputfilter = json_decode($request->getContent(), true);
-                if (!$inputfilter || !isset($inputfilter['input_filters'])) {
+                $inputfilter = $this->bodyParam('input_filters');
+                if (!$inputfilter || !isset($inputfilter['name'])) {
                     return new ApiProblemResponse(
                         new ApiProblem(404, 'The input_filters has not been specified or is not valid')
                     );
                 }
-                $inputfilter = [ $inputfilter['input_filters']['name'] => $inputfilter['input_filters'] ];
+                $inputfilter = [ $inputfilter['name'] => $inputfilter ];
                 $result = $this->model->update($module, $controller, $inputfilter);
                 if (!empty($result)) {
                     $validator = $result['zf-content-validation'][$controller]['input_filter'];
@@ -89,9 +90,7 @@ class InputfilterController extends AbstractActionController
                 break;
         }
 
-        $model = new JsonModel(['input_filters' => $result]);
-        $model->setTerminal(true);
-        return $model;
+        return new ViewModel(['input_filters' => $result]);
     }
 
     /**

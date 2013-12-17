@@ -54,7 +54,7 @@ class InputFilterModel
     }
 
     /**
-     * Remove an inputfilter by name
+     * Remove the named input
      *
      * @param  string $module
      * @param  string $controlller

@@ -10,11 +10,13 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Controller\PluginManager;
 use ZF\Apigility\Admin\Controller\InputfilterController;
 use ZF\Apigility\Admin\Model\InputfilterModel;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
+use ZF\ContentNegotiation\ParameterDataContainer;
 
 class InputfilterControllerTest extends TestCase
 {
@@ -142,8 +144,16 @@ class InputfilterControllerTest extends TestCase
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
+        $parameters = new ParameterDataContainer();
+        $parameters->setBodyParams($inputfilter);
+        $event->setParam('ZFContentNegotiationParameterData', $parameters);
+
+        $plugins = new PluginManager();
+        $plugins->setInvokableClass('bodyParam', 'ZF\ContentNegotiation\ControllerPlugin\BodyParam');
+
         $this->controller->setRequest($request);
         $this->controller->setEvent($event);
+        $this->controller->setPluginManager($plugins);
 
         $result     = $this->controller->indexAction();
         $validator  = $this->config['zf-content-validation'][$controller]['input_filter'];
