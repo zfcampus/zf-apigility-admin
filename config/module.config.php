@@ -23,6 +23,7 @@ return array(
         'factories' => array(
             'ZF\Apigility\Admin\Model\HydratorsModel' => 'ZF\Apigility\Admin\Model\HydratorsModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorsModel' => 'ZF\Apigility\Admin\Model\ValidatorsModelFactory',
+            'ZF\Apigility\Admin\Model\InputfilterModel' => 'ZF\Apigility\Admin\Model\InputfilterModelFactory',
         ),
     ),
 
@@ -33,6 +34,7 @@ return array(
         'factories' => array(
             'ZF\Apigility\Admin\Controller\Hydrators' => 'ZF\Apigility\Admin\Controller\HydratorsControllerFactory',
             'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
+            'ZF\Apigility\Admin\Controller\Inputfilter' => 'ZF\Apigility\Admin\Controller\InputfilterControllerFactory',
         ),
     ),
 
@@ -169,6 +171,19 @@ return array(
                                                 'controller' => 'ZF\Apigility\Admin\Controller\RpcService',
                                             ),
                                         ),
+                                        'may_terminate' => true,
+                                        'child_routes' => array(
+                                            'rpc_input_filter' => array(
+                                                'type' => 'segment',
+                                                'options' => array(
+                                                    'route' => '/inputfilter[/:inputname]',
+                                                    'defaults' => array(
+                                                        'controller' => 'ZF\Apigility\Admin\Controller\Inputfilter',
+                                                        'action'     => 'index',
+                                                    )
+                                                )
+                                            )
+                                        )
                                     ),
                                     'rest-service' => array(
                                         'type' => 'segment',
@@ -178,6 +193,19 @@ return array(
                                                 'controller' => 'ZF\Apigility\Admin\Controller\RestService',
                                             ),
                                         ),
+                                        'may_terminate' => true,
+                                        'child_routes' => array(
+                                            'rpc_input_filter' => array(
+                                                'type' => 'segment',
+                                                'options' => array(
+                                                    'route' => '/inputfilter[/:inputname]',
+                                                    'defaults' => array(
+                                                        'controller' => 'ZF\Apigility\Admin\Controller\Inputfilter',
+                                                        'action'     => 'index',
+                                                    )
+                                                )
+                                            )
+                                        )
                                     ),
                                 ),
                             ),
