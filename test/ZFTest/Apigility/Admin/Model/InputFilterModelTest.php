@@ -51,8 +51,11 @@ class InputFilterModelTest extends TestCase
     public function testFetch()
     {
         $result = $this->model->fetch('InputFilter', 'InputFilter\V1\Rest\Foo\Controller');
-        $this->assertTrue(!empty($result));
-        $this->assertEquals($this->config['input_filters']['InputFilter\V1\Rest\Foo\Validator']['foo'], $result['foo']);
+        $this->assertInternalType('array', $result);
+        $this->assertEquals(1, count($result));
+        $inputFilter = array_shift($result);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
+        $this->assertEquals($this->config['input_filters']['InputFilter\V1\Rest\Foo\Validator']['foo'], $inputFilter['foo']);
     }
 
     public function testAddInputFilterExistingController()
@@ -68,7 +71,8 @@ class InputFilterModelTest extends TestCase
             ]
         ];
         $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputfilter);
-        $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Foo\Validator']['bar']);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
+        $this->assertEquals($inputfilter['bar'], $result['bar']);
     }
 
     public function testAddInputFilterNewController()
@@ -86,8 +90,9 @@ class InputFilterModelTest extends TestCase
         // new controller
         $controller = 'InputFilter\V1\Rest\Bar\Controller';
         $result = $this->model->update('InputFilter', $controller, $inputfilter);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
         $this->assertEquals('InputFilter\V1\Rest\Bar\Validator', $result['zf-content-validation'][$controller]['input_filter']);
-        $this->assertEquals($inputfilter['bar'], $result['input_filters']['InputFilter\V1\Rest\Bar\Validator']['bar']);
+        $this->assertEquals($inputfilter['bar'], $result['bar']);
     }
 
     public function testRemoveInputFilter()
