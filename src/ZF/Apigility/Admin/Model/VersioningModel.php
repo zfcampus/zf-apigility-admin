@@ -230,6 +230,21 @@ class VersioningModel
             ), true);
         }
 
+        // update zf-content-validation and input_filters
+        if (isset($config['zf-content-validation'])) {
+            $newValues = $this->changeVersionArray($config['zf-content-validation'], $previous, $version);
+            $this->configResource->patch(array(
+                'zf-content-validation' => $newValues
+            ), true);
+        }
+
+        if (isset($config['input_filters'])) {
+            $newValues = $this->changeVersionArray($config['input_filters'], $previous, $version);
+            $this->configResource->patch(array(
+                'input_filters' => $newValues
+            ), true);
+        }
+
         // update zf-apigility
         if (isset($config['zf-apigility']['db-connected'])) {
             $newValues = $this->changeVersionArray($config['zf-apigility']['db-connected'], $previous, $version);
