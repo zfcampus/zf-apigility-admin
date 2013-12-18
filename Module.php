@@ -312,8 +312,8 @@ class Module
 
     /**
      * Keep a record of existing parameters so we can ensure urls are generated
-     * 
-     * @param \Zend\EventManager\EventManager $e 
+     *
+     * @param \Zend\EventManager\EventManager $e
      */
     public function onFromLink($e)
     {

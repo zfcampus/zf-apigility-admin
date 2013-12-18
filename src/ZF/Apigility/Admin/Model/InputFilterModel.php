@@ -263,8 +263,8 @@ class InputFilterModel
 
     /**
      * Determine the collection class to use
-     * 
-     * @param string $controller 
+     *
+     * @param string $controller
      * @return string
      */
     protected function getCollectionType($controller)
@@ -282,8 +282,8 @@ class InputFilterModel
 
     /**
      * Determine the entity class to use
-     * 
-     * @param string $controller 
+     *
+     * @param string $controller
      * @return string
      */
     protected function getEntityType($controller)

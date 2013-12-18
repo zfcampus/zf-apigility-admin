@@ -225,8 +225,8 @@ class RestServiceResource extends AbstractResourceListener
 
     /**
      * Inject the input filters collection, if any, as an embedded collection
-     * 
-     * @param RestServiceEntity $service 
+     *
+     * @param RestServiceEntity $service
      */
     protected function injectInputFilters(RestServiceEntity $service)
     {

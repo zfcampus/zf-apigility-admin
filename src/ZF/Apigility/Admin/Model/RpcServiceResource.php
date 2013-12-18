@@ -250,8 +250,8 @@ class RpcServiceResource extends AbstractResourceListener
 
     /**
      * Inject the input filters collection, if any, as an embedded collection
-     * 
-     * @param RpcServiceEntity $service 
+     *
+     * @param RpcServiceEntity $service
      */
     protected function injectInputFilters(RpcServiceEntity $service)
     {
