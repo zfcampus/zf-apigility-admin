@@ -24,6 +24,8 @@ class RpcServiceEntity
 
     protected $httpMethods = array('GET');
 
+    protected $inputFilters;
+
     protected $routeMatch;
 
     protected $routeName;
@@ -88,6 +90,11 @@ class RpcServiceEntity
                     }
                     $this->httpMethods = $value;
                     break;
+                case 'inputfilters':
+                    if ($value instanceof InputFilterCollection) {
+                        $this->inputFilters = $value;
+                    }
+                    break;
                 case 'routematch':
                     $this->routeMatch = $value;
                     break;
@@ -118,7 +125,7 @@ class RpcServiceEntity
      */
     public function getArrayCopy()
     {
-        return array(
+        $array = array(
             'accept_whitelist'        => $this->acceptWhitelist,
             'content_type_whitelist'  => $this->contentTypeWhitelist,
             'controller_service_name' => $this->controllerServiceName,
@@ -127,5 +134,9 @@ class RpcServiceEntity
             'route_name'              => $this->routeName,
             'selector'                => $this->selector,
         );
+        if (null !== $this->inputFilters) {
+            $array['input_filters'] = $this->inputFilters;
+        }
+        return $array;
     }
 }

@@ -8,12 +8,20 @@ namespace ZF\Apigility\Admin\Model;
 
 use RuntimeException;
 use ZF\ApiProblem\ApiProblem;
+use ZF\Hal\Collection as HalCollection;
+use ZF\Hal\Link\Link;
+use ZF\Hal\Resource as HalResource;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
 
 class RestServiceResource extends AbstractResourceListener
 {
+    /**
+     * @var InputFilterModel
+     */
+    protected $inputFilterModel;
+
     /**
      * @var RestServiceModel
      */
@@ -31,10 +39,12 @@ class RestServiceResource extends AbstractResourceListener
 
     /**
      * @param  RestServiceModelFactory $restFactory
+     * @param  InputFilterModel $inputFilterModel
      */
-    public function __construct(RestServiceModelFactory $restFactory)
+    public function __construct(RestServiceModelFactory $restFactory, InputFilterModel $inputFilterModel)
     {
         $this->restFactory = $restFactory;
+        $this->inputFilterModel = $inputFilterModel;
     }
 
     /**
@@ -116,6 +126,8 @@ class RestServiceResource extends AbstractResourceListener
         if (!$service instanceof RestServiceEntity) {
             return new ApiProblem(404, 'REST service not found');
         }
+
+        $this->injectInputFilters($service);
         return $service;
     }
 
@@ -127,8 +139,14 @@ class RestServiceResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
-        $version = $this->getEvent()->getQueryParam('version', null);
-        return $this->getModel()->fetchAll($version);
+        $version  = $this->getEvent()->getQueryParam('version', null);
+        $services = $this->getModel()->fetchAll($version);
+
+        foreach ($services as $service) {
+            $this->injectInputFilters($service);
+        }
+
+        return $services;
     }
 
     /**
@@ -203,5 +221,50 @@ class RestServiceResource extends AbstractResourceListener
         }
 
         return true;
+    }
+
+    /**
+     * Inject the input filters collection, if any, as an embedded collection
+     * 
+     * @param RestServiceEntity $service 
+     */
+    protected function injectInputFilters(RestServiceEntity $service)
+    {
+        $inputFilters = $this->inputFilterModel->fetch($this->moduleName, $service->controllerServiceName);
+        if (!$inputFilters instanceof InputFilterCollection
+            || !count($inputFilters)
+        ) {
+            return;
+        }
+
+        $collection = [];
+
+        foreach ($inputFilters as $inputFilter) {
+            $resource = new HalResource($inputFilter, $inputFilter['input_filter_name']);
+            $links    = $resource->getLinks();
+            $links->add(Link::factory([
+                'rel' => 'self',
+                'route' => [
+                    'name' => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+                    'params' => [
+                        'name' => $this->moduleName,
+                        'controller_service_name' => $service->controllerServiceName,
+                    ],
+                ],
+            ]));
+            $collection[] = $resource;
+        }
+
+        $collection = new HalCollection($collection);
+        $collection->setCollectionName('input_filter');
+        $collection->setCollectionRoute('zf-apigility-admin/module/rest-service/inputfilter');
+        $collection->setCollectionRouteParams([
+            'name' => $service->module,
+            'controller_service_name' => $service->controllerServiceName,
+        ]);
+
+        $service->exchangeArray([
+            'input_filters' => $collection,
+        ]);
     }
 }
