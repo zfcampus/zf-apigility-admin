@@ -64,6 +64,7 @@ class InputFilterController extends AbstractActionController
                         return $resource;
                     }, $result);
                     $result = new HalCollection($result);
+                    $result->setCollectionName('input_filter');
                     $result->getLinks()->add(Link::factory([
                         'rel' => 'self',
                         'route' => [
