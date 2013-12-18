@@ -365,6 +365,11 @@ return array(
                 'identifier_name' => 'adapter_name',
                 'route_name'      => 'zf-apigility-admin/api/db-adapter',
             ),
+            'ZF\Apigility\Admin\Model\InputFilterEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'identifier_name' => 'name',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+            ),
             'ZF\Apigility\Admin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'name',

@@ -94,11 +94,15 @@ class InputFilterModel
 
         // Retrieving the input filter by name
         if ($inputFilterName && $inputFilterName === $validator) {
-            return new InputFilterEntity($config['input_filters'][$inputFilterName]);
+            $inputFilter = new InputFilterEntity($config['input_filters'][$inputFilterName]);
+            $inputFilter['name'] = $inputFilterName;
+            return $inputFilter;
         }
 
         // Retrieving a collection
-        return array(new InputFilterEntity($config['input_filters'][$validator]));
+        $inputFilter = new InputFilterEntity($config['input_filters'][$validator]);
+        $inputFilter['name'] = $validator;
+        return array($inputFilter);
     }
 
     /**
@@ -141,7 +145,9 @@ class InputFilterModel
             return false;
         }
 
-        return new InputFilterEntity($updated['input_filters'][$validator]);
+        $return = new InputFilterEntity($updated['input_filters'][$validator]);
+        $return['name'] = $validator;
+        return $return;
     }
 
     /**

@@ -81,6 +81,7 @@ class InputFilterControllerTest extends TestCase
 
         $inputFilterKey = $this->config['zf-content-validation'][$controller]['input_filter'];
         $expected = $this->config['input_filters'][$inputFilterKey];
+        $expected['name'] = $inputFilterKey;
         $this->assertEquals($expected, $inputFilter->getArrayCopy());
     }
 
@@ -111,7 +112,8 @@ class InputFilterControllerTest extends TestCase
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $payload);
 
-        $expected  = $this->config['input_filters'][$validator];
+        $expected = $this->config['input_filters'][$validator];
+        $expected['name'] = $validator;
         $this->assertEquals($expected, $payload->getArrayCopy());
     }
 
@@ -169,7 +171,8 @@ class InputFilterControllerTest extends TestCase
         $config    = include $this->basePath . '/module.config.php';
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
         $expected  = $config['input_filters'][$validator];
-        $this->assertEquals($expected, $payload->getArrayCopy(), sprintf("Expected: %s\nReceived: %s\n\n", var_export($expected, 1), var_export($payload->getArrayCopy(), 1)));
+        $expected['name'] = $validator;
+        $this->assertEquals($expected, $payload->getArrayCopy());
     }
 
     public function testRemoveInputFilter()
