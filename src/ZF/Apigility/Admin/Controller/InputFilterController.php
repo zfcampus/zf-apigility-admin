@@ -101,7 +101,7 @@ class InputFilterController extends AbstractActionController
                     );
                 }
 
-                $name   = $result['name'];
+                $name   = $result['input_filter_name'];
                 $result = new HalResource($result, $name);
                 $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
                 break;

@@ -78,15 +78,13 @@ class InputFilterControllerTest extends TestCase
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Hal\Collection', $payload);
         $collection = $payload->collection;
-        $this->assertInternalType('array', $collection);
-        $resource = array_shift($collection);
-        $this->assertInstanceOf('ZF\Hal\Resource', $resource);
-        $inputFilter = $resource->resource;
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterCollection', $collection);
+        $inputFilter = $collection->dequeue();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
 
         $inputFilterKey = $this->config['zf-content-validation'][$controller]['input_filter'];
         $expected = $this->config['input_filters'][$inputFilterKey];
-        $expected['name'] = $inputFilterKey;
+        $expected['input_filter_name'] = $inputFilterKey;
         $this->assertEquals($expected, $inputFilter->getArrayCopy());
     }
 
@@ -121,7 +119,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $resource);
 
         $expected = $this->config['input_filters'][$validator];
-        $expected['name'] = $validator;
+        $expected['input_filter_name'] = $validator;
         $this->assertEquals($expected, $resource->getArrayCopy());
     }
 
@@ -182,7 +180,7 @@ class InputFilterControllerTest extends TestCase
         $config    = include $this->basePath . '/module.config.php';
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
         $expected  = $config['input_filters'][$validator];
-        $expected['name'] = $validator;
+        $expected['input_filter_name'] = $validator;
         $this->assertEquals($expected, $resource->getArrayCopy());
     }
 
