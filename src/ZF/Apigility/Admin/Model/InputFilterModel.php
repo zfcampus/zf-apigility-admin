@@ -72,15 +72,17 @@ class InputFilterModel
      * @param  string $module
      * @param  string $controller
      * @param  string $inputFilterName
-     * @return false|array|InputFilterEntity
+     * @return false|InputFilterCollection|InputFilterEntity
      */
     protected function getInputFilter($module, $controller, $inputFilterName = null)
     {
-        $configModule = $this->configFactory->factory($module);
-        $config       = $configModule->fetch(true);
+        $configModule   = $this->configFactory->factory($module);
+        $config         = $configModule->fetch(true);
+        $collectionType = $this->getCollectionType($controller);
+        $entityType     = $this->getEntityType($controller);
 
         if (!isset($config['zf-content-validation'][$controller]['input_filter'])) {
-            return array();
+            return new $collectionType();
         }
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
@@ -94,15 +96,17 @@ class InputFilterModel
 
         // Retrieving the input filter by name
         if ($inputFilterName && $inputFilterName === $validator) {
-            $inputFilter = new InputFilterEntity($config['input_filters'][$inputFilterName]);
-            $inputFilter['name'] = $inputFilterName;
+            $inputFilter = new $entityType($config['input_filters'][$inputFilterName]);
+            $inputFilter['input_filter_name'] = $inputFilterName;
             return $inputFilter;
         }
 
         // Retrieving a collection
-        $inputFilter = new InputFilterEntity($config['input_filters'][$validator]);
-        $inputFilter['name'] = $validator;
-        return array($inputFilter);
+        $collection  = new $collectionType();
+        $inputFilter = new $entityType($config['input_filters'][$validator]);
+        $inputFilter['input_filter_name'] = $validator;
+        $collection->enqueue($inputFilter);
+        return $collection;
     }
 
     /**
@@ -145,8 +149,9 @@ class InputFilterModel
             return false;
         }
 
-        $return = new InputFilterEntity($updated['input_filters'][$validator]);
-        $return['name'] = $validator;
+        $entityType = $this->getEntityType($controller);
+        $return = new $entityType($updated['input_filters'][$validator]);
+        $return['input_filter_name'] = $validator;
         return $return;
     }
 
@@ -240,13 +245,57 @@ class InputFilterModel
         }
 
         $config = $configModule->fetch(true);
-        if ((!isset($config['zf-rest']) && !isset($config['zf-rpc']))
-            || (!array_key_exists($controller, $config['zf-rest'])
-            && !array_key_exists($controller, $config['zf-rpc']))
+
+        if (isset($config['zf-rest'])
+            && array_key_exists($controller, $config['zf-rest'])
         ) {
-            return false;
+            return true;
         }
 
-        return true;
+        if (isset($config['zf-rpc'])
+            && array_key_exists($controller, $config['zf-rpc'])
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine the collection class to use
+     * 
+     * @param string $controller 
+     * @return string
+     */
+    protected function getCollectionType($controller)
+    {
+        if (strstr($controller, '\\Rest\\')) {
+            return sprintf('%s\\RestInputFilterCollection', __NAMESPACE__);
+        }
+
+        if (strstr($controller, '\\Rpc\\')) {
+            return sprintf('%s\\RpcInputFilterCollection', __NAMESPACE__);
+        }
+
+        return sprintf('%s\\InputFilterCollection', __NAMESPACE__);
+    }
+
+    /**
+     * Determine the entity class to use
+     * 
+     * @param string $controller 
+     * @return string
+     */
+    protected function getEntityType($controller)
+    {
+        if (strstr($controller, '\\Rest\\')) {
+            return sprintf('%s\\RestInputFilterEntity', __NAMESPACE__);
+        }
+
+        if (strstr($controller, '\\Rpc\\')) {
+            return sprintf('%s\\RpcInputFilterEntity', __NAMESPACE__);
+        }
+
+        return sprintf('%s\\InputFilterEntity', __NAMESPACE__);
     }
 }

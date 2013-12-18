@@ -8,6 +8,7 @@ namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use ZF\Apigility\Admin\Model\InputFilterCollection;
 use ZF\Apigility\Admin\Model\InputFilterModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
@@ -56,14 +57,17 @@ class InputFilterController extends AbstractActionController
                     );
                 }
 
-                if (is_array($result)) {
+                if ($result instanceof InputFilterCollection) {
+                    /*
                     $self   = $this;
                     $result = array_map(function ($inputFilter) use ($route, $module, $controller, $self) {
                         $resource = new HalResource($inputFilter, $inputFilter['name']);
                         $self->injectResourceSelfLink($resource->getLinks(), $route, $module, $controller, $inputFilter['name']);
                         return $resource;
                     }, $result);
+                     */
                     $result = new HalCollection($result);
+                    /*
                     $result->setCollectionName('input_filter');
                     $result->getLinks()->add(Link::factory([
                         'rel' => 'self',
@@ -76,12 +80,13 @@ class InputFilterController extends AbstractActionController
                         ],
                     ]));
                     $result->setResourceRoute($route);
+                     */
                     break;
                 }
 
-                $name   = $result['name'];
+                $name   = $result['input_filter_name'];
                 $result = new HalResource($result, $name);
-                $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
+                // $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
                 break;
 
             case $request::METHOD_POST:
