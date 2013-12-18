@@ -185,6 +185,34 @@ class VersioningModelTest extends TestCase
         }
     }
 
+    public function testCreateNewVersionClonesValidationConfigurationForNewVersion()
+    {
+        $originalConfig = include __DIR__ . '/TestAsset/module/Version/config/module.config.php';
+        $this->assertArrayHasKey('zf-content-validation', $originalConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Controller', $originalConfig['zf-content-validation']);
+        $this->assertArrayHasKey('input_filter', $originalConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']);
+        $this->assertArrayHasKey('input_filters', $originalConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $originalConfig['input_filters']);
+
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset/module/Version/src/Version');
+
+        $updatedConfig = include __DIR__ . '/TestAsset/module/Version/config/module.config.php';
+
+        $this->assertArrayHasKey('zf-content-validation', $updatedConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Controller', $updatedConfig['zf-content-validation']);
+        $this->assertArrayHasKey('input_filter', $updatedConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']);
+        $this->assertEquals('Version\V1\Rest\Message\Validator', $updatedConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']['input_filter']);
+
+        $this->assertArrayHasKey('Version\V2\Rest\Message\Controller', $updatedConfig['zf-content-validation']);
+        $this->assertArrayHasKey('input_filter', $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']);
+        $this->assertEquals('Version\V2\Rest\Message\Validator', $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']['input_filter']);
+
+        $this->assertArrayHasKey('input_filters', $updatedConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $updatedConfig['input_filters']);
+        $this->assertArrayHasKey('Version\V2\Rest\Message\Validator', $updatedConfig['input_filters']);
+        $this->assertEquals($updatedConfig['input_filters']['Version\V1\Rest\Message\Validator'], $updatedConfig['input_filters']['Version\V2\Rest\Message\Validator']);
+    }
+
     public function testSettingTheApiDefaultVersion()
     {
         $config = include $this->moduleConfigFile;

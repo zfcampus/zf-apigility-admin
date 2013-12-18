@@ -22,6 +22,27 @@ return array (
             ),
         ),
     ),
+    'input_filters' => array(
+        'Version\\V1\\Rest\\Message\\Validator' => array(
+            array(
+                'name' => 'email',
+                'validators' => array(
+                    array('name' => 'EmailAddress'),
+                ),
+            ),
+            array(
+                'name' => 'message',
+                'validators' => array(
+                    array('name' => 'NotEmpty'),
+                ),
+            )
+        ),
+    ),
+    'zf-content-validation' => array(
+        'Version\\V1\\Rest\\Message\\Controller' => array(
+            'input_filter' => 'Version\\V1\\Rest\\Message\\Validator',
+        ),
+    ),
     'zf-mvc-auth' => array(
         'authorization' => array(
             'Version\\V1\\Rest\\Message\\Controller::resource' => array(
