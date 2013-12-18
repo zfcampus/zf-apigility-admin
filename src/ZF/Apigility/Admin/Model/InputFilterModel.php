@@ -240,8 +240,8 @@ class InputFilterModel
         }
 
         $config = $configModule->fetch(true);
-        if ((!isset($config['zf-rest']) && !isset($config['zf-rpc'])) 
-            || (!array_key_exists($controller, $config['zf-rest']) 
+        if ((!isset($config['zf-rest']) && !isset($config['zf-rpc']))
+            || (!array_key_exists($controller, $config['zf-rest'])
             && !array_key_exists($controller, $config['zf-rpc']))
         ) {
             return false;
