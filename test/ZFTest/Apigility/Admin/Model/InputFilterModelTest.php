@@ -87,6 +87,7 @@ class InputFilterModelTest extends TestCase
                 ]
             ]
         ];
+
         // new controller
         $controller = 'InputFilter\V1\Rest\Bar\Controller';
         $result = $this->model->update('InputFilter', $controller, $inputfilter);

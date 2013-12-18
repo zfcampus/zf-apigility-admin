@@ -6,7 +6,6 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\Stdlib\ArrayUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
 
@@ -47,7 +46,7 @@ class InputFilterModel
      * @param  string $module
      * @param  string $controller
      * @param  array $inputFilterName
-     * @return InputFilterEntity
+     * @return false|InputFilterEntity
      */
     public function update($module, $controller, $inputFilter)
     {
@@ -120,32 +119,24 @@ class InputFilterModel
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
 
-        if (!isset($config['zf-content-validation'])) {
-            $config['zf-content-validation'] = array();
-        }
-
         if (!isset($config['zf-content-validation'][$controller])) {
-            $config['zf-content-validation'][$controller] = [
-                'input_filter' => empty($validatorName) ? $this->generateValidatorName($controller) : $validatorName,
-            ];
+            $validatorName = $validatorName ?: $this->generateValidatorName($controller);
+            $config = $configModule->patchKey(['zf-content-validation', $controller, 'input_filter'], $validatorName);
         }
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
 
         if (!isset($config['input_filters'])) {
-            $config['input_filters'] = array();
+            $config['input_filters'] = [];
         }
 
         if (!isset($config['input_filters'][$validator])) {
-            $config['input_filters'][$validator] = array();
+            $config['input_filters'][$validator] = [];
         }
 
-        $config['input_filters'][$validator] = ArrayUtils::merge(
-            $config['input_filters'][$validator],
-            $inputFilter
-        );
+        $config['input_filters'][$validator] = $inputFilter;
 
-        $updated = $configModule->patch($config);
+        $updated = $configModule->patchKey(['input_filters', $validator], $inputFilter);
         if (!is_array($updated)) {
             return false;
         }

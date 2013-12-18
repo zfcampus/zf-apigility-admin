@@ -76,10 +76,12 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
         $this->assertInternalType('array', $payload);
+        $inputFilter = array_shift($payload);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
 
         $inputFilterKey = $this->config['zf-content-validation'][$controller]['input_filter'];
-        $expected = array($this->config['input_filters'][$inputFilterKey]);
-        $this->assertEquals($expected, $payload);
+        $expected = $this->config['input_filters'][$inputFilterKey];
+        $this->assertEquals($expected, $inputFilter->getArrayCopy());
     }
 
     public function testGetInputFilter()
@@ -91,11 +93,11 @@ class InputFilterControllerTest extends TestCase
 
         $module     = 'InputFilter';
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
-        $inputname  = 'InputFilter\V1\Rest\Foo\Validator';
+        $validator  = 'InputFilter\V1\Rest\Foo\Validator';
         $params = array(
             'name' => $module,
             'controller_service_name' => $controller,
-            'input_filter_name' => $inputname
+            'input_filter_name' => $validator,
         );
         $routeMatch = new RouteMatch($params);
         $event = new MvcEvent();
@@ -110,7 +112,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $payload);
 
         $expected  = $this->config['input_filters'][$validator];
-        $this->assertEquals($expected, $payload);
+        $this->assertEquals($expected, $payload->getArrayCopy());
     }
 
     public function testAddInputFilter()
@@ -153,7 +155,7 @@ class InputFilterControllerTest extends TestCase
         $event->setParam('ZFContentNegotiationParameterData', $parameters);
 
         $plugins = new PluginManager();
-        $plugins->setInvokableClass('bodyParam', 'ZF\ContentNegotiation\ControllerPlugin\BodyParam');
+        $plugins->setInvokableClass('bodyParams', 'ZF\ContentNegotiation\ControllerPlugin\BodyParams');
 
         $this->controller->setRequest($request);
         $this->controller->setEvent($event);
@@ -164,9 +166,10 @@ class InputFilterControllerTest extends TestCase
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $payload);
 
-        $validator = $this->config['zf-content-validation'][$controller]['input_filter'];
-        $expected  = $this->config['input_filters'][$validator];
-        $this->assertEquals($expected, $payload->getArrayCopy());
+        $config    = include $this->basePath . '/module.config.php';
+        $validator = $config['zf-content-validation'][$controller]['input_filter'];
+        $expected  = $config['input_filters'][$validator];
+        $this->assertEquals($expected, $payload->getArrayCopy(), sprintf("Expected: %s\nReceived: %s\n\n", var_export($expected, 1), var_export($payload->getArrayCopy(), 1)));
     }
 
     public function testRemoveInputFilter()

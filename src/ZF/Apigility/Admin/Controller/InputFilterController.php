@@ -24,72 +24,74 @@ class InputFilterController extends AbstractActionController
 
     public function indexAction()
     {
-        $request    = $this->getRequest();
-        $module     = $this->params()->fromRoute('name', null);
-        $controller = $this->params()->fromRoute('controller_service_name', null);
-        $inputname  = $this->params()->fromRoute('inputname', null);
+        $request         = $this->getRequest();
+        $module          = $this->params()->fromRoute('name', false);
+        $controller      = $this->params()->fromRoute('controller_service_name', false);
+        $inputFilterName = $this->params()->fromRoute('input_filter_name', false);
 
-        if (!$this->model->moduleExists($module)) {
+        if (!$module || !$this->model->moduleExists($module)) {
             return new ApiProblemResponse(
-                new ApiProblem(404, 'The module specified doesn\'t exist')
+                new ApiProblem(404, 'The module specified does not exist')
             );
         }
 
-        if (!$this->model->controllerExists($module, $controller)) {
+        if (!$controller || !$this->model->controllerExists($module, $controller)) {
             return new ApiProblemResponse(
-                new ApiProblem(404, 'The controller specified doesn\'t exist')
+                new ApiProblem(404, 'The controller specified does not exist')
             );
         }
 
         switch ($request->getMethod()) {
-
             case $request::METHOD_GET:
-                $inputfilter = $this->model->fetch($module, $controller, $inputname);
-                if (false === $inputfilter) {
+                $result = $this->model->fetch($module, $controller, $inputFilterName);
+                if (false === $result) {
                     return new ApiProblemResponse(
-                        new ApiProblem(404, 'The input filter specified doesn\'t exist')
+                        new ApiProblem(404, 'The input filter specified does not exist')
                     );
-                }
-                $result = array();
-                if ($inputname && !empty($inputfilter)) {
-                    $result = $inputfilter;
-                } elseif (!empty($inputfilter)) {
-                    $result = $this->removeKey($inputfilter);
                 }
                 break;
 
-            case $request::METHOD_PUT:
-                $inputfilter = $this->bodyParam('input_filters');
-                if (!$inputfilter || !isset($inputfilter['name'])) {
+            case $request::METHOD_POST:
+                if ($inputFilterName) {
                     return new ApiProblemResponse(
-                        new ApiProblem(404, 'The input_filters has not been specified or is not valid')
+                        new ApiProblem(400, 'POST requests are not allowed to individual input filters')
                     );
                 }
-                $inputfilter = [ $inputfilter['name'] => $inputfilter ];
-                $result = $this->model->update($module, $controller, $inputfilter);
-                if (!empty($result)) {
-                    $validator = $result['zf-content-validation'][$controller]['input_filter'];
-                    $result    = $this->removeKey($result['input_filters'][$validator]);
+                // Intentionally not breaking, as remainder of logic remains the same as PUT
+
+            case $request::METHOD_PUT:
+                $inputFilter = $this->bodyParams();
+                if (empty($inputFilter)) {
+                    return new ApiProblemResponse(
+                        new ApiProblem(404, 'No input filter has been specified')
+                    );
+                }
+                $result = $this->model->update($module, $controller, $inputFilter);
+                if (!$result) {
+                    return new ApiProblemResponse(
+                        new ApiProblem(500, 'There was an unexpected error updating the input filter; please verify the module and controller specified are valid')
+                    );
                 }
                 break;
 
             case $request::METHOD_DELETE:
-                if (empty($inputname)) {
+                if (empty($inputFilterName)) {
                     return new ApiProblemResponse(
-                        new ApiProblem(404, 'The inputname has not been specified')
+                        new ApiProblem(400, 'The input filter name has not been specified')
                     );
                 }
-                $result = $this->model->remove($module, $controller, $inputname);
+
+                $result = $this->model->remove($module, $controller, $inputFilterName);
                 if (!$result) {
                     return new ApiProblemResponse(
-                        new ApiProblem(404, 'The inputname specified doesn\'t exist')
+                        new ApiProblem(404, 'The input filter specified does not exist')
                     );
                 }
                 return $this->getResponse()->setStatusCode(204);
                 break;
         }
 
-        $viewModel = new ViewModel(['input_filters' => $result]);
+        $viewModel = new ViewModel(['payload' => $result]);
         $viewModel->setTerminal(true);
         return $viewModel;
     }
