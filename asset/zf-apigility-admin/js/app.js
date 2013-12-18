@@ -405,7 +405,10 @@ module.controller(
 
 module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ValidatorsServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ValidatorsServicesRepository, ApiRepository, api, dbAdapters) {
 
+    $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
+
     $scope.api = api;
+    console.log(api);
 
     $scope.dbAdapters = dbAdapters;
 
@@ -417,17 +420,17 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.sourceCode = [];
 
-    (function () {
+//    (function () {
         HydratorServicesRepository.getList().then(function(response) {
             $scope.hydrators = response.data.hydrators;
         });
-    })();
+//    })();
 
-    (function () {
+//    (function () {
         ValidatorsServicesRepository.getList().then(function(response) {
             $scope.validatorOptions = response.data.validators;
         });
-    })();
+//    })();
 
     $scope.toggleSelection = function (model, $event) {
         var element = $event.target;
@@ -504,6 +507,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
 module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ValidatorsServicesRepository, ApiRepository, api) {
 
+    $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
+
     $scope.api = api;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
@@ -574,6 +579,7 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
 
     // setup inputs array on service (is this already here?)
     $scope.service['inputs'] = [];
+    console.log($scope.service.inputFilter);
 
     $scope.addInput = function() {
         $scope.service.inputs.push({name: $scope.newInput, validators: []});
@@ -586,9 +592,11 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
     };
 
     $scope.addOption = function (validator) {
+        console.log(validator);
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
         validator._newOptionValue = '';
+        console.log($scope.service);
     };
 
     $scope.removeInput = function (inputIndex) {
@@ -611,9 +619,15 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
                 _.forEach(value, removeUnderscoreProperties);
             }
         }
-        var modelInputs = _.cloneDeep($scope.service.inputs);
+        var modelInputs = _.cloneDeep($scope.service.inputFilter);
         _.forEach(modelInputs, removeUnderscoreProperties);
         console.log(modelInputs);
+
+        console.log($scope.$parent);
+
+        var apiRepo = $scope.$parent.ApiRepository;
+        apiRepo.saveInputFilter($scope.service, modelInputs);
+
     };
 
 }]);
@@ -715,11 +729,20 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
             }).then(function (api) {
                 // now load REST + RPC endpoints
                 return api.link('rest', {version: version}).fetch().then(function (restServices) {
-                    _.chain(restServices.embedded.rest)
-                        .pluck('props')
-                        .forEach(function (item) {
-                            apiModel.restServices.push(item);
-                        });
+
+                    _.forEach(restServices.embedded.rest, function (restService, index) {
+                        var length = 0;
+                        length = apiModel.restServices.push(restService.props);
+                        apiModel.restServices[length - 1]._self = restService.links.self.href;
+                        if (restService.links.input_filter) {
+                            restService.link('input_filter').fetch().then(function (inputFilter) {
+                                if (inputFilter.embedded.input_filter[0]) {
+                                    apiModel.restServices[length - 1].inputFilter = inputFilter.embedded.input_filter[0].props;
+                                }
+                            });
+                        }
+                    });
+
                     return api;
                 });
             }).then(function (api) {
@@ -784,6 +807,11 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                 .then(function (response) {
                     return response.data;
                 });
+        },
+
+        saveInputFilter: function (api, inputFilter) {
+            var url = api._self + '/inputfilter';
+            return $http.put(url, inputFilter);
         },
 
         removeRpcService: function (apiName, rpcServiceName) {
