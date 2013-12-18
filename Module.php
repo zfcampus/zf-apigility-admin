@@ -24,11 +24,6 @@ class Module
     protected $mvcEvent;
 
     /**
-     * @var array
-     */
-    protected $routeParams;
-
-    /**
      * @var \Closure
      */
     protected $urlHelper;
@@ -292,11 +287,6 @@ class Module
             return;
         }
 
-        $this->routeParams = [];
-        $viewHelpers = $this->sm->get('ViewHelperManager');
-        $halPlugin = $viewHelpers->get('hal');
-        $halPlugin->getEventManager()->attach('fromLink', array($this, 'onFromLink'));
-
         if ($result->isResource()) {
             $this->initializeUrlHelper();
             $this->injectServiceLinks($result->getPayload(), $result, $e);
@@ -306,20 +296,10 @@ class Module
         if ($result->isCollection()) {
             $this->mvcEvent = $e;
             $this->initializeUrlHelper();
+            $viewHelpers = $this->sm->get('ViewHelperManager');
+            $halPlugin = $viewHelpers->get('hal');
             $halPlugin->getEventManager()->attach('renderCollection.resource', array($this, 'onRenderCollectionResource'), 10);
         }
-    }
-
-    /**
-     * Keep a record of existing parameters so we can ensure urls are generated
-     *
-     * @param \Zend\EventManager\EventManager $e
-     */
-    public function onFromLink($e)
-    {
-        $routeParams = $e->getParam('params');
-        $this->routeParams = array_merge($this->routeParams, $routeParams);
-        $e->setParam('params', $routeParams);
     }
 
     protected function initializeUrlHelper()
