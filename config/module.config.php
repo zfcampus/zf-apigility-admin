@@ -195,7 +195,7 @@ return array(
                                         ),
                                         'may_terminate' => true,
                                         'child_routes' => array(
-                                            'rpc_input_filter' => array(
+                                            'rest_input_filter' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
                                                     'route' => '/inputfilter[/:input_filter_name]',
@@ -445,7 +445,7 @@ return array(
             'route_name'   => 'zf-apigility-admin/api/hydrators',
         ),
         'ZF\Apigility\Admin\Controller\InputFilter' => array(
-            'http_methods' => array('GET', 'PUT', 'DELETE'),
+            'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility-admin/api/rpc-service/rpc_input_filter',
         ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(

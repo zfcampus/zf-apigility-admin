@@ -6,12 +6,15 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\InputFilterModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
-use Zend\Http\Request;
 use ZF\ContentNegotiation\ViewModel;
+use ZF\Hal\Collection as HalCollection;
+use ZF\Hal\Link\Link;
+use ZF\Hal\Resource as HalResource;
 
 class InputFilterController extends AbstractActionController
 {
@@ -24,6 +27,9 @@ class InputFilterController extends AbstractActionController
 
     public function indexAction()
     {
+        $event           = $this->getEvent();
+        $routeMatch      = $event->getRouteMatch();
+        $route           = $this->deriveRouteName($routeMatch->getMatchedRouteName());
         $request         = $this->getRequest();
         $module          = $this->params()->fromRoute('name', false);
         $controller      = $this->params()->fromRoute('controller_service_name', false);
@@ -49,6 +55,32 @@ class InputFilterController extends AbstractActionController
                         new ApiProblem(404, 'The input filter specified does not exist')
                     );
                 }
+
+                if (is_array($result)) {
+                    $self   = $this;
+                    $result = array_map(function ($inputFilter) use ($route, $module, $controller, $self) {
+                        $resource = new HalResource($inputFilter, $inputFilter['name']);
+                        $self->injectResourceSelfLink($resource->getLinks(), $route, $module, $controller, $inputFilter['name']);
+                        return $resource;
+                    }, $result);
+                    $result = new HalCollection($result);
+                    $result->getLinks()->add(Link::factory([
+                        'rel' => 'self',
+                        'route' => [
+                            'name' => $route,
+                            'params' => [
+                                'name'                    => $module,
+                                'controller_service_name' => $controller,
+                            ],
+                        ],
+                    ]));
+                    $result->setResourceRoute($route);
+                    break;
+                }
+
+                $name   = $result['name'];
+                $result = new HalResource($result, $name);
+                $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
                 break;
 
             case $request::METHOD_POST:
@@ -72,6 +104,10 @@ class InputFilterController extends AbstractActionController
                         new ApiProblem(500, 'There was an unexpected error updating the input filter; please verify the module and controller specified are valid')
                     );
                 }
+
+                $name   = $result['name'];
+                $result = new HalResource($result, $name);
+                $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
                 break;
 
             case $request::METHOD_DELETE:
@@ -88,7 +124,6 @@ class InputFilterController extends AbstractActionController
                     );
                 }
                 return $this->getResponse()->setStatusCode(204);
-                break;
         }
 
         $e = $this->getEvent();
@@ -126,5 +161,27 @@ class InputFilterController extends AbstractActionController
     {
         $this->request = $request;
         return $this;
+    }
+
+    protected function deriveRouteName($route)
+    {
+        $matches = [];
+        preg_match('/(?P<type>rpc|rest)/', $route, $matches);
+        return sprintf('zf-apigility-admin/api/module/%s-service/%s_input_filter', $matches['type'], $matches['type']);
+    }
+
+    public function injectResourceSelfLink($links, $route, $module, $controller, $inputFilterName)
+    {
+        $links->add(Link::factory([
+            'rel' => 'self',
+            'route' => [
+                'name' => $route,
+                'params' => [
+                    'name'                    => $module,
+                    'controller_service_name' => $controller,
+                    'input_filter_name'       => $inputFilterName,
+                ],
+            ],
+        ]));
     }
 }
