@@ -51,9 +51,9 @@ class InputFilterModelTest extends TestCase
     public function testFetch()
     {
         $result = $this->model->fetch('InputFilter', 'InputFilter\V1\Rest\Foo\Controller');
-        $this->assertInternalType('array', $result);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterCollection', $result);
         $this->assertEquals(1, count($result));
-        $inputFilter = array_shift($result);
+        $inputFilter = $result->dequeue();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
         $this->assertEquals($this->config['input_filters']['InputFilter\V1\Rest\Foo\Validator']['foo'], $inputFilter['foo']);
     }

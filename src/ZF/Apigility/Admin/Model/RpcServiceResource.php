@@ -15,6 +15,11 @@ use ZF\Rest\Exception\PatchException;
 class RpcServiceResource extends AbstractResourceListener
 {
     /**
+     * @var InputFilterModel
+     */
+    protected $inputFilterModel;
+
+    /**
      * @var RpcServiceModel
      */
     protected $model;
@@ -31,10 +36,12 @@ class RpcServiceResource extends AbstractResourceListener
 
     /**
      * @param  RpcServiceModelFactory $rpcFactory
+     * @param  InputFilterModel $inputFilterModel
      */
-    public function __construct(RpcServiceModelFactory $rpcFactory)
+    public function __construct(RpcServiceModelFactory $rpcFactory, InputFilterModel $inputFilterModel)
     {
         $this->rpcFactory = $rpcFactory;
+        $this->inputFilterModel = $inputFilterModel;
     }
 
     /**
@@ -150,6 +157,7 @@ class RpcServiceResource extends AbstractResourceListener
         if (!$service instanceof RpcServiceEntity) {
             return new ApiProblem(404, 'RPC service not found');
         }
+        $this->injectInputFilters($service);
         return $service;
     }
 
@@ -161,8 +169,14 @@ class RpcServiceResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
-        $version = $this->getEvent()->getQueryParam('version', null);
-        return $this->getModel()->fetchAll($version);
+        $version  = $this->getEvent()->getQueryParam('version', null);
+        $services = $this->getModel()->fetchAll($version);
+
+        foreach ($services as $service) {
+            $this->injectInputFilters($service);
+        }
+
+        return $services;
     }
 
     /**
@@ -232,5 +246,50 @@ class RpcServiceResource extends AbstractResourceListener
             return $entity;
         }
         return $this->getModel()->deleteService($entity);
+    }
+
+    /**
+     * Inject the input filters collection, if any, as an embedded collection
+     *
+     * @param RpcServiceEntity $service
+     */
+    protected function injectInputFilters(RpcServiceEntity $service)
+    {
+        $inputFilters = $this->inputFilterModel->fetch($this->moduleName, $service->controllerServiceName);
+        if (!$inputFilters instanceof InputFilterCollection
+            || !count($inputFilters)
+        ) {
+            return;
+        }
+
+        $collection = [];
+
+        foreach ($inputFilters as $inputFilter) {
+            $resource = new HalResource($inputFilter, $inputFilter['input_filter_name']);
+            $links    = $resource->getLinks();
+            $links->add(Link::factory([
+                'rel' => 'self',
+                'route' => [
+                    'name' => 'zf-apigility-admin/api/module/rpc-service/rest_input_filter',
+                    'params' => [
+                        'name' => $this->moduleName,
+                        'controller_service_name' => $service->controllerServiceName,
+                    ],
+                ],
+            ]));
+            $collection[] = $resource;
+        }
+
+        $collection = new HalCollection($collection);
+        $collection->setCollectionName('input_filter');
+        $collection->setCollectionRoute('zf-apigility-admin/module/rpc-service/inputfilter');
+        $collection->setCollectionRouteParams([
+            'name' => $service->module,
+            'controller_service_name' => $service->controllerServiceName,
+        ]);
+
+        $service->exchangeArray([
+            'input_filters' => $collection,
+        ]);
     }
 }

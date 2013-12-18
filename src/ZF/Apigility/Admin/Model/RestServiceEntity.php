@@ -37,6 +37,8 @@ class RestServiceEntity
 
     protected $identifierName;
 
+    protected $inputFilters;
+
     protected $module;
 
     protected $pageSize = 25;
@@ -116,6 +118,11 @@ class RestServiceEntity
                 case 'identifiername':
                     $this->identifierName = $value;
                     break;
+                case 'inputfilters':
+                    if ($value instanceof InputFilterCollection) {
+                        $this->inputFilters = $value;
+                    }
+                    break;
                 case 'module':
                     $this->module = $value;
                     break;
@@ -146,7 +153,7 @@ class RestServiceEntity
 
     public function getArrayCopy()
     {
-        return array(
+        $array = array(
             'accept_whitelist'           => $this->acceptWhitelist,
             'collection_class'           => $this->collectionClass,
             'collection_http_methods'    => $this->collectionHttpMethods,
@@ -166,6 +173,10 @@ class RestServiceEntity
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,
         );
+        if (null !== $this->inputFilters) {
+            $array['input_filters'] = $this->inputFilters;
+        }
+        return $array;
     }
 
     protected function normalizeResourceNameForIdentifier($resourceName)
