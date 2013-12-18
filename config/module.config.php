@@ -379,11 +379,27 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-apigility-admin/api/module/rest-service',
+                'links'           => array(
+                    array(
+                        'rel' => 'input_filter',
+                        'route' => array(
+                            'name' => 'zf-apigility-admin/api/module/rest-service/rest_input_filter'
+                        ),
+                    )
+                ),
             ),
             'ZF\Apigility\Admin\Model\RpcServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-apigility-admin/api/module/rpc-service',
+                'links'           => array(
+                    array(
+                        'rel' => 'input_filter',
+                        'route' => array(
+                            'name' => 'zf-apigility-admin/api/module/rpc-service/rpc_input_filter'
+                        ),
+                    )
+                ),
             ),
         ),
     ),

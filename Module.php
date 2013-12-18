@@ -19,6 +19,11 @@ use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 class Module
 {
     /**
+     * @var MvcEvent
+     */
+    protected $mvcEvent;
+
+    /**
      * @var \Closure
      */
     protected $urlHelper;
@@ -265,11 +270,6 @@ class Module
             return;
         }
 
-        $controller = $matches->getParam('controller', false);
-        if ($controller != 'ZF\Apigility\Admin\Controller\Module') {
-            return;
-        }
-
         $result = $e->getResult();
         if (!$result instanceof HalJsonModel) {
             return;
@@ -277,11 +277,12 @@ class Module
 
         if ($result->isResource()) {
             $this->initializeUrlHelper();
-            $this->injectServiceLinks($result->getPayload(), $result);
+            $this->injectServiceLinks($result->getPayload(), $result, $e);
             return;
         }
 
         if ($result->isCollection()) {
+            $this->mvcEvent = $e;
             $this->initializeUrlHelper();
             $viewHelpers = $this->sm->get('ViewHelperManager');
             $halPlugin   = $viewHelpers->get('hal');
@@ -308,11 +309,19 @@ class Module
      *
      * @param  Resource $resource
      * @param  HalJsonModel $model
+     * @param  \Zend\Mvc\MvcEvent $model
      */
-    protected function injectServiceLinks(Resource $resource, HalJsonModel $model)
+    protected function injectServiceLinks(Resource $resource, HalJsonModel $model, $e)
     {
-        $module     = $resource->resource;
-        $links      = $resource->getLinks();
+        $entity = $resource->resource;
+        $links  = $resource->getLinks();
+        if ($entity instanceof Model\ModuleEntity) {
+            return $this->injectModuleResourceRelationalLinks($entity, $links, $model);
+        }
+    }
+
+    protected function injectModuleResourceRelationalLinks(Model\ModuleEntity $module, $links, HalJsonModel $model)
+    {
         $moduleName = $module['name'];
 
         $this->injectLinksForServicesByType('authorization', array(), $links, $moduleName);
@@ -323,23 +332,41 @@ class Module
         $this->injectLinksForServicesByType('rpc', $module['rpc'], $links, $moduleName);
         unset($module['rpc']);
 
-        $replacement = new Resource($module, $resource->id);
+        $replacement = new Resource($module, $moduleName);
         $replacement->setLinks($links);
         $model->setPayload($replacement);
     }
 
     /**
-     * Inject RPC/REST service links inside module resources that are composed in collections
+     * Inject links into collections
+     *
+     * Currently:
+     * - Inject RPC/REST service links inside module resources that are composed in collections
      *
      * @param  \Zend\EventManager\Event $e
      */
     public function onRenderCollectionResource($e)
     {
         $resource = $e->getParam('resource');
-        if (!$resource instanceof Model\ModuleEntity) {
-            return;
+        if ($resource instanceof Model\ModuleEntity) {
+            return $this->injectModuleCollectionRelationalLinks($resource, $e);
         }
 
+        if ($resource instanceof Model\RestServiceEntity
+            || $resource instanceof Model\RpcServiceEntity
+        ) {
+            return $this->injectServiceCollectionRelationalLinks($resource, $e);
+        }
+    }
+
+    /**
+     * Inject relational links into a Module resource
+     *
+     * @param Model\ModuleEntity $resource
+     * @param \Zend\Mvc\MvcEvent $e
+     */
+    public function injectModuleCollectionRelationalLinks(Model\ModuleEntity $resource, $e)
+    {
         $asArray  = $resource->getArrayCopy();
         $module   = $asArray['name'];
         $rest     = $asArray['rest'];
@@ -363,6 +390,42 @@ class Module
         $this->injectLinksForServicesByType('rest', $rest, $links, $module);
         $this->injectLinksForServicesByType('rpc', $rpc, $links, $module);
 
+        $e->setParam('resource', $halResource);
+    }
+
+    public function injectServiceCollectionRelationalLinks($entity, $e)
+    {
+        $module  = $this->mvcEvent->getRouteMatch()->getParam('name');
+        $service = $entity->controllerServiceName;
+        $type    = $this->getServiceType($service);
+
+        $halResource = new Resource($entity, $service);
+        $links = $halResource->getLinks();
+
+        // Need to inject the self relational link, as otherwise the HAL plugin
+        // sees we have links, and does not inject one.
+        $links->add(Link::factory(array(
+            'rel' => 'self',
+            'route' => array(
+                'name' => sprintf('zf-apigility-admin/api/module/%s-service', $type),
+                'params' => array(
+                    'name' => $module,
+                    'controller_service_name' => $service,
+                ),
+            ),
+        )));
+
+        // Add the input_filter relational link
+        $links->add(Link::factory(array(
+            'rel' => 'input_filter',
+            'route' => array(
+                'name' => sprintf('zf-apigility-admin/api/module/%s-service/%s_input_filter', $type, $type),
+                'params' => array(
+                    'name' => $module,
+                    'controller_service_name' => $service,
+                ),
+            ),
+        )));
         $e->setParam('resource', $halResource);
     }
 
@@ -401,5 +464,13 @@ class Module
 
         $link = Link::factory($spec);
         $links->add($link);
+    }
+
+    protected function getServiceType($service)
+    {
+        if (strstr($service, '\\Rest\\')) {
+            return 'rest';
+        }
+        return 'rpc';
     }
 }
