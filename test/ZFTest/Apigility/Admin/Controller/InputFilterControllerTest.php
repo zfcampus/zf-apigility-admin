@@ -79,7 +79,9 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\Hal\Collection', $payload);
         $collection = $payload->collection;
         $this->assertInternalType('array', $collection);
-        $inputFilter = array_shift($collection);
+        $resource = array_shift($collection);
+        $this->assertInstanceOf('ZF\Hal\Resource', $resource);
+        $inputFilter = $resource->resource;
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
 
         $inputFilterKey = $this->config['zf-content-validation'][$controller]['input_filter'];
@@ -104,6 +106,7 @@ class InputFilterControllerTest extends TestCase
             'input_filter_name' => $validator,
         );
         $routeMatch = new RouteMatch($params);
+        $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
@@ -154,6 +157,7 @@ class InputFilterControllerTest extends TestCase
             'controller_service_name' => $controller
         );
         $routeMatch = new RouteMatch($params);
+        $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
@@ -198,6 +202,7 @@ class InputFilterControllerTest extends TestCase
             'input_filter_name' => $validator,
         );
         $routeMatch = new RouteMatch($params);
+        $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
 
