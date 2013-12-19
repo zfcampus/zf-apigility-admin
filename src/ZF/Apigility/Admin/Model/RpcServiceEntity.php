@@ -8,6 +8,7 @@ namespace ZF\Apigility\Admin\Model;
 
 use InvalidArgumentException;
 use RuntimeException;
+use ZF\Hal\Collection as HalCollection;
 
 class RpcServiceEntity
 {
@@ -91,7 +92,9 @@ class RpcServiceEntity
                     $this->httpMethods = $value;
                     break;
                 case 'inputfilters':
-                    if ($value instanceof InputFilterCollection) {
+                    if ($value instanceof InputFilterCollection
+                        || $value instanceof HalCollection
+                    ) {
                         $this->inputFilters = $value;
                     }
                     break;
