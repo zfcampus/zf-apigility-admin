@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\Filter\FilterChain;
+use ZF\Hal\Collection as HalCollection;
 
 class RestServiceEntity
 {
@@ -119,7 +120,9 @@ class RestServiceEntity
                     $this->identifierName = $value;
                     break;
                 case 'inputfilters':
-                    if ($value instanceof InputFilterCollection) {
+                    if ($value instanceof InputFilterCollection
+                        || $value instanceof HalCollection
+                    ) {
                         $this->inputFilters = $value;
                     }
                     break;
