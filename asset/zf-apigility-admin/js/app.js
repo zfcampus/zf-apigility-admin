@@ -406,9 +406,9 @@ module.controller(
 module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ValidatorsServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ValidatorsServicesRepository, ApiRepository, api, dbAdapters) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
+    $scope.flash = flash;
 
     $scope.api = api;
-    console.log(api);
 
     $scope.dbAdapters = dbAdapters;
 
@@ -420,17 +420,13 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.sourceCode = [];
 
-//    (function () {
-        HydratorServicesRepository.getList().then(function(response) {
-            $scope.hydrators = response.data.hydrators;
-        });
-//    })();
+    HydratorServicesRepository.getList().then(function(response) {
+        $scope.hydrators = response.data.hydrators;
+    });
 
-//    (function () {
-        ValidatorsServicesRepository.getList().then(function(response) {
-            $scope.validatorOptions = response.data.validators;
-        });
-//    })();
+    ValidatorsServicesRepository.getList().then(function(response) {
+        $scope.validatorOptions = response.data.validators;
+    });
 
     $scope.toggleSelection = function (model, $event) {
         var element = $event.target;
@@ -508,6 +504,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ValidatorsServicesRepository, ApiRepository, api) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
+    $scope.flash = flash;
 
     $scope.api = api;
 
@@ -515,11 +512,9 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
     $scope.validators = [];
 
-    (function () {
-        ValidatorsServicesRepository.getList().then(function(response) {
-            $scope.validators = response.data.validators;
-        });
-    })();
+    ValidatorsServicesRepository.getList().then(function(response) {
+        $scope.validators = response.data.validators;
+    });
 
     $scope.resetForm = function () {
         $scope.showNewRpcServiceForm = false;
@@ -577,13 +572,13 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
     $scope.service = $scope.$parent.restService;
     $scope.validatorOptions = $scope.$parent.validatorOptions;
 
-    // setup inputs array on service (is this already here?)
-    $scope.service['inputs'] = [];
-    console.log($scope.service.inputFilter);
-
     $scope.addInput = function() {
-        $scope.service.inputs.push({name: $scope.newInput, validators: []});
+        $scope.service.input_filter.push({name: $scope.newInput, validators: []});
         $scope.newInput = '';
+    };
+
+    $scope.removeInput = function (inputIndex) {
+        $scope.service.input_filter.splice(inputIndex, 1);
     };
 
     $scope.addValidator = function (input) {
@@ -591,20 +586,14 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
         input._newValidatorName = '';
     };
 
+    $scope.removeValidator = function (input, validatorIndex) {
+        input.validators.splice(validatorIndex, 1);
+    };
+
     $scope.addOption = function (validator) {
-        console.log(validator);
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
         validator._newOptionValue = '';
-        console.log($scope.service);
-    };
-
-    $scope.removeInput = function (inputIndex) {
-        $scope.service.inputs.splice(inputIndex, 1);
-    };
-
-    $scope.removeValidator = function (input, validatorIndex) {
-        input.validators.splice(validatorIndex, 1);
     };
 
     $scope.removeOption = function (options, name) {
@@ -619,15 +608,12 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
                 _.forEach(value, removeUnderscoreProperties);
             }
         }
-        var modelInputs = _.cloneDeep($scope.service.inputFilter);
-        _.forEach(modelInputs, removeUnderscoreProperties);
-        console.log(modelInputs);
-
-        console.log($scope.$parent);
+        var modelInputFilter = _.cloneDeep($scope.service.input_filter);
+        _.forEach(modelInputFilter, removeUnderscoreProperties);
 
         var apiRepo = $scope.$parent.ApiRepository;
-        apiRepo.saveInputFilter($scope.service, modelInputs);
-
+        apiRepo.saveInputFilter($scope.service, modelInputFilter);
+        $scope.$parent.flash.success = 'Input Filter configuration saved.';
     };
 
 }]);
@@ -734,13 +720,30 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                         var length = 0;
                         length = apiModel.restServices.push(restService.props);
                         apiModel.restServices[length - 1]._self = restService.links.self.href;
-                        if (restService.links.input_filter) {
-                            restService.link('input_filter').fetch().then(function (inputFilter) {
-                                if (inputFilter.embedded.input_filter[0]) {
-                                    apiModel.restServices[length - 1].inputFilter = inputFilter.embedded.input_filter[0].props;
+                        if (restService.embedded.input_filters && restService.embedded.input_filters[0]) {
+                            apiModel.restServices[length - 1].input_filter = restService.embedded.input_filters[0].props;
+                            _.forEach(apiModel.restServices[length-1].input_filter, function (value, key) {
+                                if (typeof value == 'string') {
+                                    delete apiModel.restServices[length-1].input_filter[key];
+                                } else {
+                                    if (typeof value.validators == 'undefined') {
+                                        value.validators = [];
+                                    } else {
+                                        _.forEach(value.validators, function (validator, index) {
+                                            if (typeof validator.options == 'undefined' || validator.options.length == 0) {
+                                                validator.options = {};
+                                            }
+                                        })
+                                    }
                                 }
+
                             });
+                            // convert to array
+                            apiModel.restServices[length - 1].input_filter = _.toArray(apiModel.restServices[length - 1].input_filter);
+                        } else {
+                            apiModel.restServices[length - 1].input_filter = [];
                         }
+
                     });
 
                     return api;

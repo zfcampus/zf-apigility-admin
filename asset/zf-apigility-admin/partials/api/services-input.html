@@ -9,9 +9,11 @@
                 </form>
             </div>
         </li>
-        <li class="list-group-item" ng-repeat="input in service.inputFilter">
+        <li class="list-group-item" ng-repeat="input in service.input_filter">
 
-            <a ng-click="input._editNameVisible = true" ng-hide="input._editNameVisible">{{input.name}}</a>
+            <a ng-click="input._editNameVisible = true" ng-hide="input._editNameVisible">
+                {{input.name}}
+            </a>
             <div ng-show="input._editNameVisible">
                 <form ng-submit="input._editNameVisible = false">
                     <input type="text" ng-model="input.name" value="{{input.name}}">
@@ -25,7 +27,7 @@
                 <li ng-repeat="validator in input.validators">
                     <i class="glyphicon glyphicon-list validator-handle"></i>
 
-                    {{validator.name}} {{validator}}
+                    {{validator.name}}
 
                     <div class="pull-right">
                         <a ng-click="removeValidator(input, $index)">[x]</a> | <a ng-click="validator._newOptionFormVisible = true">Add Option</a>
