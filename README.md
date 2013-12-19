@@ -90,6 +90,31 @@ meaning of the flags is reversed; `true` then means the method is public,
 Additionally, any other properties used to create the `Zend\Db\Adapter\Adapter`
 instance may be composed: e.g., "username", "password", etc.
 
+### `inputfilter`
+
+```javascript
+{
+    "input_name": {
+        "name": "name of the input; should match key of object",
+        "validators": [
+            {
+                "name": "Name of validator service",
+                "options": {
+                    "key": "value pairs to specify behavior of validator"
+                }
+            }
+        ]
+    }
+}
+```
+
+An input filter may contain any number of inputs, and the format follows that
+used by `Zend\InputFilter\Factory` as described here:
+http://zf2.readthedocs.org/en/latest/modules/zend.input-filter.intro.html
+
+Currently, we do not expose the `required` flag for inputs, utilize filters, nor
+allow nesting input filters.
+
 ### `module`
 
 ```javascript
@@ -137,6 +162,7 @@ respectively.
         "allowed",
         "Request methods"
     ],
+    "input_filter": "(Optional) Present in returned RPC services, when one or more input filters are present; see the inputfilter resource for details",
     "route_match": "(Required) String indicating Segment route to match",
     "route_name": "(Only in representation) Name of route associated with endpoint",
     "selector": "(Optional) Content-Negotiation selector to use; Json by default"
@@ -185,6 +211,7 @@ respectively.
     "entity_class": "(Only in representation) Name of class representing resource entity",
     "hydrator_name": "(Only in DB-Connected resources) Name of Zend\\Stdlib\\Hydrator service used for this resource",
     "identifier_name": "(Optional) Name of route parameter and entity property representing the resource identifier; defaults to resource_name + _id",
+    "input_filter": "(Optional) Present in returned REST services, when one or more input filters are present; see the inputfilter resource for details",
     "module": "(Only in representation) Name of module in which resource resides",
     "page_size": "(Optional) Integer representing number of entities to return in a given page in a collection; defaults to 25",
     "page_size_param": "(Optional) Name of query string parameter used for pagination; defaults to 'page'",
@@ -256,7 +283,7 @@ resource](#authentication).
 
 - Errors: `application/api-problem+json`
 
-### `/admin/api/db-adapter[/:adapter_name]`
+### `/admin/api/db-adapter[/:adapter\_name]`
 
 This REST endpoint is for creating, updating, and deleting named `Zend\Db`
 adapters; it uses the [db-adapter resource](#db-adapter).
@@ -302,7 +329,7 @@ resource](#authorization).
 
 - Errors: `application/api-problem+json`
 
-### `/admin/api/db-adapter[/:adapter_name]`
+### `/admin/api/db-adapter[/:adapter\_name]`
 
 This REST endpoint is for creating, updating, and deleting named `Zend\Db`
 adapters; it uses the [db-adapter resource](#db-adapter).
@@ -427,15 +454,15 @@ This is the canonical endpoint for [Module resources](#module).
 
 - Errors: `application/api-problem+json`
 
-### `/admin/api/module/:name/rpc[/:controller_service_name]`
+### `/admin/api/module/:name/rpc[/:controller\_service\_name]`
 
 This is the canonical endpoint for [RPC resources](#rpc).
 
 - Accept: `application/json`
 
-  Returns either a single [RPC resource](#rpc) (when a `controller_service_name`
+  Returns either a single [RPC resource](#rpc) (when a `controller\_service\_name`
   is provided) or a collection of RPC resources (when no
-  `controller_service_name` is provided) on success.
+  `controller\_service\_name` is provided) on success.
 
 - Content-Type: `application/json`
 
@@ -459,7 +486,32 @@ This is the canonical endpoint for [RPC resources](#rpc).
 
 - Errors: `application/api-problem+json`
 
-### `/admin/api/module/:name/rest[/:controller_service_name]`
+### `/admin/api/module/:name/rpc/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
+
+This service is for creating, updating, and deleting named [input filters](#inputfilter)
+associated with a given RPC service.
+
+- Accept: `application/json`
+
+  Returns either single [input filter](#inputfilter) (when an
+  `input\_filter\_name` is provided) or a collection of input filters (when no
+  `input\_filter\_name` is provided) on success. Typically, only one input
+  filter will be associated with a given RPC service.
+
+  Input filters returned will also compose a property `input\_filter\_name`,
+  which is the identifier for the given input filter.
+
+- Content-Type: `aplication/json`
+
+  Expects an [input filter](#inputfilter).
+
+- Collection Methods: `GET`, `POST`
+
+- Resource Methods: `GET`, `PUT`, `DELETE`
+
+- Errors: `application/api-problem+json`
+
+### `/admin/api/module/:name/rest[/:controller\_service\_name]`
 
 This is the canonical endpoint for [REST resources](#rest).
 
@@ -469,22 +521,22 @@ future, Mongo-Connected).
 DB-Connected resources expect the following additional properties (and will
 return them as well):
 
-- `adapter_name`: A named DB adapter service.
-- `table_name`: The DB table associated with this service.
-- `hydrator_name`: Optional; the name of a hydrator service used to hydrate rows
+- `adapter\_name`: A named DB adapter service.
+- `table\_name`: The DB table associated with this service.
+- `hydrator\_name`: Optional; the name of a hydrator service used to hydrate rows
   returned by the database; defaults to ArraySerializable.
-- `table_service`: Optional; this is auto-generated by default, but an alternate
+- `table\_service`: Optional; this is auto-generated by default, but an alternate
   TableGateway service may be provided.
 
 - Accept: `application/json`
 
-  Returns either a single [REST resource](#rest) (when a `controller_service_name`
+  Returns either a single [REST resource](#rest) (when a `controller\_service\_name`
   is provided) or a collection of REST resources (when no
-  `controller_service_name` is provided) on success.
+  `controller\_service\_name` is provided) on success.
 
 - Content-Type: `application/json`
 
-  Expects an object with the property "resource_name" describing the module to create:
+  Expects an object with the property `resource\_name` describing the module to create:
 
   ```javascript
   {
@@ -500,5 +552,30 @@ return them as well):
 
 - The query string variable `version` may be passed to the collection to filter
   results by version: e.g., `/admin/api/module/:name/rest?version=2`.
+
+- Errors: `application/api-problem+json`
+
+### `/admin/api/module/:name/rest/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
+
+This service is for creating, updating, and deleting named [input filters](#inputfilter)
+associated with a given REST service.
+
+- Accept: `application/json`
+
+  Returns either single [input filter](#inputfilter) (when an
+  `input\_filter\_name` is provided) or a collection of input filters (when no
+  `input\_filter\_name` is provided) on success. Typically, only one input
+  filter will be associated with a given REST service.
+
+  Input filters returned will also compose a property `input\_filter\_name`,
+  which is the identifier for the given input filter.
+
+- Content-Type: `aplication/json`
+
+  Expects an [input filter](#inputfilter).
+
+- Collection Methods: `GET`, `POST`
+
+- Resource Methods: `GET`, `PUT`, `DELETE`
 
 - Errors: `application/api-problem+json`
