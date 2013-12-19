@@ -87,6 +87,7 @@
         <ul class="nav nav-tabs" id="myTab{{$index}}">
           <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
           <li ng-show="api.version == api.versions[api.versions.length-1]"><a data-target="#editmode{{$index}}" data-toggle="tab">Edit</a></li>
+          <li><a data-target="#inputmode{{$index}}" data-toggle="tab">Inputs</a></li>
           <li><a data-target="#sourcemode{{$index}}" data-toggle="tab">Source code</a></li>
         </ul>
 
@@ -405,6 +406,10 @@
 
               <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
+            </div>
+
+            <div class="tab-pane" id="inputmode{{$index}}">
+                <ng-include src="'zf-apigility-admin/partials/api/services-input.html'" onload="index = $index"></ng-include>
             </div>
 
             <div class="tab-pane" id="sourcemode{{$index}}">

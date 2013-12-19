@@ -6,15 +6,35 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-class ValidatorsModelFactory extends AbstractPluginManagerModelFactory
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
+class ValidatorsModelFactory implements FactoryInterface
 {
     /**
-     * @var string
+     * Return one of the plugin manager model instances
+     *
+     * @param ServiceLocatorInterface $services
+     * @return object
      */
-    protected $pluginManagerService = 'ValidatorManager';
+    public function createService(ServiceLocatorInterface $services)
+    {
+        if (! $services->has('ValidatorManager')) {
+            throw new ServiceNotCreatedException(sprintf(
+                '%s requires that the ValidatorManager service be present; service not found',
+                get_class($this)
+            ));
+        }
 
-    /**
-     * @var string
-     */
-    protected $pluginManagerModel = 'ZF\Apigility\Admin\Model\ValidatorsModel';
+        if (! $services->has('ZF\Apigility\Admin\Model\ValidatorMetadataModel')) {
+            throw new ServiceNotCreatedException(sprintf(
+                '%s requires that the %s\ValidatorMetadataModel service be present; service not found',
+                get_class($this),
+                __NAMESPACE__
+            ));
+        }
+
+        return new ValidatorsModel($services->get('ValidatorManager'), $services->get('ZF\Apigility\Admin\Model\ValidatorMetadataModel'));
+    }
 }

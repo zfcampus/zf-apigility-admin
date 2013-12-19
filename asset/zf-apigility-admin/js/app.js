@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -403,7 +403,10 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ValidatorsServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ValidatorsServicesRepository, ApiRepository, api, dbAdapters) {
+
+    $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
+    $scope.flash = flash;
 
     $scope.api = api;
 
@@ -413,13 +416,17 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.hydrators = [];
 
+    $scope.validators = [];
+
     $scope.sourceCode = [];
 
-    (function () {
-        HydratorServicesRepository.getList().then(function(response) {
-            $scope.hydrators = response.data.hydrators;
-        });
-    })();
+    HydratorServicesRepository.getList().then(function(response) {
+        $scope.hydrators = response.data.hydrators;
+    });
+
+    ValidatorsServicesRepository.getList().then(function(response) {
+        $scope.validatorOptions = response.data.validators;
+    });
 
     $scope.toggleSelection = function (model, $event) {
         var element = $event.target;
@@ -494,11 +501,20 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ValidatorsServicesRepository, ApiRepository, api) {
+
+    $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
+    $scope.flash = flash;
 
     $scope.api = api;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
+    $scope.validators = [];
+
+    ValidatorsServicesRepository.getList().then(function(response) {
+        $scope.validators = response.data.validators;
+    });
 
     $scope.resetForm = function () {
         $scope.showNewRpcServiceForm = false;
@@ -546,6 +562,58 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
             $scope.class_type = classType + ' Class';
             $scope.source_code = data.source;
         });
+    };
+
+}]);
+
+module.controller('ApiServiceInputController', ['$scope', function ($scope) {
+
+    // get services from $parent
+    $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
+    $scope.validatorOptions = $scope.$parent.validatorOptions;
+
+    $scope.addInput = function() {
+        $scope.service.input_filter.push({name: $scope.newInput, validators: []});
+        $scope.newInput = '';
+    };
+
+    $scope.removeInput = function (inputIndex) {
+        $scope.service.input_filter.splice(inputIndex, 1);
+    };
+
+    $scope.addValidator = function (input) {
+        input.validators.push({name: input._newValidatorName, options: {}});
+        input._newValidatorName = '';
+    };
+
+    $scope.removeValidator = function (input, validatorIndex) {
+        input.validators.splice(validatorIndex, 1);
+    };
+
+    $scope.addOption = function (validator) {
+        validator.options[validator._newOptionName] = validator._newOptionValue;
+        validator._newOptionName = '';
+        validator._newOptionValue = '';
+    };
+
+    $scope.removeOption = function (options, name) {
+        delete options[name];
+    };
+
+    $scope.saveInput = function () {
+        function removeUnderscoreProperties (value, key, collection) {
+            if (typeof key == 'string' && ['_', '$'].indexOf(key.charAt(0)) != -1) {
+                delete collection[key];
+            } else if (value instanceof Object) {
+                _.forEach(value, removeUnderscoreProperties);
+            }
+        }
+        var modelInputFilter = _.cloneDeep($scope.service.input_filter);
+        _.forEach(modelInputFilter, removeUnderscoreProperties);
+
+        var apiRepo = $scope.$parent.ApiRepository;
+        apiRepo.saveInputFilter($scope.service, modelInputFilter);
+        $scope.$parent.flash.success = 'Input Filter configuration saved.';
     };
 
 }]);
@@ -647,22 +715,74 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
             }).then(function (api) {
                 // now load REST + RPC endpoints
                 return api.link('rest', {version: version}).fetch().then(function (restServices) {
-                    _.chain(restServices.embedded.rest)
-                        .pluck('props')
-                        .forEach(function (item) {
-                            apiModel.restServices.push(item);
-                        });
+
+                    _.forEach(restServices.embedded.rest, function (restService, index) {
+                        var length = 0;
+                        length = apiModel.restServices.push(restService.props);
+                        apiModel.restServices[length - 1]._self = restService.links.self.href;
+                        if (restService.embedded.input_filters && restService.embedded.input_filters[0]) {
+                            apiModel.restServices[length - 1].input_filter = restService.embedded.input_filters[0].props;
+                            _.forEach(apiModel.restServices[length-1].input_filter, function (value, key) {
+                                if (typeof value == 'string') {
+                                    delete apiModel.restServices[length-1].input_filter[key];
+                                } else {
+                                    if (typeof value.validators == 'undefined') {
+                                        value.validators = [];
+                                    } else {
+                                        _.forEach(value.validators, function (validator, index) {
+                                            if (typeof validator.options == 'undefined' || validator.options.length == 0) {
+                                                validator.options = {};
+                                            }
+                                        })
+                                    }
+                                }
+
+                            });
+                            // convert to array
+                            apiModel.restServices[length - 1].input_filter = _.toArray(apiModel.restServices[length - 1].input_filter);
+                        } else {
+                            apiModel.restServices[length - 1].input_filter = [];
+                        }
+
+                    });
+
                     return api;
                 });
             }).then(function (api) {
                 // now load REST + RPC endpoints
                 return api.link('rpc', {version: version}).fetch().then(function (rpcServices) {
-                    _.chain(rpcServices.embedded.rpc)
-                        .pluck('props')
-                        .forEach(function (item) {
-                            apiModel.rpcServices.push(item);
-                        });
-                    return api;
+
+
+                    _.forEach(rpcServices.embedded.rpc, function (rpcService, index) {
+                        var length = 0;
+                        length = apiModel.rpcServices.push(rpcService.props);
+                        apiModel.rpcServices[length - 1]._self = rpcService.links.self.href;
+                        if (rpcService.embedded.input_filters && rpcService.embedded.input_filters[0]) {
+                            apiModel.rpcServices[length - 1].input_filter = rpcService.embedded.input_filters[0].props;
+                            _.forEach(apiModel.rpcServices[length-1].input_filter, function (value, key) {
+                                if (typeof value == 'string') {
+                                    delete apiModel.rpcServices[length-1].input_filter[key];
+                                } else {
+                                    if (typeof value.validators == 'undefined') {
+                                        value.validators = [];
+                                    } else {
+                                        _.forEach(value.validators, function (validator, index) {
+                                            if (typeof validator.options == 'undefined' || validator.options.length == 0) {
+                                                validator.options = {};
+                                            }
+                                        })
+                                    }
+                                }
+
+                            });
+                            // convert to array
+                            apiModel.rpcServices[length - 1].input_filter = _.toArray(apiModel.rpcServices[length - 1].input_filter);
+                        } else {
+                            apiModel.rpcServices[length - 1].input_filter = [];
+                        }
+
+                    });
+
                 });
 
             }).then(function (api) {
@@ -716,6 +836,11 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                 .then(function (response) {
                     return response.data;
                 });
+        },
+
+        saveInputFilter: function (api, inputFilter) {
+            var url = api._self + '/inputfilter';
+            return $http.put(url, inputFilter);
         },
 
         removeRpcService: function (apiName, rpcServiceName) {
@@ -839,6 +964,22 @@ module.factory(
                 return $http({method: 'GET', url: servicePath}).
                     error(function(data, status, headers, config) {
                         flash.error = 'Unable to fetch hydrators for hydrator dropdown; you may need to reload the page';
+                    });
+            }
+        };
+    }]
+);
+
+module.factory(
+    'ValidatorsServicesRepository',
+    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+        var servicePath = apiBasePath + '/validators';
+
+        return {
+            getList: function () {
+                return $http({method: 'GET', url: servicePath}).
+                    error(function(data, status, headers, config) {
+                        flash.error = 'Unable to fetch validators for hydrator dropdown; you may need to reload the page';
                     });
             }
         };
