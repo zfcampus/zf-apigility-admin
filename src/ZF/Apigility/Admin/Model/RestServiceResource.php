@@ -249,6 +249,7 @@ class RestServiceResource extends AbstractResourceListener
                     'params' => [
                         'name' => $this->moduleName,
                         'controller_service_name' => $service->controllerServiceName,
+                        'input_filter_name' => $inputFilter['input_filter_name'],
                     ],
                 ],
             ]));
