@@ -569,7 +569,7 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 module.controller('ApiServiceInputController', ['$scope', function ($scope) {
 
     // get services from $parent
-    $scope.service = $scope.$parent.restService;
+    $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
     $scope.validatorOptions = $scope.$parent.validatorOptions;
 
     $scope.addInput = function() {
@@ -751,12 +751,38 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
             }).then(function (api) {
                 // now load REST + RPC endpoints
                 return api.link('rpc', {version: version}).fetch().then(function (rpcServices) {
-                    _.chain(rpcServices.embedded.rpc)
-                        .pluck('props')
-                        .forEach(function (item) {
-                            apiModel.rpcServices.push(item);
-                        });
-                    return api;
+
+
+                    _.forEach(rpcServices.embedded.rpc, function (rpcService, index) {
+                        var length = 0;
+                        length = apiModel.rpcServices.push(rpcService.props);
+                        apiModel.rpcServices[length - 1]._self = rpcService.links.self.href;
+                        if (rpcService.embedded.input_filters && rpcService.embedded.input_filters[0]) {
+                            apiModel.rpcServices[length - 1].input_filter = rpcService.embedded.input_filters[0].props;
+                            _.forEach(apiModel.rpcServices[length-1].input_filter, function (value, key) {
+                                if (typeof value == 'string') {
+                                    delete apiModel.rpcServices[length-1].input_filter[key];
+                                } else {
+                                    if (typeof value.validators == 'undefined') {
+                                        value.validators = [];
+                                    } else {
+                                        _.forEach(value.validators, function (validator, index) {
+                                            if (typeof validator.options == 'undefined' || validator.options.length == 0) {
+                                                validator.options = {};
+                                            }
+                                        })
+                                    }
+                                }
+
+                            });
+                            // convert to array
+                            apiModel.rpcServices[length - 1].input_filter = _.toArray(apiModel.rpcServices[length - 1].input_filter);
+                        } else {
+                            apiModel.rpcServices[length - 1].input_filter = [];
+                        }
+
+                    });
+
                 });
 
             }).then(function (api) {
