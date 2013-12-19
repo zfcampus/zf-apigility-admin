@@ -513,7 +513,7 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     $scope.validators = [];
 
     ValidatorsServicesRepository.getList().then(function(response) {
-        $scope.validators = response.data.validators;
+        $scope.validatorOptions = response.data.validators;
     });
 
     $scope.resetForm = function () {
