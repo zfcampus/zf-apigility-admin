@@ -162,6 +162,7 @@ respectively.
         "allowed",
         "Request methods"
     ],
+    "input_filter": "(Optional) Present in returned RPC services, when one or more input filters are present; see the inputfilter resource for details",
     "route_match": "(Required) String indicating Segment route to match",
     "route_name": "(Only in representation) Name of route associated with endpoint",
     "selector": "(Optional) Content-Negotiation selector to use; Json by default"
@@ -210,6 +211,7 @@ respectively.
     "entity_class": "(Only in representation) Name of class representing resource entity",
     "hydrator_name": "(Only in DB-Connected resources) Name of Zend\\Stdlib\\Hydrator service used for this resource",
     "identifier_name": "(Optional) Name of route parameter and entity property representing the resource identifier; defaults to resource_name + _id",
+    "input_filter": "(Optional) Present in returned REST services, when one or more input filters are present; see the inputfilter resource for details",
     "module": "(Only in representation) Name of module in which resource resides",
     "page_size": "(Optional) Integer representing number of entities to return in a given page in a collection; defaults to 25",
     "page_size_param": "(Optional) Name of query string parameter used for pagination; defaults to 'page'",
