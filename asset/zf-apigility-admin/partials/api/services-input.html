@@ -1,82 +1,95 @@
 <div ng-controller="ApiServiceInputController">
 
-    <ul class="list-group">
-        <li class="list-group-item-heading">
-            <div class="pull-right">
-                <form id="input-form" ng-submit="addInput()">
-                    <input type="text" ng-model="newInput">
-                    <button type="submit" class="btn btn-sm btn-success">Create New Input</button>
-                </form>
-            </div>
-        </li>
-        <li class="list-group-item" ng-repeat="input in service.input_filter">
+    <div class="ag-new-input">
+        <form class="pull-right" id="input-form" ng-submit="addInput()">
+            <input type="text" ng-model="newInput">
+            <button type="submit" class="btn btn-sm btn-success">Create New Input</button>
+        </form>
+    </div>
+    <div class="ag-new-input clearfix"></div>
 
-            <a ng-click="input._editNameVisible = true" ng-hide="input._editNameVisible">
-                {{input.name}}
-            </a>
-            <div ng-show="input._editNameVisible">
-                <form ng-submit="input._editNameVisible = false">
-                    <input type="text" ng-model="input.name" value="{{input.name}}">
-                </form>
-            </div>
-
-            <div class="pull-right">
-                <a ng-click="removeInput($index)">[x]</a> | <a ng-click="input._newValidatorFormVisible = true">Add Validator</a>
-            </div>
-            <ol ui-sortable="{handle: '.validator-handle'}" class="list-group" ng-model="input.validators">
-                <li ng-repeat="validator in input.validators">
-                    <i class="glyphicon glyphicon-list validator-handle"></i>
-
-                    {{validator.name}}
-
-                    <div class="pull-right">
-                        <a ng-click="removeValidator(input, $index)">[x]</a> | <a ng-click="validator._newOptionFormVisible = true">Add Option</a>
+    <div class="panel-group" id="inputAccordion">
+        <div class="panel panel-default" ng-repeat="input in service.input_filter">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button type="button" class="accordion-toggle btn" data-toggle="collapse" data-parent="inputAccordion" data-target="#inputCollapse{{$index}}"><span class="glyphicon glyphicon-wrench"></span></button>
+                    <a ng-click="input._editNameVisible = true" ng-hide="input._editNameVisible">
+                        {{input.name}}
+                    </a>
+                    <div ng-show="input._editNameVisible">
+                        <form ng-submit="input._editNameVisible = false">
+                            <input type="text" ng-model="input.name" value="{{input.name}}">
+                        </form>
                     </div>
 
-                    <ul>
-                        <li ng-repeat="(optionName, optionValue) in validator.options">
+                    <button type="button" class="btn pull-right" aria-hidden="true" ng-click="removeInput($index)"><span class="glyphicon glyphicon-trash"></span></button>
+                </h4>
+            </div>
 
-                            {{optionName}} = {{optionValue}} <a ng-click="removeOption(validator.options, optionName)">[x]</a>
+            <div id="inputCollapse{{$index}}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="ag-new-input pull-right">
+                        <a ng-click="input._newValidatorFormVisible = true">Add Validator</a>
+                    </div>
+                    <div class="ag-new-input clearfix"></div>
+
+                    <ul ui-sortable="{handle: '.validator-handle'}" class="list-group" ng-model="input.validators">
+                        <li ng-repeat="validator in input.validators">
+                            <i class="glyphicon glyphicon-list validator-handle"></i>
+
+                            {{validator.name}}
+
+                            <div class="pull-right">
+                                <button type="button" class="close" aria-hidden="true" ng-click="removeValidator(input, $index)">&times;</button> | <a ng-click="validator._newOptionFormVisible = true">Add Option</a>
+                            </div>
+
+                            <ul>
+                                <li ng-repeat="(optionName, optionValue) in validator.options">
+
+                                    {{optionName}} = {{optionValue}} <button type="button" class="close" aria-hidden="true" ng-click="removeOption(validator.options, optionName)">&times;</button>
+
+                                </li>
+                                <li ng-show="validator._newOptionFormVisible">
+                                    <form id="input-option-form" ng-submit="addOption(validator)">
+                                        <select class="input-medium" ui-select2="{ width: '300px' }" type="text" ng-model="validator._newOptionName">
+                                            <option ng-repeat="(key, value) in validatorOptions[validator.name]" value="{{key}}">{{key}}</option>
+                                        </select>
+
+                                        <div ng-show="validator._newOptionName">
+                                            <div ng-switch="validatorOptions[validator.name][validator._newOptionName]">
+                                                <div ng-switch-when="bool">
+                                                    <select ng-model="validator._newOptionValue">
+                                                        <option value="true">TRUE</option>
+                                                        <option value="false">FALSE</option>
+                                                    </select>
+                                                </div>
+                                                <div ng-switch-default><input type="text" ng-model="validator._newOptionValue"></div>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-sm btn-success">Add Option</button>
+                                        <button type="reset" class="btn btn-sm btn-warning" ng-click="validator._newOptionFormVisible = false">Cancel</button>
+                                    </form>
+                                </li>
+                            </ul>
 
                         </li>
-                        <li ng-show="validator._newOptionFormVisible">
-                            <form id="input-option-form" ng-submit="addOption(validator)">
-                                <select class="input-medium" ui-select2="{ width: '300px' }" type="text" ng-model="validator._newOptionName">
-                                    <option ng-repeat="(key, value) in validatorOptions[validator.name]" value="{{key}}">{{key}}</option>
+                        <li ng-show="input._newValidatorFormVisible">
+                            <form id="input-validator-form" ng-submit="addValidator(input)">
+                                <select class="input-medium" ui-select2="{placeholder: 'Select Validator', width: '300px' }" type="text" ng-model="input._newValidatorName">
+                                    <option ng-repeat="(key, value) in validatorOptions" value="{{key}}">{{key}}</option>
                                 </select>
-
-                                <div ng-show="validator._newOptionName">
-                                    <div ng-switch="validatorOptions[validator.name][validator._newOptionName]">
-                                        <div ng-switch-when="bool">
-                                            <select ng-model="validator._newOptionValue">
-                                                <option value="true">TRUE</option>
-                                                <option value="false">FALSE</option>
-                                            </select>
-                                        </div>
-                                        <div ng-switch-default><input type="text" ng-model="validator._newOptionValue"></div>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-sm btn-success">Add Option</button>
-                                <button type="reset" class="btn btn-sm btn-warning" ng-click="validator._newOptionFormVisible = false">Cancel</button>
+                                <button type="submit" class="btn btn-sm btn-success">Add Validator</button>
+                                <button type="reset" class="btn btn-sm btn-warning" ng-click="input._newValidatorFormVisible = false">Cancel</button>
                             </form>
                         </li>
                     </ul>
 
-                </li>
-                <li ng-show="input._newValidatorFormVisible">
-                    <form id="input-validator-form" ng-submit="addValidator(input)">
-                        <select class="input-medium" ui-select2="{placeholder: 'Select Validator', width: '300px' }" type="text" ng-model="input._newValidatorName">
-                            <option ng-repeat="(key, value) in validatorOptions" value="{{key}}">{{key}}</option>
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-success">Add Validator</button>
-                        <button type="reset" class="btn btn-sm btn-warning" ng-click="input._newValidatorFormVisible = false">Cancel</button>
-                    </form>
-                </li>
-            </ol>
 
-        </li>
-    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <button type="submit" class="btn btn-sm btn-primary" ng-click="saveInput()">Save Changes</button>
+    <button type="submit" class="btn btn-sm btn-primary pull-right" ng-click="saveInput()">Save Changes</button>
 </div>
