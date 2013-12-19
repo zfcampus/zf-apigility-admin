@@ -8,6 +8,9 @@ namespace ZF\Apigility\Admin\Model;
 
 use RuntimeException;
 use ZF\ApiProblem\ApiProblem;
+use ZF\Hal\Collection as HalCollection;
+use ZF\Hal\Link\Link;
+use ZF\Hal\Resource as HalResource;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
