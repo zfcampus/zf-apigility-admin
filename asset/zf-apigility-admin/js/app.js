@@ -420,6 +420,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.sourceCode = [];
 
+    $scope.deleteRestService = false;
+
     HydratorServicesRepository.getList().then(function(response) {
         $scope.hydrators = response.data.hydrators;
     });
@@ -486,9 +488,17 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 
     $scope.removeRestService = function (restServiceName) {
-        ApiRepository.removeRestService($scope.api.name, restServiceName).then(function (data) {
-            $scope.deleteRestService = false;
-        });
+        ApiRepository.removeRestService($scope.api.name, restServiceName)
+            .then(function (data) {
+                flash.success = 'REST Service deleted';
+                $scope.deleteRestService = false;
+                $timeout(function () {
+                    ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
+                        $scope.api = api;
+                        $scope.currentVersion = api.currentVersion;
+                    });
+                }, 500);
+            });
     };
 
     $scope.getSourceCode = function (className, classType) {
@@ -511,6 +521,8 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
     $scope.validators = [];
+
+    $scope.deleteRpcService = false;
 
     ValidatorsServicesRepository.getList().then(function(response) {
         $scope.validatorOptions = response.data.validators;
@@ -545,15 +557,24 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
             .valueOf();
 
         ApiRepository.saveRpcService($scope.api.name, rpcServiceData).then(function (data) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
+            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {
+                flash.success = 'RPC Service updated';
+            });
         });
     };
 
     $scope.removeRpcService = function (rpcServiceName) {
-        ApiRepository.removeRpcService($scope.api.name, rpcServiceName).then(function () {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {});
-            $scope.deleteRestService = false;
-        });
+        ApiRepository.removeRpcService($scope.api.name, rpcServiceName)
+            .then(function (data) {
+                flash.success = 'RPC Service deleted';
+                $scope.deleteRpcService = false;
+                $timeout(function () {
+                    ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
+                        $scope.api = api;
+                        $scope.currentVersion = api.currentVersion;
+                    });
+                }, 500);
+            });
     };
 
     $scope.getSourceCode = function (className, classType) {
