@@ -49,6 +49,12 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
             }],
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+            }],
+            validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
+                return ValidatorsServicesRepository.getList();
+            }],
+            hydrators: ['HydratorServicesRepository', function (HydratorServicesRepository) {
+                return HydratorServicesRepository.getList();
             }]
         }
     });
@@ -58,6 +64,9 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+            }],
+            validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
+                return ValidatorsServicesRepository.getList();
             }]
         }
     });
@@ -403,7 +412,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'HydratorServicesRepository', 'ValidatorsServicesRepository', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, HydratorServicesRepository, ValidatorsServicesRepository, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, hydrators, validators, ApiRepository, api, dbAdapters) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -414,21 +423,13 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
-    $scope.hydrators = [];
+    $scope.hydrators = hydrators;
 
-    $scope.validators = [];
+    $scope.validatorOptions = validators;
 
     $scope.sourceCode = [];
 
     $scope.deleteRestService = false;
-
-    HydratorServicesRepository.getList().then(function(response) {
-        $scope.hydrators = response.data.hydrators;
-    });
-
-    ValidatorsServicesRepository.getList().then(function(response) {
-        $scope.validatorOptions = response.data.validators;
-    });
 
     $scope.toggleSelection = function (model, $event) {
         var element = $event.target;
@@ -511,7 +512,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, ValidatorsServicesRepository, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'validators', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, validators, ApiRepository, api) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -520,13 +521,9 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
-    $scope.validators = [];
+    $scope.validatorOptions = validators;
 
     $scope.deleteRpcService = false;
-
-    ValidatorsServicesRepository.getList().then(function(response) {
-        $scope.validatorOptions = response.data.validators;
-    });
 
     $scope.resetForm = function () {
         $scope.showNewRpcServiceForm = false;
@@ -983,10 +980,15 @@ module.factory(
 
         return {
             getList: function () {
-                return $http({method: 'GET', url: servicePath}).
-                    error(function(data, status, headers, config) {
+                var promise = $http({method: 'GET', url: servicePath}).then(
+                    function success(response) {
+                        return response.data.hydrators;
+                    },
+                    function error() {
                         flash.error = 'Unable to fetch hydrators for hydrator dropdown; you may need to reload the page';
-                    });
+                    }
+                );
+                return promise;
             }
         };
     }]
@@ -999,10 +1001,16 @@ module.factory(
 
         return {
             getList: function () {
-                return $http({method: 'GET', url: servicePath}).
-                    error(function(data, status, headers, config) {
+                var promise = $http({method: 'GET', url: servicePath}).then(
+                    function success(response) {
+                        return response.data.validators;
+                    },
+                    function error() {
                         flash.error = 'Unable to fetch validators for hydrator dropdown; you may need to reload the page';
-                    });
+                        return false;
+                    }
+                );
+                return promise;
             }
         };
     }]
