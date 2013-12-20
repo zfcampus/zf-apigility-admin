@@ -501,7 +501,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, flash, ValidatorsServicesRepository, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'ValidatorsServicesRepository', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, ValidatorsServicesRepository, ApiRepository, api) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -557,11 +557,12 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     };
 
     $scope.getSourceCode = function (className, classType) {
-        ApiRepository.getSourceCode($scope.api.name, className).then(function (data) {
-            $scope.filename = className + '.php';
-            $scope.class_type = classType + ' Class';
-            $scope.source_code = data.source;
-        });
+        ApiRepository.getSourceCode($scope.api.name, className)
+            .then(function (data) {
+                $scope.filename = className + '.php';
+                $scope.classType = classType + ' Class';
+                $scope.sourceCode = $sce.trustAsHtml(data.source);
+            });
     };
 
 }]);
