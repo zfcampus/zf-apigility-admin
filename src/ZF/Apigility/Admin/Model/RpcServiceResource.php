@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\Model;
 
 use RuntimeException;
+use Zend\Mvc\Controller\ControllerManager;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Hal\Collection as HalCollection;
 use ZF\Hal\Link\Link;
@@ -17,6 +18,11 @@ use ZF\Rest\Exception\PatchException;
 
 class RpcServiceResource extends AbstractResourceListener
 {
+    /**
+     * @var ControllerManager
+     */
+    protected $controllerManager;
+
     /**
      * @var InputFilterModel
      */
@@ -41,10 +47,11 @@ class RpcServiceResource extends AbstractResourceListener
      * @param  RpcServiceModelFactory $rpcFactory
      * @param  InputFilterModel $inputFilterModel
      */
-    public function __construct(RpcServiceModelFactory $rpcFactory, InputFilterModel $inputFilterModel)
+    public function __construct(RpcServiceModelFactory $rpcFactory, InputFilterModel $inputFilterModel, ControllerManager $controllerManager)
     {
         $this->rpcFactory = $rpcFactory;
         $this->inputFilterModel = $inputFilterModel;
+        $this->controllerManager = $controllerManager;
     }
 
     /**
@@ -161,6 +168,7 @@ class RpcServiceResource extends AbstractResourceListener
             return new ApiProblem(404, 'RPC service not found');
         }
         $this->injectInputFilters($service);
+        $this->injectControllerClass($service);
         return $service;
     }
 
@@ -177,6 +185,7 @@ class RpcServiceResource extends AbstractResourceListener
 
         foreach ($services as $service) {
             $this->injectInputFilters($service);
+            $this->injectControllerClass($service);
         }
 
         return $services;
@@ -294,6 +303,24 @@ class RpcServiceResource extends AbstractResourceListener
 
         $service->exchangeArray([
             'input_filters' => $collection,
+        ]);
+    }
+
+    /**
+     * Inject the class name of the controller, if it can be resolved.
+     * 
+     * @param RpcServiceEntity $service 
+     */
+    protected function injectControllerClass(RpcServiceEntity $service)
+    {
+        $controllerServiceName = $service->controllerServiceName;
+        if (!$this->controllerManager->has($controllerServiceName)) {
+            return;
+        }
+
+        $controller = $this->controllerManager->get($controllerServiceName);
+        $service->exchangeArray([
+            'controller_class' => get_class($controller),
         ]);
     }
 }

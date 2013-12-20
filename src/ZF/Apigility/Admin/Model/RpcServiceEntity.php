@@ -21,6 +21,8 @@ class RpcServiceEntity
         'application/json',
     );
 
+    protected $controllerClass;
+
     protected $controllerServiceName;
 
     protected $httpMethods = array('GET');
@@ -77,6 +79,9 @@ class RpcServiceEntity
                         ));
                     }
                     $this->contentTypeWhitelist = $value;
+                    break;
+                case 'controllerclass':
+                    $this->controllerClass = $value;
                     break;
                 case 'controllerservicename':
                     $this->controllerServiceName = $value;
@@ -139,6 +144,9 @@ class RpcServiceEntity
         );
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
+        }
+        if (null !== $this->controllerClass) {
+            $array['controller_class'] = $this->controllerClass;
         }
         return $array;
     }

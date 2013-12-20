@@ -213,17 +213,23 @@ class Module
             'ZF\Apigility\Admin\Model\RpcServiceResource' => function ($services) {
                 if (!$services->has('ZF\Apigility\Admin\Model\RpcServiceModelFactory')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\Apigility\Admin\Model\RpcServiceResource is missing one or more dependencies'
+                        'ZF\Apigility\Admin\Model\RpcServiceResource is missing RpcServiceModelFactory dependency'
                     );
                 }
                 if (!$services->has('ZF\Apigility\Admin\Model\InputFilterModel')) {
                     throw new ServiceNotCreatedException(
-                        'ZF\Apigility\Admin\Model\RpcServiceResource is missing one or more dependencies'
+                        'ZF\Apigility\Admin\Model\RpcServiceResource is missing InputFilterModel dependency'
+                    );
+                }
+                if (!$services->has('ControllerManager')) {
+                    throw new ServiceNotCreatedException(
+                        'ZF\Apigility\Admin\Model\RpcServiceResource is missing ControllerManager dependency'
                     );
                 }
                 $factory = $services->get('ZF\Apigility\Admin\Model\RpcServiceModelFactory');
                 $inputFilterModel = $services->get('ZF\Apigility\Admin\Model\InputFilterModel');
-                return new Model\RpcServiceResource($factory, $inputFilterModel);
+                $controllerManager = $services->get('ControllerManager');
+                return new Model\RpcServiceResource($factory, $inputFilterModel, $controllerManager);
             },
             'ZF\Apigility\Admin\Model\VersioningModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ConfigResourceFactory')) {
