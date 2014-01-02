@@ -293,17 +293,19 @@ class Module
             return;
         }
 
+        $viewHelpers = $this->sm->get('ViewHelperManager');
+        $halPlugin = $viewHelpers->get('hal');
+        $this->initializeUrlHelper();
+
         if ($result->isResource()) {
             $this->initializeUrlHelper();
             $this->injectServiceLinks($result->getPayload(), $result, $e);
+            $halPlugin->getEventManager()->attach('renderResource', array($this, 'onRenderResource'), 10);
             return;
         }
 
         if ($result->isCollection()) {
             $this->mvcEvent = $e;
-            $this->initializeUrlHelper();
-            $viewHelpers = $this->sm->get('ViewHelperManager');
-            $halPlugin = $viewHelpers->get('hal');
             $halPlugin->getEventManager()->attach('renderCollection.resource', array($this, 'onRenderCollectionResource'), 10);
         }
     }
@@ -353,6 +355,31 @@ class Module
         $replacement = new Resource($module, $moduleName);
         $replacement->setLinks($links);
         $model->setPayload($replacement);
+    }
+
+    public function onRenderResource($e)
+    {
+        $resource = $e->getParam('resource');
+        $entity   = $resource->resource;
+
+        if ($entity instanceof Model\RestServiceEntity
+            || $entity instanceof Model\RpcServiceEntity
+            || (is_array($entity) && array_key_exists('controller_service_name', $entity))
+        ) {
+            $links = $resource->getLinks();
+
+            if (!$links->has('input_filter')) {
+                return;
+            }
+
+            $serviceName = is_array($entity) ? $entity['controller_service_name'] : $entity->controllerServiceName;
+
+            $link   = $links->get('input_filter');
+            $params = $link->getRouteParams();
+            $link->setRouteParams(array_merge($params, [
+                'controller_service_name' => $serviceName
+            ]));
+        }
     }
 
     /**
