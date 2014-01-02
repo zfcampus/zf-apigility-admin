@@ -799,4 +799,27 @@ return array(
             'service' => 'string',
         ),
     ),
+
+    'input_filters' => array(
+        'ZF\Apigility\Admin\ModuleName\Validator' => array(
+            array(
+                'name' => 'name',
+                'validators' => array(
+                    array(
+                        'name' => 'regex',
+                        'options' => array(
+                            'pattern' => '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/',
+                            'message' => 'Invalid API name; must be a valid PHP namespace name',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
+
+    'zf-content-validation' => array(
+        'ZF\Apigility\Admin\Controller\Module' => array(
+            'input_filter' => 'ZF\Apigility\Admin\ModuleName\Validator',
+        ),
+    ),
 );
