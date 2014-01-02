@@ -363,6 +363,7 @@ class Module
         $entity   = $resource->resource;
 
         if ($entity instanceof Model\RestServiceEntity
+            || $entity instanceof Model\RpcServiceEntity
             || (is_array($entity) && array_key_exists('controller_service_name', $entity))
         ) {
             $links = $resource->getLinks();
