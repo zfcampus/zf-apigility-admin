@@ -626,7 +626,7 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
     };
 
     $scope.addOption = function (validator) {
-        if (typeof validator._newOptionValue == 'string' && (validator._newOptionValue === 'true' || validator._newOptionValue === 'false')) {
+        if ($scope.validatorOptions[validator.name][validator._newOptionName] == 'bool') {
             validator._newOptionValue = (validator._newOptionValue === 'true');
         }
         validator.options[validator._newOptionName] = validator._newOptionValue;
