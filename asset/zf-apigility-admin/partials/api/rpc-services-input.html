@@ -1,0 +1,179 @@
+<div ng-controller="ApiServiceInputController">
+
+    <div class="ag-new-input">
+        <button class="btn btn-primary pull-left" data-toggle="modal" data-target="#inputHelp">Help</button>
+
+        <form class="pull-right" id="input-form" ng-submit="addInput()">
+            <input type="text" ng-model="newInput">
+            <button type="submit" class="btn btn-sm btn-success">Create New Input</button>
+        </form>
+    </div>
+    <div class="ag-new-input clearfix"></div>
+
+    <div class="panel-group" id="inputAccordion">
+        <div class="panel panel-default" ng-repeat="input in service.input_filter">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button 
+                        type="button"
+                        class="accordion-toggle btn"
+                        data-toggle="collapse"
+                        data-parent="inputAccordion"
+                        data-target="#inputCollapse-{{ rpcService.controller_service_name | namespaceclassid }}-{{input.name}}">
+                        <span class="glyphicon glyphicon-wrench"></span>
+                    </button>
+                    <a ng-click="input._editNameVisible = true" ng-hide="input._editNameVisible">
+                        {{input.name}}
+                    </a>
+                    <span ng-show="input._editNameVisible">
+                        <form ng-submit="input._editNameVisible = false">
+                            <input type="text" ng-model="input.name" value="{{input.name}}">
+                        </form>
+                    </span>
+                    <span class="pull-right">
+                        <button type="button" class="btn" aria-hidden="true" ng-click="removeInput($index)"><span class="glyphicon glyphicon-trash"></span></button>
+                    </span>
+                </h4>
+                <div class="clearfix"></div>
+            </div>
+
+            <div id="inputCollapse-{{ rpcService.controller_service_name | namespaceclassid }}-{{input.name}}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-sm btn-success" ng-click="input._newValidatorFormVisible = true">Add Validator</button>
+                    </div>
+                    <div class="ag-new-input clearfix"></div>
+
+                    <ul ui-sortable="{handle: '.validator-handle'}" class="list-unstyled" ng-model="input.validators">
+                        <li class="panel panel-default" ng-repeat="validator in input.validators">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <i class="glyphicon glyphicon-list validator-handle"></i>
+                                    {{validator.name}}
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-sm btn-success" ng-click="validator._newOptionFormVisible = true">Add Option</button>
+                                        <button type="button" class="btn btn-sm" aria-hidden="true" ng-click="removeValidator(input, $index)"><span class="glyphicon glyphicon-trash"></span></button>
+                                    </div>
+                                </h4>
+                                <div class="clearfix"></div>
+                            </div>
+                        
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="(optionName, optionValue) in validator.options">
+                                    {{optionName}} = {{optionValue}}
+                                    <button type="button" class="btn btn-xs pull-right" aria-hidden="true" ng-click="removeOption(validator.options, optionName)"><span class="glyphicon glyphicon-trash"></span></button>
+                                </li>
+
+                                <li class="list-group-item"  ng-show="validator._newOptionFormVisible">
+                                    <form id="input-option-form" ng-submit="addOption(validator)">
+                                        <select class="input-medium" ui-select2="{ width: '300px' }" type="text" ng-model="validator._newOptionName">
+                                            <option ng-repeat="(key, value) in validatorOptions[validator.name]" value="{{key}}">{{key}}</option>
+                                        </select>
+
+                                        <span ng-show="validator._newOptionName">
+                                            <span ng-switch="validatorOptions[validator.name][validator._newOptionName]">
+                                                <span ng-switch-when="bool">
+                                                    <select ng-model="validator._newOptionValue">
+                                                        <option value="true">TRUE</option>
+                                                        <option value="false">FALSE</option>
+                                                    </select>
+                                                </span>
+                                                <span ng-switch-default><input type="text" ng-model="validator._newOptionValue"></span>
+                                            </span>
+                                        </span>
+
+                                        <div class="ag-new-input">
+                                            <button type="reset" class="btn btn-sm btn-warning" ng-click="validator._newOptionFormVisible = false">Cancel</button>
+                                            <button type="submit" class="btn btn-sm btn-success">Add Option</button>
+                                        </div>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="well" ng-show="input._newValidatorFormVisible">
+                            <form id="input-validator-form" ng-submit="addValidator(input)">
+                                <select class="input-medium" ui-select2="{placeholder: 'Select Validator', width: '300px' }" type="text" ng-model="input._newValidatorName">
+                                    <option ng-repeat="(key, value) in validatorOptions" value="{{key}}">{{key}}</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-success">Add Validator</button>
+                                <button type="reset" class="btn btn-sm btn-warning" ng-click="input._newValidatorFormVisible = false">Cancel</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ag-new-input">
+        <button type="submit" class="btn btn-sm btn-primary pull-right" ng-click="saveInput()">Save Changes</button>
+    </div>
+</div>
+
+<div id="inputHelp" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Help: Inputs</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    Inputs are used to both describe expected data, as well
+                    as specify how that data should be validated.
+                </p>
+
+                <p>
+                    Clicking the "Create New Input" button will prompt you
+                    for an input name, and then create it. If you want to
+                    change the name later, click the name to edit it.
+                    Click the <span class="glyphicon
+                        glyphicon-trash"></span> icon to remove the input.
+                </p>
+
+                <p>
+                    For each input, you may add one or more
+                    <em>validators</em>. Click the <span class="glyphicon
+                        glyphicon-wrench"></span> icon to expand the input
+                    and reveal the "Add Validator" button. Adding a
+                    validator will reveal a form that allows you to select
+                    from available validators.
+                </p>
+
+                <p>
+                    Validators will be executed in the order in which they
+                    appear in the admin tool; you may grab the <span
+                    class="glyphicon glyphicon-list"></span> icon in order
+                    to drag and re-order validators. Clicking the <span
+                        class="glyphicon glyphicon-trash"></span> icon will
+                    remove the validator.
+                </p>
+
+                <p>
+                    Most validators also support a number of options. After
+                    choosing a validator, you may add options; these may be
+                    selected from a dialog, and an appropriate form input 
+                    will then be provided to allow you to specify a value.
+                    You cannot edit options after creating them; however,
+                    you can remove them via the <span class="glyphicon
+                        glyphicon-trash"></span> icon and re-add them with
+                    the changes you desire.
+                </p>
+
+                <p>
+                    For more information on available validators and their
+                    options, please see <a
+                    href="http://framework.zend.com/manual/2.2/en/modules/zend.validator.set.html">the
+            ZF2 reference guide on validators</a>.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
