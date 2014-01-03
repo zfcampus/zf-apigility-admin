@@ -1068,6 +1068,13 @@ module.filter('servicename', function () {
     }
 });
 
+// Used to strip out the backslash characters to use as a part of a class id
+module.filter('namespaceclassid', function () {
+    return function (input) {
+        return input.replace(/\\/g, '');
+    };
+});
+
 module.run(['$rootScope', '$routeParams', '$location', function ($rootScope, $routeParams, $location) {
     $rootScope.routeParams = $routeParams;
 
