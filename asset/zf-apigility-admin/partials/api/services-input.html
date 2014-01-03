@@ -19,7 +19,7 @@
                         class="accordion-toggle btn"
                         data-toggle="collapse"
                         data-parent="inputAccordion"
-                        data-target="#inputCollapse-{{ restService.entity_class | namespaceclassid }}-{{input.name}}-{{$index}}">
+                        data-target="#inputCollapse-{{ restService.entity_class | namespaceclassid }}-{{input.name}}">
                         <span class="glyphicon glyphicon-wrench"></span>
                     </button>
                     <a ng-click="input._editNameVisible = true" ng-hide="input._editNameVisible">
@@ -37,7 +37,7 @@
                 <div class="clearfix"></div>
             </div>
 
-            <div id="inputCollapse-{{ restService.entity_class | namespaceclassid }}-{{input.name}}-{{$index}}" class="panel-collapse collapse">
+            <div id="inputCollapse-{{ restService.entity_class | namespaceclassid }}-{{input.name}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="pull-right">
                         <button type="button" class="btn btn-sm btn-success" ng-click="input._newValidatorFormVisible = true">Add Validator</button>
