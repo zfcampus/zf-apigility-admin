@@ -585,13 +585,29 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
 }]);
 
-module.controller('ApiServiceInputController', ['$scope', function ($scope) {
+module.controller('ApiServiceInputController', ['$scope', 'flash', function ($scope, flash) {
 
     // get services from $parent
     $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
     $scope.validatorOptions = $scope.$parent.validatorOptions;
 
     $scope.addInput = function() {
+        // Test to see if we already have an input by this name first
+        var found = false;
+        $scope.service.input_filter.every(function (input) {
+            if ($scope.newInput === input.name) {
+                found = true;
+                return false;
+            }
+            return true;
+        });
+
+        if (found) {
+            flash.error = "Input by the name " + $scope.newInput + " already exists!";
+            return;
+        }
+
+        // Add the input to the input filter
         $scope.service.input_filter.push({name: $scope.newInput, validators: []});
         $scope.newInput = '';
     };
@@ -1066,6 +1082,13 @@ module.filter('servicename', function () {
         }
         return newServiceName;
     }
+});
+
+// Used to strip out the backslash characters to use as a part of a class id
+module.filter('namespaceclassid', function () {
+    return function (input) {
+        return input.replace(/\\/g, '.');
+    };
 });
 
 module.run(['$rootScope', '$routeParams', '$location', function ($rootScope, $routeParams, $location) {
