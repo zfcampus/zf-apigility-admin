@@ -47,7 +47,7 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
             throw new CreationException('No database adapter name provided; cannot create RESTful resource', 422);
         }
 
-        if (null === $this->identifierName) {
+        if (null === $this->routeIdentifierName) {
             $this->identifierName = sprintf(
                 '%s_id',
                 $this->normalizeResourceNameForIdentifier($this->tableName)

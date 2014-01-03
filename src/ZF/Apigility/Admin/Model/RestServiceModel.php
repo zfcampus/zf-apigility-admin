@@ -63,7 +63,7 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $restScalarUpdateOptions = array(
         'collectionClass'          => 'collection_class',
         'entityClass'              => 'entity_class',
-        'identifierName'           => 'identifier_name',
+        'routeIdentifierName'      => 'route_identifier_name',
         'pageSize'                 => 'page_size',
         'pageSizeParam'            => 'page_size_param',
     );
@@ -259,7 +259,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $mediaType         = $this->createMediaType();
         $controllerService = ($details->controllerServiceName) ? $details->controllerServiceName : $this->createControllerServiceName($resourceName);
-        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
+        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($resourceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
         $resourceClass     = ($details->resourceClass)         ? $details->resourceClass         : $this->createResourceClass($resourceName);
         $collectionClass   = ($details->collectionClass)       ? $details->collectionClass       : $this->createCollectionClass($resourceName);
         $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($resourceName, 'entity', $details);
@@ -505,11 +505,11 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $resourceName
      * @param  string $route
-     * @param  string $identifier
+     * @param  string $routeIdentifier
      * @param  string $controllerService
      * @return string
      */
-    public function createRoute($resourceName, $route, $identifier, $controllerService)
+    public function createRoute($resourceName, $route, $routeIdentifier, $controllerService)
     {
         $filter    = $this->getRouteNameFilter();
         $routeName = sprintf(
@@ -524,7 +524,7 @@ class RestServiceModel implements EventManagerAwareInterface
                     $routeName => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => sprintf('%s[/:%s]', $route, $identifier),
+                            'route' => sprintf('%s[/:%s]', $route, $routeIdentifier),
                             'defaults' => array(
                                 'controller' => $controllerService,
                             ),
@@ -574,7 +574,7 @@ class RestServiceModel implements EventManagerAwareInterface
             $controllerService => array(
                 'listener'                   => $resourceClass,
                 'route_name'                 => $routeName,
-                'identifier_name'            => $details->identifierName,
+                'route_identifier_name'      => $details->routeIdentifierName,
                 'collection_name'            => $details->collectionName,
                 'resource_http_methods'      => $details->resourceHttpMethods,
                 'collection_http_methods'    => $details->collectionHttpMethods,
@@ -626,11 +626,11 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $config = array('zf-hal' => array('metadata_map' => array(
             $entityClass => array(
-                'identifier_name' => $details->identifierName,
+                'route_identifier_name' => $details->routeIdentifierName,
                 'route_name'      => $routeName,
             ),
             $collectionClass => array(
-                'identifier_name' => $details->identifierName,
+                'route_identifier_name' => $details->routeIdentifierName,
                 'route_name'      => $routeName,
                 'is_collection'   => true,
             ),
@@ -745,9 +745,9 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $entityUpdate     = [];
         $collectionUpdate = [];
-        if ($update->identifierName) {
-            $entityUpdate['identifier_name']     = $update->identifierName;
-            $collectionUpdate['identifier_name'] = $update->identifierName;
+        if ($update->routeIdentifierName) {
+            $entityUpdate['route_identifier_name']     = $update->routeIdentifierName;
+            $collectionUpdate['route_identifier_name'] = $update->routeIdentifierName;
         }
         if ($update->routeName) {
             $entityUpdate['route_name']     = $update->routeName;
