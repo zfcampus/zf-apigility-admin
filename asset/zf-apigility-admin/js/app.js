@@ -610,6 +610,9 @@ module.controller('ApiServiceInputController', ['$scope', function ($scope) {
     };
 
     $scope.addOption = function (validator) {
+        if (typeof validator._newOptionValue == 'string' && (validator._newOptionValue === 'true' || validator._newOptionValue === 'false')) {
+            validator._newOptionValue = (validator._newOptionValue === 'true');
+        }
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
         validator._newOptionValue = '';
