@@ -76,7 +76,7 @@ class DbConnectedRestServiceModel
         $controllerService = $restModel->createControllerServiceName($resourceName);
         $entityClass       = $restModel->createEntityClass($resourceName, 'entity-db-connected');
         $collectionClass   = $restModel->createCollectionClass($resourceName);
-        $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->identifierName, $controllerService);
+        $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->routeIdentifierName, $controllerService);
         $mediaType         = $restModel->createMediaType();
 
         $entity->exchangeArray(array(
