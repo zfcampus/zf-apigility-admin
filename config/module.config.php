@@ -517,6 +517,190 @@ return array(
     ),
 
     /*
+     * Metadata for scalar filter options.
+     *
+     * Each key in the map is a filter plugin name. The value is an array of
+     * option key/type pairs. If more than one type is possible, the types are
+     * OR'd.
+     */
+    'filter_metadata' => array(
+        'alnum' => array(
+            'allow_white_space' => 'bool',
+            'locale' => 'string',
+        ),
+        'alpha' => array(
+            'allow_white_space' => 'bool',
+            'locale' => 'string',
+        ),
+        'basename' => array(),
+        'boolean' => array(
+            'casting' => 'bool',
+            'type' => 'string',
+        ),
+        'callback' => array(
+            'callback' => 'string',
+        ),
+        'compressbz2' => array(
+            'archive' => 'string',
+            'blocksize' => 'int',
+        ),
+        'compressgz' => array(
+            'archive' => 'string',
+            'level' => 'int',
+            'mode' => 'string',
+        ),
+        'compresslzf' => array(),
+        'compress' => array(
+            'adapter' => 'string',
+        ),
+        'compressrar' => array(
+            'archive' => 'string',
+            'callback' => 'string',
+            'password' => 'string',
+            'target' => 'string',
+        ),
+        'compresssnappy' => array(),
+        'compresstar' => array(
+            'archive' => 'string',
+            'target' => 'string',
+            'mode' => 'string',
+        ),
+        'compresszip' => array(
+            'archive' => 'string',
+            'target' => 'string',
+        ),
+        'datetimeforatter' => array(
+            'format' => 'string',
+        ),
+        'decompress' => array(
+            'adapter' => 'string',
+        ),
+        'decrypt' => array(
+            'adapter' => 'string',
+        ),
+        'digits' => array(),
+        'dir' => array(),
+        'encryptblockcipher' => array(
+            'algorithm' => 'string',
+            'compression' => 'string',
+            'hash' => 'string',
+            'key' => 'string',
+            'key_iteration' => 'int',
+            'vector' => 'string',
+        ),
+        'encryptopenssl' => array(
+            'compression' => 'string',
+            'package' => 'bool',
+            'passphrase' => 'string',
+        ),
+        'encrypt' => array(
+            'adapter' => 'string',
+        ),
+        'filedecrypt' => array(
+            'adapter' => 'string',
+            'filename' => 'string',
+        ),
+        'fileencrypt' => array(
+            'adapter' => 'string',
+            'filename' => 'string',
+        ),
+        'filelowercase' => array(
+            'encoding' => 'string',
+        ),
+        'filerename' => array(
+            'overwrite' => 'bool',
+            'randomize' => 'bool',
+            'source' => string,
+            'target' => string,
+        ),
+        'filerenameupload' => array(
+            'overwrite' => 'bool',
+            'randomize' => 'bool',
+            'target' => string,
+            'use_upload_extension' => 'bool',
+            'use_upload_name' => 'bool',
+        ),
+        'fileuppercase' => array(
+            'encoding' => 'string',
+        ),
+        'htmlentities' => array(
+            'charset' => 'string',
+            'doublequote' => 'bool',
+            'encoding' => 'string',
+            'quotestyle' => 'int',
+        ),
+        'inflector' => array(
+            'throwTargetExceptionsOn' => 'bool',
+            'targetReplacementIdentifier' => 'string',
+            'target' => 'string',
+        ),
+        'int' => array(),
+        'null' => array(
+            'type' => 'int|string',
+        ),
+        'numberformat' => array(
+            'locale' => 'string',
+            'style' => 'int',
+            'type' => 'int',
+        ),
+        'numberparse' => array(
+            'locale' => 'string',
+            'style' => 'int',
+            'type' => 'int',
+        ),
+        'pregreplace' => array(
+            'pattern' => 'string',
+            'replacement' => 'string',
+        ),
+        'realpath' => array(
+            'exists' => 'bool',
+        ),
+        'stringtolower' => array(
+            'encoding' => 'string',
+        ),
+        'stringtoupper' => array(
+            'encoding' => 'string',
+        ),
+        'stringtrim' => array(
+            'charlist' => 'string',
+        ),
+        'stripnewlines' => array(),
+        'striptags' => array(
+            'allowAttribs' => 'string',
+            'allowTags' => 'string',
+        ),
+        'urinormalize' => array(
+            'defaultscheme' => 'string',
+            'enforcedscheme' => 'string',
+        ),
+        'wordcamelcasetodash' => array(),
+        'wordcamelcasetoseparator' => array(
+            'separator' => 'string',
+        ),
+        'wordcamelcasetounderscore' => array(),
+        'worddashtocamelcase' => array(),
+        'worddashtoseparator' => array(
+            'separator' => 'string',
+        ),
+        'worddashtounderscore' => array(),
+        'wordseparatortocamelcase' => array(
+            'separator' => 'string',
+        ),
+        'wordseparatortodash' => array(
+            'separator' => 'string',
+        ),
+        'wordseparatortoseparator' => array(
+            'searchseparator' => 'string',
+            'replacementseparator' => 'string',
+        ),
+        'wordunderscoretocamelcase' => array(),
+        'wordunderscoretodash' => array(),
+        'wordunderscoretoseparator' => array(
+            'separator' => 'string',
+        ),
+    ),
+
+    /*
      * Metadata for scalar validator options.
      *
      * Each key in the map is a validator plugin name. The value is an array of
