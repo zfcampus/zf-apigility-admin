@@ -50,6 +50,9 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
             }],
+            filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
+                return FiltersServicesRepository.getList();
+            }],
             validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                 return ValidatorsServicesRepository.getList();
             }],
@@ -64,6 +67,9 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+            }],
+            filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
+                return FiltersServicesRepository.getList();
             }],
             validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                 return ValidatorsServicesRepository.getList();
@@ -1014,6 +1020,28 @@ module.factory(
 );
 
 module.factory(
+    'FiltersServicesRepository',
+    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+        var servicePath = apiBasePath + '/filters';
+
+        return {
+            getList: function () {
+                var promise = $http({method: 'GET', url: servicePath}).then(
+                    function success(response) {
+                        return response.data.filters;
+                    },
+                    function error() {
+                        flash.error = 'Unable to fetch filters for filter dropdown; you may need to reload the page';
+                        return false;
+                    }
+                );
+                return promise;
+            }
+        };
+    }]
+);
+
+module.factory(
     'ValidatorsServicesRepository',
     ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
         var servicePath = apiBasePath + '/validators';
@@ -1025,7 +1053,7 @@ module.factory(
                         return response.data.validators;
                     },
                     function error() {
-                        flash.error = 'Unable to fetch validators for hydrator dropdown; you may need to reload the page';
+                        flash.error = 'Unable to fetch validators for validator dropdown; you may need to reload the page';
                         return false;
                     }
                 );
