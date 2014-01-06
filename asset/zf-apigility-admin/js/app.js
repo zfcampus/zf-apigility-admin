@@ -802,6 +802,16 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                                             }
                                         })
                                     }
+
+                                    if (typeof value.filters == 'undefined') {
+                                        value.filters = [];
+                                    } else {
+                                        _.forEach(value.filters, function (filter, index) {
+                                            if (typeof filter.options == 'undefined' || filter.options.length == 0) {
+                                                filter.options = {};
+                                            }
+                                        })
+                                    }
                                 }
 
                             });
