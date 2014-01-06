@@ -19,7 +19,7 @@ class FiltersModel extends AbstractPluginManagerModel
 
     /**
      * $pluginManager should be an instance of
-     * Zend\Validator\ValidatorPluginManager.
+     * Zend\Filter\FilterPluginManager.
      *
      * @param ServiceManager $pluginManager
      * @param array $metadata
