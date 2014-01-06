@@ -1,0 +1,132 @@
+                    <div class="panel panel-default"><div class="panel-body">
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success" ng-click="input._newValidatorFormVisible = true">Add Validator</button>
+                        </span>
+                        <h4>Validators</h4>
+                        <div class="ag-new-input clearfix"></div>
+
+                        <ul ui-sortable="{handle: '.validator-handle'}" class="list-unstyled" ng-model="input.validators">
+                            <li class="panel panel-default" ng-repeat="validator in input.validators">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <i class="glyphicon glyphicon-list validator-handle"></i>
+                                        {{validator.name}}
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-sm btn-success" ng-click="validator._newOptionFormVisible = true">Add Option</button>
+                                            <button type="button" class="btn btn-sm" aria-hidden="true" ng-click="removeValidator(input, $index)"><span class="glyphicon glyphicon-trash"></span></button>
+                                        </div>
+                                    </h4>
+                                    <div class="clearfix"></div>
+                                </div>
+                            
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="(optionName, optionValue) in validator.options">
+                                        {{optionName}} = {{optionValue}}
+                                        <button type="button" class="btn btn-xs pull-right" aria-hidden="true" ng-click="removeOption(validator.options, optionName)"><span class="glyphicon glyphicon-trash"></span></button>
+                                    </li>
+
+                                    <li class="list-group-item"  ng-show="validator._newOptionFormVisible">
+                                        <form id="input-option-form" ng-submit="addValidatorOption(validator)">
+                                            <select class="input-medium" ui-select2="{ width: '300px' }" type="text" ng-model="validator._newOptionName">
+                                                <option ng-repeat="(key, value) in validatorOptions[validator.name]" value="{{key}}">{{key}}</option>
+                                            </select>
+
+                                            <span ng-show="validator._newOptionName">
+                                                <span ng-switch="validatorOptions[validator.name][validator._newOptionName]">
+                                                    <span ng-switch-when="bool">
+                                                        <select ng-model="validator._newOptionValue">
+                                                            <option value="true">TRUE</option>
+                                                            <option value="false">FALSE</option>
+                                                        </select>
+                                                    </span>
+                                                    <span ng-switch-default><input type="text" ng-model="validator._newOptionValue"></span>
+                                                </span>
+                                            </span>
+
+                                            <div class="ag-new-input">
+                                                <button type="reset" class="btn btn-sm btn-warning" ng-click="validator._newOptionFormVisible = false">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-success">Add Option</button>
+                                            </div>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="well" ng-show="input._newValidatorFormVisible">
+                                <form id="input-validator-form" ng-submit="addValidator(input)">
+                                    <select class="input-medium" ui-select2="{placeholder: 'Select Validator', width: '300px' }" type="text" ng-model="input._newValidatorName">
+                                        <option ng-repeat="(key, value) in validatorOptions" value="{{key}}">{{key}}</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-success">Add Validator</button>
+                                    <button type="reset" class="btn btn-sm btn-warning" ng-click="input._newValidatorFormVisible = false">Cancel</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div></div>
+
+                    <div class="panel panel-default"><div class="panel-body">
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success" ng-click="input._newFilterFormVisible = true">Add Filter</button>
+                        </span>
+                        <h4>Filters</h4>
+                        <div class="ag-new-input clearfix"></div>
+
+                        <ul ui-sortable="{handle: '.filter-handle'}" class="list-unstyled" ng-model="input.filters">
+                            <li class="panel panel-default" ng-repeat="filter in input.filters">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <i class="glyphicon glyphicon-list filter-handle"></i>
+                                        {{filter.name}}
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-sm btn-success" ng-click="filter._newOptionFormVisible = true">Add Option</button>
+                                            <button type="button" class="btn btn-sm" aria-hidden="true" ng-click="removeFilter(input, $index)"><span class="glyphicon glyphicon-trash"></span></button>
+                                        </div>
+                                    </h4>
+                                    <div class="clearfix"></div>
+                                </div>
+                            
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="(optionName, optionValue) in filter.options">
+                                        {{optionName}} = {{optionValue}}
+                                        <button type="button" class="btn btn-xs pull-right" aria-hidden="true" ng-click="removeOption(filter.options, optionName)"><span class="glyphicon glyphicon-trash"></span></button>
+                                    </li>
+
+                                    <li class="list-group-item"  ng-show="filter._newOptionFormVisible">
+                                        <form id="input-option-form" ng-submit="addFilterOption(filter)">
+                                            <select class="input-medium" ui-select2="{ width: '300px' }" type="text" ng-model="filter._newOptionName">
+                                                <option ng-repeat="(key, value) in filterOptions[filter.name]" value="{{key}}">{{key}}</option>
+                                            </select>
+
+                                            <span ng-show="filter._newOptionName">
+                                                <span ng-switch="filterOptions[filter.name][filter._newOptionName]">
+                                                    <span ng-switch-when="bool">
+                                                        <select ng-model="filter._newOptionValue">
+                                                            <option value="true">TRUE</option>
+                                                            <option value="false">FALSE</option>
+                                                        </select>
+                                                    </span>
+                                                    <span ng-switch-default><input type="text" ng-model="filter._newOptionValue"></span>
+                                                </span>
+                                            </span>
+
+                                            <div class="ag-new-input">
+                                                <button type="reset" class="btn btn-sm btn-warning" ng-click="filter._newOptionFormVisible = false">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-success">Add Option</button>
+                                            </div>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="well" ng-show="input._newFilterFormVisible">
+                                <form id="input-filter-form" ng-submit="addFilter(input)">
+                                    <select class="input-medium" ui-select2="{placeholder: 'Select Filter', width: '300px' }" type="text" ng-model="input._newFilterName">
+                                        <option ng-repeat="(key, value) in filterOptions" value="{{key}}">{{key}}</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-success">Add Filter</button>
+                                    <button type="reset" class="btn btn-sm btn-warning" ng-click="input._newFilterFormVisible = false">Cancel</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div></div>
+
