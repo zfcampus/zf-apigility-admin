@@ -418,7 +418,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, hydrators, validators, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, ApiRepository, api, dbAdapters) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -428,6 +428,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     $scope.dbAdapters = dbAdapters;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
+    $scope.filterOptions = filters;
 
     $scope.hydrators = hydrators;
 
@@ -518,7 +520,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'validators', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, validators, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, ApiRepository, api) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -526,6 +528,8 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     $scope.api = api;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
+    $scope.filterOptions = filters;
 
     $scope.validatorOptions = validators;
 
@@ -595,6 +599,7 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
 
     // get services from $parent
     $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
+    $scope.filterOptions = $scope.$parent.filterOptions;
     $scope.validatorOptions = $scope.$parent.validatorOptions;
 
     $scope.addInput = function() {
@@ -614,7 +619,7 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
         }
 
         // Add the input to the input filter
-        $scope.service.input_filter.push({name: $scope.newInput, validators: []});
+        $scope.service.input_filter.push({name: $scope.newInput, filters: [], validators: []});
         $scope.newInput = '';
     };
 
