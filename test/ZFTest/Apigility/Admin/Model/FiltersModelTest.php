@@ -42,20 +42,20 @@ class FiltersModelTest extends TestCase
 
     public function testFetchAllReturnsListOfAvailablePlugins()
     {
-        $validators  = $this->model->fetchAll();
+        $filters = $this->model->fetchAll();
         foreach ($this->plugins->getRegisteredServices() as $services) {
             foreach ($services as $service) {
-                $this->assertArrayHasKey($service, $validators);
+                $this->assertArrayHasKey($service, $filters);
             }
         }
     }
 
     public function testEachPluginIsAKeyArrayPair()
     {
-        $validators  = $this->model->fetchAll();
-        foreach ($this->model->fetchAll() as $service => $metadata) {
+        $filters = $this->model->fetchAll();
+        foreach ($filters as $service => $metadata) {
             $this->assertInternalType('string', $service);
-            $this->assertInternalType('array', $metadata);
+            $this->assertInternalType('array', $metadata, sprintf('Key "%s" does not have array metadata: "%s"', $service, var_export($metadata, 1)));
         }
     }
 }

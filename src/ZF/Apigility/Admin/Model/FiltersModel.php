@@ -60,7 +60,7 @@ class FiltersModel extends AbstractPluginManagerModel
                 $value = [];
                 return;
             }
-            $key = $metadata[$key];
+            $value = $metadata[$key];
         });
 
         $this->plugins = $plugins;

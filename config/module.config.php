@@ -610,13 +610,13 @@ return array(
         'filerename' => array(
             'overwrite' => 'bool',
             'randomize' => 'bool',
-            'source' => string,
-            'target' => string,
+            'source' => 'string',
+            'target' => 'string',
         ),
         'filerenameupload' => array(
             'overwrite' => 'bool',
             'randomize' => 'bool',
-            'target' => string,
+            'target' => 'string',
             'use_upload_extension' => 'bool',
             'use_upload_name' => 'bool',
         ),
