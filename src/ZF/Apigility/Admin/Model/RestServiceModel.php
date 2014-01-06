@@ -626,11 +626,11 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $config = array('zf-hal' => array('metadata_map' => array(
             $entityClass => array(
-                'route_identifier_name' => $details->routeIdentifierName,
+                'entity_identifier_name' => $details->entityIdentifierName,
                 'route_name'      => $routeName,
             ),
             $collectionClass => array(
-                'route_identifier_name' => $details->routeIdentifierName,
+                'entity_identifier_name' => $details->entityIdentifierName,
                 'route_name'      => $routeName,
                 'is_collection'   => true,
             ),
@@ -746,8 +746,8 @@ class RestServiceModel implements EventManagerAwareInterface
         $entityUpdate     = [];
         $collectionUpdate = [];
         if ($update->routeIdentifierName) {
-            $entityUpdate['route_identifier_name']     = $update->routeIdentifierName;
-            $collectionUpdate['route_identifier_name'] = $update->routeIdentifierName;
+            $entityUpdate['entity_identifier_name']     = $update->entityIdentifierName;
+            $collectionUpdate['entity_identifier_name'] = $update->entityIdentifierName;
         }
         if ($update->routeName) {
             $entityUpdate['route_name']     = $update->routeName;

@@ -14,6 +14,7 @@ class NewRestServiceEntity extends RestServiceEntity
 
     public function exchangeArray(array $data)
     {
+        die('exchange');
         parent::exchangeArray($data);
         foreach ($data as $key => $value) {
             $key = strtolower($key);
