@@ -65,7 +65,7 @@
                                 </li>
 
                                 <li class="list-group-item"  ng-show="validator._newOptionFormVisible">
-                                    <form id="input-option-form" ng-submit="addOption(validator)">
+                                    <form id="input-option-form" ng-submit="addValidatorOption(validator)">
                                         <select class="input-medium" ui-select2="{ width: '300px' }" type="text" ng-model="validator._newOptionName">
                                             <option ng-repeat="(key, value) in validatorOptions[validator.name]" value="{{key}}">{{key}}</option>
                                         </select>

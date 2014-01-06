@@ -627,6 +627,28 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
         $scope.service.input_filter.splice(inputIndex, 1);
     };
 
+    $scope.removeOption = function (options, name) {
+        delete options[name];
+    };
+
+    $scope.addFilter = function (input) {
+        input.filters.push({name: input._newFilterName, options: {}});
+        input._newFilterName = '';
+    };
+
+    $scope.removeFilter = function (input, filterIndex) {
+        input.filters.splice(filterIndex, 1);
+    };
+
+    $scope.addFilterOption = function (filter) {
+        if ($scope.filterOptions[filter.name][filter._newOptionName] == 'bool') {
+            filter._newOptionValue = (filter._newOptionValue === 'true');
+        }
+        filter.options[filter._newOptionName] = filter._newOptionValue;
+        filter._newOptionName = '';
+        filter._newOptionValue = '';
+    };
+
     $scope.addValidator = function (input) {
         input.validators.push({name: input._newValidatorName, options: {}});
         input._newValidatorName = '';
@@ -636,17 +658,13 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
         input.validators.splice(validatorIndex, 1);
     };
 
-    $scope.addOption = function (validator) {
+    $scope.addValidatorOption = function (validator) {
         if ($scope.validatorOptions[validator.name][validator._newOptionName] == 'bool') {
             validator._newOptionValue = (validator._newOptionValue === 'true');
         }
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
         validator._newOptionValue = '';
-    };
-
-    $scope.removeOption = function (options, name) {
-        delete options[name];
     };
 
     $scope.saveInput = function () {
