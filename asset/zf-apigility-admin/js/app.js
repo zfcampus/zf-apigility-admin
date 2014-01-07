@@ -812,6 +812,12 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                                             }
                                         })
                                     }
+
+                                    if (typeof value.required == 'undefined') {
+                                        value.required = false;
+                                    } else {
+                                        value.required = !!value.required;
+                                    }
                                 }
 
                             });
