@@ -50,6 +50,9 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
             }],
+            filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
+                return FiltersServicesRepository.getList();
+            }],
             validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                 return ValidatorsServicesRepository.getList();
             }],
@@ -64,6 +67,9 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                 return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+            }],
+            filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
+                return FiltersServicesRepository.getList();
             }],
             validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                 return ValidatorsServicesRepository.getList();
@@ -412,7 +418,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, hydrators, validators, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, ApiRepository, api, dbAdapters) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -422,6 +428,8 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     $scope.dbAdapters = dbAdapters;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
+    $scope.filterOptions = filters;
 
     $scope.hydrators = hydrators;
 
@@ -512,7 +520,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'validators', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, validators, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, ApiRepository, api) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -520,6 +528,8 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     $scope.api = api;
 
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
+
+    $scope.filterOptions = filters;
 
     $scope.validatorOptions = validators;
 
@@ -589,6 +599,7 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
 
     // get services from $parent
     $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
+    $scope.filterOptions = $scope.$parent.filterOptions;
     $scope.validatorOptions = $scope.$parent.validatorOptions;
 
     $scope.addInput = function() {
@@ -608,12 +619,34 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
         }
 
         // Add the input to the input filter
-        $scope.service.input_filter.push({name: $scope.newInput, validators: []});
+        $scope.service.input_filter.push({name: $scope.newInput, filters: [], validators: []});
         $scope.newInput = '';
     };
 
     $scope.removeInput = function (inputIndex) {
         $scope.service.input_filter.splice(inputIndex, 1);
+    };
+
+    $scope.removeOption = function (options, name) {
+        delete options[name];
+    };
+
+    $scope.addFilter = function (input) {
+        input.filters.push({name: input._newFilterName, options: {}});
+        input._newFilterName = '';
+    };
+
+    $scope.removeFilter = function (input, filterIndex) {
+        input.filters.splice(filterIndex, 1);
+    };
+
+    $scope.addFilterOption = function (filter) {
+        if ($scope.filterOptions[filter.name][filter._newOptionName] == 'bool') {
+            filter._newOptionValue = (filter._newOptionValue === 'true');
+        }
+        filter.options[filter._newOptionName] = filter._newOptionValue;
+        filter._newOptionName = '';
+        filter._newOptionValue = '';
     };
 
     $scope.addValidator = function (input) {
@@ -625,17 +658,13 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
         input.validators.splice(validatorIndex, 1);
     };
 
-    $scope.addOption = function (validator) {
+    $scope.addValidatorOption = function (validator) {
         if ($scope.validatorOptions[validator.name][validator._newOptionName] == 'bool') {
             validator._newOptionValue = (validator._newOptionValue === 'true');
         }
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
         validator._newOptionValue = '';
-    };
-
-    $scope.removeOption = function (options, name) {
-        delete options[name];
     };
 
     $scope.saveInput = function () {
@@ -772,6 +801,22 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                                                 validator.options = {};
                                             }
                                         })
+                                    }
+
+                                    if (typeof value.filters == 'undefined') {
+                                        value.filters = [];
+                                    } else {
+                                        _.forEach(value.filters, function (filter, index) {
+                                            if (typeof filter.options == 'undefined' || filter.options.length == 0) {
+                                                filter.options = {};
+                                            }
+                                        })
+                                    }
+
+                                    if (typeof value.required == 'undefined') {
+                                        value.required = false;
+                                    } else {
+                                        value.required = !!value.required;
                                     }
                                 }
 
@@ -1014,6 +1059,28 @@ module.factory(
 );
 
 module.factory(
+    'FiltersServicesRepository',
+    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+        var servicePath = apiBasePath + '/filters';
+
+        return {
+            getList: function () {
+                var promise = $http({method: 'GET', url: servicePath}).then(
+                    function success(response) {
+                        return response.data.filters;
+                    },
+                    function error() {
+                        flash.error = 'Unable to fetch filters for filter dropdown; you may need to reload the page';
+                        return false;
+                    }
+                );
+                return promise;
+            }
+        };
+    }]
+);
+
+module.factory(
     'ValidatorsServicesRepository',
     ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
         var servicePath = apiBasePath + '/validators';
@@ -1025,7 +1092,7 @@ module.factory(
                         return response.data.validators;
                     },
                     function error() {
-                        flash.error = 'Unable to fetch validators for hydrator dropdown; you may need to reload the page';
+                        flash.error = 'Unable to fetch validators for validator dropdown; you may need to reload the page';
                         return false;
                     }
                 );
