@@ -21,6 +21,7 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
+            'ZF\Apigility\Admin\Model\FiltersModel' => 'ZF\Apigility\Admin\Model\FiltersModelFactory',
             'ZF\Apigility\Admin\Model\HydratorsModel' => 'ZF\Apigility\Admin\Model\HydratorsModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorMetadataModel' => 'ZF\Apigility\Admin\Model\ValidatorMetadataModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorsModel' => 'ZF\Apigility\Admin\Model\ValidatorsModelFactory',
@@ -33,6 +34,7 @@ return array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
         ),
         'factories' => array(
+            'ZF\Apigility\Admin\Controller\Filters' => 'ZF\Apigility\Admin\Controller\FiltersControllerFactory',
             'ZF\Apigility\Admin\Controller\Hydrators' => 'ZF\Apigility\Admin\Controller\HydratorsControllerFactory',
             'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
             'ZF\Apigility\Admin\Controller\InputFilter' => 'ZF\Apigility\Admin\Controller\InputFilterControllerFactory',
@@ -91,6 +93,16 @@ return array(
                                     'defaults' => array(
                                         'controller' => 'ZF\Apigility\Admin\Controller\Source',
                                         'action'     => 'source',
+                                    ),
+                                ),
+                            ),
+                            'filters' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/filters',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Filters',
+                                        'action'     => 'filters',
                                     ),
                                 ),
                             ),
@@ -241,6 +253,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Authentication' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Filters'        => 'Json',
             'ZF\Apigility\Admin\Controller\Hydrators'      => 'Json',
             'ZF\Apigility\Admin\Controller\InputFilter'    => 'HalJson',
             'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
@@ -261,6 +274,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Filters' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -313,6 +330,9 @@ return array(
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Filters' => array(
+                'application/json',
             ),
             'ZF\Apigility\Admin\Controller\Hydrators' => array(
                 'application/json',
@@ -482,6 +502,10 @@ return array(
             'http_methods' => array('GET', 'PUT'),
             'route_name'   => 'zf-apigility-admin/api/module/authorization',
         ),
+        'ZF\Apigility\Admin\Controller\Filters' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility-admin/api/filters',
+        ),
         'ZF\Apigility\Admin\Controller\Hydrators' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility-admin/api/hydrators',
@@ -513,6 +537,190 @@ return array(
         'ZF\Configuration\ModuleConfigController' => array(
             'http_methods' => array('GET', 'PATCH'),
             'route_name'   => 'zf-apigility-admin/api/config/module',
+        ),
+    ),
+
+    /*
+     * Metadata for scalar filter options.
+     *
+     * Each key in the map is a filter plugin name. The value is an array of
+     * option key/type pairs. If more than one type is possible, the types are
+     * OR'd.
+     */
+    'filter_metadata' => array(
+        'alnum' => array(
+            'allow_white_space' => 'bool',
+            'locale' => 'string',
+        ),
+        'alpha' => array(
+            'allow_white_space' => 'bool',
+            'locale' => 'string',
+        ),
+        'basename' => array(),
+        'boolean' => array(
+            'casting' => 'bool',
+            'type' => 'string',
+        ),
+        'callback' => array(
+            'callback' => 'string',
+        ),
+        'compressbz2' => array(
+            'archive' => 'string',
+            'blocksize' => 'int',
+        ),
+        'compressgz' => array(
+            'archive' => 'string',
+            'level' => 'int',
+            'mode' => 'string',
+        ),
+        'compresslzf' => array(),
+        'compress' => array(
+            'adapter' => 'string',
+        ),
+        'compressrar' => array(
+            'archive' => 'string',
+            'callback' => 'string',
+            'password' => 'string',
+            'target' => 'string',
+        ),
+        'compresssnappy' => array(),
+        'compresstar' => array(
+            'archive' => 'string',
+            'target' => 'string',
+            'mode' => 'string',
+        ),
+        'compresszip' => array(
+            'archive' => 'string',
+            'target' => 'string',
+        ),
+        'datetimeforatter' => array(
+            'format' => 'string',
+        ),
+        'decompress' => array(
+            'adapter' => 'string',
+        ),
+        'decrypt' => array(
+            'adapter' => 'string',
+        ),
+        'digits' => array(),
+        'dir' => array(),
+        'encryptblockcipher' => array(
+            'algorithm' => 'string',
+            'compression' => 'string',
+            'hash' => 'string',
+            'key' => 'string',
+            'key_iteration' => 'int',
+            'vector' => 'string',
+        ),
+        'encryptopenssl' => array(
+            'compression' => 'string',
+            'package' => 'bool',
+            'passphrase' => 'string',
+        ),
+        'encrypt' => array(
+            'adapter' => 'string',
+        ),
+        'filedecrypt' => array(
+            'adapter' => 'string',
+            'filename' => 'string',
+        ),
+        'fileencrypt' => array(
+            'adapter' => 'string',
+            'filename' => 'string',
+        ),
+        'filelowercase' => array(
+            'encoding' => 'string',
+        ),
+        'filerename' => array(
+            'overwrite' => 'bool',
+            'randomize' => 'bool',
+            'source' => 'string',
+            'target' => 'string',
+        ),
+        'filerenameupload' => array(
+            'overwrite' => 'bool',
+            'randomize' => 'bool',
+            'target' => 'string',
+            'use_upload_extension' => 'bool',
+            'use_upload_name' => 'bool',
+        ),
+        'fileuppercase' => array(
+            'encoding' => 'string',
+        ),
+        'htmlentities' => array(
+            'charset' => 'string',
+            'doublequote' => 'bool',
+            'encoding' => 'string',
+            'quotestyle' => 'int',
+        ),
+        'inflector' => array(
+            'throwTargetExceptionsOn' => 'bool',
+            'targetReplacementIdentifier' => 'string',
+            'target' => 'string',
+        ),
+        'int' => array(),
+        'null' => array(
+            'type' => 'int|string',
+        ),
+        'numberformat' => array(
+            'locale' => 'string',
+            'style' => 'int',
+            'type' => 'int',
+        ),
+        'numberparse' => array(
+            'locale' => 'string',
+            'style' => 'int',
+            'type' => 'int',
+        ),
+        'pregreplace' => array(
+            'pattern' => 'string',
+            'replacement' => 'string',
+        ),
+        'realpath' => array(
+            'exists' => 'bool',
+        ),
+        'stringtolower' => array(
+            'encoding' => 'string',
+        ),
+        'stringtoupper' => array(
+            'encoding' => 'string',
+        ),
+        'stringtrim' => array(
+            'charlist' => 'string',
+        ),
+        'stripnewlines' => array(),
+        'striptags' => array(
+            'allowAttribs' => 'string',
+            'allowTags' => 'string',
+        ),
+        'urinormalize' => array(
+            'defaultscheme' => 'string',
+            'enforcedscheme' => 'string',
+        ),
+        'wordcamelcasetodash' => array(),
+        'wordcamelcasetoseparator' => array(
+            'separator' => 'string',
+        ),
+        'wordcamelcasetounderscore' => array(),
+        'worddashtocamelcase' => array(),
+        'worddashtoseparator' => array(
+            'separator' => 'string',
+        ),
+        'worddashtounderscore' => array(),
+        'wordseparatortocamelcase' => array(
+            'separator' => 'string',
+        ),
+        'wordseparatortodash' => array(
+            'separator' => 'string',
+        ),
+        'wordseparatortoseparator' => array(
+            'searchseparator' => 'string',
+            'replacementseparator' => 'string',
+        ),
+        'wordunderscoretocamelcase' => array(),
+        'wordunderscoretodash' => array(),
+        'wordunderscoretoseparator' => array(
+            'separator' => 'string',
         ),
     ),
 
