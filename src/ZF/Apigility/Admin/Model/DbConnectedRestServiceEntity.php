@@ -48,7 +48,11 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
         }
 
         if (null === $this->entityIdentifierName) {
-            $this->entityIdentifierName = sprintf(
+            $this->entityIdentifierName = 'id';
+        }
+
+        if (null === $this->routeIdentifierName) {
+            $this->routeIdentifierName = sprintf(
                 '%s_id',
                 $this->normalizeResourceNameForIdentifier($this->tableName)
             );
