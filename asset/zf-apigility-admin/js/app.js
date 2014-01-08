@@ -619,7 +619,7 @@ module.controller('ApiServiceInputController', ['$scope', 'flash', function ($sc
         }
 
         // Add the input to the input filter
-        $scope.service.input_filter.push({name: $scope.newInput, filters: [], validators: []});
+        $scope.service.input_filter.push({name: $scope.newInput, required: true, filters: [], validators: []});
         $scope.newInput = '';
     };
 
@@ -814,7 +814,7 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
                                     }
 
                                     if (typeof value.required == 'undefined') {
-                                        value.required = false;
+                                        value.required = true;
                                     } else {
                                         value.required = !!value.required;
                                     }
