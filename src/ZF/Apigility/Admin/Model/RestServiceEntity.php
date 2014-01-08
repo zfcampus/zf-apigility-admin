@@ -38,7 +38,7 @@ class RestServiceEntity
 
     protected $routeIdentifierName;
 
-    protected $entityIdentifierName;
+    protected $entityIdentifierName = 'id';
 
     protected $inputFilters;
 

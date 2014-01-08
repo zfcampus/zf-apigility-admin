@@ -147,12 +147,12 @@ class ModuleModelTest extends TestCase
         $unique  = array();
         foreach ($modules as $module) {
             $name = $module->getNamespace();
-            $this->assertArrayHasKey($name, $expected);
-            $this->assertNotContains($name, $unique);
+            $this->assertArrayHasKey($name, $expected, sprintf('Failed asserting module "%s" is in list', $name));
+            $this->assertNotContains($name, $unique, sprintf('Failed asserting module "%s" was not previously declared', $name));
             $expectedMetadata = $expected[$name];
-            $this->assertSame($expectedMetadata['vendor'], $module->isVendor());
-            $this->assertSame($expectedMetadata['rest'], $module->getRestServices());
-            $this->assertSame($expectedMetadata['rpc'], $module->getRpcServices());
+            $this->assertSame($expectedMetadata['vendor'], $module->isVendor(), sprintf('Failed asserting module "%s" vendor flag matches "%s" (received "%s")', $name, var_export($expectedMetadata['vendor'], 1), var_export($module->isVendor(), 1)));
+            $this->assertSame($expectedMetadata['rest'], $module->getRestServices(), sprintf('Failed asserting module "%s" rest services match expectations; expected [ %s ], received [ %s ]', $name, var_export($expectedMetadata['rest'], 1), var_export($module->getRestServices(), 1)));
+            $this->assertSame($expectedMetadata['rpc'], $module->getRpcServices(), sprintf('Failed asserting module "%s" rpc services match expectations; expected [ %s ], received [ %s ]', $name, var_export($expectedMetadata['rpc'], 1), var_export($module->getRpcServices(), 1)));
             $unique[] = $name;
         }
     }
