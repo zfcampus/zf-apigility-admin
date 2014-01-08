@@ -63,7 +63,7 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $restScalarUpdateOptions = array(
         'collectionClass'          => 'collection_class',
         'entityClass'              => 'entity_class',
-        'identifierName'           => 'identifier_name',
+        'routeIdentifierName'      => 'route_identifier_name',
         'pageSize'                 => 'page_size',
         'pageSizeParam'            => 'page_size_param',
     );
@@ -259,7 +259,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $mediaType         = $this->createMediaType();
         $controllerService = ($details->controllerServiceName) ? $details->controllerServiceName : $this->createControllerServiceName($resourceName);
-        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($resourceName, $details->routeMatch, $details->identifierName, $controllerService);
+        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($resourceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
         $resourceClass     = ($details->resourceClass)         ? $details->resourceClass         : $this->createResourceClass($resourceName);
         $collectionClass   = ($details->collectionClass)       ? $details->collectionClass       : $this->createCollectionClass($resourceName);
         $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($resourceName, 'entity', $details);
@@ -505,11 +505,11 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $resourceName
      * @param  string $route
-     * @param  string $identifier
+     * @param  string $routeIdentifier
      * @param  string $controllerService
      * @return string
      */
-    public function createRoute($resourceName, $route, $identifier, $controllerService)
+    public function createRoute($resourceName, $route, $routeIdentifier, $controllerService)
     {
         $filter    = $this->getRouteNameFilter();
         $routeName = sprintf(
@@ -524,7 +524,7 @@ class RestServiceModel implements EventManagerAwareInterface
                     $routeName => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => sprintf('%s[/:%s]', $route, $identifier),
+                            'route' => sprintf('%s[/:%s]', $route, $routeIdentifier),
                             'defaults' => array(
                                 'controller' => $controllerService,
                             ),
@@ -574,7 +574,7 @@ class RestServiceModel implements EventManagerAwareInterface
             $controllerService => array(
                 'listener'                   => $resourceClass,
                 'route_name'                 => $routeName,
-                'identifier_name'            => $details->identifierName,
+                'route_identifier_name'      => $details->routeIdentifierName,
                 'collection_name'            => $details->collectionName,
                 'resource_http_methods'      => $details->resourceHttpMethods,
                 'collection_http_methods'    => $details->collectionHttpMethods,
@@ -626,13 +626,15 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $config = array('zf-hal' => array('metadata_map' => array(
             $entityClass => array(
-                'identifier_name' => $details->identifierName,
-                'route_name'      => $routeName,
+                'entity_identifier_name' => $details->entityIdentifierName,
+                'route_name'             => $routeName,
+                'route_identifier_name'  => $details->routeIdentifierName,
             ),
             $collectionClass => array(
-                'identifier_name' => $details->identifierName,
-                'route_name'      => $routeName,
-                'is_collection'   => true,
+                'entity_identifier_name' => $details->entityIdentifierName,
+                'route_name'             => $routeName,
+                'route_identifier_name'  => $details->routeIdentifierName,
+                'is_collection'          => true,
             ),
         )));
         if (isset($details->hydratorName) && $details->hydratorName) {
@@ -745,9 +747,13 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $entityUpdate     = [];
         $collectionUpdate = [];
-        if ($update->identifierName) {
-            $entityUpdate['identifier_name']     = $update->identifierName;
-            $collectionUpdate['identifier_name'] = $update->identifierName;
+        if ($update->routeIdentifierName) {
+            $entityUpdate['route_identifier_name']     = $update->routeIdentifierName;
+            $collectionUpdate['route_identifier_name'] = $update->routeIdentifierName;
+        }
+        if ($update->entityIdentifierName) {
+            $entityUpdate['entity_identifier_name']     = $update->entityIdentifierName;
+            $collectionUpdate['entity_identifier_name'] = $update->entityIdentifierName;
         }
         if ($update->routeName) {
             $entityUpdate['route_name']     = $update->routeName;
@@ -984,8 +990,16 @@ class RestServiceModel implements EventManagerAwareInterface
             $merge['entity_class'] = $entityClass;
         }
 
+        if (isset($config[$entityClass]['entity_identifier_name'])) {
+            $merge['entity_identifier_name'] = $config[$entityClass]['entity_identifier_name'];
+        }
+
         if (isset($config[$collectionClass])) {
             $merge['collection_class'] = $collectionClass;
+        }
+
+        if (!isset($merge['entity_identifier_name']) && isset($config[$collectionClass]['entity_identifier_name'])) {
+            $merge['entity_identifier_name'] = $config[$collectionClass]['entity_identifier_name'];
         }
 
         $metadata->exchangeArray($merge);
@@ -1001,17 +1015,19 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function deriveEntityClass($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
-        if (isset($config['zf-rest'])
-            && isset($config['zf-rest'][$controllerServiceName])
-            && isset($config['zf-rest'][$controllerServiceName]['entity_class'])
-        ) {
+        if (isset($config['zf-rest'][$controllerServiceName]['entity_class'])) {
             return $config['zf-rest'][$controllerServiceName]['entity_class'];
         }
 
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+        if (!preg_match('#' . preg_quote($module) . '(?P<version>' . preg_quote('\\') . 'V[a-zA-Z0-9_]+)?' . preg_quote('\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
             return null;
         }
+
+        if (isset($matches['version']) && ! empty($matches['version'])) {
+            return sprintf('%s%s\\Rest\\%s\\%sEntity', $module, $matches['version'], $matches['service'], $matches['service']);
+        }
+
         return sprintf('%s\\Rest\\%s\\%sEntity', $module, $matches['service'], $matches['service']);
     }
 
@@ -1033,9 +1049,14 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+        if (!preg_match('#' . preg_quote($module) . '(?P<version>' . preg_quote('\\') . 'V[a-zA-Z0-9_]+)?' . preg_quote('\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
             return null;
         }
+
+        if (isset($matches['version']) && ! empty($matches['version'])) {
+            return sprintf('%s%s\\Rest\\%s\\%sCollection', $module, $matches['version'], $matches['service'], $matches['service']);
+        }
+
         return sprintf('%s\\Rest\\%s\\%sCollection', $module, $matches['service'], $matches['service']);
     }
 }

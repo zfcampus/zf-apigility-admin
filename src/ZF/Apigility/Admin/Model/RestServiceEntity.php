@@ -36,7 +36,9 @@ class RestServiceEntity
 
     protected $hydratorName = 'ArraySerializable';
 
-    protected $identifierName;
+    protected $routeIdentifierName;
+
+    protected $entityIdentifierName = 'id';
 
     protected $inputFilters;
 
@@ -85,6 +87,7 @@ class RestServiceEntity
 
     public function exchangeArray(array $data)
     {
+        $legacyIdentifierName = false;
         foreach ($data as $key => $value) {
             $key = strtolower($key);
             $key = str_replace('_', '', $key);
@@ -113,11 +116,14 @@ class RestServiceEntity
                 case 'entityclass':
                     $this->entityClass = $value;
                     break;
+                case 'entityidentifiername':
+                    $this->entityIdentifierName = $value;
+                    break;
                 case 'hydratorname':
                     $this->hydratorName = $value;
                     break;
                 case 'identifiername':
-                    $this->identifierName = $value;
+                    $legacyIdentifierName = $value;
                     break;
                 case 'inputfilters':
                     if ($value instanceof InputFilterCollection
@@ -141,6 +147,9 @@ class RestServiceEntity
                 case 'resourcehttpmethods':
                     $this->resourceHttpMethods = $value;
                     break;
+                case 'routeidentifiername':
+                    $this->routeIdentifierName = $value;
+                    break;
                 case 'routematch':
                     $this->routeMatch = $value;
                     break;
@@ -151,6 +160,14 @@ class RestServiceEntity
                     $this->selector = $value;
                     break;
             }
+        }
+
+        if ($legacyIdentifierName && ! $this->routeIdentifierName) {
+            $this->routeIdentifierName = $legacyIdentifierName;
+        }
+
+        if ($legacyIdentifierName && ! $this->entityIdentifierName) {
+            $this->entityIdentifierName = $legacyIdentifierName;
         }
     }
 
@@ -165,7 +182,8 @@ class RestServiceEntity
             'content_type_whitelist'     => $this->contentTypeWhitelist,
             'controller_service_name'    => $this->controllerServiceName,
             'entity_class'               => $this->entityClass,
-            'identifier_name'            => $this->identifierName,
+            'entity_identifier_name'     => $this->entityIdentifierName,
+            'route_identifier_name'      => $this->routeIdentifierName,
             'hydrator_name'              => strtolower($this->hydratorName),
             'module'                     => $this->module,
             'page_size'                  => $this->pageSize,

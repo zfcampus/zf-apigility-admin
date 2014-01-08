@@ -76,7 +76,7 @@ class DbConnectedRestServiceModel
         $controllerService = $restModel->createControllerServiceName($resourceName);
         $entityClass       = $restModel->createEntityClass($resourceName, 'entity-db-connected');
         $collectionClass   = $restModel->createCollectionClass($resourceName);
-        $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->identifierName, $controllerService);
+        $routeName         = $restModel->createRoute($resourceName, $entity->routeMatch, $entity->routeIdentifierName, $controllerService);
         $mediaType         = $restModel->createMediaType();
 
         $entity->exchangeArray(array(
@@ -151,6 +151,7 @@ class DbConnectedRestServiceModel
                 'table_name'              => $entity->tableName,
                 'hydrator_name'           => $entity->hydratorName,
                 'controller_service_name' => $entity->controllerServiceName,
+                'entity_identifier_name' => $entity->entityIdentifierName,
             ),
         )));
         $this->restModel->configResource->patch($config, true);
@@ -169,6 +170,7 @@ class DbConnectedRestServiceModel
                 'table_name'    => $entity->tableName,
                 'table_service' => $entity->tableService,
                 'hydrator_name' => $entity->hydratorName,
+                'entity_identifier_name' => $entity->entityIdentifierName,
             ),
         )));
         $this->restModel->configResource->patch($properties, true);

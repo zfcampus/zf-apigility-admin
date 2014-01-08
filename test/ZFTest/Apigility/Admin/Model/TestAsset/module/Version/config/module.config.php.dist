@@ -79,7 +79,7 @@ return array (
         'Version\\V1\\Rest\\Message\\Controller' => array (
             'listener' => 'Version\\V1\\Rest\\Message\\MessageResource',
             'route_name' => 'version.rest.message',
-            'identifier_name' => 'message_id',
+            'route_identifier_name' => 'message_id',
             'collection_name' => 'message',
             'resource_http_methods' => array (
                 0 => 'GET',
@@ -96,7 +96,7 @@ return array (
         'Version\\V1\\Rest\\Comment\\Controller' => array (
             'listener' => 'Version\\V1\\Rest\\Comment\\CommentResource',
             'route_name' => 'version.rest.comment',
-            'identifier_name' => 'comment_id',
+            'route_identifier_name' => 'comment_id',
             'collection_name' => 'comment',
             'resource_http_methods' => array (
                 0 => 'GET',
@@ -138,22 +138,22 @@ return array (
     'zf-hal' => array (
         'metadata_map' => array (
             'Version\\V1\\Rest\\Message\\MessageEntity' => array (
-                'identifier_name' => 'message_id',
+                'entity_identifier_name' => 'message_id',
                 'route_name' => 'version.rest.message',
                 'hydrator' => 'ArraySerializable',
             ),
             'Version\\V1\\Rest\\Message\\MessageCollection' => array (
-                'identifier_name' => 'message_id',
+                'entity_identifier_name' => 'message_id',
                 'route_name' => 'version.rest.message',
                 'is_collection' => true,
             ),
             'Version\\V1\\Rest\\Comment\\CommentEntity' => array (
-                'identifier_name' => 'comment_id',
+                'entity_identifier_name' => 'comment_id',
                 'route_name' => 'version.rest.comment',
                 'hydrator' => 'ObjectProperty',
             ),
             'Version\\V1\\Rest\\Comment\\CommentCollection' => array (
-                'identifier_name' => 'comment_id',
+                'entity_identifier_name' => 'comment_id',
                 'route_name' => 'version.rest.comment',
                 'is_collection' => true,
             ),

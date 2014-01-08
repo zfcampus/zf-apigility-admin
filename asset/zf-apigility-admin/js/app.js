@@ -455,7 +455,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
         if (typeof restService !== 'object' || restService === null) {
             return false;
         }
-        if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService || "hydrator_name" in restService) {
+        if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService) {
             return true;
         }
         return false;

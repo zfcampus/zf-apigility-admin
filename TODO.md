@@ -28,3 +28,4 @@ RestModel Resource
 - [X] In patch(), first fetch() the RestEndpoint, and based on the type, determine
   which model to pass it to.
 - [X] Implement delete(), and do it similar to patch().
+

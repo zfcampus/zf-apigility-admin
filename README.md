@@ -209,8 +209,9 @@ respectively.
         "mediatypes"
     ],
     "entity_class": "(Only in representation) Name of class representing resource entity",
+    "entity_identifier_name": "(Optional) Name of entity field representing the identifier; defaults to 'id'",
     "hydrator_name": "(Only in DB-Connected resources) Name of Zend\\Stdlib\\Hydrator service used for this resource",
-    "identifier_name": "(Optional) Name of route parameter and entity property representing the resource identifier; defaults to resource_name + _id",
+    "route_identifier_name": "(Optional) Name of route parameter representing the resource identifier; defaults to resource_name + _id",
     "input_filter": "(Optional) Present in returned REST services, when one or more input filters are present; see the inputfilter resource for details",
     "module": "(Only in representation) Name of module in which resource resides",
     "page_size": "(Optional) Integer representing number of entities to return in a given page in a collection; defaults to 25",
@@ -224,7 +225,7 @@ respectively.
         "Request methods",
         "on individual resources"
     ],
-    "route_match": "(Optional) String indicating Segment route to match; defaults to /resource_name[/:identifier_name]",
+    "route_match": "(Optional) String indicating Segment route to match; defaults to /resource_name[/:route_identifier_name]",
     "route_name": "(Only in representation) Name of route associated with api service",
     "selector": "(Optional) Content-Negotiation selector to use; HalJson by default",
     "table_name": "(Only in DB-Connected resources) Name of database table used for this resource",
