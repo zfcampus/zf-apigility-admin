@@ -164,6 +164,11 @@
                   </div>
 
                   <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Entity Identifier Name</h4>
+                    <p class="list-group-item-text">{{ restService.entity_identifier_name || 'n/a' }}</p>
+                  </div>
+
+                  <div class="list-group-item">
                     <h4 class="list-group-item-heading">Collection Name</h4>
                     <p class="list-group-item-text">{{ restService.collection_name }}</p>
                   </div>
@@ -324,6 +329,14 @@
                       <div class="controls">
                         <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.route_identifier_name">
                         <p class="help-block">Name of the route parameter representing the unique identifier</p>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">Entity Identifier Name</label>
+                      <div class="controls">
+                        <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.entity_identifier_name">
+                        <p class="help-block">Name of the field in the PHP entity representing the unique identifier</p>
                       </div>
                     </div>
 
