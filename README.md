@@ -209,6 +209,7 @@ respectively.
         "mediatypes"
     ],
     "entity_class": "(Only in representation) Name of class representing resource entity",
+    "entity_identifier_name": "(Optional) Name of entity field representing the identifier; defaults to 'id'",
     "hydrator_name": "(Only in DB-Connected resources) Name of Zend\\Stdlib\\Hydrator service used for this resource",
     "route_identifier_name": "(Optional) Name of route parameter representing the resource identifier; defaults to resource_name + _id",
     "input_filter": "(Optional) Present in returned REST services, when one or more input filters are present; see the inputfilter resource for details",
