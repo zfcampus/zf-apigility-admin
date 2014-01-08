@@ -159,8 +159,8 @@
                 <div class="panel-heading">REST Parameters</div>
                 <div class="panel-body list-group">
                   <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Identifier Name</h4>
-                    <p class="list-group-item-text">{{ restService.identifier_name || 'n/a' }}</p>
+                    <h4 class="list-group-item-heading">Route Identifier Name</h4>
+                    <p class="list-group-item-text">{{ restService.route_identifier_name || 'n/a' }}</p>
                   </div>
 
                   <div class="list-group-item">
@@ -320,10 +320,10 @@
                   <div class="panel-heading">REST Parameters</div>
                   <div class="panel-body">
                     <div class="control-group">
-                      <label class="control-label">Identifier Name</label>
+                      <label class="control-label">Route Identifier Name</label>
                       <div class="controls">
-                        <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.identifier_name">
-                        <p class="help-block">Name of the field representing the unique identifier</p>
+                        <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.route_identifier_name">
+                        <p class="help-block">Name of the route parameter representing the unique identifier</p>
                       </div>
                     </div>
 

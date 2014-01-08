@@ -77,7 +77,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Hal\Collection', $payload);
-        $collection = $payload->collection;
+        $collection = $payload->getCollection();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterCollection', $collection);
         $inputFilter = $collection->dequeue();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);

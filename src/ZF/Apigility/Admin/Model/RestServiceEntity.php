@@ -36,7 +36,9 @@ class RestServiceEntity
 
     protected $hydratorName = 'ArraySerializable';
 
-    protected $identifierName;
+    protected $routeIdentifierName;
+
+    protected $entityIdentifierName;
 
     protected $inputFilters;
 
@@ -116,8 +118,11 @@ class RestServiceEntity
                 case 'hydratorname':
                     $this->hydratorName = $value;
                     break;
-                case 'identifiername':
-                    $this->identifierName = $value;
+                case 'entityidentifiername':
+                    $this->entityIdentifierName = $value;
+                    break;
+                case 'routeidentifiername':
+                    $this->routeIdentifierName = $value;
                     break;
                 case 'inputfilters':
                     if ($value instanceof InputFilterCollection
@@ -165,7 +170,8 @@ class RestServiceEntity
             'content_type_whitelist'     => $this->contentTypeWhitelist,
             'controller_service_name'    => $this->controllerServiceName,
             'entity_class'               => $this->entityClass,
-            'identifier_name'            => $this->identifierName,
+            'entity_identifier_name'     => $this->entityIdentifierName,
+            'route_identifier_name'      => $this->routeIdentifierName,
             'hydrator_name'              => strtolower($this->hydratorName),
             'module'                     => $this->module,
             'page_size'                  => $this->pageSize,

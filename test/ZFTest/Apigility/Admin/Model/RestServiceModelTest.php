@@ -86,7 +86,7 @@ class RestServiceModelTest extends TestCase
         $payload->exchangeArray(array(
             'resource_name'              => 'foo',
             'route_match'                => '/api/foo',
-            'identifier_name'            => 'foo_id',
+            'route_identifier_name'      => 'foo_id',
             'collection_name'            => 'foo',
             'resource_http_methods'      => array('GET', 'PATCH'),
             'collection_http_methods'    => array('GET', 'POST'),
@@ -97,6 +97,7 @@ class RestServiceModelTest extends TestCase
             'accept_whitelist'           => array('application/json', 'application/*+json'),
             'content_type_whitelist'     => array('application/json'),
         ));
+
         return $payload;
     }
 
@@ -267,7 +268,7 @@ class RestServiceModelTest extends TestCase
         $expected = array(
             'listener'                   => 'BarConf\Rest\Foo\FooResource',
             'route_name'                 => 'bar-conf.rest.foo',
-            'identifier_name'            => $details->identifierName,
+            'route_identifier_name'      => $details->routeIdentifierName,
             'collection_name'            => $details->collectionName,
             'resource_http_methods'      => $details->resourceHttpMethods,
             'collection_http_methods'    => $details->collectionHttpMethods,
@@ -317,14 +318,14 @@ class RestServiceModelTest extends TestCase
 
         $this->assertArrayHasKey('BarConf\Rest\Foo\FooEntity', $config);
         $this->assertEquals(array(
-            'identifier_name' => $details->identifierName,
+            'route_identifier_name' => $details->routeIdentifierName,
             'route_name'      => 'bar-conf.rest.foo',
             'hydrator'        => 'ArraySerializable',
         ), $config['BarConf\Rest\Foo\FooEntity']);
 
         $this->assertArrayHasKey('BarConf\Rest\Foo\FooCollection', $config);
         $this->assertEquals(array(
-            'identifier_name' => $details->identifierName,
+            'route_identifier_name' => $details->routeIdentifierName,
             'route_name'      => 'bar-conf.rest.foo',
             'is_collection'   => true,
         ), $config['BarConf\Rest\Foo\FooCollection']);
@@ -464,7 +465,7 @@ class RestServiceModelTest extends TestCase
 
         $options = array(
             'hydrator_name'   => 'objectproperty',
-            'identifier_name' => 'custom_foo_id',
+            'route_identifier_name' => 'custom_foo_id',
             'route_name'      => 'my/custom/route',
         );
         $patch = new RestServiceEntity();
@@ -485,10 +486,10 @@ class RestServiceModelTest extends TestCase
         $entityConfig     = $config[$entityName];
         $collectionConfig = $config[$collectionName];
 
-        $this->assertArrayHasKey('identifier_name', $entityConfig);
-        $this->assertEquals($options['identifier_name'], $entityConfig['identifier_name']);
-        $this->assertArrayHasKey('identifier_name', $collectionConfig);
-        $this->assertEquals($options['identifier_name'], $collectionConfig['identifier_name']);
+        $this->assertArrayHasKey('route_identifier_name', $entityConfig);
+        $this->assertEquals($options['route_identifier_name'], $entityConfig['route_identifier_name']);
+        $this->assertArrayHasKey('route_identifier_name', $collectionConfig);
+        $this->assertEquals($options['route_identifier_name'], $collectionConfig['route_identifier_name']);
 
         $this->assertArrayHasKey('route_name', $entityConfig);
         $this->assertEquals($options['route_name'], $entityConfig['route_name']);
