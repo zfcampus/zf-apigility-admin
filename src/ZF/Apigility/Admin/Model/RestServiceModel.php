@@ -990,8 +990,16 @@ class RestServiceModel implements EventManagerAwareInterface
             $merge['entity_class'] = $entityClass;
         }
 
+        if (isset($config[$entityClass]['entity_identifier_name'])) {
+            $merge['entity_identifier_name'] = $config[$entityClass]['entity_identifier_name'];
+        }
+
         if (isset($config[$collectionClass])) {
             $merge['collection_class'] = $collectionClass;
+        }
+
+        if (!isset($merge['entity_identifier_name']) && isset($config[$collectionClass]['entity_identifier_name'])) {
+            $merge['entity_identifier_name'] = $config[$collectionClass]['entity_identifier_name'];
         }
 
         $metadata->exchangeArray($merge);
@@ -1007,17 +1015,19 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function deriveEntityClass($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
-        if (isset($config['zf-rest'])
-            && isset($config['zf-rest'][$controllerServiceName])
-            && isset($config['zf-rest'][$controllerServiceName]['entity_class'])
-        ) {
+        if (isset($config['zf-rest'][$controllerServiceName]['entity_class'])) {
             return $config['zf-rest'][$controllerServiceName]['entity_class'];
         }
 
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+        if (!preg_match('#' . preg_quote($module) . '(?P<version>' . preg_quote('\\') . 'V[a-zA-Z0-9_]+)?' . preg_quote('\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
             return null;
         }
+
+        if (isset($matches['version']) && ! empty($matches['version'])) {
+            return sprintf('%s%s\\Rest\\%s\\%sEntity', $module, $matches['version'], $matches['service'], $matches['service']);
+        }
+
         return sprintf('%s\\Rest\\%s\\%sEntity', $module, $matches['service'], $matches['service']);
     }
 
@@ -1039,9 +1049,14 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        if (!preg_match('#' . preg_quote($module . '\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+        if (!preg_match('#' . preg_quote($module) . '(?P<version>' . preg_quote('\\') . 'V[a-zA-Z0-9_]+)?' . preg_quote('\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
             return null;
         }
+
+        if (isset($matches['version']) && ! empty($matches['version'])) {
+            return sprintf('%s%s\\Rest\\%s\\%sCollection', $module, $matches['version'], $matches['service'], $matches['service']);
+        }
+
         return sprintf('%s\\Rest\\%s\\%sCollection', $module, $matches['service'], $matches['service']);
     }
 }
