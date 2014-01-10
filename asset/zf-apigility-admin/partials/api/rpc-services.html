@@ -133,7 +133,7 @@
           </div>
 
           <div class="tab-pane" id="editmode{{$index}}">
-            <form class="form-horizontal" ng-submit="saveRpcService($index)">
+            <form novalidate class="form-horizontal" ng-submit="saveRpcService($index)">
               <fieldset>
                 <div class="panel panel-default">
                   <div class="panel-heading">General Settings</div>
@@ -149,8 +149,8 @@
                     <div class="control-group">
                       <label class="control-label">Allowed HTTP Methods</label>
                       <div class="controls">
-                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline" for="http_methods{{ $index }}">
-                          <input type="checkbox" name="http_methods_test" value="{{method}}" id="http_methods{{ $index }}" ng-checked="rpcService.http_methods.indexOf(method) > -1" ng-click="toggleSelection(rpcService.http_methods, $event)">
+                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
+                          <input type="checkbox" value="{{method}}" ng-checked="rpcService.http_methods.indexOf(method) > -1" ng-click="toggleSelection(rpcService.http_methods, $event)">
                           <span>{{method}}</span>
                         </label>
                       </div>
@@ -201,7 +201,7 @@
                 </div>
               </fieldset>
 
-              <button ng-click="saveRpcService($index)" type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+              <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
             </form>
           </div>
 

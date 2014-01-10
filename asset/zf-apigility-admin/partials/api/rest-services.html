@@ -238,7 +238,6 @@
           </div>
 
           <div class="tab-pane" id="editmode{{$index}}">
-
             <form novalidate class="form-horizontal" ng-submit="saveRestService($index)">
               <fieldset>
                 <div class="panel panel-default">
@@ -263,8 +262,8 @@
                     <div class="control-group">
                       <label class="control-label">HTTP methods allowed for ENTITIES</label>
                       <div class="controls">
-                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline" for="resource_http_methods{{ $index }}">
-                          <input type="checkbox" name="resource_http_methods_test" value="{{method}}" id="resource_http_methods{{ $index }}" ng-checked="restService.resource_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.resource_http_methods, $event)">
+                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
+                          <input type="checkbox" name="resource_http_methods_test" value="{{method}}" ng-checked="restService.resource_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.resource_http_methods, $event)">
                           <span>{{method}}</span>
                         </label>
                       </div>
@@ -273,8 +272,8 @@
                     <div class="control-group">
                       <label class="control-label">HTTP methods allowed for COLLECTIONS</label>
                       <div class="controls">
-                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline" for="collection_http_methods{{ $index }}">
-                          <input type="checkbox" name="resource_http_methods_test" value="{{method}}" id="collection_http_methods{{ $index }}" ng-checked="restService.collection_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.collection_http_methods, $event)">
+                        <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
+                          <input type="checkbox" value="{{method}}" ng-checked="restService.collection_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.collection_http_methods, $event)">
                           <span>{{method}}</span>
                         </label>
                       </div>

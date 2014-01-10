@@ -418,7 +418,7 @@ module.controller(
     }]
 );
 
-module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, ApiRepository, api, dbAdapters) {
+module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', 'toggleSelection', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, ApiRepository, api, dbAdapters, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -439,10 +439,7 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.deleteRestService = false;
 
-    $scope.toggleSelection = function (model, $event) {
-        var element = $event.target;
-        (element.checked) ? model.push(element.value) : model.splice(model.indexOf(element.value), 1);
-    };
+    $scope.toggleSelection = toggleSelection;
 
     $scope.resetForm = function () {
         $scope.showNewRestServiceForm = false;
@@ -520,18 +517,22 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 }]);
 
-module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'ApiRepository', 'api', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, ApiRepository, api) {
+module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'ApiRepository', 'api', 'toggleSelection', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, ApiRepository, api, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
 
     $scope.api = api;
 
+    $scope.toggleSelection = toggleSelection;
+
     $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
 
     $scope.filterOptions = filters;
 
     $scope.validatorOptions = validators;
+
+    $scope.sourceCode = [];
 
     $scope.deleteRpcService = false;
 
@@ -542,12 +543,12 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
     };
 
     $scope.createNewRpcService = function () {
-
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
             flash.success = 'New RPC Service created';
             $timeout(function () {
                 ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
                     $scope.api = api;
+                    $scope.currentVersion = api.currentVersion;
                 });
             }, 500);
             $scope.addRpcService = false;
@@ -557,16 +558,8 @@ module.controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', 
 
     $scope.saveRpcService = function (index) {
         var rpcServiceData = _.clone($scope.api.rpcServices[index]);
-
-        rpcServiceData.http_methods = _.chain(rpcServiceData.http_methods)
-            .where({checked: true})
-            .pluck('name')
-            .valueOf();
-
         ApiRepository.saveRpcService($scope.api.name, rpcServiceData).then(function (data) {
-            ApiRepository.setApiModel($scope.api.name, null, true).then(function (apiModel) {
-                flash.success = 'RPC Service updated';
-            });
+            flash.success = 'RPC Service updated';
         });
     };
 
@@ -914,7 +907,7 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
         },
 
         saveRestService: function (apiName, restService) {
-            var url = '/admin/api/module/' + apiName + '/rest/' + encodeURIComponent(restService.controller_service_name);
+            var url = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restService.controller_service_name);
             return $http({method: 'patch', url: url, data: restService})
                 .then(function (response) {
                     return response.data;
@@ -935,7 +928,7 @@ module.factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', fun
         },
 
         saveRpcService: function (apiName, rpcService) {
-            var url = moduleApiPath + '/' +  + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
+            var url = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
             return $http({method: 'patch', url: url, data: rpcService})
                 .then(function (response) {
                     return response.data;
@@ -1135,6 +1128,16 @@ module.factory(
 
         return resource;
     }]
+);
+
+module.factory(
+    'toggleSelection',
+    function () {
+        return function (model, $event) {
+            var element = $event.target;
+            (element.checked) ? model.push(element.value) : model.splice(model.indexOf(element.value), 1);
+        };
+    }
 );
 
 // @todo refactor the naming of this at some point
