@@ -99,13 +99,19 @@
 
 <div class="ag panel-group tooltip-api" id="accordion">
   <div class="panel panel-default" ng-repeat="dbAdapter in dbAdapters">
-    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}">
+    <div 
+      class="panel-heading accordion-toggle"
+      data-toggle="collapse"
+      data-parent="#accordion"
+      data-target="#collapse{{$index}}"
+      ng-mouseover="showRemoveButton = true"
+      ng-mouseleave="showRemoveButton = false">
       <h4 class="panel-title">
         <font color="gray" size="-1">DB Adapter</font>
 
         {{ dbAdapter.adapter_name }}
 
-        <div ng-hide="deleteDbAdapter" class="pull-right">
+        <div ng-hide="!showRemoveButton||deleteDbAdapter" class="pull-right">
           <button ng-click="deleteDbAdapter = true" id="remove-adapter" class="btn btn-sm btn-danger" content="#remove-adapter-form" title="Remove adapter">
             <span class="glyphicon glyphicon-trash"></span>
           </button>
