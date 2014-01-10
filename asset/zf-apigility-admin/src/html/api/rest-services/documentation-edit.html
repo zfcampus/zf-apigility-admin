@@ -1,0 +1,60 @@
+<form novalidate class="ag form" ng-submit="">  
+    <div class="panel panel-default">
+        <div class="panel-body list-group"> 
+            <div class="control-group list-group-item">
+                <label class="control-label">REST service description</label>
+                <div class="controls">
+                    <input type="text" placeholder="Insert the description here" class="form-control input-xlarge" required="" ng-model="restService.description">
+                    <p class="help-block">The general description of the REST service</p>
+                </div>
+            </div>
+ 
+            <ag-tabs>
+                <ag-tab-pane ng-repeat="method in restService.resource_http_methods" title="{{method}}">
+                    <div class="control-group">
+                        <label class="control-label">Description</label>
+                        <div class="controls">
+                            <input type="text" placeholder="Insert the {{method}} description here" class="form-control input-xlarge" required="" ng-model="restService.$index.description">
+                            <p class="help-block">The description of the {{method}} HTTP method</p>
+                        </div>
+                    </div>         
+
+                    <div class="control-group">
+                        <label class="control-label">Request</label>
+
+                        <button type="button"
+                            class="btn btn-default btn-xs pull-right">
+                            <i class="glyphicon glyphicon-refresh"></i>
+                            generate from configuration
+                        </button>
+
+                        <div class="controls">
+                            <textarea placeholder="Insert the request specification" class="form-control input-xlarge" required="" ng-model="restService.$index.request"></textarea>
+                            <p class="help-block">The HTTP request specification</p>
+                        </div>
+                    </div> 
+                    <div class="clearfix"></div>
+
+                    <div class="control-group">
+                        <label class="control-label">Response</label>
+
+                        <button type="button" class="btn btn-default btn-xs pull-right">
+                            <i class="glyphicon glyphicon-refresh"></i>
+                            generate from configuration
+                        </button>
+
+                         <div class="controls">
+                            <textarea placeholder="Insert the response specification" class="form-control input-xlarge" required="" ng-model="restService.$index.response"></textarea>
+                            <p class="help-block">The HTTP response specification</p>
+                        </div>
+                    </div> 
+
+                    <div class="clearfix"></div>
+                </ag-tab-pane>
+            </ag-tabs>
+        </div>
+    </div>
+
+   <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+</form>
+

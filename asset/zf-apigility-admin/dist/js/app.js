@@ -203,6 +203,17 @@ angular.module('ag-admin').controller(
 
 })(_);
 
+(function(_) {'use strict';
+
+angular.module('ag-admin').controller(
+    'ApiDocumentationController',
+    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository',
+    function ($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
+    }]
+);
+
+})(_);
+
 (function() {'use strict';
 
 angular.module('ag-admin').controller(
@@ -1588,7 +1599,7 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
         },
 
         saveInputFilter: function (api, inputFilter) {
-            var url = api._self + '/inputfilter';
+            var url = api._self + '/input-filter';
             return $http.put(url, inputFilter);
         },
 

@@ -198,7 +198,7 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
         },
 
         saveInputFilter: function (api, inputFilter) {
-            var url = api._self + '/inputfilter';
+            var url = api._self + '/input-filter';
             return $http.put(url, inputFilter);
         },
 
