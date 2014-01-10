@@ -132,7 +132,11 @@
       <div class="clearfix"></div>
     </div>
 
-    <div id="collapse{{$index}}" class="panel-collapse collapse">
+    <div 
+      id="collapse{{$index}}"
+      class="panel-collapse collapse"
+      ng-mouseover="showRemoveButton = true"
+      ng-mouseleave="showRemoveButton = false">
       <div class="panel-body">
         <ul class="nav nav-tabs" id="myTab{{$index}}">
           <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
