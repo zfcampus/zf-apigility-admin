@@ -8,29 +8,55 @@ agCollapse.directive('collapse', function() {
         restrict: 'E',
         transclude: true,
         scope: {},
-        controller: function($scope, $element) {
+        controller: ['$scope', function($scope) {
             var head;
             var body;
+            var buttons = [];
+
+            this.addButton = function(button) {
+                buttons.push(button);
+            };
+
+            $scope.showContainerButtons = function() {
+                angular.forEach(buttons, function(button) {
+                    button.element.toggleClass('invisible', false);
+                });
+            };
+
+            $scope.hideContainerButtons = function() {
+                angular.forEach(buttons, function(button) {
+                    button.element.toggleClass('invisible', true);
+                });
+            };
 
             this.setHead = function (headScope) {
                 head = headScope;
             };
 
-            this.setBody = function (bodyScope) {
-                body = bodyScope;
+            this.setBody = function (bodyElement) {
+                body = bodyElement;
             };
 
             this.expand = function() {
-                body.expand = true;
+                body.addClass('in');
             };
 
             this.collapse = function() {
-                body.expand = false;
+                body.removeClass('in');
             };
 
             this.toggle = function() {
-                body.expand = !body.expand;
+                body.toggleClass('in');
             };
+        }],
+        link: function(scope, element, attrs) {
+            element.on('mouseover', function(event) {
+                scope.showContainerButtons();
+            });
+
+            element.on('mouseleave', function(event) {
+                scope.hideContainerButtons();
+            });
         },
         template: '<div class="panel panel-default" ng-transclude></div>',
         replace: true
@@ -48,16 +74,14 @@ agCollapse.directive('collapseHeader', function () {
         restrict: 'E',
         transclude: true,
         scope: {},
-        controller: function($scope, $element) {
-            $scope.toggle = function() {
-                $scope.panel.toggle();
-            };
-        },
         link: function(scope, element, attrs, panelCtrl) {
-            scope.panel = panelCtrl;
             panelCtrl.setHead(scope);
+
+            element.on('click', function(event) {
+                panelCtrl.toggle();
+            });
         },
-        template: '<div class="panel-heading" ng-click="toggle()" ng-mouseover="showContainerButtons = true" ng-mouseleave="showContainerButtons = false" ng-transclude></div>',
+        template: '<div class="panel-heading" ng-transclude></div>',
         replace: true
     };
 });
@@ -71,13 +95,29 @@ agCollapse.directive('collapseBody', function () {
         restrict: 'E',
         transclude: true,
         scope: {},
-        controller: function($scope, $element) {
-            $scope.expand = false;
+        link: function(scope, element, attrs, panelCtrl) {
+            panelCtrl.setBody(element);
+        },
+        template: '<div class="panel-collapse collapse"><div class="panel-body" ng-transclude></div></div>',
+        replace: true
+    };
+});
+
+/* <collapse-button [criteria="..."]>...</collapse-button>
+ * @todo arbitrary criteria
+ */
+agCollapse.directive('collapseButton', function () {
+    return {
+        require: '^collapse',
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            criteria: '@'
         },
         link: function(scope, element, attrs, panelCtrl) {
-            panelCtrl.setBody(scope);
+            panelCtrl.addButton({scope: scope, element: element});
         },
-    template: '<div ng-class="{\'panel-collapse\': \'panel-collapse\', collapse: \'collapse\', in: expand}" ng-mouseover="showContainerButtons = true" ng-mouseleave="showContainerButtons = false"><div class="panel-body" ng-transclude></div></div>',
+        template: '<div class="pull-right invisible" ng-transclude></div>',
         replace: true
     };
 });
