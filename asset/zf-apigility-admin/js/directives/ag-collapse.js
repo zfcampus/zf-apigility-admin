@@ -7,54 +7,81 @@ agCollapse.directive('collapse', function() {
     return {
         restrict: 'E',
         transclude: true,
-        scope: {
-            buttonCriteria: '='
-        },
         controller: ['$scope', '$parse', function($scope, $parse) {
             var head;
             var body;
             var buttons = [];
-
-            angular.forEach($scope.buttonCriteria, function(value, key) {
-                if ($scope.hasOwnProperty(key)) {
-                    // do no overwrite existing properties
-                    return;
-                }
-                $scope[key] = value;
-            });
+            var conditionals = {};
+            var watchers = {};
 
             this.addButton = function(button) {
                 buttons.push(button);
             };
 
+            $scope.setConditionals = function(newConditionals) {
+                angular.forEach(newConditionals, function(value, key) {
+                    conditionals[key] = !!value;
+                });
+            };
+
+            this.setFlags = function(flags) {
+                angular.forEach(flags, function(value, flag) {
+                    if (watchers.hasOwnProperty(flag)) {
+                        var watcher = watchers[flag];
+                        watcher(value);
+                    } else {
+                        conditionals[flag] = !!value;
+                    }
+                });
+            };
+
+            this.addConditionalWatcher = function(conditionalCriteria, element) {
+                angular.forEach(conditionalCriteria, function(value, flag) {
+                    if (!conditionals.hasOwnProperty(flag)) {
+                        conditionals[flag] = false;
+                    }
+
+                    value = !!value;
+                    
+                    watchers[flag] = function(newVal) {
+                        newVal = !!newVal;
+                        if (conditionals[flag] === newVal) {
+                            return;
+                        }
+                        conditionals[flag] = newVal;
+                        element.toggleClass('hide', value !== newVal);
+                    };
+                });
+            };
+
             $scope.showContainerButtons = function() {
                 var criteria = false;
                 angular.forEach(buttons, function(button) {
-                    var buttonCriteria = criteria;
+                    var currentCriteria = criteria;
                     angular.forEach(button.scope.criteria, function(criteriaProp) {
-                        if (! $scope.hasOwnProperty(criteriaProp)) {
+                        if (! conditionals.hasOwnProperty(criteriaProp)) {
                             return;
                         }
-                        buttonCriteria = buttonCriteria || !!$scope[criteriaProp];
+                        currentCriteria = currentCriteria || !!conditionals[criteriaProp];
                     });
-                    button.element.toggleClass('invisible', buttonCriteria);
+                    button.element.toggleClass('invisible', currentCriteria);
                 });
             };
 
             $scope.hideContainerButtons = function() {
                 angular.forEach(buttons, function(button) {
-                    var buttonCriteria = true;
+                    var currentCriteria = true;
                     angular.forEach(button.scope.criteria, function(criteriaProp) {
-                        if (!buttonCriteria) {
+                        if (!currentCriteria) {
                             return;
                         }
-                        if (! $scope.hasOwnProperty(criteriaProp)) {
+                        if (! conditionals.hasOwnProperty(criteriaProp)) {
                             return;
                         }
                         /* !! to cast to boolean, ! to negate */
-                        buttonCriteria = !!!$scope[criteriaProp];
+                        currentCriteria = !!!conditionals[criteriaProp];
                     });
-                    button.element.toggleClass('invisible', buttonCriteria);
+                    button.element.toggleClass('invisible', currentCriteria);
                 });
             };
 
@@ -79,6 +106,12 @@ agCollapse.directive('collapse', function() {
             };
         }],
         link: function(scope, element, attrs) {
+console.log("Linking collase");
+            if (attrs.hasOwnProperty('conditionals')) {
+console.log("Setting conditionals from attribute");
+                scope.setConditionals(scope.$eval(attrs.conditionals));
+            }
+
             element.on('mouseover', function(event) {
                 scope.showContainerButtons();
             });
@@ -102,7 +135,6 @@ agCollapse.directive('collapseHeader', function () {
         require: '^collapse',
         restrict: 'E',
         transclude: true,
-        scope: {},
         link: function(scope, element, attrs, panelCtrl) {
             panelCtrl.setHead(scope);
 
@@ -123,7 +155,6 @@ agCollapse.directive('collapseBody', function () {
         require: '^collapse',
         restrict: 'E',
         transclude: true,
-        scope: {},
         link: function(scope, element, attrs, panelCtrl) {
             panelCtrl.setBody(element);
         },
@@ -139,9 +170,6 @@ agCollapse.directive('collapseButton', function () {
         require: '^collapse',
         restrict: 'E',
         transclude: true,
-        scope: {
-            criteria: '='
-        },
         controller: ['$scope', function($scope) {
             if (!$scope.criteria || ! $scope.criteria instanceof Array) {
                 $scope.criteria = [];
@@ -156,5 +184,47 @@ agCollapse.directive('collapseButton', function () {
         },
         template: '<div class="pull-right invisible" ng-transclude></div>',
         replace: true
+    };
+});
+
+agCollapse.directive('agFlag', function() {
+    return {
+        require: '^collapse',
+        restrict: 'A',
+        link: function(scope, element, attr, panelCtrl) {
+            if (!attr.hasOwnProperty('flags')) {
+                return;
+            }
+
+            var flags = scope.$eval(attr.flags);
+
+            if (typeof flags !== 'object') {
+                return;
+            }
+
+            element.on('click', function(event) {
+                panelCtrl.setFlags(flags);
+            });
+        }
+    };
+});
+
+agCollapse.directive('agShow', function() {
+    return {
+        require: '^collapse',
+        restrict: 'A',
+        link: function(scope, element, attr, panelCtrl) {
+            if (!attr.hasOwnProperty('criteria')) {
+                return;
+            }
+
+            var criteria = scope.$eval(attr.criteria);
+
+            if (typeof criteria !== 'object') {
+                return;
+            }
+
+            panelCtrl.addConditionalWatcher(criteria, element);
+        }
     };
 });
