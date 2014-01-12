@@ -116,6 +116,10 @@ agCollapse.directive('collapseButton', function () {
         },
         link: function(scope, element, attrs, panelCtrl) {
             panelCtrl.addButton({scope: scope, element: element});
+
+            element.on('click', function(event) {
+                event.stopPropagation();
+            });
         },
         template: '<div class="pull-right invisible" ng-transclude></div>',
         replace: true
