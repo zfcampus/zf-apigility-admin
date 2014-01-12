@@ -7,25 +7,54 @@ agCollapse.directive('collapse', function() {
     return {
         restrict: 'E',
         transclude: true,
-        scope: {},
-        controller: ['$scope', function($scope) {
+        scope: {
+            buttonCriteria: '='
+        },
+        controller: ['$scope', '$parse', function($scope, $parse) {
             var head;
             var body;
             var buttons = [];
+
+            angular.forEach($scope.buttonCriteria, function(value, key) {
+                if ($scope.hasOwnProperty(key)) {
+                    // do no overwrite existing properties
+                    return;
+                }
+                $scope[key] = value;
+            });
 
             this.addButton = function(button) {
                 buttons.push(button);
             };
 
             $scope.showContainerButtons = function() {
+                var criteria = false;
                 angular.forEach(buttons, function(button) {
-                    button.element.toggleClass('invisible', false);
+                    var buttonCriteria = criteria;
+                    angular.forEach(button.scope.criteria, function(criteriaProp) {
+                        if (! $scope.hasOwnProperty(criteriaProp)) {
+                            return;
+                        }
+                        buttonCriteria = buttonCriteria || !!$scope[criteriaProp];
+                    });
+                    button.element.toggleClass('invisible', buttonCriteria);
                 });
             };
 
             $scope.hideContainerButtons = function() {
                 angular.forEach(buttons, function(button) {
-                    button.element.toggleClass('invisible', true);
+                    var buttonCriteria = true;
+                    angular.forEach(button.scope.criteria, function(criteriaProp) {
+                        if (!buttonCriteria) {
+                            return;
+                        }
+                        if (! $scope.hasOwnProperty(criteriaProp)) {
+                            return;
+                        }
+                        /* !! to cast to boolean, ! to negate */
+                        buttonCriteria = !!!$scope[criteriaProp];
+                    });
+                    button.element.toggleClass('invisible', buttonCriteria);
                 });
             };
 
@@ -103,8 +132,7 @@ agCollapse.directive('collapseBody', function () {
     };
 });
 
-/* <collapse-button [criteria="..."]>...</collapse-button>
- * @todo arbitrary criteria
+/* <collapse-button [criteria="['prop1', ...]"]>...</collapse-button>
  */
 agCollapse.directive('collapseButton', function () {
     return {
@@ -112,8 +140,13 @@ agCollapse.directive('collapseButton', function () {
         restrict: 'E',
         transclude: true,
         scope: {
-            criteria: '@'
+            criteria: '='
         },
+        controller: ['$scope', function($scope) {
+            if (!$scope.criteria || ! $scope.criteria instanceof Array) {
+                $scope.criteria = [];
+            }
+        }],
         link: function(scope, element, attrs, panelCtrl) {
             panelCtrl.addButton({scope: scope, element: element});
 
