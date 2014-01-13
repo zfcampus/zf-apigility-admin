@@ -12,7 +12,7 @@
                 <div class="control-group">
                     <label class="control-label" for="adapterName">Adapter Name</label>
                     <div class="controls">
-                        <input type="text" placeholder="adapter name" class="input-xlarge" required="required" ng-model="adapter_name">
+                        <input type="text" placeholder="adapter name" class="form-control input-xlarge" required="required" ng-model="adapter_name">
                         <p class="help-block">"Virtual" name of the DB adapter service</p>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                 <div class="control-group">
                     <label class="control-label" for="driver">Driver Type</label>
                     <div class="controls">
-                        <select class="input-xlarge" ng-model="driver">
+                        <select class="form-control input-xlarge" ng-model="driver">
                             <option>IbmDb2</option>
                             <option>Mysqli</option>
                             <option>Oci8</option>
@@ -39,7 +39,7 @@
                 <div class="control-group">
                     <label class="control-label" for="database">Database</label>
                     <div class="controls">
-                        <input type="text" placeholder="database name" class="input-xlarge" required="required" ng-model="database">
+                        <input type="text" placeholder="database name" class="form-control input-xlarge" required="required" ng-model="database">
                         <p class="help-block">Name of database or database file</p>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                 <div class="control-group">
                     <label class="control-label" for="username">Username</label>
                     <div class="controls">
-                        <input type="text" placeholder="(optional) Username" class="input-xlarge" ng-model="username">
+                        <input type="text" placeholder="(optional) Username" class="form-control input-xlarge" ng-model="username">
                         <p class="help-block">Username with which to connect</p>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="control-group">
                     <label class="control-label" for="password">Password</label>
                     <div class="controls">
-                        <input type="password" placeholder="(Optional) Password" class="input-xlarge" ng-model="password">
+                        <input type="password" placeholder="(Optional) Password" class="form-control input-xlarge" ng-model="password">
                         <p class="help-block">Password with which to connect</p>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                 <div class="control-group">
                     <label class="control-label" for="hostname">Hostname</label>
                     <div class="controls">
-                        <input type="text" placeholder="(Optional) Hostname" class="input-xlarge" ng-model="hostname">
+                        <input type="text" placeholder="(Optional) Hostname" class="form-control input-xlarge" ng-model="hostname">
                         <p class="help-block">Hostname to which to connect</p>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="control-group">
                     <label class="control-label" for="port">Port</label>
                     <div class="controls">
-                        <input type="text" placeholder="(Optional) Port" class="input-xlarge" ng-model="port">
+                        <input type="text" placeholder="(Optional) Port" class="form-control input-xlarge" ng-model="port">
                         <p class="help-block">Port to which to connect</p>
                     </div>
                 </div>
@@ -84,14 +84,18 @@
                 <div class="control-group">
                     <label class="control-label" for="charset">Charset</label>
                     <div class="controls">
-                        <input type="text" placeholder="(Optional) Charset" class="input-xlarge" ng-model="charset">
+                        <input type="text" placeholder="(Optional) Charset" class="form-control input-xlarge" ng-model="charset">
                         <p class="help-block">Charset of database</p>
                     </div>
                 </div>
             </fieldset>
 
-            <button type="submit" class="btn btn-sm btn-success">Create DB Adapter</button>
-            <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+            <div class="btn-group pull-right">
+                <a ng-click="resetForm()&&(showNewDbAdapterForm = false)" class="btn btn-sm btn-right">Cancel</a>
+                <button type="submit" class="btn btn-sm btn-success">Create DB Adapter</button>
+            </div>
+
+            <div class="clearfix"></div>
         </form>
     </div>
 </div>

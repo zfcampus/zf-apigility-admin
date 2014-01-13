@@ -127,15 +127,15 @@ module.controller(
         $scope.showNewDbAdapterForm = false;
 
         $scope.resetForm = function () {
-            $scope.showNewDbAdapterForm = false;
             $scope.adapterName = '';
             $scope.driver      = '';
             $scope.database    = '';
             $scope.username    = '';
             $scope.password    = '';
-            $scope.hostname    = 'localhost';
+            $scope.hostname    = '';
             $scope.port        = '';
-            $scope.charset     = 'UTF-8';
+            $scope.charset     = '';
+            return true;
         };
 
         function updateDbAdapters(force) {
