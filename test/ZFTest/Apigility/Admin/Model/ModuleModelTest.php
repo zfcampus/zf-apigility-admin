@@ -12,8 +12,15 @@ use Test;
 
 class ModuleModelTest extends TestCase
 {
+    public $modulePath;
+
     public function setUp()
     {
+        if ($this->modulePath && file_exists($this->modulePath)) {
+            $this->removeDir($this->modulePath);
+            unset($this->modulePath);
+        }
+
         $modules = array(
             'ZFTest\Apigility\Admin\Model\TestAsset\Foa' => new TestAsset\Foa\Module(),
             'ZFTest\Apigility\Admin\Model\TestAsset\Foo' => new TestAsset\Foo\Module(),
@@ -46,6 +53,14 @@ class ModuleModelTest extends TestCase
         );
 
         $this->model         = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
+    }
+
+    public function tearDown()
+    {
+        if ($this->modulePath && file_exists($this->modulePath)) {
+            $this->removeDir($this->modulePath);
+            unset($this->modulePath);
+        }
     }
 
     public function testEnabledModulesOnlyReturnsThoseThatImplementApigilityModuleInterface()
@@ -292,5 +307,23 @@ class ModuleModelTest extends TestCase
             $modules[1]->getDefaultVersion(),
             'Did not read configured default version 123 for Test\Foo!'
         );
+    }
+
+    /**
+     * @group 59
+     */
+    public function testAttemptingToCreateModuleThatAlreadyExistsRaises409Exception()
+    {
+        $module = 'Foo';
+        $this->modulePath = $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+
+        mkdir("$modulePath/module", 0777, true);
+        mkdir("$modulePath/config", 0777, true);
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
+
+        $this->assertTrue($this->model->createModule($module, $modulePath));
+
+        $this->setExpectedException('Exception', 'exists', 409);
+        $this->model->createModule($module, $modulePath);
     }
 }

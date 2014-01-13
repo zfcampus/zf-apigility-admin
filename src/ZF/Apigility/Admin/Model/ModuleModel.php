@@ -127,10 +127,12 @@ class ModuleModel
 
         $modulePath = sprintf('%s/module/%s', $path, $module);
         if (file_exists($modulePath)) {
-            // Module already exists on this path
-            return false;
-
+            throw new \Exception(sprintf(
+                'Cannot create new API module; module by the name "%s" already exists',
+                $module
+            ), 409);
         }
+
         mkdir("$modulePath/config", 0777, true);
         mkdir("$modulePath/view", 0777, true);
         mkdir("$modulePath/src/$module/V1/Rest", 0777, true);
