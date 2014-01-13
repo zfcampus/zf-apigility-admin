@@ -165,7 +165,7 @@ agCollapse.directive('collapseBody', function () {
         link: function(scope, element, attr, panelCtrl) {
             panelCtrl.setBody(element);
         },
-        template: '<div class="panel-collapse collapse"><div class="panel-body" ng-transclude></div></div>',
+        template: '<div class="panel-collapse collapse" ng-transclude></div>',
         replace: true
     };
 });
