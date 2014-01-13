@@ -2,7 +2,7 @@
 
 var agCollapse = angular.module('ag-collapse', []);
 
-/* <collapse ...></collapse> */
+/* <collapse conditionals={...}></collapse> */
 agCollapse.directive('collapse', function() {
     return {
         restrict: 'E',
@@ -58,7 +58,7 @@ agCollapse.directive('collapse', function() {
                 });
             };
 
-            $scope.showContainerButtons = function() {
+            $scope.showContainerButtons = this.showContainerButtons = function() {
                 var criteria = false;
                 angular.forEach(buttons, function(button) {
                     var currentCriteria = criteria;
@@ -68,12 +68,18 @@ agCollapse.directive('collapse', function() {
                         }
                         currentCriteria = currentCriteria || (conditionals[criteriaProp] !== test);
                     });
-                    button.element.toggleClass('invisible', currentCriteria);
+                    button.element.toggleClass('hide', currentCriteria);
                 });
             };
 
-            $scope.hideContainerButtons = function() {
+            $scope.hideContainerButtons = this.hideContainerButtons = function(state) {
+                var bodyExpanded = body.hasClass('in');
                 angular.forEach(buttons, function(button) {
+                    if (state.hasOwnProperty('leave') && state.leave) {
+                        button.element.toggleClass('hide', true);
+                        return;
+                    }
+
                     var currentCriteria = true;
                     angular.forEach(button.criteria, function(test, criteriaProp) {
                         if (!currentCriteria) {
@@ -84,7 +90,7 @@ agCollapse.directive('collapse', function() {
                         }
                         currentCriteria = (conditionals[criteriaProp] === test);
                     });
-                    button.element.toggleClass('invisible', currentCriteria);
+                    button.element.toggleClass('hide', currentCriteria);
                 });
             };
 
@@ -118,7 +124,7 @@ agCollapse.directive('collapse', function() {
             });
 
             element.on('mouseleave', function(event) {
-                scope.hideContainerButtons();
+                scope.hideContainerButtons({leave: true});
             });
         },
         template: '<div class="panel panel-default" ng-transclude></div>',
@@ -126,11 +132,7 @@ agCollapse.directive('collapse', function() {
     };
 });
 
-/* <collapse-header ...></collapse-header>
- * Should add itself to the collapse-panel
- * Should get a reference to the collapse-panel, so that it can tell the panel
- * to toggle the body.
- */
+/* <collapse-header ...></collapse-header> */
 agCollapse.directive('collapseHeader', function () {
     return {
         require: '^collapse',
@@ -148,9 +150,7 @@ agCollapse.directive('collapseHeader', function () {
     };
 });
 
-/* <collapse-body ...></collapse-body>
- * Should add itself to the collapse-panel
- */
+/* <collapse-body ...></collapse-body> */
 agCollapse.directive('collapseBody', function () {
     return {
         require: '^collapse',
@@ -164,8 +164,7 @@ agCollapse.directive('collapseBody', function () {
     };
 });
 
-/* <collapse-button [criteria="['prop1', ...]"]>...</collapse-button>
- */
+/* <collapse-button [criteria="{...}"]>...</collapse-button> */
 agCollapse.directive('collapseButton', function () {
     return {
         require: '^collapse',
@@ -183,14 +182,17 @@ agCollapse.directive('collapseButton', function () {
             panelCtrl.addButton({criteria: criteria, element: element});
 
             element.on('click', function(event) {
+                panelCtrl.expand();
+                panelCtrl.showContainerButtons();
                 event.stopPropagation();
             });
         },
-        template: '<div class="pull-right invisible" ng-transclude></div>',
+        template: '<div class="pull-right hide" ng-transclude></div>',
         replace: true
     };
 });
 
+/* <a ag-flag flags="{...}"></a> */
 agCollapse.directive('agFlag', function() {
     return {
         require: '^collapse',
@@ -213,6 +215,7 @@ agCollapse.directive('agFlag', function() {
     };
 });
 
+/* <div ag-show criteria="{...}" class="hide">...</div> */
 agCollapse.directive('agShow', function() {
     return {
         require: '^collapse',
