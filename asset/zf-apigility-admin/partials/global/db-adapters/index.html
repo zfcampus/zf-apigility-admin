@@ -1,0 +1,59 @@
+<ng-include src="'zf-apigility-admin/partials/global/db-adapters/new-adapter-form.html'"></ng-include>
+
+<div class="ag panel-group tooltip-api">
+  <collapse 
+    conditionals="{deleteDbAdapter: false, editDbAdapter: false}"
+    ng-repeat="dbAdapter in dbAdapters">
+    <collapse-header>
+      <h4 class="panel-title">
+        <span class="btn btn-sm glyphicon glyphicon-book"></span>
+
+        {{ dbAdapter.adapter_name }}
+
+        <collapse-button criteria="{deleteDbAdapter: false}">
+          <button collapse-flag flags="{deleteDbAdapter: true}" class="btn btn-sm btn-danger" title="Remove adapter">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </collapse-button>
+
+        <collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: false}">
+          <button 
+            collapse-flag
+            flags="{editDbAdapter: true}"
+            class="btn btn-sm btn-primary btn-right"
+            title="Edit adapter" >
+            Edit
+          </button>
+        </collapse-button>
+
+        <collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: true}">
+          <a collapse-flag flags="{editDbAdapter: false}" class="btn btn-sm btn-right" title="Cancel">
+            Cancel
+          </a>
+        </collapse-button>
+
+        <div collapse-show criteria="{deleteDbAdapter: true}" class="panel panel-danger hide">
+          <div class="panel-heading">Remove DB Adapter</div>
+          <div class="panel-body">
+            <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
+              <p>Are you sure you want to delete the Adapter</p>
+              <button type="submit" class="btn btn-sm btn-danger pull-right">Yes</button>
+              <a collapse-flag flags="{deleteDbAdapter: false}" class="pull-right btn btn-sm btn-right">Cancel</a>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </h4>
+      <div class="clearfix"></div>
+    </collapse-header>
+
+    <collapse-body>
+        <ng-include src="'zf-apigility-admin/partials/global/db-adapters/view.html'"></ng-include>
+        <ng-include src="'zf-apigility-admin/partials/global/db-adapters/edit.html'"></ng-include>
+      </collapse-body>
+  </collapse>
+</div>
+
+<script>
+    $('.collapse').collapse();
+</script>

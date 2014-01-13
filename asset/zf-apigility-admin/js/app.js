@@ -12,7 +12,7 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         controller: 'DashboardController'
     });
     $routeProvider.when('/global/db-adapters', {
-        templateUrl: 'zf-apigility-admin/partials/global/db-adapters.html',
+        templateUrl: 'zf-apigility-admin/partials/global/db-adapters/index.html',
         controller: 'DbAdapterController'
     });
     $routeProvider.when('/global/authentication', {

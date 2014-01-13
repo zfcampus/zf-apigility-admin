@@ -1,0 +1,86 @@
+<div name="form" collapse-show criteria="{editDbAdapter: true}" class="panel-body hide">
+<form class="form-horizontal" ng-submit="saveDbAdapter($index)">
+    <fieldset>
+        <div class="control-group">
+            <label class="control-label" for="adapterName">Adapter Name</label>
+            <div class="controls">
+                <input type="text" placeholder="adapter name" class="input-xlarge" required="required" ng-model="dbAdapter.adapter_name">
+                <p class="help-block">"Virtual" name of the DB adapter service</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="driver">Driver Type</label>
+            <div class="controls">
+                <select class="input-xlarge" ng-model="dbAdapter.driver">
+                    <option>IbmDb2</option>
+                    <option>Mysqli</option>
+                    <option>Oci8</option>
+                    <option>Pdo_Mysql</option>
+                    <option>Pdo_Oci</option>
+                    <option>Pdo_Pgsql</option>
+                    <option>Pdo_Sqlite</option>
+                    <option>Pgsql</option>
+                    <option>Sqlsrv</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="database">Database</label>
+            <div class="controls">
+                <input type="text" placeholder="database name" class="input-xlarge" required="required" ng-model="dbAdapter.database">
+                <p class="help-block">Name of database or database file</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="username">Username</label>
+            <div class="controls">
+                <input type="text" placeholder="(optional) Username" class="input-xlarge" ng-model="dbAdapter.username">
+                <p class="help-block">Username with which to connect</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                <input type="password" placeholder="(Optional) Password" class="input-xlarge" ng-model="dbAdapter.password">
+                <p class="help-block">Password with which to connect</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="hostname">Hostname</label>
+            <div class="controls">
+                <input type="text" placeholder="(Optional) Hostname" class="input-xlarge" ng-model="dbAdapter.hostname">
+                <p class="help-block">Hostname to which to connect</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="port">Port</label>
+            <div class="controls">
+                <input type="text" placeholder="(Optional) Port" class="input-xlarge" ng-model="dbAdapter.port">
+                <p class="help-block">Port to which to connect</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="charset">Charset</label>
+            <div class="controls">
+                <input type="text" placeholder="(Optional) Charset" class="input-xlarge" ng-model="dbAdapter.charset">
+                <p class="help-block">Charset of database</p>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="btn-group pull-right">
+        <a collapse-flag flags="{editDbAdapter: false}" class="btn btn-sm btn-right">Cancel</a>
+        <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+    </div>
+
+    <div class="clearfix"></div>
+</form>
+</div>
+
