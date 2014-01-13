@@ -145,7 +145,7 @@
     </collapse-header>
 
     <collapse-body>
-        <table collapse-show criteria="{editDbAdapter: false}" class="table table-striped">
+        <table name="table" collapse-show criteria="{editDbAdapter: false}" class="table table-striped">
             <tr>
               <td>Driver</td>
               <td>{{ dbAdapter.driver }}</td>
@@ -176,7 +176,7 @@
             </tr>
         </table>
 
-        <div collapse-show criteria="{editDbAdapter: true}" class="panel-body hide">
+        <div name="form" collapse-show criteria="{editDbAdapter: true}" class="panel-body hide">
           <form class="form-horizontal" ng-submit="saveDbAdapter($index)">
             <fieldset>
               <!-- Text input-->

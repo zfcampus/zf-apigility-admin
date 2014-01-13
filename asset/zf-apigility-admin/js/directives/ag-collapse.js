@@ -31,8 +31,10 @@ agCollapse.directive('collapse', function() {
             this.setFlags = function(flags) {
                 angular.forEach(flags, function(value, flag) {
                     if (watchers.hasOwnProperty(flag)) {
-                        var watcher = watchers[flag];
-                        watcher(value);
+                        /* Trigger all watchers on this flag */
+                        angular.forEach(watchers[flag], function(watcher) {
+                            watcher(value);
+                        });
                     } else {
                         conditionals[flag] = !!value;
                     }
@@ -45,16 +47,20 @@ agCollapse.directive('collapse', function() {
                         conditionals[flag] = false;
                     }
 
+                    /* cast to bool */
                     value = !!value;
                     
-                    watchers[flag] = function(newVal) {
+                    /* ensure we have an array of watchers for a given flag */
+                    if (typeof watchers[flag] === 'undefined') {
+                        watchers[flag] = [];
+                    }
+
+                    watchers[flag].push(function(newVal) {
+                        /* cast to bool */
                         newVal = !!newVal;
-                        if (conditionals[flag] === newVal) {
-                            return;
-                        }
                         conditionals[flag] = newVal;
                         element.toggleClass('hide', value !== newVal);
-                    };
+                    });
                 });
             };
 
