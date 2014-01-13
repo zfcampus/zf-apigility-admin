@@ -192,8 +192,8 @@ agCollapse.directive('collapseButton', function () {
     };
 });
 
-/* <a ag-flag flags="{...}"></a> */
-agCollapse.directive('agFlag', function() {
+/* <a collapse-flag flags="{...}"></a> */
+agCollapse.directive('collapseFlag', function() {
     return {
         require: '^collapse',
         restrict: 'A',
@@ -215,8 +215,8 @@ agCollapse.directive('agFlag', function() {
     };
 });
 
-/* <div ag-show criteria="{...}" class="hide">...</div> */
-agCollapse.directive('agShow', function() {
+/* <div collapse-show criteria="{...}" class="hide">...</div> */
+agCollapse.directive('collapseShow', function() {
     return {
         require: '^collapse',
         restrict: 'A',
