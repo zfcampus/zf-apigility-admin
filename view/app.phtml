@@ -82,25 +82,21 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
-                <aside class="ag-sidebar" role="complementary">
-                    <div ng-show="!$root.routeParams.apiName">
-                        <ul class="nav ag-sidenav">
-                            <li ng-class="{active: ($root.routeParams.section == 'general-information')}"><a ng-href="admin#/global/information">General Information</a></li>
-                            <li ng-class="{active: ($root.routeParams.section == 'db-adapters')}"><a ng-href="admin#/global/db-adapters">Database Adapters</a></li>
-                            <li ng-class="{active: ($root.routeParams.section == 'authentication')}"><a ng-href="admin#/global/authentication">Authentication</a></li>
-                        </ul>
-                    </div>
-                    <div ng-show="$root.routeParams.apiName">
-                        <ul class="nav ag-sidenav">
-                            <li ng-class="{active: ($root.routeParams.section == 'overview')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
-                            <li ng-class="{active: ($root.routeParams.section == 'authorization')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/authorization">Authorization</a></li>
-                            <li ng-class="{active: ($root.routeParams.section == 'rest-services')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
-                            <li ng-class="{active: ($root.routeParams.section == 'rpc-services')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
-                        </ul>
-                    </div>
-                </aside>
-            </div>
+            <aside class="col-md-3 ag-sidebar" role="complementary">
+                <ul ng-show="!$root.routeParams.apiName" class="nav nav-pills nav-stacked">
+                    <li ng-class="{active: ($root.navSection == 'DashboardController')}"><a ng-href="admin#/global/information">General Information</a></li>
+                    <li ng-class="{active: ($root.navSection == 'DbAdapterController')}"><a ng-href="admin#/global/db-adapters">Database Adapters</a></li>
+                    <li ng-class="{active: ($root.navSection == 'AuthenticationController')}"><a ng-href="admin#/global/authentication">Authentication</a></li>
+                </ul>
+
+                <ul ng-show="$root.routeParams.apiName" class="nav">
+                    <li ng-class="{active: ($root.navSection == 'ApiOverviewController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiRestServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiRpcServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiAuthorizationController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/authorization">Authorization</a></li>
+                </ul>
+            </aside>
+
             <main class="col-md-9" role="main">
                 <h1 ng-bind="view.title"></h1>
                 <div id="content" ng-view></div>
