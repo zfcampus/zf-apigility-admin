@@ -98,63 +98,54 @@
 <br clear="left">
 
 <div class="ag panel-group tooltip-api">
-  <div class="panel panel-default" ng-repeat="dbAdapter in dbAdapters">
-    <div 
-      class="panel-heading"
-      ng-click="clickPanelHeading($event, $index)"
-      data-target="#collapse{{$index}}"
-      ng-mouseover="showContainerButtons = true"
-      ng-mouseleave="showContainerButtons = false">
+  <collapse 
+    conditionals="{deleteDbAdapter: false, editDbAdapter: false}"
+    ng-repeat="dbAdapter in dbAdapters">
+    <collapse-header>
       <h4 class="panel-title">
         <span class="btn btn-sm glyphicon glyphicon-book"></span>
 
         {{ dbAdapter.adapter_name }}
 
-        <div ng-hide="!showContainerButtons||deleteDbAdapter" class="pull-right">
-          <button ng-click="deleteDbAdapter = true" data-expand="true" class="btn btn-sm btn-danger" content="#remove-adapter-form" title="Remove adapter">
+        <collapse-button criteria="{deleteDbAdapter: false}">
+          <button collapse-flag flags="{deleteDbAdapter: true}" class="btn btn-sm btn-danger" title="Remove adapter">
             <span class="glyphicon glyphicon-trash"></span>
           </button>
-        </div>
+        </collapse-button>
 
-        <div ng-hide="!showContainerButtons||deleteDbAdapter||editDbAdapter" class="pull-right btn-right">
+        <collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: false}">
           <button 
-            ng-click="editDbAdapter = true"
-            class="btn btn-sm btn-primary"
-            title="Edit adapter"
-            data-expand="true">
+            collapse-flag
+            flags="{editDbAdapter: true}"
+            class="btn btn-sm btn-primary btn-right"
+            title="Edit adapter" >
             Edit
           </button>
-        </div>
+        </collapse-button>
 
-        <div ng-hide="!showContainerButtons||deleteDbAdapter||!editDbAdapter" class="pull-right btn-right">
-          <a ng-click="editDbAdapter = false" data-expand="true" class="btn btn-sm" title="Cancel">
+        <collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: true}">
+          <a collapse-flag flags="{editDbAdapter: false}" class="btn btn-sm btn-right" title="Cancel">
             Cancel
           </a>
-        </div>
+        </collapse-button>
 
-        <div ng-show="deleteDbAdapter" id="remove-adapter-form" class="panel panel-danger">
+        <div collapse-show criteria="{deleteDbAdapter: true}" class="panel panel-danger hide">
           <div class="panel-heading">Remove DB Adapter</div>
           <div class="panel-body">
             <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
               <p>Are you sure you want to delete the Adapter</p>
               <button type="submit" class="btn btn-sm btn-danger pull-right">Yes</button>
-              <a ng-click="deleteDbAdapter = false" data-expand="true" class="pull-right btn btn-sm">Cancel</a>
+              <a collapse-flag flags="{deleteDbAdapter: false}" class="pull-right btn btn-sm btn-right">Cancel</a>
               <div class="clearfix"></div>
             </form>
           </div>
         </div>
       </h4>
       <div class="clearfix"></div>
-    </div>
+    </collapse-header>
 
-    <div 
-      id="collapse{{$index}}"
-      class="panel-collapse collapse"
-      ng-mouseover="showContainerButtons = true"
-      ng-mouseleave="showContainerButtons = false">
-      <div class="panel-body">
-        <div ng-hide="editDbAdapter">
-          <table class="table table-striped">
+    <collapse-body>
+        <table collapse-show criteria="{editDbAdapter: false}" class="table table-striped">
             <tr>
               <td>Driver</td>
               <td>{{ dbAdapter.driver }}</td>
@@ -183,10 +174,9 @@
               <td>Charset</td>
               <td>{{ dbAdapter.charset }}</td>
             </tr>
-          </table>
-        </div>
+        </table>
 
-        <div ng-show="editDbAdapter">
+        <div collapse-show criteria="{editDbAdapter: true}" class="panel-body hide">
           <form class="form-horizontal" ng-submit="saveDbAdapter($index)">
             <fieldset>
               <!-- Text input-->
@@ -273,15 +263,14 @@
 
             <div>
                 <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
-                <a ng-click="editDbAdapter = false" class="btn btn-sm pull-right">Cancel</a>
+                <a collapse-flag flags="{editDbAdapter: false}" class="btn btn-sm pull-right btn-right">Cancel</a>
             </div>
 
             <div class="clearfix"></div>
           </form>
         </div>
-      </div>
-    </div>
-  </div>
+      </collapse-body>
+  </collapse>
 </div>
 
 <script>
