@@ -259,7 +259,7 @@ configuration via the `zf-configuration/config-file` key.
 
 - Methods: `GET`, `PATCH`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/authentication`
 
@@ -282,7 +282,7 @@ resource](#authentication).
   `POST` will return a `201` response on success. `PATCH` will return a `200`
   response on success. `DELETE` will return a `204` response on success.
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/db-adapter[/:adapter\_name]`
 
@@ -302,7 +302,7 @@ adapters; it uses the [db-adapter resource](#db-adapter).
 
 - Resource Methods: `GET`, `PATCH`, `DELETE`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/module/:name/authorization?version=:version`
 
@@ -328,7 +328,7 @@ resource](#authorization).
   `PUT` will return a `200` response on success, along with the updated
   entity.
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/db-adapter[/:adapter\_name]`
 
@@ -348,7 +348,7 @@ adapters; it uses the [db-adapter resource](#db-adapter).
 
 - Resource Methods: `GET`, `PATCH`, `DELETE`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 
 ### `/admin/api/config/module?module={module name}`
@@ -377,7 +377,7 @@ This endpoint will Apigility-enable (Apigilify) an existing module.
 
 - Methods: `PUT`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/validators`
 
@@ -386,7 +386,7 @@ use case is for building a drop-down of available plugins when creating an
 input filter for a service.
 
 - Accept: `application/json`
-  
+
   Returns an `application/json` response with the following format on success:
 
   ```javascript
@@ -401,7 +401,7 @@ input filter for a service.
 
 - Methods: `GET`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/versioning`
 
@@ -428,7 +428,7 @@ passed in the payload, the version number is simply incremented.
 
 - Methods: `PATCH`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/module[/:name]`
 
@@ -453,7 +453,7 @@ This is the canonical endpoint for [Module resources](#module).
 
 - Resource Methods: `GET`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/module/:name/rpc[/:controller\_service\_name]`
 
@@ -485,7 +485,7 @@ This is the canonical endpoint for [RPC resources](#rpc).
 - The query string variable `version` may be passed to the collection to filter
   results by version: e.g., `/admin/api/module/:name/rpc?version=2`.
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/module/:name/rpc/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
 
@@ -510,7 +510,7 @@ associated with a given RPC service.
 
 - Resource Methods: `GET`, `PUT`, `DELETE`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/module/:name/rest[/:controller\_service\_name]`
 
@@ -554,7 +554,7 @@ return them as well):
 - The query string variable `version` may be passed to the collection to filter
   results by version: e.g., `/admin/api/module/:name/rest?version=2`.
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
 
 ### `/admin/api/module/:name/rest/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
 
@@ -579,4 +579,4 @@ associated with a given REST service.
 
 - Resource Methods: `GET`, `PUT`, `DELETE`
 
-- Errors: `application/api-problem+json`
+- Errors: `application/problem+json`
