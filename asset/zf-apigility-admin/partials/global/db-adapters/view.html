@@ -3,27 +3,33 @@
         <td>Driver</td>
         <td>{{ dbAdapter.driver }}</td>
     </tr>
+
     <tr>
         <td>Database</td>
         <td>{{ dbAdapter.database }}</td>
     </tr>
-    <tr>
+
+    <tr ng-show="dbAdapter.username">
         <td>Username</td>
         <td>{{ dbAdapter.username }}</td>
     </tr>
-    <tr>
+
+    <tr ng-show="dbAdapter.password">
         <td>Password</td>
         <td>{{ dbAdapter.password }}</td>
     </tr>
-    <tr>
+
+    <tr ng-show="dbAdapter.hostname">
         <td>Hostname</td>
         <td>{{ dbAdapter.hostname }}</td>
     </tr>
-    <tr>
+
+    <tr ng-show="dbAdapter.port">
         <td>Port</td>
         <td>{{ dbAdapter.port }}</td>
     </tr>
-    <tr>
+
+    <tr ng-show="dbAdapter.charset">
         <td>Charset</td>
         <td>{{ dbAdapter.charset }}</td>
     </tr>

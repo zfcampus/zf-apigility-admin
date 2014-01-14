@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="username">Username</label>
             <div class="controls">
                 <input type="text" placeholder="(optional) Username" class="form-control input-xlarge" ng-model="dbAdapter.username">
@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="password">Password</label>
             <div class="controls">
                 <input type="password" placeholder="(Optional) Password" class="form-control input-xlarge" ng-model="dbAdapter.password">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="hostname">Hostname</label>
             <div class="controls">
                 <input type="text" placeholder="(Optional) Hostname" class="form-control input-xlarge" ng-model="dbAdapter.hostname">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="port">Port</label>
             <div class="controls">
                 <input type="text" placeholder="(Optional) Port" class="form-control input-xlarge" ng-model="dbAdapter.port">

@@ -10,7 +10,6 @@
     <div class="panel-body">
         <form class="form-horizontal" ng-submit="createNewDbAdapter()">
             <fieldset>
-                <!-- Text input-->
                 <div class="control-group">
                     <label class="control-label" for="adapterName">Adapter Name</label>
                     <div class="controls">
@@ -19,7 +18,6 @@
                     </div>
                 </div>
 
-                <!-- Select Basic -->
                 <div class="control-group">
                     <label class="control-label" for="driver">Driver Type</label>
                     <div class="controls">
@@ -37,7 +35,6 @@
                     </div>
                 </div>
 
-                <!-- Text input-->
                 <div class="control-group">
                     <label class="control-label" for="database">Database</label>
                     <div class="controls">
@@ -46,8 +43,7 @@
                     </div>
                 </div>
 
-                <!-- Text input-->
-                <div class="control-group">
+                <div class="control-group" ng-show="driver && (driver != 'Pdo_Sqlite')">
                     <label class="control-label" for="username">Username</label>
                     <div class="controls">
                         <input type="text" placeholder="(optional) Username" class="form-control input-xlarge" ng-model="username">
@@ -55,8 +51,7 @@
                     </div>
                 </div>
 
-                <!-- Password input-->
-                <div class="control-group">
+                <div class="control-group" ng-show="driver && (driver != 'Pdo_Sqlite')">
                     <label class="control-label" for="password">Password</label>
                     <div class="controls">
                         <input type="password" placeholder="(Optional) Password" class="form-control input-xlarge" ng-model="password">
@@ -64,8 +59,7 @@
                     </div>
                 </div>
 
-                <!-- Text input-->
-                <div class="control-group">
+                <div class="control-group" ng-show="driver && (driver != 'Pdo_Sqlite')">
                     <label class="control-label" for="hostname">Hostname</label>
                     <div class="controls">
                         <input type="text" placeholder="(Optional) Hostname" class="form-control input-xlarge" ng-model="hostname">
@@ -73,8 +67,7 @@
                     </div>
                 </div>
 
-                <!-- Text input-->
-                <div class="control-group">
+                <div class="control-group" ng-show="driver && (driver != 'Pdo_Sqlite')">
                     <label class="control-label" for="port">Port</label>
                     <div class="controls">
                         <input type="text" placeholder="(Optional) Port" class="form-control input-xlarge" ng-model="port">
@@ -82,7 +75,6 @@
                     </div>
                 </div>
 
-                <!-- Text input-->
                 <div class="control-group">
                     <label class="control-label" for="charset">Charset</label>
                     <div class="controls">
