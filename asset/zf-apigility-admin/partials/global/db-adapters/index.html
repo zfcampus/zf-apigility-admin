@@ -10,41 +10,43 @@
 
         {{ dbAdapter.adapter_name }}
 
-        <collapse-button criteria="{deleteDbAdapter: false}">
-          <button collapse-flag flags="{deleteDbAdapter: true}" class="btn btn-sm btn-danger" title="Remove adapter">
-            <span class="glyphicon glyphicon-trash"></span>
-          </button>
-        </collapse-button>
+        <div class="btn-group pull-right">
+            <button
+                type="button" title="Cancel" class="btn btn-sm btn-default"
+                collapse-flag flags="{editDbAdapter: false}" 
+                collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: true}">
+                Cancel
+            </button>
 
-        <collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: false}">
-          <button 
-            collapse-flag
-            flags="{editDbAdapter: true}"
-            class="btn btn-sm btn-success btn-right"
-            title="Edit adapter" >
-            <span class="glyphicon glyphicon-edit"></span>
-          </button>
-        </collapse-button>
+            <button 
+                type="button" class="btn btn-sm btn-success" title="Edit adapter"
+                collapse-flag flags="{editDbAdapter: true}"
+                collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: false}">
+                <span class="glyphicon glyphicon-edit"></span>
+            </button>
 
-        <collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: true}">
-          <a collapse-flag flags="{editDbAdapter: false}" class="btn btn-sm btn-right" title="Cancel">
-            Cancel
-          </a>
-        </collapse-button>
+            <button 
+                type="button" class="btn btn-sm btn-danger" title="Remove adapter"
+                collapse-flag flags="{deleteDbAdapter: true}"
+                collapse-button criteria="{deleteDbAdapter: false}">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+      </h4>
 
-        <div collapse-show criteria="{deleteDbAdapter: true}" class="panel panel-danger hide">
+      <div class="clearfix"></div>
+
+      <div collapse-show criteria="{deleteDbAdapter: true}" class="panel panel-danger hide">
           <div class="panel-heading">Remove DB Adapter</div>
           <div class="panel-body">
-            <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
+          <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
               <p>Are you sure you want to delete the Adapter</p>
               <button type="submit" class="btn btn-sm btn-danger pull-right">Yes</button>
               <a collapse-flag flags="{deleteDbAdapter: false}" class="pull-right btn btn-sm btn-right">Cancel</a>
               <div class="clearfix"></div>
-            </form>
+          </form>
           </div>
-        </div>
-      </h4>
-      <div class="clearfix"></div>
+      </div>
     </collapse-header>
 
     <collapse-body>

@@ -174,8 +174,7 @@ agCollapse.directive('collapseBody', function () {
 agCollapse.directive('collapseButton', function () {
     return {
         require: '^collapse',
-        restrict: 'E',
-        transclude: true,
+        restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
             var criteria = {};
             if (attr.hasOwnProperty('criteria')) {
@@ -187,14 +186,14 @@ agCollapse.directive('collapseButton', function () {
 
             panelCtrl.addButton({criteria: criteria, element: element});
 
+            element.addClass('hide');
+
             element.on('click', function(event) {
                 panelCtrl.expand();
                 panelCtrl.showContainerButtons();
                 event.stopPropagation();
             });
-        },
-        template: '<div class="pull-right hide" ng-transclude></div>',
-        replace: true
+        }
     };
 });
 
