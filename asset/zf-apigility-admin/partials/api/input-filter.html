@@ -1,9 +1,6 @@
                     <div class="panel panel-default"><div class="panel-body">
-                        <span class="pull-right">
-                            <input class="checkbox" type="checkbox" ng-model="input.required">
-                        </span>
-                        <h4>Required?</h4>
-                        <div class="ag-new-input clearfix"></div>
+                        <button type="button" class="btn btn-sm pull-right" ng-class="{true: 'btn-success', false: 'btn-default'}[input.required]" ng-click="input.required = !input.required">{{input.required && 'On' || 'Off'}}</button>
+                        <label class="control-label">Required</label>
                     </div></div>
 
                     <div class="panel panel-default"><div class="panel-body">
