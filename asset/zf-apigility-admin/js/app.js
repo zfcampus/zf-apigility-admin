@@ -41,7 +41,7 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         }
     });
     $routeProvider.when('/api/:apiName/:version/rest-services', {
-        templateUrl: 'zf-apigility-admin/partials/api/rest-services.html',
+        templateUrl: 'zf-apigility-admin/partials/api/rest-services/index.html',
         controller: 'ApiRestServicesController',
         resolve: {
             dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {

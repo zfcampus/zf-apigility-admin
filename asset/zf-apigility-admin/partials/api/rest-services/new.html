@@ -1,0 +1,58 @@
+<div ng-hide="showNewRestServiceForm">
+  <button ng-click="showNewRestServiceForm = true" class="btn btn-default btn-primary" title="Create New REST Service">
+    Create New REST Service
+  </button>
+</div>
+
+<div ng-show="showNewRestServiceForm" class="panel panel-default">
+  <div class="panel-heading">Create a New REST Service</div>
+  <div class="panel-body">
+
+    <ul class="nav nav-tabs" id="restFormTab">
+      <li class="active"><a data-target="#codeconnected" data-toggle="tab">Code-Connected</a></li>
+      <li><a data-target="#dbconnected" data-toggle="tab">DB-Connected</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="codeconnected">
+        <form class="form-horizontal" ng-submit="createNewRestService()">
+          <fieldset>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">REST Service Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" ng-model="$parent.restServiceName" placeholder="REST Service Name ..." required="">
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-sm btn-success">Create REST Service</button>
+          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+        </form>
+      </div>
+
+      <div class="tab-pane" id="dbconnected">
+        <form class="form-horizontal" ng-submit="createNewDbConnectedService()">
+          <fieldset>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">DB Adapter Name</label>
+              <div class="col-lg-10">
+                <select class="form-control input-xlarge"
+                    ng-model="dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">Table Name</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" ng-model="dbTableName" placeholder="DB Table Name ...">
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-sm btn-success">Create DB-Connected REST Service</button>
+          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br clear="left" />
+

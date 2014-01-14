@@ -1,60 +1,6 @@
 <ng-include src="'zf-apigility-admin/partials/api/version.html'"></ng-include>
-<div ng-hide="showNewRestServiceForm">
-  <button ng-click="showNewRestServiceForm = true" class="btn btn-default btn-primary" title="Create New REST Service">
-    Create New REST Service
-  </button>
-</div>
-<div ng-show="showNewRestServiceForm" class="panel panel-default">
-  <div class="panel-heading">Create a New REST Service</div>
-  <div class="panel-body">
 
-    <ul class="nav nav-tabs" id="restFormTab">
-      <li class="active"><a data-target="#codeconnected" data-toggle="tab">Code-Connected</a></li>
-      <li><a data-target="#dbconnected" data-toggle="tab">DB-Connected</a></li>
-    </ul>
-
-    <div class="tab-content">
-      <div class="tab-pane active" id="codeconnected">
-        <form class="form-horizontal" ng-submit="createNewRestService()">
-          <fieldset>
-            <div class="form-group">
-              <label class="col-lg-2 control-label">REST Service Name</label>
-              <div class="col-lg-10">
-                <input class="form-control" type="text" ng-model="$parent.restServiceName" placeholder="REST Service Name ..." required="">
-              </div>
-            </div>
-          </fieldset>
-          <button type="submit" class="btn btn-sm btn-success">Create REST Service</button>
-          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
-        </form>
-      </div>
-
-      <div class="tab-pane" id="dbconnected">
-        <form class="form-horizontal" ng-submit="createNewDbConnectedService()">
-          <fieldset>
-            <div class="form-group">
-              <label class="col-lg-2 control-label">DB Adapter Name</label>
-              <div class="col-lg-10">
-                <select class="form-control input-xlarge"
-                    ng-model="dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-lg-2 control-label">Table Name</label>
-              <div class="col-lg-10">
-                <input class="form-control" type="text" ng-model="dbTableName" placeholder="DB Table Name ...">
-              </div>
-            </div>
-          </fieldset>
-          <button type="submit" class="btn btn-sm btn-success">Create DB-Connected REST Service</button>
-          <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<br clear="left">
+<ng-include src="'zf-apigility-admin/partials/api/rest-services/new.html'"></ng-include>
 
 <div class="panel-group tooltip-api" id="accordion">
   <div class="panel panel-default" ng-repeat="restService in api.restServices">
@@ -81,161 +27,19 @@
         </div>
       </h4>
     </div>
+
     <div id="collapse{{$index}}" class="panel-collapse collapse">
       <div class="panel-body">
 
         <ul class="nav nav-tabs" id="myTab{{$index}}">
-          <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">View</a></li>
+          <li class="active"><a data-target="#viewmode{{$index}}" data-toggle="tab">Settings</a></li>
           <li ng-show="api.version == api.versions[api.versions.length-1]"><a data-target="#editmode{{$index}}" data-toggle="tab">Edit</a></li>
           <li><a data-target="#inputmode{{$index}}" data-toggle="tab">Fields</a></li>
           <li><a data-target="#sourcemode{{$index}}" data-toggle="tab">Source code</a></li>
         </ul>
 
         <div class="tab-content">
-          <div class="tab-pane active" id="viewmode{{$index}}">
-            <div class="panel panel-default">
-              <div class="panel-heading">General Settings</div>
-              <div class="panel-body list-group">
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Route matches:</h4>
-                  <p class="list-group-item-text">{{ restService.route_match }}</p>
-                </div>
-
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Page Size</h4>
-                  <p class="list-group-item-text">{{ restService.page_size }}</p>
-                </div>
-
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">HTTP Allowed Resource Methods</h4>
-                  <p class="list-group-item-text">{{ restService.resource_http_methods.join(', ') }}</p>
-                </div>
-
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">HTTP Allowed Collection Methods</h4>
-                  <p class="list-group-item-text">
-                    {{ restService.collection_http_methods.join(', ') }}
-                  </p>
-                </div>
-
-              </div>
-            </div>
-
-            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=true" ng-hide="showAdvanced{{$index}}">
-                <span class="glyphicon glyphicon-circle-arrow-down"></span> Show advanced configuration
-            </button>
-            <button class="btn btn-default btn-sm" type="button" ng-click="showAdvanced{{$index}}=false" ng-show="showAdvanced{{$index}}">
-                <span class="glyphicon glyphicon-circle-arrow-up"></span> Hide advanced configuration
-            </button>
-            <br />
-
-            <div ng-show="showAdvanced{{$index}}">
-              <div ng-show="isDbConnected(restService)" class="panel panel-default">
-                <div class="panel-heading">Database Settings</div>
-                <div class="panel-body list-group">
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">DB Adapter Name</h4>
-                    <p class="list-group-item-text">{{ restService.adapter_name }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">DB Table Name</h4>
-                    <p class="list-group-item-text">{{ restService.table_name }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Table Gateway Service Name</h4>
-                    <p class="list-group-item-text">{{ restService.table_service }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel panel-default">
-                <div class="panel-heading">REST Parameters</div>
-                <div class="panel-body list-group">
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Route Identifier Name</h4>
-                    <p class="list-group-item-text">{{ restService.route_identifier_name || 'n/a' }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Entity Identifier Name</h4>
-                    <p class="list-group-item-text">{{ restService.entity_identifier_name || 'n/a' }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Hydrator Service Name</h4>
-                    <p class="list-group-item-text">{{ restService.hydrator_name }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Collection Name</h4>
-                    <p class="list-group-item-text">{{ restService.collection_name }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Page Size Parameter (Query string)</h4>
-                    <p class="list-group-item-text">{{ restService.page_size_param }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Collection Query String whitelist</h4>
-                    <p class="list-group-item-text">{{ restService.collection_query_whitelist.join(', ') || 'n/a' }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel panel-default">
-                <div class="panel-heading">Content Negotiation</div>
-                <div class="panel-body list-group">
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Content Negotiation Selector</h4>
-                    <p class="list-group-item-text">{{ restService.selector }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Accept whitelist</h4>
-                    <p class="list-group-item-text">{{ restService.accept_whitelist.join(', ') || 'n/a' }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Content-Type whitelist</h4>
-                    <p class="list-group-item-text">{{ restService.content_type_whitelist.join(', ') || 'n/a' }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel panel-default">
-                <div class="panel-heading">Service/Class/Route Names</div>
-                <div class="panel-body list-group">
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Controller Service Name</h4>
-                    <p class="list-group-item-text">{{ restService.controller_service_name }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Resource Class</h4>
-                    <p class="list-group-item-text">{{ restService.resource_class }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Entity Class</h4>
-                    <p class="list-group-item-text">{{ restService.entity_class }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Collection Class</h4>
-                    <p class="list-group-item-text">{{ restService.collection_class }}</p>
-                  </div>
-
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Route Name</h4>
-                    <p class="list-group-item-text">{{ restService.route_name }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ng-include src="'zf-apigility-admin/partials/api/rest-services/settings-view.html'"></ng-include>
 
           <div class="tab-pane" id="editmode{{$index}}">
             <form novalidate class="form-horizontal" ng-submit="saveRestService($index)">
@@ -421,7 +225,7 @@
             </div>
 
             <div class="tab-pane" id="inputmode{{$index}}">
-                <ng-include src="'zf-apigility-admin/partials/api/rest-services-input.html'" onload="index = $index"></ng-include>
+                <ng-include src="'zf-apigility-admin/partials/api/rest-services/input-edit.html'" onload="index = $index"></ng-include>
             </div>
 
             <div class="tab-pane" id="sourcemode{{$index}}">
