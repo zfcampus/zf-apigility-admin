@@ -63,6 +63,12 @@
                 <ag-tab-pane title="Settings">
                     <ng-include src="'zf-apigility-admin/partials/api/rest-services/settings-view.html'"></ng-include>
                 </ag-tab-pane>
+
+                <ag-tab-pane title="Fields">
+                    <ng-include src="'zf-apigility-admin/partials/api/rest-services/input-view.html'"
+                        onload="index = $index"></ng-include>
+                </ag-tab-pane>
+
                 <ag-tab-pane title="Source Code">
                     <ng-include 
                         src="'zf-apigility-admin/partials/api/rest-services/source-code.html'"
@@ -74,6 +80,7 @@
                 <ag-tab-pane title="Settings">
                     <ng-include src="'zf-apigility-admin/partials/api/rest-services/settings-edit.html'"></ng-include>
                 </ag-tab-pane>
+
                 <ag-tab-pane title="Fields">
                     <ng-include src="'zf-apigility-admin/partials/api/rest-services/input-edit.html'"
                         onload="index = $index"></ng-include>
