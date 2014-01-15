@@ -2,8 +2,10 @@
     <div class="ag-new-input">
         <button class="btn btn-info pull-left" data-toggle="modal" data-target="#inputHelp">Help</button>
 
-        <form class="pull-right" id="input-form" ng-submit="addInput()">
-            <input type="text" ng-model="newInput">
+        <form class="form-inline pull-right" ng-submit="addInput()">
+            <div class="form-group">
+                <input type="text" class="form-control input-xlarge" placeholder="Field name" ng-model="newInput">
+            </div>
             <button type="submit" class="btn btn-sm btn-primary">Create New Field</button>
         </form>
     </div>
