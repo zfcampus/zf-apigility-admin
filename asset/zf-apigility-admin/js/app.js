@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover', 'ag-include']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover', 'ag-include', 'ag-edit-inplace']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
