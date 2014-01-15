@@ -52,40 +52,10 @@
             </div>
 
             <div class="tab-pane" id="sourcemode{{$index}}">
-                <br />
-                <p>Click on the file name to show the source code.</p>
-
-                <table class="table table-striped">
-                    <tr>
-                        <td>Collection Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.restServices[$index].collection_class, 'Collection')">{{ restService.collection_class }}.php</button></td>
-                    </tr>
-                    <tr>
-                        <td>Entity Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.restServices[$index].entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
-                    </tr>
-                    <tr ng-hide="restService.adapter_name">
-                        <td>Resource Class</td>
-                        <td><button data-toggle="modal" data-target="#myModal{{$index}}" class="btn-link" ng-click="getSourceCode(api.restServices[$index].resource_class, 'Resource')">{{ restService.resource_class }}.php</td>
-                    </tr>
-                </table>
-
-                <div class="modal fade" id="myModal{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">{{ classType }}<br /><font size="-1">{{ filename }}</font></h4>
-                            </div>
-                            <div class="modal-body" style="overflow:auto;max-height:500px;" ng-bind-html="sourceCode"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ng-include 
+                    src="'zf-apigility-admin/partials/api/rest-services/source-code.html'"
+                    onload="index = $index; service = restService"></ng-include>
             </div>
-
         </div>
       </div>
     </div>
