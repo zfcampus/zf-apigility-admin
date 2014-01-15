@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover', 'ag-include']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -127,6 +127,7 @@ module.controller(
         $scope.showNewDbAdapterForm = false;
 
         $scope.resetForm = function () {
+            $scope.showNewDbAdapterForm = false;
             $scope.adapterName = '';
             $scope.driver      = '';
             $scope.database    = '';
@@ -149,6 +150,7 @@ module.controller(
         updateDbAdapters(false);
 
         $scope.createNewDbAdapter = function () {
+console.log("Creating new db adapter");
             var options = {
                 adapter_name :  $scope.adapter_name,
                 driver       :  $scope.driver,

@@ -1,7 +1,8 @@
-<ng-include src="'zf-apigility-admin/partials/global/db-adapters/new-adapter-form.html'"></ng-include>
+<ag-include src="zf-apigility-admin/partials/global/db-adapters/new-adapter-form.html"></ag-include>
 
 <div class="ag panel-group tooltip-api">
   <collapse 
+    class="panel-default"
     conditionals="{deleteDbAdapter: false, editDbAdapter: false}"
     ng-repeat="dbAdapter in dbAdapters">
     <collapse-header>
