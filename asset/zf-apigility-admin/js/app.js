@@ -62,7 +62,7 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         }
     });
     $routeProvider.when('/api/:apiName/:version/rpc-services', {
-        templateUrl: 'zf-apigility-admin/partials/api/rpc-services.html',
+        templateUrl: 'zf-apigility-admin/partials/api/rpc-services/index.html',
         controller: 'ApiRpcServicesController',
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
