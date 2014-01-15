@@ -1,94 +1,19 @@
-<div class="panel panel-default"><div class="panel-body">
-    <button 
-        type="button" class="btn btn-sm pull-right"
-        ng-class="{true: 'btn-success', false: 'btn-default'}[input.required]">
-        {{input.required && 'Yes' || 'No'}}
-    </button>
+<div class="ag panel-group tooltip-api" ng-controller="ApiServiceInputController">
+    <collapse 
+        class="panel-default"
+        ng-repeat="input in service.input_filter">
+        <collapse-header>
+            <h4 class="panel-title">
+                <span class="btn btn-sm glyphicon glyphicon-info-sign"></span>
+                {{ input.name }}
+            </h4>
+        </collapse-header>
 
-    <label class="control-label">Required</label>
-</div></div>
-
-<collapse class="panel-info">
-    <collapse-header>
-        <h4 class="panel-title">
-            <span class="btn btn-sm glyphicon glyphicon-ok"></span>
-            Validators
-        </h4>
-    </collapse-header>
-
-    <collapse-body>
-        <collapse class="panel panel-blank" ng-repeat="validator in input.validators">
-            <collapse-header>
-                <h4 class="panel-title">
-                    {{validator.name}}
-                </h4>
-            </collapse-header>
-        
-            <collapse-body class="list-group in">
-                <li class="list-group-item" 
-                    ng-repeat="(optionName, optionValue) in validator.options">
-                    <div class="form-group form-horizontal">
-                        <label class="control-label col-sm-4">{{optionName}}:</label>
-
-                        <div class="col-sm-7">
-                            <button 
-                                type="button" class="btn btn-sm form-control-static"
-                                ng-show="validatorOptions[validator.name][optionName] == 'bool'"
-                                ng-class="{true: 'btn-success', false: 'btn-default'}[optionValue]">
-                                {{optionValue && 'Yes' || 'No'}}
-                            </button>
-                            <p 
-                                class="form-control-static input-xlarge"
-                                ng-show="validatorOptions[validator.name][optionName] != 'bool'">
-                                {{ optionValue }}
-                            </p>
-                        </div>
-                    </div>
-                </li>
-            </collapse-body>
-        </collapse>
-    </collapse-body>
-</collapse>
-
-<collapse class="panel-info">
-    <collapse-header>
-        <h4 class="panel-title">
-            <span class="btn btn-sm glyphicon glyphicon-filter"></span>
-            Filters
-        </h4>
-    </collapse-header>
-    
-    <collapse-body>
-        <collapse class="panel-blank" ng-repeat="filter in input.filters">
-            <collapse-header>
-                <h4 class="panel-title">
-                    {{filter.name}}
-                </h4>
-            </collapse-header>
-        
-            <collapse-body class="list-group in">
-                <li class="list-group-item"
-                    ng-repeat="(optionName, optionValue) in filter.options">
-                    <div class="form-group form-horizontal">
-                        <label class="control-label col-sm-4">{{optionName}}:</label>
-
-                        <div class="col-sm-7">
-                            <button 
-                                type="button" class="btn btn-sm form-control-static"
-                                ng-show="filterOptions[filter.name][optionName] == 'bool'"
-                                ng-class="{true: 'btn-success', false: 'btn-default'}[optionValue]">
-                                {{optionValue && 'On' || 'Off'}}</button>
-                            <p 
-                                class="form-control-static input-xlarge"
-                                ng-show="filterOptions[filter.name][optionName] != 'bool'">
-                                {{ optionValue }}
-                            </p>
-                        </div>
-                    </div>
-                </li>
-            </collapse-body>
-        </collapse>
-    </collapse-body>
-</collapse>
-
+        <collapse-body>
+            <div class="panel-body">
+                <ng-include src="'zf-apigility-admin/partials/api/input-view.html'" onload="index = $index; input = input"></ng-include>
+            </div>
+        </collapse-body>
+    </collapse>
+</div>
 
