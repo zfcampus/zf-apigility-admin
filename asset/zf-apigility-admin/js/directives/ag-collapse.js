@@ -133,7 +133,7 @@ agCollapse.directive('collapse', function() {
                 scope.hideContainerButtons({leave: true});
             });
         },
-        template: '<div class="panel panel-default" ng-transclude></div>',
+        template: '<div class="panel" ng-transclude></div>',
         replace: true
     };
 });
