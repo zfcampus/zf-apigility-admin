@@ -1,11 +1,19 @@
 <div class="panel panel-default"><div class="panel-body">
-    <button type="button" class="btn btn-sm pull-right" ng-class="{true: 'btn-success', false: 'btn-default'}[input.required]" ng-click="input.required = !input.required">{{input.required && 'On' || 'Off'}}</button>
+    <button 
+        type="button" class="btn btn-sm pull-right"
+        ng-class="{true: 'btn-success', false: 'btn-default'}[input.required]"
+        ng-click="input.required = !input.required">
+        {{input.required && 'Yes' || 'No'}}
+    </button>
+
     <label class="control-label">Required</label>
 </div></div>
 
 <collapse class="panel-info" conditionals="{newValidatorFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
+            <span class="btn btn-sm glyphicon glyphicon-ok"></span>
+
             Validators
 
             <button 
@@ -16,7 +24,7 @@
             </button>
         </h4>
 
-        <div class="ag-new-input clearfix"></div>
+        <div class="clearfix"></div>
     </collapse-header>
 
     <collapse-body>
@@ -24,7 +32,7 @@
             <collapse class="panel panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="validator in input.validators">
                 <collapse-header>
                     <h4 class="panel-title">
-                        <span class="btn btn-sm glyphicon glyphicon-move validator-handle"></span>
+                        <span class="btn btn-sm glyphicon glyphicon-resize-vertical validator-handle"></span>
 
                         {{validator.name}}
 
@@ -57,7 +65,8 @@
                                     type="button" class="btn btn-sm form-control-static"
                                     ng-show="validatorOptions[validator.name][optionName] == 'bool'"
                                     ng-class="{true: 'btn-success', false: 'btn-default'}[optionValue]">
-                                    {{optionValue && 'On' || 'Off'}}</button>
+                                    {{optionValue && 'Yes' || 'No'}}
+                                </button>
                                 <p 
                                     class="form-control-static input-xlarge"
                                     ng-show="validatorOptions[validator.name][optionName] != 'bool'">
@@ -89,7 +98,9 @@
                                     type="button" class="btn btn-sm"
                                     ng-show="validator._newOptionName && (validatorOptions[validator.name][validator._newOptionName] == 'bool')"
                                     ng-class="{true: 'btn-success', false: 'btn-default'}[validator._newOptionValue]"
-                                    ng-click="validator._newOptionValue = !validator._newOptionValue">{{validator._newOptionValue && 'On' || 'Off'}}</button>
+                                    ng-click="validator._newOptionValue = !validator._newOptionValue">
+                                    {{validator._newOptionValue && 'Yes' || 'No'}}
+                                </button>
                                 <input 
                                     type="text" class="form-control input-xlarge" 
                                     ng-show="validator._newOptionName && (validatorOptions[validator.name][validator._newOptionName] != 'bool')"
@@ -110,7 +121,7 @@
         </div>
 
         <div class="panel panel-blank hide"
-            collapse-show="{newValidatorFormVisible: true}">
+            collapse-show criteria="{newValidatorFormVisible: true}">
             <div class="panel-body">
                 <form ng-submit="addValidator(input)">
                     <select class="input-xlarge" ui-select2="{placeholder: 'Select Validator', width: '300px' }" type="text" ng-model="input._newValidatorName">
@@ -132,6 +143,7 @@
 <collapse class="panel-info" conditionals="{newFilterFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
+            <span class="btn btn-sm glyphicon glyphicon-filter"></span>
             Filters
 
             <button 
@@ -150,7 +162,7 @@
             <collapse class="panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="filter in input.filters">
                 <collapse-header>
                     <h4 class="panel-title">
-                        <span class="btn btn-sm glyphicon glyphicon-move filter-handle"></span>
+                        <span class="btn btn-sm glyphicon glyphicon-resize-vertical filter-handle"></span>
 
                         {{filter.name}}
 

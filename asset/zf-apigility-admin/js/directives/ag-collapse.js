@@ -7,6 +7,7 @@ agCollapse.directive('collapse', function() {
     return {
         restrict: 'E',
         transclude: true,
+        scope: {},
         controller: ['$scope', '$parse', function($scope, $parse) {
             var head;
             var body;
