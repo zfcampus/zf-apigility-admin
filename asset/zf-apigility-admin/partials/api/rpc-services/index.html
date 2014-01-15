@@ -1,35 +1,6 @@
 <ng-include src="'zf-apigility-admin/partials/api/version.html'"></ng-include>
-<div ng-hide="showNewRpcServiceForm">
-  <button ng-click="showNewRpcServiceForm = true" id="create-rpc-service-button" class="btn btn-default btn-primary" title="Create New rpc Service" position="bottom" content="#create-rpc-service-form">
-    Create New RPC Service
-  </button>
-</div>
-<div ng-show="showNewRpcServiceForm" class="panel panel-default">
-  <div class="panel-heading">Create a new RPC service</div>
-  <div class="panel-body">
-    <form class="form-horizontal" ng-submit="createNewRpcService()">
-      <fieldset>
-        <div class="form-group">
-          <label class="col-lg-2 control-label">RPC Service Name</label>
-          <div class="col-lg-10">
-            <input type="text" class="form-control" ng-model="rpcServiceName" placeholder="RPC Service Name ..." required="">
-          </div>
-        </div>
 
-        <div class="form-group">
-          <label class="col-lg-2 control-label">Route to match</label>
-          <div class="col-lg-10">
-            <input type="text" class="form-control" ng-model="rpcServiceRoute" placeholder="Route to match">
-          </div>
-        </div>
-      </fieldset>
-
-      <button type="submit" class="btn btn-sm btn-success">Create RPC Service</button>
-      <button ng-click="resetForm()" type="button" class="btn btn-sm btn-warning">Cancel</button>
-    </form>
-  </div>
-</div>
-<br clear="left">
+<ag-include src="zf-apigility-admin/partials/api/rpc-services/new.html"></ag-include>
 
 <div class="panel-group tooltip-api" id="accordion">
   <div class="panel panel-default" ng-repeat="rpcService in api.rpcServices">
