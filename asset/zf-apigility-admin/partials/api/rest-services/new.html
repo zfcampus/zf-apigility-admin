@@ -39,7 +39,27 @@
             </div></div></ag-tab-pane>
 
             <ag-tab-pane title="DB-Connected"><div class="panel"><div class="panel-body">
-                <form class="form" ng-submit="createNewDbConnectedService()">
+                <div class="panel panel-warning" ng-show="dbAdapters.length < 1">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">No DB Adapters Present</h4>
+                    </div>
+
+                    <div class="panel-body">
+                        <p>
+                            You have not yet configured any database adapters, and
+                            thus cannot create a DB-Connected REST service.
+                        </p>
+
+                        <p>
+                            You can create adapters on the 
+                            <a ng-href="admin#/global/db-adapters">Database Adapters setting page</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <form class="form" 
+                    ng-show="dbAdapters.length > 0"
+                    ng-submit="createNewDbConnectedService()">
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">DB Adapter Name</label>
