@@ -1,6 +1,6 @@
 <ng-include src="'zf-apigility-admin/partials/api/version.html'"></ng-include>
 
-<div class="panel panel-default" ng-controller="ApiVersionController">
+<div class="panel panel-info" ng-controller="ApiVersionController">
     <div class="panel-heading">
         <h4 class="panel-title">
             Versioning
@@ -12,20 +12,24 @@
     </div>
 
     <div class="panel-body">
-        <p>
-            <strong>Current Default API Version</strong>
+        <form class="form-inline">
             <select
-                class="pull-right"
+                class="form-control input-xlarge pull-right"
                 id="default-api-version"
                 ng-model="defaultApiVersion"
                 ng-options="ver for ver in api.versions"
                 ng-change="setDefaultApiVersion()"></select>
+        </form>
+
+        <p>
+            <strong>Current Default API Version</strong>
         </p>
+
         <div class="clearfix"></div>
     </div>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
         <h4 class="panel-title">REST services</h4>
     </div>
@@ -38,7 +42,7 @@
     </table>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
         <h4 class="panel-title">RPC services</h4>
     </div>
