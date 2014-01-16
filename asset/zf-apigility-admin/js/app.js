@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover', 'ag-include', 'ag-edit-inplace', 'ag-tabs']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover', 'ag-include', 'ag-edit-inplace', 'ag-tabs', 'ag-modal-dismiss']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -98,9 +98,14 @@ module.controller(
             ApiRepository.getList(true).then(function (apis) { $scope.apis = apis; });
         };
 
-        $scope.createNewApi = function () {
+        $scope.createNewApi = function ($event) {
+            var form = angular.element($event.target);
+            form.find('input').attr('disabled', true);
+            form.find('button').attr('disabled', true);
+
             ApiRepository.createNewApi($scope.apiName).then(function (newApi) {
                 // reset form, repopulate, redirect to new
+                $scope.dismissModal();
                 $scope.resetForm();
                 $scope.refreshApiList();
 
@@ -150,7 +155,6 @@ module.controller(
         updateDbAdapters(false);
 
         $scope.createNewDbAdapter = function () {
-console.log("Creating new db adapter");
             var options = {
                 adapter_name :  $scope.adapter_name,
                 driver       :  $scope.driver,
