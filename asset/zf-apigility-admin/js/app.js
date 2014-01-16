@@ -1,6 +1,6 @@
 'use strict';
 
-var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2']);
+var module = angular.module('ag-admin', ['ngRoute', 'ngSanitize', 'tags-input', 'angular-flash.service', 'angular-flash.flash-alert-directive', 'ui.sortable', 'ui.select2', 'ag-collapse', 'ag-hover', 'ag-include', 'ag-edit-inplace', 'ag-tabs', 'ag-modal-dismiss']);
 
 module.config(['$routeProvider', '$provide', function($routeProvider, $provide) {
 
@@ -12,11 +12,11 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         controller: 'DashboardController'
     });
     $routeProvider.when('/global/db-adapters', {
-        templateUrl: 'zf-apigility-admin/partials/global/db-adapters.html',
+        templateUrl: 'zf-apigility-admin/partials/global/db-adapters/index.html',
         controller: 'DbAdapterController'
     });
     $routeProvider.when('/global/authentication', {
-        templateUrl: 'zf-apigility-admin/partials/global/authentication.html',
+        templateUrl: 'zf-apigility-admin/partials/global/authentication/index.html',
         controller: 'AuthenticationController'
     });
     $routeProvider.when('/api/:apiName/:version/overview', {
@@ -37,11 +37,14 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
             }],
             apiAuthorizations: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
                 return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
+            }],
+            authentication: ['AuthenticationRepository', function (AuthenticationRepository) {
+                return AuthenticationRepository.hasAuthentication();
             }]
         }
     });
     $routeProvider.when('/api/:apiName/:version/rest-services', {
-        templateUrl: 'zf-apigility-admin/partials/api/rest-services.html',
+        templateUrl: 'zf-apigility-admin/partials/api/rest-services/index.html',
         controller: 'ApiRestServicesController',
         resolve: {
             dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
@@ -62,7 +65,7 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         }
     });
     $routeProvider.when('/api/:apiName/:version/rpc-services', {
-        templateUrl: 'zf-apigility-admin/partials/api/rpc-services.html',
+        templateUrl: 'zf-apigility-admin/partials/api/rpc-services/index.html',
         controller: 'ApiRpcServicesController',
         resolve: {
             api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
@@ -98,9 +101,14 @@ module.controller(
             ApiRepository.getList(true).then(function (apis) { $scope.apis = apis; });
         };
 
-        $scope.createNewApi = function () {
+        $scope.createNewApi = function ($event) {
+            var form = angular.element($event.target);
+            form.find('input').attr('disabled', true);
+            form.find('button').attr('disabled', true);
+
             ApiRepository.createNewApi($scope.apiName).then(function (newApi) {
                 // reset form, repopulate, redirect to new
+                $scope.dismissModal();
                 $scope.resetForm();
                 $scope.refreshApiList();
 
@@ -133,9 +141,10 @@ module.controller(
             $scope.database    = '';
             $scope.username    = '';
             $scope.password    = '';
-            $scope.hostname    = 'localhost';
+            $scope.hostname    = '';
             $scope.port        = '';
-            $scope.charset     = 'UTF-8';
+            $scope.charset     = '';
+            return true;
         };
 
         function updateDbAdapters(force) {
@@ -191,6 +200,28 @@ module.controller(
             });
         };
 
+        /* @todo Ideally, this should not be using jquery. Instead, it should
+         * likely use a combination of ng-class and ng-click such that ng-click
+         * changes a scope variable that will update ng-class. However, until I
+         * can figure that out, this will do.
+         *
+         * Key though: stopPropagation is necessary for those buttons we mark as
+         * "data-expand", as we do not want the parent -- the panel header -- to
+         * toggle that back closed.
+         */
+        $scope.clickPanelHeading = function ($event, $index) {
+            var panel = $('#collapse' + $index);
+            var target = $($event.target);
+            if (target.attr('data-expand')) {
+                /* target is a button; expand the collapse */
+                panel.toggleClass('in', true);
+                $event.stopPropagation();
+                return false;
+            }
+
+            panel.toggleClass('in');
+        };
+
     }]
 );
 
@@ -211,53 +242,44 @@ module.controller(
     $scope.oauth2                           = null;
 
     var enableSetupButtons = function () {
-        $scope.$apply(function () {
-            $scope.showSetupButtons             = true;
-            $scope.showHttpBasicAuthentication  = false;
-            $scope.showHttpDigestAuthentication = false;
-            $scope.showOAuth2Authentication     = false;
-            $scope.removeAuthenticationForm     = false;
-            $scope.httpBasic                    = null;
-            $scope.httpDigest                   = null;
-            $scope.oauth2                       = null;
-        });
+        $scope.showSetupButtons             = true;
+        $scope.showHttpBasicAuthentication  = false;
+        $scope.showHttpDigestAuthentication = false;
+        $scope.showOAuth2Authentication     = false;
+        $scope.removeAuthenticationForm     = false;
+        $scope.httpBasic                    = null;
+        $scope.httpDigest                   = null;
+        $scope.oauth2                       = null;
     };
 
     var fetchAuthenticationDetails = function (force) {
-        AuthenticationRepository.fetch({force: true})
+        AuthenticationRepository.fetch({cache: !force})
             .then(function (authentication) {
-                var data = authentication.props;
-                if (data.type == "http_basic") {
-                    $scope.$apply(function () {
-                        $scope.showSetupButtons             = false;
-                        $scope.showHttpBasicAuthentication  = true;
-                        $scope.showHttpDigestAuthentication = false;
-                        $scope.showOAuth2Authentication     = false;
-                        $scope.httpBasic                    = data;
-                        $scope.httpDigest                   = null;
-                        $scope.oauth2                       = null;
-                    });
-                } else if (data.type == "http_digest") {
-                    $scope.$apply(function () {
-                        $scope.showSetupButtons             = false;
-                        $scope.showHttpDigestAuthentication = true;
-                        $scope.showHttpBasicAuthentication  = false;
-                        $scope.showOAuth2Authentication     = false;
-                        data.digest_domains                 = data.digest_domains.split(" ");
-                        $scope.httpDigest                   = data;
-                        $scope.httpBasic                    = null;
-                        $scope.oauth2                       = null;
-                    });
-                } else if (data.type == "oauth2") {
-                    $scope.$apply(function () {
-                        $scope.showSetupButtons             = false;
-                        $scope.showOAuth2Authentication     = true;
-                        $scope.showHttpDigestAuthentication = false;
-                        $scope.showHttpBasicAuthentication  = false;
-                        $scope.oauth2                       = data;
-                        $scope.httpDigest                   = null;
-                        $scope.httpBasic                    = null;
-                    });
+                if (authentication.type == "http_basic") {
+                    $scope.showSetupButtons             = false;
+                    $scope.showHttpBasicAuthentication  = true;
+                    $scope.showHttpDigestAuthentication = false;
+                    $scope.showOAuth2Authentication     = false;
+                    $scope.httpBasic                    = authentication;
+                    $scope.httpDigest                   = null;
+                    $scope.oauth2                       = null;
+                } else if (authentication.type == "http_digest") {
+                    $scope.showSetupButtons             = false;
+                    $scope.showHttpDigestAuthentication = true;
+                    $scope.showHttpBasicAuthentication  = false;
+                    $scope.showOAuth2Authentication     = false;
+                    data.digest_domains                 = authentication.digest_domains.split(" ");
+                    $scope.httpDigest                   = authentication;
+                    $scope.httpBasic                    = null;
+                    $scope.oauth2                       = null;
+                } else if (authentication.type == "oauth2") {
+                    $scope.showSetupButtons             = false;
+                    $scope.showOAuth2Authentication     = true;
+                    $scope.showHttpDigestAuthentication = false;
+                    $scope.showHttpBasicAuthentication  = false;
+                    $scope.oauth2                       = authentication;
+                    $scope.httpDigest                   = null;
+                    $scope.httpBasic                    = null;
                 } else {
                     enableSetupButtons();
                 }
@@ -389,11 +411,56 @@ module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'fl
 
 module.controller(
     'ApiAuthorizationController',
-    ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, ApiAuthorizationRepository) {
+    ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'authentication', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
+        $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
+        $scope.authentication = authentication;
 
         var version = $routeParams.version.match(/\d/g)[0] || 1;
         $scope.editable = (version == api.versions[api.versions.length - 1]);
+
+        var serviceMethodMap = (function() {
+            var services = {};
+            angular.forEach(api.restServices, function(service) {
+                var entityName = service.controller_service_name + '::__resource__';
+                var collectionName = service.controller_service_name + '::__collection__';
+                var entityMethods = {
+                    GET: false,
+                    POST: false,
+                    PUT: false,
+                    PATCH: false,
+                    DELETE: false,
+                };
+                var collectionMethods = {
+                    GET: false,
+                    POST: false,
+                    PUT: false,
+                    PATCH: false,
+                    DELETE: false,
+                };
+                angular.forEach(service.resource_http_methods, function(method) {
+                    entityMethods[method] = true;
+                });
+                angular.forEach(service.collection_http_methods, function(method) {
+                    collectionMethods[method] = true;
+                });
+                services[entityName] = entityMethods;
+                services[collectionName] = collectionMethods;
+            });
+            return services;
+        })();
+
+        $scope.isEditable = function(serviceName, method) {
+            if (!$scope.editable) {
+                return false;
+            }
+
+            if (!serviceMethodMap.hasOwnProperty(serviceName)) {
+                return false;
+            }
+
+            return serviceMethodMap[serviceName][method];
+        };
 
         $scope.saveAuthorization = function () {
             flash.success = 'Authorization settings saved';
@@ -401,14 +468,18 @@ module.controller(
         };
 
         $scope.updateColumn = function ($event, column) {
-            _.forEach($scope.apiAuthorizations, function (item, name) {
-                $scope.apiAuthorizations[name][column] = $event.target.checked;
+            angular.forEach($scope.apiAuthorizations, function (item, name) {
+                if ($scope.isEditable(name, column)) {
+                    $scope.apiAuthorizations[name][column] = $event.target.checked;
+                }
             });
         };
 
         $scope.updateRow = function ($event, name) {
             _.forEach(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], function (method) {
-                $scope.apiAuthorizations[name][method] = $event.target.checked;
+                if ($scope.isEditable(name, method)) {
+                    $scope.apiAuthorizations[name][method] = $event.target.checked;
+                }
             });
         };
 
@@ -449,10 +520,10 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 
     $scope.isDbConnected = function (restService) {
-        if (typeof restService !== 'object' || restService === null) {
+        if (typeof restService !== 'object' || typeof restService === 'undefined') {
             return false;
         }
-        if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService) {
+        if (restService.hasOwnProperty('adapter_name') || restService.hasOwnProperty('table_name') || restService.hasOwnProperty('table_service')) {
             return true;
         }
         return false;
@@ -1097,36 +1168,52 @@ module.factory(
 
 module.factory(
     'AuthenticationRepository',
-    ['$http', '$location', 'apiBasePath', function ($http, $location, apiBasePath) {
+    ['$http', '$q', 'apiBasePath', function ($http, $q, apiBasePath) {
 
         var authenticationPath = apiBasePath + '/authentication';
 
-        var resource = new Hyperagent.Resource(authenticationPath);
-
-        resource.createAuthentication = function (options) {
-            return $http.post(authenticationPath, options)
-                .then(function (response) {
-                    return response.data;
+        return {
+            hasAuthentication: function() {
+                return this.fetch({cache: false}).then(
+                    function success(response) {
+                        var configured = true;
+                        if (response === '') {
+                            configured = false;
+                        }
+                        return { configured: configured };
+                    },
+                    function error(error) {
+                        return { configured: false };
+                    }
+                );
+            },
+            fetch: function(options) {
+                return $http.get(authenticationPath, options)
+                    .then(function (response) {
+                        return response.data;
+                    });
+            },
+            createAuthentication: function (options) {
+                return $http.post(authenticationPath, options)
+                    .then(function (response) {
+                        return response.data;
+                    });
+            },
+            updateAuthentication: function (data) {
+                return $http({method: 'patch', url: authenticationPath, data: data})
+                    .then(function (response) {
+                        return response.data;
+                    });
+            },
+            removeAuthentication: function () {
+                return $http.delete(authenticationPath)
+                    .then(function (response) {
+                    return true;
+                }, function (error) {
+                    return false;
                 });
+            }
         };
-
-        resource.updateAuthentication = function (data) {
-            return $http({method: 'patch', url: authenticationPath, data: data})
-                .then(function (response) {
-                    return response.data;
-                });
-        };
-
-        resource.removeAuthentication = function () {
-            return $http.delete(authenticationPath)
-                .then(function (response) {
-                return true;
-            }, function (error) {
-                return false;
-            });
-        };
-
-        return resource;
     }]
 );
 
@@ -1161,10 +1248,11 @@ module.filter('namespaceclassid', function () {
     };
 });
 
-module.run(['$rootScope', '$routeParams', '$location', function ($rootScope, $routeParams, $location) {
+module.run(['$rootScope', '$routeParams', '$location', '$route', function ($rootScope, $routeParams, $location, $route) {
     $rootScope.routeParams = $routeParams;
 
     $rootScope.$on('$routeChangeSuccess', function(scope, next, current){
+        scope.targetScope.$root.navSection = $route.current.controller;
         if (next.locals.api && scope.targetScope.$root.pageTitle != next.locals.api.name) {
             scope.targetScope.$root.pageTitle = next.locals.api.name;
         }

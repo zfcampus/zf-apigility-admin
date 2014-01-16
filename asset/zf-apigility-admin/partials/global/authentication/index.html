@@ -1,0 +1,47 @@
+<h2>Authentication</h2>
+
+<div ng-show="showAuthenticationSetup()">
+    <p>
+        There is currently NO Authentication. Select <b>ONE</b> of the
+        authentication methods below for your application:
+    </p>
+    
+    <div class="btn-group">
+        <button ng-click="showHttpBasicAuthenticationForm = true" class="btn btn-sm btn-primary" title="HTTP Basic">
+            HTTP Basic
+        </button>
+
+        <button ng-click="showHttpDigestAuthenticationForm = true" class="btn btn-sm btn-primary" title="HTTP Digest">
+            HTTP Digest
+        </button>
+
+        <button ng-click="showOAuth2AuthenticationForm = true" class="btn btn-sm btn-primary" title="OAuth2">
+            OAuth2
+        </button>
+    </div>
+</div>
+
+<div ng-show="showHttpBasicAuthenticationForm">
+    <ag-include src="zf-apigility-admin/partials/global/authentication/new-http-basic.html"></ag-include>
+</div>
+
+<div ng-show="showHttpBasicAuthentication">
+    <ag-include src="zf-apigility-admin/partials/global/authentication/http-basic.html"></ag-include>
+</div>
+
+<div ng-show="showHttpDigestAuthenticationForm">
+    <ag-include src="zf-apigility-admin/partials/global/authentication/new-http-digest.html"></ag-include>
+</div>
+
+<div ng-show="showHttpDigestAuthentication">
+    <ag-include src="zf-apigility-admin/partials/global/authentication/http-digest.html"></ag-include>
+</div>
+
+<div ng-show="showOAuth2AuthenticationForm">
+    <ag-include src="zf-apigility-admin/partials/global/authentication/new-oauth2.html"></ag-include>
+</div>
+
+<div ng-show="showOAuth2Authentication">
+    <ag-include src="zf-apigility-admin/partials/global/authentication/oauth2.html"></ag-include>
+</div>
+

@@ -1,0 +1,66 @@
+<ag-include src="zf-apigility-admin/partials/global/db-adapters/new-adapter-form.html"></ag-include>
+
+<div class="ag panel-group tooltip-api">
+  <collapse 
+    class="panel-info"
+    conditionals="{deleteDbAdapter: false, editDbAdapter: false}"
+    ng-repeat="dbAdapter in dbAdapters">
+    <collapse-header>
+      <h4 class="panel-title">
+        <span class="btn btn-sm glyphicon glyphicon-book"></span>
+
+        {{ dbAdapter.adapter_name }}
+
+        <div class="btn-group pull-right">
+            <button
+                type="button" title="Cancel" class="btn btn-sm btn-default"
+                collapse-flag flags="{editDbAdapter: false}" 
+                collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: true}">
+                Cancel
+            </button>
+
+            <button 
+                type="button" class="btn btn-sm btn-success" title="Edit adapter"
+                collapse-flag flags="{editDbAdapter: true}"
+                collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: false}">
+                <span class="glyphicon glyphicon-edit"></span>
+            </button>
+
+            <button 
+                type="button" class="btn btn-sm btn-danger" title="Remove adapter"
+                collapse-flag flags="{deleteDbAdapter: true}"
+                collapse-button criteria="{deleteDbAdapter: false}">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+      </h4>
+
+      <div class="clearfix"></div>
+
+      <div collapse-show criteria="{deleteDbAdapter: true}" class="panel panel-danger hide">
+          <div class="panel-heading"><h4 class="panel-title">Remove DB Adapter</h4></div>
+          <div class="panel-body">
+          <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
+              <p>Are you sure you want to delete the Adapter</p>
+
+              <div class="btn-group pull-right">
+                <button collapse-flag flags="{deleteDbAdapter: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-danger">Yes</button>
+              </div>
+
+              <div class="clearfix"></div>
+          </form>
+          </div>
+      </div>
+    </collapse-header>
+
+    <collapse-body>
+        <ng-include src="'zf-apigility-admin/partials/global/db-adapters/view.html'"></ng-include>
+        <ng-include src="'zf-apigility-admin/partials/global/db-adapters/edit.html'"></ng-include>
+      </collapse-body>
+  </collapse>
+</div>
+
+<script>
+    $('.collapse').collapse();
+</script>
