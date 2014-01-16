@@ -61,12 +61,11 @@
                             <label class="control-label col-sm-4">{{optionName}}:</label>
 
                             <div class="col-sm-7">
-                                <button 
-                                    type="button" class="btn btn-sm form-control-static"
+                                <p class="form-control-static input-xlarge"
                                     ng-show="validatorOptions[validator.name][optionName] == 'bool'"
-                                    ng-class="{true: 'btn-success', false: 'btn-default'}[optionValue]">
+                                    ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
                                     {{optionValue && 'Yes' || 'No'}}
-                                </button>
+                                </p>
                                 <p 
                                     class="form-control-static input-xlarge"
                                     ng-show="validatorOptions[validator.name][optionName] != 'bool'">
@@ -191,11 +190,11 @@
                             <label class="control-label col-sm-4">{{optionName}}:</label>
 
                             <div class="col-sm-7">
-                                <button 
-                                    type="button" class="btn btn-sm form-control-static"
+                                <p class="form-control-static input-xlarge"
                                     ng-show="filterOptions[filter.name][optionName] == 'bool'"
-                                    ng-class="{true: 'btn-success', false: 'btn-default'}[optionValue]">
-                                    {{optionValue && 'On' || 'Off'}}</button>
+                                    ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
+                                    {{optionValue && 'Yes' || 'No'}}
+                                </p>
                                 <p 
                                     class="form-control-static input-xlarge"
                                     ng-show="filterOptions[filter.name][optionName] != 'bool'">
