@@ -101,13 +101,13 @@
     <div class="container">
         <div class="row">
             <aside class="col-md-3 ag-sidebar" role="complementary">
-                <ul ng-show="!$root.routeParams.apiName" class="nav nav-pills nav-stacked">
+                <ul ng-show="!$root.routeParams.apiName" class="nav nav-pills ag-admin-nav-pills nav-stacked">
                     <li ng-class="{active: ($root.navSection == 'DashboardController')}"><a ng-href="admin#/global/information">General Information</a></li>
                     <li ng-class="{active: ($root.navSection == 'DbAdapterController')}"><a ng-href="admin#/global/db-adapters">Database Adapters</a></li>
                     <li ng-class="{active: ($root.navSection == 'AuthenticationController')}"><a ng-href="admin#/global/authentication">Authentication</a></li>
                 </ul>
 
-                <ul ng-show="$root.routeParams.apiName" class="nav">
+                <ul ng-show="$root.routeParams.apiName" class="nav nav-pills ag-admin-nav-pills nav-stacked">
                     <li ng-class="{active: ($root.navSection == 'ApiOverviewController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
                     <li ng-class="{active: ($root.navSection == 'ApiRestServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
                     <li ng-class="{active: ($root.navSection == 'ApiRpcServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
