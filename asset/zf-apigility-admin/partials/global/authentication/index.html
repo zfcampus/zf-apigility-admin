@@ -21,34 +21,33 @@
     </div>
 </div>
 
-<div ng-show="showHttpBasicAuthenticationForm" class="panel panel-default">
-  <div class="panel-heading">Setup HTTP Basic Authentication</div>
-  <div class="panel-body">
-    <form class="form-horizontal" ng-submit="createHttpBasicAuthentication()">
-      <fieldset>
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="realm">Authentication Realm</label>
-          <div class="controls">
-            <input type="text" placeholder="api" class="input-xlarge" required="required" ng-model="realm">
-            <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
-          </div>
-        </div>
+<div ng-show="showHttpBasicAuthenticationForm" class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Setup HTTP Basic Authentication</h4>
+    </div>
 
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="htpasswd">Location of htpasswd file</label>
-          <div class="controls">
-            <input type="text" placeholder="data/htpasswd" class="input-xlarge" required="required" ng-model="htpasswd">
-            <p class="help-block">Location on the filesystem of the htpasswd file</p>
-          </div>
-        </div>
-      </fieldset>
+    <div class="panel-body">
+        <form class="form" ng-submit="createHttpBasicAuthentication()">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="realm">Authentication Realm</label>
+                    <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="realm">
+                    <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+                </div>
 
-      <button class="btn btn-sm btn-success" type="submit">Save</button>
-      <button class="btn btn-sm btn-warning" type="button" ng-click="resetForm()">Cancel</button>
-    </form>
-  </div>
+                <div class="control-group">
+                    <label class="control-label" for="htpasswd">Location of htpasswd file</label>
+                    <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="htpasswd">
+                    <p class="help-block">Location on the filesystem of the htpasswd file</p>
+                </div>
+            </fieldset>
+
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-default" type="button" ng-click="resetForm()">Cancel</button>
+                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div ng-show="showHttpBasicAuthentication" class="panel panel-default">
@@ -124,60 +123,54 @@
   </div>
 </div>
 
-<div ng-show="showHttpDigestAuthenticationForm" class="panel panel-default">
-  <div class="panel-heading">Setup HTTP Digest Authentication</div>
-  <div class="panel-body">
-    <form class="form-horizontal" ng-submit="createHttpDigestAuthentication()">
-      <fieldset>
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="realm">Realm</label>
-          <div class="controls">
-            <input type="text" placeholder="api" class="input-xlarge" required="required" ng-model="realm">
-            <p class="help-block">HTTP authentication realm</p>
-          </div>
-        </div>
+<div ng-show="showHttpDigestAuthenticationForm" class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Setup HTTP Digest Authentication</h4>
+    </div>
 
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="htdigest">Location of htdigest file</label>
-          <div class="controls">
-            <input type="text" placeholder="data/htdigest" class="input-xlarge" required="required" ng-model="htdigest">
-            <p class="help-block">Location on the filesystem of the htdigest file</p>
-          </div>
-        </div>
+    <div class="panel-body">
+        <form class="form" ng-submit="createHttpDigestAuthentication()">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="realm">Realm</label>
+                    <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="realm">
+                    <p class="help-block">HTTP authentication realm</p>
+                </div>
 
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="digest_domains">Digest domains</label>
-          <div class="controls">
-            <tags-input 
-              ng-class="form-control"
-              ng-model="digest_domains"
-              add-on-space="true"
-              min-length="1"
-              max-length="256"
-              allowed-tags-pattern="^/[a-zA-Z0-9_+./%-]*$"
-              placeholder="Add a path">
-            </tags-input>
-            <p class="help-block">Space-separated list of URI paths for which authentication will be applied</p>
-          </div>
-        </div>
+                <div class="control-group">
+                    <label class="control-label" for="htdigest">Location of htdigest file</label>
+                    <input type="text" placeholder="data/htdigest"
+                        class="form-control input-xlarge" required="required" ng-model="htdigest">
+                    <p class="help-block">Location on the filesystem of the htdigest file</p>
+                </div>
 
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="nonce_timeout">Nonce timeout</label>
-          <div class="controls">
-            <input type="text" placeholder="3600" class="input-xlarge" required="required" ng-model="nonce_timeout">
-            <p class="help-block">Expiration in seconds for inactive authentication</p>
-          </div>
-        </div>
-      </fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="digest_domains">Digest domains</label>
+                    <tags-input 
+                        ng-class="form-control"
+                        ng-model="digest_domains"
+                        add-on-space="true"
+                        min-length="1"
+                        max-length="256"
+                        allowed-tags-pattern="^/[a-zA-Z0-9_+./%-]*$"
+                        placeholder="Add a path">
+                    </tags-input>
+                    <p class="help-block">Space-separated list of URI paths for which authentication will be applied</p>
+                </div>
 
-      <button class="btn btn-sm btn-success" type="submit">Save</button>
-      <button class="btn btn-sm btn-warning" type="button" ng-click="resetForm()">Cancel</button>
-    </form>
-  </div>
+                <div class="control-group">
+                    <label class="control-label" for="nonce_timeout">Nonce timeout</label>
+                    <input type="text" placeholder="3600" class="form-control input-xlarge" required="required" ng-model="nonce_timeout">
+                    <p class="help-block">Expiration in seconds for inactive authentication</p>
+                </div>
+            </fieldset>
+
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-default" type="button" ng-click="resetForm()">Cancel</button>
+                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div ng-show="showHttpDigestAuthentication" class="panel panel-default">
@@ -289,53 +282,46 @@
   </div>
 </div>
 
-<div ng-show="showOAuth2AuthenticationForm" class="panel panel-default">
-  <div class="panel-heading">Setup OAuth2 Authentication</div>
-  <div class="panel-body">
-    <form class="form-horizontal" ng-submit="createOAuth2Authentication()">
-      <fieldset>
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="dsn">PDO DSN</label>
-          <div class="controls">
-            <input type="text" placeholder="sqlite::memory:" class="input-xlarge" required="required" ng-model="dsn">
-            <p class="help-block">The PDO database source name (DSN).</p>
-          </div>
-        </div>
+<div ng-show="showOAuth2AuthenticationForm" class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Setup OAuth2 Authentication</h4>
+    </div>
 
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="username">PDO Username</label>
-          <div class="controls">
-            <input type="text" placeholder="username" class="input-xlarge" ng-model="username">
-            <p class="help-block">Username associated with the database holding
-            OAuth2 credentials (required if not using SQLite).</p>
-          </div>
-        </div>
+    <div class="panel-body">
+        <form class="form" ng-submit="createOAuth2Authentication()">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="dsn">PDO DSN</label>
+                    <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" required="required" ng-model="dsn">
+                    <p class="help-block">The PDO database source name (DSN).</p>
+                </div>
 
-        <!-- Password input-->
-        <div class="control-group">
-          <label class="control-label" for="password">PDO Password</label>
-          <div class="controls">
-            <input type="password" placeholder="password" class="input-xlarge" ng-model="password">
-            <p class="help-block">Password for the username listed (required if not using SQLite).</p>
-          </div>
-        </div>
+                <div class="control-group">
+                    <label class="control-label" for="username">PDO Username</label>
+                    <input type="text" placeholder="username" class="form-control input-xlarge" ng-model="username">
+                    <p class="help-block">Username associated with the database holding
+                        OAuth2 credentials (required if not using SQLite).</p>
+                </div>
 
-        <!-- Text input-->
-        <div class="control-group">
-          <label class="control-label" for="route_match">OAuth2 route</label>
-          <div class="controls">
-            <input type="text" placeholder="/oauth" class="input-xlarge" ng-model="route_match">
-            <p class="help-block">Base URI to use as the OAuth2 server endpoint.</p>
-          </div>
-        </div>
-      </fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="password">PDO Password</label>
+                    <input type="password" placeholder="password" class="form-control input-xlarge" ng-model="password">
+                    <p class="help-block">Password for the username listed (required if not using SQLite).</p>
+                </div>
 
-      <button class="btn btn-sm btn-success" type="submit">Save</button>
-      <button class="btn btn-sm btn-warning" type="button" ng-click="resetForm()">Cancel</button>
-    </form>
-  </div>
+                <div class="control-group">
+                    <label class="control-label" for="route_match">OAuth2 route</label>
+                    <input type="text" placeholder="/oauth" class="form-control input-xlarge" ng-model="route_match">
+                    <p class="help-block">Base URI to use as the OAuth2 server endpoint.</p>
+                </div>
+            </fieldset>
+
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-default" type="button" ng-click="resetForm()">Cancel</button>
+                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div ng-show="showOAuth2Authentication" class="panel panel-default">
