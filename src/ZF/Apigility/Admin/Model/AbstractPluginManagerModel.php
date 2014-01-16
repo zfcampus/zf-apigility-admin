@@ -50,10 +50,18 @@ class AbstractPluginManagerModel
             return $this->plugins;
         }
 
-        $this->plugins  = [];
-        foreach ($this->pluginManager->getCanonicalNames() as $name => $canonical) {
+        // Add invokableClasses via reflection
+        $reflClass = new \ReflectionClass($this->pluginManager);
+        $reflProp  = $reflClass->getProperty('invokableClasses');
+        $reflProp->setAccessible(true);
+
+        $invokables = array_flip($reflProp->getValue($this->pluginManager));
+        $plugins    = array_merge($invokables, $this->pluginManager->getCanonicalNames());
+
+        foreach ($plugins as $name => $canonical) {
             $this->plugins[] = $name;
         }
+
         sort($this->plugins, SORT_STRING);
         return $this->plugins;
     }
