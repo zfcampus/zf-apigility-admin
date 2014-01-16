@@ -548,63 +548,63 @@ return array(
      * OR'd.
      */
     'filter_metadata' => array(
-        'alnum' => array(
+        'Zend\I18n\Filter\Alnum' => array(
             'allow_white_space' => 'bool',
             'locale' => 'string',
         ),
-        'alpha' => array(
+        'Zend\I18n\Filter\Alpha' => array(
             'allow_white_space' => 'bool',
             'locale' => 'string',
         ),
-        'basename' => array(),
-        'boolean' => array(
+        'Zend\Filter\BaseName' => array(),
+        'Zend\Filter\Boolean' => array(
             'casting' => 'bool',
             'type' => 'string',
         ),
-        'callback' => array(
+        'Zend\Filter\Callback' => array(
             'callback' => 'string',
         ),
-        'compressbz2' => array(
+        'Zend\Filter\Compress\Bz2' => array(
             'archive' => 'string',
             'blocksize' => 'int',
         ),
-        'compressgz' => array(
+        'Zend\Filter\Compress\Gz' => array(
             'archive' => 'string',
             'level' => 'int',
             'mode' => 'string',
         ),
-        'compresslzf' => array(),
-        'compress' => array(
+        'Zend\Filter\Compress\Lzf' => array(),
+        'Zend\Filter\Compress' => array(
             'adapter' => 'string',
         ),
-        'compressrar' => array(
+        'Zend\Filter\Compress\Rar' => array(
             'archive' => 'string',
             'callback' => 'string',
             'password' => 'string',
             'target' => 'string',
         ),
-        'compresssnappy' => array(),
-        'compresstar' => array(
+        'Zend\Filter\Compress\Snappy' => array(),
+        'Zend\Filter\Compress\Tar' => array(
             'archive' => 'string',
             'target' => 'string',
             'mode' => 'string',
         ),
-        'compresszip' => array(
+        'Zend\Filter\Compress\Zip' => array(
             'archive' => 'string',
             'target' => 'string',
         ),
-        'datetimeforatter' => array(
+        'Zend\Filter\DateTimeForatter' => array(
             'format' => 'string',
         ),
-        'decompress' => array(
+        'Zend\Filter\Decompress' => array(
             'adapter' => 'string',
         ),
-        'decrypt' => array(
+        'Zend\Filter\Decrypt' => array(
             'adapter' => 'string',
         ),
-        'digits' => array(),
-        'dir' => array(),
-        'encryptblockcipher' => array(
+        'Zend\Filter\Digits' => array(),
+        'Zend\Filter\Dir' => array(),
+        'Zend\Filter\Encrypt\BlockCipher' => array(
             'algorithm' => 'string',
             'compression' => 'string',
             'hash' => 'string',
@@ -612,114 +612,114 @@ return array(
             'key_iteration' => 'int',
             'vector' => 'string',
         ),
-        'encryptopenssl' => array(
+        'Zend\Filter\Encrypt\Openssl' => array(
             'compression' => 'string',
             'package' => 'bool',
             'passphrase' => 'string',
         ),
-        'encrypt' => array(
+        'Zend\Filter\Encrypt' => array(
             'adapter' => 'string',
         ),
-        'filedecrypt' => array(
-            'adapter' => 'string',
-            'filename' => 'string',
-        ),
-        'fileencrypt' => array(
+        'Zend\Filter\File\Decrypt' => array(
             'adapter' => 'string',
             'filename' => 'string',
         ),
-        'filelowercase' => array(
+        'Zend\Filter\File\Encrypt' => array(
+            'adapter' => 'string',
+            'filename' => 'string',
+        ),
+        'Zend\Filter\File\LowerCase' => array(
             'encoding' => 'string',
         ),
-        'filerename' => array(
+        'Zend\Filter\File\Rename' => array(
             'overwrite' => 'bool',
             'randomize' => 'bool',
             'source' => 'string',
             'target' => 'string',
         ),
-        'filerenameupload' => array(
+        'Zend\Filter\File\RenameUpload' => array(
             'overwrite' => 'bool',
             'randomize' => 'bool',
             'target' => 'string',
             'use_upload_extension' => 'bool',
             'use_upload_name' => 'bool',
         ),
-        'fileuppercase' => array(
+        'Zend\Filter\File\Uppercase' => array(
             'encoding' => 'string',
         ),
-        'htmlentities' => array(
+        'Zend\Filter\HtmlEntities' => array(
             'charset' => 'string',
             'doublequote' => 'bool',
             'encoding' => 'string',
             'quotestyle' => 'int',
         ),
-        'inflector' => array(
+        'Zend\Filter\Inflector' => array(
             'throwTargetExceptionsOn' => 'bool',
             'targetReplacementIdentifier' => 'string',
             'target' => 'string',
         ),
-        'int' => array(),
-        'null' => array(
+        'Zend\Filter\Int' => array(),
+        'Zend\Filter\Null' => array(
             'type' => 'int|string',
         ),
-        'numberformat' => array(
+        'Zend\I18n\Filter\NumberFormat' => array(
             'locale' => 'string',
             'style' => 'int',
             'type' => 'int',
         ),
-        'numberparse' => array(
+        'Zend\I18n\Filter\NumberParse' => array(
             'locale' => 'string',
             'style' => 'int',
             'type' => 'int',
         ),
-        'pregreplace' => array(
+        'Zend\Filter\PregReplace' => array(
             'pattern' => 'string',
             'replacement' => 'string',
         ),
-        'realpath' => array(
+        'Zend\Filter\RealPath' => array(
             'exists' => 'bool',
         ),
-        'stringtolower' => array(
+        'Zend\Filter\StringToLower' => array(
             'encoding' => 'string',
         ),
-        'stringtoupper' => array(
+        'Zend\Filter\StringToUpper' => array(
             'encoding' => 'string',
         ),
-        'stringtrim' => array(
+        'Zend\Filter\StringTrim' => array(
             'charlist' => 'string',
         ),
-        'stripnewlines' => array(),
-        'striptags' => array(
+        'Zend\Filter\StripNewlines' => array(),
+        'Zend\Filter\StripTags' => array(
             'allowAttribs' => 'string',
             'allowTags' => 'string',
         ),
-        'urinormalize' => array(
+        'Zend\Filter\UriNormalize' => array(
             'defaultscheme' => 'string',
             'enforcedscheme' => 'string',
         ),
-        'wordcamelcasetodash' => array(),
-        'wordcamelcasetoseparator' => array(
+        'Zend\Filter\Word\CamelCaseToDash' => array(),
+        'Zend\Filter\Word\CamelCaseToSeparator' => array(
             'separator' => 'string',
         ),
-        'wordcamelcasetounderscore' => array(),
-        'worddashtocamelcase' => array(),
-        'worddashtoseparator' => array(
+        'Zend\Filter\Word\CamelCaseToUnderscore' => array(),
+        'Zend\Filter\Word\DashToCamelCase' => array(),
+        'Zend\Filter\Word\DashToSeparator' => array(
             'separator' => 'string',
         ),
-        'worddashtounderscore' => array(),
-        'wordseparatortocamelcase' => array(
+        'Zend\Filter\Word\DashToUnderscore' => array(),
+        'Zend\Filter\Word\SeparatorToCamelCase' => array(
             'separator' => 'string',
         ),
-        'wordseparatortodash' => array(
+        'Zend\Filter\Word\SeparatorToDash' => array(
             'separator' => 'string',
         ),
-        'wordseparatortoseparator' => array(
+        'Zend\Filter\Word\SeparatorToSeparator' => array(
             'searchseparator' => 'string',
             'replacementseparator' => 'string',
         ),
-        'wordunderscoretocamelcase' => array(),
-        'wordunderscoretodash' => array(),
-        'wordunderscoretoseparator' => array(
+        'Zend\Filter\Word\UnderscoreToCamelCase' => array(),
+        'Zend\Filter\Word\UnderscoreToDash' => array(),
+        'Zend\Filter\Word\UnderscoreToSeparator' => array(
             'separator' => 'string',
         ),
     ),
@@ -744,246 +744,246 @@ return array(
             'translatortextdomain' => 'string',
             'translatorenabled' => 'bool',
         ),
-        'barcodecodabar' => array(),
-        'barcodecode128' => array(),
-        'barcodecode25interleaved' => array(),
-        'barcodecode25' => array(),
-        'barcodecode39ext' => array(),
-        'barcodecode39' => array(),
-        'barcodecode93ext' => array(),
-        'barcodecode93' => array(),
-        'barcodeean12' => array(),
-        'barcodeean13' => array(),
-        'barcodeean14' => array(),
-        'barcodeean18' => array(),
-        'barcodeean2' => array(),
-        'barcodeean5' => array(),
-        'barcodeean8' => array(),
-        'barcodegtin12' => array(),
-        'barcodegtin13' => array(),
-        'barcodegtin14' => array(),
-        'barcodeidentcode' => array(),
-        'barcodeintelligentmail' => array(),
-        'barcodeissn' => array(),
-        'barcodeitf14' => array(),
-        'barcodeleitcode' => array(),
-        'barcode' => array(
+        'Zend\Validator\Barcode\Codabar' => array(),
+        'Zend\Validator\Barcode\Code128' => array(),
+        'Zend\Validator\Barcode\Code25interleaved' => array(),
+        'Zend\Validator\Barcode\Code25' => array(),
+        'Zend\Validator\Barcode\Code39ext' => array(),
+        'Zend\Validator\Barcode\Code39' => array(),
+        'Zend\Validator\Barcode\Code93ext' => array(),
+        'Zend\Validator\Barcode\Code93' => array(),
+        'Zend\Validator\Barcode\Ean12' => array(),
+        'Zend\Validator\Barcode\Ean13' => array(),
+        'Zend\Validator\Barcode\Ean14' => array(),
+        'Zend\Validator\Barcode\Ean18' => array(),
+        'Zend\Validator\Barcode\Ean2' => array(),
+        'Zend\Validator\Barcode\Ean5' => array(),
+        'Zend\Validator\Barcode\Ean8' => array(),
+        'Zend\Validator\Barcode\Gtin12' => array(),
+        'Zend\Validator\Barcode\Gtin13' => array(),
+        'Zend\Validator\Barcode\Gtin14' => array(),
+        'Zend\Validator\Barcode\Identcode' => array(),
+        'Zend\Validator\Barcode\Intelligentmail' => array(),
+        'Zend\Validator\Barcode\Issn' => array(),
+        'Zend\Validator\Barcode\Itf14' => array(),
+        'Zend\Validator\Barcode\Leitcode' => array(),
+        'Zend\Validator\Barcode' => array(
             'adapter' => 'string', // this is the validator adapter name to use
             'useChecksum' => 'bool',
         ),
-        'barcodeplanet' => array(),
-        'barcodepostnet' => array(),
-        'barcoderoyalmail' => array(),
-        'barcodesscc' => array(),
-        'barcodeupca' => array(),
-        'barcodeupce' => array(),
-        'between' => array(
+        'Zend\Validator\Barcode\Planet' => array(),
+        'Zend\Validator\Barcode\Postnet' => array(),
+        'Zend\Validator\Barcode\Royalmail' => array(),
+        'Zend\Validator\Barcode\Sscc' => array(),
+        'Zend\Validator\Barcode\Upca' => array(),
+        'Zend\Validator\Barcode\Upce' => array(),
+        'Zend\Validator\Between' => array(
             'inclusive' => 'bool',
             'max' => 'int',
             'min' => 'int',
         ),
-        'bitwise' => array(
+        'Zend\Validator\Bitwise' => array(
             'control' => 'int',
             'operator' => 'string',
             'strict' => 'bool',
         ),
-        'callback' => array(
+        'Zend\Validator\Callback' => array(
             'callback' => 'string',
         ),
-        'creditcard' => array(
+        'Zend\Validator\CreditCard' => array(
             'type' => 'string',
             'service' => 'string',
         ),
-        'csrf' => array(
+        'Zend\Validator\Csrf' => array(
             'name' => 'string',
             'salt' => 'string',
             'timeout' => 'int',
         ),
-        'date' => array(
+        'Zend\Validator\Date' => array(
             'format' => 'string',
         ),
-        'datestep' => array(
+        'Zend\Validator\DateStep' => array(
             'format' => 'string',
             'basevalue' => 'string|int',
         ),
-        'dbnorecordexists' => array(
+        'Zend\Validator\Db\NoRecordExists' => array(
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
             'exclude' => 'string',
         ),
-        'dbrecordexists' => array(
+        'Zend\Validator\Db\RecordExists' => array(
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
             'exclude' => 'string',
         ),
-        'digits' => array(),
-        'emailaddress' => array(
+        'Zend\Validator\Digits' => array(),
+        'Zend\Validator\EmailAddress' => array(
             'allow' => 'int',
             'useMxCheck' => 'bool',
             'useDeepMxCheck' => 'bool',
             'useDomainCheck' => 'bool',
         ),
-        'explode' => array(
+        'Zend\Validator\Explode' => array(
             'valuedelimiter' => 'string',
             'breakonfirstfailure' => 'bool',
         ),
-        'filecount' => array(
+        'Zend\Validator\File\Count' => array(
             'max' => 'int',
             'min' => 'int',
         ),
-        'filecrc32' => array(
+        'Zend\Validator\File\Crc32' => array(
             'algorithm' => 'string',
             'hash' => 'string',
             'crc32' => 'string',
         ),
-        'fileexcludeextension' => array(
+        'Zend\Validator\File\ExcludeExtension' => array(
             'case' => 'bool',
             'extension' => 'string',
         ),
-        'fileexcludemimetype' => array(
+        'Zend\Validator\File\ExcludeMimeType' => array(
             'disableMagicFile' => 'bool',
             'magicFile' => 'string',
             'enableHeaderCheck' => 'bool',
             'mimeType' => 'string',
         ),
-        'fileexists' => array(
+        'Zend\Validator\File\Exists' => array(
             'directory' => 'string',
         ),
-        'fileextension' => array(
+        'Zend\Validator\File\Extension' => array(
             'case' => 'bool',
             'extension' => 'string',
         ),
-        'filefilessize' => array(
+        'Zend\Validator\File\FilesSize' => array(
             'max' => 'int',
             'min' => 'int',
             'size' => 'int',
             'useByteString' => 'bool',
         ),
-        'filehash' => array(
+        'Zend\Validator\File\Hash' => array(
             'algorithm' => 'string',
             'hash' => 'string',
         ),
-        'fileimagesize' => array(
+        'Zend\Validator\File\ImageSize' => array(
             'maxHeight' => 'int',
             'minHeight' => 'int',
             'maxWidth' => 'int',
             'minWidth' => 'int',
         ),
-        'fileiscompressed' => array(
+        'Zend\Validator\File\IsCompressed' => array(
             'disableMagicFile' => 'bool',
             'magicFile' => 'string',
             'enableHeaderCheck' => 'bool',
             'mimeType' => 'string',
         ),
-        'fileisimage' => array(
+        'Zend\Validator\File\IsImage' => array(
             'disableMagicFile' => 'bool',
             'magicFile' => 'string',
             'enableHeaderCheck' => 'bool',
             'mimeType' => 'string',
         ),
-        'filemd5' => array(
+        'Zend\Validator\File\Md5' => array(
             'algorithm' => 'string',
             'hash' => 'string',
             'md5' => 'string',
         ),
-        'filemimetype' => array(
+        'Zend\Validator\File\MimeType' => array(
             'disableMagicFile' => 'bool',
             'magicFile' => 'string',
             'enableHeaderCheck' => 'bool',
             'mimeType' => 'string',
         ),
-        'filenotexists' => array(
+        'Zend\Validator\File\NotExists' => array(
             'directory' => 'string',
         ),
-        'filesha1' => array(
+        'Zend\Validator\File\Sha1' => array(
             'algorithm' => 'string',
             'hash' => 'string',
             'sha1' => 'string',
         ),
-        'filesize' => array(
+        'Zend\Validator\File\Size' => array(
             'max' => 'int',
             'min' => 'int',
             'size' => 'int',
             'useByteString' => 'bool',
         ),
-        'fileuploadfile' => array(),
-        'fileupload' => array(),
-        'filewordcount' => array(
+        'Zend\Validator\File\UploadFile' => array(),
+        'Zend\Validator\File\Upload' => array(),
+        'Zend\Validator\File\WordCount' => array(
             'max' => 'int',
             'min' => 'int',
         ),
-        'greaterthan' => array(
+        'Zend\Validator\GreaterThan' => array(
             'inclusive' => 'bool',
             'min' => 'int',
         ),
-        'hex' => array(),
-        'hostname' => array(
+        'Zend\Validator\Hex' => array(),
+        'Zend\Validator\Hostname' => array(
             'allow' => 'int',
             'useIdnCheck' => 'bool',
             'useTldCheck' => 'bool',
         ),
-        'iban' => array(
+        'Zend\Validator\Iban' => array(
             'country_code' => 'string',
             'allow_non_sepa' => 'bool',
         ),
-        'identical' => array(
+        'Zend\Validator\Identical' => array(
             'literal' => 'bool',
             'strict' => 'bool',
             'token' => 'string',
         ),
-        'inarray' => array(
+        'Zend\Validator\InArray' => array(
             'strict' => 'bool',
             'recursive' => 'bool',
         ),
-        'ip' => array(
+        'Zend\Validator\Ip' => array(
             'allowipv4' => 'bool',
             'allowipv6' => 'bool',
             'allowipvfuture' => 'bool',
             'allowliteral' => 'bool',
         ),
-        'isbn' => array(
+        'Zend\Validator\Isbn' => array(
             'type' => 'string',
             'separator' => 'string',
         ),
-        'isinstanceof' => array(
+        'Zend\Validator\IsInstanceOf' => array(
             'classname' => 'string',
         ),
-        'lessthan' => array(
+        'Zend\Validator\LessThan' => array(
             'inclusive' => 'bool',
             'max' => 'int',
         ),
-        'notempty' => array(
+        'Zend\Validator\NotEmpty' => array(
             'type' => 'int',
         ),
-        'regex' => array(
+        'Zend\Validator\Regex' => array(
             'pattern' => 'string',
         ),
-        'sitemapchangefreq' => array(),
-        'sitemaplastmod' => array(),
-        'sitemaploc' => array(),
-        'sitemappriority' => array(),
-        'step' => array(
+        'Zend\Validator\Sitemap\Changefreq' => array(),
+        'Zend\Validator\Sitemap\Lastmod' => array(),
+        'Zend\Validator\Sitemap\Loc' => array(),
+        'Zend\Validator\Sitemap\Priority' => array(),
+        'Zend\Validator\Step' => array(
             'baseValue' => 'int|float',
             'step' => 'float',
         ),
-        'stringlength' => array(
+        'Zend\Validator\StringLength' => array(
             'max' => 'int',
             'min' => 'int',
             'encoding' => 'string',
         ),
-        'uri' => array(
+        'Zend\Validator\Uri' => array(
             'allowAbsolute' => 'bool',
             'allowRelative' => 'bool',
         ),
-        'alnum' => array(
+        'Zend\I18n\Validator\Alnum' => array(
             'allowwhitespace' => 'bool',
         ),
-        'alpha' => array(
+        'Zend\I18n\Validator\Alpha' => array(
             'allowwhitespace' => 'bool',
         ),
-        'datetime' => array(
+        'Zend\I18n\Validator\DateTime' => array(
             'calendar' => 'int',
             'datetype' => 'int',
             'pattern' => 'string',
@@ -991,17 +991,17 @@ return array(
             'timezone' => 'string',
             'locale' => 'string',
         ),
-        'float' => array(
+        'Zend\I18n\Validator\Float' => array(
             'locale' => 'string',
         ),
-        'int' => array(
+        'Zend\I18n\Validator\Int' => array(
             'locale' => 'string',
         ),
-        'phonenumber' => array(
+        'Zend\I18n\Validator\PhoneNumber' => array(
             'country' => 'string',
             'allow_possible' => 'bool',
         ),
-        'postcode' => array(
+        'Zend\I18n\Validator\PostCode' => array(
             'locale' => 'string',
             'format' => 'string',
             'service' => 'string',
