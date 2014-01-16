@@ -469,14 +469,18 @@ module.controller(
         };
 
         $scope.updateColumn = function ($event, column) {
-            _.forEach($scope.apiAuthorizations, function (item, name) {
-                $scope.apiAuthorizations[name][column] = $event.target.checked;
+            angular.forEach($scope.apiAuthorizations, function (item, name) {
+                if ($scope.isEditable(name, column)) {
+                    $scope.apiAuthorizations[name][column] = $event.target.checked;
+                }
             });
         };
 
         $scope.updateRow = function ($event, name) {
             _.forEach(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], function (method) {
-                $scope.apiAuthorizations[name][method] = $event.target.checked;
+                if ($scope.isEditable(name, method)) {
+                    $scope.apiAuthorizations[name][method] = $event.target.checked;
+                }
             });
         };
 
