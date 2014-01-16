@@ -43,6 +43,8 @@ class Module
 
     public function getAutoloaderConfig()
     {
+        $this->resetCache();
+        
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
@@ -517,5 +519,23 @@ class Module
             return 'rest';
         }
         return 'rpc';
+    }
+    
+    /**
+     * Removing optimizer config cache.
+     * Otherwise the admin wont work with enabled file caching
+     */
+    protected function resetCache()
+    {
+        if (function_exists('opcache_reset')) {
+            // >= PHP 5.5.0
+            opcache_reset();
+        } elseif (function_exists('accelerator_reset')) {
+            // < PHP 5.5 (previous ZendOptimizer+)
+            accelerator_reset();
+        } elseif (function_exists('apc_clear_cache')) {
+            // APC
+            apc_clear_cache('filehits');
+        }
     }
 }
