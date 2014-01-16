@@ -16,7 +16,7 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
         controller: 'DbAdapterController'
     });
     $routeProvider.when('/global/authentication', {
-        templateUrl: 'zf-apigility-admin/partials/global/authentication.html',
+        templateUrl: 'zf-apigility-admin/partials/global/authentication/index.html',
         controller: 'AuthenticationController'
     });
     $routeProvider.when('/api/:apiName/:version/overview', {
