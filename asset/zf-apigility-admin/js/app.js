@@ -525,10 +525,10 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
     };
 
     $scope.isDbConnected = function (restService) {
-        if (typeof restService !== 'object' || restService === null) {
+        if (typeof restService !== 'object' || typeof restService === 'undefined') {
             return false;
         }
-        if ("adapter_name" in restService || "table_name" in restService || "table_service" in restService) {
+        if (restService.hasOwnProperty('adapter_name') || restService.hasOwnProperty('table_name') || restService.hasOwnProperty('table_service')) {
             return true;
         }
         return false;

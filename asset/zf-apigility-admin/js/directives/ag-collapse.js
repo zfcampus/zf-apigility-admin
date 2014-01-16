@@ -7,7 +7,9 @@ agCollapse.directive('collapse', function() {
     return {
         restrict: 'E',
         transclude: true,
-        scope: {},
+        scope: {
+            show: '&'
+        },
         controller: ['$scope', '$parse', function($scope, $parse) {
             var head;
             var body;
@@ -122,6 +124,12 @@ agCollapse.directive('collapse', function() {
             };
         }],
         link: function(scope, element, attr) {
+            if (typeof scope.show !== 'undefined') {
+                if (!scope.show) {
+                    element.toggleClass('hide', true);
+                }
+            }
+
             if (attr.hasOwnProperty('conditionals')) {
                 scope.setConditionals(scope.$eval(attr.conditionals));
             }
