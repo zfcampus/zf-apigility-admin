@@ -4,9 +4,9 @@
 
 <p>A check means authorization is required.</p>
 
-<table class="table table-bordered table-striped table-responsive ag">
+<table class="table table-bordered table-striped table-responsive">
     <thead>
-        <tr>
+        <tr class="success">
             <th>Controller Service Name</th>
             <th class="text-center">GET    <br><input type="checkbox" ng-click="updateColumn($event, 'GET')"    ng-disabled="!editable"></th>
             <th class="text-center">POST   <br><input type="checkbox" ng-click="updateColumn($event, 'POST')"   ng-disabled="!editable"></th>
@@ -25,14 +25,15 @@
             <td class="text-center"><input type="checkbox" ng-model="apiAuthorizations[name].PATCH"  ng-disabled="!editable"></td>
             <td class="text-center"><input type="checkbox" ng-model="apiAuthorizations[name].PUT"    ng-disabled="!editable"></td>
             <td class="text-center"><input type="checkbox" ng-model="apiAuthorizations[name].DELETE" ng-disabled="!editable"></td>
-            <td class="text-center action"><input type="checkbox" ng-click="updateRow($event, name)"        ng-disabled="!editable"></td>
+            <td class="text-center success"><input type="checkbox" ng-click="updateRow($event, name)" ng-disabled="!editable"></td>
         </tr>
     </tbody>
-
-    <tfoot>
-        <tr>
-            <td colspan="6"></td>
-            <td class="text-center action"><button class="btn btn-default btn-small" ng-click="saveAuthorization()" ng-disabled="!editable">Save</button></td>
-        </tr>
-    </tfoot>
 </table>
+
+<div class="btn-group pull-right">
+    <!-- todo Create "cancel"/"reset" functionality -->
+    <button class="btn btn-sm btn-default" type="button" ng-disabled="!editable">Cancel</button>
+    <button class="btn btn-sm btn-success" type="button" ng-click="saveAuthorization()" ng-disabled="!editable">Save</button>
+</div>
+
+<div class="clearfix"></div>
