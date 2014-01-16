@@ -21,12 +21,12 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
+            'ZF\Apigility\Admin\Model\DocumentationModel' => 'ZF\Apigility\Admin\Model\DocumentationModelFactory',
             'ZF\Apigility\Admin\Model\FiltersModel' => 'ZF\Apigility\Admin\Model\FiltersModelFactory',
             'ZF\Apigility\Admin\Model\HydratorsModel' => 'ZF\Apigility\Admin\Model\HydratorsModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorMetadataModel' => 'ZF\Apigility\Admin\Model\ValidatorMetadataModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorsModel' => 'ZF\Apigility\Admin\Model\ValidatorsModelFactory',
             'ZF\Apigility\Admin\Model\InputFilterModel' => 'ZF\Apigility\Admin\Model\InputFilterModelFactory',
-            'ZF\Apigility\Admin\Model\DocumentationModel' => 'ZF\Apigility\Admin\Model\DocumentationModelFactory',
         ),
     ),
 
@@ -35,11 +35,11 @@ return array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
         ),
         'factories' => array(
+            'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
             'ZF\Apigility\Admin\Controller\Filters' => 'ZF\Apigility\Admin\Controller\FiltersControllerFactory',
             'ZF\Apigility\Admin\Controller\Hydrators' => 'ZF\Apigility\Admin\Controller\HydratorsControllerFactory',
             'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
             'ZF\Apigility\Admin\Controller\InputFilter' => 'ZF\Apigility\Admin\Controller\InputFilterControllerFactory',
-            'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
         ),
     ),
 
@@ -198,10 +198,10 @@ return array(
                                                     )
                                                 )
                                             ),
-                                            'rpc_doc' => array(
+                                            'rpc-doc' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/doc[/:method[/:target]]',
+                                                    'route' => '/doc[/:method/:section]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
@@ -230,10 +230,10 @@ return array(
                                                     )
                                                 )
                                             ),
-                                            'rest_doc' => array(
+                                            'rest-doc' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/doc[/:method[/:target]]',
+                                                    'route' => '/doc[/:method/:section]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
@@ -275,6 +275,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Authentication' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Documentation'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\Filters'        => 'Json',
             'ZF\Apigility\Admin\Controller\Hydrators'      => 'Json',
             'ZF\Apigility\Admin\Controller\InputFilter'    => 'HalJson',
@@ -296,6 +297,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Documentation' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -433,6 +438,11 @@ return array(
                 'route_identifier_name' => 'input_filter_name',
                 'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
             ),
+            'ZF\Apigility\Admin\Model\DocumentationEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'route_identifier_name' => 'rest_documentation',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest-doc',
+            ),
             'ZF\Apigility\Admin\Model\RestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
@@ -523,6 +533,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Authorization' => array(
             'http_methods' => array('GET', 'PUT'),
             'route_name'   => 'zf-apigility-admin/api/module/authorization',
+        ),
+        'ZF\Apigility\Admin\Controller\Documentation' => array(
+            'http_methods' => array('GET', 'PUT', 'DELETE'),
+            'route_name'   => 'zf-apigility-admin/api/rest-service/rest-doc',
         ),
         'ZF\Apigility\Admin\Controller\Filters' => array(
             'http_methods' => array('GET'),

@@ -20,6 +20,9 @@ class DocumentationModelFactory implements FactoryInterface
                 __NAMESPACE__
             ));
         }
-        return new DocumentationModel($services->get('ZF\Configuration\ConfigResourceFactory'));
+        return new DocumentationModel(
+            $services->get('ZF\Configuration\ConfigResourceFactory'),
+            $services->get('ZF\Configuration\ModuleUtils')
+        );
     }
 }
