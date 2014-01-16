@@ -26,6 +26,7 @@ return array(
             'ZF\Apigility\Admin\Model\ValidatorMetadataModel' => 'ZF\Apigility\Admin\Model\ValidatorMetadataModelFactory',
             'ZF\Apigility\Admin\Model\ValidatorsModel' => 'ZF\Apigility\Admin\Model\ValidatorsModelFactory',
             'ZF\Apigility\Admin\Model\InputFilterModel' => 'ZF\Apigility\Admin\Model\InputFilterModelFactory',
+            'ZF\Apigility\Admin\Model\DocumentationModel' => 'ZF\Apigility\Admin\Model\DocumentationModelFactory',
         ),
     ),
 
@@ -38,6 +39,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Hydrators' => 'ZF\Apigility\Admin\Controller\HydratorsControllerFactory',
             'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
             'ZF\Apigility\Admin\Controller\InputFilter' => 'ZF\Apigility\Admin\Controller\InputFilterControllerFactory',
+            'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
         ),
     ),
 
@@ -195,6 +197,16 @@ return array(
                                                         'action'     => 'index',
                                                     )
                                                 )
+                                            ),
+                                            'rpc_doc' => array(
+                                                'type' => 'segment',
+                                                'options' => array(
+                                                    'route' => '/doc[/:method[/:target]]',
+                                                    'defaults' => array(
+                                                        'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
+                                                        'action'     => 'index',
+                                                    )
+                                                )
                                             )
                                         )
                                     ),
@@ -214,6 +226,16 @@ return array(
                                                     'route' => '/inputfilter[/:input_filter_name]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\InputFilter',
+                                                        'action'     => 'index',
+                                                    )
+                                                )
+                                            ),
+                                            'rest_doc' => array(
+                                                'type' => 'segment',
+                                                'options' => array(
+                                                    'route' => '/doc[/:method[/:target]]',
+                                                    'defaults' => array(
+                                                        'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
                                                     )
                                                 )
