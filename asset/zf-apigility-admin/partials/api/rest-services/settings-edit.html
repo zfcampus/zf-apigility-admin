@@ -69,16 +69,6 @@
             </div>
 
             <div class="control-group list-group-item">
-                <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
-                <div class="controls">
-                    <select class="form-control input-xlarge"
-                        ng-model="restService.hydrator_name"
-                        ng-options="v as v for (k,v) in hydrators"></select>
-                    <p class="help-block">The name of the hydrator service used to hydrate entities</p>
-                </div>
-            </div>
-
-            <div class="control-group list-group-item">
                 <label class="control-label" for="table_service">TableGateway Service Name</label>
                 <div class="controls">
                     <input type="text" placeholder="TableGateway Service Name" class="form-control input-xlarge" required="" ng-model="restService.table_service">
@@ -107,6 +97,16 @@
                 <div class="controls">
                     <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.entity_identifier_name">
                     <p class="help-block">Name of the field in the PHP entity representing the unique identifier</p>
+                </div>
+            </div>
+
+            <div class="control-group list-group-item">
+                <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
+                <div class="controls">
+                    <select class="form-control input-xlarge"
+                        ng-model="restService.hydrator_name"
+                        ng-options="v as v for (k,v) in hydrators"></select>
+                    <p class="help-block">The name of the hydrator service used to hydrate entities</p>
                 </div>
             </div>
 
