@@ -51,8 +51,8 @@ class AbstractPluginManagerModel
         }
 
         $this->plugins  = [];
-        foreach ($this->pluginManager->getRegisteredServices() as $key => $services) {
-            $this->plugins += $services;
+        foreach ($this->pluginManager->getCanonicalNames() as $name => $canonical) {
+            $this->plugins[] = $name;
         }
         sort($this->plugins, SORT_STRING);
         return $this->plugins;
