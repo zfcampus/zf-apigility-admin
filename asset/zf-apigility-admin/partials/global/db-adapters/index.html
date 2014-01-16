@@ -38,12 +38,16 @@
       <div class="clearfix"></div>
 
       <div collapse-show criteria="{deleteDbAdapter: true}" class="panel panel-danger hide">
-          <div class="panel-heading">Remove DB Adapter</div>
+          <div class="panel-heading"><h4 class="panel-title">Remove DB Adapter</h4></div>
           <div class="panel-body">
           <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
               <p>Are you sure you want to delete the Adapter</p>
-              <button type="submit" class="btn btn-sm btn-danger pull-right">Yes</button>
-              <a collapse-flag flags="{deleteDbAdapter: false}" class="pull-right btn btn-sm btn-right">Cancel</a>
+
+              <div class="btn-group pull-right">
+                <button collapse-flag flags="{deleteDbAdapter: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-danger">Yes</button>
+              </div>
+
               <div class="clearfix"></div>
           </form>
           </div>

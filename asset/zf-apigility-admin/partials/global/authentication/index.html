@@ -50,77 +50,95 @@
     </div>
 </div>
 
-<div ng-show="showHttpBasicAuthentication" class="panel panel-default">
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <font color="gray" size="-1">HTTP Basic Authentication</font>
-      <div ng-hide="removeAuthenticationForm" class="pull-right">
-        <button ng-click="removeAuthenticationForm = true" class="btn btn-link"
-          id="remove-authentication" content="#remove-authentication-form"
-          title="Remove Authentication">
-          <span class="glyphicon glyphicon-trash"></span> Remove
-        </button>
-      </div>
-      <div ng-show="removeAuthenticationForm" id="remove-authentication-form" class="panel panel-default">
-        <div class="panel-heading">Remove Authentication</div>
-        <div class="panel-body">
-          <form ng-submit="removeAuthentication()">
-            <p>Are you sure you want to remove authentication?</p>
-            <button ng-click="removeAuthentication()" type="submit" class="btn btn-sm btn-success">Yes</button>
-            <button ng-click="removeAuthenticationForm = false" type="button" class="btn btn-sm btn-default">No</button>
-          </form>
-        </div>
-      </div>
-    </h4>
-  </div>
-  <div class="panel-body">
-    <ul class="nav nav-tabs" id="AuthHttpBasicTab">
-      <li class="active"><a data-target="#viewmodeAuthHttpBasicTab" data-toggle="tab">View</a></li>
-      <li><a data-target="#editmodeAuthHttpBasicTab" data-toggle="tab">Edit</a></li>
-    </ul>
+<div ng-show="showHttpBasicAuthentication">
+<collapse class="panel panel-info"
+    conditionals="{edit: false, delete: false}">
+    <collapse-header>
+        <h4 class="panel-title">
+            <span class="btn btn-sm glyphicon glyphicon-lock"></span>
 
-    <div class="tab-content">
-      <div class="tab-pane active" id="viewmodeAuthHttpBasicTab">
-        <table class="table table-striped">
-          <tr>
+            HTTP Basic Settings
+
+            <div class="btn-group pull-right">
+                <button
+                    type="button" title="Cancel" class="btn btn-sm btn-default"
+                    collapse-flag flags="{edit: false}" 
+                    collapse-button criteria="{delete: false, edit: true}">
+                    Cancel
+                </button>
+
+                <button 
+                    type="button" class="btn btn-sm btn-success" title="Edit settings"
+                    collapse-flag flags="{edit: true}"
+                    collapse-button criteria="{delete: false, edit: false}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-danger" title="Remove Authentication"
+                    collapse-flag flags="{delete: true}"
+                    collapse-button criteria="{delete: false}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </div>
+        </h4>
+
+        <div class="clearfix"></div>
+
+        <div collapse-show criteria="{delete: true}" class="panel panel-danger hide">
+            <div class="panel-heading"><h4 class="panel-title">Remove Authentication</h4></div>
+            <div class="panel-body">
+                <form ng-submit="removeAuthentication()">
+                    <p>Are you sure you want to remove authentication?</p>
+
+                    <div class="btn-group pull-right">
+                        <button collapse-flag flags="{delete: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Yes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </collapse-header>
+
+    <table collapse-show criteria="{edit: false}" class="table table-striped">
+        <tr>
             <td>Realm</td>
             <td>{{httpBasic.realm}}</td>
-          </tr>
-          <tr>
+        </tr>
+
+        <tr>
             <td>htpasswd Location</td>
             <td>{{httpBasic.htpasswd}}</td>
-          </tr>
-        </table>
-      </div>
+        </tr>
+    </table>
 
-      <div class="tab-pane" id="editmodeAuthHttpBasicTab">
-        <form class="form-horizontal" ng-submit="updateHttpBasicAuthentication()">
-          <fieldset>
-            <!-- Text input-->
-            <div class="control-group">
-              <label class="control-label" for="realm">Authentication Realm</label>
-              <div class="controls">
-                <input type="text" placeholder="api" class="input-xlarge" required="required" ng-model="httpBasic.realm">
-                <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
-              </div>
+    <collapse-body collapse-show criteria="{edit: true}">
+        <div class="panel-body"><form class="form" ng-submit="updateHttpBasicAuthentication()">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="realm">Authentication Realm</label>
+                    <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpBasic.realm">
+                    <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="htpasswd">Location of htpasswd file</label>
+                    <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="httpBasic.htpasswd">
+                    <p class="help-block">Location on the filesystem of the htpasswd file</p>
+                </div>
+            </fieldset>
+
+            <div class="btn-group pull-right">
+                <button
+                    type="button" title="Cancel" class="btn btn-sm btn-default"
+                    collapse-flag flags="{edit: false}">Cancel</button>
+                <button type="button" title="Save" class="btn btn-sm btn-success"
+                    ng-click="updateHttpBasicAuthentication()">Save</button>
             </div>
 
-            <!-- Text input-->
-            <div class="control-group">
-              <label class="control-label" for="htpasswd">Location of htpasswd file</label>
-              <div class="controls">
-                <input type="text" placeholder="data/htpasswd" class="input-xlarge" required="required" ng-model="httpBasic.htpasswd">
-                <p class="help-block">Location on the filesystem of the htpasswd file</p>
-              </div>
-            </div>
-          </fieldset>
-
-          <button class="btn btn-sm btn-success" type="submit"
-            ng-click="updateHttpBasicAuthentication()">Save</button><br />
-        </form>
-      </div>
-    </div>
-  </div>
+            <div class="clearfix"></div>
+        </form></div>
+    </collapse-body>
+</collapse>
 </div>
 
 <div ng-show="showHttpDigestAuthenticationForm" class="panel panel-primary">
