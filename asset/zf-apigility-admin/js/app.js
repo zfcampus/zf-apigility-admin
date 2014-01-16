@@ -414,10 +414,54 @@ module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'fl
 module.controller(
     'ApiAuthorizationController',
     ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, ApiAuthorizationRepository) {
+        $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
 
         var version = $routeParams.version.match(/\d/g)[0] || 1;
         $scope.editable = (version == api.versions[api.versions.length - 1]);
+
+        var serviceMethodMap = (function() {
+            var services = {};
+            angular.forEach(api.restServices, function(service) {
+                var entityName = service.controller_service_name + '::__resource__';
+                var collectionName = service.controller_service_name + '::__collection__';
+                var entityMethods = {
+                    GET: false,
+                    POST: false,
+                    PUT: false,
+                    PATCH: false,
+                    DELETE: false,
+                };
+                var collectionMethods = {
+                    GET: false,
+                    POST: false,
+                    PUT: false,
+                    PATCH: false,
+                    DELETE: false,
+                };
+                angular.forEach(service.resource_http_methods, function(method) {
+                    entityMethods[method] = true;
+                });
+                angular.forEach(service.collection_http_methods, function(method) {
+                    collectionMethods[method] = true;
+                });
+                services[entityName] = entityMethods;
+                services[collectionName] = collectionMethods;
+            });
+            return services;
+        })();
+
+        $scope.isEditable = function(serviceName, method) {
+            if (!$scope.editable) {
+                return false;
+            }
+
+            if (!serviceMethodMap.hasOwnProperty(serviceName)) {
+                return false;
+            }
+
+            return serviceMethodMap[serviceName][method];
+        };
 
         $scope.saveAuthorization = function () {
             flash.success = 'Authorization settings saved';
