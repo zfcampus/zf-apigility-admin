@@ -2,7 +2,30 @@
 
 <h2>Authorization</h2>
 
-<p>A check means authorization is required.</p>
+<div class="panel panel-warning" ng-hide="authentication.configured">
+    <div class="panel-heading">
+        <h4 class="panel-title">No Authentication configured!</h4>
+    </div>
+
+    <div class="panel-body">
+        <p>
+            You do not have authentication configured at this time. Marking services
+            as requiring authorization will make them inaccessible.
+        </p>
+
+        <p>
+            You can configure authentication on the <a
+            ng-href="admin#/global/authentication">authentication
+            screen</a>.
+        </p>
+    </div>
+</div>
+
+<p>
+    A <input type="checkbox" checked> check means authorization is
+    <strong>required</strong> for the given combination of service
+    and HTTP method.
+</p>
 
 <table class="table table-bordered table-striped table-responsive">
     <thead>

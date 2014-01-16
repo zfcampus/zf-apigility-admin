@@ -37,6 +37,9 @@ module.config(['$routeProvider', '$provide', function($routeProvider, $provide) 
             }],
             apiAuthorizations: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
                 return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
+            }],
+            authentication: ['AuthenticationRepository', function (AuthenticationRepository) {
+                return AuthenticationRepository.hasAuthentication();
             }]
         }
     });
@@ -239,53 +242,44 @@ module.controller(
     $scope.oauth2                           = null;
 
     var enableSetupButtons = function () {
-        $scope.$apply(function () {
-            $scope.showSetupButtons             = true;
-            $scope.showHttpBasicAuthentication  = false;
-            $scope.showHttpDigestAuthentication = false;
-            $scope.showOAuth2Authentication     = false;
-            $scope.removeAuthenticationForm     = false;
-            $scope.httpBasic                    = null;
-            $scope.httpDigest                   = null;
-            $scope.oauth2                       = null;
-        });
+        $scope.showSetupButtons             = true;
+        $scope.showHttpBasicAuthentication  = false;
+        $scope.showHttpDigestAuthentication = false;
+        $scope.showOAuth2Authentication     = false;
+        $scope.removeAuthenticationForm     = false;
+        $scope.httpBasic                    = null;
+        $scope.httpDigest                   = null;
+        $scope.oauth2                       = null;
     };
 
     var fetchAuthenticationDetails = function (force) {
-        AuthenticationRepository.fetch({force: true})
+        AuthenticationRepository.fetch({cache: !force})
             .then(function (authentication) {
-                var data = authentication.props;
-                if (data.type == "http_basic") {
-                    $scope.$apply(function () {
-                        $scope.showSetupButtons             = false;
-                        $scope.showHttpBasicAuthentication  = true;
-                        $scope.showHttpDigestAuthentication = false;
-                        $scope.showOAuth2Authentication     = false;
-                        $scope.httpBasic                    = data;
-                        $scope.httpDigest                   = null;
-                        $scope.oauth2                       = null;
-                    });
-                } else if (data.type == "http_digest") {
-                    $scope.$apply(function () {
-                        $scope.showSetupButtons             = false;
-                        $scope.showHttpDigestAuthentication = true;
-                        $scope.showHttpBasicAuthentication  = false;
-                        $scope.showOAuth2Authentication     = false;
-                        data.digest_domains                 = data.digest_domains.split(" ");
-                        $scope.httpDigest                   = data;
-                        $scope.httpBasic                    = null;
-                        $scope.oauth2                       = null;
-                    });
-                } else if (data.type == "oauth2") {
-                    $scope.$apply(function () {
-                        $scope.showSetupButtons             = false;
-                        $scope.showOAuth2Authentication     = true;
-                        $scope.showHttpDigestAuthentication = false;
-                        $scope.showHttpBasicAuthentication  = false;
-                        $scope.oauth2                       = data;
-                        $scope.httpDigest                   = null;
-                        $scope.httpBasic                    = null;
-                    });
+                if (authentication.type == "http_basic") {
+                    $scope.showSetupButtons             = false;
+                    $scope.showHttpBasicAuthentication  = true;
+                    $scope.showHttpDigestAuthentication = false;
+                    $scope.showOAuth2Authentication     = false;
+                    $scope.httpBasic                    = authentication;
+                    $scope.httpDigest                   = null;
+                    $scope.oauth2                       = null;
+                } else if (authentication.type == "http_digest") {
+                    $scope.showSetupButtons             = false;
+                    $scope.showHttpDigestAuthentication = true;
+                    $scope.showHttpBasicAuthentication  = false;
+                    $scope.showOAuth2Authentication     = false;
+                    data.digest_domains                 = authentication.digest_domains.split(" ");
+                    $scope.httpDigest                   = authentication;
+                    $scope.httpBasic                    = null;
+                    $scope.oauth2                       = null;
+                } else if (authentication.type == "oauth2") {
+                    $scope.showSetupButtons             = false;
+                    $scope.showOAuth2Authentication     = true;
+                    $scope.showHttpDigestAuthentication = false;
+                    $scope.showHttpBasicAuthentication  = false;
+                    $scope.oauth2                       = authentication;
+                    $scope.httpDigest                   = null;
+                    $scope.httpBasic                    = null;
                 } else {
                     enableSetupButtons();
                 }
@@ -417,9 +411,10 @@ module.controller('ApiOverviewController', ['$http', '$rootScope', '$scope', 'fl
 
 module.controller(
     'ApiAuthorizationController',
-    ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, ApiAuthorizationRepository) {
+    ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'authentication', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
         $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
+        $scope.authentication = authentication;
 
         var version = $routeParams.version.match(/\d/g)[0] || 1;
         $scope.editable = (version == api.versions[api.versions.length - 1]);
@@ -1173,36 +1168,52 @@ module.factory(
 
 module.factory(
     'AuthenticationRepository',
-    ['$http', '$location', 'apiBasePath', function ($http, $location, apiBasePath) {
+    ['$http', '$q', 'apiBasePath', function ($http, $q, apiBasePath) {
 
         var authenticationPath = apiBasePath + '/authentication';
 
-        var resource = new Hyperagent.Resource(authenticationPath);
-
-        resource.createAuthentication = function (options) {
-            return $http.post(authenticationPath, options)
-                .then(function (response) {
-                    return response.data;
+        return {
+            hasAuthentication: function() {
+                return this.fetch({cache: false}).then(
+                    function success(response) {
+                        var configured = true;
+                        if (response === '') {
+                            configured = false;
+                        }
+                        return { configured: configured };
+                    },
+                    function error(error) {
+                        return { configured: false };
+                    }
+                );
+            },
+            fetch: function(options) {
+                return $http.get(authenticationPath, options)
+                    .then(function (response) {
+                        return response.data;
+                    });
+            },
+            createAuthentication: function (options) {
+                return $http.post(authenticationPath, options)
+                    .then(function (response) {
+                        return response.data;
+                    });
+            },
+            updateAuthentication: function (data) {
+                return $http({method: 'patch', url: authenticationPath, data: data})
+                    .then(function (response) {
+                        return response.data;
+                    });
+            },
+            removeAuthentication: function () {
+                return $http.delete(authenticationPath)
+                    .then(function (response) {
+                    return true;
+                }, function (error) {
+                    return false;
                 });
+            }
         };
-
-        resource.updateAuthentication = function (data) {
-            return $http({method: 'patch', url: authenticationPath, data: data})
-                .then(function (response) {
-                    return response.data;
-                });
-        };
-
-        resource.removeAuthentication = function () {
-            return $http.delete(authenticationPath)
-                .then(function (response) {
-                return true;
-            }, function (error) {
-                return false;
-            });
-        };
-
-        return resource;
     }]
 );
 
