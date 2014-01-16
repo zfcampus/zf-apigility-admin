@@ -1,6 +1,9 @@
 <div ng-controller="ApiServiceInputController">
     <div class="ag-new-input">
-        <button class="btn btn-info pull-left" data-toggle="modal" data-target="#inputHelp">Help</button>
+        <button class="btn btn-info pull-left" title="Help"
+            data-toggle="modal" data-target="#inputHelp">
+            <span class="glyphicon glyphicon-info-sign"></span>
+        </button>
 
         <form class="form-inline pull-right" ng-submit="addInput()">
             <div class="form-group">
