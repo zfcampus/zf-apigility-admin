@@ -151,7 +151,7 @@ class DbConnectedRestServiceModel
                 'table_name'              => $entity->tableName,
                 'hydrator_name'           => $entity->hydratorName,
                 'controller_service_name' => $entity->controllerServiceName,
-                'entity_identifier_name' => $entity->entityIdentifierName,
+                'entity_identifier_name'  => $entity->entityIdentifierName,
             ),
         )));
         $this->restModel->configResource->patch($config, true);
@@ -166,10 +166,10 @@ class DbConnectedRestServiceModel
     {
         $properties = array('zf-apigility' => array('db-connected' => array(
             $entity->resourceClass => array(
-                'adapter_name'  => $entity->adapterName,
-                'table_name'    => $entity->tableName,
-                'table_service' => $entity->tableService,
-                'hydrator_name' => $entity->hydratorName,
+                'adapter_name'           => $entity->adapterName,
+                'table_name'             => $entity->tableName,
+                'table_service'          => $entity->tableService,
+                'hydrator_name'          => $entity->hydratorName,
                 'entity_identifier_name' => $entity->entityIdentifierName,
             ),
         )));

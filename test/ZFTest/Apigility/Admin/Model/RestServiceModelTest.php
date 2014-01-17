@@ -320,7 +320,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals(array(
             'route_identifier_name'  => $details->routeIdentifierName,
             'route_name'             => 'bar-conf.rest.foo',
-            'hydrator'               => 'ArraySerializable',
+            'hydrator'               => 'Zend\Stdlib\Hydrator\ArraySerializable',
             'entity_identifier_name' => 'id',
         ), $config['BarConf\Rest\Foo\FooEntity']);
 
