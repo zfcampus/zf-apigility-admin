@@ -994,6 +994,10 @@ class RestServiceModel implements EventManagerAwareInterface
             $merge['entity_identifier_name'] = $config[$entityClass]['entity_identifier_name'];
         }
 
+        if (isset($config[$entityClass]['hydrator'])) {
+            $merge['hydrator_name'] = $config[$entityClass]['hydrator'];
+        }
+
         if (isset($config[$collectionClass])) {
             $merge['collection_class'] = $collectionClass;
         }
