@@ -291,19 +291,29 @@ module.controller(
     };
 
     var createAuthentication = function (options) {
-        AuthenticationRepository.createAuthentication(options).then(function (authentication) {
-            flash.success = 'Authentication created';
-            fetchAuthenticationDetails(true);
-            $scope.removeAuthenticationForm = false;
-            $scope.resetForm();
-        });
+        AuthenticationRepository.createAuthentication(options).then(
+            function success(authentication) {
+                flash.success = 'Authentication created';
+                fetchAuthenticationDetails(true);
+                $scope.removeAuthenticationForm = false;
+                $scope.resetForm();
+            },
+            function error(response) {
+                flash.error('Unable to create authentication; please verify that the DSN is valid.');
+            }
+        );
     };
 
     var updateAuthentication = function (options) {
-        AuthenticationRepository.updateAuthentication(options).then(function (authentication) {
-            flash.success = 'Authentication updated';
-            fetchAuthenticationDetails(true);
-        });
+        AuthenticationRepository.updateAuthentication(options).then(
+            function success(authentication) {
+                flash.success = 'Authentication updated';
+                fetchAuthenticationDetails(true);
+            },
+            function error(response) {
+                flash.error('Unable to update authentication; please verify that the DSN is valid.');
+            }
+        );
     };
 
     $scope.resetForm = function () {
