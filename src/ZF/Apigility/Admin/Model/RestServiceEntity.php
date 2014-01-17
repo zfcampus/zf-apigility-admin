@@ -184,7 +184,7 @@ class RestServiceEntity
             'entity_class'               => $this->entityClass,
             'entity_identifier_name'     => $this->entityIdentifierName,
             'route_identifier_name'      => $this->routeIdentifierName,
-            'hydrator_name'              => strtolower($this->hydratorName),
+            'hydrator_name'              => $this->hydratorName,
             'module'                     => $this->module,
             'page_size'                  => $this->pageSize,
             'page_size_param'            => $this->pageSizeParam,
