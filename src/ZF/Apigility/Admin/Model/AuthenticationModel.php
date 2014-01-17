@@ -6,6 +6,9 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use PDO;
+use PDOException;
+use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
@@ -45,6 +48,12 @@ class AuthenticationModel
         }
 
         $entity  = $this->createAuthenticationEntityFromConfig($authenticationConfig);
+
+        if ($entity->isOAuth2()) {
+            $data = $entity->getArrayCopy();
+            $this->validateDsn($data['dsn']);
+        }
+
         $allData = $entity->getArrayCopy();
         unset($allData['type']);
         $global  = $this->removeSensitiveConfig($allData);
@@ -76,6 +85,12 @@ class AuthenticationModel
         }
 
         $current->exchangeArray($authenticationConfig);
+
+        if ($current->isOAuth2()) {
+            $data = $current->getArrayCopy();
+            $this->validateDsn($data['dsn']);
+        }
+
         $allData = $current->getArrayCopy();
         unset($allData['type']);
         $global  = $this->removeSensitiveConfig($allData);
@@ -284,5 +299,20 @@ class AuthenticationModel
 
         $key = 'zf-oauth2';
         $this->localConfig->patchKey($key, $toSet);
+    }
+
+    /**
+     * Validate a DSN
+     * 
+     * @param string $dsn 
+     * @throws Exception\InvalidArgumentException on invalid DSN
+     */
+    protected function validateDsn($dsn)
+    {
+        try {
+            new PDO($dsn);
+        } catch (PDOException $e) {
+            throw new Exception\InvalidArgumentException(sprintf('Invalid DSN "%s" provided', $dsn), 422);
+        }
     }
 }
