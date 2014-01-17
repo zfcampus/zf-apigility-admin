@@ -247,4 +247,43 @@ class AuthenticationModelTest extends TestCase
         $this->assertArrayNotHasKey('db', $local['zf-oauth2']);
         $this->assertArrayNotHasKey('storage', $local['zf-oauth2']);
     }
+
+    /**
+     * @group zf-oauth2-19
+     */
+    public function testAttemptingToCreateOAuth2ConfigurationWithInvalidDsnRaisesException()
+    {
+        $toCreate = array(
+            'dsn'         => 'sqlite:/tmp/' . uniqid() . '/.db',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
+        );
+        $model = $this->createModelFromConfigArrays(array(), array());
+
+        $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
+        $model->create($toCreate);
+    }
+
+    /**
+     * @group zf-oauth2-19
+     */
+    public function testAttemptingToUpdateOAuth2ConfigurationWithInvalidDsnRaisesException()
+    {
+        $toCreate = array(
+            'dsn'         => 'sqlite::memory:',
+            'username'    => 'me',
+            'password'    => 'too',
+            'route_match' => '/api/oauth',
+        );
+        $model = $this->createModelFromConfigArrays(array(), array());
+
+        $model->create($toCreate);
+        $newConfig = array(
+            'dsn' => 'sqlite:/tmp/' . uniqid() . '/.db',
+        );
+
+        $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
+        $entity = $model->update($newConfig);
+    }
 }
