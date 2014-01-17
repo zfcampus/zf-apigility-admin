@@ -16,13 +16,13 @@
     </div>
 
     <div class="panel-body">
-        <ag-tabs>
+        <ag-tabs parent="newService">
             <ag-tab-pane title="Code-Connected"><div class="panel"><div class="panel-body">
-                <form class="form" ng-submit="createNewRestService()">
+                <form class="form" ng-submit="newService.createNewRestService()">
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">REST Service Name</label>
-                            <input class="form-control input-xlarge" type="text" ng-model="$parent.restServiceName" placeholder="REST Service Name ..." required="">
+                            <input class="form-control input-xlarge" type="text" ng-model="newService.restServiceName" placeholder="REST Service Name ..." required="">
                         </div>
                     </fieldset>
 
@@ -59,17 +59,16 @@
 
                 <form class="form" 
                     ng-show="dbAdapters.length > 0"
-                    ng-submit="createNewDbConnectedService()">
+                    ng-submit="newService.createNewDbConnectedService()">
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">DB Adapter Name</label>
-                            <select class="form-control input-xlarge"
-                                ng-model="dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
+                            <select class="form-control input-xlarge" ng-model="newService.dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label">Table Name</label>
-                            <input class="form-control input-xlarge" type="text" ng-model="dbTableName" placeholder="DB Table Name ...">
+                            <input class="form-control input-xlarge" type="text" ng-model="newService.dbTableName" placeholder="DB Table Name ...">
                         </div>
                     </fieldset>
 
