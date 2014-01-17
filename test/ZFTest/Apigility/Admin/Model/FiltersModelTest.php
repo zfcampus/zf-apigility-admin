@@ -43,10 +43,9 @@ class FiltersModelTest extends TestCase
     public function testFetchAllReturnsListOfAvailablePlugins()
     {
         $filters = $this->model->fetchAll();
-        foreach ($this->plugins->getRegisteredServices() as $services) {
-            foreach ($services as $service) {
-                $this->assertArrayHasKey($service, $filters);
-            }
+        $this->assertGreaterThan(0, count($filters));
+        foreach ($filters as $service => $metadata) {
+            $this->assertContains('\\Filter\\', $service);
         }
     }
 

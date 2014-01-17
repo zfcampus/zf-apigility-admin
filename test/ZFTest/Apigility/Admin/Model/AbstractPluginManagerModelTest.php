@@ -10,25 +10,23 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 abstract class AbstractPluginManagerModelTest extends TestCase
 {
-    public $plugins;
     public $model;
+    public $namespace;
+    public $plugins;
 
     public function setUp()
     {
         $this->markTestIncomplete(
-            'Please define the setUp() method in your extending test case, and set the plugins and model properties'
+            'Please define the setUp() method in your extending test case, and set the plugins, model, and namespace properties'
         );
     }
 
     public function testFetchAllReturnsListOfAvailablePlugins()
     {
-        $allServices = $this->plugins->getRegisteredServices();
-        $validators  = [];
-        foreach ($allServices as $key => $services) {
-            $validators += $services;
+        $services = $this->model->fetchAll();
+        $this->assertGreaterThan(0, count($services));
+        foreach ($services as $service) {
+            $this->assertContains($this->namespace, $service);
         }
-        sort($validators, SORT_STRING);
-
-        $this->assertEquals($validators, $this->model->fetchAll());
     }
 }

@@ -45,10 +45,9 @@ class ValidatorsModelTest extends TestCase
     public function testFetchAllReturnsListOfAvailablePlugins()
     {
         $validators  = $this->model->fetchAll();
-        foreach ($this->plugins->getRegisteredServices() as $services) {
-            foreach ($services as $service) {
-                $this->assertArrayHasKey($service, $validators);
-            }
+        $this->assertGreaterThan(0, count($validators));
+        foreach ($validators as $service => $metadata) {
+            $this->assertContains('\\Validator\\', $service);
         }
     }
 

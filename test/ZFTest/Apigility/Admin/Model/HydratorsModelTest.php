@@ -13,6 +13,7 @@ class HydratorsModelTest extends AbstractPluginManagerModelTest
 {
     public function setUp()
     {
+        $this->namespace = '\\Hydrator\\';
         $this->plugins = new HydratorPluginManager();
         $this->model = new HydratorsModel($this->plugins);
     }
