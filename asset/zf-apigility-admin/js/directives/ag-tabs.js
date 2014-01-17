@@ -5,12 +5,14 @@
 
 var agTabs = angular.module('ag-tabs', []);
 
-/* <ag-tabs ...>[<ag-tab-pane ...></ag-tab-pane>]</ag-tabs> */
+/* <ag-tabs [parent="..."] ...>[<ag-tab-pane ...></ag-tab-pane>]</ag-tabs> */
 agTabs.directive('agTabs', function() {
     return {
         restrict: 'E',
         transclude: true,
-        scope: {},
+        scope: {
+            parent: '='
+        },
         controller: function($scope, $element) {
             var panes = $scope.panes = [];
 

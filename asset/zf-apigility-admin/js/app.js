@@ -514,9 +514,9 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
 
     $scope.resetForm = function () {
         $scope.showNewRestServiceForm = false;
-        $scope.restServiceName = '';
-        $scope.dbAdapterName = '';
-        $scope.dbTableName = '';
+        $scope.newService.restServiceName = '';
+        $scope.newService.dbAdapterName = '';
+        $scope.newService.dbTableName = '';
     };
 
     $scope.isDbConnected = function (restService) {
@@ -529,8 +529,14 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
         return false;
     };
 
-    $scope.createNewRestService = function () {
-        ApiRepository.createNewRestService($scope.api.name, $scope.restServiceName).then(function (restResource) {
+    $scope.newService = {
+        restServiceName: '',
+        dbAdapterName: '',
+        dbTableName: ''
+    };
+
+    $scope.newService.createNewRestService = function () {
+        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName).then(function (restResource) {
             flash.success = 'New REST Service created';
             $timeout(function () {
                 ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
@@ -539,12 +545,13 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
                 });
             }, 500);
             $scope.showNewRestServiceForm = false;
-            $scope.restServiceName = '';
+            $scope.newService.restServiceName = '';
+        }, function (response) {
         });
     };
 
-    $scope.createNewDbConnectedService = function () {
-        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.dbAdapterName, $scope.dbTableName).then(function (restResource) {
+    $scope.newService.createNewDbConnectedService = function () {
+        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName).then(function (restResource) {
             flash.success = 'New DB Connected Service created';
             $timeout(function () {
                 ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
@@ -552,8 +559,9 @@ module.controller('ApiRestServicesController', ['$http', '$rootScope', '$scope',
                 });
             }, 500);
             $scope.showNewRestServiceForm = false;
-            $scope.dbAdapterName = '';
-            $scope.dbTableName = '';
+            $scope.newService.dbAdapterName = '';
+            $scope.newService.dbTableName = '';
+        }, function (response) {
         });
     };
 
