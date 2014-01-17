@@ -10,7 +10,7 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
 {
     protected $adapterName;
 
-    protected $hydratorName = 'ArraySerializable';
+    protected $hydratorName = 'Zend\Stdlib\Hydrator\ArraySerializable';
 
     protected $tableName;
 
