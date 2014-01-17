@@ -96,6 +96,7 @@ class RestServiceModelTest extends TestCase
             'selector'                   => 'HalJson',
             'accept_whitelist'           => array('application/json', 'application/*+json'),
             'content_type_whitelist'     => array('application/json'),
+            'hydrator_name'              => 'Zend\Stdlib\Hydrator\ObjectProperty',
         ));
 
         return $payload;
@@ -320,7 +321,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals(array(
             'route_identifier_name'  => $details->routeIdentifierName,
             'route_name'             => 'bar-conf.rest.foo',
-            'hydrator'               => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            'hydrator'               => 'Zend\Stdlib\Hydrator\ObjectProperty',
             'entity_identifier_name' => 'id',
         ), $config['BarConf\Rest\Foo\FooEntity']);
 
@@ -376,6 +377,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $service->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $service->routeName);
         $this->assertEquals('/api/foo[/:foo_id]', $service->routeMatch);
+        $this->assertEquals('Zend\Stdlib\Hydrator\ObjectProperty', $service->hydratorName);
     }
 
     public function testCanUpdateRouteForExistingService()
@@ -466,9 +468,9 @@ class RestServiceModelTest extends TestCase
         $original = $this->codeRest->createService($details);
 
         $options = array(
-            'hydrator_name'   => 'objectproperty',
+            'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
-            'route_name'      => 'my/custom/route',
+            'route_name'            => 'my/custom/route',
         );
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
