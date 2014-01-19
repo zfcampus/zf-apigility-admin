@@ -1,0 +1,38 @@
+{
+  "name": "hyperagent",
+  "version": "0.4.0",
+  "dependencies": {
+    "q": "~1.0.0",
+    "jquery": "~2.0.0",
+    "uri.js": "~1.11.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.0",
+    "chai": "~1.8.0"
+  },
+  "ignore": [
+    "**/*.md",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    ".travis.yml",
+    "Gruntfile.js",
+    "karma*.js",
+    "lib/",
+    "sample/",
+    "test/",
+    "dist/*.min.js",
+    "dist/commonjs",
+    "package.json"
+  ],
+  "homepage": "https://github.com/weluse/hyperagent",
+  "_release": "0.4.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.4.0",
+    "commit": "2dc71a890adf1f41bc21c470df3b72278d914584"
+  },
+  "_source": "git://github.com/weluse/hyperagent.git",
+  "_target": "~0.4.0",
+  "_originalSource": "hyperagent"
+}
