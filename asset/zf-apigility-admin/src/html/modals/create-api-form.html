@@ -1,0 +1,23 @@
+<div id="create-api-form" class="modal fade" role="dialog" aria-hidden="true" ag-modal-dismiss><div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header"><h4 class="modal-title">Create New API</h4></div>
+
+        <div class="modal-body">
+            <form class="form" ng-submit="createNewApi($event)">
+                <fieldset>
+                    <div class="form-controls">
+                        <input type="text" class="form-control input-xlarge" ng-model="apiName" placeholder="API Name ..." required="">
+                    </div>
+                </fieldset>
+
+                <div class="ag-new-input btn-group pull-right">
+                    <button type="button" class="btn btn-sm btn-default" ng-click="resetForm()" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Create API</button>
+                </div>
+
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div></div>
+

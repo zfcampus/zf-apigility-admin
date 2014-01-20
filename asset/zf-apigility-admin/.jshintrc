@@ -1,0 +1,6 @@
+{
+    "es5": true,
+    "globals": {
+        "angular": true
+    }
+}

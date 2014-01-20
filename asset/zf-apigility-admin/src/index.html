@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <base href="%BASE_HREF%/" />
+
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/dist/css/vendor-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/dist/css/main.min.css" />
+
+    <script type="text/javascript" src="zf-apigility-admin/dist/js/vendor-ui.min.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/dist/js/vendor-util.min.js"></script>
+    <script type="text/javascript" src="zf-apigility-admin/dist/js/angular.min.js"></script>
+
+</head>
+<body id="ng-app" ng-app="ag-admin" data-api-base-path="%BASE_HREF%">
+    <a class="sr-only" href="admin#content"> … </a>
+    <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="admin" class="navbar-brand">
+                    <img src="zf-apigility/img/ag-logo.png">
+                </a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="ag-admin-module-navigation" ng-controller="ApiListController" ng-init="refreshApiList();">
+        <div class="container">
+            <button id="create-module-button"
+                class="btn btn-sm btn-primary pull-right"
+                position="bottom"
+                title="Create New API"
+                data-toggle="modal"
+                data-target="#create-api-form">
+                Create New API
+            </button>
+
+            <span class="pull-left">APIs: </span>
+            <ul class="nav nav-pills ag-admin-nav-pills">
+                <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
+                    <a ng-bind="api.namespace" ng-href="admin#/api/{{ api.name }}/v{{ api.versions[api.versions.length-1] }}/overview"></a>
+                </li>
+            </ul>
+        </div>
+
+    <div class="ag-admin-header" id="content">
+        <div class="container">
+            <h1 ng-bind="pageTitle"></h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <aside class="col-md-3 ag-sidebar" role="complementary">
+                <ul ng-show="!$root.routeParams.apiName" class="nav nav-pills ag-admin-nav-pills nav-stacked">
+                    <li ng-class="{active: ($root.navSection == 'DashboardController')}"><a ng-href="admin#/global/information">General Information</a></li>
+                    <li ng-class="{active: ($root.navSection == 'DbAdapterController')}"><a ng-href="admin#/global/db-adapters">Database Adapters</a></li>
+                    <li ng-class="{active: ($root.navSection == 'AuthenticationController')}"><a ng-href="admin#/global/authentication">Authentication</a></li>
+                </ul>
+
+                <ul ng-show="$root.routeParams.apiName" class="nav nav-pills ag-admin-nav-pills nav-stacked">
+                    <li ng-class="{active: ($root.navSection == 'ApiOverviewController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiRestServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiRpcServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiAuthorizationController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/authorization">Authorization</a></li>
+                </ul>
+            </aside>
+
+            <main class="ag col-md-9" role="main">
+                <h1 ng-bind="view.title"></h1>
+                <div id="content" ng-view></div>
+            </main>
+        </div>
+    </div>
+
+    <div flash-alert active-class="in" class="alert fade fade-out">
+        <span class="alert-message">{{flash.message}}</span>
+    </div>
+
+    <ag-include src="zf-apigility-admin/dist/html/modals/create-api-form.html"></ag-include>
+    <ng-include src="'zf-apigility-admin/dist/html/modals/help-input-filter.html'"></ng-include>
+
+    <script type="text/javascript" src="zf-apigility-admin/dist/js/app.min.js"></script>
+</body>
+</html>
