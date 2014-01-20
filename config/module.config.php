@@ -188,7 +188,7 @@ return array(
                                         ),
                                         'may_terminate' => true,
                                         'child_routes' => array(
-                                            'rpc_input_filter' => array(
+                                            'inputfilter' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
                                                     'route' => '/inputfilter[/:input_filter_name]',
@@ -198,10 +198,10 @@ return array(
                                                     )
                                                 )
                                             ),
-                                            'rpc-doc' => array(
+                                            'doc' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/doc[/:method/:section]',
+                                                    'route' => '/doc[/:resource_type/:method]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
@@ -220,7 +220,7 @@ return array(
                                         ),
                                         'may_terminate' => true,
                                         'child_routes' => array(
-                                            'rest_input_filter' => array(
+                                            'input-filter' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
                                                     'route' => '/inputfilter[/:input_filter_name]',
@@ -230,10 +230,10 @@ return array(
                                                     )
                                                 )
                                             ),
-                                            'rest-doc' => array(
+                                            'doc' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/doc[/:method/:section]',
+                                                    'route' => '/doc[/:method]',
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
@@ -414,14 +414,14 @@ return array(
                 'route_name'      => 'zf-apigility-admin/api/db-adapter',
             ),
             'ZF\Apigility\Admin\Model\InputFilterCollection' => array(
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service/inputfilter',
                 'is_collection'   => true,
                 'collection_name' => 'input_filter',
             ),
             'ZF\Apigility\Admin\Model\InputFilterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service/inputfilter',
             ),
             'ZF\Apigility\Admin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
@@ -429,14 +429,14 @@ return array(
                 'route_name'      => 'zf-apigility-admin/api/module',
             ),
             'ZF\Apigility\Admin\Model\RestInputFilterCollection' => array(
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service/inputfilter',
                 'is_collection'   => true,
                 'collection_name' => 'input_filter',
             ),
             'ZF\Apigility\Admin\Model\RestInputFilterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+                'route_name'      => 'zf-apigility-admin/api/module/rest-service/inputfilter',
             ),
             'ZF\Apigility\Admin\Model\DocumentationEntity' => array(
                 'hydrator'        => 'ArraySerializable',
@@ -451,20 +451,20 @@ return array(
                     array(
                         'rel' => 'input_filter',
                         'route' => array(
-                            'name' => 'zf-apigility-admin/api/module/rest-service/rest_input_filter'
+                            'name' => 'zf-apigility-admin/api/module/rest-service/inputfilter'
                         ),
                     )
                 ),
             ),
             'ZF\Apigility\Admin\Model\RpcInputFilterCollection' => array(
-                'route_name'      => 'zf-apigility-admin/api/module/rpc-service/rpc_input_filter',
+                'route_name'      => 'zf-apigility-admin/api/module/rpc-service/inputfilter',
                 'is_collection'   => true,
                 'collection_name' => 'input_filter',
             ),
             'ZF\Apigility\Admin\Model\RpcInputFilterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rpc-service/rpc_input_filter',
+                'route_name'      => 'zf-apigility-admin/api/module/rpc-service/inputfilter',
             ),
             'ZF\Apigility\Admin\Model\RpcServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
@@ -474,7 +474,7 @@ return array(
                     array(
                         'rel' => 'input_filter',
                         'route' => array(
-                            'name' => 'zf-apigility-admin/api/module/rpc-service/rpc_input_filter'
+                            'name' => 'zf-apigility-admin/api/module/rpc-service/inputfilter'
                         ),
                     )
                 ),
@@ -548,7 +548,7 @@ return array(
         ),
         'ZF\Apigility\Admin\Controller\InputFilter' => array(
             'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
-            'route_name'   => 'zf-apigility-admin/api/rpc-service/rpc_input_filter',
+            'route_name'   => 'zf-apigility-admin/api/rpc-service/inputfilter',
         ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),

@@ -12,6 +12,12 @@ use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfig
 
 class DocumentationModel
 {
+    const REST_RESOURCE_ENTITY = 'entity';
+    const REST_RESOURCE_COLLECTION = 'collection';
+    const TARGET_DESCRIPTION = 'description';
+    const TARGET_REQUEST = 'request';
+    const TARGET_RESPONSE = 'response';
+
     /**
      * @var ConfigResourceFactory
      */
@@ -25,6 +31,29 @@ class DocumentationModel
         $this->moduleUtils = $moduleUtils;
     }
 
+    public function fetchRestDocumentation($module, $controllerServiceName, $restResourceType = null, $httpMethod = null, $target = self::TARGET_DESCRIPTION)
+    {
+        $data = $this->getDocumentationArray($module);
+        if (!isset($data[$controllerServiceName])) {
+            return null;
+        }
+    }
+
+    public function storeRestDocumentation($documentation, $module, $controllerServiceName, $restResourceType = null, $httpMethod = null, $target = self::TARGET_DESCRIPTION)
+    {
+        $data = $this->getDocumentationArray($module);
+    }
+
+    public function fetchRpcDocumentation($module, $controllerServiceName, $httpMethod, $target = self::TARGET_DESCRIPTION)
+    {
+        $data = $this->getDocumentationArray($module);
+    }
+
+    public function storeRpcDocumentation($documentation, $module, $controllerServiceName, $httpMethod, $target = self::TARGET_DESCRIPTION)
+    {
+        $data = $this->getDocumentationArray($module);
+    }
+
     public function fetchControllerDocumentation($module, $controller)
     {
         $data = $this->getDocumentationArray($module);
@@ -34,13 +63,13 @@ class DocumentationModel
         return $data[$controller]['documentation'];
     }
 
-    public function fetchControllerMethodDocumentation($module, $controller, $method, $type)
+    public function fetchControllerMethodDocumentation($module, $controller, $type, $method)
     {
         $data = $this->getDocumentationArray($module);
-        if (!isset($data[$controller][$controller][$method][$type])) {
+        if (!isset($data[$controller][$method][$type])) {
             return null;
         }
-        return $data[$controller][$controller][$method][$type];
+        return $data[$controller][$method][$type];
     }
 
     public function storeControllerDocumentation($module, $controller, $text)
@@ -53,27 +82,20 @@ class DocumentationModel
         $this->storeDocumentationArray($module, $data);
     }
 
-    public function storeControllerMethodDocumentation($module, $controller, $method, $type)
+    public function storeControllerMethodDocumentation($module, $controller, $method, $section, $text)
     {
-
-    }
-
-    /**
-     * Get the validators of a specific module and controller
-     *
-     * @param  string $module
-     * @param  string $controller
-     * @param  string $inputFilterName
-     * @return false|array|InputFilterEntity
-     */
-    public function fetch($module, $controller, $method = null, $section = null)
-    {
-        return $this->getDocumentationArray($module, $controller, $method, $section);
-    }
-
-    public function update($module, $controller, $method, $section, $data)
-    {
-        return $this->storeDocumentationArray($module, $controller, $method, $section, $data);
+        $data = $this->getDocumentationArray($module);
+        if (!isset($data[$controller])) {
+            $data[$controller] = array();
+        }
+        if (!isset($data[$controller][$method])) {
+            $data[$controller][$method] = [];
+        }
+        if (!isset($data[$controller][$method][$section])) {
+            $data[$controller][$method][$section] = '';
+        }
+        $data[$controller][$method][$section] = $text;
+        $this->storeDocumentationArray($module, $data);
     }
 
     /**
@@ -124,35 +146,6 @@ class DocumentationModel
 
         return false;
     }
-
-//    /**
-//     * Get input filter of a module and controller
-//     *
-//     * @param  string $module
-//     * @param  string $controller
-//     * @param  string $inputFilterName
-//     * @return false|InputFilterCollection|InputFilterEntity
-//     */
-//    protected function getDocumentation($module, $controller, $method = null, $section = null)
-//    {
-//        $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
-//        $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
-//
-//        $docs = (file_exists($docConfigPath)) ? include $docConfigPath : array();
-//        if (!isset($docs[$module])) {
-//            return null;
-//        }
-//
-//        if (!isset($docs[$module][$controller])) {
-//            return null;
-//        }
-//
-//        if (!isset($docs[$module][$controller][$section])) {
-//            return null;
-//        }
-//
-//        return $docs[$module][$controller][$section];
-//    }
 
     protected function getDocumentationArray($module)
     {
