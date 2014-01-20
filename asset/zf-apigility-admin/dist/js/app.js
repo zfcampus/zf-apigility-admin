@@ -98,6 +98,8 @@ angular.module(
 
 })();
 
+/*! zf-apigility-admin 20-01-2014 */
+
 (function(_) {'use strict';
 
 angular.module('ag-admin').controller(
@@ -1789,6 +1791,10 @@ angular.module('ag-admin').factory(
 );
 
 })();
+
+/*! zf-apigility-admin 20-01-2014 */
+
+/*! zf-apigility-admin 20-01-2014 */
 
 (function() {'use strict';
 

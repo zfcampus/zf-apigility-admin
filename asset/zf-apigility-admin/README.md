@@ -39,3 +39,8 @@ If you need to add any new JS or CSS dependencies, please do so as follows:
 - Execute `bower install`
 - Execute `git add vendor`
 - Commit your changes
+
+At this point, you should add the necessary scripts to the relevant build tasks
+in the `Gruntfile.js`. If you look under the "concat" section, you will see
+existing configuration for CSS as well as UI, util, and Angular JS. Adding them
+here will allow grunt to concatenate and minify the files.
