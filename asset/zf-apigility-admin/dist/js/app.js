@@ -98,8 +98,6 @@ angular.module(
 
 })();
 
-/*! zf-apigility-admin 20-01-2014 */
-
 (function(_) {'use strict';
 
 angular.module('ag-admin').controller(
@@ -1291,6 +1289,23 @@ angular.module('ag-admin').directive('agTabs', function() {
 
 (function() {'use strict';
 
+// @todo refactor the naming of this at some point
+angular.module('ag-admin').filter('servicetype', function () {
+    return function (input) {
+        var parts = input.split('::');
+        switch (parts[1]) {
+            case '__collection__': return '(Collection)';
+            case '__resource__':   return '(Entity)';
+            default: return '';
+        }
+    };
+});
+
+})();
+
+
+(function() {'use strict';
+
 // Used to strip out the backslash characters to use as a part of a class id
 angular.module('ag-admin').filter('namespaceclassid', function () {
     return function (input) {
@@ -1305,14 +1320,14 @@ angular.module('ag-admin').filter('namespaceclassid', function () {
 // @todo refactor the naming of this at some point
 angular.module('ag-admin').filter('servicename', function () {
     return function (input) {
-        var parts = input.split('::');
-        var newServiceName = parts[0] + ' (';
-        switch (parts[1]) {
-            case '__collection__': newServiceName += 'Collection)'; break;
-            case '__resource__': newServiceName += 'Entity)'; break;
-            default: newServiceName += parts[1] + ")"; break;
+        /* For controller service name like "Status\V3\Rest\Message\Controller",
+         * return "Message"
+         */
+        var r = /^[^\\]+\\{1,2}V[^\\]+\\{1,2}(Rest|Rpc)\\{1,2}([^\\]+)\\{1,2}.*?Controller.*?$/;
+        if (!input.match(r)) {
+            return input;
         }
-        return newServiceName;
+        return input.replace(r, '$2');
     };
 });
 
@@ -1791,10 +1806,6 @@ angular.module('ag-admin').factory(
 );
 
 })();
-
-/*! zf-apigility-admin 20-01-2014 */
-
-/*! zf-apigility-admin 20-01-2014 */
 
 (function() {'use strict';
 
