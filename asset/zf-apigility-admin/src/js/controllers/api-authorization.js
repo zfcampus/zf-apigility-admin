@@ -38,6 +38,22 @@ angular.module('ag-admin').controller(
                 services[entityName] = entityMethods;
                 services[collectionName] = collectionMethods;
             });
+
+            angular.forEach(api.rpcServices, function(service) {
+                var serviceName = service.controller_service_name;
+                var serviceMethods = {
+                    GET: false,
+                    POST: false,
+                    PUT: false,
+                    PATCH: false,
+                    DELETE: false,
+                };
+                angular.forEach(service.http_methods, function(method) {
+                    serviceMethods[method] = true;
+                });
+                services[serviceName] = serviceMethods;
+            });
+
             return services;
         })();
 
@@ -47,7 +63,12 @@ angular.module('ag-admin').controller(
             }
 
             if (!serviceMethodMap.hasOwnProperty(serviceName)) {
-                return false;
+                var parts = serviceName.split('::');
+                var test  = parts[0];
+                if (!serviceMethodMap.hasOwnProperty(test)) {
+                    return false;
+                }
+                serviceName = test;
             }
 
             return serviceMethodMap[serviceName][method];
