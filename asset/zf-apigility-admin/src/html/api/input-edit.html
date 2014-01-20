@@ -12,7 +12,7 @@
 <collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <span class="btn btn-sm glyphicon glyphicon-ok"></span>
+            <i class="btn btn-sm glyphicon glyphicon-ok"></i>
 
             Validators
 
@@ -32,7 +32,7 @@
             <collapse class="panel panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="validator in input.validators">
                 <collapse-header>
                     <h4 class="panel-title">
-                        <span class="btn btn-sm glyphicon glyphicon-resize-vertical validator-handle"></span>
+                        <i class="btn btn-sm glyphicon glyphicon-resize-vertical validator-handle"></i>
 
                         {{validator.name}}
 
@@ -45,7 +45,7 @@
                                 type="button" class="btn btn-sm btn-danger" 
                                 collapse-button
                                 ng-click="removeValidator(input, $index)">
-                                <span class="glyphicon glyphicon-trash"></span>
+                                <i class="glyphicon glyphicon-trash"></i>
                             </button>
                         </div>
                     </h4>
@@ -78,7 +78,7 @@
                                     type="button" class="btn btn-sm btn-danger pull-right"
                                     ag-hover-target
                                     ng-click="removeOption(validator.options, optionName)">
-                                    <span class="glyphicon glyphicon-trash"></span></button>
+                                    <i class="glyphicon glyphicon-trash"></i></button>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -142,7 +142,7 @@
 <collapse class="panel-warning" conditionals="{newFilterFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <span class="btn btn-sm glyphicon glyphicon-filter"></span>
+            <i class="btn btn-sm glyphicon glyphicon-filter"></i>
             Filters
 
             <button 
@@ -161,7 +161,7 @@
             <collapse class="panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="filter in input.filters">
                 <collapse-header>
                     <h4 class="panel-title">
-                        <span class="btn btn-sm glyphicon glyphicon-resize-vertical filter-handle"></span>
+                        <i class="btn btn-sm glyphicon glyphicon-resize-vertical filter-handle"></i>
 
                         {{filter.name}}
 
@@ -174,7 +174,7 @@
                                 type="button" class="btn btn-sm btn-danger" 
                                 collapse-button
                                 ng-click="removeFilter(input, $index)">
-                                <span class="glyphicon glyphicon-trash"></span>
+                                <i class="glyphicon glyphicon-trash"></i>
                             </button>
                         </div>
                     </h4>
@@ -207,7 +207,7 @@
                                     type="button" class="btn btn-sm btn-danger pull-right"
                                     ag-hover-target
                                     ng-click="removeOption(filter.options, optionName)">
-                                    <span class="glyphicon glyphicon-trash"></span></button>
+                                    <i class="glyphicon glyphicon-trash"></i></button>
                             </div>
                         </div>
                         <div class="clearfix"></div>

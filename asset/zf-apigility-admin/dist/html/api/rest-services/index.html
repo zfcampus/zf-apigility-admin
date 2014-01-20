@@ -8,7 +8,7 @@
         ng-repeat="restService in api.restServices">
         <collapse-header>
             <h4 class="panel-title">
-                <span class="btn btn-small glyphicon glyphicon-leaf"></span>
+                <i class="btn btn-small glyphicon glyphicon-leaf"></i>
 
                 {{ restService.entity_class }}
 
@@ -24,14 +24,14 @@
                         type="button" class="btn btn-sm btn-success" title="Edit service"
                         collapse-flag flags="{edit: true}"
                         collapse-button criteria="{delete: false, edit: false}">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <i class="glyphicon glyphicon-edit"></i>
                     </button>
 
                     <button 
                         type="button" class="btn btn-sm btn-danger" title="Remove serivce"
                         collapse-flag flags="{delete: true}"
                         collapse-button criteria="{delete: false}">
-                        <span class="glyphicon glyphicon-trash"></span>
+                        <i class="glyphicon glyphicon-trash"></i>
                     </button>
                 </div>
             </h4>
