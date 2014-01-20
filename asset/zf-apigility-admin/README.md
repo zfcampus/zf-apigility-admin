@@ -16,6 +16,18 @@ Run the following command from this directory to install dependencies:
 npm install
 ```
 
+If you have not yet installed Bower, please do so:
+
+```sh
+sudo npm install -g bower
+```
+
+Finally, invoke Bower to install the relevant CSS and JS libraries:
+
+```sh
+bower install
+```
+
 Workflow
 --------
 
