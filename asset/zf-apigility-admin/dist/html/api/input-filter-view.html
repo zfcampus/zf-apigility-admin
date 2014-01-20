@@ -1,4 +1,10 @@
 <div class="ag panel-group tooltip-api" ng-controller="ApiServiceInputController">
+    <div class="panel panel-blank" ng-show="service.input_filter.length === 0"><div class="panel-body">
+        <p>
+            No fields have been configured.
+        </p>
+    </div></div>
+
     <collapse 
         class="panel-info"
         ng-repeat="input in service.input_filter">
