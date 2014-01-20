@@ -41,6 +41,17 @@ If you need to add any new JS or CSS dependencies, please do so as follows:
 - Commit your changes
 
 At this point, you should add the necessary scripts to the relevant build tasks
-in the `Gruntfile.js`. If you look under the "concat" section, you will see
-existing configuration for CSS as well as UI, util, and Angular JS. Adding them
-here will allow grunt to concatenate and minify the files.
+in the `Gruntfile.js`. Typically:
+
+- For CSS, update the `cssmin.minify.files` array to add the appropriate CSS
+  files. Make sure you add the non-minified variants!
+- For JS, update the `src` key under the appropriate heading below the `concat`
+  key. E.g: if you are adding UI-related JS, put it in `concat.vendorUi.src`;
+  for general utility JS, put it in `concat.vendorUtil.src`; for Angular
+  modules, put it in `concat.vendorAngular.src`.
+
+Occasionally, you will find that either a CSS library or JS script relies on
+assets installed via the vendor. You can copy these to the correct locations
+under the `copy` heading; use the Bootstrap Glyphicon fonts and the Select2
+widget as examples.
+
