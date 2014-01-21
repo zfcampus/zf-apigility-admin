@@ -44,7 +44,7 @@ class Module
     public function getAutoloaderConfig()
     {
         $this->resetCache();
-        
+
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
@@ -520,7 +520,7 @@ class Module
         }
         return 'rpc';
     }
-    
+
     /**
      * Removing optimizer config cache.
      * Otherwise the admin wont work with enabled file caching
