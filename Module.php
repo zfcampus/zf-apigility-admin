@@ -532,7 +532,7 @@ class Module
             // skip the built-in PHP webserver (OPcache reset is not needed + it crashes the server in PHP 5.4 with ZendOptimizer+)
             return;
         }
-        
+
         if (function_exists('opcache_reset')) {
             // >= PHP 5.5.0
             opcache_reset();
