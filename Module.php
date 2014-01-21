@@ -38,13 +38,13 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
-        $events->attach('render', array($this, 'onRender'), 100);
+        $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
     }
 
     public function getAutoloaderConfig()
     {
         $this->resetCache();
-        
+
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
@@ -520,7 +520,7 @@ class Module
         }
         return 'rpc';
     }
-    
+
     /**
      * Removing optimizer config cache.
      * Otherwise the admin wont work with enabled file caching
