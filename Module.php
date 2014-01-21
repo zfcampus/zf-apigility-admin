@@ -38,7 +38,7 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
-        $events->attach('render', array($this, 'onRender'), 100);
+        $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
     }
 
     public function getAutoloaderConfig()
