@@ -466,7 +466,7 @@ class Module
         $links->add(Link::factory(array(
             'rel' => 'input_filter',
             'route' => array(
-                'name' => sprintf('zf-apigility-admin/api/module/%s-service/%s_input_filter', $type, $type),
+                'name' => sprintf('zf-apigility-admin/api/module/%s-service/input-filter', $type),
                 'params' => array(
                     'name' => $module,
                     'controller_service_name' => $service,

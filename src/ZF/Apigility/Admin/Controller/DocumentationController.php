@@ -23,19 +23,32 @@ class DocumentationController extends AbstractActionController
 
     public function indexAction()
     {
-        $event           = $this->getEvent();
-        $routeMatch      = $event->getRouteMatch();
-        $route           = $this->deriveRouteName($routeMatch->getMatchedRouteName());
-        $request         = $this->getRequest();
-        $module          = $this->params()->fromRoute('name', false);
-        $controller      = $this->params()->fromRoute('controller_service_name', false);
-        $method          = $this->params()->fromRoute('method', false);
-        $section         = $this->params()->fromRoute('section', false);
+        $request = $this->getRequest();
+        $module = $this->params()->fromRoute('name', false);
+        $controllerServiceName = $this->params()->fromRoute('controller_service_name', false);
+        $resourceType = $this->params()->fromRoute('rest_resource_type', false); // collection or entity
+        $httpMethod = $this->params()->fromRoute('http_method', false); // GET, POST, etc
+        $httpDirection = $this->params()->fromRoute('http_direction', false); // request or response
+        $controllerType = $this->params()->fromRoute('controller_type'); // rest or rpc
 
-        $validSectionsByControllerType = [
-            'rest' => ['request-collection', 'request-entity', 'response-collection', 'response-entity'],
-            'rpc' => ['request', 'response']
-        ];
+        if ($controllerType == 'rest' && $resourceType != false) {
+            if (!in_array($resourceType, ['collection', 'entity'])) {
+                return new ApiProblemResponse(
+                    new ApiProblem(404, 'The rest type specified must be one of collection or entity')
+                );
+            }
+        }
+
+        if ($httpDirection) {
+            if (!in_array($httpDirection, ['request', 'response'])) {
+                return new ApiProblemResponse(
+                    new ApiProblem(404, 'The http direction specified must be one of request or response')
+                );
+            }
+            $target = $httpDirection;
+        } else {
+            $target = DocumentationModel::TARGET_DESCRIPTION;
+        }
 
         if (!$module || !$this->model->moduleExists($module)) {
             return new ApiProblemResponse(
@@ -43,50 +56,48 @@ class DocumentationController extends AbstractActionController
             );
         }
 
-        if (!$controller || !$this->model->controllerExists($module, $controller)) {
+        if (!$controllerServiceName || !$this->model->controllerExists($module, $controllerServiceName)) {
             return new ApiProblemResponse(
                 new ApiProblem(404, 'The controller specified does not exist')
             );
         }
 
-        $controllerType = (stripos($controller, 'rest') !== false) ? 'rest' : 'rpc';
-
-        if ($method && $section) {
-            if (!in_array($section, $validSectionsByControllerType[$controllerType])) {
-                return new ApiProblemResponse(
-                    new ApiProblem(404, 'The section specified must be one of: ' . implode(', ', $validSectionsByControllerType[$controllerType]))
-                );
-            }
-        }
+        $documentation = null;
 
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
-                if ($method && $section) {
-                    $result = array('documentation' => $this->model->fetchControllerMethodDocumentation($module, $controller, $method, $section));
-                } else {
-                    $result = array('documentation' => $this->model->fetchControllerDocumentation($module, $controller));
-                }
+                $documentation = ($controllerType == 'rest')
+                    ? $this->model->fetchRestDocumentation($module, $controllerServiceName, $resourceType, $httpMethod, $target)
+                    : $this->model->fetchRpcDocumentation($module, $controllerServiceName, $httpMethod, $target);
 
-
+                /*
+                $metadata = new \ZF\Apigility\Admin\Model\DocumentationEntity($module);
+                $halResource = new \ZF\Hal\Resource($metadata, $module);
+                $halResource->getLinks()->add(\ZF\Hal\Link\Link::factory(array(
+                    'rel'   => 'self',
+                    'route' => array(
+                        'name'   => 'zf-apigility-admin/api/...',
+                        // 'params' => array('docmentation' => $module),
+                    ),
+                )));
+                */
 
                 break;
             case $request::METHOD_PUT:
                 $body = $this->bodyParams();
-
-                if ($method && $section) {
-                    $this->model->storeControllerMethodDocumentation($module, $controller, $method, $section, $body['documentation']);
-                    $result = array('documentation' => $this->model->fetchControllerMethodDocumentation($module, $controller, $method, $section));
-                } else {
-                    $this->model->storeControllerDocumentation($module, $controller, $body['documentation']);
-                    $result = array('documentation' => $this->model->fetchControllerDocumentation($module, $controller));
+                if (!isset($body['documentation'])) {
+                    return new ApiProblemResponse(
+                        new ApiProblem(400, 'A documentation key is required in the body of the request')
+                    );
                 }
+                $documentation = ($controllerType == 'rest')
+                    ? $this->model->storeRestDocumentation($body['documentation'], $module, $controllerServiceName, $resourceType, $httpMethod, $target)
+                    : $this->model->storeRpcDocumentation($body['documentation'], $module, $controllerServiceName, $httpMethod, $target);
                 break;
             case $request::METHOD_DELETE:
-                if ($method && $section) {
-                    $this->model->fetchControllerMethodDocumentation($module, $controller, $method, $section);
-                } else {
-                    $this->model->fetchControllerDocumentation($module, $controller);
-                }
+                $documentation = ($controllerType == 'rest')
+                    ? $this->model->storeRestDocumentation(DocumentationModel::NULL_DESCRIPTION, $module, $controllerServiceName, $resourceType, $httpMethod, $target)
+                    : $this->model->storeRpcDocumentation(DocumentationModel::NULL_DESCRIPTION, $module, $controllerServiceName, $httpMethod, $target);
                 $result = null;
                 break;
             default:
@@ -98,6 +109,7 @@ class DocumentationController extends AbstractActionController
 
         // needs to return HalResource / HalCollection
 
+
         // use payload => HalResource/HalCollection
 
         // rel link called up/parent
@@ -105,15 +117,9 @@ class DocumentationController extends AbstractActionController
         $e = $this->getEvent();
         $e->setParam('ZFContentNegotiationFallback', 'HalJson');
 
-        $viewModel = new ViewModel($result);
+        $viewModel = new ViewModel(['payload' => ['documentation' => (isset($halResource) ? $halResource : $documentation)]]);
         $viewModel->setTerminal(true);
         return $viewModel;
     }
 
-    protected function deriveRouteName($route)
-    {
-        $matches = [];
-        preg_match('/(?P<type>rpc|rest)/', $route, $matches);
-        return sprintf('zf-apigility-admin/api/module/%s-service/%s-doc', $matches['type'], $matches['type']);
-    }
 } 

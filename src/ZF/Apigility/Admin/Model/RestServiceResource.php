@@ -245,7 +245,7 @@ class RestServiceResource extends AbstractResourceListener
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [
-                    'name' => 'zf-apigility-admin/api/module/rest-service/rest_input_filter',
+                    'name' => 'zf-apigility-admin/api/module/rest-service/input-filter',
                     'params' => [
                         'name' => $this->moduleName,
                         'controller_service_name' => $service->controllerServiceName,
@@ -258,7 +258,7 @@ class RestServiceResource extends AbstractResourceListener
 
         $collection = new HalCollection($collection);
         $collection->setCollectionName('input_filter');
-        $collection->setCollectionRoute('zf-apigility-admin/module/rest-service/inputfilter');
+        $collection->setCollectionRoute('zf-apigility-admin/module/rest-service/input-filter');
         $collection->setCollectionRouteParams([
             'name' => $service->module,
             'controller_service_name' => $service->controllerServiceName,

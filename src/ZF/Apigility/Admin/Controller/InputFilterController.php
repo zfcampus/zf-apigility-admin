@@ -133,13 +133,13 @@ class InputFilterController extends AbstractActionController
     /**
      * Remove the key from the input filter array
      *
-     * @param  array $inputfilter
+     * @param  array $inputFilter
      * @return array
      */
-    protected function removeKey($inputfilter)
+    protected function removeKey($inputFilter)
     {
         $result = array();
-        foreach ($inputfilter as $key => $value) {
+        foreach ($inputFilter as $key => $value) {
             $result[] = $value;
         }
         return $result;
@@ -163,7 +163,7 @@ class InputFilterController extends AbstractActionController
     {
         $matches = [];
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
-        return sprintf('zf-apigility-admin/api/module/%s-service/%s_input_filter', $matches['type'], $matches['type']);
+        return sprintf('zf-apigility-admin/api/module/%s-service/input-filter', $matches['type']);
     }
 
     public function injectResourceSelfLink($links, $route, $module, $controller, $inputFilterName)
