@@ -202,7 +202,7 @@ return array(
                                             'doc' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/doc[/:http_method[/:http_direction]]',
+                                                    'route' => '/doc', // [/:http_method[/:http_direction]]
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
@@ -235,7 +235,7 @@ return array(
                                             'doc' => array(
                                                 'type' => 'segment',
                                                 'options' => array(
-                                                    'route' => '/doc[/:rest_resource_type[/:http_method[/:http_direction]]]',
+                                                    'route' => '/doc', // [/:rest_resource_type[/:http_method[/:http_direction]]]
                                                     'defaults' => array(
                                                         'controller' => 'ZF\Apigility\Admin\Controller\Documentation',
                                                         'action'     => 'index',
@@ -455,6 +455,12 @@ return array(
                         'route' => array(
                             'name' => 'zf-apigility-admin/api/module/rest-service/input-filter'
                         ),
+                    ),
+                    array(
+                        'rel' => 'documentation',
+                        'route' => [
+                            'name' => 'zf-apigility-admin/api/module/rest-service/doc',
+                        ]
                     )
                 ),
             ),
@@ -478,6 +484,12 @@ return array(
                         'route' => array(
                             'name' => 'zf-apigility-admin/api/module/rpc-service/input-filter'
                         ),
+                    ),
+                    array(
+                        'rel' => 'documentation',
+                        'route' => [
+                            'name' => 'zf-apigility-admin/api/module/rpc-service/doc',
+                        ]
                     )
                 ),
             ),
@@ -537,7 +549,7 @@ return array(
             'route_name'   => 'zf-apigility-admin/api/module/authorization',
         ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
-            'http_methods' => array('GET', 'PUT', 'DELETE'),
+            'http_methods' => array('GET', 'PATCH', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility-admin/api/rest-service/rest-doc',
         ),
         'ZF\Apigility\Admin\Controller\Filters' => array(

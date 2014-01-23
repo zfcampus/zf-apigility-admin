@@ -23,6 +23,11 @@ class RestServiceResource extends AbstractResourceListener
     protected $inputFilterModel;
 
     /**
+     * @var DocumentationModel
+     */
+    protected $documentationModel;
+
+    /**
      * @var RestServiceModel
      */
     protected $model;
@@ -41,10 +46,11 @@ class RestServiceResource extends AbstractResourceListener
      * @param  RestServiceModelFactory $restFactory
      * @param  InputFilterModel $inputFilterModel
      */
-    public function __construct(RestServiceModelFactory $restFactory, InputFilterModel $inputFilterModel)
+    public function __construct(RestServiceModelFactory $restFactory, InputFilterModel $inputFilterModel, DocumentationModel $documentationModel)
     {
         $this->restFactory = $restFactory;
         $this->inputFilterModel = $inputFilterModel;
+        $this->documentationModel = $documentationModel;
     }
 
     /**
@@ -128,6 +134,7 @@ class RestServiceResource extends AbstractResourceListener
         }
 
         $this->injectInputFilters($service);
+        $this->injectDocumentation($service);
         return $service;
     }
 
@@ -144,6 +151,7 @@ class RestServiceResource extends AbstractResourceListener
 
         foreach ($services as $service) {
             $this->injectInputFilters($service);
+            $this->injectDocumentation($service);
         }
 
         return $services;
@@ -267,5 +275,16 @@ class RestServiceResource extends AbstractResourceListener
         $service->exchangeArray([
             'input_filters' => $collection,
         ]);
+    }
+
+    protected function injectDocumentation(RestServiceEntity $service)
+    {
+        $documentation = $this->documentationModel->fetchDocumentation($this->moduleName, $service->controllerServiceName);
+        if (!$documentation) {
+            return;
+        }
+        $resource = new HalResource($documentation, 'documentation');
+
+        $service->exchangeArray(['documentation' => $resource]);
     }
 }

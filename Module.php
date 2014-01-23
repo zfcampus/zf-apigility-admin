@@ -210,7 +210,8 @@ class Module
                 }
                 $factory = $services->get('ZF\Apigility\Admin\Model\RestServiceModelFactory');
                 $inputFilterModel = $services->get('ZF\Apigility\Admin\Model\InputFilterModel');
-                return new Model\RestServiceResource($factory, $inputFilterModel);
+                $documentationModel = $services->get('ZF\Apigility\Admin\Model\DocumentationModel');
+                return new Model\RestServiceResource($factory, $inputFilterModel, $documentationModel);
             },
             'ZF\Apigility\Admin\Model\RpcServiceResource' => function ($services) {
                 if (!$services->has('ZF\Apigility\Admin\Model\RpcServiceModelFactory')) {
@@ -231,7 +232,8 @@ class Module
                 $factory = $services->get('ZF\Apigility\Admin\Model\RpcServiceModelFactory');
                 $inputFilterModel = $services->get('ZF\Apigility\Admin\Model\InputFilterModel');
                 $controllerManager = $services->get('ControllerManager');
-                return new Model\RpcServiceResource($factory, $inputFilterModel, $controllerManager);
+                $documentationModel = $services->get('ZF\Apigility\Admin\Model\DocumentationModel');
+                return new Model\RpcServiceResource($factory, $inputFilterModel, $controllerManager, $documentationModel);
             },
             'ZF\Apigility\Admin\Model\VersioningModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ConfigResourceFactory')) {

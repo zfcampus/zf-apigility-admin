@@ -12,12 +12,8 @@ use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfig
 
 class DocumentationModel
 {
-    const REST_RESOURCE_ENTITY = 'entity';
-    const REST_RESOURCE_COLLECTION = 'collection';
-    const TARGET_DESCRIPTION = 'description';
-    const TARGET_REQUEST = 'request';
-    const TARGET_RESPONSE = 'response';
-    const NULL_DESCRIPTION = null;
+    const TYPE_REST = 'rest';
+    const TYPE_RPC = 'rpc';
 
     /**
      * @var ConfigResourceFactory
@@ -32,120 +28,67 @@ class DocumentationModel
         $this->moduleUtils = $moduleUtils;
     }
 
-    public function fetchRestDocumentation($module, $controllerServiceName, $restResourceType = null, $httpMethod = null, $target = self::TARGET_DESCRIPTION)
+    public function getSchemaTemplate($type = self::TYPE_REST)
     {
-        // check to ensure target is correct
-        if ($httpMethod) {
-            if (!in_array($target, [self::TARGET_DESCRIPTION, self::TARGET_REQUEST, self::TARGET_RESPONSE])) {
-                throw new \InvalidArgumentException('$target must be one of description, request, or response');
-            }
-        } elseif ($target !== self::TARGET_DESCRIPTION) {
-            throw new \InvalidArgumentException('$target must be description when $httpMethod is null');
+        switch ($type) {
+            case self::TYPE_REST:
+                return [
+                    'collection' => [
+                        'description' => null,
+                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                    ],
+                    'entity' => [
+                        'description' => null,
+                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                    ],
+                    'description' => null
+                ];
+            case self::TYPE_RPC:
+                return [
+                    'description' => null,
+                    'GET'    => ['description' => null, 'request' => null, 'response' => null],
+                    'POST'   => ['description' => null, 'request' => null, 'response' => null],
+                    'PUT'    => ['description' => null, 'request' => null, 'response' => null],
+                    'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
+                    'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                ];
         }
-
-        //$data = $this->getDocumentationArray($module);
-
-        $config = $this->getDocumentationConfigResource($module);
-        $flatConfigValues = $config->fetch();
-
-        $dottedName = $controllerServiceName . '.';
-
-        // create flat key
-        if ($restResourceType) {
-            $dottedName .= $restResourceType . '.';
-            if ($httpMethod) {
-                $dottedName .= $httpMethod . '.';
-            }
-        }
-
-        $dottedName .= $target;
-        if (isset($flatConfigValues[$dottedName])) {
-            return $flatConfigValues[$dottedName];
-        }
-        return null;
     }
 
-    public function storeRestDocumentation($documentation, $module, $controllerServiceName, $restResourceType = null, $httpMethod = null, $target = self::TARGET_DESCRIPTION)
+    public function fetchDocumentation($module, $controllerServiceName)
     {
-        // check to ensure target is correct
-        if ($httpMethod) {
-            if (!in_array($target, [self::TARGET_DESCRIPTION, self::TARGET_REQUEST, self::TARGET_RESPONSE])) {
-                throw new \InvalidArgumentException('$target must be one of description, request, or response');
-            }
-        } elseif ($target !== self::TARGET_DESCRIPTION) {
-            throw new \InvalidArgumentException('$target must be description when $httpMethod is null');
+        $configResource = $this->getDocumentationConfigResource($module);
+        $value = $configResource->fetch(true);
+        if (isset($value[$controllerServiceName])) {
+            return $value[$controllerServiceName];
         }
-
-
-        $config = $this->getDocumentationConfigResource($module);
-        $dottedName = $controllerServiceName . '.';
-
-        // create flat key
-        if ($restResourceType) {
-            $dottedName .= $restResourceType . '.';
-            if ($httpMethod) {
-                $dottedName .= $httpMethod . '.';
-            }
-        }
-
-        $dottedName .= $target;
-
-        $config->patchKey($dottedName, $documentation);
-        return $documentation;
+        return [];
     }
 
-    public function fetchRpcDocumentation($module, $controllerServiceName, $httpMethod, $target = self::TARGET_DESCRIPTION)
+    public function storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, $replace = false)
     {
-        // check to ensure target is correct
-        if ($httpMethod) {
-            if (!in_array($target, [self::TARGET_DESCRIPTION, self::TARGET_REQUEST, self::TARGET_RESPONSE])) {
-                throw new \InvalidArgumentException('$target must be one of description, request, or response');
-            }
-        } elseif ($target !== self::TARGET_DESCRIPTION) {
-            throw new \InvalidArgumentException('$target must be description when $httpMethod is null');
+        $configResource = $this->getDocumentationConfigResource($module);
+        $template = [$controllerServiceName => $this->getSchemaTemplate($controllerType)];
+        $templateFlat = $configResource->traverseArray($template);
+        $documentationFlat = $configResource->traverseArray([$controllerServiceName => $documentation]);
+
+        $validDocumentationFlat = array_intersect_key($documentationFlat, $templateFlat);
+
+        if ($replace) {
+            $configResource->deleteKey($controllerServiceName);
         }
 
-        $config = $this->getDocumentationConfigResource($module);
-        $flatConfigValues = $config->fetch();
-
-        $dottedName = $controllerServiceName . '.';
-
-        // create flat key
-        if ($httpMethod) {
-            $dottedName .= $httpMethod . '.';
-        }
-
-        $dottedName .= $target;
-        if (isset($flatConfigValues[$dottedName])) {
-            return $flatConfigValues[$dottedName];
-        }
-        return null;
-    }
-
-    public function storeRpcDocumentation($documentation, $module, $controllerServiceName, $httpMethod, $target = self::TARGET_DESCRIPTION)
-    {
-        // check to ensure target is correct
-        if ($httpMethod) {
-            if (!in_array($target, [self::TARGET_DESCRIPTION, self::TARGET_REQUEST, self::TARGET_RESPONSE])) {
-                throw new \InvalidArgumentException('$target must be one of description, request, or response');
-            }
-        } elseif ($target !== self::TARGET_DESCRIPTION) {
-            throw new \InvalidArgumentException('$target must be description when $httpMethod is null');
-        }
-
-        $config = $this->getDocumentationConfigResource($module);
-
-        $dottedName = $controllerServiceName . '.';
-
-        // create flat key
-        if ($httpMethod) {
-            $dottedName .= $httpMethod . '.';
-        }
-
-        $dottedName .= $target;
-
-        $config->patchKey($dottedName, $documentation);
-        return $documentation;
+        $configResource->patch($validDocumentationFlat);
+        $fullDoc = $configResource->fetch(true);
+        return $fullDoc[$controllerServiceName];
     }
 
     /**

@@ -29,6 +29,8 @@ class RpcServiceEntity
 
     protected $inputFilters;
 
+    protected $documentation;
+
     protected $routeMatch;
 
     protected $routeName;
@@ -103,6 +105,9 @@ class RpcServiceEntity
                         $this->inputFilters = $value;
                     }
                     break;
+                case 'documentation':
+                    $this->documentation = $value;
+                    break;
                 case 'routematch':
                     $this->routeMatch = $value;
                     break;
@@ -144,6 +149,9 @@ class RpcServiceEntity
         );
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
+        }
+        if (null !== $this->documentation) {
+            $array['documentation'] = $this->documentation;
         }
         if (null !== $this->controllerClass) {
             $array['controller_class'] = $this->controllerClass;
