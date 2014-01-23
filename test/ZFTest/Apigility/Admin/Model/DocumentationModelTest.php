@@ -10,11 +10,15 @@ use ZFTest\Configuration\TestAsset\ConfigWriter;
 
 class DocumentationModelTest extends \PHPUnit_Framework_TestCase
 {
+    protected $actualDocData;
+
     /** @var DocumentationModel */
     protected $docModel = null;
 
     public function setup()
     {
+        $this->actualDocData = include __DIR__ . '/TestAsset/module/Doc/config/documentation.config.php';
+
         $mockModuleUtils = $this->getMock('ZF\Configuration\ModuleUtils', ['getModuleConfigPath'], [], '', false);
         $mockModuleUtils->expects($this->any())
             ->method('getModuleConfigPath')
@@ -29,24 +33,10 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchRestDocumentation()
     {
-        $this->assertEquals(
-            'per rest controller description',
-            $this->docModel->fetchRestDocumentation('Doc', 'Doc\\V1\\Rest\\FooBar\\Controller')
-        );
 
         $this->assertEquals(
-            'General in rest collection',
-            $this->docModel->fetchRestDocumentation('Doc', 'Doc\\V1\\Rest\\FooBar\\Controller', 'collection')
-        );
-
-        $this->assertEquals(
-            'General description for GET',
-            $this->docModel->fetchRestDocumentation('Doc', 'Doc\\V1\\Rest\\FooBar\\Controller', 'entity', 'GET')
-        );
-
-        $this->assertEquals(
-            'Request for POST doc in collection',
-            $this->docModel->fetchRestDocumentation('Doc', 'Doc\\V1\\Rest\\FooBar\\Controller', 'collection', 'POST', 'request')
+            $this->actualDocData['Doc\\V1\\Rest\\FooBar\\Controller'],
+            $this->docModel->fetchDocumentation('Doc', 'Doc\\V1\\Rest\\FooBar\\Controller')
         );
     }
 
