@@ -60,7 +60,7 @@ class InputFilterModelTest extends TestCase
 
     public function testAddInputFilterExistingController()
     {
-        $inputfilter = [
+        $inputFilter = [
             'bar' => [
                 'name' => 'bar',
                 'validators' => [
@@ -70,9 +70,9 @@ class InputFilterModelTest extends TestCase
                 ]
             ]
         ];
-        $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputfilter);
+        $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputFilter);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
-        $this->assertEquals($inputfilter['bar'], $result['bar'], sprintf("Updates: %s\n\nResult: %s\n", var_export($inputfilter, 1), var_export($result, 1)));
+        $this->assertEquals($inputFilter['bar'], $result['bar'], sprintf("Updates: %s\n\nResult: %s\n", var_export($inputFilter, 1), var_export($result, 1)));
     }
 
     public function testAddInputFilterNewController()

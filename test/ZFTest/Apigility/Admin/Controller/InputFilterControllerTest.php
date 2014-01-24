@@ -125,7 +125,7 @@ class InputFilterControllerTest extends TestCase
 
     public function testAddInputFilter()
     {
-        $inputfilter = [
+        $inputFilter = [
             [
                 'name' => 'bar',
                 'validators' => [
@@ -144,7 +144,7 @@ class InputFilterControllerTest extends TestCase
 
         $request = new Request();
         $request->setMethod('put');
-        $request->setContent(json_encode($inputfilter));
+        $request->setContent(json_encode($inputFilter));
         $request->getHeaders()->addHeaderLine('Accept', 'application/json');
         $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
 
@@ -160,7 +160,7 @@ class InputFilterControllerTest extends TestCase
         $event->setRouteMatch($routeMatch);
 
         $parameters = new ParameterDataContainer();
-        $parameters->setBodyParams($inputfilter);
+        $parameters->setBodyParams($inputFilter);
         $event->setParam('ZFContentNegotiationParameterData', $parameters);
 
         $plugins = new PluginManager();

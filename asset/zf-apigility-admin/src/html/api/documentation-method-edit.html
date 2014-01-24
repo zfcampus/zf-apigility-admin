@@ -1,0 +1,40 @@
+
+<div class="control-group">
+    <label class="control-label">Description</label>
+    <div class="controls">
+        <input type="text" placeholder="Insert the {{method}} description here" class="form-control input-xlarge" required="" ng-model="methodData.description">
+        <p class="help-block">The description of the {{method}} HTTP method</p>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label">Request</label>
+
+    <button type="button"
+            class="btn btn-default btn-xs pull-right">
+        <i class="glyphicon glyphicon-refresh"></i>
+        generate from configuration
+    </button>
+
+    <div class="controls">
+        <textarea placeholder="Insert the request specification" class="form-control input-xlarge" required="" ng-model="methodData.request"></textarea>
+        <p class="help-block">The HTTP request specification</p>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div class="control-group">
+    <label class="control-label">Response</label>
+
+    <button type="button" class="btn btn-default btn-xs pull-right">
+        <i class="glyphicon glyphicon-refresh"></i>
+        generate from configuration
+    </button>
+
+    <div class="controls">
+        <textarea placeholder="Insert the response specification" class="form-control input-xlarge" required="" ng-model="methodData.response"></textarea>
+        <p class="help-block">The HTTP response specification</p>
+    </div>
+</div>
+
+<div class="clearfix"></div>

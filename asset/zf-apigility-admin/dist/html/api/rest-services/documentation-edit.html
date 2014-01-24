@@ -1,0 +1,54 @@
+<div ng-controller="ApiDocumentationController">
+    <form novalidate class="ag form" ng-submit="save(restService.documentation)">
+        <div class="panel panel-default">
+            <div class="panel-body list-group">
+                <div class="control-group list-group-item">
+                    <label class="control-label">REST service description</label>
+                    <div class="controls">
+                        <input type="text" placeholder="Insert the description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.description">
+                        <p class="help-block">The general description of the REST service</p>
+                    </div>
+                </div>
+
+                <ag-tabs>
+                    <ag-tab-pane title="Collection">
+
+                        <div class="control-group">
+                            <label class="control-label">Description</label>
+                            <div class="controls">
+                                <input type="text" placeholder="Insert the Collection description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.collection.description">
+                                <p class="help-block">The description of the Collection</p>
+                            </div>
+                        </div>
+
+                        <ag-tabs>
+                            <ag-tab-pane ng-repeat="method in restService.collection_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.collection[method]">
+                                <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-edit.html"></ag-include>
+                            </ag-tab-pane>
+                        </ag-tabs>
+                    </ag-tab-pane>
+                    <ag-tab-pane title="Entity">
+
+                        <div class="control-group">
+                            <label class="control-label">Description</label>
+                            <div class="controls">
+                                <input type="text" placeholder="Insert the Entity description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.entity.description">
+                                <p class="help-block">The description of the Entity</p>
+                            </div>
+                        </div>
+
+                        <ag-tabs>
+                            <ag-tab-pane ng-repeat="method in restService.resource_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.entity[method]">
+                                <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-edit.html"></ag-include>
+                            </ag-tab-pane>
+                        </ag-tabs>
+                    </ag-tab-pane>
+                </ag-tabs>
+
+
+            </div>
+        </div>
+
+       <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+    </form>
+</div>

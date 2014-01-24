@@ -1,0 +1,26 @@
+<div ng-controller="ApiDocumentationController">
+    <form novalidate class="ag form" ng-submit="save(rpcService.documentation)">
+        <div class="panel panel-default">
+            <div class="panel-body list-group">
+
+                <div class="control-group">
+                    <label class="control-label">Description</label>
+                    <div class="controls">
+                        <input type="text" placeholder="Insert the description here" class="form-control input-xlarge" required="" ng-model="rpcService.documentation.description">
+                        <p class="help-block">The description of the RPC Service</p>
+                    </div>
+                </div>
+
+                <ag-tabs>
+                    <ag-tab-pane ng-repeat="method in rpcService.http_methods" title="{{method}}" ng-init="methodData = rpcService.documentation[method]">
+                        <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-edit.html"></ag-include>
+                    </ag-tab-pane>
+                </ag-tabs>
+
+
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-sm btn-success pull-right">Save</button>
+    </form>
+</div>
