@@ -29,6 +29,11 @@ class RpcServiceResource extends AbstractResourceListener
     protected $inputFilterModel;
 
     /**
+     * @var DocumentationModel
+     */
+    protected $documentationModel;
+
+    /**
      * @var RpcServiceModel
      */
     protected $model;
@@ -47,11 +52,12 @@ class RpcServiceResource extends AbstractResourceListener
      * @param  RpcServiceModelFactory $rpcFactory
      * @param  InputFilterModel $inputFilterModel
      */
-    public function __construct(RpcServiceModelFactory $rpcFactory, InputFilterModel $inputFilterModel, ControllerManager $controllerManager)
+    public function __construct(RpcServiceModelFactory $rpcFactory, InputFilterModel $inputFilterModel, ControllerManager $controllerManager, DocumentationModel $documentationModel)
     {
         $this->rpcFactory = $rpcFactory;
         $this->inputFilterModel = $inputFilterModel;
         $this->controllerManager = $controllerManager;
+        $this->documentationModel = $documentationModel;
     }
 
     /**
@@ -168,6 +174,7 @@ class RpcServiceResource extends AbstractResourceListener
             return new ApiProblem(404, 'RPC service not found');
         }
         $this->injectInputFilters($service);
+        $this->injectDocumentation($service);
         $this->injectControllerClass($service);
         return $service;
     }
@@ -185,6 +192,7 @@ class RpcServiceResource extends AbstractResourceListener
 
         foreach ($services as $service) {
             $this->injectInputFilters($service);
+            $this->injectDocumentation($service);
             $this->injectControllerClass($service);
         }
 
@@ -282,7 +290,7 @@ class RpcServiceResource extends AbstractResourceListener
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [
-                    'name' => 'zf-apigility-admin/api/module/rpc-service/rpc_input_filter',
+                    'name' => 'zf-apigility-admin/api/module/rpc-service/input-filter',
                     'params' => [
                         'name' => $this->moduleName,
                         'controller_service_name' => $service->controllerServiceName,
@@ -295,7 +303,7 @@ class RpcServiceResource extends AbstractResourceListener
 
         $collection = new HalCollection($collection);
         $collection->setCollectionName('input_filter');
-        $collection->setCollectionRoute('zf-apigility-admin/module/rpc-service/inputfilter');
+        $collection->setCollectionRoute('zf-apigility-admin/module/rpc-service/input-filter');
         $collection->setCollectionRouteParams([
             'name' => $this->moduleName,
             'controller_service_name' => $service->controllerServiceName,
@@ -304,6 +312,17 @@ class RpcServiceResource extends AbstractResourceListener
         $service->exchangeArray([
             'input_filters' => $collection,
         ]);
+    }
+
+    protected function injectDocumentation(RpcServiceEntity $service)
+    {
+        $documentation = $this->documentationModel->fetchDocumentation($this->moduleName, $service->controllerServiceName);
+        if (!$documentation) {
+            return;
+        }
+        $resource = new HalResource($documentation, 'documentation');
+
+        $service->exchangeArray(['documentation' => $resource]);
     }
 
     /**

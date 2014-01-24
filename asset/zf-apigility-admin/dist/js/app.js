@@ -203,6 +203,57 @@ angular.module('ag-admin').controller(
 
 })(_);
 
+(function(_) {'use strict';
+
+angular.module('ag-admin').controller(
+    'ApiDocumentationController',
+    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository',
+    function ($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
+
+        $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
+
+        // for rest
+        if (typeof $scope.$parent.restService != 'undefined') {
+            if (typeof $scope.service.documentation == 'undefined') {
+                $scope.service.documentation = {};
+            }
+            if (typeof $scope.service.documentation.collection == 'undefined') {
+                $scope.service.documentation.collection = {};
+            }
+            _.forEach($scope.service.collection_http_methods, function (allowed_method) {
+                if (typeof $scope.service.documentation.collection[allowed_method] == 'undefined') {
+                    $scope.service.documentation.collection[allowed_method] = {description: null, request: null, response: null};
+                }
+            });
+            if (typeof $scope.service.documentation.entity == 'undefined') {
+                $scope.service.documentation.entity = {};
+            }
+            _.forEach($scope.service.resource_http_methods, function (allowed_method) {
+                if (typeof $scope.service.documentation.entity[allowed_method] == 'undefined') {
+                    $scope.service.documentation.entity[allowed_method] = {description: null, request: null, response: null};
+                }
+            });
+        } else {
+            if (typeof $scope.service.documentation == 'undefined') {
+                $scope.service.documentation = {};
+            }
+            _.forEach($scope.service.http_methods, function (allowed_method) {
+                if (typeof $scope.service.documentation[allowed_method] == 'undefined') {
+                    $scope.service.documentation[allowed_method] = {description: null, request: null, response: null};
+                }
+            });
+        }
+
+        $scope.save = function() {
+            ApiRepository.saveDocumentation($scope.service);
+            $scope.$parent.flash.success = 'Documentation saved.';
+        };
+
+    }]
+);
+
+})(_);
+
 (function() {'use strict';
 
 angular.module('ag-admin').controller(
@@ -1129,6 +1180,21 @@ angular.module('ag-admin').directive('collapse', function() {
 
 (function() {'use strict';
 
+/* <ag-comment>Comment you want stripped here</ag-comment> */
+angular.module('ag-admin').directive('agComment', function() {
+  return {
+    restrict: 'E',
+    compile: function(element, attr) {
+        element.replaceWith('');
+    }
+  };
+});
+
+})();
+
+
+(function() {'use strict';
+
 angular.module('ag-admin').directive('agEditInplace', function() {
     return {
         restrict: 'E',
@@ -1253,7 +1319,7 @@ angular.module('ag-admin').directive('agModalDismiss', function() {
  * Borrowed from http://errietta.me/blog/bootstrap-angularjs-directives/
  */
 
-  /* <ag-tabs [parent="..."] ...>[<ag-tab-pane ...></ag-tab-pane>]</ag-tabs> */
+/* <ag-tabs [parent="..."] ...>[<ag-tab-pane ...></ag-tab-pane>]</ag-tabs> */
 angular.module('ag-admin').directive('agTabs', function() {
     return {
         restrict: 'E',
@@ -1279,8 +1345,21 @@ angular.module('ag-admin').directive('agTabs', function() {
                 panes.push(pane);
             };
         }],
+        link: function (scope, element, attr) {
+            var tabType = 'nav-tabs';
+            if (attr.hasOwnProperty('pills')) {
+                tabType = 'nav-pills';
+            }
+            angular.forEach(element.children(), function (child) {
+                child = angular.element(child);
+                if (child.context.tagName !== 'UL') {
+                    return;
+                }
+                child.addClass(tabType);
+            });
+        },
         template: '<div class="ag-tabs">' +
-            '<ul class="nav nav-tabs">' +
+            '<ul class="nav">' +
             '<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">'+
             '<a href="" ng-click="select(pane)">{{pane.title}}</a>' +
             '</li>' +
@@ -1493,6 +1572,10 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                             apiModel.restServices[length - 1].input_filter = [];
                         }
 
+                        if (restService.embedded.documentation) {
+                            apiModel.restServices[length - 1].documentation = restService.embedded.documentation.props;
+                        }
+
                     });
 
                     return api;
@@ -1528,6 +1611,10 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                             apiModel.rpcServices[length - 1].input_filter = _.toArray(apiModel.rpcServices[length - 1].input_filter);
                         } else {
                             apiModel.rpcServices[length - 1].input_filter = [];
+                        }
+
+                        if (rpcService.embedded.documentation) {
+                            apiModel.rpcServices[length - 1].documentation = rpcService.embedded.documentation.props;
                         }
 
                     });
@@ -1588,8 +1675,13 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
         },
 
         saveInputFilter: function (api, inputFilter) {
-            var url = api._self + '/inputfilter';
+            var url = api._self + '/input-filter';
             return $http.put(url, inputFilter);
+        },
+
+        saveDocumentation: function (api) {
+            var url = api._self + '/doc';
+            return $http.put(url, api.documentation);
         },
 
         removeRpcService: function (apiName, rpcServiceName) {

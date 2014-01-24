@@ -63,7 +63,7 @@ class InputFilterModel
      */
     public function remove($module, $controller, $inputname)
     {
-        return $this->removeinputfilter($module, $controller, $inputname);
+        return $this->removeInputFilter($module, $controller, $inputname);
     }
 
     /**

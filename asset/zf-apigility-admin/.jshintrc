@@ -1,6 +1,7 @@
 {
     "es5": true,
     "globals": {
-        "angular": true
+        "angular": true,
+        "console": true
     }
 }

@@ -103,6 +103,10 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                             apiModel.restServices[length - 1].input_filter = [];
                         }
 
+                        if (restService.embedded.documentation) {
+                            apiModel.restServices[length - 1].documentation = restService.embedded.documentation.props;
+                        }
+
                     });
 
                     return api;
@@ -138,6 +142,10 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                             apiModel.rpcServices[length - 1].input_filter = _.toArray(apiModel.rpcServices[length - 1].input_filter);
                         } else {
                             apiModel.rpcServices[length - 1].input_filter = [];
+                        }
+
+                        if (rpcService.embedded.documentation) {
+                            apiModel.rpcServices[length - 1].documentation = rpcService.embedded.documentation.props;
                         }
 
                     });
@@ -198,8 +206,13 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
         },
 
         saveInputFilter: function (api, inputFilter) {
-            var url = api._self + '/inputfilter';
+            var url = api._self + '/input-filter';
             return $http.put(url, inputFilter);
+        },
+
+        saveDocumentation: function (api) {
+            var url = api._self + '/doc';
+            return $http.put(url, api.documentation);
         },
 
         removeRpcService: function (apiName, rpcServiceName) {

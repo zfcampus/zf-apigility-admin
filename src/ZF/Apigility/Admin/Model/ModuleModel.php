@@ -15,7 +15,6 @@ use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\ApigilityModuleInterface;
-use ZF\Configuration\Module;
 
 class ModuleModel
 {

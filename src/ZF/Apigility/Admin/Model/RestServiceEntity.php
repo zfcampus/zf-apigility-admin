@@ -42,6 +42,8 @@ class RestServiceEntity
 
     protected $inputFilters;
 
+    protected $documentation;
+
     protected $module;
 
     protected $pageSize = 25;
@@ -132,6 +134,9 @@ class RestServiceEntity
                         $this->inputFilters = $value;
                     }
                     break;
+                case 'documentation':
+                    $this->documentation = $value;
+                    break;
                 case 'module':
                     $this->module = $value;
                     break;
@@ -196,6 +201,9 @@ class RestServiceEntity
         );
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
+        }
+        if (null !== $this->documentation) {
+            $array['documentation'] = $this->documentation;
         }
         return $array;
     }
