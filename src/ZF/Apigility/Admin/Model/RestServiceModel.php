@@ -747,19 +747,30 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $entityUpdate     = [];
         $collectionUpdate = [];
-        if ($update->routeIdentifierName) {
+        if ($update->routeIdentifierName
+            && $update->routeIdentifierName !== $original->routeIdentifierName
+        ) {
             $entityUpdate['route_identifier_name']     = $update->routeIdentifierName;
             $collectionUpdate['route_identifier_name'] = $update->routeIdentifierName;
         }
-        if ($update->entityIdentifierName) {
+
+        if ($update->entityIdentifierName
+            && $update->entityIdentifierName !== $original->entityIdentifierName
+        ) {
             $entityUpdate['entity_identifier_name']     = $update->entityIdentifierName;
             $collectionUpdate['entity_identifier_name'] = $update->entityIdentifierName;
         }
-        if ($update->routeName) {
+
+        if ($update->routeName
+            && $update->routeName !== $original->routeName
+        ) {
             $entityUpdate['route_name']     = $update->routeName;
             $collectionUpdate['route_name'] = $update->routeName;
         }
-        if ($update->hydratorName) {
+
+        if ($update->hydratorName
+            && $update->hydratorName !== $original->hydratorName
+        ) {
             $entityUpdate['hydrator'] = $update->hydratorName;
         }
 
@@ -769,6 +780,7 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         if (!empty($collectionUpdate)) {
+            $collectionUpdate['is_collection'] = true;
             $key = $baseKey . $original->collectionClass;
             $this->configResource->patchKey($key, $collectionUpdate);
         }
