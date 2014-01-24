@@ -41,7 +41,7 @@ angular.module('ag-admin').controller(
 
         $scope.save = function() {
             ApiRepository.saveDocumentation($scope.service);
-            $scope.$parent.flash.success = 'Input Filter configuration saved.';
+            $scope.$parent.flash.success = 'Documentation saved.';
         };
 
     }]
