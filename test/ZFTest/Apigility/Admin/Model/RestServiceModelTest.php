@@ -565,4 +565,35 @@ class RestServiceModelTest extends TestCase
         $this->setExpectedException('ZF\Apigility\Admin\Exception\RuntimeException', 'find', 404);
         $this->codeRest->fetch($service->controllerServiceName);
     }
+
+    /**
+     * @group skeleton-37
+     */
+    public function testUpdateHalConfigShouldNotRemoveIsCollectionKey()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
+            'route_identifier_name' => 'custom_foo_id',
+            'route_name'            => 'my/custom/route',
+        );
+        $patch = new RestServiceEntity();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateHalConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-hal', $config);
+        $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
+        $config = $config['zf-hal']['metadata_map'];
+
+        $collectionName = $original->collectionClass;
+        $this->assertArrayHasKey($collectionName, $config);
+
+        $collectionConfig = $config[$collectionName];
+        $this->assertArrayHasKey('is_collection', $collectionConfig);
+        $this->assertTrue($collectionConfig['is_collection']);
+    }
 }
