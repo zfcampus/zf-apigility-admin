@@ -1180,6 +1180,21 @@ angular.module('ag-admin').directive('collapse', function() {
 
 (function() {'use strict';
 
+/* <ag-comment>Comment you want stripped here</ag-comment> */
+angular.module('ag-admin').directive('agComment', function() {
+  return {
+    restrict: 'E',
+    compile: function(element, attr) {
+        element.replaceWith('');
+    }
+  };
+});
+
+})();
+
+
+(function() {'use strict';
+
 angular.module('ag-admin').directive('agEditInplace', function() {
     return {
         restrict: 'E',
@@ -1304,7 +1319,7 @@ angular.module('ag-admin').directive('agModalDismiss', function() {
  * Borrowed from http://errietta.me/blog/bootstrap-angularjs-directives/
  */
 
-  /* <ag-tabs [parent="..."] ...>[<ag-tab-pane ...></ag-tab-pane>]</ag-tabs> */
+/* <ag-tabs [parent="..."] ...>[<ag-tab-pane ...></ag-tab-pane>]</ag-tabs> */
 angular.module('ag-admin').directive('agTabs', function() {
     return {
         restrict: 'E',
@@ -1330,8 +1345,21 @@ angular.module('ag-admin').directive('agTabs', function() {
                 panes.push(pane);
             };
         }],
+        link: function (scope, element, attr) {
+            var tabType = 'nav-tabs';
+            if (attr.hasOwnProperty('pills')) {
+                tabType = 'nav-pills';
+            }
+            angular.forEach(element.children(), function (child) {
+                child = angular.element(child);
+                if (child.context.tagName !== 'UL') {
+                    return;
+                }
+                child.addClass(tabType);
+            });
+        },
         template: '<div class="ag-tabs">' +
-            '<ul class="nav nav-tabs">' +
+            '<ul class="nav">' +
             '<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">'+
             '<a href="" ng-click="select(pane)">{{pane.title}}</a>' +
             '</li>' +
