@@ -290,7 +290,7 @@ class RpcServiceResource extends AbstractResourceListener
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [
-                    'name' => 'zf-apigility-admin/api/module/rpc-service/rpc_input_filter',
+                    'name' => 'zf-apigility-admin/api/module/rpc-service/input-filter',
                     'params' => [
                         'name' => $this->moduleName,
                         'controller_service_name' => $service->controllerServiceName,
