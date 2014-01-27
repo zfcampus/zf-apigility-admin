@@ -51,7 +51,7 @@ class AuthenticationModel
 
         if ($entity->isOAuth2()) {
             $data = $entity->getArrayCopy();
-            $this->validateDsn($data['dsn']);
+            $this->validateDsn($data['dsn'], $data['username'], $data['password']);
         }
 
         $allData = $entity->getArrayCopy();
@@ -88,7 +88,7 @@ class AuthenticationModel
 
         if ($current->isOAuth2()) {
             $data = $current->getArrayCopy();
-            $this->validateDsn($data['dsn']);
+            $this->validateDsn($data['dsn'], $data['username'], $data['password']);
         }
 
         $allData = $current->getArrayCopy();
@@ -304,15 +304,19 @@ class AuthenticationModel
     /**
      * Validate a DSN
      * 
-     * @param string $dsn 
+     * @param  string $dsn 
+     * @param  string $username
+     * @param  string $password
      * @throws Exception\InvalidArgumentException on invalid DSN
      */
-    protected function validateDsn($dsn)
+    protected function validateDsn($dsn, $username = null, $password = null)
     {
         try {
-            new PDO($dsn);
+            new PDO($dsn, $username, $password);
         } catch (PDOException $e) {
-            throw new Exception\InvalidArgumentException(sprintf('Invalid DSN "%s" provided', $dsn), 422);
+            throw new Exception\InvalidArgumentException(
+                sprintf('Invalid DSN "%s" provided', $dsn, $password), 422
+            );
         }
     }
 }
