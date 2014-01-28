@@ -372,17 +372,25 @@ class Module
         ) {
             $links = $resource->getLinks();
 
-            if (!$links->has('input_filter')) {
-                return;
+            if ($links->has('input_filter')) {
+                $serviceName = is_array($entity) ? $entity['controller_service_name'] : $entity->controllerServiceName;
+
+                $link   = $links->get('input_filter');
+                $params = $link->getRouteParams();
+                $link->setRouteParams(array_merge($params, [
+                    'controller_service_name' => $serviceName
+                ]));
             }
 
-            $serviceName = is_array($entity) ? $entity['controller_service_name'] : $entity->controllerServiceName;
+            if ($links->has('documentation')) {
+                $serviceName = is_array($entity) ? $entity['controller_service_name'] : $entity->controllerServiceName;
 
-            $link   = $links->get('input_filter');
-            $params = $link->getRouteParams();
-            $link->setRouteParams(array_merge($params, [
-                'controller_service_name' => $serviceName
-            ]));
+                $link   = $links->get('documentation');
+                $params = $link->getRouteParams();
+                $link->setRouteParams(array_merge($params, [
+                    'controller_service_name' => $serviceName
+                ]));
+            }
         }
     }
 
@@ -475,6 +483,19 @@ class Module
                 ),
             ),
         )));
+
+        // Add the documentation relational link
+        $links->add(Link::factory(array(
+            'rel' => 'documentation',
+            'route' => array(
+                'name' => sprintf('zf-apigility-admin/api/module/%s-service/doc', $type),
+                'params' => array(
+                    'name' => $module,
+                    'controller_service_name' => $service,
+                ),
+            ),
+        )));
+
         $e->setParam('resource', $halResource);
     }
 

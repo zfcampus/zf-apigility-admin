@@ -408,6 +408,7 @@ return array(
             'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
+                'entity_identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-apigility-admin/api/module/rest-service',
             ),
             'ZF\Apigility\Admin\Model\DbAdapterEntity' => array(
@@ -448,6 +449,7 @@ return array(
             'ZF\Apigility\Admin\Model\RestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
+                'entity_identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-apigility-admin/api/module/rest-service',
                 'links'           => array(
                     array(
@@ -458,9 +460,9 @@ return array(
                     ),
                     array(
                         'rel' => 'documentation',
-                        'route' => [
+                        'route' => array(
                             'name' => 'zf-apigility-admin/api/module/rest-service/doc',
-                        ]
+                        ),
                     )
                 ),
             ),
@@ -477,6 +479,7 @@ return array(
             'ZF\Apigility\Admin\Model\RpcServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
+                'entity_identifier_name' => 'controller_service_name',
                 'route_name'      => 'zf-apigility-admin/api/module/rpc-service',
                 'links'           => array(
                     array(
@@ -487,9 +490,9 @@ return array(
                     ),
                     array(
                         'rel' => 'documentation',
-                        'route' => [
+                        'route' => array(
                             'name' => 'zf-apigility-admin/api/module/rpc-service/doc',
-                        ]
+                        ),
                     )
                 ),
             ),
