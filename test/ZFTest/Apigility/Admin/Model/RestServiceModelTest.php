@@ -240,7 +240,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals($expected, $routes[$routeName]);
     }
 
-    public function testCreareRouteWritesVersioningConfiguration()
+    public function testCreateRouteWritesVersioningConfiguration()
     {
         $routeName = $this->codeRest->createRoute('FooBar', '/foo-bar', 'foo_bar_id', 'BarConf\Rest\FooBar\Controller');
 
