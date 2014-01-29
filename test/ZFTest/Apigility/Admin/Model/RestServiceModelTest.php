@@ -596,4 +596,48 @@ class RestServiceModelTest extends TestCase
         $this->assertArrayHasKey('is_collection', $collectionConfig);
         $this->assertTrue($collectionConfig['is_collection']);
     }
+
+    /**
+     * @group 76
+     */
+    public function testUpdateHalConfigShouldKeepExistingKeysIntact()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'hydrator_name'          => 'Zend\Stdlib\Hydrator\Reflection',
+            'entity_identifier_name' => 'custom_foo_id',
+        );
+        $patch = new RestServiceEntity();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateHalConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-hal', $config);
+        $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
+        $config = $config['zf-hal']['metadata_map'];
+
+        $entityName     = $original->entityClass;
+        $collectionName = $original->collectionClass;
+        $this->assertArrayHasKey($entityName, $config);
+        $this->assertArrayHasKey($collectionName, $config);
+
+        $entityConfig = $config[$entityName];
+        $this->assertArrayHasKey('entity_identifier_name', $entityConfig);
+        $this->assertArrayHasKey('route_identifier_name', $entityConfig);
+        $this->assertArrayHasKey('route_name', $entityConfig);
+        $this->assertEquals($options['entity_identifier_name'], $entityConfig['entity_identifier_name']);
+        $this->assertEquals($original->routeIdentifierName, $entityConfig['route_identifier_name']);
+        $this->assertEquals($original->routeName, $entityConfig['route_name']);
+
+        $collectionConfig = $config[$collectionName];
+        $this->assertArrayHasKey('entity_identifier_name', $entityConfig);
+        $this->assertArrayHasKey('route_identifier_name', $entityConfig);
+        $this->assertArrayHasKey('route_name', $entityConfig);
+        $this->assertEquals($options['entity_identifier_name'], $entityConfig['entity_identifier_name']);
+        $this->assertEquals($original->routeIdentifierName, $entityConfig['route_identifier_name']);
+        $this->assertEquals($original->routeName, $entityConfig['route_name']);
+    }
 }

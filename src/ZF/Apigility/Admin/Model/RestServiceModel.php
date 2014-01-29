@@ -10,6 +10,7 @@ use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Filter\FilterChain;
+use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
@@ -745,6 +746,9 @@ class RestServiceModel implements EventManagerAwareInterface
         $service = $original->controllerServiceName;
         $baseKey = 'zf-hal.metadata_map.';
 
+        $entityConfig     = $this->getConfigForSubkey($baseKey . $original->entityClass);
+        $collectionConfig = $this->getConfigForSubkey($baseKey . $original->collectionClass);
+
         $entityUpdate     = [];
         $collectionUpdate = [];
         if ($update->routeIdentifierName
@@ -775,14 +779,15 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         if (!empty($entityUpdate)) {
+            $update = ArrayUtils::merge($entityConfig, $entityUpdate);
             $key = $baseKey . $original->entityClass;
-            $this->configResource->patchKey($key, $entityUpdate);
+            $this->configResource->patchKey($key, $update);
         }
 
         if (!empty($collectionUpdate)) {
-            $collectionUpdate['is_collection'] = true;
+            $update = ArrayUtils::merge($collectionConfig, $collectionUpdate);
             $key = $baseKey . $original->collectionClass;
-            $this->configResource->patchKey($key, $collectionUpdate);
+            $this->configResource->patchKey($key, $update);
         }
     }
 
@@ -1074,5 +1079,33 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         return sprintf('%s\\Rest\\%s\\%sCollection', $module, $matches['service'], $matches['service']);
+    }
+
+    /**
+     * Traverse an array for a subkey
+     *
+     * Subkey is given in "." notation, which is then split, and
+     * the configuration is traversed until no more keys are available,
+     * or a corresponding entry is not found; in the latter case,
+     * the $default will be provided.
+     *
+     * @param string $subKey
+     * @param array|mixed $default
+     * @return mixed
+     */
+    protected function getConfigForSubkey($subKey, $default = [])
+    {
+        $config = $this->configResource->fetch(true);
+        $keys   = explode('.', $subKey);
+
+        do {
+            $key = array_shift($keys);
+            if (!isset($config[$key])) {
+                return $default;
+            }
+            $config = $config[$key];
+        } while (count($keys));
+
+        return $config;
     }
 }
