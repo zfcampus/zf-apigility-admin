@@ -289,7 +289,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Validators'     => 'Json',
             'ZF\Apigility\Admin\Controller\Versioning'     => 'Json',
         ),
-        'accept-whitelist' => array(
+        'accept_whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
                 'application/json',
                 'application/*+json',
@@ -347,7 +347,7 @@ return array(
                 'application/*+json',
             ),
         ),
-        'content-type-whitelist' => array(
+        'content_type_whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
                 'application/json',
                 'application/*+json',
