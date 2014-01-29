@@ -116,7 +116,7 @@ return array (
             'Version\\V1\\Rest\\Message\\Controller' => 'HalJson',
             'Version\\V1\\Rest\\Comment\\Controller' => 'HalJson',
         ),
-        'accept-whitelist' => array (
+        'accept_whitelist' => array (
             'Version\\V1\\Rest\\Message\\Controller' => array (
                 0 => 'application/json',
                 1 => 'application/*+json',
@@ -126,7 +126,7 @@ return array (
                 1 => 'application/*+json',
             ),
         ),
-        'content-type-whitelist' => array (
+        'content_type_whitelist' => array (
             'Version\\V1\\Rest\\Message\\Controller' => array (
                 0 => 'application/json',
             ),
