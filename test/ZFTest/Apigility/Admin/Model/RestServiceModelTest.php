@@ -628,7 +628,7 @@ class RestServiceModelTest extends TestCase
         $this->assertArrayHasKey('entity_identifier_name', $entityConfig);
         $this->assertArrayHasKey('route_identifier_name', $entityConfig);
         $this->assertArrayHasKey('route_name', $entityConfig);
-        $this->assertEquals($original->entityIdentifierName, $entityConfig['entity_identifier_name']);
+        $this->assertEquals($options['entity_identifier_name'], $entityConfig['entity_identifier_name']);
         $this->assertEquals($original->routeIdentifierName, $entityConfig['route_identifier_name']);
         $this->assertEquals($original->routeName, $entityConfig['route_name']);
 
@@ -636,7 +636,7 @@ class RestServiceModelTest extends TestCase
         $this->assertArrayHasKey('entity_identifier_name', $entityConfig);
         $this->assertArrayHasKey('route_identifier_name', $entityConfig);
         $this->assertArrayHasKey('route_name', $entityConfig);
-        $this->assertEquals($original->entityIdentifierName, $entityConfig['entity_identifier_name']);
+        $this->assertEquals($options['entity_identifier_name'], $entityConfig['entity_identifier_name']);
         $this->assertEquals($original->routeIdentifierName, $entityConfig['route_identifier_name']);
         $this->assertEquals($original->routeName, $entityConfig['route_name']);
     }
