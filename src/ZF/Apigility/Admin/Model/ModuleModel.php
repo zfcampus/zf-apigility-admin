@@ -210,7 +210,7 @@ EOD;
 
         $replacement = preg_replace(
             '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
-            "use ZF\\Apigility\\Provider\\ApigilityProviderInterface;\n\nclass $1 implements ApigilityProviderInterface\n{",
+            "use ZF\Apigility\Provider\ApigilityProviderInterface;\n\nclass $1 implements ApigilityProviderInterface\n{",
             $content
         );
 
