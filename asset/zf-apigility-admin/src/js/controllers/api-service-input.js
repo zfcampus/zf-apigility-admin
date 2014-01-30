@@ -7,6 +7,12 @@ angular.module('ag-admin').controller('ApiServiceInputController', ['$scope', 'f
     $scope.validatorOptions = $scope.$parent.validatorOptions;
 
     $scope.addInput = function() {
+        // Test first to see if we have a value
+        if (!$scope.newInput || $scope.newInput === null || $scope.newInput === '' || $scope.newInput.match(/^\s+$/)) {
+            flash.error = "Must provide an input name!";
+            return;
+        }
+
         // Test to see if we already have an input by this name first
         var found = false;
         $scope.service.input_filter.every(function (input) {
