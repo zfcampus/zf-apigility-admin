@@ -698,7 +698,7 @@ angular.module('ag-admin').controller(
                     $scope.showHttpDigestAuthentication = true;
                     $scope.showHttpBasicAuthentication  = false;
                     $scope.showOAuth2Authentication     = false;
-                    $scope.digest_domains               = authentication.digest_domains.split(" ");
+                    $scope.digest_domains               = authentication.digest_domains;
                     $scope.httpDigest                   = authentication;
                     $scope.httpBasic                    = null;
                     $scope.oauth2                       = null;
@@ -750,7 +750,7 @@ angular.module('ag-admin').controller(
         $scope.showHttpBasicAuthenticationForm  = false;
         $scope.showHttpDigestAuthenticationForm = false;
         $scope.showOAuth2AuthenticationForm     = false;
-        $scope.digest_domains                   = '';
+        $scope.digest_domains                   = [];
         $scope.dsn                              = '';
         $scope.htdigest                         = '';
         $scope.htpasswd                         = '';
@@ -782,7 +782,7 @@ angular.module('ag-admin').controller(
             accept_schemes : [ "digest" ],
             realm          : $scope.realm,
             htdigest       : $scope.htdigest,
-            digest_domains : $scope.digest_domains.join(" "),
+            digest_domains : $scope.digest_domains.join(' '),
             nonce_timeout  : $scope.nonce_timeout
         };
         createAuthentication(options);
@@ -810,7 +810,7 @@ angular.module('ag-admin').controller(
         var options = {
             realm          : $scope.httpDigest.realm,
             htdigest       : $scope.httpDigest.htdigest,
-            digest_domains : $scope.httpDigest.digest_domains.join(" "),
+            digest_domains : $scope.httpDigest.digest_domains.join(' '),
             nonce_timeout  : $scope.httpDigest.nonce_timeout
         };
         updateAuthentication(options);
@@ -1778,7 +1778,11 @@ angular.module('ag-admin').factory(
             fetch: function(options) {
                 return $http.get(authenticationPath, options)
                     .then(function (response) {
-                        return response.data;
+                        var data = response.data;
+                        if (data.hasOwnProperty('digest_domains') && typeof data.digest_domains === 'string') {
+                            data.digest_domains = data.digest_domains.split(' ');
+                        }
+                        return data;
                     });
             },
             createAuthentication: function (options) {
