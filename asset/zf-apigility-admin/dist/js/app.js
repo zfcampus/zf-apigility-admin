@@ -12,7 +12,8 @@ angular.module(
         'angular-flash.service',
         'angular-flash.flash-alert-directive',
         'ui.sortable',
-        'ui.select2'
+        'ui.select2',
+        'toggle-switch'
     ]
 ).config([
     '$routeProvider', '$provide', 

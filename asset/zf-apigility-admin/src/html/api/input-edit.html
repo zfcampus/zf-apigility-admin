@@ -1,12 +1,6 @@
 <div class="panel panel-default"><div class="panel-body">
-    <button 
-        type="button" class="btn btn-sm pull-right"
-        ng-class="{true: 'btn-success', false: 'btn-default'}[input.required]"
-        ng-click="input.required = !input.required">
-        {{input.required && 'Yes' || 'No'}}
-    </button>
-
     <label class="control-label">Required</label>
+    <toggle-switch model="input.required" class="pull-right"></toggle-switch>
 </div></div>
 
 <collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
