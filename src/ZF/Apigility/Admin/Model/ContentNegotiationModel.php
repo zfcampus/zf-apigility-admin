@@ -71,8 +71,7 @@ class ContentNegotiationModel
     {
         $config = array();
         $fromConfigFile = $this->globalConfig->fetch(true);
-        if (isset($fromConfigFile['zf-content-negotiation'])
-            && isset($fromConfigFile['zf-content-negotiation']['selectors'])
+        if (isset($fromConfigFile['zf-content-negotiation']['selectors'])
             && is_array($fromConfigFile['zf-content-negotiation']['selectors'])
         ) {
             $config = $fromConfigFile['zf-content-negotiation']['selectors'];
@@ -95,10 +94,7 @@ class ContentNegotiationModel
     public function fetch($name)
     {
         $config = $this->globalConfig->fetch(true);
-        if (!isset($config['zf-content-negotiation'])
-            || !isset($config['zf-content-negotiation']['selectors'])
-            || !is_array($config['zf-content-negotiation']['selectors'])
-            || !isset($config['zf-content-negotiation']['selectors'][$name])
+        if (!isset($config['zf-content-negotiation']['selectors'][$name])
             || !is_array($config['zf-content-negotiation']['selectors'][$name])
         ) {
             return false;
