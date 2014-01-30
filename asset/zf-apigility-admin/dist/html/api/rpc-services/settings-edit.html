@@ -36,27 +36,27 @@
 
             <div class="control-group list-group-item">
                 <label class="control-label" for="accept_whitelist">Accept whitelist</label>
-                <ng-tags-input 
-                    ng-class="[form-control, input-xlarge]"
+                <tags-input 
+                    custom-class="ag-tags"
                     ng-model="rpcService.accept_whitelist"
                     add-on-space="true"
                     max-length="256"
                     allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
                     placeholder="Add a mediatype to the whitelist">
-                </ng-tags-input>
+                </tags-input>
                 <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
             </div>
 
             <div class="control-group list-group-item">
                 <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
-                <ng-tags-input 
-                    ng-class="[form-control, input-xlarge]"
+                <tags-input 
+                    custom-class="ag-tags"
                     ng-model="rpcService.content_type_whitelist"
                     add-on-space="true"
                     max-length="256"
                     allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
                     placeholder="Add a mediatype to the whitelist">
-                </ng-tags-input>
+                </tags-input>
                 <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
             </div>
         </collapse-body>
