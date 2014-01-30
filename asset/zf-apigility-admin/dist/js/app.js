@@ -25,6 +25,15 @@ angular.module(
             templateUrl: 'zf-apigility-admin/dist/html/index.html',
             controller: 'DashboardController'
         });
+        $routeProvider.when('/global/content-negotiation', {
+            templateUrl: 'zf-apigility-admin/dist/html/global/content-negotiation/index.html',
+            controller: 'ContentNegotiationController',
+            resolve: {
+                selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                    return ContentNegotiationResource.getList();
+                }]
+            }
+        });
         $routeProvider.when('/global/db-adapters', {
             templateUrl: 'zf-apigility-admin/dist/html/global/db-adapters/index.html',
             controller: 'DbAdapterController'
@@ -838,6 +847,42 @@ angular.module('ag-admin').controller(
 }]);
 
 })();
+
+(function(_) {'use strict';
+
+angular.module('ag-admin').controller(
+  'ContentNegotiationController',
+  ['$scope', '$location', 'flash', 'selectors', function ($scope, $location, flash, selectors) {
+    var newSelector = {
+      content_name: '',
+      viewModel: '',
+      selectors: {}
+    };
+
+    $scope.showNewSelectorForm = false;
+    $scope.newSelector = _.cloneDeep(newSelector);
+    $scope.selectors = selectors;
+
+    $scope.resetNewSelectorForm = function() {
+      $scope.showNewSelectorForm = false;
+      $scope.newSelector = _.cloneDeep(newSelector);
+    };
+
+    $scope.addViewModel = function (viewModel, selector) {
+      selector.selectors[viewModel] = [];
+      $scope.newSelector.viewModel = '';
+    };
+
+    $scope.createSelector = function() {
+      delete $scope.newSelector.viewModel;
+      console.log($scope.newSelector);
+      flash.success = 'New selector created';
+      $scope.resetNewSelectorForm();
+    };
+  }]
+);
+
+})(_);
 
 (function() {'use strict';
 
@@ -1807,6 +1852,32 @@ angular.module('ag-admin').factory(
             }
         };
     }]
+);
+
+})();
+
+(function() {'use strict';
+
+angular.module('ag-admin').factory(
+  'ContentNegotiationResource',
+  ['$http', 'flash', 'apiBasePath',
+  function ($http, flash, apiBasePath) {
+
+    var servicePath = apiBasePath + '/content-negotiation';
+
+    return {
+      getList: function () {
+        return $http({method: 'GET', url: servicePath}).then(
+          function success(response) {
+            return response.data._embedded.selectors;
+          },
+          function error() {
+            flash.error = 'Unable to fetch content negotiation selectors; you may need to reload the page';
+          }
+        );
+      }
+    };
+  }]
 );
 
 })();
