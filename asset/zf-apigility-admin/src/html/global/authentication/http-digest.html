@@ -2,7 +2,7 @@
     conditionals="{edit: false, delete: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <i class="btn btn-sm glyphicon glyphicon-lock"></i>
+            <i class="glyphicon glyphicon-lock"></i>
 
             HTTP Digest Settings
 
@@ -73,22 +73,22 @@
     <collapse-body collapse-show criteria="{edit: true}">
         <div class="panel-body"><form class="form" ng-submit="updateHttpDigestAuthentication()">
             <fieldset>
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="realm">Realm</label>
                     <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpDigest.realm">
                     <p class="help-block">HTTP authentication realm</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="htdigest">Location of htdigest file</label>
                     <input type="text" placeholder="data/htdigest" class="form-control input-xlarge" required="required" ng-model="httpDigest.htdigest">
                     <p class="help-block">Location on the filesystem of the htdigest file</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="digest_domains">Digest domains</label>
-                    <tags-input 
-                        custom-class="ag-tags"
+                    <ng-tags-input 
+                        ng-class="form-control"
                         ng-model="httpDigest.digest_domains"
                         add-on-space="true"
                         min-length="1"
@@ -99,7 +99,7 @@
                     <p class="help-block">Space-separated list of URI paths for which authentication will be applied</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="nonce_timeout">Nonce timeout</label>
                     <input type="text" placeholder="3600" class="form-control input-xlarge" required="required" ng-model="httpDigest.nonce_timeout">
                     <p class="help-block">Expiration in seconds for inactive authentication</p>

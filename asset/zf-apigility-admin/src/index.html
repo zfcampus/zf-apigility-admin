@@ -5,7 +5,6 @@
     <base href="%BASE_HREF%/" />
 
     <link rel="stylesheet" type="text/css" href="zf-apigility-admin/dist/css/vendor-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="zf-apigility/css/main.css" />
     <link rel="stylesheet" type="text/css" href="zf-apigility-admin/dist/css/main.min.css" />
 
     <script type="text/javascript" src="zf-apigility-admin/dist/js/vendor-ui.min.js"></script>
@@ -15,7 +14,7 @@
 </head>
 <body id="ng-app" ng-app="ag-admin" data-api-base-path="%BASE_HREF%">
     <a class="sr-only" href="admin#content"> … </a>
-    <header class="navbar navbar-inverse navbar-fixed-top ag-admin-nav" role="banner">
+    <header class="navbar navbar-inverse navbar-fixed-top primary" role="banner">
         <div class="container">
             <div class="navbar-header">
                 <a href="admin" class="navbar-brand">
@@ -31,26 +30,29 @@
         </div>
     </header>
 
-    <div class="ag-admin-module-navigation" ng-controller="ApiListController" ng-init="refreshApiList();">
+    <div class="navbar navbar-default navbar-fixed-top secondary" ng-controller="ApiListController" ng-init="refreshApiList();">
         <div class="container">
-            <button id="create-module-button"
-                class="btn btn-sm btn-primary pull-right"
-                position="bottom"
-                title="Create New API"
-                data-toggle="modal"
-                data-target="#create-api-form">
-                Create New API
-            </button>
+            <div class="pull-right">
+                <button id="create-module-button"
+                    class="btn btn-sm btn-primary navbar-btn"
+                    position="bottom"
+                    title="Create New API"
+                    data-toggle="modal"
+                    data-target="#create-api-form">
+                    <i class="glyphicon glyphicon-plus"></i> Create New API
+                </button>
+            </div>
 
-            <span class="pull-left">APIs: </span>
-            <ul class="nav nav-pills ag-admin-nav-pills">
+            <p class="navbar-text">APIs:</p>
+            <ul class="navbar-nav nav">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
                     <a ng-bind="api.namespace" ng-href="admin#/api/{{ api.name }}/v{{ api.versions[api.versions.length-1] }}/overview"></a>
                 </li>
             </ul>
         </div>
+    </div>
 
-    <div class="ag-admin-header" id="content">
+    <div id="content">
         <div class="container">
             <h1 ng-bind="pageTitle"></h1>
         </div>

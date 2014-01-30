@@ -5,18 +5,15 @@
 
 <collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
     <collapse-header>
-        <h4 class="panel-title">
-            <i class="btn btn-sm glyphicon glyphicon-ok"></i>
-
-            Validators
-
-            <button 
-                type="button" class="btn btn-sm btn-primary pull-right"
-                collapse-flag flags="{newValidatorFormVisible: true}"
-                collapse-button criteria="{newValidatorFormVisible: false}">
-                Add Validator
-            </button>
+        <h4 class="panel-title pull-left">
+            <i class="glyphicon glyphicon-ok"></i> Validators
         </h4>
+        <button 
+            type="button" class="btn btn-sm btn-primary pull-right"
+            collapse-flag flags="{newValidatorFormVisible: true}"
+            collapse-button criteria="{newValidatorFormVisible: false}">
+            Add Validator
+        </button>
 
         <div class="clearfix"></div>
     </collapse-header>
@@ -26,7 +23,7 @@
             <collapse class="panel panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="validator in input.validators">
                 <collapse-header>
                     <h4 class="panel-title">
-                        <i class="btn btn-sm glyphicon glyphicon-resize-vertical validator-handle"></i>
+                        <i class="glyphicon glyphicon-resize-vertical validator-handle"></i>
 
                         {{validator.name}}
 
@@ -133,7 +130,7 @@
 <collapse class="panel-warning" conditionals="{newFilterFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <i class="btn btn-sm glyphicon glyphicon-filter"></i>
+            <i class="glyphicon glyphicon-filter"></i>
             Filters
 
             <button 
@@ -152,7 +149,7 @@
             <collapse class="panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="filter in input.filters">
                 <collapse-header>
                     <h4 class="panel-title">
-                        <i class="btn btn-sm glyphicon glyphicon-resize-vertical filter-handle"></i>
+                        <i class="glyphicon glyphicon-resize-vertical filter-handle"></i>
 
                         {{filter.name}}
 

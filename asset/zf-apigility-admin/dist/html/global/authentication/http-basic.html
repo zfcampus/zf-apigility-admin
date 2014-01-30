@@ -2,7 +2,7 @@
     conditionals="{edit: false, delete: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <i class="btn btn-sm glyphicon glyphicon-lock"></i>
+            <i class="glyphicon glyphicon-lock"></i>
 
             HTTP Basic Settings
 
@@ -61,13 +61,13 @@
     <collapse-body collapse-show criteria="{edit: true}">
         <div class="panel-body"><form class="form" ng-submit="updateHttpBasicAuthentication()">
             <fieldset>
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="realm">Authentication Realm</label>
                     <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpBasic.realm">
                     <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="htpasswd">Location of htpasswd file</label>
                     <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="httpBasic.htpasswd">
                     <p class="help-block">Location on the filesystem of the htpasswd file</p>

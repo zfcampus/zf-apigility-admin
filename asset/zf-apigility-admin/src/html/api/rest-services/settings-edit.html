@@ -6,7 +6,7 @@
         </collapse-header>
 
         <collapse-body class="list-group in">
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Route to match</label>
                 <div class="controls">
                     <input type="text" placeholder="/api/your_resource" class="form-control input-xlarge" required="" ng-model="restService.route_match">
@@ -14,7 +14,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Number of entities to display per page of a collection</label>
                 <div class="controls">
                     <input type="text" placeholder="25" class="form-control input-xlarge" ng-model="restService.page_size">
@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">HTTP methods allowed for ENTITIES</label>
                 <div class="controls">
                     <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">HTTP methods allowed for COLLECTIONS</label>
                 <div class="controls">
                     <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
@@ -50,7 +50,7 @@
         </collapse-header>
 
         <collapse-body class="list-group">
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="selector">DB Adapter Name</label>
                 <div class="controls">
                     <select 
@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="table_name">DB Table Name</label>
                 <div class="controls">
                     <input type="text" placeholder="Table Name" class="form-control input-xlarge" required="" ng-model="restService.table_name">
@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="table_service">TableGateway Service Name</label>
                 <div class="controls">
                     <input type="text" placeholder="TableGateway Service Name" class="form-control input-xlarge" required="" ng-model="restService.table_service">
@@ -84,7 +84,7 @@
         </collapse-header>
 
         <collapse-body class="list-group">
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Route Identifier Name</label>
                 <div class="controls">
                     <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.route_identifier_name">
@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Entity Identifier Name</label>
                 <div class="controls">
                     <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.entity_identifier_name">
@@ -100,7 +100,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
                 <div class="controls">
                     <select class="form-control input-xlarge"
@@ -110,7 +110,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Collection Name</label>
                 <div class="controls">
                     <input type="text" placeholder="id" class="form-control input-xlarge" required="" ng-model="restService.collection_name">
@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="page_size_param">Page size parameter</label>
                 <div class="controls">
                     <input type="text" placeholder="" class="form-control input-xlarge" ng-model="restService.page_size_param">
@@ -126,7 +126,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Collection Query String whitelist</label>
                 <div class="controls">
                     <tags-input
@@ -151,14 +151,14 @@
         </collapse-header>
 
         <collapse-body class="list-group">
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Content Negotiation Selector</label>
                     <div class="controls">
                     <select class="form-control input-xlarge" ng-model="restService.selector" ng-options="v as v for (k,v) in contentNegotiation"></select>
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Accept whitelist</label>
                 <div class="controls">
                     <tags-input
@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Content-Type whitelist</label>
                 <div class="controls">
                     <tags-input

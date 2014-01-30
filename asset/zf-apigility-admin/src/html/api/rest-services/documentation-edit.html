@@ -2,7 +2,7 @@
     <form novalidate class="ag form" ng-submit="save(restService.documentation)">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label">REST service description</label>
                     <div class="controls">
                         <input type="text" placeholder="Insert the description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.description">
@@ -13,7 +13,7 @@
                 <div class="panel panel-default"><div class="panel-body">
                 <ag-tabs pills>
                     <ag-tab-pane title="Collection"><div class="panel-body">
-                        <div class="control-group">
+                        <div class="form-group">
                             <label class="control-label">Description</label>
                             <div class="controls">
                                 <input type="text" placeholder="Insert the Collection description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.collection.description">
@@ -31,7 +31,7 @@
                     </div></ag-tab-pane>
 
                     <ag-tab-pane title="Entity"><div class="panel-body">
-                        <div class="control-group">
+                        <div class="form-group">
                             <label class="control-label">Description</label>
                             <div class="controls">
                                 <input type="text" placeholder="Insert the Entity description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.entity.description">
