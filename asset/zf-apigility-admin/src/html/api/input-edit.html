@@ -1,12 +1,6 @@
 <div class="panel panel-default"><div class="panel-body">
-    <button 
-        type="button" class="btn btn-sm pull-right"
-        ng-class="{true: 'btn-success', false: 'btn-default'}[input.required]"
-        ng-click="input.required = !input.required">
-        {{input.required && 'Yes' || 'No'}}
-    </button>
-
     <label class="control-label">Required</label>
+    <toggle-switch model="input.required" class="small pull-right"></toggle-switch>
 </div></div>
 
 <collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
@@ -93,13 +87,10 @@
 
                                 <br />
 
-                                <button 
-                                    type="button" class="btn btn-sm"
+                                <toggle-switch 
                                     ng-show="validator._newOptionName && (validatorOptions[validator.name][validator._newOptionName] == 'bool')"
-                                    ng-class="{true: 'btn-success', false: 'btn-default'}[validator._newOptionValue]"
-                                    ng-click="validator._newOptionValue = !validator._newOptionValue">
-                                    {{validator._newOptionValue && 'Yes' || 'No'}}
-                                </button>
+                                    model="validator._newOptionValue"
+                                    class="small"></toggle-switch>
                                 <input 
                                     type="text" class="form-control input-xlarge" 
                                     ng-show="validator._newOptionName && (validatorOptions[validator.name][validator._newOptionName] != 'bool')"

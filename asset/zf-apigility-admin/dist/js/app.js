@@ -12,7 +12,8 @@ angular.module(
         'angular-flash.service',
         'angular-flash.flash-alert-directive',
         'ui.sortable',
-        'ui.select2'
+        'ui.select2',
+        'toggle-switch'
     ]
 ).config([
     '$routeProvider', '$provide', 
@@ -578,7 +579,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', ['$scope', 'f
 
     $scope.addValidatorOption = function (validator) {
         if ($scope.validatorOptions[validator.name][validator._newOptionName] == 'bool') {
-            validator._newOptionValue = (validator._newOptionValue === 'true');
+            validator._newOptionValue = (validator._newOptionValue === true);
         }
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
