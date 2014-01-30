@@ -265,6 +265,15 @@ return array(
                                     ),
                                 ),
                             ),
+                            'content-negotiation' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/content-negotiation[/:content_name]',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\ContentNegotiation',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -274,20 +283,21 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
-            'ZF\Apigility\Admin\Controller\Authentication' => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Authorization'  => 'HalJson',
-            'ZF\Apigility\Admin\Controller\DbAdapter'      => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Documentation'  => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Filters'        => 'Json',
-            'ZF\Apigility\Admin\Controller\Hydrators'      => 'Json',
-            'ZF\Apigility\Admin\Controller\InputFilter'    => 'HalJson',
-            'ZF\Apigility\Admin\Controller\ModuleCreation' => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Module'         => 'HalJson',
-            'ZF\Apigility\Admin\Controller\RestService'    => 'HalJson',
-            'ZF\Apigility\Admin\Controller\RpcService'     => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Source'         => 'Json',
-            'ZF\Apigility\Admin\Controller\Validators'     => 'Json',
-            'ZF\Apigility\Admin\Controller\Versioning'     => 'Json',
+            'ZF\Apigility\Admin\Controller\Authentication'     => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Authorization'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\ContentNegotiation' => 'HalJson',
+            'ZF\Apigility\Admin\Controller\DbAdapter'          => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Documentation'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Filters'            => 'Json',
+            'ZF\Apigility\Admin\Controller\Hydrators'          => 'Json',
+            'ZF\Apigility\Admin\Controller\InputFilter'        => 'HalJson',
+            'ZF\Apigility\Admin\Controller\ModuleCreation'     => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Module'             => 'HalJson',
+            'ZF\Apigility\Admin\Controller\RestService'        => 'HalJson',
+            'ZF\Apigility\Admin\Controller\RpcService'         => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Source'             => 'Json',
+            'ZF\Apigility\Admin\Controller\Validators'         => 'Json',
+            'ZF\Apigility\Admin\Controller\Versioning'         => 'Json',
         ),
         'accept_whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
@@ -295,6 +305,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Authorization' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -356,6 +370,10 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
+            'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
                 'application/json',
                 'application/*+json',
@@ -404,6 +422,12 @@ return array(
             ),
             'ZF\Apigility\Admin\Model\AuthorizationEntity' => array(
                 'hydrator'        => 'ArraySerializable',
+            ),
+            'ZF\Apigility\Admin\Model\ContentNegotiationEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'route_identifier_name' => 'content_name',
+                'entity_identifier_name' => 'content_name',
+                'route_name'      => 'zf-apigility-admin/api/content-negotiation'
             ),
             'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
@@ -513,6 +537,15 @@ return array(
     ),
 
     'zf-rest' => array(
+        'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+            'listener'                => 'ZF\Apigility\Admin\Model\ContentNegotiationResource',
+            'route_name'              => 'zf-apigility-admin/api/content-negotiation',
+            'route_identifier_name'   => 'content_name',
+            'entity_class'            => 'ZF\Apigility\Admin\Model\ContentNegotiationEntity',
+            'resource_http_methods'   => array('GET', 'PATCH', 'DELETE'),
+            'collection_http_methods' => array('GET', 'POST'),
+            'collection_name'         => 'selectors',
+        ),
         'ZF\Apigility\Admin\Controller\DbAdapter' => array(
             'listener'                => 'ZF\Apigility\Admin\Model\DbAdapterResource',
             'route_name'              => 'zf-apigility-admin/api/db-adapter',
