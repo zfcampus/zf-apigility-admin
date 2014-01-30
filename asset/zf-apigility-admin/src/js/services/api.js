@@ -250,6 +250,18 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                 .then(function (response) {
                     return response.data;
                 });
+        },
+
+        getLatestVersion: function (api) {
+            var versions = api.versions;
+            var latest = versions.pop();
+            versions.push(latest);
+            return latest;
+        },
+
+        isLatestVersion: function (api) {
+            var latest = this.getLatestVersion(api);
+            return (api.version === latest);
         }
     };
 }]);

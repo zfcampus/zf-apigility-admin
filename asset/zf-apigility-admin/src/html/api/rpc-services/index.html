@@ -12,7 +12,7 @@
 
                 {{ rpcService.controller_service_name | servicename }}
 
-                <div class="btn-group pull-right">
+                <div class="btn-group pull-right" ng-show="isLatestVersion()">
                     <button
                         type="button" title="Cancel" class="btn btn-sm btn-default"
                         collapse-flag flags="{edit: false}" 

@@ -25,6 +25,10 @@ angular.module('ag-admin').controller('ApiRpcServicesController', ['$http', '$ro
         $scope.rpcServiceRoute = '';
     };
 
+    $scope.isLatestVersion = function () {
+        return $scope.ApiRepository.isLatestVersion($scope.api);
+    };
+
     $scope.createNewRpcService = function () {
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(function (rpcResource) {
             flash.success = 'New RPC Service created';
