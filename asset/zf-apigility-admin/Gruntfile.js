@@ -140,7 +140,8 @@ module.exports = function(grunt) {
                     'vendor/angular-flash/dist/angular-flash.js',
                     'vendor/angular-ui-sortable/src/sortable.js',
                     'vendor/angular-ui-select2/src/select2.js',
-                    'vendor/ng-tags-input/ng-tags-input.js'
+                    'vendor/ng-tags-input/ng-tags-input.js',
+                    'vendor/angular-toggle-switch/angular-toggle-switch.js'
                 ],
                 dest: '<%= dist.vendor.js.angular %>'
             }
@@ -154,7 +155,9 @@ module.exports = function(grunt) {
                         'vendor/sass-bootstrap-glypicons/css/bootstrap-glyphicons.css',
                         'vendor/jquery-ui/themes/ui-lightness/jquery-ui.css',
                         'vendor/select2/select2.css',
-                        'vendor/ng-tags-input/ng-tags-input.css'
+                        'vendor/ng-tags-input/ng-tags-input.css',
+                        'vendor/angular-toggle-switch/angular-toggle-switch.css',
+                        'vendor/angular-toggle-switch/angular-toggle-switch-bootstrap.css'
                     ]
                 }
             }
@@ -195,8 +198,12 @@ module.exports = function(grunt) {
                 files: ['<%= src.template %>/**/*.html'],
                 tasks: ['copy']
             }
-        }
+        },
+
+        clean: ['dist/**/*']
     });
+
+
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');

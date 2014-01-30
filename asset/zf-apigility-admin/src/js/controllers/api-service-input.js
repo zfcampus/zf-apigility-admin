@@ -64,7 +64,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', ['$scope', 'f
 
     $scope.addValidatorOption = function (validator) {
         if ($scope.validatorOptions[validator.name][validator._newOptionName] == 'bool') {
-            validator._newOptionValue = (validator._newOptionValue === 'true');
+            validator._newOptionValue = (validator._newOptionValue === true);
         }
         validator.options[validator._newOptionName] = validator._newOptionValue;
         validator._newOptionName = '';
