@@ -22,7 +22,7 @@ class ContentNegotiationEntity
     public function getArrayCopy()
     {
         return array_merge(
-            [ 'content_name' => $this->name ], 
+            [ 'content_name' => $this->name ],
             [ 'selectors' => $this->config ]
         );
     }

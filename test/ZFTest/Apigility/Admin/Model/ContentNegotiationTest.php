@@ -108,7 +108,7 @@ class ContentNegotiationTest extends TestCase
         );
         $model = $this->createModelFromConfigArray(array());
         $model->create('Json', $toCreate);
-        
+
         $toUpdate = array(
             'ZF\ContentNegotiation\JsonModel' => array(
                 'application/json',
@@ -163,7 +163,7 @@ class ContentNegotiationTest extends TestCase
             $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $value);
         }
     }
-    
+
     public function testFetchContentNegotiation()
     {
         $toCreate = array(
