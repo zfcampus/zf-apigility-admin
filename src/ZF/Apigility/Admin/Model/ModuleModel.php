@@ -15,6 +15,7 @@ use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\ApigilityModuleInterface;
+use ZF\Apigility\Provider\ApigilityProviderInterface;
 
 class ModuleModel
 {
@@ -200,19 +201,23 @@ EOD;
             return false;
         }
 
+        if ($modules[$module] instanceof ApigilityProviderInterface) {
+            return false;
+        }
+
         $objModule = new ReflectionObject($modules[$module]);
         $content   = file_get_contents($objModule->getFileName());
 
         $replacement = preg_replace(
             '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
-            "use ZF\Apigility\ApigilityModuleInterface;\n\nclass $1 implements ApigilityModuleInterface\n{",
+            "use ZF\\Apigility\\Provider\\ApigilityProviderInterface;\n\nclass $1 implements ApigilityProviderInterface\n{",
             $content
         );
 
         if ($replacement === $content) {
             $replacement = preg_replace(
                 '/implements\s/',
-                'implements ZF\Apigility\ApigilityModuleInterface,',
+                'implements ZF\Apigility\Provider\ApigilityProviderInterface,',
                 $content
             );
         }
@@ -238,8 +243,16 @@ EOD;
 
         $this->modules = array();
         foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
-            if (!$module instanceof ApigilityModuleInterface) {
+            if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
                 continue;
+            }
+
+            if ($module instanceof ApigilityModuleInterface) {
+                trigger_error(
+                    'ZF\Apigility\ApigilityModuleInterface is deprecated,
+                    use ZF\Apigility\Provider\ApigilityProviderInterface instead',
+                    E_USER_DEPRECATED
+                );
             }
 
             $services = $this->getServicesByModule($moduleName);
@@ -259,11 +272,17 @@ EOD;
     /**
      * Retrieves the configured default version for the specified module.
      *
-     * @param  ApigilityModuleInterface $module
+     * @param  ApigilityModuleInterface|ApigilityProviderInterface $module
+     * @throws \ZF\Apigility\Admin\Exception\InvalidArgumentException
      * @return int
      */
-    protected function getModuleDefaultVersion(ApigilityModuleInterface $module)
+    protected function getModuleDefaultVersion($module)
     {
+        if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+            throw new Exception\InvalidArgumentException(
+                'Expected ApigilityProviderInterface or ApigilityModuleInterface'
+            );
+        }
         if (! method_exists($module, 'getConfig')) {
             return 1;
         }
@@ -300,11 +319,20 @@ EOD;
      * is added to the list.
      *
      * @param  string $moduleName
-     * @param  array $services
+     * @param $module
+     * @throws \ZF\Apigility\Admin\Exception\InvalidArgumentException
+     * @internal param array $services
      * @return array
      */
-    protected function getVersionsByModule($moduleName, ApigilityModuleInterface $module)
+    protected function getVersionsByModule($moduleName, $module)
+
     {
+        if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+            throw new Exception\InvalidArgumentException(
+                'Expected ApigilityProviderInterface or ApigilityModuleInterface'
+            );
+        }
+
         $r        = new ReflectionObject($module);
         $path     = dirname($r->getFileName());
         $dirSep   = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
