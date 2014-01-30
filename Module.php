@@ -105,6 +105,27 @@ class Module
 
                 return new Model\AuthorizationModelFactory($moduleUtils, $configFactory, $moduleModel);
             },
+            'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
+                if (!$services->has('Config')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\ContentNegotiationModel service because Config service is not present'
+                    );
+                }
+                $config = $services->get('Config');
+                $writer = new PhpArrayWriter();
+
+                $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
+                return new Model\ContentNegotiationModel($global);
+            },
+            'ZF\Apigility\Admin\Model\ContentNegotiationResource' => function ($services) {
+                if (!$services->has('ZF\Apigility\Admin\Model\ContentNegotiationModel')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\ContentNegotiationResource service because ZF\Apigility\Admin\Model\ContentNegotiationModel service is not present'
+                    );
+                }
+                $model = $services->get('ZF\Apigility\Admin\Model\ContentNegotiationModel');
+                return new Model\ContentNegotiationResource($model);
+            },
             'ZF\Apigility\Admin\Model\DbAdapterModel' => function ($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
