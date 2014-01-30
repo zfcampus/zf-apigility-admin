@@ -129,14 +129,14 @@
             <div class="control-group list-group-item">
                 <label class="control-label">Collection Query String whitelist</label>
                 <div class="controls">
-                    <ng-tags-input
-                        ng-class="form-control"
+                    <tags-input
+                        custom-class="ag-tags"
                         ng-model="restService.collection_query_whitelist"
                         add-on-space="true"
                         max-length="256"
                         allowed-tags-pattern="^[a-zA-Z0-9_+.-]+$"
                         placeholder="Add a variable to the whitelist">
-                    </ng-tags-input>
+                    </tags-input>
                     <p class="help-block">Specify query string variables that
                     should be represented in relational links for collections
                     of this resource (e.g., "filter", "sort", "version").</p>
@@ -161,14 +161,14 @@
             <div class="control-group list-group-item">
                 <label class="control-label">Accept whitelist</label>
                 <div class="controls">
-                    <ng-tags-input
-                        ng-class="form-control"
+                    <tags-input
+                        custom-class="ag-tags"
                         ng-model="restService.accept_whitelist"
                         add-on-space="true"
                         max-length="256"
                         allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
                         placeholder="Add a mediatype to the whitelist">
-                    </ng-tags-input>
+                    </tags-input>
                     <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
                 </div>
             </div>
@@ -176,14 +176,14 @@
             <div class="control-group list-group-item">
                 <label class="control-label">Content-Type whitelist</label>
                 <div class="controls">
-                    <ng-tags-input
-                        ng-class="form-control"
+                    <tags-input
+                        custom-class="ag-tags"
                         ng-model="restService.content_type_whitelist"
                         add-on-space="true"
                         max-length="256"
                         allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
                         placeholder="Add a mediatype to the whitelist">
-                    </ng-tags-input>
+                    </tags-input>
                     <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
                 </div>
             </div>
