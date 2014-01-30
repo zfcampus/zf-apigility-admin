@@ -25,6 +25,15 @@ angular.module(
             templateUrl: 'zf-apigility-admin/dist/html/index.html',
             controller: 'DashboardController'
         });
+        $routeProvider.when('/global/content-negotiation', {
+            templateUrl: 'zf-apigility-admin/dist/html/global/content-negotiation/index.html',
+            controller: 'ContentNegotiationController',
+            resolve: {
+                selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                    return ContentNegotiationResource.getList();
+                }]
+            }
+        });
         $routeProvider.when('/global/db-adapters', {
             templateUrl: 'zf-apigility-admin/dist/html/global/db-adapters/index.html',
             controller: 'DbAdapterController'

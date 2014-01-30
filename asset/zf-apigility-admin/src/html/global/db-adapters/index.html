@@ -7,7 +7,7 @@
     ng-repeat="dbAdapter in dbAdapters">
     <collapse-header>
       <h4 class="panel-title">
-        <span class="btn btn-sm glyphicon glyphicon-book"></span>
+        <i class="btn btn-sm glyphicon glyphicon-book"></i>
 
         {{ dbAdapter.adapter_name }}
 
@@ -55,12 +55,8 @@
     </collapse-header>
 
     <collapse-body>
-        <ng-include src="'zf-apigility-admin/dist/html/global/db-adapters/view.html'"></ng-include>
-        <ng-include src="'zf-apigility-admin/dist/html/global/db-adapters/edit.html'"></ng-include>
-      </collapse-body>
+      <ng-include src="'zf-apigility-admin/dist/html/global/db-adapters/view.html'"></ng-include>
+      <ng-include src="'zf-apigility-admin/dist/html/global/db-adapters/edit.html'"></ng-include>
+    </collapse-body>
   </collapse>
 </div>
-
-<script>
-    $('.collapse').collapse();
-</script>
