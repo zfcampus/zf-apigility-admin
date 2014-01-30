@@ -23,7 +23,7 @@ class ContentNegotiationEntity
     {
         return array_merge(
             [ 'content_name' => $this->name ], 
-            [ $this->name => $this->config ]
+            [ 'selectors' => $this->config ]
         );
     }
 

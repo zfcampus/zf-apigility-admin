@@ -180,7 +180,7 @@ class ContentNegotiationTest extends TestCase
         $arrayCopy = $content->getArrayCopy();
         $this->assertArrayHasKey('content_name', $arrayCopy);
         $this->assertEquals('Json', $arrayCopy['content_name']);
-        $this->assertArrayHasKey('Json', $arrayCopy);
-        $this->assertEquals($toCreate, $arrayCopy['Json']);
+        $this->assertArrayHasKey('selectors', $arrayCopy);
+        $this->assertEquals($toCreate, $arrayCopy['selectors']);
     }
 }
