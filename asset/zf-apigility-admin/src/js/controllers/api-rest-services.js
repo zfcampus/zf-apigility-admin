@@ -30,6 +30,10 @@ angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$r
         $scope.newService.dbTableName = '';
     };
 
+    $scope.isLatestVersion = function () {
+        return $scope.ApiRepository.isLatestVersion($scope.api);
+    };
+
     $scope.isDbConnected = function (restService) {
         if (typeof restService !== 'object' || typeof restService === 'undefined') {
             return false;

@@ -343,6 +343,10 @@ angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$r
         $scope.newService.dbTableName = '';
     };
 
+    $scope.isLatestVersion = function () {
+        return $scope.ApiRepository.isLatestVersion($scope.api);
+    };
+
     $scope.isDbConnected = function (restService) {
         if (typeof restService !== 'object' || typeof restService === 'undefined') {
             return false;
@@ -451,6 +455,10 @@ angular.module('ag-admin').controller('ApiRpcServicesController', ['$http', '$ro
         $scope.showNewRpcServiceForm = false;
         $scope.rpcServiceName = '';
         $scope.rpcServiceRoute = '';
+    };
+
+    $scope.isLatestVersion = function () {
+        return $scope.ApiRepository.isLatestVersion($scope.api);
     };
 
     $scope.createNewRpcService = function () {
@@ -1719,6 +1727,18 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                 .then(function (response) {
                     return response.data;
                 });
+        },
+
+        getLatestVersion: function (api) {
+            var versions = api.versions;
+            var latest = versions.pop();
+            versions.push(latest);
+            return latest;
+        },
+
+        isLatestVersion: function (api) {
+            var latest = this.getLatestVersion(api);
+            return (api.version === latest);
         }
     };
 }]);
