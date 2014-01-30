@@ -1077,14 +1077,6 @@ angular.module('ag-admin').directive('collapse', function() {
             if (attr.hasOwnProperty('conditionals')) {
                 scope.setConditionals(scope.$eval(attr.conditionals));
             }
-
-            element.on('mouseover', function(event) {
-                scope.showContainerButtons();
-            });
-
-            element.on('mouseleave', function(event) {
-                scope.hideContainerButtons({leave: true});
-            });
         },
         template: '<div class="panel" ng-transclude></div>',
         replace: true
@@ -1100,6 +1092,14 @@ angular.module('ag-admin').directive('collapse', function() {
 
             element.on('click', function(event) {
                 panelCtrl.toggle();
+            });
+
+            element.on('mouseover', function(event) {
+                panelCtrl.showContainerButtons();
+            });
+
+            element.on('mouseleave', function(event) {
+                panelCtrl.hideContainerButtons({leave: true});
             });
         },
         template: '<div class="panel-heading" ng-transclude></div>',
