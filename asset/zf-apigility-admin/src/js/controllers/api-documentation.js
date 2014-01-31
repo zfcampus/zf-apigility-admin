@@ -39,6 +39,20 @@ angular.module('ag-admin').controller(
             });
         }
 
+        $scope.generate = function(model, direction) {
+            var docparams = [];
+            _.forEach($scope.service.input_filter, function (item) {
+                docparams.push('    "' + item.name + '": "' + (item.description || '') + '"');
+            });
+            var doctext = "{\n" + docparams.join(",\n") + "\n}";
+            if (!model[direction]) {
+                model[direction] = doctext;
+            } else {
+                model[direction] += "\n" + doctext;
+            }
+
+        };
+
         $scope.save = function() {
             ApiRepository.saveDocumentation($scope.service);
             $scope.$parent.flash.success = 'Documentation saved.';

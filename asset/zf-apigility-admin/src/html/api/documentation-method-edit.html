@@ -2,21 +2,23 @@
 <div class="control-group">
     <label class="control-label">Description</label>
     <div class="controls">
-        <input type="text" placeholder="Insert the {{method}} description here" class="form-control input-xlarge" required="" ng-model="methodData.description">
+        <textarea 
+            placeholder="Insert the {{method}} description here"
+            class="form-control input-xlarge" 
+            required=""
+            rows="3"
+            ng-model="methodData.description"></textarea>
         <p class="help-block">The description of the {{method}} HTTP method</p>
     </div>
 </div>
 
-<div class="control-group">
-    <label class="control-label">Request</label>
+<div class="control-group" ng-hide="method == 'GET'">
+    <label class="control-label">Request Body</label>
 
-    <ag-comment>
-    <button type="button"
-            class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, 'request')" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
-    </ag-comment>
 
     <div class="controls">
         <textarea placeholder="Insert the request specification" class="form-control input-xlarge" required="" rows="10" ng-model="methodData.request"></textarea>
@@ -26,14 +28,12 @@
 <div class="clearfix"></div>
 
 <div class="control-group">
-    <label class="control-label">Response</label>
+    <label class="control-label">Response Body</label>
 
-    <ag-comment>
-    <button type="button" class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, 'response')" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
-    </ag-comment>
 
     <div class="controls">
         <textarea placeholder="Insert the response specification" class="form-control input-xlarge" required="" rows="10" ng-model="methodData.response"></textarea>
