@@ -1,0 +1,54 @@
+<div ng-controller="ApiDocumentationController">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div ng-show="restService.documentation.description">
+                <div ng-bind-html="restService.documentation.description"></div>
+            </div>
+
+            <div class="text-muted" ng-hide="restService.documentation.description">
+                No service description yet provided.
+            </div>
+
+            <div class="panel panel-default"><div class="panel-body">
+            <ag-tabs pills>
+                <ag-tab-pane title="Collection"><div class="panel-body">
+                    <div ng-show="restService.documentation.collection.description">
+                        <div ng-bind-html="restService.documentation.collection.description"></div>
+                    </div>
+
+                    <div class="text-muted" ng-hide="restService.documentation.collection.description">
+                        No collection description yet provided.
+                    </div>
+
+                    <div class="panel panel-default"><div class="panel-body">
+                    <ag-tabs pills>
+                        <ag-tab-pane ng-repeat="method in restService.collection_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.collection[method]; restPart = 'collection'"><div class="panel-body">
+                            <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-view.html"></ag-include>
+                        </div></ag-tab-pane>
+                    </ag-tabs>
+                    </div></div>
+                </div></ag-tab-pane>
+
+                <ag-tab-pane title="Entity"><div class="panel-body">
+                    <div ng-show="restService.documentation.entity.description">
+                        <div ng-bind-html="restService.documentation.entity.description"></div>
+                    </div>
+
+                    <div class="text-muted" ng-hide="restService.documentation.entity.description">
+                        No entity description yet provided.
+                    </div>
+
+                    <div class="panel panel-default"><div class="panel-body">
+                    <ag-tabs pills>
+                        <ag-tab-pane ng-repeat="method in restService.resource_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.entity[method]; restPart = 'entity'; service=restService"><div class="panel-body">
+                            <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-view.html"></ag-include>
+                        </div></ag-tab-pane>
+                    </ag-tabs>
+                    </div></div>
+                </div></ag-tab-pane>
+            </ag-tabs>
+            </div></div>
+        </div>
+    </div>
+</div>
+
