@@ -40,7 +40,6 @@ angular.module('ag-admin').controller(
         }
 
         $scope.generate = function(model, method, direction, part) {
-            console.log('running');
             var docparams = [];
             _.forEach($scope.service.input_filter, function (item) {
                 docparams.push('    "' + item.name + '": "' + item.description + '"');
