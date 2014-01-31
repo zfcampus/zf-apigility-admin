@@ -7,11 +7,13 @@
                 <div ng-hide="rpcService.documentation.description" class="text-muted">No service description yet provided.</div>
             </div>
 
-            <ag-tabs>
-                <ag-tab-pane ng-repeat="method in rpcService.http_methods" title="{{method}}" ng-init="methodData = rpcService.documentation[method]">
+            <div class="panel panel-default"><div class="panel-body">
+            <ag-tabs pills>
+                <ag-tab-pane ng-repeat="method in rpcService.http_methods" title="{{method}}" ng-init="methodData = rpcService.documentation[method]"><div class="panel-body">
                     <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-view.html"></ag-include>
-                </ag-tab-pane>
+                </div></ag-tab-pane>
             </ag-tabs>
+            </div></div>
         </div>
     </div>
 </div>
