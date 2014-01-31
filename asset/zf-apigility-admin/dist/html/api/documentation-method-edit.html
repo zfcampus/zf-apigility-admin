@@ -7,10 +7,10 @@
     </div>
 </div>
 
-<div class="control-group">
-    <label class="control-label">Request</label>
+<div class="control-group" ng-hide="method == 'GET'">
+    <label class="control-label">Request Body</label>
 
-    <button type="button" ng-click="generate(methodData, method, 'request', restPart)" class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, 'request')" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
@@ -23,9 +23,9 @@
 <div class="clearfix"></div>
 
 <div class="control-group">
-    <label class="control-label">Response</label>
+    <label class="control-label">Response Body</label>
 
-    <button type="button" ng-click="generate(methodData, method, 'response', restPart)" class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, 'response')" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
