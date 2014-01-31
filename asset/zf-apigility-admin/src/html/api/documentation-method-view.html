@@ -1,0 +1,19 @@
+<div ng-show="methodData.description">
+    <div ng-bind-html="methodData.description"></div>
+</div>
+<div class="text-muted" ng-hide="methodData.description">
+    No description available.
+</div>
+
+<div class="control-group" ng-hide="method == 'GET'">
+    <label class="control-label">Request Body</label>
+    <div ng-show="methodData.request"><pre ng-bind-html="methodData.request"></pre></div>
+    <div ng-hide="methodData.request" class="text-muted">No request body available.</div>
+</div>
+
+<div class="control-group">
+    <label class="control-label">Response Body</label>
+    <div ng-show="methodData.response"><pre ng-bind-html="methodData.response"></pre></div>
+    <div ng-hide="methodData.response" class="text-muted">No response body available.</div>
+</div>
+
