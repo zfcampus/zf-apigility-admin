@@ -33,6 +33,31 @@ angular.module('ag-admin').controller('ApiServiceInputController', ['$scope', 'f
         $scope.newInput = '';
     };
 
+    $scope.validateInputName = function (name) {
+        // Test first to see if we have a value
+        if (!name || name === null || name === '' || name.match(/^\s+$/)) {
+            flash.error = "Input name can not be empty!";
+            return false;
+        }
+
+        // Test to see if we already have an input by this name first
+        var found = false;
+        $scope.service.input_filter.every(function (input) {
+            if (name === input.name) {
+                found = true;
+                return false;
+            }
+            return true;
+        });
+
+        if (found) {
+            flash.error = "Input by the name " + name + " already exists!";
+            return false;
+        }
+
+        return true;
+    };
+
     $scope.removeInput = function (inputIndex) {
         $scope.service.input_filter.splice(inputIndex, 1);
     };

@@ -581,6 +581,31 @@ angular.module('ag-admin').controller('ApiServiceInputController', ['$scope', 'f
         $scope.newInput = '';
     };
 
+    $scope.validateInputName = function (name) {
+        // Test first to see if we have a value
+        if (!name || name === null || name === '' || name.match(/^\s+$/)) {
+            flash.error = "Input name can not be empty!";
+            return false;
+        }
+
+        // Test to see if we already have an input by this name first
+        var found = false;
+        $scope.service.input_filter.every(function (input) {
+            if (name === input.name) {
+                found = true;
+                return false;
+            }
+            return true;
+        });
+
+        if (found) {
+            flash.error = "Input by the name " + name + " already exists!";
+            return false;
+        }
+
+        return true;
+    };
+
     $scope.removeInput = function (inputIndex) {
         $scope.service.input_filter.splice(inputIndex, 1);
     };
@@ -1392,19 +1417,46 @@ angular.module('ag-admin').directive('agEditInplace', function() {
         restrict: 'E',
         replace: true,
         scope: {
-            'agInputName': '=name'
+            'agInputName': '=name',
+            validate: '&'
         },
         templateUrl: 'zf-apigility-admin/dist/html/directives/ag-edit-inplace.html',
         controller: ['$scope', function($scope) {
+            var initialValue;
+
             $scope.isFormVisible = false;
+
+            $scope.setInitialValue = function (value) {
+                initialValue = value;
+            };
+
+            $scope.resetForm = function () {
+                $scope.agInputName = initialValue;
+                $scope.isFormVisible = false;
+            };
         }],
         link: function(scope, element, attr) {
             element.on('click', function(event) {
                 event.stopPropagation();
             });
 
+            scope.setInitialValue(scope.agInputName);
+
             var name = angular.element(element.children()[0]);
             var form = angular.element(element.children()[1]);
+
+            if (attr.hasOwnProperty('validate') &&
+                typeof scope.validate === 'function') {
+                form.on('submit', function (event) {
+                    if (scope.validate(scope.agInputName)) {
+                        scope.isFormVisible = false;
+                    }
+                });
+            } else {
+                form.on('submit', function (event) {
+                    scope.isFormVisible = false;
+                });
+            }
 
             scope.$watch('isFormVisible', function(newVal) {
                 if (newVal) {
