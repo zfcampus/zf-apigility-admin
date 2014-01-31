@@ -5,15 +5,56 @@
     No description available.
 </div>
 
-<div class="control-group" ng-hide="method == 'GET'">
-    <label class="control-label">Request Body</label>
-    <div ng-show="methodData.request"><pre ng-bind-html="methodData.request"></pre></div>
-    <div ng-hide="methodData.request" class="text-muted">No request body available.</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Request</h4>
+    </div>
+
+    <div class="panel-body">
+        <div class="control-group">
+            <label class="control-label">Headers</label>
+            <table class="table table-striped">
+                <tr ng-show="service.accept_whitelist">
+                    <td width="30%"><strong>Accept</strong></td>
+                    <td>{{ service.accept_whitelist.join(', ') }}</td>
+                </tr>
+                <tr ng-show="method != 'GET' && service.content_type_whitelist">
+                    <td width="30%"><strong>Content-Type</strong></td>
+                    <td>{{ service.content_type_whitelist.join(', ') }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="control-group" ng-hide="method == 'GET'">
+            <label class="control-label">Body</label>
+            <div ng-show="methodData.request"><pre ng-bind-html="methodData.request"></pre></div>
+            <div ng-hide="methodData.request" class="text-muted">No request body available.</div>
+        </div>
+    </div>
 </div>
 
-<div class="control-group">
-    <label class="control-label">Response Body</label>
-    <div ng-show="methodData.response"><pre ng-bind-html="methodData.response"></pre></div>
-    <div ng-hide="methodData.response" class="text-muted">No response body available.</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Response</h4>
+    </div>
+
+
+    <div class="panel-body">
+        <div ng-show="service.content_type_whitelist" class="control-group">
+            <label class="control-label">Headers</label>
+            <table class="table table-striped">
+                <tr ng-show="method != 'GET' && service.content_type_whitelist">
+                    <td width="30%"><strong>Content-Type</strong></td>
+                    <td>{{ service.content_type_whitelist.join(', ') }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Response Body</label>
+            <div ng-show="methodData.response"><pre ng-bind-html="methodData.response"></pre></div>
+            <div ng-hide="methodData.response" class="text-muted">No response body available.</div>
+        </div>
+    </div>
 </div>
 
