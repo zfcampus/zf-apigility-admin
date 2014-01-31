@@ -1091,10 +1091,12 @@ angular.module('ag-admin').directive('collapse', function() {
             show: '&'
         },
         controller: ['$scope', '$parse', function($scope, $parse) {
-            var head;
             var body;
             var buttons = [];
+            var chevron;
             var conditionals = {};
+            var panel = this;
+            var head;
             var watchers = {};
 
             this.addButton = function(button) {
@@ -1189,6 +1191,23 @@ angular.module('ag-admin').directive('collapse', function() {
 
             this.setBody = function (bodyElement) {
                 body = bodyElement;
+                if (body.hasClass('in')) {
+                    panel.toggleChevron('up');
+                }
+
+                $scope.$watch(function () {
+                    return body.attr('class');
+                }, function (newClass) {
+                    if (body.hasClass('in')) {
+                        panel.toggleChevron('up');
+                    } else {
+                        panel.toggleChevron('down');
+                    }
+                });
+            };
+
+            this.setChevron = function (chevronElement) {
+                chevron = chevronElement;
             };
 
             this.expand = function() {
@@ -1201,6 +1220,28 @@ angular.module('ag-admin').directive('collapse', function() {
 
             this.toggle = function() {
                 body.toggleClass('in');
+                panel.toggleChevron();
+            };
+
+            this.toggleChevron = function (flag) {
+                if (typeof flag === 'undefined' || flag === null) {
+                    if (body.hasClass('in')) {
+                        flag = 'up';
+                    } else {
+                        flag = 'down';
+                    }
+                }
+
+                var start = (flag === 'up')  ? 'down' : 'up';
+                var end   = (start === 'up') ? 'down' : 'up';
+
+                var startClass = 'glyphicon-chevron-' + start;
+                var endClass   = 'glyphicon-chevron-' + end;
+
+                if (chevron.hasClass(startClass)) {
+                    chevron.removeClass(startClass);
+                    chevron.addClass(endClass);
+                }
             };
         }],
         link: function(scope, element, attr) {
@@ -1225,7 +1266,13 @@ angular.module('ag-admin').directive('collapse', function() {
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attr, panelCtrl) {
+            var chevron = angular.element('<i class="glyphicon glyphicon-chevron-down"></i>');
+            var chevronWrapper = angular.element('<div class="ag-chevron pull-right"></div>');
+            chevronWrapper.append(chevron);
+            element.prepend(chevronWrapper);
+
             panelCtrl.setHead(scope);
+            panelCtrl.setChevron(chevron);
 
             element.on('click', function(event) {
                 panelCtrl.toggle();
