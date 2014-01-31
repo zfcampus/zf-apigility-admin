@@ -10,13 +10,10 @@
 <div class="control-group">
     <label class="control-label">Request</label>
 
-    <ag-comment>
-    <button type="button"
-            class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, method, 'request', restPart)" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
-    </ag-comment>
 
     <div class="controls">
         <textarea placeholder="Insert the request specification" class="form-control input-xlarge" required="" rows="10" ng-model="methodData.request"></textarea>
@@ -28,12 +25,10 @@
 <div class="control-group">
     <label class="control-label">Response</label>
 
-    <ag-comment>
-    <button type="button" class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, method, 'response', restPart)" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
-    </ag-comment>
 
     <div class="controls">
         <textarea placeholder="Insert the response specification" class="form-control input-xlarge" required="" rows="10" ng-model="methodData.response"></textarea>
