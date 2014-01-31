@@ -1,6 +1,9 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'ApiRepository', 'api', 'toggleSelection', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, ApiRepository, api, toggleSelection) {
+angular.module('ag-admin').controller(
+  'ApiRpcServicesController', 
+  ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'selectors', 'ApiRepository', 'api', 'toggleSelection', 
+  function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, selectors, ApiRepository, api, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -9,11 +12,11 @@ angular.module('ag-admin').controller('ApiRpcServicesController', ['$http', '$ro
 
     $scope.toggleSelection = toggleSelection;
 
-    $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
-
     $scope.filterOptions = filters;
 
     $scope.validatorOptions = validators;
+
+    $scope.selectors = selectors;
 
     $scope.sourceCode = [];
 

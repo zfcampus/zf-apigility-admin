@@ -84,6 +84,15 @@ angular.module(
                 }],
                 hydrators: ['HydratorServicesRepository', function (HydratorServicesRepository) {
                     return HydratorServicesRepository.getList();
+                }],
+                selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                    return ContentNegotiationResource.getList().then(function (selectors) {
+                        var selectorNames = [];
+                        angular.forEach(selectors, function (selector) {
+                            selectorNames.push(selector.content_name);
+                        });
+                        return selectorNames;
+                    });
                 }]
             }
         });
@@ -99,6 +108,15 @@ angular.module(
                 }],
                 validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                     return ValidatorsServicesRepository.getList();
+                }],
+                selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                    return ContentNegotiationResource.getList().then(function (selectors) {
+                        var selectorNames = [];
+                        angular.forEach(selectors, function (selector) {
+                            selectorNames.push(selector.content_name);
+                        });
+                        return selectorNames;
+                    });
                 }]
             }
         });
