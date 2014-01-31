@@ -5,7 +5,12 @@
                 <div class="control-group">
                     <label class="control-label">REST service description</label>
                     <div class="controls">
-                        <input type="text" placeholder="Insert the description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.description">
+                        <textarea 
+                            placeholder="Insert the description here"
+                            class="form-control input-xlarge"
+                            required=""
+                            rows="5"
+                            ng-model="restService.documentation.description"></textarea>
                         <p class="help-block">The general description of the REST service</p>
                     </div>
                 </div>
@@ -16,7 +21,12 @@
                         <div class="control-group">
                             <label class="control-label">Description</label>
                             <div class="controls">
-                                <input type="text" placeholder="Insert the Collection description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.collection.description">
+                                <textarea 
+                                    placeholder="Insert the Collection description here"
+                                    class="form-control input-xlarge"
+                                    required=""
+                                    rows="3"
+                                    ng-model="restService.documentation.collection.description"></textarea>
                                 <p class="help-block">The description of the Collection</p>
                             </div>
                         </div>
@@ -34,7 +44,12 @@
                         <div class="control-group">
                             <label class="control-label">Description</label>
                             <div class="controls">
-                                <input type="text" placeholder="Insert the Entity description here" class="form-control input-xlarge" required="" ng-model="restService.documentation.entity.description">
+                                <textarea 
+                                    placeholder="Insert the Entity description here"
+                                    class="form-control input-xlarge"
+                                    required=""
+                                    rows="3"
+                                    ng-model="restService.documentation.entity.description"></textarea>
                                 <p class="help-block">The description of the Entity</p>
                             </div>
                         </div>
