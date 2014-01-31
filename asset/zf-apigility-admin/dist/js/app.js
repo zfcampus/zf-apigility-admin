@@ -1204,8 +1204,9 @@ angular.module('ag-admin').directive('collapse', function() {
             };
         }],
         link: function(scope, element, attr) {
-            if (typeof scope.show !== 'undefined') {
-                if (!scope.show) {
+            if (attr.hasOwnProperty('show') && 
+                typeof scope.show === 'function') {
+                if (!scope.show()) {
                     element.toggleClass('hide', true);
                 }
             }
