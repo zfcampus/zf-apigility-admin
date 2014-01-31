@@ -1,6 +1,9 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', 'toggleSelection', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, ApiRepository, api, dbAdapters, toggleSelection) {
+angular.module('ag-admin').controller(
+  'ApiRestServicesController', 
+  ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'selectors', 'ApiRepository', 'api', 'dbAdapters', 'toggleSelection', 
+  function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -9,13 +12,13 @@ angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$r
 
     $scope.dbAdapters = dbAdapters;
 
-    $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
-
     $scope.filterOptions = filters;
 
     $scope.hydrators = hydrators;
 
     $scope.validatorOptions = validators;
+
+    $scope.selectors = selectors;
 
     $scope.sourceCode = [];
 

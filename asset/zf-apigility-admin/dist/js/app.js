@@ -84,6 +84,15 @@ angular.module(
                 }],
                 hydrators: ['HydratorServicesRepository', function (HydratorServicesRepository) {
                     return HydratorServicesRepository.getList();
+                }],
+                selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                    return ContentNegotiationResource.getList().then(function (selectors) {
+                        var selectorNames = [];
+                        angular.forEach(selectors, function (selector) {
+                            selectorNames.push(selector.content_name);
+                        });
+                        return selectorNames;
+                    });
                 }]
             }
         });
@@ -99,6 +108,15 @@ angular.module(
                 }],
                 validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                     return ValidatorsServicesRepository.getList();
+                }],
+                selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                    return ContentNegotiationResource.getList().then(function (selectors) {
+                        var selectorNames = [];
+                        angular.forEach(selectors, function (selector) {
+                            selectorNames.push(selector.content_name);
+                        });
+                        return selectorNames;
+                    });
                 }]
             }
         });
@@ -323,7 +341,10 @@ angular.module('ag-admin').controller('ApiOverviewController', ['$http', '$rootS
 
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'ApiRepository', 'api', 'dbAdapters', 'toggleSelection', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, ApiRepository, api, dbAdapters, toggleSelection) {
+angular.module('ag-admin').controller(
+  'ApiRestServicesController', 
+  ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'selectors', 'ApiRepository', 'api', 'dbAdapters', 'toggleSelection', 
+  function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -332,13 +353,13 @@ angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$r
 
     $scope.dbAdapters = dbAdapters;
 
-    $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
-
     $scope.filterOptions = filters;
 
     $scope.hydrators = hydrators;
 
     $scope.validatorOptions = validators;
+
+    $scope.selectors = selectors;
 
     $scope.sourceCode = [];
 
@@ -442,7 +463,10 @@ angular.module('ag-admin').controller('ApiRestServicesController', ['$http', '$r
 
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiRpcServicesController', ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'ApiRepository', 'api', 'toggleSelection', function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, ApiRepository, api, toggleSelection) {
+angular.module('ag-admin').controller(
+  'ApiRpcServicesController', 
+  ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'selectors', 'ApiRepository', 'api', 'toggleSelection', 
+  function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, selectors, ApiRepository, api, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
     $scope.flash = flash;
@@ -451,11 +475,11 @@ angular.module('ag-admin').controller('ApiRpcServicesController', ['$http', '$ro
 
     $scope.toggleSelection = toggleSelection;
 
-    $scope.contentNegotiation = ['HalJson', 'Json']; // @todo refactor to provider/factory
-
     $scope.filterOptions = filters;
 
     $scope.validatorOptions = validators;
+
+    $scope.selectors = selectors;
 
     $scope.sourceCode = [];
 
