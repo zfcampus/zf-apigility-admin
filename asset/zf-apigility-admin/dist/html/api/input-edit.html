@@ -3,6 +3,11 @@
     <toggle-switch model="input.required" class="small pull-right"></toggle-switch>
 </div></div>
 
+<div class="panel panel-default"><div class="panel-body">
+  <label class="control-label">Description</label>
+  <textarea class="form-control input-xlarge" ng-model="input.description"></textarea>
+</div></div>
+
 <collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
@@ -79,7 +84,7 @@
                     </li>
 
                     <li class="list-group-item hide" collapse-show criteria="{newOptionFormVisible: true}">
-                        <form id="input-option-form" ng-submit="addValidatorOption(validator)">
+                        <form id="input-validator-option-form" ng-submit="addValidatorOption(validator)">
                             <div class="form-group">
                                 <select class="input-xlarge" ui-select2="{placeholder: 'Select Option', width: '300px' }" type="text" ng-model="validator._newOptionName">
                                     <option ng-repeat="(key, value) in validatorOptions[validator.name]" value="{{key}}">{{key}}</option>
@@ -205,7 +210,7 @@
                     </li>
 
                     <li class="list-group-item hide" collapse-show criteria="{newOptionFormVisible: true}">
-                        <form id="input-option-form" ng-submit="addFilterOption(filter)">
+                        <form id="input-filter-option-form" ng-submit="addFilterOption(filter)">
                             <div class="form-group">
                                 <select class="input-xlarge" ui-select2="{placeholder: 'Select Option', width: '300px' }" type="text" ng-model="filter._newOptionName">
                                     <option ng-repeat="(key, value) in filterOptions[filter.name]" value="{{key}}">{{key}}</option>
