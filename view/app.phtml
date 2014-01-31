@@ -1,4 +1,9 @@
 <?php 
-$path = __DIR__ . '/../asset/zf-apigility-admin/dist/index.html';
+$path    = __DIR__ . '/../asset/zf-apigility-admin/dist/index.html';
+$apiBase = $this->url('zf-apigility-admin/api/module');
+$apiBase = substr($apiBase, 0, strrpos($apiBase, '/'));
+
 $html = file_get_contents($path);
-echo str_replace('%BASE_HREF%', $this->basePath(), $html);
+$html = str_replace('%BASE_HREF%', $this->basePath(), $html);
+$html = str_replace('%API_BASE%', $apiBase, $html);
+echo $html;
