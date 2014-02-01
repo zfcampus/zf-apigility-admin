@@ -8,9 +8,14 @@ vendor/autoload.php
 vendor/bin/
 vendor/bshaffer/
 vendor/composer/
+vendor/fabpot/
+vendor/guzzle/
 vendor/kriswallsmith/
 vendor/phpunit/
+vendor/psr/
 vendor/rwoverdijk/
+vendor/satooshi/
+vendor/sebastian/
 vendor/symfony/
 vendor/zendframework/
 vendor/zfcampus/

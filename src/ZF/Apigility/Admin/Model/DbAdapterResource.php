@@ -9,7 +9,6 @@ namespace ZF\Apigility\Admin\Model;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
-use ZF\Rest\Exception\PatchException;
 
 class DbAdapterResource extends AbstractResourceListener
 {

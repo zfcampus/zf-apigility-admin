@@ -16,4 +16,4 @@ class DocumentationControllerFactory implements FactoryInterface
         $services = $controllers->getServiceLocator();
         return new DocumentationController($services->get('ZF\Apigility\Admin\Model\DocumentationModel'));
     }
-} 
+}

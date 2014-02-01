@@ -2,7 +2,6 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Admin\Model\DocumentationModel;
 use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory;
@@ -46,4 +45,3 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
     public function testStoreRpcDocumentation() {}
     */
 }
- 

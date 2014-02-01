@@ -327,8 +327,8 @@ class RpcServiceResource extends AbstractResourceListener
 
     /**
      * Inject the class name of the controller, if it can be resolved.
-     * 
-     * @param RpcServiceEntity $service 
+     *
+     * @param RpcServiceEntity $service
      */
     protected function injectControllerClass(RpcServiceEntity $service)
     {
