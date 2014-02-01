@@ -2,7 +2,7 @@
     conditionals="{edit: false, delete: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <i class="btn btn-sm glyphicon glyphicon-lock"></i>
+            <i class="glyphicon glyphicon-lock"></i>
 
             OAuth2 Settings
 
@@ -64,28 +64,28 @@
     </table>
 
     <collapse-body collapse-show criteria="{edit: true}">
-        <div class="panel-body"><form class="form" ng-submit="updateOAuth2Authentication()">
+        <div class="panel-body"><form class="form" ng-submit="updatOAuth2Authentication()">
             <fieldset>
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="dsn">PDO DSN</label>
                     <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" required="required" ng-model="oauth2.dsn">
                     <p class="help-block">The PDO database source name (DSN).</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="username">PDO Username</label>
                     <input type="text" placeholder="username" class="form-control input-xlarge" ng-model="oauth2.username">
                     <p class="help-block">Username associated with the database holding
                         OAuth2 credentials (required if not using SQLite).</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="password">PDO Password</label>
                     <input type="password" placeholder="password" class="form-control input-xlarge" ng-model="oauth2.password">
                     <p class="help-block">Password for the username listed (required if not using SQLite).</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="route_match">OAuth2 route</label>
                     <input type="text" placeholder="/oauth" class="form-control input-xlarge" ng-model="oauth2.route_match">
                     <p class="help-block">Base URI to use as the OAuth2 server endpoint.</p>
