@@ -2,9 +2,9 @@
 
 namespace Test\Bar;
 
-use ZF\Apigility\ApigilityModuleInterface;
+use ZF\Apigility\Provider\ApigilityProviderInterface;
 
-class Module implements ApigilityModuleInterface
+class Module implements ApigilityProviderInterface
 {
     public function getConfig()
     {

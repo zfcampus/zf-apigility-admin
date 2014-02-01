@@ -63,7 +63,7 @@ class ModuleModelTest extends TestCase
         }
     }
 
-    public function testEnabledModulesOnlyReturnsThoseThatImplementApigilityModuleInterface()
+    public function testEnabledModulesOnlyReturnsThoseThatImplementApigilityProviderInterface()
     {
         $expected = array(
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar',
