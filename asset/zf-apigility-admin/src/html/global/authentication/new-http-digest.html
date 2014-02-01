@@ -21,15 +21,15 @@
 
                 <div class="form-group">
                     <label class="control-label" for="digest_domains">Digest domains</label>
-                    <ng-tags-input 
-                        ng-class="form-control"
+                    <tags-input 
+                        custom-class="ag-tags"
                         ng-model="digest_domains"
                         add-on-space="true"
                         min-length="1"
                         max-length="256"
                         allowed-tags-pattern="^/[a-zA-Z0-9_+./%-]*$"
                         placeholder="Add a path">
-                    </ng-tags-input>
+                    </tags-input>
                     <p class="help-block">Space-separated list of URI paths for which authentication will be applied</p>
                 </div>
 

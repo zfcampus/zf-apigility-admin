@@ -45,6 +45,7 @@ angular.module('ag-admin').controller(
                     $scope.showOAuth2Authentication     = false;
                     $scope.digest_domains               = authentication.digest_domains.split(" ");
                     $scope.httpDigest                   = authentication;
+                    $scope.httpDigest.digest_domains = authentication.digest_domains.split(" ");
                     $scope.httpBasic                    = null;
                     $scope.oauth2                       = null;
                 } else if (authentication.type == "oauth2") {
@@ -80,6 +81,9 @@ angular.module('ag-admin').controller(
     };
 
     var updateAuthentication = function (options) {
+        if (options.hasOwnProperty('digest_domains') && typeof options.digest_domains === 'object' && Array.isArray(options.digest_domains)) {
+            options.digest_domains = options.digest_domains.join(' ');
+        }
         AuthenticationRepository.updateAuthentication(options).then(
             function success(authentication) {
                 flash.success = 'Authentication updated';
