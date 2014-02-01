@@ -6,8 +6,8 @@
 
 namespace ZFTest\Apigility\Admin\Model\TestAsset\Bar;
 
-use ZF\Apigility\ApigilityModuleInterface;
+use ZF\Apigility\Provider\ApigilityProviderInterface;
 
-class Module implements ApigilityModuleInterface
+class Module implements ApigilityProviderInterface
 {
 }
