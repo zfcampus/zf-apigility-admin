@@ -12,7 +12,6 @@ use ZF\Apigility\Admin\Model\DocumentationModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Collection as HalCollection;
 use ZF\Hal\Link\Link as HalLink;
 use ZF\Hal\Resource as HalResource;
 
@@ -83,4 +82,4 @@ class DocumentationController extends AbstractActionController
         return sprintf('zf-apigility-admin/api/module/%s-service/doc', $matches['type']);
     }
 
-} 
+}

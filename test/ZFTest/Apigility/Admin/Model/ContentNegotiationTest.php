@@ -8,7 +8,6 @@ namespace ZFTest\Apigility\Admin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
-use Zend\Stdlib\ArrayUtils;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Configuration\ConfigResource;
 

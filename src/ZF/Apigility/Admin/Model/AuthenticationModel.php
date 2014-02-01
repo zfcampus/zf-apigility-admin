@@ -11,7 +11,6 @@ use PDOException;
 use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Rest\Exception\CreationException;
-use ZF\Rest\Exception\PatchException;
 
 class AuthenticationModel
 {
@@ -303,8 +302,8 @@ class AuthenticationModel
 
     /**
      * Validate a DSN
-     * 
-     * @param  string $dsn 
+     *
+     * @param  string $dsn
      * @param  string $username
      * @param  string $password
      * @throws Exception\InvalidArgumentException on invalid DSN

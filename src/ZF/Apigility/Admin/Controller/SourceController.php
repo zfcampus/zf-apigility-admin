@@ -9,12 +9,9 @@ namespace ZF\Apigility\Admin\Controller;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Resource;
-use ZF\Hal\Link\Link;
 use ReflectionClass;
 
 class SourceController extends AbstractActionController

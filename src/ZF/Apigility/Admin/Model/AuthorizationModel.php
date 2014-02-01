@@ -6,7 +6,6 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 

@@ -9,11 +9,8 @@ namespace ZFTest\Apigility\Admin\Controller;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Controller\PluginManager;
-use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\SourceController;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\ContentNegotiation\ParameterDataContainer;
 use ZFTest\Apigility\Admin\Model\TestAsset\Bar\Module as BarModule;
 
 class SourceControllerTest extends TestCase
