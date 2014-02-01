@@ -24,11 +24,7 @@ angular.module('ag-admin').factory(
             fetch: function(options) {
                 return $http.get(authenticationPath, options)
                     .then(function (response) {
-                        var data = response.data;
-                        if (data.hasOwnProperty('digest_domains') && typeof data.digest_domains === 'string') {
-                            data.digest_domains = data.digest_domains.split(' ');
-                        }
-                        return data;
+                        return response.data;
                     });
             },
             createAuthentication: function (options) {

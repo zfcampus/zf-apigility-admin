@@ -6,192 +6,49 @@
 @agGreen: #004000;
 @agBlueHighlight: #428BCA;
 
-.ag-admin-navbar-collapse {
-  font-size: 1.1em;
+body {
+  padding-top: 142px;
 }
 
-.ag-admin-navbar-collapse button {
-  margin-top: 5px;
-}
-
-.ag-admin-header {
-  font-size: 21px;
-  text-align: left;
-  padding: 10px 30px 40px;
-
-  h1 {
+h1, .h1 {
     color: @agGreen;
-    font-size: 60px;
-  }
-
-  border-bottom: 1px solid rgb(229, 229, 229);
-
 }
 
-.ag-admin-nav {
+.navbar {
+  > .container {
+    .navbar-brand {
+      padding: 10px 15px;
+    }
+  }
+}
+
+.navbar-inverse {
     background: @agBlue;
-    border-color: rgb(70, 50, 101);
+}
 
-    .navbar-nav > li > a {
-      color: #B7D9FF;
+.navbar-fixed-top {
+    &.primary {
+
     }
-
-    .navbar-nav > li.ag-nav-dashboard a {
-        color: #fff;
-    }
-
-}
-
-.ag-admin-module-navigation {
-  border-bottom: 1px solid #ccc;
-  font-size: 16px;
-  span {
-    padding: 5px 10px;
-  }
-  .ag-admin-nav-pills {
-    li > a {
-      padding: 5px 10px;
-    }
-  }
-}
-
-.ag-admin-sidebar {
-  display: block;
-}
-
-.ag-admin-sidenav {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  text-shadow: 0px 1px 0px rgb(255, 255, 255);
-  background-color: rgb(247, 245, 250);
-  border-radius: 5px 5px 5px 5px;
-}
-
-.ag-admin-sidebar .nav  {
-  li > a {
-    display: block;
-    color: rgb(113, 107, 122);
-    padding: 5px 20px;
-  }
-  .active > a,
-  .active:hover > a
-  .active:focus > a {
-    font-weight: bold;
-    color: rgb(86, 61, 124);
-    background-color: transparent;
-    border-right: 1px solid rgb(86, 61, 124);
-  }
-}
-
-#api-version {
-  margin-top: -100px;
-}
-
-div.alert {
-  position: fixed;
-  top: 120px;
-  left: 45%;
-}
-
-table.ag thead {
-    background-color: @agBlueHighlight;
-    th {
-        color: white;
+    &.secondary {
+        top: 71px;
     }
 }
 
-table.ag th.action, table.ag td.action, table.table-striped.ag td.action {
-    background-color: @agBlueHighlight;
+.panel-heading {
+    .btn-group {
+        margin-top: -6px;
+        margin-bottom: -6px;
+        margin-right: -10px;
+    }
 }
 
-.ag-new-input {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-.ag .panel-danger {
-    border-width: 3px;
-}
-
-.ag .btn-right {
-    margin-right: 5px;
-}
-
-.panel-blank > .panel-heading {
-    background-color: white;
-}
-
-.ag-tags {
-    .tags {
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-
-        .focused {
-            border-color: #66afe9;
-            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);
-        }
-
-        .tag-item {
-            background: #428bca;
-            border: 1px solid #357ebd;
-            border-radius: 4px;
-            color: #fff;
-
-            .selected {
-                background: #d9534f;
-                border: 1px solid #d43f3a;
-                border-radius: 4px;
-                color: #fff;
-            }
-
-            button {
-                background: transparent;
-                color: #000;
-                opacity: .4;
-            }
-        }
-
-        .autocomplete {
-            border-radius: 4px;
-
-            .tag-item.selected {
-                color: #262626;
-                background-color: #e9e9e9;
-            }
+#content {
+    > .container {
+        h1 {
+            margin: 0 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #EEE;
         }
     }
-}
-
-.switch {
-    border-radius: 5px;
-    -o-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-
-    .small {
-        height: 30px;
-    }
-}
-
-.switch.small span {
-    font-size: 12px;
-    line-height: 18px;
-}
-
-.ag-code {
-    overflow:auto;
-    max-height:500px;
-
-    span {
-        padding: 0;
-    }
-}
-
-.ag-chevron {
-    padding-left: 5px;
 }

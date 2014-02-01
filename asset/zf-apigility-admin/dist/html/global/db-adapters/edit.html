@@ -1,7 +1,7 @@
 <div collapse-show criteria="{editDbAdapter: true}" class="panel-body hide">
-<form novalidate class="form-horizontal" ng-submit="saveDbAdapter($index)">
+<form novalidate ng-submit="saveDbAdapter($index)">
     <fieldset>
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="adapterName">Adapter Name</label>
             <div class="controls">
                 <input type="text" placeholder="adapter name" class="form-control input-xlarge" required="required" ng-model="dbAdapter.adapter_name">
@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="driver">Driver Type</label>
             <div class="controls">
                 <select class="form-control input-xlarge" ng-model="dbAdapter.driver">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="database">Database</label>
             <div class="controls">
                 <input type="text" placeholder="database name" class="form-control input-xlarge" required="required" ng-model="dbAdapter.database">
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
+        <div class="form-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="username">Username</label>
             <div class="controls">
                 <input type="text" placeholder="(optional) Username" class="form-control input-xlarge" ng-model="dbAdapter.username">
@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
+        <div class="form-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="password">Password</label>
             <div class="controls">
                 <input type="password" placeholder="(Optional) Password" class="form-control input-xlarge" ng-model="dbAdapter.password">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
+        <div class="form-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="hostname">Hostname</label>
             <div class="controls">
                 <input type="text" placeholder="(Optional) Hostname" class="form-control input-xlarge" ng-model="dbAdapter.hostname">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div class="control-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
+        <div class="form-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="port">Port</label>
             <div class="controls">
                 <input type="text" placeholder="(Optional) Port" class="form-control input-xlarge" ng-model="dbAdapter.port">
@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="charset">Charset</label>
             <div class="controls">
                 <input type="text" placeholder="(Optional) Charset" class="form-control input-xlarge" ng-model="dbAdapter.charset">
