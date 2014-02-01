@@ -1,4 +1,4 @@
-<div class="control-group">
+<div class="form-group">
     <label class="control-label">Description</label>
     <div class="controls">
         <textarea 
@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<div class="control-group" ng-hide="method == 'GET'">
+<div class="form-group" ng-hide="method == 'GET'">
     <label class="control-label">Request Body</label>
 
     <button type="button" ng-click="generate(methodData, 'request')" class="btn btn-default btn-xs pull-right">
@@ -26,7 +26,7 @@
 </div>
 <div class="clearfix"></div>
 
-<div class="control-group">
+<div class="form-group">
     <label class="control-label">Response Body</label>
 
     <button type="button" ng-click="generate(methodData, 'response')" class="btn btn-default btn-xs pull-right">
@@ -41,4 +41,3 @@
 </div>
 
 <div class="clearfix"></div>
-

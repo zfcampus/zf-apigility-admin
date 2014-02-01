@@ -5,14 +5,14 @@
         </collapse-header>
 
         <collapse-body class="list-group in">
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Route to match</label>
                 <input type="text" placeholder="/api/for/your/service"
                     class="form-control input-xlarge" required="" value="{{ rpcService.route_match }}">
                 <p class="help-block">A literal or segment (i.e., with ":variable" placeholders) route to match</p>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Allowed HTTP Methods</label>
                 <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
                     <input type="checkbox" class="input-xlarge" value="{{method}}" ng-checked="rpcService.http_methods.indexOf(method) > -1" ng-click="toggleSelection(rpcService.http_methods, $event)">
@@ -28,12 +28,12 @@
         </collapse-header>
 
         <collapse-body class="list-group">
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label">Content Negotiation Selector</label>
                 <select class="form-control input-xlarge" ng-model="restService.selector" ng-options="v as v for (k,v) in selectors"></select>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="accept_whitelist">Accept whitelist</label>
                 <tags-input 
                     custom-class="ag-tags"
@@ -46,7 +46,7 @@
                 <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
             </div>
 
-            <div class="control-group list-group-item">
+            <div class="form-group list-group-item">
                 <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
                 <tags-input 
                     custom-class="ag-tags"

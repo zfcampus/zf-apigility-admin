@@ -1,5 +1,3 @@
-<ng-include src="'zf-apigility-admin/dist/html/api/version.html'"></ng-include>
-
 <ag-include src="zf-apigility-admin/dist/html/api/rest-services/new.html"></ag-include>
 
 <div class="panel-group tooltip-api">
@@ -7,34 +5,31 @@
         conditionals="{edit: false, delete: false}"
         ng-repeat="restService in api.restServices">
         <collapse-header>
-            <h4 class="panel-title">
-                <i class="btn btn-small glyphicon glyphicon-leaf"></i>
-
-                {{ restService.controller_service_name | servicename }}
-
-                <div class="btn-group pull-right" ng-show="isLatestVersion()">
-                    <button
-                        type="button" title="Cancel" class="btn btn-sm btn-default"
-                        collapse-flag flags="{edit: false}" 
-                        collapse-button criteria="{delete: false, edit: true}">
-                        Cancel
-                    </button>
-
-                    <button 
-                        type="button" class="btn btn-sm btn-success" title="Edit service"
-                        collapse-flag flags="{edit: true}"
-                        collapse-button criteria="{delete: false, edit: false}">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </button>
-
-                    <button 
-                        type="button" class="btn btn-sm btn-danger" title="Remove serivce"
-                        collapse-flag flags="{delete: true}"
-                        collapse-button criteria="{delete: false}">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </button>
-                </div>
+            <h4 class="panel-title pull-left">
+                <span class="glyphicon glyphicon-leaf"></span> {{ restService.controller_service_name | servicename }}
             </h4>
+            <div class="btn-group pull-right" ng-show="isLatestVersion()">
+                <button
+                    type="button" title="Cancel" class="btn btn-sm btn-default"
+                    collapse-flag flags="{edit: false}" 
+                    collapse-button criteria="{delete: false, edit: true}">
+                    Cancel
+                </button>
+
+                <button 
+                    type="button" class="btn btn-sm btn-success" title="Edit service"
+                    collapse-flag flags="{edit: true}"
+                    collapse-button criteria="{delete: false, edit: false}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button>
+
+                <button 
+                    type="button" class="btn btn-sm btn-danger" title="Remove serivce"
+                    collapse-flag flags="{delete: true}"
+                    collapse-button criteria="{delete: false}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </div>
 
             <div class="clearfix"></div>
 
@@ -59,7 +54,7 @@
         </collapse-header>
 
         <collapse-body>
-            <ag-tabs collapse-show criteria="{edit: false}">
+            <ag-tabs class="panel-body" collapse-show criteria="{edit: false}">
                 <ag-tab-pane title="Settings">
                     <ng-include src="'zf-apigility-admin/dist/html/api/rest-services/settings-view.html'"></ng-include>
                 </ag-tab-pane>
@@ -81,7 +76,7 @@
                 </ag-tab-pane>
             </ag-tabs>
 
-            <ag-tabs class="hide" collapse-show criteria="{edit: true}">
+            <ag-tabs class="panel-body hide" collapse-show criteria="{edit: true}">
                 <ag-tab-pane title="Settings">
                     <ng-include src="'zf-apigility-admin/dist/html/api/rest-services/settings-edit.html'"></ng-include>
                 </ag-tab-pane>

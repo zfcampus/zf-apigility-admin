@@ -1,8 +1,9 @@
 <collapse class="panel-info"
+    no-chevron
     conditionals="{edit: false, delete: false}">
     <collapse-header>
         <h4 class="panel-title">
-            <i class="btn btn-sm glyphicon glyphicon-lock"></i>
+            <span class="glyphicon glyphicon-lock"></span>
 
             HTTP Basic Settings
 
@@ -18,13 +19,13 @@
                     type="button" class="btn btn-sm btn-success" title="Edit settings"
                     collapse-flag flags="{edit: true}"
                     collapse-button criteria="{delete: false, edit: false}">
-                    <i class="glyphicon glyphicon-edit"></i>
+                    <span class="glyphicon glyphicon-edit"></span>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-danger" title="Remove Authentication"
                     collapse-flag flags="{delete: true}"
                     collapse-button criteria="{delete: false}">
-                    <i class="glyphicon glyphicon-trash"></i>
+                    <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </div>
         </h4>
@@ -61,13 +62,13 @@
     <collapse-body collapse-show criteria="{edit: true}">
         <div class="panel-body"><form class="form" ng-submit="updateHttpBasicAuthentication()">
             <fieldset>
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="realm">Authentication Realm</label>
                     <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpBasic.realm">
                     <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="htpasswd">Location of htpasswd file</label>
                     <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="httpBasic.htpasswd">
                     <p class="help-block">Location on the filesystem of the htpasswd file</p>

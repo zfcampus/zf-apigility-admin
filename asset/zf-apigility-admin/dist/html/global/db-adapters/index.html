@@ -7,7 +7,7 @@
     ng-repeat="dbAdapter in dbAdapters">
     <collapse-header>
       <h4 class="panel-title">
-        <i class="btn btn-sm glyphicon glyphicon-book"></i>
+        <span class="glyphicon glyphicon-book"></span>
 
         {{ dbAdapter.adapter_name }}
 
@@ -23,14 +23,14 @@
                 type="button" class="btn btn-sm btn-success" title="Edit adapter"
                 collapse-flag flags="{editDbAdapter: true}"
                 collapse-button criteria="{deleteDbAdapter: false, editDbAdapter: false}">
-                <i class="glyphicon glyphicon-edit"></i>
+                <span class="glyphicon glyphicon-edit"></span>
             </button>
 
             <button 
                 type="button" class="btn btn-sm btn-danger" title="Remove adapter"
                 collapse-flag flags="{deleteDbAdapter: true}"
                 collapse-button criteria="{deleteDbAdapter: false}">
-                <i class="glyphicon glyphicon-trash"></i>
+                <span class="glyphicon glyphicon-trash"></span>
             </button>
         </div>
       </h4>

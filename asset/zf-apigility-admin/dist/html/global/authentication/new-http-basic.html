@@ -6,13 +6,13 @@
     <div class="panel-body">
         <form class="form" ng-submit="createHttpBasicAuthentication()">
             <fieldset>
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="realm">Authentication Realm</label>
                     <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="realm">
                     <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
                 </div>
 
-                <div class="control-group">
+                <div class="form-group">
                     <label class="control-label" for="htpasswd">Location of htpasswd file</label>
                     <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="htpasswd">
                     <p class="help-block">Location on the filesystem of the htpasswd file</p>

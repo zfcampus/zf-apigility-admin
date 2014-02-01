@@ -12,8 +12,9 @@ angular.module('ag-admin').directive('collapse', function() {
             var buttons = [];
             var chevron;
             var conditionals = {};
-            var panel = this;
             var head;
+            this.noChevron = false;
+            var panel = this;
             var watchers = {};
 
             this.addButton = function(button) {
@@ -28,6 +29,13 @@ angular.module('ag-admin').directive('collapse', function() {
                 angular.forEach(newConditionals, function(value, key) {
                     conditionals[key] = !!value;
                 });
+            };
+
+            $scope.setNoChevron = function(flag) {
+                panel.noChevron = !!flag;
+                if (chevron) {
+                    chevron.remove();
+                }
             };
 
             this.setFlags = function(flags) {
@@ -141,6 +149,10 @@ angular.module('ag-admin').directive('collapse', function() {
             };
 
             this.toggleChevron = function (flag) {
+                if (panel.noChevron) {
+                    return;
+                }
+
                 if (typeof flag === 'undefined' || flag === null) {
                     if (body.hasClass('in')) {
                         flag = 'up';
@@ -172,6 +184,10 @@ angular.module('ag-admin').directive('collapse', function() {
             if (attr.hasOwnProperty('conditionals')) {
                 scope.setConditionals(scope.$eval(attr.conditionals));
             }
+
+            if (attr.hasOwnProperty('noChevron')) {
+                scope.setNoChevron(true);
+            }
         },
         template: '<div class="panel" ng-transclude></div>',
         replace: true
@@ -183,13 +199,15 @@ angular.module('ag-admin').directive('collapse', function() {
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attr, panelCtrl) {
-            var chevron = angular.element('<i class="glyphicon glyphicon-chevron-down"></i>');
-            var chevronWrapper = angular.element('<div class="ag-chevron pull-right"></div>');
-            chevronWrapper.append(chevron);
-            element.prepend(chevronWrapper);
-
             panelCtrl.setHead(scope);
-            panelCtrl.setChevron(chevron);
+
+            if (!panelCtrl.noChevron) {
+                var chevron = angular.element('<i class="glyphicon glyphicon-chevron-down"></i>');
+                var chevronWrapper = angular.element('<div class="ag-chevron pull-right"></div>');
+                chevronWrapper.append(chevron);
+                element.prepend(chevronWrapper);
+                panelCtrl.setChevron(chevron);
+            }
 
             element.on('click', function(event) {
                 panelCtrl.toggle();
