@@ -416,4 +416,17 @@ class RpcServiceModelTest extends TestCase
         $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-rpc']);
         $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-content-negotiation']['controllers']);
     }
+
+    /**
+     * @group 72
+     * @depends testCanCreateRpcConfiguration
+     */
+    public function testCanRemoveAllHttpVerbsWhenUpdating($configData)
+    {
+        $methods = array();
+        $this->writer->toFile($configData->config_file, $configData->config);
+        $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
+        $config = include $configData->config_file;
+        $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_methods']);
+    }
 }
