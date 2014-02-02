@@ -94,6 +94,12 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                                     } else {
                                         value.required = !!value.required;
                                     }
+
+                                    if (typeof value.allow_empty == 'undefined') {
+                                        value.allow_empty = false;
+                                    } else {
+                                        value.allow_empty = !!value.allow_empty;
+                                    }
                                 }
 
                             });
