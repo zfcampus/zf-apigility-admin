@@ -640,4 +640,30 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals($original->routeIdentifierName, $entityConfig['route_identifier_name']);
         $this->assertEquals($original->routeName, $entityConfig['route_name']);
     }
+
+    /**
+     * @group 72
+     */
+    public function testCanRemoveAllHttpVerbsWhenUpdating()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'collection_http_methods'    => array(),
+            'resource_http_methods'      => array(),
+        );
+        $patch = new RestServiceEntity();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateRestConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-rest', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['zf-rest']);
+        $test = $config['zf-rest'][$original->controllerServiceName];
+
+        $this->assertEquals(array(), $test['collection_http_methods']);
+        $this->assertEquals(array(), $test['resource_http_methods']);
+    }
 }
