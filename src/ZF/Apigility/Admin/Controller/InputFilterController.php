@@ -89,11 +89,6 @@ class InputFilterController extends AbstractActionController
 
             case $request::METHOD_PUT:
                 $inputFilter = $this->bodyParams();
-                if (empty($inputFilter)) {
-                    return new ApiProblemResponse(
-                        new ApiProblem(404, 'No input filter has been specified')
-                    );
-                }
                 $result = $this->model->update($module, $controller, $inputFilter);
                 if (!$result) {
                     return new ApiProblemResponse(
