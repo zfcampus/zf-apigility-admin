@@ -63,6 +63,8 @@ class InputFilterModelTest extends TestCase
         $inputFilter = [
             'bar' => [
                 'name' => 'bar',
+                'required' => true,
+                'allow_empty' => true,
                 'validators' => [
                     [
                         'name' => 'NotEmpty'
@@ -80,6 +82,8 @@ class InputFilterModelTest extends TestCase
         $inputfilter = [
             'bar' => [
                 'name' => 'bar',
+                'required' => true,
+                'allow_empty' => true,
                 'validators' => [
                     [
                         'name' => 'NotEmpty'
