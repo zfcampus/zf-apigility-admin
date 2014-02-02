@@ -693,9 +693,6 @@ class RestServiceModel implements EventManagerAwareInterface
         updateArrayOptions:
 
         foreach ($this->restArrayUpdateOptions as $property => $configKey) {
-            if (!$update->$property) {
-                continue;
-            }
             $key = sprintf('zf-rest.%s.%s', $original->controllerServiceName, $configKey);
             $this->configResource->patchKey($key, $update->$property);
         }
