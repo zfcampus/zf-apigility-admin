@@ -2,7 +2,7 @@
   "name": "zf-apigility-admin",
   "description": "Apigility Admin UI",
   "type": "library",
-  "version": "0.9.0dev",
+  "version": "0.9.0-beta",
   "author": "",
   "contributors": [],
   "license": "BSD-3-Clause",
