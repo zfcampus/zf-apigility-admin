@@ -172,7 +172,6 @@ class RpcServiceModel
         $serviceName       = ucfirst($serviceName);
 
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
-            /** @todo define exception in Rpc namespace */
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
@@ -253,7 +252,7 @@ class RpcServiceModel
         $renderer->setResolver($resolver);
 
         if (!file_put_contents($classPath,
-            "<?php\n" . $renderer->render($view))) {
+            "<" . "?php\n" . $renderer->render($view))) {
             return false;
         }
 
@@ -352,18 +351,22 @@ class RpcServiceModel
             $selector = 'Json';
         }
 
+        $mediaType = $this->createMediaType();
+
         $config = array('zf-content-negotiation' => array(
             'controllers' => array(
                 $controllerService => $selector,
             ),
             'accept_whitelist' => array(
                 $controllerService => array(
+                    $mediaType,
                     'application/json',
                     'application/*+json',
                 ),
             ),
             'content_type_whitelist' => array(
                 $controllerService => array(
+                    $mediaType,
                     'application/json',
                 ),
             ),
@@ -544,5 +547,21 @@ class RpcServiceModel
         }
 
         return $config['options']['route'];
+    }
+
+    /**
+     * Create the mediatype for this
+     *
+     * Based on the module and the latest module version.
+     *
+     * @return string
+     */
+    public function createMediaType()
+    {
+        return sprintf(
+            'application/vnd.%s.v%s+json',
+            $this->normalize($this->module),
+            $this->moduleEntity->getLatestVersion()
+        );
     }
 }
