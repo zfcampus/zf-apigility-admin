@@ -14,7 +14,7 @@
 <div class="form-group" ng-hide="method == 'GET'">
     <label class="control-label">Request Body</label>
 
-    <button type="button" ng-click="generate(methodData, 'request')" class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, method, 'request')" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
@@ -29,7 +29,7 @@
 <div class="form-group">
     <label class="control-label">Response Body</label>
 
-    <button type="button" ng-click="generate(methodData, 'response')" class="btn btn-default btn-xs pull-right">
+    <button type="button" ng-click="generate(methodData, method, 'response', restPart)" class="btn btn-default btn-xs pull-right">
         <i class="glyphicon glyphicon-refresh"></i>
         generate from configuration
     </button>
