@@ -285,12 +285,14 @@ class RpcServiceModelTest extends TestCase
                 ),
                 'accept_whitelist' => array(
                     'FooConf\V1\Rpc\HelloWorld\Controller' => array(
+                        'application/vnd.foo-conf.v1+json',
                         'application/json',
                         'application/*+json',
                     ),
                 ),
                 'content_type_whitelist' => array(
                     'FooConf\V1\Rpc\HelloWorld\Controller' => array(
+                        'application/vnd.foo-conf.v1+json',
                         'application/json',
                     ),
                 ),
