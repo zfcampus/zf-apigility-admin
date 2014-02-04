@@ -269,12 +269,16 @@ angular.module('ag-admin').controller(
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository',
-    function ($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
+    ['$rootScope', '$scope', '$timeout', '$routeParams', 'flash', 'ApiRepository', 'ApiAuthorizationRepository',
+    function ($rootScope, $scope, $timeout, $routeParams, flash, ApiRepository, ApiAuthorizationRepository) {
 
+        var moduleName = $routeParams.apiName;
+        var version    = $routeParams.version;
+        
         $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
+        $scope.authorizations = {};
 
-        // for rest
+        // for REST
         if (typeof $scope.$parent.restService != 'undefined') {
             if (typeof $scope.service.documentation == 'undefined') {
                 $scope.service.documentation = {};
@@ -295,6 +299,8 @@ angular.module('ag-admin').controller(
                     $scope.service.documentation.entity[allowed_method] = {description: null, request: null, response: null};
                 }
             });
+
+        // for RPC
         } else {
             if (typeof $scope.service.documentation == 'undefined') {
                 $scope.service.documentation = {};
@@ -305,6 +311,18 @@ angular.module('ag-admin').controller(
                 }
             });
         }
+
+        ApiAuthorizationRepository.getServiceAuthorizations($scope.service, moduleName, version).then(function (authorizations) {
+            $scope.authorizations = authorizations;
+        });
+
+        $scope.requiresAuthorization = function (method, type) {
+            var authorizations = $scope.authorizations;
+            if (type == 'entity' || type == 'collection') {
+                return authorizations[type][method];
+            }
+            return authorizations[method];
+        };
 
         var hasHalMediaType = function (mediatypes) {
             if (typeof mediatypes !== 'object' || !Array.isArray(mediatypes)) {
@@ -1788,13 +1806,12 @@ angular.module('ag-admin').filter('servicename', function () {
 
 })();
 
-(function(Hyperagent) {'use strict';
+(function(_, Hyperagent) {'use strict';
 
 angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
 
     return {
         getApiAuthorization: function (name, version, force) {
-
             var apiAuthorizationsModel = [];
             var deferred = $q.defer();
 
@@ -1810,7 +1827,44 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', 
             });
 
             return deferred.promise;
+        },
 
+        getServiceAuthorizations: function (service, moduleName, version) {
+            return this.getApiAuthorization(moduleName, version).then(function (apiAuthorizations) {
+                var authorizations = {};
+                var complete = false;
+                var matches;
+                var controllerServiceName = service.controller_service_name;
+                controllerServiceName = controllerServiceName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                var serviceRegex = new RegExp('^' + controllerServiceName + '::(.*?)$');
+                var actionRegex  = new RegExp('^__([^_]+)__$');
+                _.forEach(apiAuthorizations, function (data, serviceName) {
+                    if (complete) {
+                        return;
+                    }
+
+                    matches = serviceRegex.exec(serviceName);
+                    if (!Array.isArray(matches)) {
+                        return;
+                    }
+
+                    var action = matches[1];
+                    matches = actionRegex.exec(action);
+                    if (Array.isArray(matches)) {
+                        var type = matches[1];
+                        if (type == 'resource') {
+                            type = 'entity';
+                        }
+                        authorizations[type] = data;
+                        return;
+                    }
+
+                    authorizations = data;
+                    complete = true;
+                });
+
+                return authorizations;
+            });
         },
 
         saveApiAuthorizations: function (apiName, apiAuthorizationsModel) {
@@ -1820,7 +1874,7 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', 
     };
 }]);
 
-})(Hyperagent);
+})(_, Hyperagent);
 
 (function(_, Hyperagent) {'use strict';
 

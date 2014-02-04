@@ -1,7 +1,12 @@
+<div ng-show="requiresAuthorization(method, restPart)">
+    <button class="btn btn-sm btn-danger">Authorization Required</button>
+</div>
+
 <div ng-show="methodData.description">
     <div ng-bind-html="methodData.description"></div>
 </div>
-<div class="text-muted" ng-hide="methodData.description">
+
+<div ng-hide="methodData.description" class="text-muted">
     No description available.
 </div>
 

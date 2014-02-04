@@ -2,12 +2,16 @@
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository',
-    function ($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
+    ['$rootScope', '$scope', '$timeout', '$routeParams', 'flash', 'ApiRepository', 'ApiAuthorizationRepository',
+    function ($rootScope, $scope, $timeout, $routeParams, flash, ApiRepository, ApiAuthorizationRepository) {
 
+        var moduleName = $routeParams.apiName;
+        var version    = $routeParams.version;
+        
         $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
+        $scope.authorizations = {};
 
-        // for rest
+        // for REST
         if (typeof $scope.$parent.restService != 'undefined') {
             if (typeof $scope.service.documentation == 'undefined') {
                 $scope.service.documentation = {};
@@ -28,6 +32,8 @@ angular.module('ag-admin').controller(
                     $scope.service.documentation.entity[allowed_method] = {description: null, request: null, response: null};
                 }
             });
+
+        // for RPC
         } else {
             if (typeof $scope.service.documentation == 'undefined') {
                 $scope.service.documentation = {};
@@ -38,6 +44,18 @@ angular.module('ag-admin').controller(
                 }
             });
         }
+
+        ApiAuthorizationRepository.getServiceAuthorizations($scope.service, moduleName, version).then(function (authorizations) {
+            $scope.authorizations = authorizations;
+        });
+
+        $scope.requiresAuthorization = function (method, type) {
+            var authorizations = $scope.authorizations;
+            if (type == 'entity' || type == 'collection') {
+                return authorizations[type][method];
+            }
+            return authorizations[method];
+        };
 
         var hasHalMediaType = function (mediatypes) {
             if (typeof mediatypes !== 'object' || !Array.isArray(mediatypes)) {
