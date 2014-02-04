@@ -1,6 +1,8 @@
 <div ng-controller="ApiDocumentationController">
     <div class="panel panel-default">
         <div class="panel-body">
+            <h3>{{ restService.controller_service_name | servicename }}: {{ restService.route_match }}</h3>
+
             <div ng-show="restService.documentation.description">
                 <div ng-bind-html="restService.documentation.description"></div>
             </div>
