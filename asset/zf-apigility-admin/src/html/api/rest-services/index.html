@@ -1,4 +1,4 @@
-<ag-include src="zf-apigility-admin/src/html/api/rest-services/new.html"></ag-include>
+<ag-include src="html/api/rest-services/new.html"></ag-include>
 
 <div class="panel-group tooltip-api">
     <collapse class="panel-info" 
@@ -56,38 +56,38 @@
         <collapse-body>
             <ag-tabs class="panel-body" collapse-show criteria="{edit: false}">
                 <ag-tab-pane title="Settings">
-                    <ng-include src="'zf-apigility-admin/src/html/api/rest-services/settings-view.html'"></ng-include>
+                    <ng-include src="'html/api/rest-services/settings-view.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Fields">
-                    <ng-include src="'zf-apigility-admin/src/html/api/input-filter-view.html'"
+                    <ng-include src="'html/api/input-filter-view.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Documentation">
-                    <ng-include src="'zf-apigility-admin/src/html/api/rest-services/documentation-view.html'"
+                    <ng-include src="'html/api/rest-services/documentation-view.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Source Code">
                     <ng-include 
-                        src="'zf-apigility-admin/src/html/api/rest-services/source-code.html'"
+                        src="'html/api/rest-services/source-code.html'"
                         onload="index = $index; service = restService"></ng-include>
                 </ag-tab-pane>
             </ag-tabs>
 
             <ag-tabs class="panel-body hide" collapse-show criteria="{edit: true}">
                 <ag-tab-pane title="Settings">
-                    <ng-include src="'zf-apigility-admin/src/html/api/rest-services/settings-edit.html'"></ng-include>
+                    <ng-include src="'html/api/rest-services/settings-edit.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Fields">
-                    <ng-include src="'zf-apigility-admin/src/html/api/input-filter-edit.html'"
+                    <ng-include src="'html/api/input-filter-edit.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Documentation">
-                    <ag-include src="zf-apigility-admin/src/html/api/rest-services/documentation-edit.html"></ag-include>
+                    <ag-include src="html/api/rest-services/documentation-edit.html"></ag-include>
                 </ag-tab-pane>
             </ag-tabs>
         </collapse-body>

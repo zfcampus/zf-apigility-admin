@@ -1,4 +1,5 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').controller(
     'ApiListController',

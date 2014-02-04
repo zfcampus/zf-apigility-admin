@@ -1,4 +1,4 @@
-<div collapse-show criteria="{editSelector: true}" class="hide">
+<div collapse-show="" criteria="{editSelector: true}" class="hide">
   <div class="panel-body">
     <div class="ag-new-input pull-right"><form class="form-inline" role="form">
       <div class="form-group">
@@ -26,20 +26,13 @@
 
         <td>
           <div class="control-group">
-            <tags-input
-              custom-class="ag-tags"
-              ng-model="mediaTypes"
-              add-on-space="true"
-              max-length="256"
-              allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-              placeholder="Add a mediatype">
+            <tags-input custom-class="ag-tags" ng-model="mediaTypes" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$" placeholder="Add a mediatype">
             </tags-input>
           </div>
         </td>
 
         <td>
-          <button type="button" class="btn btn-sm btn-danger"
-            ng-click="removeViewModel(viewModel, selector)">
+          <button type="button" class="btn btn-sm btn-danger" ng-click="removeViewModel(viewModel, selector)">
             <i class="glyphicon glyphicon-trash"></i>
           </button>
         </td>
@@ -48,7 +41,7 @@
       <tr>
         <td colspan="3">
           <div class="btn-group pull-right">
-            <button type="button" collapse-flag flags="{editSelector: false}" ng-click="resetSelectorForm(selector)" class="btn btn-sm btn-default">Cancel</button>
+            <button type="button" collapse-flag="" flags="{editSelector: false}" ng-click="resetSelectorForm(selector)" class="btn btn-sm btn-default">Cancel</button>
             <button type="button" ng-click="updateSelector(selector)" class="btn btn-sm btn-success">Update Selector</button>
           </div>
 

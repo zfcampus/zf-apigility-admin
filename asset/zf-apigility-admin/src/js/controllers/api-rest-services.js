@@ -1,4 +1,5 @@
-(function(_) {'use strict';
+(function(_) {
+    'use strict';
 
 angular.module('ag-admin').controller(
   'ApiRestServicesController', 

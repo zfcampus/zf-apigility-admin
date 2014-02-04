@@ -1,4 +1,4 @@
-<ng-include src="'zf-apigility-admin/dist/html/api/version.html'"></ng-include>
+<ng-include src="'html/api/version.html'"></ng-include>
 
 <h2>Authorization</h2>
 
@@ -14,15 +14,14 @@
         </p>
 
         <p>
-            You can configure authentication on the <a
-            ng-href="admin#/global/authentication">authentication
+            You can configure authentication on the <a ng-href="/admin#/global/authentication">authentication
             screen</a>.
         </p>
     </div>
 </div>
 
 <p>
-    A <input type="checkbox" checked> check means authentication is
+    A <input type="checkbox" checked="checked"> check means authentication is
     <strong>required</strong> for the given combination of service
     and HTTP method.
 </p>
@@ -31,10 +30,10 @@
     <thead>
         <tr class="success">
             <th>Service Name</th>
-            <th class="text-center">GET    <br><input type="checkbox" ng-click="updateColumn($event, 'GET')"    ng-disabled="!editable"></th>
-            <th class="text-center">POST   <br><input type="checkbox" ng-click="updateColumn($event, 'POST')"   ng-disabled="!editable"></th>
-            <th class="text-center">PATCH  <br><input type="checkbox" ng-click="updateColumn($event, 'PATCH')"  ng-disabled="!editable"></th>
-            <th class="text-center">PUT    <br><input type="checkbox" ng-click="updateColumn($event, 'PUT')"    ng-disabled="!editable"></th>
+            <th class="text-center">GET    <br><input type="checkbox" ng-click="updateColumn($event, 'GET')" ng-disabled="!editable"></th>
+            <th class="text-center">POST   <br><input type="checkbox" ng-click="updateColumn($event, 'POST')" ng-disabled="!editable"></th>
+            <th class="text-center">PATCH  <br><input type="checkbox" ng-click="updateColumn($event, 'PATCH')" ng-disabled="!editable"></th>
+            <th class="text-center">PUT    <br><input type="checkbox" ng-click="updateColumn($event, 'PUT')" ng-disabled="!editable"></th>
             <th class="text-center">DELETE <br><input type="checkbox" ng-click="updateColumn($event, 'DELETE')" ng-disabled="!editable"></th>
             <th class="text-center">&nbsp;</th>
         </tr>

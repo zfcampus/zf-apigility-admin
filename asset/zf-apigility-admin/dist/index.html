@@ -4,19 +4,16 @@
     <meta charset="utf-8">
     <base href="%BASE_HREF%/">
     
-    <!-- build:css /css/apigility.css -->
-    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/src/css/vendor.css">
-    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/src/css/main.css">
-    <!-- endbuild -->
+    <link rel="stylesheet" href="css/apigility.css"/>
         
 </head>
 <body id="ng-app" ng-app="ag-admin" data-api-base-path="%API_BASE%">
-    <a class="sr-only" href="admin#content"> … </a>
+    <a class="sr-only" href="/admin#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top primary" role="banner">
         <div class="container">
             <div class="navbar-header">
-                <a href="admin" class="navbar-brand">
-                    <img src="zf-apigility/img/ag-logo.png">
+                <a href="/admin" class="navbar-brand">
+                    <img src="/zf-apigility/img/ag-logo.png">
                 </a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -39,7 +36,7 @@
             <p class="navbar-text">APIs:</p>
             <ul class="navbar-nav nav">
                 <li ng-repeat="api in apis" ng-class="{active: ($root.routeParams.apiName == api.name)}">
-                    <a ng-bind="api.namespace" ng-href="admin#/api/{{ api.name }}/v{{ api.versions[api.versions.length-1] }}/overview"></a>
+                    <a ng-bind="api.namespace" ng-href="/admin#/api/{{ api.name }}/v{{ api.versions[api.versions.length - 1] }}/overview"></a>
                 </li>
             </ul>
         </div>
@@ -55,17 +52,17 @@
         <div class="row">
             <aside class="col-md-3 ag-sidebar" role="complementary">
                 <ul ng-show="!$root.routeParams.apiName" class="nav nav-pills ag-admin-nav-pills nav-stacked">
-                    <li ng-class="{active: ($root.navSection == 'DashboardController')}"><a ng-href="admin#/global/information">General Information</a></li>
-                    <li ng-class="{active: ($root.navSection == 'DbAdapterController')}"><a ng-href="admin#/global/db-adapters">Database Adapters</a></li>
-                    <li ng-class="{active: ($root.navSection == 'AuthenticationController')}"><a ng-href="admin#/global/authentication">Authentication</a></li>
-                    <li ng-class="{active: ($root.navSection == 'ContentNegotiationController')}"><a ng-href="admin#/global/content-negotiation">Content Negotiation</a></li>
+                    <li ng-class="{active: ($root.navSection == 'DashboardController')}"><a ng-href="/admin#/global/information">General Information</a></li>
+                    <li ng-class="{active: ($root.navSection == 'DbAdapterController')}"><a ng-href="/admin#/global/db-adapters">Database Adapters</a></li>
+                    <li ng-class="{active: ($root.navSection == 'AuthenticationController')}"><a ng-href="/admin#/global/authentication">Authentication</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ContentNegotiationController')}"><a ng-href="/admin#/global/content-negotiation">Content Negotiation</a></li>
                 </ul>
 
                 <ul ng-show="$root.routeParams.apiName" class="nav nav-pills ag-admin-nav-pills nav-stacked">
-                    <li ng-class="{active: ($root.navSection == 'ApiOverviewController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
-                    <li ng-class="{active: ($root.navSection == 'ApiRestServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
-                    <li ng-class="{active: ($root.navSection == 'ApiRpcServicesController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
-                    <li ng-class="{active: ($root.navSection == 'ApiAuthorizationController')}"><a ng-href="admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/authorization">Authorization</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiOverviewController')}"><a ng-href="/admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/overview">Overview</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiRestServicesController')}"><a ng-href="/admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rest-services">REST Services</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiRpcServicesController')}"><a ng-href="/admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/rpc-services">RPC Services</a></li>
+                    <li ng-class="{active: ($root.navSection == 'ApiAuthorizationController')}"><a ng-href="/admin#/api/{{ $root.routeParams.apiName }}/{{ $root.routeParams.version }}/authorization">Authorization</a></li>
                 </ul>
             </aside>
 
@@ -80,71 +77,13 @@
         <span class="alert-message">{{flash.message}}</span>
     </div>
 
-    <ag-include src="zf-apigility-admin/src/html/modals/create-api-form.html"></ag-include>
-    <ng-include src="'zf-apigility-admin/src/html/modals/help-input-filter.html'"></ng-include>
+    <ag-include src="html/modals/create-api-form.html"></ag-include>
+    <ng-include src="'html/modals/help-input-filter.html'"></ng-include>
 
-    <!-- build:js scripts/vendor-ui.js -->
-    <script src="zf-apigility-admin/src/vendor/jquery/jquery.js"></script>
-    <script src="zf-apigility-admin/src/vendor/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="zf-apigility-admin/src/vendor/jquery-ui/ui/jquery-ui.js"></script>
-    <script src="zf-apigility-admin/src/vendor/select2/select2.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js scripts/vendor-util.js -->
-    <script src="zf-apigility-admin/src/vendor/lodash/dist/lodash.js"></script>
-    <script src="zf-apigility-admin/src/vendor/q/q.js"></script>
-    <script src="zf-apigility-admin/src/vendor/uri.js/src/URI.js"></script>
-    <script src="zf-apigility-admin/src/vendor/uri.js/src/URITemplate.js"></script>
-    <script src="zf-apigility-admin/src/vendor/hyperagent/dist/hyperagent.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js scripts/vendor-angular.js -->
-    <script src="zf-apigility-admin/src/vendor/angular/angular.js"></script>
-    <script src="zf-apigility-admin/src/vendor/angular-route/angular-route.js"></script>
-    <script src="zf-apigility-admin/src/vendor/angular-sanitize/angular-sanitize.js"></script>
-    <script src="zf-apigility-admin/src/vendor/angular-flash/dist/angular-flash.js"></script>
-    <script src="zf-apigility-admin/src/vendor/angular-ui-sortable/src/sortable.js"></script>
-    <script src="zf-apigility-admin/src/vendor/angular-ui-select2/src/select2.js"></script>
-    <script src="zf-apigility-admin/src/vendor/ng-tags-input/ng-tags-input.js"></script>
-    <script src="zf-apigility-admin/src/vendor/angular-toggle-switch/angular-toggle-switch.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js scripts/app.js -->
-    <script src="zf-apigility-admin/src/js/_declarations.js"></script>
-    <script src="zf-apigility-admin/src/js/zf-apigility-admin.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-authorization.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-create.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-documentation.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-list.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-overview.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-rest-services.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-rpc-services.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-service-input.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/api-version.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/authentication.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/content-negotiation.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/dashboard.js"></script>
-    <script src="zf-apigility-admin/src/js/controllers/db-adapter.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-collapse.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-comment.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-edit-inplace.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-hover.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-include.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-modal-dismiss.js"></script>
-    <script src="zf-apigility-admin/src/js/directives/ag-tabs.js"></script>
-    <script src="zf-apigility-admin/src/js/filters/authorizationservicename.js"></script>
-    <script src="zf-apigility-admin/src/js/filters/namespaceclassid.js"></script>
-    <script src="zf-apigility-admin/src/js/filters/servicename.js"></script>
-    <script src="zf-apigility-admin/src/js/services/api-authorization.js"></script>
-    <script src="zf-apigility-admin/src/js/services/api.js"></script>
-    <script src="zf-apigility-admin/src/js/services/authentication.js"></script>
-    <script src="zf-apigility-admin/src/js/services/content-negotiation.js"></script>
-    <script src="zf-apigility-admin/src/js/services/db-adapter.js"></script>
-    <script src="zf-apigility-admin/src/js/services/filters.js"></script>
-    <script src="zf-apigility-admin/src/js/services/hydrators.js"></script>
-    <script src="zf-apigility-admin/src/js/services/toggle-selection.js"></script>
-    <script src="zf-apigility-admin/src/js/services/validators.js"></script>
-    <!-- endbuild -->
+    <script src="js/vendor-ui.js"></script>
+    <script src="js/vendor-util.js"></script>
+    <script src="js/vendor-angular.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
 </html>

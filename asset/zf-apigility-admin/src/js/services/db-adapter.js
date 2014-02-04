@@ -1,4 +1,5 @@
-(function(_, Hyperagent) {'use strict';
+(function(_, Hyperagent) {
+    'use strict';
 
 angular.module('ag-admin').factory('DbAdapterResource', function ($http, $q, $location, apiBasePath) {
 

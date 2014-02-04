@@ -1,7 +1,6 @@
 (function() {'use strict';
 
-angular.module('ag-admin').run([
-    '$rootScope', '$routeParams', '$location', '$route', 
+angular.module('ag-admin').run(
     function ($rootScope, $routeParams, $location, $route) {
         $rootScope.routeParams = $routeParams;
 
@@ -12,6 +11,6 @@ angular.module('ag-admin').run([
             }
         });
     }
-]);
+);
 
 })();

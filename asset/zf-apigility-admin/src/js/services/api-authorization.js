@@ -1,4 +1,5 @@
-(function(Hyperagent) {'use strict';
+(function(Hyperagent) {
+    'use strict';
 
 angular.module('ag-admin').factory('ApiAuthorizationRepository', function ($rootScope, $q, $http, apiBasePath) {
 

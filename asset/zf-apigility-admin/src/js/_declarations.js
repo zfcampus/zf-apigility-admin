@@ -19,11 +19,11 @@
             $provide.value('apiBasePath', angular.element('body').data('api-base-path') || '/admin/api');
 
             $routeProvider.when('/dashboard', {
-                templateUrl: 'zf-apigility-admin/src/html/index.html',
+                templateUrl: 'html/index.html',
                 controller: 'DashboardController'
             });
             $routeProvider.when('/global/content-negotiation', {
-                templateUrl: 'zf-apigility-admin/src/html/global/content-negotiation/index.html',
+                templateUrl: 'html/global/content-negotiation/index.html',
                 controller: 'ContentNegotiationController',
                 resolve: {
                     selectors: function(ContentNegotiationResource) {
@@ -32,15 +32,15 @@
                 }
             });
             $routeProvider.when('/global/db-adapters', {
-                templateUrl: 'zf-apigility-admin/src/html/global/db-adapters/index.html',
+                templateUrl: 'html/global/db-adapters/index.html',
                 controller: 'DbAdapterController'
             });
             $routeProvider.when('/global/authentication', {
-                templateUrl: 'zf-apigility-admin/src/html/global/authentication/index.html',
+                templateUrl: 'html/global/authentication/index.html',
                 controller: 'AuthenticationController'
             });
             $routeProvider.when('/api/:apiName/:version/overview', {
-                templateUrl: 'zf-apigility-admin/src/html/api/overview.html',
+                templateUrl: 'html/api/overview.html',
                 controller: 'ApiOverviewController',
                 resolve: {
                     api: function($route, ApiRepository) {
@@ -49,7 +49,7 @@
                 }
             });
             $routeProvider.when('/api/:apiName/:version/authorization', {
-                templateUrl: 'zf-apigility-admin/src/html/api/authorization.html',
+                templateUrl: 'html/api/authorization.html',
                 controller: 'ApiAuthorizationController',
                 resolve: {
                     api: function($route, ApiRepository) {
@@ -64,7 +64,7 @@
                 }
             });
             $routeProvider.when('/api/:apiName/:version/rest-services', {
-                templateUrl: 'zf-apigility-admin/src/html/api/rest-services/index.html',
+                templateUrl: 'html/api/rest-services/index.html',
                 controller: 'ApiRestServicesController',
                 resolve: {
                     dbAdapters: function(DbAdapterResource) {
@@ -94,7 +94,7 @@
                 }
             });
             $routeProvider.when('/api/:apiName/:version/rpc-services', {
-                templateUrl: 'zf-apigility-admin/src/html/api/rpc-services/index.html',
+                templateUrl: 'html/api/rpc-services/index.html',
                 controller: 'ApiRpcServicesController',
                 resolve: {
                     api: function($route, ApiRepository) {

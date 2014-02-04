@@ -70,9 +70,25 @@ module.exports = function(grunt) {
             }
         },
 
-        // Compiles Less to CSS and generates necessary files if requested
+        // Empties folders to start fresh
+        clean: {
+            dist: {
+                files: [{
+                    dot: true,
+                    src: [
+                        '.tmp',
+                        '<%= yeoman.dist %>/*',
+                        '!<%= yeoman.dist %>/.git*'
+                    ]
+                }]
+            },
+            server: '.tmp'
+        },
+
+        // Compiles Less to CSS
         less: {
             options: {
+                // Adds additional paths for import (so can import bower_components as well)
                 paths: [
                     '<%= yeoman.app %>/less',
                     '<%= yeoman.app %>/vendor'
@@ -86,16 +102,8 @@ module.exports = function(grunt) {
                 options: {
                     cleancss: false
                 }
-            },
-            dist: {
-                files: {
-                    '<%= yeoman.dist %>/css/main.css': '<%= yeoman.app %>/less/main.less',
-                    '<%= yeoman.dist %>/css/vendor.css': '<%= yeoman.app %>/less/vendor.less'
-                },
-                options: {
-                    cleancss: true
-                }
             }
+            // Dist is handled by usemin/cssmin of the above 'server' config
         },
 
         // Reads HTML for usemin blocks to enable smart builds that automatically
@@ -132,7 +140,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= yeoman.app %>',
-                    src: ['*.html', 'views/**/*.html'],
+                    src: ['*.html', 'html/**/*.html'],
                     dest: '<%= yeoman.dist %>'
                 }]
             }
@@ -162,9 +170,17 @@ module.exports = function(grunt) {
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
-                        'images/{,**/}*.{webp,cur}',
+                        'img/{,**/}*.webp',
                         'fonts/*',
-                        'scripts/data/**/*.json'
+                        'js/data/**/*.json'
+                    ]
+                }, {
+                    expand: true,
+                    dot: false,
+                    cwd: '<%= yeoman.app %>/vendor/select2',
+                    dest: '<%= yeoman.dist %>/css/',
+                    src: [
+                        '*.{png,gif}',
                     ]
                 }]
             }
@@ -179,7 +195,7 @@ module.exports = function(grunt) {
                 'less:server'
             ],
             dist: [
-                'less:dist',
+                'less:server',
                 'htmlmin'
             ]
         },
@@ -195,26 +211,28 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('serve', function(target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build']);
-        }
-
         grunt.task.run([
+            'clean:server',
             'concurrent:server',
             'watch'
         ]);
     });
 
     grunt.registerTask('test', [
+        'clean:server',
         'concurrent:test',
         'karma'
     ]);
 
     grunt.registerTask('build', [
+        'clean:dist',
         'useminPrepare',
         'concurrent:dist',
+        'concat',
         'ngmin',
         'copy:dist',
+        'cssmin',
+        'uglify',
         'usemin'
     ]);
 

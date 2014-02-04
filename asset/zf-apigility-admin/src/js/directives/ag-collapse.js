@@ -1,4 +1,5 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').directive('collapse', function() {
     return {
@@ -7,7 +8,7 @@ angular.module('ag-admin').directive('collapse', function() {
         scope: {
             show: '&'
         },
-        controller: ['$scope', '$parse', function($scope, $parse) {
+        controller: function($scope, $parse) {
             var body;
             var buttons = [];
             var chevron;
@@ -172,7 +173,7 @@ angular.module('ag-admin').directive('collapse', function() {
                     chevron.addClass(endClass);
                 }
             };
-        }],
+        },
         link: function(scope, element, attr) {
             if (attr.hasOwnProperty('show') && 
                 typeof scope.show === 'function') {
