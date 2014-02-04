@@ -26,9 +26,9 @@
                 templateUrl: 'html/global/content-negotiation/index.html',
                 controller: 'ContentNegotiationController',
                 resolve: {
-                    selectors: function(ContentNegotiationResource) {
+                    selectors: ['ContentNegotiationResource', function(ContentNegotiationResource) {
                         return ContentNegotiationResource.getList();
-                    }
+                    }]
                 }
             });
             $routeProvider.when('/global/db-adapters', {
@@ -43,78 +43,78 @@
                 templateUrl: 'html/api/overview.html',
                 controller: 'ApiOverviewController',
                 resolve: {
-                    api: function($route, ApiRepository) {
+                    api: ['$route', 'ApiRepository', function($route, ApiRepository) {
                         return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
-                    }
+                    }]
                 }
             });
             $routeProvider.when('/api/:apiName/:version/authorization', {
                 templateUrl: 'html/api/authorization.html',
                 controller: 'ApiAuthorizationController',
                 resolve: {
-                    api: function($route, ApiRepository) {
+                    api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                         return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
-                    },
-                    apiAuthorizations: function($route, ApiAuthorizationRepository) {
+                    }],
+                    apiAuthorizations: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
                         return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
-                    },
-                    authentication: function(AuthenticationRepository) {
+                    }],
+                    authentication: ['AuthenticationRepository', function (AuthenticationRepository) {
                         return AuthenticationRepository.hasAuthentication();
-                    },
+                    }]
                 }
             });
             $routeProvider.when('/api/:apiName/:version/rest-services', {
                 templateUrl: 'html/api/rest-services/index.html',
                 controller: 'ApiRestServicesController',
                 resolve: {
-                    dbAdapters: function(DbAdapterResource) {
+                    dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
                         return DbAdapterResource.getList();
-                    },
-                    api: function($route, ApiRepository) {
+                    }],
+                    api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                         return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
-                    },
-                    filters: function(FiltersServicesRepository) {
+                    }],
+                    filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
                         return FiltersServicesRepository.getList();
-                    },
-                    validators: function(ValidatorsServicesRepository) {
+                    }],
+                    validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                         return ValidatorsServicesRepository.getList();
-                    },
-                    hydrators: function(HydratorServicesRepository) {
+                    }],
+                    hydrators: ['HydratorServicesRepository', function (HydratorServicesRepository) {
                         return HydratorServicesRepository.getList();
-                    },
-                    selectors: function(ContentNegotiationResource) {
-                        return ContentNegotiationResource.getList().then(function(selectors) {
+                    }],
+                    selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                        return ContentNegotiationResource.getList().then(function (selectors) {
                             var selectorNames = [];
-                            angular.forEach(selectors, function(selector) {
+                            angular.forEach(selectors, function (selector) {
                                 selectorNames.push(selector.content_name);
                             });
                             return selectorNames;
                         });
-                    }
+                    }]
                 }
             });
             $routeProvider.when('/api/:apiName/:version/rpc-services', {
                 templateUrl: 'html/api/rpc-services/index.html',
                 controller: 'ApiRpcServicesController',
                 resolve: {
-                    api: function($route, ApiRepository) {
+                    api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
                         return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
-                    },
-                    filters: function(FiltersServicesRepository) {
+                    }],
+                    filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
                         return FiltersServicesRepository.getList();
-                    },
-                    validators: function(ValidatorsServicesRepository) {
+                    }],
+                    validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
                         return ValidatorsServicesRepository.getList();
-                    },
-                    selectors: function(ContentNegotiationResource) {
-                        return ContentNegotiationResource.getList().then(function(selectors) {
+                    }],
+                    selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+                        return ContentNegotiationResource.getList().then(function (selectors) {
                             var selectorNames = [];
-                            angular.forEach(selectors, function(selector) {
+                            angular.forEach(selectors, function (selector) {
                                 selectorNames.push(selector.content_name);
                             });
                             return selectorNames;
                         });
-                    }
+                    }]
                 }
             });
             $routeProvider.otherwise({
