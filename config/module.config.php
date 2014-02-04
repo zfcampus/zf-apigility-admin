@@ -33,6 +33,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
+            'ZF\Apigility\Admin\Controller\CacheEnabled' => 'ZF\Apigility\Admin\Controller\CacheEnabledController',
         ),
         'factories' => array(
             'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
@@ -66,6 +67,16 @@ return array(
                         ),
                         'may_terminate' => false,
                         'child_routes' => array(
+                            'cache-enabled' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/cache-enabled',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\CacheEnabled',
+                                        'action'     => 'cacheEnabled',
+                                    ),
+                                ),
+                            ),
                             'config' => array(
                                 'type' => 'literal',
                                 'options' => array(
@@ -285,6 +296,7 @@ return array(
         'controllers' => array(
             'ZF\Apigility\Admin\Controller\Authentication'     => 'HalJson',
             'ZF\Apigility\Admin\Controller\Authorization'      => 'HalJson',
+            'ZF\Apigility\Admin\Controller\CacheEnabled'       => 'Json',
             'ZF\Apigility\Admin\Controller\ContentNegotiation' => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'          => 'HalJson',
             'ZF\Apigility\Admin\Controller\Documentation'      => 'HalJson',
@@ -305,6 +317,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Authorization' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\CacheEnabled' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -367,6 +383,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Authorization' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\CacheEnabled' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -596,6 +616,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Authorization' => array(
             'http_methods' => array('GET', 'PUT'),
             'route_name'   => 'zf-apigility-admin/api/module/authorization',
+        ),
+        'ZF\Apigility\Admin\Controller\CacheEnabled' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility-admin/api/cache-enabled',
         ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
             'http_methods' => array('GET', 'PATCH', 'PUT', 'DELETE'),

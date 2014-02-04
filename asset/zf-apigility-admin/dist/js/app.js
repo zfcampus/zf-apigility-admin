@@ -1217,6 +1217,36 @@ angular.module('ag-admin').controller(
 
 })(_, $);
 
+(function() { 'use strict';
+
+angular.module('ag-admin').directive('agCacheModal', 
+    ['CacheEnabledResource',
+    function(CacheEnabledResource) {
+        var isEnabled = false;
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'zf-apigility-admin/dist/html/modals/cache-check.html',
+            controller: ['$scope', function ($scope) {
+                $scope.isEnabled = false;
+
+                CacheEnabledResource.getCacheStatus().then(function (status) {
+                    $scope.isEnabled = status;
+                });
+            }],
+            link: function(scope, element, attr) {
+                scope.$watch('isEnabled', function (newValue, oldValue) {
+                    if (newValue) {
+                        element.modal('show');
+                    }
+                });
+            }
+        };
+    }]
+);
+
+})();
+
 (function() {'use strict';
 
 angular.module('ag-admin').directive('collapse', function() {
@@ -2209,6 +2239,32 @@ angular.module('ag-admin').factory(
             }
         };
     }]
+);
+
+})();
+
+(function() {'use strict';
+
+angular.module('ag-admin').factory(
+  'CacheEnabledResource',
+  ['$http', 'flash', 'apiBasePath',
+  function ($http, flash, apiBasePath) {
+
+    var servicePath = apiBasePath + '/cache-enabled';
+
+    return {
+      getCacheStatus: function () {
+        return $http({method: 'GET', url: servicePath}).then(
+          function success(response) {
+            return response.data.cache_enabled;
+          },
+          function error() {
+            flash.error = 'Unable to fetch API opcode cache status; you may need to refresh the page.';
+          }
+        );
+      }
+    };
+  }]
 );
 
 })();

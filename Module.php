@@ -43,7 +43,7 @@ class Module
 
     public function getAutoloaderConfig()
     {
-        $this->resetCache();
+        $this->disableOpCache();
 
         return array(
             'Zend\Loader\StandardAutoloader' => array(
@@ -566,26 +566,28 @@ class Module
     }
 
     /**
-     * Removing optimizer config cache.
-     * Otherwise the admin wont work with enabled file caching
+     * Disable opcode caching
+     *
+     * Disables opcode caching for opcode caches that allow doing so during
+     * runtime; the admin API will not work with opcode caching enabled.
      */
-    protected function resetCache()
+    protected function disableOpCache()
     {
-        $phpServerString = 'PHP ' . PHP_VERSION . ' Development Server';
-        if (isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] == $phpServerString) {
-            // skip the built-in PHP webserver (OPcache reset is not needed + it crashes the server in PHP 5.4 with ZendOptimizer+)
+        if (isset($_SERVER['SERVER_SOFTWARE'])
+            && preg_match('/^PHP .*? Development Server$/', $_SERVER['SERVER_SOFTWARE'])
+        ) {
+            // skip the built-in PHP webserver (OPcache reset is not needed + 
+            // it crashes the server in PHP 5.4 with ZendOptimizer+)
             return;
         }
 
-        if (function_exists('opcache_reset')) {
-            // >= PHP 5.5.0
-            opcache_reset();
-        } elseif (function_exists('accelerator_reset')) {
-            // < PHP 5.5 (previous ZendOptimizer+)
-            accelerator_reset();
-        } elseif (function_exists('apc_clear_cache')) {
-            // APC
-            apc_clear_cache('filehits');
+        // Disable opcode caches that allow runtime disabling
+        if (function_exists('xcache_get')) {
+            // XCache; just disable it
+            ini_set('xcache.cacher', '0');
+        } elseif (function_exists('wincache_ocache_meminfo')) {
+            // WinCache; just disable it
+            ini_set('wincache.ocenabled', '0');
         }
     }
 }
