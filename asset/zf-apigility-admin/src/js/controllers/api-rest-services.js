@@ -2,7 +2,6 @@
 
 angular.module('ag-admin').controller(
   'ApiRestServicesController', 
-  ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'hydrators', 'validators', 'selectors', 'ApiRepository', 'api', 'dbAdapters', 'toggleSelection', 
   function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
@@ -116,6 +115,6 @@ angular.module('ag-admin').controller(
                 }
             });
     };
-}]);
+});
 
 })(_);

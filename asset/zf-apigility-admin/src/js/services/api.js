@@ -1,6 +1,6 @@
 (function(_, Hyperagent) {'use strict';
 
-angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
+angular.module('ag-admin').factory('ApiRepository', function ($rootScope, $q, $http, apiBasePath) {
     var moduleApiPath = apiBasePath + '/module';
 
     return {
@@ -270,6 +270,6 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
             return (api.version === latest);
         }
     };
-}]);
+});
 
 })(_, Hyperagent);

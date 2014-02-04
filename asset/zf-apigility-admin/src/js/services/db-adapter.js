@@ -1,6 +1,6 @@
 (function(_, Hyperagent) {'use strict';
 
-angular.module('ag-admin').factory('DbAdapterResource', ['$http', '$q', '$location', 'apiBasePath', function ($http, $q, $location, apiBasePath) {
+angular.module('ag-admin').factory('DbAdapterResource', function ($http, $q, $location, apiBasePath) {
 
     var dbAdapterApiPath = apiBasePath + '/db-adapter';
 
@@ -39,6 +39,6 @@ angular.module('ag-admin').factory('DbAdapterResource', ['$http', '$q', '$locati
     };
 
     return resource;
-}]);
+});
 
 })(_, Hyperagent);

@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
     'AuthenticationController',
-    ['$scope', 'flash', 'AuthenticationRepository', function ($scope, flash, AuthenticationRepository) {
+    function ($scope, flash, AuthenticationRepository) {
 
     $scope.showSetupButtons                 = false;
     $scope.showHttpBasicAuthenticationForm  = false;
@@ -184,6 +184,6 @@ angular.module('ag-admin').controller(
     };
 
     fetchAuthenticationDetails(true);
-}]);
+});
 
 })();

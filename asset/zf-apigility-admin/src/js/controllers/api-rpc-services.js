@@ -2,7 +2,6 @@
 
 angular.module('ag-admin').controller(
   'ApiRpcServicesController', 
-  ['$http', '$rootScope', '$scope', '$timeout', '$sce', 'flash', 'filters', 'validators', 'selectors', 'ApiRepository', 'api', 'toggleSelection', 
   function ($http, $rootScope, $scope, $timeout, $sce, flash, filters, validators, selectors, ApiRepository, api, toggleSelection) {
 
     $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
@@ -79,6 +78,6 @@ angular.module('ag-admin').controller(
                 }
             });
     };
-}]);
+});
 
 })(_);

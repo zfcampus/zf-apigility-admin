@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').factory(
     'HydratorServicesRepository',
-    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+    function ($http, flash, apiBasePath) {
         var servicePath = apiBasePath + '/hydrators';
 
         return {
@@ -18,7 +18,7 @@ angular.module('ag-admin').factory(
                 return promise;
             }
         };
-    }]
+    }
 );
 
 })();

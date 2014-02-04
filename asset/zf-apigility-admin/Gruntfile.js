@@ -88,6 +88,10 @@ module.exports = function(grunt) {
                 }
             },
             dist: {
+                files: {
+                    '<%= yeoman.dist %>/css/main.css': '<%= yeoman.app %>/less/main.less',
+                    '<%= yeoman.dist %>/css/vendor.css': '<%= yeoman.app %>/less/vendor.less'
+                },
                 options: {
                     cleancss: true
                 }
@@ -163,12 +167,6 @@ module.exports = function(grunt) {
                         'scripts/data/**/*.json'
                     ]
                 }]
-            },
-            styles: {
-                expand: true,
-                cwd: '<%= yeoman.app %>/css',
-                dest: '.tmp/css/',
-                src: '{,**/}*.css'
             }
         },
 
@@ -178,12 +176,10 @@ module.exports = function(grunt) {
                 'less:server'
             ],
             test: [
-                'less:server',
-                'copy:styles'
+                'less:server'
             ],
             dist: [
                 'less:dist',
-                'copy:styles',
                 'htmlmin'
             ]
         },

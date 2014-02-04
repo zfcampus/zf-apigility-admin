@@ -2,7 +2,6 @@
 
 angular.module('ag-admin').factory(
   'ContentNegotiationResource',
-  ['$http', 'flash', 'apiBasePath',
   function ($http, flash, apiBasePath) {
 
     var servicePath = apiBasePath + '/content-negotiation';
@@ -85,7 +84,7 @@ angular.module('ag-admin').factory(
         );
       }
     };
-  }]
+  }
 );
 
 })();

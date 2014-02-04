@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  ['$scope', '$location', 'flash', 'selectors', 'ContentNegotiationResource', function ($scope, $location, flash, selectors, ContentNegotiationResource) {
+  function ($scope, $location, flash, selectors, ContentNegotiationResource) {
     var newSelector = {
       content_name: '',
       viewModel: '',
@@ -89,7 +89,7 @@ angular.module('ag-admin').controller(
 
       });
     };
-  }]
+  }
 );
 
 })(_);

@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    ['$scope', '$location', 'flash', 'DbAdapterResource', function ($scope, $location, flash, DbAdapterResource) {
+    function ($scope, $location, flash, DbAdapterResource) {
         $scope.dbAdapters = [];
         $scope.showNewDbAdapterForm = false;
 
@@ -94,7 +94,7 @@ angular.module('ag-admin').controller(
             panel.toggleClass('in');
         };
 
-    }]
+    }
 );
 
 })(_, $);

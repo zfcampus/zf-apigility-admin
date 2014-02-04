@@ -1,6 +1,6 @@
 (function(Hyperagent) {'use strict';
 
-angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
+angular.module('ag-admin').factory('ApiAuthorizationRepository', function ($rootScope, $q, $http, apiBasePath) {
 
     return {
         getApiAuthorization: function (name, version, force) {
@@ -28,6 +28,6 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', 
             return $http.put(url, apiAuthorizationsModel);
         }
     };
-}]);
+});
 
 })(Hyperagent);

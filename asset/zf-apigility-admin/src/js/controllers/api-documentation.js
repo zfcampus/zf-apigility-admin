@@ -2,7 +2,6 @@
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository',
     function ($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
 
         $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
@@ -58,7 +57,7 @@ angular.module('ag-admin').controller(
             $scope.$parent.flash.success = 'Documentation saved.';
         };
 
-    }]
+    }
 );
 
 })(_);

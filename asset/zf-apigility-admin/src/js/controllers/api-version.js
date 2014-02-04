@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
     'ApiVersionController',
-    ['$rootScope', '$scope', '$location', '$timeout', '$routeParams', 'flash', 'ApiRepository', function($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
+    function($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
 
         ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
             $scope.api = api;
@@ -35,7 +35,7 @@ angular.module('ag-admin').controller(
                 $location.path('/api/' + $scope.api.name + '/v' + $scope.currentVersion + '/' + lastSegment);
             }, 500);
         };
-    }]
+    }
 );
 
 })();

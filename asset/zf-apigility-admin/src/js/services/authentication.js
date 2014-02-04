@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').factory(
     'AuthenticationRepository',
-    ['$http', '$q', 'apiBasePath', function ($http, $q, apiBasePath) {
+    function ($http, $q, apiBasePath) {
 
         var authenticationPath = apiBasePath + '/authentication';
 
@@ -48,7 +48,7 @@ angular.module('ag-admin').factory(
                 });
             }
         };
-    }]
+    }
 );
 
 })();

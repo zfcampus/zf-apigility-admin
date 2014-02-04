@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
     'ApiAuthorizationController',
-    ['$http', '$rootScope', '$scope', '$routeParams', 'flash', 'api', 'apiAuthorizations', 'authentication', 'ApiAuthorizationRepository', function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
+    function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
         $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
         $scope.authentication = authentication;
@@ -98,7 +98,7 @@ angular.module('ag-admin').controller(
         $scope.showTopSaveButton = function () {
             return (Object.keys(apiAuthorizations).length > 10);
         };
-    }]
+    }
 );
 
 })(_);
