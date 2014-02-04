@@ -1,10 +1,9 @@
-(function(Hyperagent) {'use strict';
+(function(_, Hyperagent) {'use strict';
 
 angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
 
     return {
         getApiAuthorization: function (name, version, force) {
-
             var apiAuthorizationsModel = [];
             var deferred = $q.defer();
 
@@ -20,7 +19,44 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', 
             });
 
             return deferred.promise;
+        },
 
+        getServiceAuthorizations: function (service, moduleName, version) {
+            return this.getApiAuthorization(moduleName, version).then(function (apiAuthorizations) {
+                var authorizations = {};
+                var complete = false;
+                var matches;
+                var controllerServiceName = service.controller_service_name;
+                controllerServiceName = controllerServiceName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                var serviceRegex = new RegExp('^' + controllerServiceName + '::(.*?)$');
+                var actionRegex  = new RegExp('^__([^_]+)__$');
+                _.forEach(apiAuthorizations, function (data, serviceName) {
+                    if (complete) {
+                        return;
+                    }
+
+                    matches = serviceRegex.exec(serviceName);
+                    if (!Array.isArray(matches)) {
+                        return;
+                    }
+
+                    var action = matches[1];
+                    matches = actionRegex.exec(action);
+                    if (Array.isArray(matches)) {
+                        var type = matches[1];
+                        if (type == 'resource') {
+                            type = 'entity';
+                        }
+                        authorizations[type] = data;
+                        return;
+                    }
+
+                    authorizations = data;
+                    complete = true;
+                });
+
+                return authorizations;
+            });
         },
 
         saveApiAuthorizations: function (apiName, apiAuthorizationsModel) {
@@ -30,4 +66,4 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', 
     };
 }]);
 
-})(Hyperagent);
+})(_, Hyperagent);
