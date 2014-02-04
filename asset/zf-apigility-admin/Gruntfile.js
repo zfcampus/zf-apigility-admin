@@ -1,233 +1,230 @@
+// Generated on 2013-12-20 using generator-angular 0.6.0
+'use strict';
+
+// # Globbing
+// for performance reasons we're only matching one level down:
+// 'test/spec/{,**/}*.js'
+// use this if you want to recursively match all subfolders:
+// 'test/spec/**/*.js'
+
 module.exports = function(grunt) {
 
+    // Load grunt tasks automatically
+    require('load-grunt-tasks')(grunt);
+
+    // Time how long tasks take. Can help when optimizing build times
+    require('time-grunt')(grunt);
+
+    // Define the configuration for all the tasks
     grunt.initConfig({
 
-        pkg: grunt.file.readJSON('package.json'),
-
-        src: {
-            spa: 'src/index.html',
-            template: 'src/html',
-            style: 'src/css',
-            script: 'src/js',
-            fonts: 'vendor/sass-bootstrap-glyphicons/fonts',
-            select2: 'vendor/select2'
+        // Project settings
+        yeoman: {
+            app: 'src',
+            dist: 'dist'
         },
 
-        dist: {
-            spa: 'dist/index.html',
-            template: 'dist/html',
-            style: 'dist/css',
-            script: 'dist/js',
-            fonts: 'dist/fonts',
-            select2: 'dist/css',
-            vendor: {
-                css: 'dist/css/vendor-ui.min.css',
-                js: {
-                    ui: 'dist/js/vendor-ui.min.js',
-                    util: 'dist/js/vendor-util.min.js',
-                    angular: 'dist/js/angular.min.js'
-                }
+        // Watches files for changes and runs tasks based on the changed files
+        watch: {
+            js: {
+                files: ['{<%= yeoman.app %>}/js/{,**/}*.js'],
+                tasks: ['newer:jshint:all']
+            },
+            jsTest: {
+                files: ['test/spec/{,**/}*.js'],
+                tasks: ['newer:jshint:test', 'karma']
+            },
+            less: {
+                files: ['<%= yeoman.app %>/less/{,**/}*.less'],
+                tasks: ['less:server']
+            },
+            gruntfile: {
+                files: ['Gruntfile.js']
+            },
+            livereload: {
+                options: {
+                    livereload: true
+                },
+                files: [
+                    '<%= yeoman.app %>/{,**/}*.html',
+                    '<%= yeoman.app %>/css/{,**/}*.css'
+                ]
             }
         },
 
+        // Make sure code styles are up to par and there are no obvious mistakes
         jshint: {
-            files: [
-                '<%= src.script %>/**/*.js'
+            options: {
+                jshintrc: '.jshintrc',
+                reporter: require('jshint-stylish')
+            },
+            all: [
+                'Gruntfile.js',
+                '<%= yeoman.app %>/js/{,**/}*.js'
             ],
-            options: {
-                jshintrc: '.jshintrc'
+            test: {
+                options: {
+                    jshintrc: 'test/.jshintrc'
+                },
+                src: ['test/spec/{,**/}*.js']
             }
         },
 
+        // Compiles Less to CSS and generates necessary files if requested
         less: {
-            dev: {
-                files: {
-                    '<%= dist.style %>/main.css': '<%= src.style %>/main.less'
-                },
-                options: {
-                    paths: ['<%= src.style %>/**/*.less'],
-                    cleancss: true
-                }
-            },
-            prod: {
-                files: {
-                    '<%= dist.style %>/main.min.css': '<%= src.style %>/main.less'
-                },
-                options: {
-                    paths: ['<%= src.style %>/**/*.less'],
-                    cleancss: true,
-                    yuicompress: true
-                }
-            }
-        },
-
-        copy: {
-            spa: {
-                src: '<%= src.spa %>',
-                dest: '<%= dist.spa %>'
-            },
-            template: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= src.template %>',
-                        src: ['**/*.html'],
-                        dest: '<%= dist.template %>'
-                    }
-                ]
-            },
-            fonts: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= src.fonts %>',
-                        src: ['*.*'],
-                        dest: '<%= dist.fonts %>',
-                        rename: function(dest, src) {
-                            /* Need to rename files to add a hyphen between the
-                             * words. No idea why, just that errors started to
-                             * be thrown when we started minifying the CSS
-                             */
-                            return dest + '/' + src.replace('glyphiconshalflings', 'glyphicons-halflings');
-                        }
-                    }
-                ]
-            },
-            select2: {
-                /* select2 expects to find several images in the css directory
-                 * relative to where it was loaded */
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= src.select2 %>',
-                        src: ['*.gif', '*.png'],
-                        dest: '<%= dist.select2 %>'
-                    }
-                ]
-            }
-        },
-
-        concat: {
-            options: {},
-            app: {
-                src: ['<%= src.script %>/**/*.js'],
-                dest: '<%= dist.script %>/app.js'
-            },
-            vendorUi: {
-                src: [
-                    'vendor/jquery/jquery.js',
-                    'vendor/bootstrap/dist/js/bootstrap.js',
-                    'vendor/jquery-ui/ui/jquery-ui.js',
-                    'vendor/select2/select2.js'
-                ],
-                dest: '<%= dist.vendor.js.ui %>'
-            },
-            vendorUtil: {
-                src: [
-                    'vendor/lodash/dist/lodash.js',
-                    'vendor/q/q.js',
-                    'vendor/uri.js/src/URI.js',
-                    'vendor/uri.js/src/URITemplate.js',
-                    'vendor/hyperagent/dist/hyperagent.js'
-                ],
-                dest: '<%= dist.vendor.js.util %>'
-            },
-            vendorAngular: {
-                src: [
-                    'vendor/angular/angular.js',
-                    'vendor/angular-route/angular-route.js',
-                    'vendor/angular-sanitize/angular-sanitize.js',
-                    'vendor/angular-flash/dist/angular-flash.js',
-                    'vendor/angular-ui-sortable/src/sortable.js',
-                    'vendor/angular-ui-select2/src/select2.js',
-                    'vendor/ng-tags-input/ng-tags-input.js',
-                    'vendor/angular-toggle-switch/angular-toggle-switch.js'
-                ],
-                dest: '<%= dist.vendor.js.angular %>'
-            }
-        },
-
-        cssmin: {
-            minify: {
-                files: {
-                    '<%= dist.vendor.css %>': [
-                        'vendor/bootstrap/dist/css/bootstrap.css',
-                        'vendor/sass-bootstrap-glypicons/css/bootstrap-glyphicons.css',
-                        'vendor/jquery-ui/themes/ui-lightness/jquery-ui.css',
-                        'vendor/select2/select2.css',
-                        'vendor/ng-tags-input/ng-tags-input.css',
-                        'vendor/angular-toggle-switch/angular-toggle-switch.css',
-                        'vendor/angular-toggle-switch/angular-toggle-switch-bootstrap.css'
-                    ]
-                }
-            }
-        },
-
-        uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+                paths: [
+                    '<%= yeoman.app %>/less',
+                    '<%= yeoman.app %>/vendor'
+                ]
+            },
+            server: {
+                files: {
+                    '<%= yeoman.app %>/css/main.css': '<%= yeoman.app %>/less/main.less',
+                    '<%= yeoman.app %>/css/vendor.css': '<%= yeoman.app %>/less/vendor.less'
+                },
+                options: {
+                    cleancss: false
+                }
             },
             dist: {
-                files: {
-                    '<%= dist.vendor.js.ui %>': ['<%= concat.vendorUi.dest %>'],
-                    '<%= dist.vendor.js.util %>': ['<%= concat.vendorUtil.dest %>'],
-                    '<%= dist.vendor.js.angular %>': ['<%= concat.vendorAngular.dest %>'],
-                    '<%= dist.script %>/app.min.js': ['<%= concat.app.dest %>']
+                options: {
+                    cleancss: true
                 }
             }
         },
 
-        watch: {
-            gruntfile: {
-                files: ['Gruntfile.js'],
-                tasks: ['build']
-            },
-            script: {
-                files: ['<%= src.script %>/**/*.js'],
-                tasks: ['jshint', 'concat', 'uglify']
-            },
-            style: {
-                files: ['<%= src.style %>/main.less'],
-                tasks: ['less:dev', 'less:prod']
-            },
-            spa: {
-                files: ['<%= src.spa %>'],
-                tasks: ['copy']
-            },
-            template: {
-                files: ['<%= src.template %>/**/*.html'],
-                tasks: ['copy']
+        // Reads HTML for usemin blocks to enable smart builds that automatically
+        // concat, minify and revision files. Creates configurations in memory so
+        // additional tasks can operate on them
+        useminPrepare: {
+            html: '<%= yeoman.app %>/index.html',
+            options: {
+                dest: '<%= yeoman.dist %>'
             }
         },
 
-        clean: ['dist/**/*']
+        // Performs rewrites based on rev and the useminPrepare configuration
+        usemin: {
+            html: ['<%= yeoman.dist %>/{,**/}*.html'],
+            css: ['<%= yeoman.dist %>/css/{,**/}*.css'],
+            options: {
+                assetsDirs: ['<%= yeoman.dist %>']
+            }
+        },
+
+        htmlmin: {
+            dist: {
+                options: {
+                    // Optional configurations that you can uncomment to use
+                    // removeCommentsFromCDATA: true,
+                    // collapseBooleanAttributes: true,
+                    // removeAttributeQuotes: true,
+                    // removeRedundantAttributes: true,
+                    // useShortDoctype: true,
+                    // removeEmptyAttributes: true,
+                    // removeOptionalTags: true*/
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>',
+                    src: ['*.html', 'views/**/*.html'],
+                    dest: '<%= yeoman.dist %>'
+                }]
+            }
+        },
+
+        // Allow the use of non-minsafe AngularJS files. Automatically makes it
+        // minsafe compatible so Uglify does not destroy the ng references
+        ngmin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/concat/js',
+                    src: '*.js',
+                    dest: '.tmp/concat/js'
+                }]
+            }
+        },
+
+        // Copies remaining files to places other tasks can use
+        copy: {
+            dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.dist %>',
+                    src: [
+                        '*.{ico,png,txt}',
+                        '.htaccess',
+                        'images/{,**/}*.{webp,cur}',
+                        'fonts/*',
+                        'scripts/data/**/*.json'
+                    ]
+                }]
+            },
+            styles: {
+                expand: true,
+                cwd: '<%= yeoman.app %>/css',
+                dest: '.tmp/css/',
+                src: '{,**/}*.css'
+            }
+        },
+
+        // Run some tasks in parallel to speed up the build process
+        concurrent: {
+            server: [
+                'less:server'
+            ],
+            test: [
+                'less:server',
+                'copy:styles'
+            ],
+            dist: [
+                'less:dist',
+                'copy:styles',
+                'htmlmin'
+            ]
+        },
+
+        // Test settings
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+                singleRun: true
+            }
+        }
     });
 
 
+    grunt.registerTask('serve', function(target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build']);
+        }
 
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-angular-templates');
-    grunt.loadNpmTasks('grunt-inline-angular-templates');
+        grunt.task.run([
+            'concurrent:server',
+            'watch'
+        ]);
+    });
 
-    grunt.registerTask('lint', [
-        'jshint'
+    grunt.registerTask('test', [
+        'concurrent:test',
+        'karma'
     ]);
 
     grunt.registerTask('build', [
-        'jshint',
-        'less:dev',
-        'less:prod',
-        'cssmin',
-        'copy',
-        'concat',
-        'uglify'
+        'useminPrepare',
+        'concurrent:dist',
+        'ngmin',
+        'copy:dist',
+        'usemin'
+    ]);
+
+    grunt.registerTask('default', [
+        'newer:jshint',
+        'test',
+        'build'
     ]);
 };

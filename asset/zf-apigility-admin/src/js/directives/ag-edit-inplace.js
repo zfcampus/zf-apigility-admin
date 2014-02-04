@@ -8,7 +8,7 @@ angular.module('ag-admin').directive('agEditInplace', function() {
             'agInputName': '=name',
             validate: '&'
         },
-        templateUrl: 'zf-apigility-admin/dist/html/directives/ag-edit-inplace.html',
+        templateUrl: 'zf-apigility-admin/src/html/directives/ag-edit-inplace.html',
         controller: ['$scope', function($scope) {
             var initialValue;
 
@@ -30,7 +30,7 @@ angular.module('ag-admin').directive('agEditInplace', function() {
 
             scope.setInitialValue(scope.agInputName);
 
-            var name = angular.element(element.children()[0]);
+                var name = angular.element(element.children()[0]);
             var form = angular.element(element.children()[1]);
 
             if (attr.hasOwnProperty('validate') &&

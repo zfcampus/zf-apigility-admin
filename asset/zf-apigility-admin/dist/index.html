@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <base href="%BASE_HREF%/" />
-
-    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/dist/css/vendor-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/dist/css/main.min.css" />
-
-    <script type="text/javascript" src="zf-apigility-admin/dist/js/vendor-ui.min.js"></script>
-    <script type="text/javascript" src="zf-apigility-admin/dist/js/vendor-util.min.js"></script>
-    <script type="text/javascript" src="zf-apigility-admin/dist/js/angular.min.js"></script>
-
+    <base href="%BASE_HREF%/">
+    
+    <!-- build:css /css/apigility.css -->
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/src/css/vendor.css">
+    <link rel="stylesheet" type="text/css" href="zf-apigility-admin/src/css/main.css">
+    <!-- endbuild -->
+        
 </head>
 <body id="ng-app" ng-app="ag-admin" data-api-base-path="%API_BASE%">
     <a class="sr-only" href="admin#content"> … </a>
@@ -33,12 +31,7 @@
     <div class="navbar navbar-default navbar-fixed-top secondary" ng-controller="ApiListController" ng-init="refreshApiList();">
         <div class="container">
             <div class="pull-right">
-                <button id="create-module-button"
-                    class="btn btn-sm btn-primary navbar-btn"
-                    position="bottom"
-                    title="Create New API"
-                    data-toggle="modal"
-                    data-target="#create-api-form">
+                <button id="create-module-button" class="btn btn-sm btn-primary navbar-btn" position="bottom" title="Create New API" data-toggle="modal" data-target="#create-api-form">
                     <i class="glyphicon glyphicon-plus"></i> Create New API
                 </button>
             </div>
@@ -78,18 +71,80 @@
 
             <main class="ag col-md-9" role="main">
                 <h1 ng-bind="view.title"></h1>
-                <div id="content" ng-view></div>
+                <div id="content" ng-view=""></div>
             </main>
         </div>
     </div>
 
-    <div flash-alert active-class="in" class="alert fade fade-out">
+    <div flash-alert="" active-class="in" class="alert fade fade-out">
         <span class="alert-message">{{flash.message}}</span>
     </div>
 
-    <ag-include src="zf-apigility-admin/dist/html/modals/create-api-form.html"></ag-include>
-    <ng-include src="'zf-apigility-admin/dist/html/modals/help-input-filter.html'"></ng-include>
+    <ag-include src="zf-apigility-admin/src/html/modals/create-api-form.html"></ag-include>
+    <ng-include src="'zf-apigility-admin/src/html/modals/help-input-filter.html'"></ng-include>
 
-    <script type="text/javascript" src="zf-apigility-admin/dist/js/app.min.js"></script>
+    <!-- build:js scripts/vendor-ui.js -->
+    <script src="zf-apigility-admin/src/vendor/jquery/jquery.js"></script>
+    <script src="zf-apigility-admin/src/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="zf-apigility-admin/src/vendor/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="zf-apigility-admin/src/vendor/select2/select2.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/vendor-util.js -->
+    <script src="zf-apigility-admin/src/vendor/lodash/dist/lodash.js"></script>
+    <script src="zf-apigility-admin/src/vendor/q/q.js"></script>
+    <script src="zf-apigility-admin/src/vendor/uri.js/src/URI.js"></script>
+    <script src="zf-apigility-admin/src/vendor/uri.js/src/URITemplate.js"></script>
+    <script src="zf-apigility-admin/src/vendor/hyperagent/dist/hyperagent.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/vendor-angular.js -->
+    <script src="zf-apigility-admin/src/vendor/angular/angular.js"></script>
+    <script src="zf-apigility-admin/src/vendor/angular-route/angular-route.js"></script>
+    <script src="zf-apigility-admin/src/vendor/angular-sanitize/angular-sanitize.js"></script>
+    <script src="zf-apigility-admin/src/vendor/angular-flash/dist/angular-flash.js"></script>
+    <script src="zf-apigility-admin/src/vendor/angular-ui-sortable/src/sortable.js"></script>
+    <script src="zf-apigility-admin/src/vendor/angular-ui-select2/src/select2.js"></script>
+    <script src="zf-apigility-admin/src/vendor/ng-tags-input/ng-tags-input.js"></script>
+    <script src="zf-apigility-admin/src/vendor/angular-toggle-switch/angular-toggle-switch.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/app.js -->
+    <script src="zf-apigility-admin/src/js/_declarations.js"></script>
+    <script src="zf-apigility-admin/src/js/zf-apigility-admin.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-authorization.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-create.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-documentation.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-list.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-overview.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-rest-services.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-rpc-services.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-service-input.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/api-version.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/authentication.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/content-negotiation.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/dashboard.js"></script>
+    <script src="zf-apigility-admin/src/js/controllers/db-adapter.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-collapse.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-comment.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-edit-inplace.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-hover.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-include.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-modal-dismiss.js"></script>
+    <script src="zf-apigility-admin/src/js/directives/ag-tabs.js"></script>
+    <script src="zf-apigility-admin/src/js/filters/authorizationservicename.js"></script>
+    <script src="zf-apigility-admin/src/js/filters/namespaceclassid.js"></script>
+    <script src="zf-apigility-admin/src/js/filters/servicename.js"></script>
+    <script src="zf-apigility-admin/src/js/services/api-authorization.js"></script>
+    <script src="zf-apigility-admin/src/js/services/api.js"></script>
+    <script src="zf-apigility-admin/src/js/services/authentication.js"></script>
+    <script src="zf-apigility-admin/src/js/services/content-negotiation.js"></script>
+    <script src="zf-apigility-admin/src/js/services/db-adapter.js"></script>
+    <script src="zf-apigility-admin/src/js/services/filters.js"></script>
+    <script src="zf-apigility-admin/src/js/services/hydrators.js"></script>
+    <script src="zf-apigility-admin/src/js/services/toggle-selection.js"></script>
+    <script src="zf-apigility-admin/src/js/services/validators.js"></script>
+    <!-- endbuild -->
+
 </body>
 </html>
