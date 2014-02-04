@@ -14,6 +14,14 @@
     <label class="control-label">Allow Empty</label>
 </div></div>
 
+<div class="panel panel-default"><div class="panel-body">
+    <span class="form-control-static input-xlarge pull-right" ng-class="{true: 'text-info', false: 'text-muted'}[input.continue_if_empty]">
+        <strong>{{input.continue_if_empty && 'Yes' || 'No'}}</strong>
+    </span>
+
+    <label class="control-label">Continue if Empty</label>
+</div></div>
+
 <div ng-show="input.validators.length > 0">
 <collapse class="panel-warning">
     <collapse-header>
