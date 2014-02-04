@@ -582,10 +582,7 @@ class Module
         }
 
         // Disable opcode caches that allow runtime disabling
-        if (function_exists('opcache_reset')) {
-            // >= PHP 5.5.0; just disable it
-            ini_set('opcache.enable', '0');
-        } elseif (function_exists('xcache_get')) {
+        if (function_exists('xcache_get')) {
             // XCache; just disable it
             ini_set('xcache.cacher', '0');
         } elseif (function_exists('wincache_ocache_meminfo')) {
