@@ -2,8 +2,8 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    ['$scope', '$location', 'flash', 'DbAdapterResource', function ($scope, $location, flash, DbAdapterResource) {
-        $scope.dbAdapters = [];
+    ['$scope', '$location', 'flash', 'DbAdapterResource', 'dbAdapters', function ($scope, $location, flash, DbAdapterResource, dbAdapters) {
+        $scope.dbAdapters = dbAdapters;
         $scope.showNewDbAdapterForm = false;
 
         $scope.resetForm = function () {
@@ -19,15 +19,12 @@ angular.module('ag-admin').controller(
             return true;
         };
 
-        function updateDbAdapters(force) {
+        var updateDbAdapters = function (force) {
             $scope.dbAdapters = [];
-            DbAdapterResource.fetch({force: force}).then(function (dbAdapters) {
-                $scope.$apply(function () {
-                    $scope.dbAdapters = _.pluck(dbAdapters.embedded.db_adapter, 'props');
-                });
+            DbAdapterResource.getList(force).then(function (updatedAdapters) {
+                $scope.dbAdapters = updatedAdapters;
             });
-        }
-        updateDbAdapters(false);
+        };
 
         $scope.createNewDbAdapter = function () {
             var options = {
