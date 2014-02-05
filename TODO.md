@@ -40,7 +40,7 @@ Admin UI Improvements
   file. (Although multiple related directives may be in the same file.)
 - [ ] Switch to ui-router
 - [ ] Switch to angular-ui-bootstrap
-- [ ] Remove Hyperagent (in favor of either $http, $resource, or Restangular)
+- [X] Remove Hyperagent (in favor of either $http, $resource, or Restangular)
 - [ ] Add unit tests
 - [ ] Add end-to-end tests
 
