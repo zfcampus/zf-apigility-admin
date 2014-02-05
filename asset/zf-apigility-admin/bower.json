@@ -28,12 +28,11 @@
     "bootstrap": "~3.0.3",
     "sass-bootstrap-glyphicons": "~1.0.0",
     "angular-ui-sortable": "~0.10.0",
-    "hyperagent": "~0.4.0",
     "lodash": "~2.4.1",
     "ng-tags-input": "~1.1.0",
     "angular-toggle-switch": "~0.2.5"
   },
   "resolutions": {
-    "angular": "1.2.10-build.2164+sha.8b395ff"
+    "angular": "1.2.12-build.2223+sha.95522cc"
   }
 }

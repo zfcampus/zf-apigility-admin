@@ -36,7 +36,12 @@ angular.module(
         });
         $routeProvider.when('/global/db-adapters', {
             templateUrl: 'zf-apigility-admin/dist/html/global/db-adapters/index.html',
-            controller: 'DbAdapterController'
+            controller: 'DbAdapterController',
+            resolve: {
+                dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
+                    return DbAdapterResource.getList();
+                }]
+            }
         });
         $routeProvider.when('/global/authentication', {
             templateUrl: 'zf-apigility-admin/dist/html/global/authentication/index.html',

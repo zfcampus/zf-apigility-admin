@@ -1,24 +1,28 @@
-(function(_, Hyperagent) {'use strict';
+(function(_) {'use strict';
 
-angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
-
+angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$http', 'apiBasePath', 'Hal', function ($http, apiBasePath, Hal) {
     return {
         getApiAuthorization: function (name, version, force) {
-            var apiAuthorizationsModel = [];
-            var deferred = $q.defer();
+            force = !!force;
 
             if (typeof version == 'string') {
                 version = parseInt(version.match(/\d/g)[0], 10);
             }
 
-            var hyperagentResource = new Hyperagent.Resource(apiBasePath + '/module/' + name + '/authorization?version=' + version);
+            var config = {
+                method: 'GET',
+                url: apiBasePath + '/module/' + name + '/authorization',
+                params: {
+                    version: version
+                },
+                cache: !force
+            };
 
-            hyperagentResource.fetch({force: !!force}).then(function (authorizationData) {
-                apiAuthorizationsModel = authorizationData.props;
-                deferred.resolve(apiAuthorizationsModel);
-            });
-
-            return deferred.promise;
+            return $http(config).then(
+                function success(response) {
+                    return Hal.props(response.data);
+                }
+            );
         },
 
         getServiceAuthorizations: function (service, moduleName, version) {
@@ -61,9 +65,11 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$rootScope', 
 
         saveApiAuthorizations: function (apiName, apiAuthorizationsModel) {
             var url = apiBasePath + '/module/' + apiName + '/authorization';
-            return $http.put(url, apiAuthorizationsModel);
+            return $http.put(url, apiAuthorizationsModel).then(function (response) {
+                return Hal.props(response.data);
+            });
         }
     };
 }]);
 
-})(_, Hyperagent);
+})(_);

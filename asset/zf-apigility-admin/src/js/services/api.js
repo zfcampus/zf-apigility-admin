@@ -1,28 +1,31 @@
-(function(_, Hyperagent) {'use strict';
+(function(_) {'use strict';
 
-angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http', 'apiBasePath', function ($rootScope, $q, $http, apiBasePath) {
+angular.module('ag-admin').factory('ApiRepository', ['$q', '$http', 'apiBasePath', 'Hal', function ($q, $http, apiBasePath, Hal) {
     var moduleApiPath = apiBasePath + '/module';
 
     return {
-
-        hyperagentResource: new Hyperagent.Resource(moduleApiPath),
-
         currentApiModel: null,
 
         getList: function (force) {
+            force = !!force;
             var apisModel = [];
-            var deferred = $q.defer();
-            this.hyperagentResource.fetch({force: !!force}).then(function (apis) {
-                apisModel = _.pluck(apis.embedded.module, 'props');
-                // make $q and Q play nice together
-                $rootScope.$apply(function () {
-                    deferred.resolve(apisModel);
-                });
-            });
-            return deferred.promise;
+            var config = {
+                method: 'GET',
+                url: moduleApiPath,
+                cache: !force
+            };
+
+            return $http(config).then(
+                function success(response) {
+                    var apis = Hal.pluckCollection('module', response.data);
+                    apis = Hal.stripLinks(apis);
+                    return Hal.stripEmbedded(apis);
+                }
+            );
         },
 
         getApi: function (name, version, force) {
+            force = !!force;
             var apiModel = {};
             var deferred = $q.defer();
 
@@ -38,132 +41,88 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
                 return deferred.promise;
             }
 
-            this.hyperagentResource.fetch({force: !!force}).then(function (apis) {
-                var api = _.find(apis.embedded.module, function (m) {
-                    return m.props.name === name;
+            var config = {
+                method: 'GET',
+                url: moduleApiPath,
+                cache: !force
+            };
+            $http(config).then(function (response) {
+                var apis = Hal.pluckCollection('module', response.data);
+                var api = _.find(apis, function (m) {
+                    return m.name === name;
                 });
 
-                _.forEach(api.props, function (value, key) {
+                _.forEach(Hal.stripLinks(api), function (value, key) {
                     apiModel[key] = value;
                 });
 
                 apiModel.restServices = [];
-                apiModel.rpcServices = [];
+                apiModel.rpcServices  = [];
 
                 if (!version) {
-                    version = api.props.versions[api.props.versions.length - 1];
+                    version = api.versions[api.versions.length - 1];
                 }
 
                 return api;
             }).then(function (api) {
-                // now load REST + RPC endpoints
-                return api.link('rest', {version: version}).fetch().then(function (restServices) {
+                // Now load REST endpoints
+                var config = self.getHttpConfigFromLink('rest', api);
+                config.method = 'GET';
+                config.params.version = version;
+                return $http(config).then(function (response) {
+                    apiModel.restServices = Hal.pluckCollection('rest', response.data);
+                    _.forEach(apiModel.restServices, function (restService, index) {
+                        restService._self = Hal.getLink('self', restService);
+                        restService.input_filter = {};
+                        restService.documentation = {};
+                        if (! restService._embedded) {
+                            return;
+                        }
 
-                    _.forEach(restServices.embedded.rest, function (restService, index) {
-                        var length = 0;
-                        length = apiModel.restServices.push(restService.props);
-                        apiModel.restServices[length - 1]._self = restService.links.self.href;
-                        if (restService.embedded.input_filters && restService.embedded.input_filters[0]) {
-                            apiModel.restServices[length - 1].input_filter = restService.embedded.input_filters[0].props;
-                            _.forEach(apiModel.restServices[length-1].input_filter, function (value, key) {
-                                if (typeof value == 'string') {
-                                    delete apiModel.restServices[length-1].input_filter[key];
-                                } else {
-                                    if (typeof value.validators == 'undefined') {
-                                        value.validators = [];
-                                    } else {
-                                        _.forEach(value.validators, function (validator, index) {
-                                            if (typeof validator.options == 'undefined' || validator.options.length === 0) {
-                                                validator.options = {};
-                                            }
-                                        });
-                                    }
-
-                                    if (typeof value.filters == 'undefined') {
-                                        value.filters = [];
-                                    } else {
-                                        _.forEach(value.filters, function (filter, index) {
-                                            if (typeof filter.options == 'undefined' || filter.options.length === 0) {
-                                                filter.options = {};
-                                            }
-                                        });
-                                    }
-
-                                    if (typeof value.required == 'undefined') {
-                                        value.required = true;
-                                    } else {
-                                        value.required = !!value.required;
-                                    }
-
-                                    if (typeof value.allow_empty == 'undefined') {
-                                        value.allow_empty = false;
-                                    } else {
-                                        value.allow_empty = !!value.allow_empty;
-                                    }
-
-                                    if (typeof value.continue_if_empty == 'undefined') {
-                                        value.continue_if_empty = false;
-                                    } else {
-                                        value.continue_if_empty = !!value.continue_if_empty;
-                                    }
-                                }
-
+                        if (restService._embedded && restService._embedded.input_filters && restService._embedded.input_filters[0]) {
+                            restService.input_filter = Hal.props(restService._embedded.input_filters[0]);
+                            _.forEach(restService.input_filter, function (value, key) {
+                                self.marshalInputFilter(restService, value, key);
                             });
-                            // convert to array
-                            apiModel.restServices[length - 1].input_filter = _.toArray(apiModel.restServices[length - 1].input_filter);
-                        } else {
-                            apiModel.restServices[length - 1].input_filter = [];
+                            restService.input_filter = _.toArray(restService.input_filter);
                         }
 
-                        if (restService.embedded.documentation) {
-                            apiModel.restServices[length - 1].documentation = restService.embedded.documentation.props;
+                        if (restService._embedded.documentation) {
+                            var documentation = Hal.pluckCollection('documentation', restService);
+                            restService.documentation = Hal.props(documentation);
                         }
-
                     });
-
                     return api;
                 });
             }).then(function (api) {
-                // now load REST + RPC endpoints
-                return api.link('rpc', {version: version}).fetch().then(function (rpcServices) {
+                var config = self.getHttpConfigFromLink('rpc', api);
+                config.method = 'GET';
+                config.params.version = version;
+                return $http(config).then(function (response) {
+                    apiModel.rpcServices = Hal.pluckCollection('rpc', response.data);
+                    _.forEach(apiModel.rpcServices, function (rpcService, index) {
+                        rpcService._self = Hal.getLink('self', rpcService);
+                        rpcService.input_filter = {};
+                        rpcService.documentation = {};
+                        if (! rpcService._embedded) {
+                            return;
+                        }
 
-
-                    _.forEach(rpcServices.embedded.rpc, function (rpcService, index) {
-                        var length = 0;
-                        length = apiModel.rpcServices.push(rpcService.props);
-                        apiModel.rpcServices[length - 1]._self = rpcService.links.self.href;
-                        if (rpcService.embedded.input_filters && rpcService.embedded.input_filters[0]) {
-                            apiModel.rpcServices[length - 1].input_filter = rpcService.embedded.input_filters[0].props;
-                            _.forEach(apiModel.rpcServices[length-1].input_filter, function (value, key) {
-                                if (typeof value == 'string') {
-                                    delete apiModel.rpcServices[length-1].input_filter[key];
-                                } else {
-                                    if (typeof value.validators == 'undefined') {
-                                        value.validators = [];
-                                    } else {
-                                        _.forEach(value.validators, function (validator, index) {
-                                            if (typeof validator.options == 'undefined' || validator.options.length === 0) {
-                                                validator.options = {};
-                                            }
-                                        });
-                                    }
-                                }
-
+                        if (rpcService._embedded.input_filters && rpcService._embedded.input_filters[0]) {
+                            rpcService.input_filter = Hal.props(rpcService._embedded.input_filters[0]);
+                            _.forEach(rpcService.input_filter, function (value, key) {
+                                self.marshalInputFilter(rpcService, value, key);
                             });
-                            // convert to array
-                            apiModel.rpcServices[length - 1].input_filter = _.toArray(apiModel.rpcServices[length - 1].input_filter);
-                        } else {
-                            apiModel.rpcServices[length - 1].input_filter = [];
+                            rpcService.input_filter = _.toArray(rpcService.input_filter);
                         }
 
-                        if (rpcService.embedded.documentation) {
-                            apiModel.rpcServices[length - 1].documentation = rpcService.embedded.documentation.props;
+                        if (rpcService._embedded.documentation) {
+                            var documentation = Hal.pluckCollection('documentation', rpcService);
+                            rpcService.documentation = Hal.props(documentation);
                         }
-
                     });
-
+                    return api;
                 });
-
             }).then(function (api) {
                 deferred.resolve(apiModel);
                 self.currentApiModel = apiModel;
@@ -274,8 +233,86 @@ angular.module('ag-admin').factory('ApiRepository', ['$rootScope', '$q', '$http'
         isLatestVersion: function (api) {
             var latest = this.getLatestVersion(api);
             return (api.version === latest);
+        },
+
+        marshalInputFilter: function (service, data, key) {
+            if (typeof data == 'string') {
+                delete service.input_filter[key];
+                return;
+            }
+
+            if (typeof data.validators == 'undefined') {
+                data.validators = [];
+            } else {
+                _.forEach(data.validators, function (validator, index) {
+                    if (typeof validator.options == 'undefined' || validator.options.length === 0) {
+                        validator.options = {};
+                    }
+                });
+            }
+
+            if (typeof data.filters == 'undefined') {
+                data.filters = [];
+            } else {
+                _.forEach(data.filters, function (filter, index) {
+                    if (typeof filter.options == 'undefined' || filter.options.length === 0) {
+                        filter.options = {};
+                    }
+                });
+            }
+
+            if (typeof data.required == 'undefined') {
+                data.required = true;
+            } else {
+                data.required = !!data.required;
+            }
+
+            if (typeof data.allow_empty == 'undefined') {
+                data.allow_empty = false;
+            } else {
+                data.allow_empty = !!data.allow_empty;
+            }
+
+            if (typeof data.continue_if_empty == 'undefined') {
+                data.continue_if_empty = false;
+            } else {
+                data.continue_if_empty = !!data.continue_if_empty;
+            }
+        },
+
+        getHttpConfigFromLink: function (rel, resource) {
+            var config  = {
+                uri: null,
+                params: {}
+            };
+
+            var uri = Hal.getLink(rel, resource);
+
+            // Remove templates
+            uri = uri.replace(/\{[^}]+\}/, '', 'g');
+
+            // Check for query string
+            var matches = uri.match(/^([^?]+)\?(.*?)$/);
+            if (!Array.isArray(matches)) {
+                config.url = uri;
+                return config;
+            }
+
+            // Split query string into key/value pairs
+            config.url = matches[1];
+            config.params = {};
+            var paramPairs = matches[2].split('&');
+            _.forEach(paramPairs, function (pair, index) {
+                if (!pair.match(/\=/)) {
+                    config.params[pair] = true;
+                    return;
+                }
+                pair = pair.split('=', 2);
+                config.params[pair[0]] = pair[1];
+            });
+            return config;
         }
     };
 }]);
 
-})(_, Hyperagent);
+})(_);
