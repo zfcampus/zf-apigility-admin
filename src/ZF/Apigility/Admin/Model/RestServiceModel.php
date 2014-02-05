@@ -244,10 +244,10 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Create a new service using the details provided
      *
-     * @param  NewRestServiceEntity $details
+     * @param  RestServiceEntity $details
      * @return RestServiceEntity
      */
-    public function createService(NewRestServiceEntity $details)
+    public function createService(RestServiceEntity $details)
     {
         $resourceName = ucfirst($details->resourceName);
 
