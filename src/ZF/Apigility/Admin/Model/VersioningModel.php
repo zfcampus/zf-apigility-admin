@@ -16,14 +16,18 @@ class VersioningModel
 {
     protected $configResource;
 
+    protected $docsConfigResource;
+
     protected $moduleNameFilter;
 
     /**
      * @param  ConfigResource $config
+     * @param  null|ConfigResource $docsConfig
      */
-    public function __construct(ConfigResource $config)
+    public function __construct(ConfigResource $config, ConfigResource $docsConfig = null)
     {
         $this->configResource = $config;
+        $this->docsConfigResource = $docsConfig;
     }
 
     /**
@@ -163,12 +167,16 @@ class VersioningModel
      *
      * @param  string  $module
      * @param  string  $file
-     * @param  integer $previous
-     * @param  integer $version
+     * @param  integer $previous Previous version
+     * @param  integer $version New version
      * @return boolean
      */
     protected function updateConfigVersion($module, $file, $previous, $version)
     {
+        if (preg_match('#[/\\\\]documentation.config.php$#', $file)) {
+            return $this->updateDocumentationVersion($module, $previous, $version);
+        }
+
         $config = $this->configResource->fetch(true);
         if (empty($config)) {
             return false;
@@ -383,5 +391,26 @@ class VersioningModel
         $this->moduleNameFilter->attachByName('Word\CamelCaseToDash')
             ->attachByName('StringToLower');
         return $this->moduleNameFilter;
+    }
+
+    /**
+     * Update the documentation to add a new $version based on the $previous
+     * 
+     * @param  string $module 
+     * @param  integer $previous Previous version
+     * @param  integer $version New version
+     * @return true
+     */
+    protected function updateDocumentationVersion($module, $previous, $version)
+    {
+        if (!$this->docsConfigResource) {
+            // Nothing to do
+            return true;
+        }
+
+        $originalDocs = $this->docsConfigResource->fetch(true);
+        $newDocs = $this->changeVersionArray($originalDocs, $previous, $version);
+        $this->docsConfigResource->patch($newDocs, true);
+        return true;
     }
 }

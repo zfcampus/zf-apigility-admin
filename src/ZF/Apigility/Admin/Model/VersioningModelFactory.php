@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
 class VersioningModelFactory
@@ -23,11 +24,17 @@ class VersioningModelFactory
     protected $models = array();
 
     /**
+     * @var ModuleUtils
+     */
+    protected $moduleUtils;
+
+    /**
      * @param  ConfigResourceFactory $configFactory
      */
-    public function __construct(ConfigResourceFactory $configFactory)
+    public function __construct(ConfigResourceFactory $configFactory, ModuleUtils $moduleUtils)
     {
         $this->configFactory = $configFactory;
+        $this->moduleUtils   = $moduleUtils;
     }
 
     /**
@@ -40,8 +47,10 @@ class VersioningModelFactory
             return $this->models[$module];
         }
 
-        $config = $this->configFactory->factory($this->normalizeModuleName($module));
-        $this->models[$module] = new VersioningModel($config);
+        $config     = $this->configFactory->factory($this->normalizeModuleName($module));
+        $docsConfig = $this->getDocsConfig($module);
+
+        $this->models[$module] = new VersioningModel($config, $docsConfig);
 
         return $this->models[$module];
     }
@@ -53,5 +62,16 @@ class VersioningModelFactory
     protected function normalizeModuleName($name)
     {
         return str_replace('.', '\\', $name);
+    }
+
+    protected function getDocsConfig($module)
+    {
+        $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
+        $docConfigPath    = dirname($moduleConfigPath) . '/documentation.config.php';
+        if (!file_exists($docConfigPath)) {
+            return null;
+        }
+        $documentation = include $docConfigPath;
+        return $this->configFactory->createConfigResource($documentation, $docConfigPath);
     }
 }

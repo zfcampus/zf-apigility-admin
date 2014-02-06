@@ -1,0 +1,35 @@
+<?php
+return array(
+    'Version\\V1\\Rest\\Message\\Controller' => array (
+        'collection' => array(
+            'GET' => array(
+                'description' => 'Description of GET for collection',
+                'response' => '{}',
+            ),
+            'description' => 'Description of collection',
+        ),
+        'entity' => array(
+            'GET' => array(
+                'description' => 'description of GET for entity',
+                'response' => '{}',
+            ),
+            'description' => 'Description of entity',
+        ),
+    ),
+    'Version\\V1\\Rest\\Comment\\Controller' => array (
+        'collection' => array(
+            'GET' => array(
+                'description' => 'Description of GET for collection',
+                'response' => '{}',
+            ),
+            'description' => 'Description of collection',
+        ),
+        'entity' => array(
+            'GET' => array(
+                'description' => 'description of GET for entity',
+                'response' => '{}',
+            ),
+            'description' => 'Description of entity',
+        ),
+    ),
+);
