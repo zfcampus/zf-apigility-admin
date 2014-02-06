@@ -18,7 +18,8 @@ class VersioningModelTest extends TestCase
 {
     public function setUp()
     {
-        $this->moduleConfigFile = __DIR__ . '/TestAsset/module/Version/config/module.config.php';
+        $this->moduleConfigFile     = __DIR__ . '/TestAsset/module/Version/config/module.config.php';
+        $this->moduleDocsConfigFile = __DIR__ . '/TestAsset/module/Version/config/documentation.config.php';
         $this->setUpModuleConfig();
 
         $writer      = new PhpArray();
@@ -35,15 +36,19 @@ class VersioningModelTest extends TestCase
 
     public function removeModuleConfig()
     {
-        if (file_exists($this->moduleConfigFile)) {
-            unlink($this->moduleConfigFile);
+        foreach (array($this->moduleConfigFile, $this->moduleDocsConfigFile) as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
     }
 
     public function setUpModuleConfig()
     {
         $this->removeModuleConfig();
-        copy($this->moduleConfigFile . '.dist', $this->moduleConfigFile);
+        foreach (array($this->moduleConfigFile, $this->moduleDocsConfigFile) as $file) {
+            copy($file . '.dist', $file);
+        }
     }
 
     /**
@@ -221,5 +226,26 @@ class VersioningModelTest extends TestCase
 
         $newConfig = include $this->moduleConfigFile;
         $this->assertSame(1337, $newConfig['zf-versioning']['default_version']);
+    }
+
+    public function testCreateNewVersionClonesDocumentationForNewVersion()
+    {
+        $docsConfig = include $this->moduleDocsConfigFile;
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Controller', $docsConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Comment\Controller', $docsConfig);
+        $this->assertTrue(isset($docsConfig['Version\V1\Rest\Message\Controller']['collection']['GET']['response']));
+        $this->assertTrue(isset($docsConfig['Version\V1\Rest\Message\Controller']['entity']['GET']['response']));
+        $this->assertTrue(isset($docsConfig['Version\V1\Rest\Comment\Controller']['collection']['GET']['response']));
+        $this->assertTrue(isset($docsConfig['Version\V1\Rest\Comment\Controller']['entity']['GET']['response']));
+
+        $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset/module/Version/src/Version');
+
+        $newDocsConfig = include $this->moduleDocsConfigFile;
+        $this->assertArrayHasKey('Version\V2\Rest\Message\Controller', $newDocsConfig);
+        $this->assertArrayHasKey('Version\V2\Rest\Comment\Controller', $newDocsConfig);
+        $this->assertEquals($docsConfig['Version\V1\Rest\Message\Controller'], $newDocsConfig['Version\V1\Rest\Message\Controller']);
+        $this->assertEquals($docsConfig['Version\V1\Rest\Message\Controller'], $newDocsConfig['Version\V2\Rest\Message\Controller']);
+        $this->assertEquals($docsConfig['Version\V1\Rest\Comment\Controller'], $newDocsConfig['Version\V1\Rest\Comment\Controller']);
+        $this->assertEquals($docsConfig['Version\V1\Rest\Comment\Controller'], $newDocsConfig['Version\V2\Rest\Comment\Controller']);
     }
 }
