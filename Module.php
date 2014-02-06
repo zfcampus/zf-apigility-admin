@@ -257,13 +257,16 @@ class Module
                 return new Model\RpcServiceResource($factory, $inputFilterModel, $controllerManager, $documentationModel);
             },
             'ZF\Apigility\Admin\Model\VersioningModelFactory' => function ($services) {
-                if (!$services->has('ZF\Configuration\ConfigResourceFactory')) {
+                if (!$services->has('ZF\Configuration\ConfigResourceFactory')
+                    || !$services->has('ZF\Configuration\ModuleUtils')
+                ) {
                     throw new ServiceNotCreatedException(
                         'ZF\Apigility\Admin\Model\VersioningModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
                 }
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                return new Model\VersioningModelFactory($configFactory);
+                $moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
+                return new Model\VersioningModelFactory($configFactory, $moduleUtils);
             },
         ));
     }

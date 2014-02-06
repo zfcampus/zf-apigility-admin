@@ -24,8 +24,10 @@ class VersioningModelTest extends TestCase
 
         $writer      = new PhpArray();
         $config      = include $this->moduleConfigFile;
+        $docs        = include $this->moduleDocsConfigFile;
         $resource    = new ConfigResource($config, $this->moduleConfigFile, $writer);
-        $this->model = new VersioningModel($resource);
+        $docResource = new ConfigResource($docs, $this->moduleDocsConfigFile, $writer);
+        $this->model = new VersioningModel($resource, $docResource);
     }
 
     public function tearDown()
