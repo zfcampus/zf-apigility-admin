@@ -1989,8 +1989,8 @@ angular.module('ag-admin').factory('ApiRepository', ['$q', '$http', 'apiBasePath
                     apiModel.restServices = Hal.pluckCollection('rest', response.data);
                     _.forEach(apiModel.restServices, function (restService, index) {
                         restService._self = Hal.getLink('self', restService);
-                        restService.input_filter = {};
-                        restService.documentation = {};
+                        restService.input_filter = [];
+                        restService.documentation = [];
                         if (! restService._embedded) {
                             return;
                         }
@@ -2018,8 +2018,8 @@ angular.module('ag-admin').factory('ApiRepository', ['$q', '$http', 'apiBasePath
                     apiModel.rpcServices = Hal.pluckCollection('rpc', response.data);
                     _.forEach(apiModel.rpcServices, function (rpcService, index) {
                         rpcService._self = Hal.getLink('self', rpcService);
-                        rpcService.input_filter = {};
-                        rpcService.documentation = {};
+                        rpcService.input_filter = [];
+                        rpcService.documentation = [];
                         if (! rpcService._embedded) {
                             return;
                         }
