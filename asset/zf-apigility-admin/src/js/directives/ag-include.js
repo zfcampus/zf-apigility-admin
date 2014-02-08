@@ -1,7 +1,6 @@
 (function(console) { 'use strict';
 
-angular.module('ag-admin').directive('agInclude', [
-    '$http', '$templateCache', '$compile',
+angular.module('ag-admin').directive('agInclude', 
     function($http, $templateCache, $compile) {
         return {
             restrict: 'E',
@@ -22,6 +21,6 @@ angular.module('ag-admin').directive('agInclude', [
             }
         };
     }
-]);
+);
 
 })(console);

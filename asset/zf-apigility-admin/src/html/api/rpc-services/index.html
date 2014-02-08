@@ -1,6 +1,6 @@
-<ng-include src="'zf-apigility-admin/dist/html/api/version.html'"></ng-include>
+<ng-include src="'html/api/version.html'"></ng-include>
 
-<ag-include src="zf-apigility-admin/dist/html/api/rpc-services/new.html"></ag-include>
+<ag-include src="html/api/rpc-services/new.html"></ag-include>
 
 <div class="panel-group tooltip-api" id="accordion">
     <collapse class="panel-info"
@@ -61,36 +61,36 @@
         <collapse-body>
             <ag-tabs collapse-show criteria="{edit: false}">
                 <ag-tab-pane title="Settings">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/rpc-services/settings-view.html'"></ng-include>
+                    <ng-include src="'html/api/rpc-services/settings-view.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Fields">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/input-filter-view.html'" onload="index = $index"></ng-include>
+                    <ng-include src="'html/api/input-filter-view.html'" onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Documentation">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/rpc-services/documentation-view.html'"></ng-include>
+                    <ng-include src="'html/api/rpc-services/documentation-view.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Source Code">
                     <ng-include 
-                        src="'zf-apigility-admin/dist/html/api/rpc-services/source-code.html'"
+                        src="'html/api/rpc-services/source-code.html'"
                         onload="index = $index; service = rpcService"></ng-include>
                 </ag-tab-pane>
             </ag-tabs>
 
             <ag-tabs class="hide" collapse-show criteria="{edit: true}">
                 <ag-tab-pane title="Settings">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/rpc-services/settings-edit.html'"></ng-include>
+                    <ng-include src="'html/api/rpc-services/settings-edit.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Fields">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/input-filter-edit.html'"
+                    <ng-include src="'html/api/input-filter-edit.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Documentation">
-                    <ag-include src="zf-apigility-admin/dist/html/api/rpc-services/documentation-edit.html"></ag-include>
+                    <ag-include src="html/api/rpc-services/documentation-edit.html"></ag-include>
                 </ag-tab-pane>
             </ag-tabs>
         </collapse-body>

@@ -1,6 +1,7 @@
-(function(_) {'use strict';
+(function(_) {
+    'use strict';
 
-angular.module('ag-admin').factory('DbAdapterResource', ['$http', 'apiBasePath', 'Hal', function ($http, apiBasePath, Hal) {
+angular.module('ag-admin').factory('DbAdapterResource', function ($http, apiBasePath, Hal) {
 
     var dbAdapterApiPath = apiBasePath + '/db-adapter';
 
@@ -41,6 +42,6 @@ angular.module('ag-admin').factory('DbAdapterResource', ['$http', 'apiBasePath',
                 });
         }
     };
-}]);
+});
 
 })(_);

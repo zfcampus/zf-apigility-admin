@@ -1,8 +1,9 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').controller(
     'AuthenticationController',
-    ['$scope', 'flash', 'AuthenticationRepository', function ($scope, flash, AuthenticationRepository) {
+    function ($scope, flash, AuthenticationRepository) {
 
     $scope.showSetupButtons                 = false;
     $scope.showHttpBasicAuthenticationForm  = false;
@@ -30,7 +31,7 @@ angular.module('ag-admin').controller(
     var fetchAuthenticationDetails = function (force) {
         AuthenticationRepository.fetch({cache: !force})
             .then(function (authentication) {
-                if (authentication.type == "http_basic") {
+                if (authentication.type == 'http_basic') {
                     $scope.showSetupButtons             = false;
                     $scope.showHttpBasicAuthentication  = true;
                     $scope.showHttpDigestAuthentication = false;
@@ -38,17 +39,17 @@ angular.module('ag-admin').controller(
                     $scope.httpBasic                    = authentication;
                     $scope.httpDigest                   = null;
                     $scope.oauth2                       = null;
-                } else if (authentication.type == "http_digest") {
+                } else if (authentication.type == 'http_digest') {
                     $scope.showSetupButtons             = false;
                     $scope.showHttpDigestAuthentication = true;
                     $scope.showHttpBasicAuthentication  = false;
                     $scope.showOAuth2Authentication     = false;
-                    $scope.digest_domains               = authentication.digest_domains.split(" ");
+                    $scope.digest_domains               = authentication.digest_domains.split(' ');
                     $scope.httpDigest                   = authentication;
-                    $scope.httpDigest.digest_domains = authentication.digest_domains.split(" ");
+                    $scope.httpDigest.digest_domains = authentication.digest_domains.split(' ');
                     $scope.httpBasic                    = null;
                     $scope.oauth2                       = null;
-                } else if (authentication.type == "oauth2") {
+                } else if (authentication.type == 'oauth2') {
                     $scope.showSetupButtons             = false;
                     $scope.showOAuth2Authentication     = true;
                     $scope.showHttpDigestAuthentication = false;
@@ -119,7 +120,7 @@ angular.module('ag-admin').controller(
 
     $scope.createHttpBasicAuthentication = function () {
         var options = {
-            accept_schemes : [ "basic" ],
+            accept_schemes : [ 'basic' ],
             realm          : $scope.realm,
             htpasswd       : $scope.htpasswd
         };
@@ -128,10 +129,10 @@ angular.module('ag-admin').controller(
 
     $scope.createHttpDigestAuthentication = function () {
         var options = {
-            accept_schemes : [ "digest" ],
+            accept_schemes : [ 'digest' ],
             realm          : $scope.realm,
             htdigest       : $scope.htdigest,
-            digest_domains : $scope.digest_domains.join(" "),
+            digest_domains : $scope.digest_domains.join(' '),
             nonce_timeout  : $scope.nonce_timeout
         };
         createAuthentication(options);
@@ -159,7 +160,7 @@ angular.module('ag-admin').controller(
         var options = {
             realm          : $scope.httpDigest.realm,
             htdigest       : $scope.httpDigest.htdigest,
-            digest_domains : $scope.httpDigest.digest_domains.join(" "),
+            digest_domains : $scope.httpDigest.digest_domains.join(' '),
             nonce_timeout  : $scope.httpDigest.nonce_timeout
         };
         updateAuthentication(options);
@@ -184,6 +185,6 @@ angular.module('ag-admin').controller(
     };
 
     fetchAuthenticationDetails(true);
-}]);
+});
 
 })();

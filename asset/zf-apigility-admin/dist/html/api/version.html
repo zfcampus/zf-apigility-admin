@@ -2,11 +2,7 @@
     <form class="form-inline">
         <div class="form-controls">
             <label class="control-label">Current Version:</label>
-            <select
-                class="form-control input-xlarge"
-                ng-model="currentVersion"
-                ng-options="ver for ver in api.versions"
-                ng-change="changeVersion()"></select>
+            <select class="form-control input-xlarge" ng-model="currentVersion" ng-options="ver for ver in api.versions" ng-change="changeVersion()"></select>
         </div>
     </form>
 </div>

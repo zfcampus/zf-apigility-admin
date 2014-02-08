@@ -1,40 +1,30 @@
 <div ng-controller="ApiDocumentationController">
-    <form novalidate class="ag form" ng-submit="save(restService.documentation)">
+    <form novalidate="" class="ag form" ng-submit="save(restService.documentation)">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <label class="control-label">REST service description</label>
                     <div class="controls">
-                        <textarea 
-                            placeholder="Insert the description here"
-                            class="form-control input-xlarge"
-                            required=""
-                            rows="5"
-                            ng-model="restService.documentation.description"></textarea>
+                        <textarea placeholder="Insert the description here" class="form-control input-xlarge" required="" rows="5" ng-model="restService.documentation.description"></textarea>
                         <p class="help-block">The general description of the REST service</p>
                     </div>
                 </div>
 
                 <div class="panel panel-default"><div class="panel-body">
-                <ag-tabs pills>
+                <ag-tabs pills="">
                     <ag-tab-pane title="Collection"><div class="panel-body">
                         <div class="form-group">
                             <label class="control-label">Description</label>
                             <div class="controls">
-                                <textarea 
-                                    placeholder="Insert the Collection description here"
-                                    class="form-control input-xlarge"
-                                    required=""
-                                    rows="3"
-                                    ng-model="restService.documentation.collection.description"></textarea>
+                                <textarea placeholder="Insert the Collection description here" class="form-control input-xlarge" required="" rows="3" ng-model="restService.documentation.collection.description"></textarea>
                                 <p class="help-block">The description of the Collection</p>
                             </div>
                         </div>
 
                         <div class="panel panel-default"><div class="panel-body">
-                        <ag-tabs pills>
+                        <ag-tabs pills="">
                             <ag-tab-pane ng-repeat="method in restService.collection_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.collection[method]; restPart = 'collection'"><div class="panel-body">
-                                <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-edit.html"></ag-include>
+                                <ag-include src="html/api/documentation-method-edit.html"></ag-include>
                             </div></ag-tab-pane>
                         </ag-tabs>
                         </div></div>
@@ -44,20 +34,15 @@
                         <div class="form-group">
                             <label class="control-label">Description</label>
                             <div class="controls">
-                                <textarea 
-                                    placeholder="Insert the Entity description here"
-                                    class="form-control input-xlarge"
-                                    required=""
-                                    rows="3"
-                                    ng-model="restService.documentation.entity.description"></textarea>
+                                <textarea placeholder="Insert the Entity description here" class="form-control input-xlarge" required="" rows="3" ng-model="restService.documentation.entity.description"></textarea>
                                 <p class="help-block">The description of the Entity</p>
                             </div>
                         </div>
 
                         <div class="panel panel-default"><div class="panel-body">
-                        <ag-tabs pills>
+                        <ag-tabs pills="">
                             <ag-tab-pane ng-repeat="method in restService.resource_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.entity[method]; restPart = 'entity'"><div class="panel-body">
-                                <ag-include src="zf-apigility-admin/dist/html/api/documentation-method-edit.html"></ag-include>
+                                <ag-include src="html/api/documentation-method-edit.html"></ag-include>
                             </div></ag-tab-pane>
                         </ag-tabs>
                         </div></div>
@@ -68,8 +53,7 @@
         </div>
 
         <div class="ag-new-input btn-group pull-right">
-            <button type="button" class="btn btn-sm btn-default"
-                collapse-flag flags="{edit: false}">Cancel</button>
+            <button type="button" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}">Cancel</button>
             <button type="submit" class="btn btn-sm btn-success">Save</button>
         </div>
     </form>

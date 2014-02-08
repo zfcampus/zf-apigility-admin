@@ -1,6 +1,4 @@
-<collapse class="panel-info"
-    no-chevron
-    conditionals="{edit: false, delete: false}">
+<collapse class="panel-info" no-chevron="" conditionals="{edit: false, delete: false}">
     <collapse-header>
         <h4 class="panel-title">
             <span class="glyphicon glyphicon-lock"></span>
@@ -8,23 +6,15 @@
             OAuth2 Settings
 
             <div class="btn-group pull-right">
-                <button
-                    type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-flag flags="{edit: false}" 
-                    collapse-button criteria="{delete: false, edit: true}">
+                <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}" collapse-button="" criteria="{delete: false, edit: true}">
                     Cancel
                 </button>
 
-                <button 
-                    type="button" class="btn btn-sm btn-success" title="Edit settings"
-                    collapse-flag flags="{edit: true}"
-                    collapse-button criteria="{delete: false, edit: false}">
+                <button type="button" class="btn btn-sm btn-success" title="Edit settings" collapse-flag="" flags="{edit: true}" collapse-button="" criteria="{delete: false, edit: false}">
                     <span class="glyphicon glyphicon-edit"></span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-danger" title="Remove Authentication"
-                    collapse-flag flags="{delete: true}"
-                    collapse-button criteria="{delete: false}">
+                <button type="button" class="btn btn-sm btn-danger" title="Remove Authentication" collapse-flag="" flags="{delete: true}" collapse-button="" criteria="{delete: false}">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </div>
@@ -32,14 +22,14 @@
 
         <div class="clearfix"></div>
 
-        <div collapse-show criteria="{delete: true}" class="panel panel-danger hide">
+        <div collapse-show="" criteria="{delete: true}" class="panel panel-danger hide">
             <div class="panel-heading"><h4 class="panel-title">Remove Authentication</h4></div>
             <div class="panel-body">
                 <form ng-submit="removeAuthentication()">
                     <p>Are you sure you want to remove authentication?</p>
 
                     <div class="btn-group pull-right">
-                        <button collapse-flag flags="{delete: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
+                        <button collapse-flag="" flags="{delete: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
                         <button type="submit" class="btn btn-sm btn-danger">Yes</button>
                     </div>
                 </form>
@@ -47,7 +37,7 @@
         </div>
     </collapse-header>
 
-    <table collapse-show criteria="{edit: false}" class="table table-striped">
+    <table collapse-show="" criteria="{edit: false}" class="table table-striped">
         <tr>
             <td>PDO DSN</td>
             <td>{{oauth2.dsn}}</td>
@@ -64,7 +54,7 @@
         </tr>
     </table>
 
-    <collapse-body collapse-show criteria="{edit: true}">
+    <collapse-body collapse-show="" criteria="{edit: true}">
         <div class="panel-body"><form class="form" ng-submit="updatOAuth2Authentication()">
             <fieldset>
                 <div class="form-group">
@@ -94,9 +84,7 @@
             </fieldset>
 
             <div class="btn-group pull-right">
-                <button
-                    type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-flag flags="{edit: false}">Cancel</button>
+                <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}">Cancel</button>
                 <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
             </div>
 
@@ -104,4 +92,3 @@
         </form></div>
     </collapse-body>
 </collapse>
-

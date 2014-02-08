@@ -1,4 +1,4 @@
-<ng-include src="'zf-apigility-admin/dist/html/api/version.html'"></ng-include>
+<ng-include src="'html/api/version.html'"></ng-include>
 
 <div class="panel panel-info" ng-controller="ApiVersionController">
     <div class="panel-heading">
@@ -11,12 +11,7 @@
 
     <div class="panel-body">
         <form class="form-inline">
-            <select
-                class="form-control input-xlarge pull-right"
-                id="default-api-version"
-                ng-model="defaultApiVersion"
-                ng-options="ver for ver in api.versions"
-                ng-change="setDefaultApiVersion()"></select>
+            <select class="form-control input-xlarge pull-right" id="default-api-version" ng-model="defaultApiVersion" ng-options="ver for ver in api.versions" ng-change="setDefaultApiVersion()"></select>
         </form>
 
         <p>

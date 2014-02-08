@@ -1,8 +1,9 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').factory(
     'FiltersServicesRepository',
-    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+    function ($http, flash, apiBasePath) {
         var servicePath = apiBasePath + '/filters';
 
         return {
@@ -19,7 +20,7 @@ angular.module('ag-admin').factory(
                 return promise;
             }
         };
-    }]
+    }
 );
 
 })();

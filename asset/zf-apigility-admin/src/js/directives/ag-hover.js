@@ -1,9 +1,10 @@
-(function() {'use strict';
+(function() {
+  'use strict';
 
 angular.module('ag-admin').directive('agHover', function() {
   return {
     restrict: 'A',
-    controller: ['$scope', function($scope) {
+    controller: function($scope) {
       var target;
 
       this.setTarget = function(element) {
@@ -13,7 +14,7 @@ angular.module('ag-admin').directive('agHover', function() {
       this.toggleHide = $scope.toggleHide = function(flag) {
         target.toggleClass('hide', flag);
       };
-    }],
+    },
     link: function(scope, element, attr) {
       element.on('mouseover', function(event) {
         scope.toggleHide(false);

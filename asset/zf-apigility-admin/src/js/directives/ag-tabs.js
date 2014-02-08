@@ -1,4 +1,5 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 /**
  * Borrowed from http://errietta.me/blog/bootstrap-angularjs-directives/
  */
@@ -11,7 +12,7 @@ angular.module('ag-admin').directive('agTabs', function() {
         scope: {
             parent: '='
         },
-        controller: ['$scope', '$element', function($scope, $element) {
+        controller: function($scope, $element) {
             var panes = $scope.panes = [];
 
             $scope.select = function(pane) {
@@ -23,12 +24,13 @@ angular.module('ag-admin').directive('agTabs', function() {
             };
 
             this.addPane = function(pane) {
-                if (panes.length === 0)
+                if (panes.length === 0) {
                     $scope.select(pane);
+                }
 
                 panes.push(pane);
             };
-        }],
+        },
         link: function (scope, element, attr) {
             var tabType = 'nav-tabs';
             if (attr.hasOwnProperty('pills')) {

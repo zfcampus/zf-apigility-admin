@@ -1,8 +1,9 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').controller(
     'ApiListController',
-    ['$rootScope', '$scope', 'ApiRepository', function($rootScope, $scope, ApiRepository) {
+    function($rootScope, $scope, ApiRepository) {
 
         $scope.apis = [];
 
@@ -11,6 +12,6 @@ angular.module('ag-admin').controller(
         };
 
         $rootScope.$on('refreshApiList', function () { $scope.refreshApiList(); });
-    }]
+    }
 );
 })();

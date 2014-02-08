@@ -1,4 +1,4 @@
-<form novalidate class="ag form" ng-submit="saveRestService($index)">
+<form novalidate="" class="ag form" ng-submit="saveRestService($index)">
 <fieldset class="panel-group">
     <collapse class="panel-success">
         <collapse-header>
@@ -53,10 +53,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label" for="selector">DB Adapter Name</label>
                 <div class="controls">
-                    <select 
-                        class="form-control input-xlarge"
-                        ng-model="restService.adapter_name"
-                        ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
+                    <select class="form-control input-xlarge" ng-model="restService.adapter_name" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
                 </div>
             </div>
 
@@ -103,9 +100,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label" for="hydrator_name">Hydrator Service Name</label>
                 <div class="controls">
-                    <select class="form-control input-xlarge"
-                        ng-model="restService.hydrator_name"
-                        ng-options="v for v in hydrators"></select>
+                    <select class="form-control input-xlarge" ng-model="restService.hydrator_name" ng-options="v for v in hydrators"></select>
                     <p class="help-block">The name of the hydrator service used to hydrate entities</p>
                 </div>
             </div>
@@ -129,13 +124,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label">Collection Query String whitelist</label>
                 <div class="controls">
-                    <tags-input
-                        custom-class="ag-tags"
-                        ng-model="restService.collection_query_whitelist"
-                        add-on-space="true"
-                        max-length="256"
-                        allowed-tags-pattern="^[a-zA-Z0-9_+.-]+$"
-                        placeholder="Add a variable to the whitelist">
+                    <tags-input custom-class="ag-tags" ng-model="restService.collection_query_whitelist" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z0-9_+.-]+$" placeholder="Add a variable to the whitelist">
                     </tags-input>
                     <p class="help-block">Specify query string variables that
                     should be represented in relational links for collections
@@ -161,13 +150,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label">Accept whitelist</label>
                 <div class="controls">
-                    <tags-input
-                        custom-class="ag-tags"
-                        ng-model="restService.accept_whitelist"
-                        add-on-space="true"
-                        max-length="256"
-                        allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                        placeholder="Add a mediatype to the whitelist">
+                    <tags-input custom-class="ag-tags" ng-model="restService.accept_whitelist" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$" placeholder="Add a mediatype to the whitelist">
                     </tags-input>
                     <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
                 </div>
@@ -176,13 +159,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label">Content-Type whitelist</label>
                 <div class="controls">
-                    <tags-input
-                        custom-class="ag-tags"
-                        ng-model="restService.content_type_whitelist"
-                        add-on-space="true"
-                        max-length="256"
-                        allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                        placeholder="Add a mediatype to the whitelist">
+                    <tags-input custom-class="ag-tags" ng-model="restService.content_type_whitelist" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$" placeholder="Add a mediatype to the whitelist">
                     </tags-input>
                     <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
                 </div>
@@ -193,9 +170,7 @@
 
 <div class="ag-new-input btn-group pull-right">
     <!-- todo Make the "cancel" action revert  -->
-    <button type="button" class="btn btn-sm btn-default"
-        collapse-flag flags="{edit: false}">Cancel</button>
+    <button type="button" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}">Cancel</button>
     <button type="submit" class="btn btn-sm btn-success">Save</button>
 </div>
 </form>
-
