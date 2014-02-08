@@ -1,6 +1,7 @@
-(function(_) {'use strict';
+(function(_) {
+    'use strict';
 
-angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$http', 'apiBasePath', 'Hal', function ($http, apiBasePath, Hal) {
+angular.module('ag-admin').factory('ApiAuthorizationRepository', function ($http, apiBasePath, Hal) {
     return {
         getApiAuthorization: function (name, version, force) {
             force = !!force;
@@ -31,7 +32,7 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$http', 'apiB
                 var complete = false;
                 var matches;
                 var controllerServiceName = service.controller_service_name;
-                controllerServiceName = controllerServiceName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                controllerServiceName = controllerServiceName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
                 var serviceRegex = new RegExp('^' + controllerServiceName + '::(.*?)$');
                 var actionRegex  = new RegExp('^__([^_]+)__$');
                 _.forEach(apiAuthorizations, function (data, serviceName) {
@@ -70,6 +71,6 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', ['$http', 'apiB
             });
         }
     };
-}]);
+});
 
 })(_);

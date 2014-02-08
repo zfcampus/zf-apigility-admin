@@ -1,6 +1,5 @@
 <div>
-  <button class="btn btn-info pull-left" title="Help" 
-    data-toggle="modal" data-target="#content-negotiation-help">
+  <button class="btn btn-info pull-left" title="Help" data-toggle="modal" data-target="#content-negotiation-help">
     <i class="glyphicon glyphicon-info-sign"></i>
   </button>
 
@@ -47,13 +46,7 @@
 
         <td>
           <div class="control-group">
-            <tags-input
-              custom-class="ag-tags"
-              ng-model="mediaTypes"
-              add-on-space="true"
-              max-length="256"
-              allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-              placeholder="Add a mediatype">
+            <tags-input custom-class="ag-tags" ng-model="mediaTypes" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$" placeholder="Add a mediatype">
             </tags-input>
           </div>
         </td>
@@ -72,4 +65,3 @@
     </tbody>
   </table>
 </div>
-

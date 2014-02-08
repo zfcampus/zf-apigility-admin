@@ -1,6 +1,6 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').factory('ApiRepository', ['$q', '$http', 'apiBasePath', 'Hal', function ($q, $http, apiBasePath, Hal) {
+angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBasePath, Hal) {
     var moduleApiPath = apiBasePath + '/module';
 
     return {
@@ -313,6 +313,6 @@ angular.module('ag-admin').factory('ApiRepository', ['$q', '$http', 'apiBasePath
             return config;
         }
     };
-}]);
+});
 
 })(_);

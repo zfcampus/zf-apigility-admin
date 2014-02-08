@@ -1,9 +1,9 @@
-(function(_, $) {'use strict';
+(function(_) {'use strict';
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    ['$scope', '$location', 'flash', 'DbAdapterResource', 'dbAdapters', function ($scope, $location, flash, DbAdapterResource, dbAdapters) {
-        $scope.dbAdapters = dbAdapters;
+    function ($scope, flash, DbAdapterResource, dbAdapters) {
+        $scope.dbAdapters = [];
         $scope.showNewDbAdapterForm = false;
 
         $scope.resetForm = function () {
@@ -68,30 +68,7 @@ angular.module('ag-admin').controller(
                 $scope.deleteDbAdapter = false;
             });
         };
-
-        /* @todo Ideally, this should not be using jquery. Instead, it should
-         * likely use a combination of ng-class and ng-click such that ng-click
-         * changes a scope variable that will update ng-class. However, until I
-         * can figure that out, this will do.
-         *
-         * Key though: stopPropagation is necessary for those buttons we mark as
-         * "data-expand", as we do not want the parent -- the panel header -- to
-         * toggle that back closed.
-         */
-        $scope.clickPanelHeading = function ($event, $index) {
-            var panel = $('#collapse' + $index);
-            var target = $($event.target);
-            if (target.attr('data-expand')) {
-                /* target is a button; expand the collapse */
-                panel.toggleClass('in', true);
-                $event.stopPropagation();
-                return false;
-            }
-
-            panel.toggleClass('in');
-        };
-
-    }]
+    }
 );
 
-})(_, $);
+})(_);

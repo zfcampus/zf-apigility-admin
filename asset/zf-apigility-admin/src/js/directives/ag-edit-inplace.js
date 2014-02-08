@@ -1,4 +1,5 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').directive('agEditInplace', function() {
     return {
@@ -8,8 +9,8 @@ angular.module('ag-admin').directive('agEditInplace', function() {
             'agInputName': '=name',
             validate: '&'
         },
-        templateUrl: 'zf-apigility-admin/dist/html/directives/ag-edit-inplace.html',
-        controller: ['$scope', function($scope) {
+        templateUrl: '/zf-apigility-admin/src/html/directives/ag-edit-inplace.html',
+        controller: function($scope) {
             var initialValue;
 
             $scope.isFormVisible = false;
@@ -22,7 +23,7 @@ angular.module('ag-admin').directive('agEditInplace', function() {
                 $scope.agInputName = initialValue;
                 $scope.isFormVisible = false;
             };
-        }],
+        },
         link: function(scope, element, attr) {
             element.on('click', function(event) {
                 event.stopPropagation();
@@ -30,7 +31,7 @@ angular.module('ag-admin').directive('agEditInplace', function() {
 
             scope.setInitialValue(scope.agInputName);
 
-            var name = angular.element(element.children()[0]);
+                var name = angular.element(element.children()[0]);
             var form = angular.element(element.children()[1]);
 
             if (attr.hasOwnProperty('validate') &&

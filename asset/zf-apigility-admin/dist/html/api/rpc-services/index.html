@@ -1,11 +1,9 @@
-<ng-include src="'zf-apigility-admin/dist/html/api/version.html'"></ng-include>
+<ng-include src="'html/api/version.html'"></ng-include>
 
-<ag-include src="zf-apigility-admin/dist/html/api/rpc-services/new.html"></ag-include>
+<ag-include src="html/api/rpc-services/new.html"></ag-include>
 
 <div class="panel-group tooltip-api" id="accordion">
-    <collapse class="panel-info"
-        conditionals="{edit: false, delete: false}"
-        ng-repeat="rpcService in api.rpcServices">
+    <collapse class="panel-info" conditionals="{edit: false, delete: false}" ng-repeat="rpcService in api.rpcServices">
         <collapse-header>
             <h4 class="panel-title">
                 <i class="btn btn-small glyphicon glyphicon-fire"></i>
@@ -13,24 +11,15 @@
                 {{ rpcService.controller_service_name | servicename }}
 
                 <div class="btn-group pull-right" ng-show="isLatestVersion()">
-                    <button
-                        type="button" title="Cancel" class="btn btn-sm btn-default"
-                        collapse-flag flags="{edit: false}" 
-                        collapse-button criteria="{delete: false, edit: true}">
+                    <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}" collapse-button="" criteria="{delete: false, edit: true}">
                         Cancel
                     </button>
 
-                    <button 
-                        type="button" class="btn btn-sm btn-success" title="Edit service"
-                        collapse-flag flags="{edit: true}"
-                        collapse-button criteria="{delete: false, edit: false}">
+                    <button type="button" class="btn btn-sm btn-success" title="Edit service" collapse-flag="" flags="{edit: true}" collapse-button="" criteria="{delete: false, edit: false}">
                         <i class="glyphicon glyphicon-edit"></i>
                     </button>
 
-                    <button 
-                        type="button" class="btn btn-sm btn-danger" title="Remove serivce"
-                        collapse-flag flags="{delete: true}"
-                        collapse-button criteria="{delete: false}">
+                    <button type="button" class="btn btn-sm btn-danger" title="Remove serivce" collapse-flag="" flags="{delete: true}" collapse-button="" criteria="{delete: false}">
                         <i class="glyphicon glyphicon-trash"></i>
                     </button>
                 </div>
@@ -38,19 +27,17 @@
 
             <div class="clearfix"></div>
 
-            <div collapse-show criteria="{delete: true}" class="panel panel-danger hide">
+            <div collapse-show="" criteria="{delete: true}" class="panel panel-danger hide">
                 <div class="panel-heading">Remove RPC service</div>
 
                 <div class="panel-body">
                     <p>Are you sure you want to delete the service?</p>
 
                     <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-sm btn-default"
-                            collapse-flag flags="{delete: false}">
+                        <button type="button" class="btn btn-sm btn-default" collapse-flag="" flags="{delete: false}">
                             No
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger"
-                            ng-click="removeRpcService(rpcService.controller_service_name)">
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="removeRpcService(rpcService.controller_service_name)">
                             Yes
                         </button>
                     </div>
@@ -59,41 +46,37 @@
         </collapse-header>
 
         <collapse-body>
-            <ag-tabs collapse-show criteria="{edit: false}">
+            <ag-tabs collapse-show="" criteria="{edit: false}">
                 <ag-tab-pane title="Settings">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/rpc-services/settings-view.html'"></ng-include>
+                    <ng-include src="'html/api/rpc-services/settings-view.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Fields">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/input-filter-view.html'" onload="index = $index"></ng-include>
+                    <ng-include src="'html/api/input-filter-view.html'" onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Documentation">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/rpc-services/documentation-view.html'"></ng-include>
+                    <ng-include src="'html/api/rpc-services/documentation-view.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Source Code">
-                    <ng-include 
-                        src="'zf-apigility-admin/dist/html/api/rpc-services/source-code.html'"
-                        onload="index = $index; service = rpcService"></ng-include>
+                    <ng-include src="'html/api/rpc-services/source-code.html'" onload="index = $index; service = rpcService"></ng-include>
                 </ag-tab-pane>
             </ag-tabs>
 
-            <ag-tabs class="hide" collapse-show criteria="{edit: true}">
+            <ag-tabs class="hide" collapse-show="" criteria="{edit: true}">
                 <ag-tab-pane title="Settings">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/rpc-services/settings-edit.html'"></ng-include>
+                    <ng-include src="'html/api/rpc-services/settings-edit.html'"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Fields">
-                    <ng-include src="'zf-apigility-admin/dist/html/api/input-filter-edit.html'"
-                        onload="index = $index"></ng-include>
+                    <ng-include src="'html/api/input-filter-edit.html'" onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
                 <ag-tab-pane title="Documentation">
-                    <ag-include src="zf-apigility-admin/dist/html/api/rpc-services/documentation-edit.html"></ag-include>
+                    <ag-include src="html/api/rpc-services/documentation-edit.html"></ag-include>
                 </ag-tab-pane>
             </ag-tabs>
         </collapse-body>
     </collapse>
 </div>
-

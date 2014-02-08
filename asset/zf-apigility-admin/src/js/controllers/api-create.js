@@ -1,8 +1,9 @@
-(function() {'use strict';
+(function() {
+    'use strict';
 
 angular.module('ag-admin').controller(
     'ApiCreateController',
-    ['$rootScope', '$scope', '$location', '$timeout', 'flash', 'ApiRepository', function($rootScope, $scope, $location, $timeout, flash, ApiRepository) {
+    function($rootScope, $scope, $location, $timeout, flash, ApiRepository) {
 
         $scope.showNewApiForm = false;
 
@@ -28,6 +29,6 @@ angular.module('ag-admin').controller(
             $scope.showNewApiForm = false;
             $scope.apiName = '';
         };
-    }]
+    }
 );
 })();

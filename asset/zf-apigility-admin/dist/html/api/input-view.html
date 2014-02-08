@@ -40,20 +40,15 @@
             </collapse-header>
         
             <collapse-body class="list-group in">
-                <li class="list-group-item" 
-                    ng-repeat="(optionName, optionValue) in validator.options">
+                <li class="list-group-item" ng-repeat="(optionName, optionValue) in validator.options">
                     <div class="form-group form-horizontal">
                         <label class="control-label col-sm-4">{{optionName}}:</label>
 
                         <div class="col-sm-7">
-                            <p class="form-control-static input-xlarge"
-                                ng-show="validatorOptions[validator.name][optionName] == 'bool'"
-                                ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
+                            <p class="form-control-static input-xlarge" ng-show="validatorOptions[validator.name][optionName] == 'bool'" ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
                                 {{optionValue && 'Yes' || 'No'}}
                             </p>
-                            <p 
-                                class="form-control-static input-xlarge"
-                                ng-show="validatorOptions[validator.name][optionName] != 'bool'">
+                            <p class="form-control-static input-xlarge" ng-show="validatorOptions[validator.name][optionName] != 'bool'">
                                 {{ optionValue }}
                             </p>
                         </div>
@@ -83,20 +78,15 @@
             </collapse-header>
         
             <collapse-body class="list-group in">
-                <li class="list-group-item"
-                    ng-repeat="(optionName, optionValue) in filter.options">
+                <li class="list-group-item" ng-repeat="(optionName, optionValue) in filter.options">
                     <div class="form-group form-horizontal">
                         <label class="control-label col-sm-4">{{optionName}}:</label>
 
                         <div class="col-sm-7">
-                            <p class="form-control-static input-xlarge"
-                                ng-show="filterOptions[filter.name][optionName] == 'bool'"
-                                ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
+                            <p class="form-control-static input-xlarge" ng-show="filterOptions[filter.name][optionName] == 'bool'" ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
                                 {{optionValue && 'Yes' || 'No'}}
                             </p>
-                            <p 
-                                class="form-control-static input-xlarge"
-                                ng-show="filterOptions[filter.name][optionName] != 'bool'">
+                            <p class="form-control-static input-xlarge" ng-show="filterOptions[filter.name][optionName] != 'bool'">
                                 {{ optionValue }}
                             </p>
                         </div>
@@ -107,4 +97,3 @@
     </collapse-body>
 </collapse>
 </div>
-

@@ -1,13 +1,11 @@
 <div ng-hide="showNewRestServiceForm">
-    <button 
-        class="btn btn-default btn-primary pull-right" title="Create New REST Service"
-        ng-click="showNewRestServiceForm = true">
+    <button class="btn btn-default btn-primary pull-right" title="Create New REST Service" ng-click="showNewRestServiceForm = true">
         Create New REST Service
     </button>
 
     <div class="clearfix"></div>
 
-    <br />
+    <br>
 </div>
 
 <div ng-show="showNewRestServiceForm" class="panel panel-primary">
@@ -27,9 +25,7 @@
                     </fieldset>
 
                     <div class="btn-group pull-right">
-                        <button
-                            type="button" class="btn btn-sm btn-default"
-                            ng-click="resetForm()">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-default" ng-click="resetForm()">Cancel</button>
                         <button type="submit" class="btn btn-sm btn-primary">
                             Create Code-Connected REST Service</button>
                     </div>
@@ -52,14 +48,12 @@
 
                         <p>
                             You can create adapters on the 
-                            <a ng-href="admin#/global/db-adapters">Database Adapters setting page</a>.
+                            <a ng-href="/admin#/global/db-adapters">Database Adapters setting page</a>.
                         </p>
                     </div>
                 </div>
 
-                <form class="form" 
-                    ng-show="dbAdapters.length > 0"
-                    ng-submit="newService.createNewDbConnectedService()">
+                <form class="form" ng-show="dbAdapters.length > 0" ng-submit="newService.createNewDbConnectedService()">
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">DB Adapter Name</label>
@@ -73,9 +67,7 @@
                     </fieldset>
 
                     <div class="btn-group pull-right">
-                        <button
-                            type="button" class="btn btn-sm btn-default"
-                            ng-click="resetForm()">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-default" ng-click="resetForm()">Cancel</button>
                         <button type="submit" class="btn btn-sm btn-primary">
                             Create DB-Connected REST Service</button>
                     </div>
@@ -86,4 +78,3 @@
         </ag-tabs>
     </div>
 </div>
-

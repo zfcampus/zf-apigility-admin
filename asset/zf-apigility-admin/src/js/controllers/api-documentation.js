@@ -1,9 +1,9 @@
-(function(_) {'use strict';
+(function(_) {
+    'use strict';
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    ['$rootScope', '$scope', '$timeout', '$routeParams', 'flash', 'ApiRepository', 'ApiAuthorizationRepository',
-    function ($rootScope, $scope, $timeout, $routeParams, flash, ApiRepository, ApiAuthorizationRepository) {
+    function ($scope, $routeParams, flash, ApiRepository, ApiAuthorizationRepository) {
 
         var moduleName = $routeParams.apiName;
         var version    = $routeParams.version;
@@ -80,18 +80,18 @@ angular.module('ag-admin').controller(
             if (append) {
                 routeMatch += append;
             }
-            return tab(indent) + "\"" + rel + "\": {\n" + tab(indent + 1) + "\"href\": \"" + routeMatch + "\"\n" + tab(indent) + "}";
+            return tab(indent) + '"' + rel + '": {\n' + tab(indent + 1) + '"href": "' + routeMatch + '"\n' + tab(indent) + '}';
         };
 
         var createLinks = function (links, indent) {
-            return tab(indent) + "\"_links\": {\n" + links.join(",\n") + "\n" + tab(indent) + "}\n";
+            return tab(indent) + '"_links": {\n' + links.join(',\n') + '\n' + tab(indent) + '}\n';
         };
 
         var createCollection = function (collectionName, routeMatch, params) {
             var entityLinks = [ createLink('self', routeMatch, 5) ];
-            var collection = tab(1) + "\"_embedded\": {\n" + tab(2) + "\"" + collectionName + "\": [\n" + tab(3) + "{\n";
+            var collection = tab(1) + '"_embedded": {\n' + tab(2) + '"' + collectionName + '": [\n' + tab(3) + '{\n';
             collection += createLinks(entityLinks, 4);
-            collection += params.join(",\n") + "\n" + tab(3) + "}\n" + tab(2) + "]\n" + tab(1) + "}";
+            collection += params.join(',\n') + '\n' + tab(3) + '}\n' + tab(2) + ']\n' + tab(1) + '}';
             return collection;
         };
 
@@ -112,7 +112,7 @@ angular.module('ag-admin').controller(
 
             if (isHal && (restPart != 'collection' || method == 'POST')) {
                 links.push(createLink('self', $scope.service.route_match, 2));
-                doctext = "{\n" + createLinks(links, 1) + docparams.join(",\n") + "\n}";
+                doctext = '{\n' + createLinks(links, 1) + docparams.join(',\n') + '\n}';
             } else if (isHal && restPart == 'collection') {
                 var collectionName = $scope.service.collection_name ? $scope.service.collection_name : 'items';
                 _.forEach(docparams, function (param, key) {
@@ -123,15 +123,15 @@ angular.module('ag-admin').controller(
                 links.push(createLink('prev', $scope.service.route_match, 2, '?page={page}', 'collection'));
                 links.push(createLink('next', $scope.service.route_match, 2, '?page={page}', 'collection'));
                 links.push(createLink('last', $scope.service.route_match, 2, '?page={page}', 'collection'));
-                doctext = "{\n" + createLinks(links, 1) + createCollection(collectionName, $scope.service.route_match, docparams) + "\n}";
+                doctext = '{\n' + createLinks(links, 1) + createCollection(collectionName, $scope.service.route_match, docparams) + '\n}';
             } else {
-                doctext = "{\n" + docparams.join(",\n") + "\n}";
+                doctext = '{\n' + docparams.join(',\n') + '\n}';
             }
 
             if (!model[direction]) {
                 model[direction] = doctext;
             } else {
-                model[direction] += "\n" + doctext;
+                model[direction] += '\n' + doctext;
             }
 
         };
@@ -141,7 +141,7 @@ angular.module('ag-admin').controller(
             $scope.$parent.flash.success = 'Documentation saved.';
         };
 
-    }]
+    }
 );
 
 })(_);

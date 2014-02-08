@@ -1,4 +1,4 @@
-<ag-include src="zf-apigility-admin/dist/html/global/content-negotiation/new-selector-form.html"></ag-include>
+<ag-include src="html/global/content-negotiation/new-selector-form.html"></ag-include>
 
 <div class="ag panel-group tooltip-api">
   <collapse
@@ -7,9 +7,7 @@
     ng-repeat="selector in selectors">
     <collapse-header>
       <h4 class="panel-title">
-        <i class="btn btn-sm glyphicon glyphicon-tags"></i>
-
-        {{ selector.content_name }}
+        <i class="glyphicon glyphicon-tags"></i> {{ selector.content_name }}
 
         <div class="btn-group pull-right">
             <button
@@ -55,8 +53,8 @@
     </collapse-header>
 
     <collapse-body>
-      <ng-include src="'zf-apigility-admin/dist/html/global/content-negotiation/view.html'"></ng-include>
-      <ng-include src="'zf-apigility-admin/dist/html/global/content-negotiation/edit.html'"></ng-include>
+      <ng-include src="'html/global/content-negotiation/view.html'"></ng-include>
+      <ng-include src="'html/global/content-negotiation/edit.html'"></ng-include>
     </collapse-body>
   </collapse>
 </div>

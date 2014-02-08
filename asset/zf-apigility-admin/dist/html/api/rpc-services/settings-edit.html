@@ -1,4 +1,4 @@
-<form novalidate class="ag form" ng-submit="saveRpcService($index)">
+<form novalidate="" class="ag form" ng-submit="saveRpcService($index)">
     <collapse class="panel-success">
         <collapse-header>
             <h4 class="panel-title">General Settings</h4>
@@ -7,8 +7,7 @@
         <collapse-body class="list-group in">
             <div class="form-group list-group-item">
                 <label class="control-label">Route to match</label>
-                <input type="text" placeholder="/api/for/your/service"
-                    class="form-control input-xlarge" required="" value="{{ rpcService.route_match }}">
+                <input type="text" placeholder="/api/for/your/service" class="form-control input-xlarge" required="" value="{{ rpcService.route_match }}">
                 <p class="help-block">A literal or segment (i.e., with ":variable" placeholders) route to match</p>
             </div>
 
@@ -35,26 +34,14 @@
 
             <div class="form-group list-group-item">
                 <label class="control-label" for="accept_whitelist">Accept whitelist</label>
-                <tags-input 
-                    custom-class="ag-tags"
-                    ng-model="rpcService.accept_whitelist"
-                    add-on-space="true"
-                    max-length="256"
-                    allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                    placeholder="Add a mediatype to the whitelist">
+                <tags-input custom-class="ag-tags" ng-model="rpcService.accept_whitelist" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$" placeholder="Add a mediatype to the whitelist">
                 </tags-input>
                 <p class="help-block">Specify mediatypes for representations this API can provide (tied to Accept request header)</p>
             </div>
 
             <div class="form-group list-group-item">
                 <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
-                <tags-input 
-                    custom-class="ag-tags"
-                    ng-model="rpcService.content_type_whitelist"
-                    add-on-space="true"
-                    max-length="256"
-                    allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$"
-                    placeholder="Add a mediatype to the whitelist">
+                <tags-input custom-class="ag-tags" ng-model="rpcService.content_type_whitelist" add-on-space="true" max-length="256" allowed-tags-pattern="^[a-zA-Z-]+/[a-zA-Z0-9*_+.-]+$" placeholder="Add a mediatype to the whitelist">
                 </tags-input>
                 <p class="help-block">Specify mediatypes allowed for submitted content (tied to the Content-Type request header)</p>
             </div>
@@ -63,11 +50,9 @@
 
     <div class="ag-new-input btn-group pull-right">
         <!-- todo Implement logic to reset form/model -->
-        <button type="button" class="btn btn-sm btn-default"
-            collapse-flag flags="{edit: false}">Cancel</button>
+        <button type="button" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}">Cancel</button>
         <button type="submit" class="btn btn-sm btn-success">Save</button>
     </div>
 
     <div class="clearfix"></div>
 </form>
-

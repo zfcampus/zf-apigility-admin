@@ -1,38 +1,42 @@
 {
-  "name": "zf-apigility-admin",
-  "version": "0.9.0dev",
-  "homepage": "http://apigility.org/",
-  "authors": [
-    "Matthew Weier O'Phinney <matthew@zend.com>"
-  ],
-  "description": "Apigility Admin UI",
-  "main": "dist/index.html",
-  "keywords": [
-    "API"
-  ],
-  "license": "BSD-3-Clause",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "vendor",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "angular-route": "~1.2.9",
-    "angular-flash": "~0.1.11",
-    "angular-sanitize": "~1.2.9",
-    "angular-ui-select2": "~0.0.5",
-    "bootstrap": "~3.0.3",
-    "sass-bootstrap-glyphicons": "~1.0.0",
-    "angular-ui-sortable": "~0.10.0",
-    "lodash": "~2.4.1",
-    "ng-tags-input": "~1.1.0",
-    "angular-toggle-switch": "~0.2.5"
-  },
-  "resolutions": {
-    "angular": "1.2.12-build.2223+sha.95522cc"
-  }
+    "name": "zf-apigility-admin",
+    "version": "0.9.0dev",
+    "homepage": "http://apigility.org/",
+    "authors": [
+        "Matthew Weier O'Phinney <matthew@zend.com>"
+    ],
+    "description": "Apigility Admin UI",
+    "main": "dist/index.html",
+    "keywords": [
+        "API"
+    ],
+    "license": "BSD-3-Clause",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "vendor",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular-route": "~1.2.10",
+        "angular-flash": "~0.1.11",
+        "angular-sanitize": "~1.2.10",
+        "angular-ui-select2": "~0.0.5",
+        "angular-ui-sortable": "~0.10.0",
+        "bootstrap": "~3.0.3",
+        "sass-bootstrap-glyphicons": "~1.0.0",
+        "lodash": "~2.4.1",
+        "ng-tags-input": "~1.1.0",
+        "angular-toggle-switch": "~0.2.5"
+    },
+    "devDependencies": {
+        "angular-mocks": "1.2.10",
+        "angular-scenario": "1.2.10"
+    },
+    "resolutions": {
+        "angular": "1.2.10"
+    }
 }

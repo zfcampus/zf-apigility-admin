@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').factory(
     'ValidatorsServicesRepository',
-    ['$http', 'flash', 'apiBasePath', function ($http, flash, apiBasePath) {
+    function ($http, flash, apiBasePath) {
         var servicePath = apiBasePath + '/validators';
 
         return {
@@ -19,7 +19,7 @@ angular.module('ag-admin').factory(
                 return promise;
             }
         };
-    }]
+    }
 );
 
 })();
