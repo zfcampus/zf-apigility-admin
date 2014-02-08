@@ -16,6 +16,13 @@ angular.module('ag-admin').controller(
             if (typeof $scope.service.documentation == 'undefined') {
                 $scope.service.documentation = {};
             }
+            if (Array.isArray($scope.service.documentation)) {
+                var docs = {};
+                _.forEach($scope.service.documentation, function (val, key) {
+                    docs[key] = val;
+                });
+                $scope.service.documentation = docs;
+            }
             if (typeof $scope.service.documentation.collection == 'undefined') {
                 $scope.service.documentation.collection = {};
             }
@@ -37,6 +44,13 @@ angular.module('ag-admin').controller(
         } else {
             if (typeof $scope.service.documentation == 'undefined') {
                 $scope.service.documentation = {};
+            }
+            if (Array.isArray($scope.service.documentation)) {
+                var docs = {};
+                _.forEach($scope.service.documentation, function (val, key) {
+                    docs[key] = val;
+                });
+                $scope.service.documentation = docs;
             }
             _.forEach($scope.service.http_methods, function (allowed_method) {
                 if (typeof $scope.service.documentation[allowed_method] == 'undefined') {
@@ -137,6 +151,14 @@ angular.module('ag-admin').controller(
         };
 
         $scope.save = function() {
+            /* Ensure we have an object */
+            if (Array.isArray($scope.service.documentation)) {
+                var docs = {};
+                _.forEach($scope.service.documentation, function (val, key) {
+                    docs[key] = val;
+                });
+                $scope.service.documentation = docs;
+            }
             ApiRepository.saveDocumentation($scope.service);
             $scope.$parent.flash.success = 'Documentation saved.';
         };
