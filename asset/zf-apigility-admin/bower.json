@@ -28,7 +28,6 @@
         "angular-ui-sortable": "~0.10.0",
         "bootstrap": "~3.0.3",
         "sass-bootstrap-glyphicons": "~1.0.0",
-        "hyperagent": "~0.4.0",
         "lodash": "~2.4.1",
         "ng-tags-input": "~1.1.0",
         "angular-toggle-switch": "~0.2.5"

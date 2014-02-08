@@ -26,6 +26,10 @@
                 <ul>
                      <li>A "required" flag - is the field required in order to
                      validate?</li>
+                     <li>An "allow empty" flag - can the field be a null or
+                     empty string and still be considered valid?</li>
+                     <li>A "continue if empty" flag - if the field is empty and
+                     required, should the validations still be run?</li>
                      <li>One or more <em>validators</em>.</li>
                      <li>One or more <em>filters</em>, used to normalize the
                      field prior to validation.</li>

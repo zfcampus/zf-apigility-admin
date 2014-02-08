@@ -9,7 +9,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
     $scope.addInput = function() {
         // Test first to see if we have a value
         if (!$scope.newInput || $scope.newInput === null || $scope.newInput === '' || $scope.newInput.match(/^\s+$/)) {
-            flash.error = "Must provide an input name!";
+            flash.error = 'Must provide an input name!';
             return;
         }
 
@@ -24,7 +24,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         });
 
         if (found) {
-            flash.error = "Input by the name " + $scope.newInput + " already exists!";
+            flash.error = 'Input by the name ' + $scope.newInput + ' already exists!';
             return;
         }
 
@@ -36,7 +36,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
     $scope.validateInputName = function (name) {
         // Test first to see if we have a value
         if (!name || name === null || name === '' || name.match(/^\s+$/)) {
-            flash.error = "Input name can not be empty!";
+            flash.error = 'Input name can not be empty!';
             return false;
         }
 
@@ -51,7 +51,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         });
 
         if (found) {
-            flash.error = "Input by the name " + name + " already exists!";
+            flash.error = 'Input by the name ' + name + ' already exists!';
             return false;
         }
 

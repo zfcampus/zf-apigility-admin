@@ -1,13 +1,20 @@
-<div ng-hide="showNewSelectorForm" class="ag-new-input pull-right"><form class="form-inline" role="form">
-  <div class="form-group">
-    <input type="text" placeholder="Selector name" class="form-control input-xlarge" required="required" ng-model="newSelector.content_name">
-  </div>
-
-  <button type="button" ng-click="showNewSelectorForm = true" class="btn btn-default btn-primary" title="Create New Selector">
-      Create New Selector
+<div>
+  <button class="btn btn-info pull-left" title="Help" 
+    data-toggle="modal" data-target="#content-negotiation-help">
+    <i class="glyphicon glyphicon-info-sign"></i>
   </button>
-</form></div>
-<div class="clearfix"></div>
+
+  <form ng-hide="showNewSelectorForm" class="form-inline pull-right" role="form">
+    <div class="form-group">
+      <input type="text" placeholder="Selector name" class="form-control input-xlarge" required="required" ng-model="newSelector.content_name">
+    </div>
+
+    <button type="button" ng-click="showNewSelectorForm = true" class="btn btn-default btn-primary" title="Create New Selector">
+      Create New Selector
+    </button>
+  </form>
+</div>
+<div class="clearfix ag-new-input"></div>
 
 <div ng-show="showNewSelectorForm" class="panel panel-primary">
   <div class="panel-heading">

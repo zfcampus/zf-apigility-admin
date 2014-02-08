@@ -1,45 +1,47 @@
-(function(_, Hyperagent) {
+(function(_) {
     'use strict';
 
-angular.module('ag-admin').factory('DbAdapterResource', function ($http, $q, $location, apiBasePath) {
+angular.module('ag-admin').factory('DbAdapterResource', function ($http, apiBasePath, Hal) {
 
     var dbAdapterApiPath = apiBasePath + '/db-adapter';
 
-    var resource =  new Hyperagent.Resource(dbAdapterApiPath);
+    return {
+        getList: function (force) {
+            force = !!force;
+            var config = {
+                method: 'GET',
+                url: dbAdapterApiPath,
+                cache: !force
+            };
+            return $http(config).then(
+                function success(response) {
+                    var dbAdapters = Hal.pluckCollection('db_adapter', response.data);
+                    return Hal.props(dbAdapters);
+                }
+            );
+        },
 
-    resource.getList = function () {
-        var deferred = $q.defer();
+        createNewAdapter: function (options) {
+            return $http.post(dbAdapterApiPath, options)
+                .then(function (response) {
+                    return Hal.props(response.data);
+                });
+        },
 
-        this.fetch().then(function (adapters) {
-            var dbAdapters = _.pluck(adapters.embedded.db_adapter, 'props');
-            deferred.resolve(dbAdapters);
-        });
+        saveAdapter: function (name, data) {
+            return $http({method: 'patch', url: dbAdapterApiPath + '/' + encodeURIComponent(name), data: data})
+                .then(function (response) {
+                    return Hal.props(response.data);
+                });
+        },
 
-        return deferred.promise;
+        removeAdapter: function (name) {
+            return $http.delete(dbAdapterApiPath + '/' + encodeURIComponent(name))
+                .then(function (response) {
+                    return true;
+                });
+        }
     };
-
-    resource.createNewAdapter = function (options) {
-        return $http.post(dbAdapterApiPath, options)
-            .then(function (response) {
-                return response.data;
-            });
-    };
-
-    resource.saveAdapter = function (name, data) {
-        return $http({method: 'patch', url: dbAdapterApiPath + '/' + encodeURIComponent(name), data: data})
-            .then(function (response) {
-                return response.data;
-            });
-    };
-
-    resource.removeAdapter = function (name) {
-        return $http.delete(dbAdapterApiPath + '/' + encodeURIComponent(name))
-            .then(function (response) {
-                return true;
-            });
-    };
-
-    return resource;
 });
 
-})(_, Hyperagent);
+})(_);

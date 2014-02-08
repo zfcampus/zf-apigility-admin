@@ -1,8 +1,8 @@
-(function(_, $) {'use strict';
+(function(_) {'use strict';
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    function ($scope, $location, flash, DbAdapterResource) {
+    function ($scope, flash, DbAdapterResource, dbAdapters) {
         $scope.dbAdapters = [];
         $scope.showNewDbAdapterForm = false;
 
@@ -19,15 +19,12 @@ angular.module('ag-admin').controller(
             return true;
         };
 
-        function updateDbAdapters(force) {
+        var updateDbAdapters = function (force) {
             $scope.dbAdapters = [];
-            DbAdapterResource.fetch({force: force}).then(function (dbAdapters) {
-                $scope.$apply(function () {
-                    $scope.dbAdapters = _.pluck(dbAdapters.embedded.db_adapter, 'props');
-                });
+            DbAdapterResource.getList(force).then(function (updatedAdapters) {
+                $scope.dbAdapters = updatedAdapters;
             });
-        }
-        updateDbAdapters(false);
+        };
 
         $scope.createNewDbAdapter = function () {
             var options = {
@@ -71,30 +68,7 @@ angular.module('ag-admin').controller(
                 $scope.deleteDbAdapter = false;
             });
         };
-
-        /* @todo Ideally, this should not be using jquery. Instead, it should
-         * likely use a combination of ng-class and ng-click such that ng-click
-         * changes a scope variable that will update ng-class. However, until I
-         * can figure that out, this will do.
-         *
-         * Key though: stopPropagation is necessary for those buttons we mark as
-         * "data-expand", as we do not want the parent -- the panel header -- to
-         * toggle that back closed.
-         */
-        $scope.clickPanelHeading = function ($event, $index) {
-            var panel = $('#collapse' + $index);
-            var target = $($event.target);
-            if (target.attr('data-expand')) {
-                /* target is a button; expand the collapse */
-                panel.toggleClass('in', true);
-                $event.stopPropagation();
-                return false;
-            }
-
-            panel.toggleClass('in');
-        };
-
     }
 );
 
-})(_, $);
+})(_);

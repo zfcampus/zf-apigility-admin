@@ -1,7 +1,12 @@
+<div ng-show="requiresAuthorization(method, restPart)">
+    <button class="btn btn-sm btn-danger">Authorization Required</button>
+</div>
+
 <div ng-show="methodData.description">
     <div ng-bind-html="methodData.description"></div>
 </div>
-<div class="text-muted" ng-hide="methodData.description">
+
+<div ng-hide="methodData.description" class="text-muted">
     No description available.
 </div>
 
@@ -11,7 +16,7 @@
     </div>
 
     <div class="panel-body">
-        <div class="control-group">
+        <div class="control-group" ng-show="service.accept_whitelist || service.content_type_whitelist">
             <label class="control-label">Headers</label>
             <table class="table table-striped">
                 <tr ng-show="service.accept_whitelist">
@@ -40,10 +45,10 @@
 
 
     <div class="panel-body">
-        <div ng-show="service.content_type_whitelist" class="control-group">
+        <div ng-show="method!= 'GET' && service.content_type_whitelist" class="control-group">
             <label class="control-label">Headers</label>
             <table class="table table-striped">
-                <tr ng-show="method != 'GET' && service.content_type_whitelist">
+                <tr>
                     <td width="30%"><strong>Content-Type</strong></td>
                     <td>{{ service.content_type_whitelist.join(', ') }}</td>
                 </tr>
