@@ -267,6 +267,7 @@ class RestServiceModelTest extends TestCase
         $config = $config['zf-rest']['BarConf\Rest\Foo\Controller'];
 
         $expected = array(
+            'service_name'               => 'foo',
             'listener'                   => 'BarConf\Rest\Foo\FooResource',
             'route_name'                 => 'bar-conf.rest.foo',
             'route_identifier_name'      => $details->routeIdentifierName,
@@ -341,6 +342,7 @@ class RestServiceModelTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
 
         $this->assertEquals('BarConf', $result->module);
+        $this->assertEquals('foo', $result->serviceName);
         $this->assertEquals('BarConf\V1\Rest\Foo\Controller', $result->controllerServiceName);
         $this->assertEquals('BarConf\V1\Rest\Foo\FooResource', $result->resourceClass);
         $this->assertEquals('BarConf\V1\Rest\Foo\FooEntity', $result->entityClass);
@@ -371,6 +373,7 @@ class RestServiceModelTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $service);
 
         $this->assertEquals('BarConf', $service->module);
+        $this->assertEquals('foo', $service->serviceName);
         $this->assertEquals('BarConf\V1\Rest\Foo\Controller', $service->controllerServiceName);
         $this->assertEquals('BarConf\V1\Rest\Foo\FooResource', $service->resourceClass);
         $this->assertEquals('BarConf\V1\Rest\Foo\FooEntity', $service->entityClass);

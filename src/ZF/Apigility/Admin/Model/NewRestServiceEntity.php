@@ -21,6 +21,7 @@ class NewRestServiceEntity extends RestServiceEntity
             switch ($key) {
                 case 'resourcename':
                     $this->resourceName = $value;
+                    $this->serviceName  = $value;
                     break;
             }
         }

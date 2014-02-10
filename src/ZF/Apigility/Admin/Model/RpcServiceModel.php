@@ -169,16 +169,16 @@ class RpcServiceModel
      */
     public function createService($serviceName, $route, $httpMethods, $selector = null)
     {
-        $serviceName       = ucfirst($serviceName);
+        $normalizedServiceName = ucfirst($serviceName);
 
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $normalizedServiceName)) {
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
-        $controllerData    = $this->createController($serviceName);
+        $controllerData    = $this->createController($normalizedServiceName);
         $controllerService = $controllerData->service;
-        $routeName         = $this->createRoute($route, $serviceName, $controllerService);
-        $this->createRpcConfig($controllerService, $routeName, $httpMethods);
+        $routeName         = $this->createRoute($route, $normalizedServiceName, $controllerService);
+        $this->createRpcConfig($serviceName, $controllerService, $routeName, $httpMethods);
         $this->createContentNegotiationConfig($controllerService, $selector);
 
         return $this->fetch($controllerService);
@@ -318,16 +318,18 @@ class RpcServiceModel
     /*
      * Create the zf-rpc configuration for the controller service
      *
+     * @param  string $serviceName
      * @param  string $controllerService
      * @param  string $routeName
      * @param  array $httpMethods
      * @param  null|string|callable $callable
      * @return array
      */
-    public function createRpcConfig($controllerService, $routeName, array $httpMethods = array('GET'), $callable = null)
+    public function createRpcConfig($serviceName, $controllerService, $routeName, array $httpMethods = array('GET'), $callable = null)
     {
         $config = array('zf-rpc' => array(
             $controllerService => array(
+                'service_name' => $serviceName,
                 'http_methods' => $httpMethods,
                 'route_name'   => $routeName,
             ),

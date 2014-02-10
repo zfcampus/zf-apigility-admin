@@ -37,6 +37,8 @@ class RpcServiceEntity
 
     protected $selector = 'Json';
 
+    protected $serviceName;
+
     public function __get($name)
     {
         if (!isset($this->{$name})) {
@@ -117,6 +119,9 @@ class RpcServiceEntity
                 case 'selector':
                     $this->selector = $value;
                     break;
+                case 'servicename':
+                    $this->serviceName = $value;
+                    break;
                 default:
                     break;
             }
@@ -146,6 +151,7 @@ class RpcServiceEntity
             'route_match'             => $this->routeMatch,
             'route_name'              => $this->routeName,
             'selector'                => $this->selector,
+            'service_name'            => $this->serviceName,
         );
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
