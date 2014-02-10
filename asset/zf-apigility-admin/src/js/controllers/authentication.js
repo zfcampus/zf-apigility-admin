@@ -140,6 +140,7 @@ angular.module('ag-admin').controller(
 
     $scope.createOAuth2Authentication = function () {
         var options = {
+            dsn_type    : $scope.dsn_type,
             dsn         : $scope.dsn,
             username    : $scope.username,
             password    : $scope.password,
@@ -168,6 +169,7 @@ angular.module('ag-admin').controller(
 
     $scope.updateOAuth2Authentication = function () {
         var options = {
+            dsn_type    : $scope.oauth2.dsn_type,
             dsn         : $scope.oauth2.dsn,
             username    : $scope.oauth2.username,
             password    : $scope.oauth2.password,

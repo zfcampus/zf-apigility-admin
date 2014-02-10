@@ -12,6 +12,9 @@ class AuthenticationEntity
     const TYPE_DIGEST = 'digest';
     const TYPE_OAUTH2 = 'oauth2';
 
+    const DSN_PDO   = 'pdo';
+    const DSN_MONGO = 'mongo';
+
     /**
      * Digest domains for HTTP digest authentication (space-separated list of paths)
      *
@@ -25,6 +28,13 @@ class AuthenticationEntity
      * @var string
      */
     protected $dsn;
+
+    /**
+     * DSN type (Mongo or PDO)
+     *
+     * @var string
+     */
+    protected $dsnType = self::DSN_PDO;
 
     /**
      * Path to file containing HTTP digest credentials
@@ -119,6 +129,7 @@ class AuthenticationEntity
             case self::TYPE_OAUTH2:
                 return array(
                     'type'        => 'oauth2',
+                    'dsn_type'    => $this->dsnType,
                     'dsn'         => $this->dsn,
                     'username'    => $this->username,
                     'password'    => $this->password,
@@ -137,7 +148,7 @@ class AuthenticationEntity
                 $allowedKeys = array('realm', 'htdigest', 'digestdomains', 'noncetimeout');
                 break;
             case self::TYPE_OAUTH2:
-                $allowedKeys = array('dsn', 'username', 'password', 'routematch');
+                $allowedKeys = array('dsntype', 'dsn', 'username', 'password', 'routematch');
                 break;
         }
 
@@ -147,6 +158,9 @@ class AuthenticationEntity
                 continue;
             }
             switch ($key) {
+                case 'dsntype':
+                    $this->dsnType = strtolower($value);
+                    break;
                 case 'dsn':
                     $this->dsn = $value;
                     break;
@@ -176,6 +190,11 @@ class AuthenticationEntity
                     break;
             }
         }
+    }
+
+    public function getDsnType()
+    {
+        return $this->dsnType;
     }
 
     public function isBasic()
