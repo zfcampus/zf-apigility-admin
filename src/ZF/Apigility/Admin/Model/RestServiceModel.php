@@ -169,6 +169,14 @@ class RestServiceModel implements EventManagerAwareInterface
         $restConfig['controllerServiceName'] = $controllerService;
         $restConfig['module']                = $this->module;
         $restConfig['resource_class']        = $restConfig['listener'];
+
+        if (!isset($restConfig['service_name'])) {
+            $restConfig['service_name'] = $controllerService;
+            $q = preg_quote('\\');
+            if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . 'Rest' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerService, $matches)) {
+                $restConfig['service_name'] = $matches['service'];
+            }
+        }
         unset($restConfig['listener']);
 
         $entity = new RestServiceEntity();
@@ -584,6 +592,7 @@ class RestServiceModel implements EventManagerAwareInterface
                 'page_size_param'            => $details->pageSizeParam,
                 'entity_class'               => $details->entityClass,
                 'collection_class'           => $details->collectionClass,
+                'service_name'               => $details->serviceName,
             ),
         ));
         $this->configResource->patch($config, true);

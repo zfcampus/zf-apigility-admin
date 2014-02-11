@@ -180,10 +180,11 @@ class RpcServiceModelTest extends TestCase
 
     public function testCanCreateRpcConfiguration()
     {
-        $result = $this->codeRpc->createRpcConfig('FooConf\Rpc\HelloWorld\Controller', 'foo-conf.rpc.hello-world', array('GET', 'PATCH'));
+        $result = $this->codeRpc->createRpcConfig('HelloWorld', 'FooConf\Rpc\HelloWorld\Controller', 'foo-conf.rpc.hello-world', array('GET', 'PATCH'));
         $expected = array(
             'zf-rpc' => array(
                 'FooConf\Rpc\HelloWorld\Controller' => array(
+                    'service_name' => 'HelloWorld',
                     'http_methods' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.rpc.hello-world',
                 ),
@@ -277,6 +278,7 @@ class RpcServiceModelTest extends TestCase
             )),
             'zf-rpc' => array(
                 'FooConf\V1\Rpc\HelloWorld\Controller' => array(
+                    'service_name' => 'HelloWorld',
                     'http_methods' => array('GET', 'PATCH'),
                     'route_name'   => 'foo-conf.rpc.hello-world',
                 ),

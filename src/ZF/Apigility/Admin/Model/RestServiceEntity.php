@@ -60,6 +60,8 @@ class RestServiceEntity
 
     protected $selector = 'HalJson';
 
+    protected $serviceName;
+
     public function __get($name)
     {
         if ($name === 'filter') {
@@ -164,6 +166,9 @@ class RestServiceEntity
                 case 'selector':
                     $this->selector = $value;
                     break;
+                case 'servicename':
+                    $this->serviceName = $value;
+                    break;
             }
         }
 
@@ -198,6 +203,7 @@ class RestServiceEntity
             'route_match'                => $this->routeMatch,
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,
+            'service_name'               => $this->serviceName,
         );
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
