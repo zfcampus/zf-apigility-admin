@@ -328,13 +328,13 @@ class Module
         if ($result->isResource()) {
             $this->initializeUrlHelper();
             $this->injectServiceLinks($result->getPayload(), $result, $e);
-            $halPlugin->getEventManager()->attach('renderResource', array($this, 'onRenderResource'), 10);
+            $halPlugin->getEventManager()->attach('renderEntity', array($this, 'onRenderEntity'), 10);
             return;
         }
 
         if ($result->isCollection()) {
             $this->mvcEvent = $e;
-            $halPlugin->getEventManager()->attach('renderCollection.resource', array($this, 'onRenderCollectionResource'), 10);
+            $halPlugin->getEventManager()->attach('renderCollection.entity', array($this, 'onRenderCollectionEntity'), 10);
         }
     }
 
@@ -385,7 +385,7 @@ class Module
         $model->setPayload($replacement);
     }
 
-    public function onRenderResource($e)
+    public function onRenderEntity($e)
     {
         $resource = $e->getParam('resource');
         $entity   = $resource->resource;
@@ -426,7 +426,7 @@ class Module
      *
      * @param  \Zend\EventManager\Event $e
      */
-    public function onRenderCollectionResource($e)
+    public function onRenderCollectionEntity($e)
     {
         $resource = $e->getParam('resource');
         if ($resource instanceof Model\ModuleEntity) {
