@@ -26,7 +26,7 @@
                 <label class="control-label">HTTP methods allowed for ENTITIES</label>
                 <div class="controls">
                     <label ng-repeat="method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']" class="checkbox inline">
-                        <input type="checkbox" name="resource_http_methods_test" value="{{method}}" ng-checked="restService.resource_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.resource_http_methods, $event)">
+                        <input type="checkbox" name="entity_http_methods_test" value="{{method}}" ng-checked="restService.entity_http_methods.indexOf(method) > -1" ng-click="toggleSelection(restService.entity_http_methods, $event)">
                         <span>{{method}}</span>
                     </label>
                 </div>
