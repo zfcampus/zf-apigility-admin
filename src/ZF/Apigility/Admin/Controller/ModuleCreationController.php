@@ -13,7 +13,7 @@ use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Resource;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
 
 class ModuleCreationController extends AbstractActionController
@@ -44,15 +44,15 @@ class ModuleCreationController extends AbstractActionController
                 }
 
                 $metadata = new ModuleEntity($module);
-                $resource = new Resource($metadata, $module);
-                $resource->getLinks()->add(Link::factory(array(
+                $entity   = new Entity($metadata, $module);
+                $entity->getLinks()->add(Link::factory(array(
                     'rel'   => 'self',
                     'route' => array(
                         'name'   => 'zf-apigility-admin/api/module',
                         'params' => array('module' => $module),
                     ),
                 )));
-                $model    = new ViewModel(array('payload' => $resource));
+                $model    = new ViewModel(array('payload' => $entity));
                 $model->setTerminal(true);
                 return $model;
 

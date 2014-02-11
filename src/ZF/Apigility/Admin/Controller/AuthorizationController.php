@@ -14,7 +14,7 @@ use ZF\Apigility\Admin\Model\AuthorizationModelFactory;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Resource;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
 
 class AuthorizationController extends AbstractActionController
@@ -49,8 +49,8 @@ class AuthorizationController extends AbstractActionController
                 );
         }
 
-        $resource = new Resource($entity, null);
-        $resource->getLinks()->add(Link::factory(array(
+        $entity = new Entity($entity, null);
+        $entity->getLinks()->add(Link::factory(array(
             'rel'   => 'self',
             'route' => array(
                 'name'    => 'zf-apigility-admin/api/module/authorization',
@@ -64,7 +64,7 @@ class AuthorizationController extends AbstractActionController
                 ),
             )
         )));
-        $model = new ViewModel(array('payload' => $resource));
+        $model = new ViewModel(array('payload' => $entity));
         $model->setTerminal(true);
         return $model;
     }

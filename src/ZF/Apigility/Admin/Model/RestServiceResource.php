@@ -10,7 +10,7 @@ use RuntimeException;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Hal\Collection as HalCollection;
 use ZF\Hal\Link\Link;
-use ZF\Hal\Resource as HalResource;
+use ZF\Hal\Entity as HalEntity;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
@@ -248,8 +248,8 @@ class RestServiceResource extends AbstractResourceListener
         $collection = [];
 
         foreach ($inputFilters as $inputFilter) {
-            $resource = new HalResource($inputFilter, $inputFilter['input_filter_name']);
-            $links    = $resource->getLinks();
+            $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
+            $links    = $entity->getLinks();
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [
@@ -261,7 +261,7 @@ class RestServiceResource extends AbstractResourceListener
                     ],
                 ],
             ]));
-            $collection[] = $resource;
+            $collection[] = $entity;
         }
 
         $collection = new HalCollection($collection);
@@ -283,8 +283,8 @@ class RestServiceResource extends AbstractResourceListener
         if (!$documentation) {
             return;
         }
-        $resource = new HalResource($documentation, 'documentation');
+        $entity = new HalEntity($documentation, 'documentation');
 
-        $service->exchangeArray(['documentation' => $resource]);
+        $service->exchangeArray(['documentation' => $entity]);
     }
 }

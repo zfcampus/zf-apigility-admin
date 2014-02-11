@@ -15,7 +15,7 @@ use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Collection as HalCollection;
 use ZF\Hal\Link\Link;
-use ZF\Hal\Resource as HalResource;
+use ZF\Hal\Entity as HalEntity;
 
 class InputFilterController extends AbstractActionController
 {
@@ -70,13 +70,13 @@ class InputFilterController extends AbstractActionController
                             ],
                         ],
                     ]));
-                    $result->setResourceRoute($route);
+                    $result->setEntityRoute($route);
                     break;
                 }
 
                 $name   = $result['input_filter_name'];
-                $result = new HalResource($result, $name);
-                $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
+                $result = new HalEntity($result, $name);
+                $this->injectEntitySelfLink($result->getLinks(), $route, $module, $controller, $name);
                 break;
 
             case $request::METHOD_POST:
@@ -97,8 +97,8 @@ class InputFilterController extends AbstractActionController
                 }
 
                 $name   = $result['input_filter_name'];
-                $result = new HalResource($result, $name);
-                $this->injectResourceSelfLink($result->getLinks(), $route, $module, $controller, $name);
+                $result = new HalEntity($result, $name);
+                $this->injectEntitySelfLink($result->getLinks(), $route, $module, $controller, $name);
                 break;
 
             case $request::METHOD_DELETE:
@@ -161,7 +161,7 @@ class InputFilterController extends AbstractActionController
         return sprintf('zf-apigility-admin/api/module/%s-service/input-filter', $matches['type']);
     }
 
-    public function injectResourceSelfLink($links, $route, $module, $controller, $inputFilterName)
+    public function injectEntitySelfLink($links, $route, $module, $controller, $inputFilterName)
     {
         $links->add(Link::factory([
             'rel' => 'self',

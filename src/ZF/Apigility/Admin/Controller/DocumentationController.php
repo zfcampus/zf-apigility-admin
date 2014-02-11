@@ -13,7 +13,7 @@ use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Link\Link as HalLink;
-use ZF\Hal\Resource as HalResource;
+use ZF\Hal\Entity as HalEntity;
 
 class DocumentationController extends AbstractActionController
 {
@@ -37,7 +37,7 @@ class DocumentationController extends AbstractActionController
 
         switch ($httpMethod) {
             case HttpRequest::METHOD_GET:
-                $result = new HalResource(
+                $result = new HalEntity(
                     $this->model->fetchDocumentation($module, $controllerServiceName),
                     'documentation'
                 );
@@ -45,7 +45,7 @@ class DocumentationController extends AbstractActionController
                 break;
             case HttpRequest::METHOD_PUT:
                 $documentation = $this->bodyParams();
-                $result = new HalResource(
+                $result = new HalEntity(
                     $this->model->storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, true),
                     'documentation'
                 );
@@ -53,7 +53,7 @@ class DocumentationController extends AbstractActionController
                 break;
             case HttpRequest::METHOD_PATCH:
                 $documentation = $this->bodyParams();
-                $result = new HalResource(
+                $result = new HalEntity(
                     $this->model->storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, false),
                     'documentation'
                 );
