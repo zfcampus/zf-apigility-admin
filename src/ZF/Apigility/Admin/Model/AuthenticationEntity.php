@@ -12,8 +12,8 @@ class AuthenticationEntity
     const TYPE_DIGEST = 'digest';
     const TYPE_OAUTH2 = 'oauth2';
 
-    const DSN_PDO   = 'pdo';
-    const DSN_MONGO = 'mongo';
+    const DSN_PDO   = 'POD';
+    const DSN_MONGO = 'Mongo';
 
     /**
      * Digest domains for HTTP digest authentication (space-separated list of paths)
@@ -92,6 +92,12 @@ class AuthenticationEntity
      */
     protected $username;
 
+    /**
+     * Database name for mongo connection
+     *
+     * @var string
+     */
+    protected $database;
 
     public function __construct($type = self::TYPE_BASIC, $realmOrParams = 'api', array $params = array())
     {
@@ -130,6 +136,7 @@ class AuthenticationEntity
                 return array(
                     'type'        => 'oauth2',
                     'dsn_type'    => $this->dsnType,
+                    'database'    => $this->database,
                     'dsn'         => $this->dsn,
                     'username'    => $this->username,
                     'password'    => $this->password,
@@ -148,7 +155,7 @@ class AuthenticationEntity
                 $allowedKeys = array('realm', 'htdigest', 'digestdomains', 'noncetimeout');
                 break;
             case self::TYPE_OAUTH2:
-                $allowedKeys = array('dsntype', 'dsn', 'username', 'password', 'routematch');
+                $allowedKeys = array('dsntype', 'database', 'dsn', 'username', 'password', 'routematch');
                 break;
         }
 
@@ -159,7 +166,10 @@ class AuthenticationEntity
             }
             switch ($key) {
                 case 'dsntype':
-                    $this->dsnType = strtolower($value);
+                    $this->dsnType = $value;
+                    break;
+                case 'database':
+                    $this->database = $value;
                     break;
                 case 'dsn':
                     $this->dsn = $value;

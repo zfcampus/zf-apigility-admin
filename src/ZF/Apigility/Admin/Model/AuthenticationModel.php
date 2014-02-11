@@ -182,6 +182,7 @@ class AuthenticationModel
             switch ($key) {
                 case 'dsn_type':
                 case 'dsn':
+                case 'database':
                 case 'htdigest':
                 case 'htpasswd':
                 case 'password':
@@ -255,15 +256,21 @@ class AuthenticationModel
         }
 
         $localConfig = $this->localConfig->fetch(true);
-        if (!isset($localConfig['zf-oauth2']['db'])
-            || !is_array($localConfig['zf-oauth2']['db'])
+        if (isset($localConfig['zf-oauth2']['db'])
+            && is_array($localConfig['zf-oauth2']['db'])
         ) {
-            return false;
+            return array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);;
         }
 
-        $oauth2Config = array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);
+        if (isset($localConfig['zf-oauth2']['mongo'])
+            && is_array($localConfig['zf-oauth2']['mongo'])
+        ) {
+            return array_merge($oauth2Config, $localConfig['zf-oauth2']['mongo']);;
+        }
 
-        return $oauth2Config;
+
+
+        return false;
     }
 
     /**

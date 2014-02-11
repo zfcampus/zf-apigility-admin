@@ -23,14 +23,20 @@
                     <p class="help-block">The {{ dsn_type }} database source name (DSN).</p>
                 </div>
 
-                <div class="form-group" ng-show="dsn_type && (dsn_type != Mongo)">
+                <div class="form-group" ng-show="dsn_type && (dsn_type == 'Mongo')">
+                    <label class="control-label" for="dsn">{{ dsn_type }} Database</label>
+                    <input type="text" class="form-control input-xlarge" required="required" ng-model="database">
+                    <p class="help-block">The {{ dsn_type }} database name (DSN).</p>
+                </div>
+
+                <div class="form-group" ng-show="dsn_type && (dsn_type != 'Mongo')">
                     <label class="control-label" for="username">Username</label>
                     <input type="text" placeholder="username" class="form-control input-xlarge" ng-model="username">
                     <p class="help-block">Username associated with the database holding
                         OAuth2 credentials (required if not using SQLite).</p>
                 </div>
 
-                <div class="form-group" ng-show="dsn_type && (dsn_type != Mongo)">
+                <div class="form-group" ng-show="dsn_type && (dsn_type != 'Mongo')">
                     <label class="control-label" for="password">Password</label>
                     <input type="password" placeholder="password" class="form-control input-xlarge" ng-model="password">
                     <p class="help-block">Password for the username listed (required if not using SQLite).</p>
