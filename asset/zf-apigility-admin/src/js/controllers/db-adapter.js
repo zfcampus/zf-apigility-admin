@@ -3,7 +3,7 @@
 angular.module('ag-admin').controller(
     'DbAdapterController',
     function ($scope, flash, DbAdapterResource, dbAdapters) {
-        $scope.dbAdapters = [];
+        $scope.dbAdapters = dbAdapters;
         $scope.showNewDbAdapterForm = false;
 
         $scope.resetForm = function () {
