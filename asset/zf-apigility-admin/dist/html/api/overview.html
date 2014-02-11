@@ -29,7 +29,7 @@
 
     <table class="table table-striped">
         <tr ng-repeat="restService in api.restServices">
-            <td width="40%"><strong>{{ restService.controller_service_name | servicename }}</strong></td>
+            <td width="40%"><strong>{{ restService.service_name }}</strong></td>
             <td width="60%">{{ restService.route_match }}</td>
         </tr>
     </table>
@@ -42,7 +42,7 @@
 
     <table class="table table-striped">
         <tr ng-repeat="rpcService in api.rpcServices">
-            <td width="40%"><strong>{{ rpcService.controller_service_name | servicename }}</strong></td>
+            <td width="40%"><strong>{{ rpcService.service_name }}</strong></td>
             <td width="60%">{{ rpcService.route_match }}</td>
         </tr>
     </table>
