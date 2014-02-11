@@ -67,19 +67,28 @@ class RpcServiceModel
     {
         $data   = array('controller_service_name' => $controllerServiceName);
         $config = $this->configResource->fetch(true);
-        if (isset($config['zf-rpc'])
-            && isset($config['zf-rpc'][$controllerServiceName])
-        ) {
-            $rpcConfig = $config['zf-rpc'][$controllerServiceName];
-            if (isset($rpcConfig['route_name'])) {
-                $data['route_name']  = $rpcConfig['route_name'];
-                $data['route_match'] = $this->getRouteMatchStringFromModuleConfig($data['route_name'], $config);
-            }
-            if (isset($rpcConfig['http_methods'])) {
-                $data['http_methods'] = $rpcConfig['http_methods'];
-            }
-        } else {
+
+        if (!isset($config['zf-rpc'][$controllerServiceName])) {
             return false;
+        }
+
+        $rpcConfig = $config['zf-rpc'][$controllerServiceName];
+
+        if (isset($rpcConfig['route_name'])) {
+            $data['route_name']  = $rpcConfig['route_name'];
+            $data['route_match'] = $this->getRouteMatchStringFromModuleConfig($data['route_name'], $config);
+        }
+
+        if (isset($rpcConfig['http_methods'])) {
+            $data['http_methods'] = $rpcConfig['http_methods'];
+        }
+
+        if (!isset($rpcConfig['service_name'])) {
+            $rpcConfig['service_name'] = $controllerServiceName;
+            $q = preg_quote('\\');
+            if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . 'Rpc' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerServiceName, $matches)) {
+                $rpcConfig['service_name'] = $matches['service'];
+            }
         }
 
         if (isset($config['zf-content-negotiation'])) {

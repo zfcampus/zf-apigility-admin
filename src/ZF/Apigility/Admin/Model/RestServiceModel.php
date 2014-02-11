@@ -173,7 +173,7 @@ class RestServiceModel implements EventManagerAwareInterface
         if (!isset($restConfig['service_name'])) {
             $restConfig['service_name'] = $controllerService;
             $q = preg_quote('\\');
-            if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerService, $matches)) {
+            if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . 'Rest' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerService, $matches)) {
                 $restConfig['service_name'] = $matches['service'];
             }
         }
