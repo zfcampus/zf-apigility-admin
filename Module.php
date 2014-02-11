@@ -12,7 +12,7 @@ use Zend\Mvc\Router\RouteMatch;
 use ZF\Configuration\ConfigResource;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
-use ZF\Hal\Resource;
+use ZF\Hal\Entity;
 use ZF\Hal\View\HalJsonModel;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 
@@ -325,7 +325,7 @@ class Module
         $halPlugin = $viewHelpers->get('hal');
         $this->initializeUrlHelper();
 
-        if ($result->isResource()) {
+        if ($result->isEntity()) {
             $this->initializeUrlHelper();
             $this->injectServiceLinks($result->getPayload(), $result, $e);
             $halPlugin->getEventManager()->attach('renderEntity', array($this, 'onRenderEntity'), 10);
@@ -355,14 +355,14 @@ class Module
     /**
      * Inject links for the service services of a module
      *
-     * @param  Resource $resource
+     * @param  Entity $entity
      * @param  HalJsonModel $model
      * @param  \Zend\Mvc\MvcEvent $model
      */
-    protected function injectServiceLinks(Resource $resource, HalJsonModel $model, $e)
+    protected function injectServiceLinks(Entity $halEntity, HalJsonModel $model, $e)
     {
-        $entity = $resource->resource;
-        $links  = $resource->getLinks();
+        $entity = $halEntity->entity;
+        $links  = $halEntity->getLinks();
         if ($entity instanceof Model\ModuleEntity) {
             return $this->injectModuleResourceRelationalLinks($entity, $links, $model);
         }
@@ -380,15 +380,15 @@ class Module
         $this->injectLinksForServicesByType('rpc', $module['rpc'], $links, $moduleName);
         unset($module['rpc']);
 
-        $replacement = new Resource($module, $moduleName);
+        $replacement = new Entity($module, $moduleName);
         $replacement->setLinks($links);
         $model->setPayload($replacement);
     }
 
     public function onRenderEntity($e)
     {
-        $resource = $e->getParam('resource');
-        $entity   = $resource->resource;
+        $halEntity = $e->getParam('entity');
+        $entity    = $halEntity->entity;
 
         if ($entity instanceof Model\RestServiceEntity
             || $entity instanceof Model\RpcServiceEntity
@@ -428,15 +428,15 @@ class Module
      */
     public function onRenderCollectionEntity($e)
     {
-        $resource = $e->getParam('resource');
-        if ($resource instanceof Model\ModuleEntity) {
-            return $this->injectModuleCollectionRelationalLinks($resource, $e);
+        $entity = $e->getParam('entity');
+        if ($entity instanceof Model\ModuleEntity) {
+            return $this->injectModuleCollectionRelationalLinks($entity, $e);
         }
 
-        if ($resource instanceof Model\RestServiceEntity
-            || $resource instanceof Model\RpcServiceEntity
+        if ($entity instanceof Model\RestServiceEntity
+            || $entity instanceof Model\RpcServiceEntity
         ) {
-            return $this->injectServiceCollectionRelationalLinks($resource, $e);
+            return $this->injectServiceCollectionRelationalLinks($entity, $e);
         }
     }
 
@@ -456,8 +456,8 @@ class Module
         unset($asArray['rest']);
         unset($asArray['rpc']);
 
-        $halResource = new Resource($asArray, $module);
-        $links       = $halResource->getLinks();
+        $halEntity   = new Entity($asArray, $module);
+        $links       = $halEntity->getLinks();
         $links->add(Link::factory(array(
             'rel' => 'self',
             'route' => array(
@@ -471,7 +471,7 @@ class Module
         $this->injectLinksForServicesByType('rest', $rest, $links, $module);
         $this->injectLinksForServicesByType('rpc', $rpc, $links, $module);
 
-        $e->setParam('resource', $halResource);
+        $e->setParam('entity', $halEntity);
     }
 
     public function injectServiceCollectionRelationalLinks($entity, $e)
@@ -480,8 +480,8 @@ class Module
         $service = $entity->controllerServiceName;
         $type    = $this->getServiceType($service);
 
-        $halResource = new Resource($entity, $service);
-        $links = $halResource->getLinks();
+        $halEntity = new Entity($entity, $service);
+        $links = $halEntity->getLinks();
 
         // Need to inject the self relational link, as otherwise the HAL plugin
         // sees we have links, and does not inject one.
@@ -520,7 +520,7 @@ class Module
             ),
         )));
 
-        $e->setParam('resource', $halResource);
+        $e->setParam('entity', $halEntity);
     }
 
     /**
