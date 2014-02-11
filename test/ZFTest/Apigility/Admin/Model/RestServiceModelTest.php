@@ -88,7 +88,7 @@ class RestServiceModelTest extends TestCase
             'route_match'                => '/api/foo',
             'route_identifier_name'      => 'foo_id',
             'collection_name'            => 'foo',
-            'resource_http_methods'      => array('GET', 'PATCH'),
+            'entity_http_methods'        => array('GET', 'PATCH'),
             'collection_http_methods'    => array('GET', 'POST'),
             'collection_query_whitelist' => array('sort', 'filter'),
             'page_size'                  => 10,
@@ -272,7 +272,7 @@ class RestServiceModelTest extends TestCase
             'route_name'                 => 'bar-conf.rest.foo',
             'route_identifier_name'      => $details->routeIdentifierName,
             'collection_name'            => $details->collectionName,
-            'resource_http_methods'      => $details->resourceHttpMethods,
+            'entity_http_methods'        => $details->entityHttpMethods,
             'collection_http_methods'    => $details->collectionHttpMethods,
             'collection_query_whitelist' => $details->collectionQueryWhitelist,
             'page_size'                  => $details->pageSize,
@@ -416,7 +416,7 @@ class RestServiceModelTest extends TestCase
             'page_size_param'            => 'r',
             'collection_query_whitelist' => array('f', 's'),
             'collection_http_methods'    => array('GET'),
-            'resource_http_methods'      => array('GET'),
+            'entity_http_methods'        => array('GET'),
         );
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
@@ -519,7 +519,7 @@ class RestServiceModelTest extends TestCase
             'page_size_param'            => 'r',
             'collection_query_whitelist' => array('f', 's'),
             'collection_http_methods'    => array('GET'),
-            'resource_http_methods'      => array('GET'),
+            'entity_http_methods'        => array('GET'),
             'selector'                   => 'Json',
             'accept_whitelist'           => array('application/json'),
             'content_type_whitelist'     => array('application/json'),
@@ -654,7 +654,7 @@ class RestServiceModelTest extends TestCase
 
         $options = array(
             'collection_http_methods'    => array(),
-            'resource_http_methods'      => array(),
+            'entity_http_methods'        => array(),
         );
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
@@ -667,6 +667,6 @@ class RestServiceModelTest extends TestCase
         $test = $config['zf-rest'][$original->controllerServiceName];
 
         $this->assertEquals(array(), $test['collection_http_methods']);
-        $this->assertEquals(array(), $test['resource_http_methods']);
+        $this->assertEquals(array(), $test['entity_http_methods']);
     }
 }

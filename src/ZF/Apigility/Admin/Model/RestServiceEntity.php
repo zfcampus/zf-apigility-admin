@@ -11,8 +11,6 @@ use ZF\Hal\Collection as HalCollection;
 
 class RestServiceEntity
 {
-    protected $filters = array();
-
     protected $acceptWhitelist = array(
         'application/json',
         'application/*+json',
@@ -32,17 +30,19 @@ class RestServiceEntity
 
     protected $controllerServiceName;
 
+    protected $documentation;
+
     protected $entityClass;
 
-    protected $hydratorName = 'Zend\Stdlib\Hydrator\ArraySerializable';
-
-    protected $routeIdentifierName;
+    protected $entityHttpMethods = array('GET', 'PATCH', 'PUT', 'DELETE');
 
     protected $entityIdentifierName = 'id';
 
-    protected $inputFilters;
+    protected $filters = array();
 
-    protected $documentation;
+    protected $hydratorName = 'Zend\Stdlib\Hydrator\ArraySerializable';
+
+    protected $inputFilters;
 
     protected $module;
 
@@ -52,7 +52,7 @@ class RestServiceEntity
 
     protected $resourceClass;
 
-    protected $resourceHttpMethods = array('GET', 'PATCH', 'PUT', 'DELETE');
+    protected $routeIdentifierName;
 
     protected $routeMatch;
 
@@ -71,6 +71,14 @@ class RestServiceEntity
                 $name
             ));
         }
+
+        /**
+         * @todo Remove this prior to 1.0; BC fix implemented prior to 0.9.0
+         */
+        if ($name === 'resourceHttpMethods') {
+            $name = 'entityHttpMethods';
+        }
+
         if (!property_exists($this, $name)) {
             throw new \OutOfRangeException(sprintf(
                 '%s does not contain a property by the name of "%s"',
@@ -86,6 +94,14 @@ class RestServiceEntity
         if ($name === 'filter') {
             return false;
         }
+
+        /**
+         * @todo Remove this prior to 1.0; BC fix implemented prior to 0.9.0
+         */
+        if ($name === 'resourceHttpMethods') {
+            $name = 'entityHttpMethods';
+        }
+
         return (property_exists($this, $name));
     }
 
@@ -120,6 +136,9 @@ class RestServiceEntity
                 case 'entityclass':
                     $this->entityClass = $value;
                     break;
+                case 'entityhttpmethods':
+                    $this->entityHttpMethods = $value;
+                    break;
                 case 'entityidentifiername':
                     $this->entityIdentifierName = $value;
                     break;
@@ -152,7 +171,7 @@ class RestServiceEntity
                     $this->resourceClass = $value;
                     break;
                 case 'resourcehttpmethods':
-                    $this->resourceHttpMethods = $value;
+                    $this->entityHttpMethods = $value;
                     break;
                 case 'routeidentifiername':
                     $this->routeIdentifierName = $value;
@@ -192,14 +211,14 @@ class RestServiceEntity
             'content_type_whitelist'     => $this->contentTypeWhitelist,
             'controller_service_name'    => $this->controllerServiceName,
             'entity_class'               => $this->entityClass,
+            'entity_http_methods'        => $this->entityHttpMethods,
             'entity_identifier_name'     => $this->entityIdentifierName,
-            'route_identifier_name'      => $this->routeIdentifierName,
             'hydrator_name'              => $this->hydratorName,
             'module'                     => $this->module,
-            'page_size'                  => $this->pageSize,
             'page_size_param'            => $this->pageSizeParam,
+            'page_size'                  => $this->pageSize,
             'resource_class'             => $this->resourceClass,
-            'resource_http_methods'      => $this->resourceHttpMethods,
+            'route_identifier_name'      => $this->routeIdentifierName,
             'route_match'                => $this->routeMatch,
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,

@@ -30,7 +30,7 @@ angular.module('ag-admin').controller(
                     PATCH: false,
                     DELETE: false,
                 };
-                angular.forEach(service.resource_http_methods, function(method) {
+                angular.forEach(service.entity_http_methods, function(method) {
                     entityMethods[method] = true;
                 });
                 angular.forEach(service.collection_http_methods, function(method) {

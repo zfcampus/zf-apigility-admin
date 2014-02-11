@@ -114,13 +114,13 @@ class InputFilterControllerTest extends TestCase
         $result = $this->controller->indexAction();
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
-        $this->assertInstanceOf('ZF\Hal\Resource', $payload);
-        $resource = $payload->resource;
-        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $resource);
+        $this->assertInstanceOf('ZF\Hal\Entity', $payload);
+        $entity = $payload->entity;
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
         $expected = $this->config['input_filters'][$validator];
         $expected['input_filter_name'] = $validator;
-        $this->assertEquals($expected, $resource->getArrayCopy());
+        $this->assertEquals($expected, $entity->getArrayCopy());
     }
 
     public function testAddInputFilter()
@@ -173,15 +173,15 @@ class InputFilterControllerTest extends TestCase
         $result     = $this->controller->indexAction();
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
-        $this->assertInstanceOf('ZF\Hal\Resource', $payload);
-        $resource = $payload->resource;
-        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $resource);
+        $this->assertInstanceOf('ZF\Hal\Entity', $payload);
+        $entity = $payload->entity;
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
         $config    = include $this->basePath . '/module.config.php';
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
         $expected  = $config['input_filters'][$validator];
         $expected['input_filter_name'] = $validator;
-        $this->assertEquals($expected, $resource->getArrayCopy());
+        $this->assertEquals($expected, $entity->getArrayCopy());
     }
 
     public function testRemoveInputFilter()

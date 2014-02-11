@@ -34,7 +34,7 @@ angular.module('ag-admin').controller(
             if (typeof $scope.service.documentation.entity == 'undefined') {
                 $scope.service.documentation.entity = {};
             }
-            _.forEach($scope.service.resource_http_methods, function (allowed_method) {
+            _.forEach($scope.service.entity_http_methods, function (allowed_method) {
                 if (typeof $scope.service.documentation.entity[allowed_method] == 'undefined') {
                     $scope.service.documentation.entity[allowed_method] = {description: null, request: null, response: null};
                 }
