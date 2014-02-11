@@ -6,7 +6,7 @@
         ng-repeat="restService in api.restServices">
         <collapse-header>
             <h4 class="panel-title pull-left">
-                <span class="glyphicon glyphicon-leaf"></span> {{ restService.controller_service_name | servicename }}
+                <span class="glyphicon glyphicon-leaf"></span> {{ restService.service_name }}
             </h4>
             <div class="btn-group pull-right" ng-show="isLatestVersion()">
                 <button
