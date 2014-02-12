@@ -3,12 +3,12 @@
 
 angular.module('ag-admin').controller(
     'ApiAuthorizationController',
-    function ($http, $rootScope, $scope, $routeParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
+    function ($http, $rootScope, $scope, $stateParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
         $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
         $scope.authentication = authentication;
 
-        var version = $routeParams.version.match(/\d/g)[0] || 1;
+        var version = $stateParams.version.match(/\d/g)[0] || 1;
         $scope.editable = (version == api.versions[api.versions.length - 1]);
 
         var serviceMethodMap = (function() {
@@ -77,7 +77,7 @@ angular.module('ag-admin').controller(
 
         $scope.saveAuthorization = function () {
             flash.success = 'Authorization settings saved';
-            ApiAuthorizationRepository.saveApiAuthorizations($routeParams.apiName, $scope.apiAuthorizations);
+            ApiAuthorizationRepository.saveApiAuthorizations($stateParams.apiName, $scope.apiAuthorizations);
         };
 
         $scope.updateColumn = function ($event, column) {

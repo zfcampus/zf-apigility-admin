@@ -5,7 +5,7 @@
      * Declare and configure modules
      */
     angular.module('ag-admin', [
-        'ngRoute',
+        'ui.router',
         'ngSanitize',
         'ngTagsInput',
         'angular-flash.service',
@@ -14,15 +14,17 @@
         'ui.select2',
         'toggle-switch'
     ]).config(
-        function($routeProvider, $provide) {
+        function($provide, $stateProvider, $urlRouterProvider) {
             // setup the API Base Path (this should come from initial ui load/php)
             $provide.value('apiBasePath', angular.element('body').data('api-base-path') || '/admin/api');
 
-            $routeProvider.when('/dashboard', {
+            $stateProvider.state('dashboard', {
+                url: '/dashboard',
                 templateUrl: 'html/index.html',
                 controller: 'DashboardController'
             });
-            $routeProvider.when('/global/content-negotiation', {
+            $stateProvider.state('dashboard.content-negotiation', {
+                url: '^/global/content-negotiation',
                 templateUrl: 'html/global/content-negotiation/index.html',
                 controller: 'ContentNegotiationController',
                 resolve: {
@@ -31,7 +33,8 @@
                     }]
                 }
             });
-            $routeProvider.when('/global/db-adapters', {
+            $stateProvider.state('dashboard.db-adapters', {
+                url: '^/global/db-adapters',
                 templateUrl: 'html/global/db-adapters/index.html',
                 controller: 'DbAdapterController',
                 resolve: {
@@ -40,43 +43,46 @@
                     }]
                 }
             });
-            $routeProvider.when('/global/authentication', {
+            $stateProvider.state('dashboard.authentication', {
+                url: '^/global/authentication',
                 templateUrl: 'html/global/authentication/index.html',
                 controller: 'AuthenticationController'
             });
-            $routeProvider.when('/api/:apiName/:version/overview', {
-                templateUrl: 'html/api/overview.html',
-                controller: 'ApiOverviewController',
+            $stateProvider.state('api', {
+                abstract: true,
+                url: '/api/:apiName/:version',
+                template: '<ui-view/>',
                 resolve: {
-                    api: ['$route', 'ApiRepository', function($route, ApiRepository) {
-                        return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
+                    api: ['$stateParams', 'ApiRepository', function($stateParams, ApiRepository) {
+                        return ApiRepository.getApi($stateParams.apiName, $stateParams.version);
                     }]
                 }
             });
-            $routeProvider.when('/api/:apiName/:version/authorization', {
+            $stateProvider.state('api.overview', {
+                url: '/overview',
+                templateUrl: 'html/api/overview.html',
+                controller: 'ApiOverviewController'
+            });
+            $stateProvider.state('api.authorization', {
+                url: '/authorization',
                 templateUrl: 'html/api/authorization.html',
                 controller: 'ApiAuthorizationController',
                 resolve: {
-                    api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
-                        return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
-                    }],
-                    apiAuthorizations: ['$route', 'ApiAuthorizationRepository', function ($route, ApiAuthorizationRepository) {
-                        return ApiAuthorizationRepository.getApiAuthorization($route.current.params.apiName, $route.current.params.version);
+                    apiAuthorizations: ['$stateParams', 'ApiAuthorizationRepository', function ($stateParams, ApiAuthorizationRepository) {
+                        return ApiAuthorizationRepository.getApiAuthorization($stateParams.apiName, $stateParams.version);
                     }],
                     authentication: ['AuthenticationRepository', function (AuthenticationRepository) {
                         return AuthenticationRepository.hasAuthentication();
                     }]
                 }
             });
-            $routeProvider.when('/api/:apiName/:version/rest-services', {
+            $stateProvider.state('api.rest', {
+                url: '/rest-services',
                 templateUrl: 'html/api/rest-services/index.html',
                 controller: 'ApiRestServicesController',
                 resolve: {
                     dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
                         return DbAdapterResource.getList();
-                    }],
-                    api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
-                        return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
                     }],
                     filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
                         return FiltersServicesRepository.getList();
@@ -98,13 +104,11 @@
                     }]
                 }
             });
-            $routeProvider.when('/api/:apiName/:version/rpc-services', {
+            $stateProvider.state('api.rpc', {
+                url: '/rpc-services',
                 templateUrl: 'html/api/rpc-services/index.html',
                 controller: 'ApiRpcServicesController',
                 resolve: {
-                    api: ['$route', 'ApiRepository', function ($route, ApiRepository) {
-                        return ApiRepository.getApi($route.current.params.apiName, $route.current.params.version);
-                    }],
                     filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
                         return FiltersServicesRepository.getList();
                     }],
@@ -122,9 +126,7 @@
                     }]
                 }
             });
-            $routeProvider.otherwise({
-                redirectTo: '/dashboard'
-            });
+            $urlRouterProvider.otherwise('/dashboard');
         }
     );
 
