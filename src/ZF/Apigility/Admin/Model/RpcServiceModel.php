@@ -83,11 +83,13 @@ class RpcServiceModel
             $data['http_methods'] = $rpcConfig['http_methods'];
         }
 
-        if (!isset($rpcConfig['service_name'])) {
-            $rpcConfig['service_name'] = $controllerServiceName;
+        if (isset($rpcConfig['service_name'])) {
+            $data['service_name'] = $rpcConfig['service_name'];
+        } else {
+            $data['service_name'] = $controllerServiceName;
             $q = preg_quote('\\');
             if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . 'Rpc' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerServiceName, $matches)) {
-                $rpcConfig['service_name'] = $matches['service'];
+                $data['service_name'] = $matches['service'];
             }
         }
 
