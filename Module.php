@@ -394,7 +394,7 @@ class Module
             || $entity instanceof Model\RpcServiceEntity
             || (is_array($entity) && array_key_exists('controller_service_name', $entity))
         ) {
-            $links = $resource->getLinks();
+            $links = $entity->getLinks();
 
             if ($links->has('input_filter')) {
                 $serviceName = is_array($entity) ? $entity['controller_service_name'] : $entity->controllerServiceName;
