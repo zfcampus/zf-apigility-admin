@@ -218,9 +218,41 @@ class AuthenticationModelTest extends TestCase
         $this->assertEquals(array(
             'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
             'db' => array(
+                'dsn_type'    => 'PDO',
                 'dsn'         => 'sqlite::memory:',
                 'username'    => 'me',
                 'password'    => 'too',
+            ),
+        ), $local['zf-oauth2']);
+    }
+
+    public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
+    {
+        $toCreate = array(
+            'dsn'         => 'mongodb://127.0.0.1',
+            'database'    => 'apigilityTest',
+            'dsn_type'    => 'Mongo',
+            'route_match' => '/api/oauth',
+        );
+
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $global = include($this->globalConfigPath);
+        $this->assertArrayHasKey('router', $global);
+        $this->assertArrayHasKey('routes', $global['router']);
+        $this->assertArrayHasKey('oauth', $global['router']['routes']);
+        $this->assertArrayHasKey('options', $global['router']['routes']['oauth']);
+        $this->assertArrayHasKey('route', $global['router']['routes']['oauth']['options']);
+        $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
+
+        $local  = include($this->localConfigPath);
+        $this->assertEquals(array(
+            'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
+            'db' => array(
+                'dsn_type'    => 'Mongo',
+                'dsn'         => 'mongodb:\\127.0.0.1',
+                'database'    => 'apigilityTest',
             ),
         ), $local['zf-oauth2']);
     }
@@ -246,6 +278,23 @@ class AuthenticationModelTest extends TestCase
         $this->assertFalse(isset($local['router']['routes']['oauth']));
         $this->assertArrayNotHasKey('db', $local['zf-oauth2']);
         $this->assertArrayNotHasKey('storage', $local['zf-oauth2']);
+    }
+
+    /**
+     * @group zf-oauth2-19
+     */
+    public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()
+    {
+        $toCreate = array(
+            'dsn'         => 'mongodb:300.300.300.300',
+            'database'    => 'wrong',
+            'route_match' => '/api/oauth',
+            'dsn_type'    => 'Mongo'
+        );
+        $model = $this->createModelFromConfigArrays(array(), array());
+
+        $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
+        $model->create($toCreate);
     }
 
     /**

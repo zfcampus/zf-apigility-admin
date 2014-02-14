@@ -12,6 +12,9 @@ class AuthenticationEntity
     const TYPE_DIGEST = 'digest';
     const TYPE_OAUTH2 = 'oauth2';
 
+    const DSN_PDO   = 'PDO';
+    const DSN_MONGO = 'Mongo';
+
     /**
      * Digest domains for HTTP digest authentication (space-separated list of paths)
      *
@@ -25,6 +28,13 @@ class AuthenticationEntity
      * @var string
      */
     protected $dsn;
+
+    /**
+     * DSN type (Mongo or PDO)
+     *
+     * @var string
+     */
+    protected $dsnType = self::DSN_PDO;
 
     /**
      * Path to file containing HTTP digest credentials
@@ -82,6 +92,12 @@ class AuthenticationEntity
      */
     protected $username;
 
+    /**
+     * Database name for mongo connection
+     *
+     * @var string
+     */
+    protected $database;
 
     public function __construct($type = self::TYPE_BASIC, $realmOrParams = 'api', array $params = array())
     {
@@ -117,13 +133,19 @@ class AuthenticationEntity
                     'nonce_timeout'  => $this->nonceTimeout,
                 );
             case self::TYPE_OAUTH2:
-                return array(
+                $array = array(
                     'type'        => 'oauth2',
+                    'dsn_type'    => $this->dsnType,
                     'dsn'         => $this->dsn,
                     'username'    => $this->username,
                     'password'    => $this->password,
                     'route_match' => $this->routeMatch,
                 );
+                if ($this->getDsnType() === self::DSN_MONGO) {
+                    $array['database'] = $this->database;
+                }
+
+                return $array;
         }
     }
 
@@ -137,7 +159,7 @@ class AuthenticationEntity
                 $allowedKeys = array('realm', 'htdigest', 'digestdomains', 'noncetimeout');
                 break;
             case self::TYPE_OAUTH2:
-                $allowedKeys = array('dsn', 'username', 'password', 'routematch');
+                $allowedKeys = array('dsntype', 'database', 'dsn', 'username', 'password', 'routematch');
                 break;
         }
 
@@ -147,6 +169,12 @@ class AuthenticationEntity
                 continue;
             }
             switch ($key) {
+                case 'dsntype':
+                    $this->dsnType = $value;
+                    break;
+                case 'database':
+                    $this->database = $value;
+                    break;
                 case 'dsn':
                     $this->dsn = $value;
                     break;
@@ -176,6 +204,11 @@ class AuthenticationEntity
                     break;
             }
         }
+    }
+
+    public function getDsnType()
+    {
+        return $this->dsnType;
     }
 
     public function isBasic()

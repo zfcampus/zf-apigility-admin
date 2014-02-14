@@ -130,6 +130,7 @@ class AuthenticationEntityTest extends TestCase
         ));
         $this->assertEquals(array(
             'type'        => 'oauth2',
+            'dsn_type'    => 'PDO',
             'dsn'         => 'sqlite::memory:',
             'username'    => 'me',
             'password'    => 'too',
