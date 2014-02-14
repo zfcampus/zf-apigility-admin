@@ -124,7 +124,7 @@ class RpcServiceModelTest extends TestCase
         $controllerService = sprintf("%s\\V1\\Rpc\\%s\\Controller", $this->module, $serviceName);
 
         $this->assertEquals($className, $result->class);
-        $this->assertEquals($fileName, $result->file);
+        $this->assertEquals(realpath($fileName), realpath($result->file));
         $this->assertEquals($controllerService, $result->service);
 
         require_once $fileName;
