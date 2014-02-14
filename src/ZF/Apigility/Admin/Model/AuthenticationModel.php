@@ -52,7 +52,8 @@ class AuthenticationModel
 
         if ($entity->isOAuth2()) {
             $data = $entity->getArrayCopy();
-            $this->validateDsn($data['dsn'], $data['username'], $data['password']);
+            $dsnType = isset($data['dsn_type']) ? $data['dsn_type'] : AuthenticationEntity::DSN_PDO;
+            $this->validateDsn($data['dsn'], $data['username'], $data['password'], $dsnType);
         }
 
         $allData = $entity->getArrayCopy();

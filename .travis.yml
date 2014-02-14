@@ -1,9 +1,14 @@
 language: php
+
+services:
+ - mongodb
+ 
 php:
   - 5.4
   - 5.5
 
 before_script:
+  - pecl install -f mongo-1.4.1
   - composer self-update
   - composer install --dev --prefer-source
 

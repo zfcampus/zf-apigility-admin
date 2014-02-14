@@ -229,7 +229,7 @@ class AuthenticationModelTest extends TestCase
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
     {
         $toCreate = array(
-            'dsn'         => 'mongodb://127.0.0.1',
+            'dsn'         => 'mongodb://localhost:27017',
             'database'    => 'apigilityTest',
             'dsn_type'    => 'Mongo',
             'route_match' => '/api/oauth',
@@ -248,10 +248,12 @@ class AuthenticationModelTest extends TestCase
 
         $local  = include($this->localConfigPath);
         $this->assertEquals(array(
-            'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
-            'db' => array(
+            'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
+            'mongo' => array(
                 'dsn_type'    => 'Mongo',
-                'dsn'         => 'mongodb:\\127.0.0.1',
+                'dsn'         => 'mongodb://localhost:27017',
+                'username'    => null,
+                'password'    => null,
                 'database'    => 'apigilityTest',
             ),
         ), $local['zf-oauth2']);
