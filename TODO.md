@@ -29,6 +29,14 @@ RestModel Resource
   which model to pass it to.
 - [X] Implement delete(), and do it similar to patch().
 
+Documentation
+-------------
+
+- [ ] Add zf-apigility-documentation as a required dependency of zf-apigility
+- [ ] Add a settings screen for zf-apigility-documentation
+  - [ ] Capture route endpoint for docs
+  - [ ] Allow specifying a ContentNegotiation selector for the route endpoint
+
 Admin UI Improvements
 ---------------------
 
