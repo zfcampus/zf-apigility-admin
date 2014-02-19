@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <base href="%BASE_HREF%/" />
+    
+    <!-- build:css css/apigility.css -->
+    <link rel="stylesheet" type="text/css" href="css/vendor.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <!-- endbuild -->
+        
+</head>
+<body id="ng-app" ng-app="ag-test" data-api-base-path="%API_BASE%">
+    <a class="sr-only" href="/admin#content"> … </a>
+    <header class="navbar navbar-inverse navbar-fixed-top primary" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/admin" class="navbar-brand">
+                    <img src="/zf-apigility/img/ag-logo.png">
+                </a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse ag-admin-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li ng-class="{active: ('ag.settings' | includedByState)}"><a ui-sref="ag.settings.overview">Settings</a></li>
+                    <li ng-class="{active: ('ag.api' | includedByState)}"><a ui-sref="ag.api">APIs</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="navbar navbar-default navbar-fixed-top secondary">
+        <div ui-view="breadcrumbs" class="container"></div>
+    </div>
+
+    <div id="content">
+        <div class="container">
+            <div ui-view="title"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <aside ui-view="sidebar" class="col-md-3 ag-sidebar" role="complementary"></aside>
+
+            <main ui-view="content" class="ag col-md-9" role="main"></main>
+        </div>
+    </div>
+
+    <!-- build:js js/vendor-ui.js -->
+    <script src="vendor/jquery/jquery.js"></script>
+    <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- endbuild -->
+    <!-- build:js js/vendor-util.js -->
+    <script src="vendor/lodash/dist/lodash.js"></script>
+    <!-- endbuild -->
+    <!-- build:js js/vendor-angular.js -->
+    <script src="vendor/angular/angular.js"></script>
+    <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="vendor/angular-sanitize/angular-sanitize.js"></script>
+    <!-- endbuild -->
+    <!-- build:js js/app.js -->
+    <script src="js/test.js"></script>
+    <!-- endbuild -->
+</body>
+</html>

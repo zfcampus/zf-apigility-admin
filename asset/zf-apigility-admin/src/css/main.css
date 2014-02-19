@@ -8,14 +8,40 @@ h1,
 .h1 {
   color: #004000;
 }
-.navbar > .container .navbar-brand {
+.navbar > .container-fluid .navbar-brand {
   padding: 10px 15px;
+}
+.navbar > .container-fluid .ag-admin-navbar-collapse {
+  overflow: hidden;
+  width: 100%;
+}
+.navbar > .container-fluid .ag-admin-navbar-collapse ul.navbar-nav {
+  z-index: 3;
+  float: none;
+  height: 100%;
+}
+.navbar > .container-fluid .ag-admin-navbar-collapse ul.navbar-nav > li {
+  min-width: 85px;
+  text-align: center;
+}
+.navbar > .container-fluid .ag-admin-navbar-collapse ul.navbar-nav > li > a {
+  min-height: 70px;
 }
 .navbar-inverse {
   background: #0c0c56;
 }
 .navbar-fixed-top.secondary {
+  z-index: 1;
   top: 71px;
+  margin-bottom: 0;
+  min-height: 30px;
+}
+.navbar-fixed-top.secondary .container {
+  height: auto;
+}
+.breadcrumb {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .panel-heading .btn-group {
   margin-top: -6px;
