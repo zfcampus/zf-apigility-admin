@@ -33,12 +33,18 @@
               };
 
               var generateBreadcrumb = function (state) {
-                if (state.abstract || !state.url || !state.data || !state.data.pageTitle) {
+                if (!state.url || !state.data) {
                   return false;
                 }
 
+                if (!state.data.pageTitle && !state.data.breadcrumbTitle) {
+                  return false;
+                }
+
+                var title = state.data.breadcrumbTitle ? state.data.breadcrumbTitle : state.data.pageTitle;
+
                 return {
-                  title: state.data.pageTitle,
+                  title: title,
                   href: $state.url,
                   active: false
                 };
@@ -85,6 +91,8 @@
               $scope.$watch(function () {
                 return $state.current.name;
               }, createBreadcrumbs);
+
+              $scope.$on('updateBreadcrumbs', createBreadcrumbs);
 
               createBreadcrumbs();
             }]
@@ -190,13 +198,19 @@
       });
 
       $stateProvider.state('ag.api', {
-        url: '/api',
+        url: '/api/:apiName/:version',
         data: {
-          pageTitle: 'APIs'
+          pageTitle: 'API'
+        },
+        resolve: {
+          api: ['$stateParams', 'ApiRepository', function($stateParams, ApiRepository) {
+            return ApiRepository.getApi($stateParams.apiName, $stateParams.version);
+          }]
         },
         views: {
           'content@': {
-            template: '<h4>APIs</h4>'
+            templateUrl: 'html/api/overview.html',
+            controller: 'ApiOverviewController'
           },
           'sidebar@': {
             templateUrl: 'html/api/sidebar.html',
