@@ -23,7 +23,7 @@
         views: {
           breadcrumbs: {
             templateUrl: 'html/breadcrumbs.html',
-            controller: ['$scope', '$state', '$stateParams', function ($scope, $state, $stateParams) {
+            controller: ['$rootScope', '$scope', '$state', '$stateParams', function ($rootScope, $scope, $state, $stateParams) {
               $scope.breadcrumbs = [];
 
               var home = {
@@ -43,11 +43,12 @@
 
                 var title = state.data.breadcrumbTitle ? state.data.breadcrumbTitle : state.data.pageTitle;
 
-                return {
+                var breadcrumb = {
                   title: title,
-                  href: $state.url,
+                  href: state.name,
                   active: false
                 };
+                return breadcrumb;
               };
 
               var createBreadcrumbs = function () {
@@ -92,17 +93,17 @@
                 return $state.current.name;
               }, createBreadcrumbs);
 
-              $scope.$on('updateBreadcrumbs', createBreadcrumbs);
+              $rootScope.$on('updateBreadcrumbs', createBreadcrumbs);
 
               createBreadcrumbs();
             }]
           },
           title: {
             template: '<h1 ng-bind="pageTitle"></h1>',
-            controller: ['$scope', '$state', function ($scope, $state) {
+            controller: ['$rootScope', '$scope', '$state', function ($rootScope, $scope, $state) {
 
               var update = function (oldval, newval) {
-                if (oldval === newval) {
+                if (oldval === newval || !newval) {
                   return;
                 }
 
@@ -117,7 +118,11 @@
                 return $state.current.name;
               }, update);
 
-              update($state);
+              $rootScope.$on('updateTitle', function (apiName) {
+                update(null, apiName);
+              });
+
+              update(null, $state);
             }]
           },
           sidebar: {
@@ -198,9 +203,30 @@
       });
 
       $stateProvider.state('ag.api', {
-        url: '/api/:apiName/:version',
+        url: '/api',
         data: {
-          pageTitle: 'API'
+          pageTitle: 'APIs'
+        },
+        resolve: {
+          apis: ['ApiRepository', function(ApiRepository) {
+            return ApiRepository.getList();
+          }]
+        },
+        views: {
+          'content@': {
+            templateUrl: 'html/api/index.html',
+            controller: 'ApiController'
+          },
+          'sidebar@': {
+            templateUrl: 'html/api/index-sidebar.html'
+          }
+        }
+      });
+
+      $stateProvider.state('ag.api.version', {
+        url: '/:apiName/v:version',
+        data: {
+          pageTitle: ''
         },
         resolve: {
           api: ['$stateParams', 'ApiRepository', function($stateParams, ApiRepository) {

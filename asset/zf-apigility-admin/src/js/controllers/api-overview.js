@@ -1,12 +1,15 @@
 (function() {
     'use strict';
 
-angular.module('ag-admin').controller('ApiOverviewController', function ($http, $rootScope, $scope, $state, $stateParams, flash, api, ApiRepository) {
+angular.module('ag-admin').controller('ApiOverviewController', function ($rootScope, $scope, $state, $stateParams, flash, api, ApiRepository) {
     $scope.api = api;
     $scope.defaultApiVersion = api.default_version;
 
-    $state.$current.data.breadcrumbTitle = $state.current.data.pageTitle + ' / ' + $stateParams.apiName + ' / v' + $stateParams.version;
-    $scope.$emit('updateBreadcrumbs');
+    $state.$current.data.pageTitle = api.name;
+    $rootScope.$broadcast('updateTitle', api.name);
+
+    $state.$current.data.breadcrumbTitle = api.name + ' (v' + $stateParams.version + ')';
+    $rootScope.$broadcast('updateBreadcrumbs');
 
     $scope.setDefaultApiVersion = function () {
         flash.info = 'Setting the default API version to ' + $scope.defaultApiVersion;
