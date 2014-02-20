@@ -1,4 +1,4 @@
-<div ng-hide="showNewRpcServiceForm">
+<div ng-hide="showNewRpcServiceForm || !isLatestVersion()">
     <button 
         class="btn btn-default btn-primary pull-right" title="Create New RPC Service" position="bottom"
         ng-click="showNewRpcServiceForm = true">

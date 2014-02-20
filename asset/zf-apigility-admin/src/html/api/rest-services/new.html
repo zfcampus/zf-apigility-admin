@@ -1,4 +1,4 @@
-<div ng-hide="showNewRestServiceForm">
+<div ng-hide="showNewRestServiceForm || !isLatestVersion()">
     <button 
         class="btn btn-default btn-primary pull-right" title="Create New REST Service"
         ng-click="showNewRestServiceForm = true">
