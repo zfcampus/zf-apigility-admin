@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-angular.module('ag-admin').controller('ApiOverviewController', function ($rootScope, $scope, flash, api, ApiRepository) {
+angular.module('ag-admin').controller('ApiOverviewController', function ( $scope, flash, api, ApiRepository) {
     $scope.api = api;
     $scope.defaultApiVersion = api.default_version;
 

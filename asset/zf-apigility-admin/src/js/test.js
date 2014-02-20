@@ -23,7 +23,7 @@
         views: {
           breadcrumbs: {
             templateUrl: 'html/breadcrumbs.html',
-            controller: ['$scope', '$state', function ($scope, $state) {
+            controller: ['$rootScope', '$scope', '$state', function ($rootScope, $scope, $state) {
               $scope.breadcrumbs = [];
 
               var home = {
@@ -97,16 +97,14 @@
                 $scope.params = $state.params;
               };
 
-              $scope.$watch(function () {
-                return $state.current.name;
-              }, createBreadcrumbs);
+              $rootScope.$on('$stateChangeSuccess', createBreadcrumbs);
 
               createBreadcrumbs();
             }]
           },
           title: {
             template: '<h1 ng-bind="pageTitle"></h1>',
-            controller: ['$scope', '$state', function ($scope, $state) {
+            controller: ['$rootScope', '$scope', '$state', function ($rootScope, $scope, $state) {
 
               var update = function (oldval, newval) {
                 if (oldval === newval || !newval) {
@@ -124,9 +122,9 @@
                 $scope.pageTitle = pageTitle;
               };
 
-              $scope.$watch(function () {
-                return $state.current.name;
-              }, update);
+              $rootScope.$on('$stateChangeSuccess', function () {
+                update(null, $state.$current.name);
+              });
 
               update(null, $state);
             }]
