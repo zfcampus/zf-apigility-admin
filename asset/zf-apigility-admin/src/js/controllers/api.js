@@ -24,6 +24,8 @@ angular.module('ag-admin').controller(
         // reset form, repopulate, redirect to new
         $scope.dismissModal();
         $scope.resetForm();
+        form.find('input').attr('disabled', false);
+        form.find('button').attr('disabled', false);
 
         flash.success = 'New API Created';
         $timeout(function () {
