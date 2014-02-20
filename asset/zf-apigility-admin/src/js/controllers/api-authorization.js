@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
     'ApiAuthorizationController',
-    function ($http, $rootScope, $scope, $stateParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
+    function ($scope, $stateParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
         $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
         $scope.authentication = authentication;

@@ -254,6 +254,27 @@
         }
       });
 
+      $stateProvider.state('ag.api.version.authorization', {
+        url: '/authorization',
+        data: {
+          pageTitle: 'Authorization'
+        },
+        resolve: {
+          apiAuthorizations: ['$stateParams', 'ApiAuthorizationRepository', function ($stateParams, ApiAuthorizationRepository) {
+              return ApiAuthorizationRepository.getApiAuthorization($stateParams.apiName, $stateParams.version);
+          }],
+          authentication: ['AuthenticationRepository', function (AuthenticationRepository) {
+              return AuthenticationRepository.hasAuthentication();
+          }]
+        },
+        views: {
+          'content@': {
+            templateUrl: 'html/api/authorization.html',
+            controller: 'ApiAuthorizationController'
+          },
+        }
+      });
+
       $urlRouterProvider.otherwise('/settings/overview');
     }
   );
