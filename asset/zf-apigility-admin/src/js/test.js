@@ -231,6 +231,24 @@
         resolve: {
           api: ['$stateParams', 'ApiRepository', function($stateParams, ApiRepository) {
             return ApiRepository.getApi($stateParams.apiName, $stateParams.version);
+          }],
+          /* The following are not deps for this state, but are common deps for
+           * both REST and RPC service screens.
+           */
+          filters: ['FiltersServicesRepository', function (FiltersServicesRepository) {
+            return FiltersServicesRepository.getList();
+          }],
+          validators: ['ValidatorsServicesRepository', function (ValidatorsServicesRepository) {
+            return ValidatorsServicesRepository.getList();
+          }],
+          selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
+            return ContentNegotiationResource.getList().then(function (selectors) {
+              var selectorNames = [];
+              angular.forEach(selectors, function (selector) {
+                selectorNames.push(selector.content_name);
+              });
+              return selectorNames;
+            });
           }]
         },
         views: {
@@ -272,6 +290,39 @@
             templateUrl: 'html/api/authorization.html',
             controller: 'ApiAuthorizationController'
           },
+        }
+      });
+      $stateProvider.state('ag.api.version.rest', {
+        url: '/rest-services',
+        data: {
+          pageTitle: 'REST Services'
+        },
+        resolve: {
+          dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
+            return DbAdapterResource.getList();
+          }],
+          hydrators: ['HydratorServicesRepository', function (HydratorServicesRepository) {
+            return HydratorServicesRepository.getList();
+          }]
+        },
+        views: {
+          'content@': {
+            templateUrl: 'html/api/rest-services/index.html',
+            controller: 'ApiRestServicesController'
+          },
+        }
+      });
+
+      $stateProvider.state('ag.api.version.rpc', {
+        url: '/rpc-services',
+        data: {
+          pageTitle: 'RPC Services'
+        },
+        views: {
+          'content@': {
+            templateUrl: 'html/api/rpc-services/index.html',
+            controller: 'ApiRpcServicesController'
+          }
         }
       });
 
