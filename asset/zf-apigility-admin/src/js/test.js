@@ -23,7 +23,7 @@
         views: {
           breadcrumbs: {
             templateUrl: 'html/breadcrumbs.html',
-            controller: ['$rootScope', '$scope', '$state', '$stateParams', function ($rootScope, $scope, $state, $stateParams) {
+            controller: ['$scope', '$state', function ($scope, $state) {
               $scope.breadcrumbs = [];
 
               var home = {
@@ -37,11 +37,19 @@
                   return false;
                 }
 
-                if (!state.data.pageTitle && !state.data.breadcrumbTitle) {
+                if (!state.data.pageTitle && !state.data.breadcrumb) {
                   return false;
                 }
 
-                var title = state.data.breadcrumbTitle ? state.data.breadcrumbTitle : state.data.pageTitle;
+                var title = '';
+                
+                if (typeof state.data.breadcrumb === 'string') {
+                  title = state.data.breadcrumb;
+                } else if (typeof state.data.breadcrumb === 'function') {
+                  title = state.data.breadcrumb($state.params);
+                } else if (state.data.pageTitle) {
+                  title = state.data.pageTitle;
+                }
 
                 var breadcrumb = {
                   title: title,
@@ -86,21 +94,19 @@
                 });
 
                 $scope.breadcrumbs = breadcrumbs;
-                $scope.params = $stateParams;
+                $scope.params = $state.params;
               };
 
               $scope.$watch(function () {
                 return $state.current.name;
               }, createBreadcrumbs);
 
-              $rootScope.$on('updateBreadcrumbs', createBreadcrumbs);
-
               createBreadcrumbs();
             }]
           },
           title: {
             template: '<h1 ng-bind="pageTitle"></h1>',
-            controller: ['$rootScope', '$scope', '$state', function ($rootScope, $scope, $state) {
+            controller: ['$scope', '$state', function ($scope, $state) {
 
               var update = function (oldval, newval) {
                 if (oldval === newval || !newval) {
@@ -109,7 +115,11 @@
 
                 var pageTitle;
                 if ($state.current && $state.current.data && $state.current.data.pageTitle) {
-                  pageTitle = $state.current.data.pageTitle;
+                  if (typeof $state.current.data.pageTitle === 'string') {
+                    pageTitle = $state.current.data.pageTitle;
+                  } else if (typeof $state.current.data.pageTitle === 'function') {
+                    pageTitle = $state.current.data.pageTitle($state.params);
+                  }
                 }
                 $scope.pageTitle = pageTitle;
               };
@@ -117,10 +127,6 @@
               $scope.$watch(function () {
                 return $state.current.name;
               }, update);
-
-              $rootScope.$on('updateTitle', function (apiName) {
-                update(null, apiName);
-              });
 
               update(null, $state);
             }]
@@ -226,7 +232,12 @@
       $stateProvider.state('ag.api.version', {
         url: '/:apiName/v:version',
         data: {
-          pageTitle: ''
+          pageTitle: function (params) {
+            return params.apiName + ' (v' + params.version + ')';
+          },
+          breadcrumb: function (params) {
+            return params.apiName + ' (v' + params.version + ')'; 
+          }
         },
         resolve: {
           api: ['$stateParams', 'ApiRepository', function($stateParams, ApiRepository) {
@@ -275,7 +286,8 @@
       $stateProvider.state('ag.api.version.authorization', {
         url: '/authorization',
         data: {
-          pageTitle: 'Authorization'
+          pageTitle: 'Authorization',
+          breadcrumb: false
         },
         resolve: {
           apiAuthorizations: ['$stateParams', 'ApiAuthorizationRepository', function ($stateParams, ApiAuthorizationRepository) {
@@ -295,7 +307,8 @@
       $stateProvider.state('ag.api.version.rest', {
         url: '/rest-services',
         data: {
-          pageTitle: 'REST Services'
+          pageTitle: 'REST Services',
+          breadcrumb: false
         },
         resolve: {
           dbAdapters: ['DbAdapterResource', function (DbAdapterResource) {
@@ -316,7 +329,8 @@
       $stateProvider.state('ag.api.version.rpc', {
         url: '/rpc-services',
         data: {
-          pageTitle: 'RPC Services'
+          pageTitle: 'RPC Services',
+          breadcrumb: false
         },
         views: {
           'content@': {
