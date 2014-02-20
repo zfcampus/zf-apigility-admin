@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="css/apigility.css"/>
         
 </head>
-<body id="ng-app" ng-app="ag-admin" data-api-base-path="%API_BASE%">
-    <a class="sr-only" href="#content"> … </a>
+<body id="ng-app" ng-app="ag-test" data-api-base-path="%API_BASE%">
+    <a class="sr-only" href="/admin#content"> … </a>
     <header class="navbar navbar-inverse navbar-fixed-top primary" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a href="#" class="navbar-brand">
+                <a href="/admin" class="navbar-brand">
                     <img src="/zf-apigility/img/ag-logo.png">
                 </a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".ag-admin-navbar-collapse">
@@ -30,7 +30,6 @@
                 </ul>
             </div>
         </div>
-        
     </header>
 
     <div class="navbar navbar-default navbar-fixed-top secondary">
@@ -50,13 +49,6 @@
             <main ui-view="content" class="ag col-md-9" role="main"></main>
         </div>
     </div>
-
-    <div flash-alert="" active-class="in" class="alert fade fade-out">
-        <span class="alert-message">{{flash.message}}</span>
-    </div>
-
-    <ng-include src="'html/modals/help-content-negotiation.html'"></ng-include>
-    <ng-include src="'html/modals/help-input-filter.html'"></ng-include>
 
     <script src="js/vendor-ui.js"></script>
     <script src="js/vendor-util.js"></script>
