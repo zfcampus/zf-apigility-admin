@@ -3,10 +3,11 @@
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    function ($scope, $routeParams, flash, ApiRepository, ApiAuthorizationRepository) {
+    function ($scope, $stateParams, flash, ApiRepository, ApiAuthorizationRepository) {
 
-        var moduleName = $routeParams.apiName;
-        var version    = $routeParams.version;
+        var moduleName = $stateParams.apiName;
+        var version    = $stateParams.version;
+        var docs       = {};
         
         $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
         $scope.authorizations = {};
@@ -17,7 +18,7 @@ angular.module('ag-admin').controller(
                 $scope.service.documentation = {};
             }
             if (Array.isArray($scope.service.documentation)) {
-                var docs = {};
+                docs = {};
                 _.forEach($scope.service.documentation, function (val, key) {
                     docs[key] = val;
                 });
@@ -46,7 +47,7 @@ angular.module('ag-admin').controller(
                 $scope.service.documentation = {};
             }
             if (Array.isArray($scope.service.documentation)) {
-                var docs = {};
+                docs = {};
                 _.forEach($scope.service.documentation, function (val, key) {
                     docs[key] = val;
                 });
@@ -153,7 +154,7 @@ angular.module('ag-admin').controller(
         $scope.save = function() {
             /* Ensure we have an object */
             if (Array.isArray($scope.service.documentation)) {
-                var docs = {};
+                docs = {};
                 _.forEach($scope.service.documentation, function (val, key) {
                     docs[key] = val;
                 });

@@ -1,13 +1,13 @@
 (function() {'use strict';
 
 angular.module('ag-admin').run(
-    function ($rootScope, $routeParams, $location, $route) {
-        $rootScope.routeParams = $routeParams;
+    function ($rootScope, $stateParams) {
+        $rootScope.stateParams = $stateParams;
 
-        $rootScope.$on('$routeChangeSuccess', function(scope, next, current){
-            scope.targetScope.$root.navSection = $route.current.controller;
-            if (next.locals.api && scope.targetScope.$root.pageTitle != next.locals.api.name) {
-                scope.targetScope.$root.pageTitle = next.locals.api.name;
+        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+            $rootScope.navSection = toParams.controller;
+            if (toParams.locals.api && $rootScope.pageTitle != toParams.locals.api.name) {
+                $rootScope.pageTitle = toParams.locals.api.name;
             }
         });
     }

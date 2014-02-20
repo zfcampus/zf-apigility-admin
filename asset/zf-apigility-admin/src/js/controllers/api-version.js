@@ -2,9 +2,9 @@
 
 angular.module('ag-admin').controller(
     'ApiVersionController',
-    function($rootScope, $scope, $location, $timeout, $routeParams, flash, ApiRepository) {
+    function($rootScope, $scope, $location, $timeout, $stateParams, flash, ApiRepository) {
 
-        ApiRepository.getApi($routeParams.apiName, $routeParams.version).then(function (api) {
+        ApiRepository.getApi($stateParams.apiName, $stateParams.version).then(function (api) {
             $scope.api = api;
             $scope.currentVersion = api.version;
             $scope.defaultApiVersion = api.default_version;

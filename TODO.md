@@ -46,7 +46,7 @@ Admin UI Improvements
 - [X] Integrate Grunt into workflow
 - [X] Refactor application into one controller/directive/filter/service per
   file. (Although multiple related directives may be in the same file.)
-- [ ] Switch to ui-router
+- [X] Switch to ui-router
 - [ ] Switch to angular-ui-bootstrap
 - [X] Remove Hyperagent (in favor of either $http, $resource, or Restangular)
 - [ ] Add unit tests
@@ -79,7 +79,7 @@ Admin UI Improvements
   - [X] put the "remove" icon to the right, with an "edit" icon to its left (if
     editable); these icons should only be visible on _hover_.
 
-- Every section - db adapters, authentication, rest services, etc. - should have
+- [X] Every section - db adapters, authentication, rest services, etc. - should have
   a _title_ in its main pane.
 
 - [ ] Icons
@@ -89,10 +89,10 @@ Admin UI Improvements
 
 - [ ] _Every_ resource should be addressable, to allow linking to them directly.
 
-- [ ] The topnav should have "Settings" and "APIs" items. The latter _may_ be okay
+- [X] The topnav should have "Settings" and "APIs" items. The latter _may_ be okay
   as a dropdown with the various APIs available.
 
-- [ ] Consider adding breadcrumbs, to make it clear the relation/hierarchy of the
+- [X] Consider adding breadcrumbs, to make it clear the relation/hierarchy of the
   current active item.
 
 - [ ] Consider having search inside the tool, to allow surfacing the various
@@ -122,16 +122,16 @@ Admin UI Improvements
 
 ### "Dashboard"
 
-- [ ] Breadcrumbs: "Settings"
-- [ ] Title: Settings
+- [X] Breadcrumbs: "Settings"
+- [X] Title: Settings
 - [ ] This should actually be titled "Settings" (or "Application-wide Settings"),
   and should not be the main dashboard.
 
 #### DB Adapters
 
-- [ ] Breadcrumbs: "Settings -> DB Adapters"
-- [ ] Title: Database Adapters
-- [ ] Add a page title, and navigation breadcrumbs: "Settings -> DB Adapters"
+- [X] Breadcrumbs: "Settings -> DB Adapters"
+- [X] Title: Database Adapters
+- [X] Add a page title, and navigation breadcrumbs: "Settings -> DB Adapters"
 - [X] Make this more wizard-like. When you choose to create a DB adapter, first
   select the adapter type you wish to create, and then expose the options
   necessary for that adapter type. (Do this like we did with validator and
@@ -157,9 +157,9 @@ Admin UI Improvements
 
 #### Authentication
 
-- [ ] Breadcrumbs: "Settings -> Authentication"
-- [ ] Title: Authentication
-- [ ] Add a page title, and navigation breadcrumbs: "Settings -> Authentication"
+- [X] Breadcrumbs: "Settings -> Authentication"
+- [X] Title: Authentication
+- [X] Add a page title, and navigation breadcrumbs: "Settings -> Authentication"
 - [X] Be explicit: "Select ONE of the authentication methods below for your
   application"
 - [X] Remove the words "Setup" and "Authentication" from the buttons
@@ -180,23 +180,23 @@ Admin UI Improvements
 
 ### APIs
 
-- [ ] Breadcrumbs: "APIs"
-- [ ] Title: APIs
+- [X] Breadcrumbs: "APIs"
+- [X] Title: APIs
 - [ ] Create a landing page for APIs
-    - [ ] List all APIs, and link to them.
+    - [X] List all APIs, and link to them.
     - [ ] Potentially provide the API description for each, when present
     - [ ] Consider having badges:
         - [ ] Green or similar for APIs that appear to have complete information
         - [ ] Red for APIs that may need additional configuration to be complete
             - [ ] Hover dialog that would link to action items, such as
               documentation
-    - "Create API" goes on this page. It should be a form, and always present
+    - [X] "Create API" goes on this page. It should be a form, and always present
       (no need to click a button to make the form appear).
 
 #### API Screen
 
-- [ ] Breadcrumbs: "APIs -> {API name}"
-- [ ] Title: {API Name} API (latter in a different color; gray?)
+- [X] Breadcrumbs: "APIs -> {API name}"
+- [X] Title: {API Name} API (latter in a different color; gray?)
 - [ ] Display API description, if available. Otherwise, have dummy text. Double
   click of text allows you to edit, and displays "cancel" and "save" buttons.
 - [ ] Versioning
@@ -223,8 +223,8 @@ Admin UI Improvements
 
 #### REST/RPC Services
 
-- [ ] Breadcrumbs: "APIs -> {API Name} -> (REST|RPC) Services"
-- [ ] Title: REST|RPC Services
+- [X] Breadcrumbs: "APIs -> {API Name} -> (REST|RPC) Services"
+- [X] Title: REST|RPC Services
 - [ ] If no services:
     - [ ] "You have not yet created any services; would you like to?" and do a modal
       drop down in place.
@@ -232,8 +232,8 @@ Admin UI Improvements
   box and focus it.
     - [ ] Ideally, also allow addressing each tab inside the collapse box, and,
       potentially, whether or not the state is view or edit
-- [ ] Naming
-    - [ ] Consider allowing the ability to configure a _name_ for each service
+- [X] Naming
+    - [X] Consider allowing the ability to configure a _name_ for each service
     - [X] have a method for normalizing the name in the UI based on rules. Thus,
       `Status\V1\Rest\Status\Controller` becomes just `Status` in the UI.
 - [ ] Collapse lists
@@ -243,16 +243,16 @@ Admin UI Improvements
       "edit" (far right)
     - [X] "remove" button in titlebar, visible only on hover, to display "remove"
       dialog (farthest right)
-    - [ ] Tabs within:
-        - [ ] View mode:
+    - [X] Tabs within:
+        - [X] View mode:
             - [X] Settings
             - [X] Fields
-            - [ ] Documentation
+            - [X] Documentation
             - [X] Source Code
-        - [ ] Edit mode:
+        - [X] Edit mode:
             - [X] Settings
             - [X] Fields
-            - [ ] Documentation
+            - [X] Documentation
     - [ ] Edit forms 
         - [X] should have a "cancel" button to return to "view" mode
         - [ ] revert any changes. 
@@ -289,8 +289,8 @@ Admin UI Improvements
     - [X] Options:
         - [X] Use toggles for boolean values
     - [ ] "Add" dialogs
-        - [ ] Frame all "Add" dialogs with a thicker line so as to draw attention to them.
-        - [ ] "Add ..." buttons should disappear while the form is available
+        - [X] Frame all "Add" dialogs with a thicker line so as to draw attention to them.
+        - [X] "Add ..." buttons should disappear while the form is available
         - [ ] "Add ..." forms should be removed once an item is created
     - [X] Make all "add" buttons display on hover over the specific panel only
 - [ ] Source Code viewer
@@ -299,8 +299,8 @@ Admin UI Improvements
 
 #### Authorization
 
-- [ ] Breadcrumbs: "APIs -> {API Name} -> Authorization"
-- [ ] Title: Authorization
+- [X] Breadcrumbs: "APIs -> {API Name} -> Authorization"
+- [X] Title: Authorization
 - [X] See note about normalized names under REST/RPC services; use those names in
   this table.
 - [X] Move "Save" out of the table; perhaps rename to "Update" (but whatever is
