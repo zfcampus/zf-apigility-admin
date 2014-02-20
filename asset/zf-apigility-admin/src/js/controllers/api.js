@@ -4,16 +4,20 @@
 angular.module('ag-admin').controller(
   'ApiController',
   function($scope, $state, $timeout, flash, apis, ApiRepository) {
-    var apiList = [];
-    angular.forEach(apis, function (api) {
-      apiList.push({
-        apiName: api.name,
-        version: api.versions.pop()
-      });
-    });
-    $scope.apiList = apiList;
-
     $scope.showNewApiForm = false;
+    $scope.apiList = [];
+
+    var stateName = $state.current.name;
+    var updateList = function (apiCollection) {
+      var apiList = [];
+      angular.forEach(apiCollection, function (api) {
+        apiList.push({
+          apiName: api.name,
+          version: api.versions.pop()
+        });
+      });
+      $scope.apiList = apiList;
+    };
 
     $scope.createNewApi = function ($event) {
       var form = angular.element($event.target);
@@ -29,6 +33,9 @@ angular.module('ag-admin').controller(
 
         flash.success = 'New API Created';
         $timeout(function () {
+          ApiRepository.getList(true).then(function(apiCollection) {
+            updateList(apiCollection);
+          });
           $state.go('ag.api.version', {apiName: newApi.name, version: 1});
         }, 500);
       });
@@ -38,6 +45,8 @@ angular.module('ag-admin').controller(
       $scope.showNewApiForm = false;
       $scope.apiName = '';
     };
+
+    updateList(apis);
   }
 );
 })();

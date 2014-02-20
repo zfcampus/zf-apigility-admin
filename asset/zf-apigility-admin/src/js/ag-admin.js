@@ -213,7 +213,7 @@
         },
         resolve: {
           apis: ['ApiRepository', function(ApiRepository) {
-            return ApiRepository.getList();
+            return ApiRepository.getList(true);
           }]
         },
         views: {
@@ -239,7 +239,7 @@
         },
         resolve: {
           api: ['$stateParams', 'ApiRepository', function($stateParams, ApiRepository) {
-            return ApiRepository.getApi($stateParams.apiName, $stateParams.version);
+            return ApiRepository.getApi($stateParams.apiName, $stateParams.version, true);
           }],
           /* The following are not deps for this state, but are common deps for
            * both REST and RPC service screens.
