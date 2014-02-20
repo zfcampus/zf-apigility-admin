@@ -150,7 +150,7 @@ angular.module('ag-admin').directive('collapse', function() {
             };
 
             this.toggleChevron = function (flag) {
-                if (panel.noChevron) {
+                if (panel.noChevron || !chevron) {
                     return;
                 }
 
