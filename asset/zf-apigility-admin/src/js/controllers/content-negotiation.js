@@ -3,12 +3,15 @@
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  function ($scope, $location, flash, selectors, ContentNegotiationResource) {
+  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource) {
     var newSelector = {
       content_name: '',
       viewModel: '',
       selectors: {}
     };
+
+    $scope.activeSelector = $stateParams.selector ? $stateParams.selector : '';
+    $scope.inEdit         = !!$stateParams.edit;
 
     $scope.showNewSelectorForm = false;
     $scope.newSelector = _.cloneDeep(newSelector);
@@ -17,6 +20,14 @@ angular.module('ag-admin').controller(
     $scope.resetNewSelectorForm = function() {
       $scope.showNewSelectorForm = false;
       $scope.newSelector = _.cloneDeep(newSelector);
+    };
+
+    $scope.cancelEdit = function () {
+        $state.go($state.$current.name, {edit: ''}, {reload: true});
+    };
+
+    $scope.startEdit = function () {
+        $state.go($state.$current.name, {edit: true}, {notify: false});
     };
 
     $scope.addViewModel = function (viewModel, selector) {

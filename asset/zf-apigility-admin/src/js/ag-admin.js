@@ -172,7 +172,7 @@
         }
       });
       $stateProvider.state('ag.settings.content-negotiation', {
-        url: '/content-negotiation',
+        url: '/content-negotiation?selector&edit',
         data: {
           pageTitle: 'Content Negotiation'
         },
