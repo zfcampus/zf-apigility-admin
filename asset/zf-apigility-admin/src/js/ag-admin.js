@@ -189,7 +189,7 @@
         }
       });
       $stateProvider.state('ag.settings.db-adapters', {
-        url: '/db-adapters',
+        url: '/db-adapters?adapter&edit',
         data: {
           pageTitle: 'Database Adapters'
         },

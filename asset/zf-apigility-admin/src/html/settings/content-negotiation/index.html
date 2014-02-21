@@ -55,8 +55,13 @@
     </collapse-header>
 
     <collapse-body>
-      <ng-include src="'html/settings/content-negotiation/view.html'"></ng-include>
-      <ng-include src="'html/settings/content-negotiation/edit.html'"></ng-include>
+      <div collapse-show criteria="{editSelector: false}">
+        <ng-include src="'html/settings/content-negotiation/view.html'"></ng-include>
+      </div>
+
+      <div collapse-show criteria="{editSelector: true}" class="hide">
+        <ng-include src="'html/settings/content-negotiation/edit.html'"></ng-include>
+      </div>
     </collapse-body>
   </collapse>
 </div>
