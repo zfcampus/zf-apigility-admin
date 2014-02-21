@@ -3,10 +3,10 @@
 
 angular.module('ag-admin').controller(
   'ApiRestServicesController', 
-  function ($scope, $stateParams, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
+  function ($scope, $state, $stateParams, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
 
     $scope.activeService     = $stateParams.service ? $stateParams.service : '';
-    $scope.edit              = typeof $stateParams.edit === 'boolean' ? $stateParams.edit : false;
+    $scope.inEdit            = !!$stateParams.edit;
     $scope.view              = $stateParams.view ? $stateParams.view : 'settings';
     $scope.ApiRepository     = ApiRepository; // used in child controller (input filters)
     $scope.flash             = flash;
@@ -36,6 +36,10 @@ angular.module('ag-admin').controller(
     $scope.isLatestVersion = function () {
         return $scope.ApiRepository.isLatestVersion($scope.api);
     };
+    if (!$scope.isLatestVersion()) {
+        $scope.inEdit = false;
+        $state.go($state.$current.name, {edit: ''}, {reload: true});
+    }
 
     $scope.isDbConnected = function (restService) {
         if (typeof restService !== 'object' || typeof restService === 'undefined') {
@@ -75,6 +79,14 @@ angular.module('ag-admin').controller(
                 $scope.newService.dbAdapterName = '';
                 $scope.newService.dbTableName = '';
             }, function (response) {});
+    };
+
+    $scope.cancelEdit = function () {
+        $state.go($state.$current.name, {edit: ''}, {reload: true});
+    };
+
+    $scope.startEdit = function () {
+        $state.go($state.$current.name, {edit: true}, {notify: false});
     };
 
     $scope.saveRestService = function (index) {

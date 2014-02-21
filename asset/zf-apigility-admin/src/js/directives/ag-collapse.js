@@ -8,7 +8,7 @@ angular.module('ag-admin').directive('collapse', function() {
         scope: {
             show: '&'
         },
-        controller: function($scope, $parse, $location, $urlRouter) {
+        controller: function($scope, $parse, $state) {
             var active = false;
             var body;
             var buttons = [];
@@ -39,6 +39,7 @@ angular.module('ag-admin').directive('collapse', function() {
                 angular.forEach(newConditionals, function(value, key) {
                     conditionals[key] = !!value;
                 });
+                panel.setFlags(conditionals);
             };
 
             $scope.setName = function(panelName) {
@@ -157,16 +158,18 @@ angular.module('ag-admin').directive('collapse', function() {
             this.expand = function() {
                 body.addClass('in');
                 if (name && searchParam) {
-                    $location.search(searchParam, name);
-                    $urlRouter.sync();
+                    var toParams = {};
+                    toParams[searchParam] = name;
+                    $state.go($state.$current.name, toParams);
                 }
             };
 
             this.collapse = function() {
                 body.removeClass('in');
                 if (searchParam) {
-                    $location.search(searchParam, null);
-                    $urlRouter.sync();
+                    var toParams = {};
+                    toParams[searchParam] = null;
+                    $state.go($state.$current.name, toParams);
                 }
             };
 
@@ -289,12 +292,18 @@ angular.module('ag-admin').directive('collapse', function() {
         require: '^collapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
+            var clickAction;
             var criteria = {};
+
             if (attr.hasOwnProperty('criteria')) {
                 criteria = scope.$eval(attr.criteria);
                 if (typeof criteria !== 'object') {
                     criteria = {};
                 }
+            }
+
+            if (attr.hasOwnProperty('click')) {
+                clickAction = scope.$eval(attr.click);
             }
 
             panelCtrl.addButton({criteria: criteria, element: element});
@@ -304,6 +313,9 @@ angular.module('ag-admin').directive('collapse', function() {
             element.on('click', function(event) {
                 panelCtrl.expand();
                 panelCtrl.showContainerButtons();
+                if (typeof clickAction === 'function') {
+                    clickAction(event, element);
+                }
                 event.stopPropagation();
             });
         }
@@ -314,6 +326,8 @@ angular.module('ag-admin').directive('collapse', function() {
         require: '^collapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
+            var clickAction;
+
             if (!attr.hasOwnProperty('flags')) {
                 return;
             }
@@ -324,8 +338,15 @@ angular.module('ag-admin').directive('collapse', function() {
                 return;
             }
 
+            if (attr.hasOwnProperty('click')) {
+                clickAction = scope.$eval(attr.click);
+            }
+
             element.on('click', function(event) {
                 panelCtrl.setFlags(flags);
+                if (clickAction) {
+                    clickAction(event, element);
+                }
             });
         }
     };
