@@ -51,6 +51,7 @@ angular.module('ag-admin').directive('collapse', function() {
                 if (chevron) {
                     chevron.remove();
                 }
+                panel.expand();
             };
 
             $scope.setSearchParam = function(panelSearchParam) {
@@ -165,6 +166,10 @@ angular.module('ag-admin').directive('collapse', function() {
             };
 
             this.collapse = function() {
+                if (panel.noChevron) {
+                    return;
+                }
+
                 body.removeClass('in');
                 if (searchParam) {
                     var toParams = {};

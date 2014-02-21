@@ -160,7 +160,7 @@
         }
       });
       $stateProvider.state('ag.settings.authentication', {
-        url: '/authentication',
+        url: '/authentication?edit',
         data: {
           pageTitle: 'Authentication'
         },

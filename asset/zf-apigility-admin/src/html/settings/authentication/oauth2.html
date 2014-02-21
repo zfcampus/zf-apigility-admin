@@ -1,6 +1,6 @@
 <collapse class="panel-info"
     no-chevron
-    conditionals="{edit: false, delete: false}">
+    conditionals="{edit: inEdit, delete: false}">
     <collapse-header>
         <h4 class="panel-title">
             <span class="glyphicon glyphicon-lock"></span>
@@ -10,14 +10,14 @@
             <div class="btn-group pull-right">
                 <button
                     type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-flag flags="{edit: false}" 
+                    collapse-flag flags="{edit: false}" click="cancelEdit"
                     collapse-button criteria="{delete: false, edit: true}">
                     Cancel
                 </button>
 
                 <button 
                     type="button" class="btn btn-sm btn-success" title="Edit settings"
-                    collapse-flag flags="{edit: true}"
+                    collapse-flag flags="{edit: true}" click="startEdit"
                     collapse-button criteria="{delete: false, edit: false}">
                     <span class="glyphicon glyphicon-edit"></span>
                 </button>
@@ -96,7 +96,7 @@
             <div class="btn-group pull-right">
                 <button
                     type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-flag flags="{edit: false}">Cancel</button>
+                    collapse-flag flags="{edit: false}" click="cancelEdit">Cancel</button>
                 <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
             </div>
 
