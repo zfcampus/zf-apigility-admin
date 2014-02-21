@@ -1,6 +1,8 @@
-<ng-include src="'html/api/version.html'"></ng-include>
-
 <ag-include src="html/api/rpc-services/new.html"></ag-include>
+
+<div ng-show="!api.rpcServices.length" class="text-muted">
+    No RPC services defined.
+</div>
 
 <div class="panel-group tooltip-api" id="accordion">
     <collapse class="panel-info"

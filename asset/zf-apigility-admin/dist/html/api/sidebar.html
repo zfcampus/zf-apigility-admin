@@ -1,0 +1,10 @@
+<ul class="nav nav-pills ag-admin-nav-pills nav-stacked ag-sidenav">
+  <li class="form-inline" ng-controller="ApiVersionController">
+    Current Version:
+    <select class="form-control input-sm" ng-model="currentVersion" ng-options="ver for ver in api.versions" ng-change="changeVersion()"></select>
+  </li>
+  <li ng-class="{active: ('ag.api.version' | isState)}"><a ui-sref="ag.api.version">Overview</a></li>
+  <li ng-class="{active: ('ag.api.version.rest' | isState)}"><a ui-sref="ag.api.version.rest">REST Services</a></li>
+  <li ng-class="{active: ('ag.api.version.rpc' | isState)}"><a ui-sref="ag.api.version.rpc">RPC Services</a></li>
+  <li ng-class="{active: ('ag.api.version.authorization' | isState)}"><a ui-sref="ag.api.version.authorization">Authorization</a></li>
+</ul>

@@ -1,0 +1,6 @@
+<ol class="breadcrumb">
+  <li ng-repeat="breadcrumb in breadcrumbs" ng-class="{active: breadcrumb.active}">
+    <a ng-if="!breadcrumb.active" ui-sref="{{ breadcrumb.href }}(params)">{{ breadcrumb.title }}</a>
+    <span ng-if="breadcrumb.active">{{ breadcrumb.title }}</span>
+  </li>
+</ol>

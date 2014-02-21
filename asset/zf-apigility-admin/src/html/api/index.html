@@ -1,0 +1,7 @@
+<ul class="list-group">
+  <li ng-repeat="api in apiList" class="list-group-item">
+    <a ui-sref="ag.api.version(api)">{{ api.apiName }}</a>
+  </li>
+</ul>
+
+<ag-include src="html/modals/create-api-form.html"></ag-include>

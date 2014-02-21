@@ -7,17 +7,38 @@
 @agBlueHighlight: #428BCA;
 
 body {
-    padding-top: 142px;
+  padding-top: 142px;
 }
 
 h1, .h1 {
-    color: @agGreen;
+  color: @agGreen;
 }
 
 .navbar {
-  > .container {
+  > .container-fluid {
+
     .navbar-brand {
       padding: 10px 15px;
+    }
+
+    .ag-admin-navbar-collapse {
+      overflow: hidden;
+      width: 100%;
+
+      ul.navbar-nav {
+        z-index: 3;
+        float: none;
+        height: 100%;
+
+        > li {
+          min-width: 85px;
+          text-align: center;
+
+          > a {
+            min-height: 70px;
+          }
+        }
+      }
     }
   }
 }
@@ -31,8 +52,19 @@ h1, .h1 {
 
     }
     &.secondary {
+        z-index: 1;
         top: 71px;
+        margin-bottom: 0;
+        min-height: 30px;
+        .container {
+            height: auto;
+        }
     }
+}
+
+.breadcrumb {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .panel-heading {
