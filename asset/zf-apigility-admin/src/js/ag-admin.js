@@ -325,7 +325,7 @@
       });
 
       $stateProvider.state('ag.api.version.rpc', {
-        url: '/rpc-services',
+        url: '/rpc-services?service&view&edit',
         data: {
           pageTitle: 'RPC Services',
           breadcrumb: false
