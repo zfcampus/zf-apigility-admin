@@ -3,8 +3,9 @@
 
 angular.module('ag-admin').controller(
     'AuthenticationController',
-    function ($scope, flash, AuthenticationRepository) {
+    function ($scope, $state, $stateParams, flash, AuthenticationRepository) {
 
+    $scope.inEdit                           = !!$stateParams.edit;
     $scope.showSetupButtons                 = false;
     $scope.showHttpBasicAuthenticationForm  = false;
     $scope.showHttpBasicAuthentication      = false;
@@ -79,6 +80,14 @@ angular.module('ag-admin').controller(
                 flash.error('Unable to create authentication; please verify that the DSN is valid.');
             }
         );
+    };
+
+    $scope.cancelEdit = function () {
+        $state.go($state.$current.name, {edit: ''}, {reload: true});
+    };
+
+    $scope.startEdit = function () {
+        $state.go($state.$current.name, {edit: true}, {notify: false});
     };
 
     var updateAuthentication = function (options) {

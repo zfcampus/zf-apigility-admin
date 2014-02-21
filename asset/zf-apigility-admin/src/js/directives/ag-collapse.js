@@ -8,14 +8,17 @@ angular.module('ag-admin').directive('collapse', function() {
         scope: {
             show: '&'
         },
-        controller: function($scope, $parse) {
+        controller: function($scope, $parse, $state) {
+            var active = false;
             var body;
             var buttons = [];
             var chevron;
             var conditionals = {};
             var head;
+            var name;
             this.noChevron = false;
             var panel = this;
+            var searchParam;
             var watchers = {};
 
             this.addButton = function(button) {
@@ -26,10 +29,21 @@ angular.module('ag-admin').directive('collapse', function() {
                 buttons.push(button);
             };
 
+            $scope.setActive = function() {
+                if (body) {
+                    panel.expand();
+                }
+            };
+
             $scope.setConditionals = function(newConditionals) {
                 angular.forEach(newConditionals, function(value, key) {
                     conditionals[key] = !!value;
                 });
+                panel.setFlags(conditionals);
+            };
+
+            $scope.setName = function(panelName) {
+                name = panelName;
             };
 
             $scope.setNoChevron = function(flag) {
@@ -37,6 +51,11 @@ angular.module('ag-admin').directive('collapse', function() {
                 if (chevron) {
                     chevron.remove();
                 }
+                panel.expand();
+            };
+
+            $scope.setSearchParam = function(panelSearchParam) {
+                searchParam = panelSearchParam;
             };
 
             this.setFlags = function(flags) {
@@ -117,6 +136,7 @@ angular.module('ag-admin').directive('collapse', function() {
 
             this.setBody = function (bodyElement) {
                 body = bodyElement;
+
                 if (body.hasClass('in')) {
                     panel.toggleChevron('up');
                 }
@@ -138,14 +158,34 @@ angular.module('ag-admin').directive('collapse', function() {
 
             this.expand = function() {
                 body.addClass('in');
+                if (name && searchParam) {
+                    var toParams = {};
+                    toParams[searchParam] = name;
+                    $state.go($state.$current.name, toParams);
+                }
             };
 
             this.collapse = function() {
+                if (panel.noChevron) {
+                    return;
+                }
+
                 body.removeClass('in');
+                if (searchParam) {
+                    var toParams = {};
+                    toParams[searchParam] = null;
+                    $state.go($state.$current.name, toParams);
+                }
             };
 
             this.toggle = function() {
-                body.toggleClass('in');
+                /* Doing this way to ensure location gets updated */
+                if (body.hasClass('in')) {
+                    panel.collapse();
+                } else {
+                    panel.expand();
+                }
+
                 panel.toggleChevron();
             };
 
@@ -180,6 +220,20 @@ angular.module('ag-admin').directive('collapse', function() {
                 if (!scope.show()) {
                     element.toggleClass('hide', true);
                 }
+            }
+
+            if (attr.hasOwnProperty('active')) {
+                if (!!scope.$eval(attr.active)) {
+                    scope.setActive();
+                }
+            }
+
+            if (attr.hasOwnProperty('name')) {
+                scope.setName(attr.name);
+            }
+
+            if (attr.hasOwnProperty('searchparam')) {
+                scope.setSearchParam(attr.searchparam);
             }
 
             if (attr.hasOwnProperty('conditionals')) {
@@ -243,12 +297,18 @@ angular.module('ag-admin').directive('collapse', function() {
         require: '^collapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
+            var clickAction;
             var criteria = {};
+
             if (attr.hasOwnProperty('criteria')) {
                 criteria = scope.$eval(attr.criteria);
                 if (typeof criteria !== 'object') {
                     criteria = {};
                 }
+            }
+
+            if (attr.hasOwnProperty('click')) {
+                clickAction = scope.$eval(attr.click);
             }
 
             panelCtrl.addButton({criteria: criteria, element: element});
@@ -258,6 +318,9 @@ angular.module('ag-admin').directive('collapse', function() {
             element.on('click', function(event) {
                 panelCtrl.expand();
                 panelCtrl.showContainerButtons();
+                if (typeof clickAction === 'function') {
+                    clickAction(event, element);
+                }
                 event.stopPropagation();
             });
         }
@@ -268,6 +331,8 @@ angular.module('ag-admin').directive('collapse', function() {
         require: '^collapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
+            var clickAction;
+
             if (!attr.hasOwnProperty('flags')) {
                 return;
             }
@@ -278,8 +343,15 @@ angular.module('ag-admin').directive('collapse', function() {
                 return;
             }
 
+            if (attr.hasOwnProperty('click')) {
+                clickAction = scope.$eval(attr.click);
+            }
+
             element.on('click', function(event) {
                 panelCtrl.setFlags(flags);
+                if (clickAction) {
+                    clickAction(event, element);
+                }
             });
         }
     };

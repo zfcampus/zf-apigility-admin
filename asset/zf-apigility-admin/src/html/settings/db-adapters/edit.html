@@ -1,5 +1,4 @@
-<div collapse-show criteria="{editDbAdapter: true}" class="panel-body hide">
-<form novalidate ng-submit="saveDbAdapter($index)">
+<form class="panel-body" novalidate ng-submit="saveDbAdapter($index)">
     <fieldset>
         <div class="form-group">
             <label class="control-label" for="adapterName">Adapter Name</label>
@@ -76,11 +75,10 @@
     </fieldset>
 
     <div class="btn-group pull-right">
-        <button type="button" collapse-flag flags="{editDbAdapter: false}" class="btn btn-sm btn-default">Cancel</a>
+        <button type="button" collapse-flag flags="{edit: false}" click="cancelEdit" class="btn btn-sm btn-default">Cancel</a>
         <button type="submit" class="btn btn-sm btn-success">Save</button>
     </div>
 
     <div class="clearfix"></div>
 </form>
-</div>
 

@@ -124,7 +124,7 @@ Admin UI Improvements
 
 - [X] Breadcrumbs: "Settings"
 - [X] Title: Settings
-- [ ] This should actually be titled "Settings" (or "Application-wide Settings"),
+- [X] This should actually be titled "Settings" (or "Application-wide Settings"),
   and should not be the main dashboard.
 
 #### DB Adapters
@@ -138,6 +138,8 @@ Admin UI Improvements
   filter options.)
     - [X] Show on the right what fields are _required_, so the user has a visual
       cue.
+- [X] Make all adapters addressable
+    - [X] Make edit state for each adapter addressable
 - [ ] Changes to collapse items:
     - [X] remove "DB Adapter" text label; instead, use an icon with a hover title.
     - [X] remove tabbed view
@@ -164,6 +166,7 @@ Admin UI Improvements
   application"
 - [X] Remove the words "Setup" and "Authentication" from the buttons
     - Make sure they stack nicely when on narrower screens, or stack _always_
+- [X] Make edit state addressable
 - [ ] Details screen:
     - [X] Have "Edit | Remove" buttons on title bar, visible on hover
     - [X] Clicking "edit" switches to an edit form; otherwise a "view"
@@ -215,10 +218,13 @@ Admin UI Improvements
         - [ ] Add a red X if no services (of EITHER type) are defined
         - [ ] No badge if none defined, but REST services are defined
     - [X] Authorization
-- [ ] Link to each service; do not just list
+- [X] Link to each service; do not just list
+    - [X] Each service individually
+    - [X] Specific tab in the service
+    - [X] View vs Edit state for the tab
 - [ ] If no services:
-    - [ ] "You have not yet created any services; would you like to?" and do a modal
-      drop down in place.
+    - [X] "You have not yet created any services; would you like to?" and do a modal
+    - [ ] "Would you like to?" and do a modal drop down in place.
     - [ ] Red badge! (and, conversely, green badge or check mark if services exist!)
 
 #### REST/RPC Services

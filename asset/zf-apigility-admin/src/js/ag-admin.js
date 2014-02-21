@@ -160,7 +160,7 @@
         }
       });
       $stateProvider.state('ag.settings.authentication', {
-        url: '/authentication',
+        url: '/authentication?edit',
         data: {
           pageTitle: 'Authentication'
         },
@@ -172,7 +172,7 @@
         }
       });
       $stateProvider.state('ag.settings.content-negotiation', {
-        url: '/content-negotiation',
+        url: '/content-negotiation?selector&edit',
         data: {
           pageTitle: 'Content Negotiation'
         },
@@ -189,7 +189,7 @@
         }
       });
       $stateProvider.state('ag.settings.db-adapters', {
-        url: '/db-adapters',
+        url: '/db-adapters?adapter&edit',
         data: {
           pageTitle: 'Database Adapters'
         },
@@ -303,7 +303,7 @@
         }
       });
       $stateProvider.state('ag.api.version.rest', {
-        url: '/rest-services',
+        url: '/rest-services?service&view&edit',
         data: {
           pageTitle: 'REST Services',
           breadcrumb: false
@@ -325,7 +325,7 @@
       });
 
       $stateProvider.state('ag.api.version.rpc', {
-        url: '/rpc-services',
+        url: '/rpc-services?service&view&edit',
         data: {
           pageTitle: 'RPC Services',
           breadcrumb: false

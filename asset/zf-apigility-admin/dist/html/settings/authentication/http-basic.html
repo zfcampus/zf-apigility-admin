@@ -1,4 +1,4 @@
-<collapse class="panel-info" no-chevron="" conditionals="{edit: false, delete: false}">
+<collapse class="panel-info" no-chevron="" conditionals="{{ {edit: inEdit, delete: false} }}">
     <collapse-header>
         <h4 class="panel-title">
             <span class="glyphicon glyphicon-lock"></span>
@@ -6,11 +6,11 @@
             HTTP Basic Settings
 
             <div class="btn-group pull-right">
-                <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}" collapse-button="" criteria="{delete: false, edit: true}">
+                <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}" click="cancelEdit" collapse-button="" criteria="{delete: false, edit: true}">
                     Cancel
                 </button>
 
-                <button type="button" class="btn btn-sm btn-success" title="Edit settings" collapse-flag="" flags="{edit: true}" collapse-button="" criteria="{delete: false, edit: false}">
+                <button type="button" class="btn btn-sm btn-success" title="Edit settings" collapse-flag="" flags="{edit: true}" click="startEdit" collapse-button="" criteria="{delete: false, edit: false}">
                     <span class="glyphicon glyphicon-edit"></span>
                 </button>
 
@@ -37,40 +37,42 @@
         </div>
     </collapse-header>
 
-    <table collapse-show="" criteria="{edit: false}" class="table table-striped">
-        <tr>
-            <td>Realm</td>
-            <td>{{httpBasic.realm}}</td>
-        </tr>
+    <collapse-body>
+        <table collapse-show="" criteria="{edit: false}" class="table table-striped">
+            <tr>
+                <td>Realm</td>
+                <td>{{httpBasic.realm}}</td>
+            </tr>
 
-        <tr>
-            <td>htpasswd Location</td>
-            <td>{{httpBasic.htpasswd}}</td>
-        </tr>
-    </table>
+            <tr>
+                <td>htpasswd Location</td>
+                <td>{{httpBasic.htpasswd}}</td>
+            </tr>
+        </table>
 
-    <collapse-body collapse-show="" criteria="{edit: true}">
-        <div class="panel-body"><form class="form" ng-submit="updateHttpBasicAuthentication()">
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="realm">Authentication Realm</label>
-                    <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpBasic.realm">
-                    <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+        <div collapse-show="" criteria="{edit: true}">
+            <div class="panel-body"><form class="form" ng-submit="updateHttpBasicAuthentication()">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label" for="realm">Authentication Realm</label>
+                        <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpBasic.realm">
+                        <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="htpasswd">Location of htpasswd file</label>
+                        <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="httpBasic.htpasswd">
+                        <p class="help-block">Location on the filesystem of the htpasswd file</p>
+                    </div>
+                </fieldset>
+
+                <div class="btn-group pull-right">
+                    <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}" click="cancelEdit">Cancel</button>
+                    <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label" for="htpasswd">Location of htpasswd file</label>
-                    <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="httpBasic.htpasswd">
-                    <p class="help-block">Location on the filesystem of the htpasswd file</p>
-                </div>
-            </fieldset>
-
-            <div class="btn-group pull-right">
-                <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-flag="" flags="{edit: false}">Cancel</button>
-                <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
-            </div>
-
-            <div class="clearfix"></div>
-        </form></div>
+                <div class="clearfix"></div>
+            </form></div>
+        </div>
     </collapse-body>
 </collapse>

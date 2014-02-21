@@ -2,9 +2,11 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    function ($scope, flash, DbAdapterResource, dbAdapters) {
-        $scope.dbAdapters = dbAdapters;
+    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
+        $scope.dbAdapters           = dbAdapters;
         $scope.showNewDbAdapterForm = false;
+        $scope.activeAdapter        = $stateParams.adapter ? $stateParams.adapter : '';
+        $scope.inEdit               = !!$stateParams.edit;
 
         $scope.resetForm = function () {
             $scope.showNewDbAdapterForm = false;
@@ -17,6 +19,14 @@ angular.module('ag-admin').controller(
             $scope.port        = '';
             $scope.charset     = '';
             return true;
+        };
+
+        $scope.cancelEdit = function () {
+            $state.go($state.$current.name, {edit: ''}, {reload: true});
+        };
+
+        $scope.startEdit = function () {
+            $state.go($state.$current.name, {edit: true}, {notify: false});
         };
 
         var updateDbAdapters = function (force) {
