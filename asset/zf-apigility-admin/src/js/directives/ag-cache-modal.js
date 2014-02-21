@@ -7,7 +7,7 @@ angular.module('ag-admin').directive('agCacheModal',
         return {
             restrict: 'E',
             replace: true,
-            templateUrl: 'zf-apigility-admin/dist/html/modals/cache-check.html',
+            templateUrl: 'html/modals/cache-check.html',
             controller: ['$scope', function ($scope) {
                 $scope.isEnabled = false;
 
