@@ -8,6 +8,8 @@
     <collapse class="panel-info" 
         ng-repeat="restService in api.restServices"
         active="{{ activeService == restService.service_name }}"
+        name="{{ restService.service_name }}"
+        searchparam="service"
         conditionals="{edit: false, delete: false}">
         <collapse-header>
             <h4 class="panel-title pull-left">
@@ -60,21 +62,21 @@
 
         <collapse-body>
             <ag-tabs class="panel-body" collapse-show criteria="{edit: false}">
-                <ag-tab-pane title="Settings">
+                <ag-tab-pane name="settings" selected="view == 'settings'" title="Settings">
                     <ng-include src="'html/api/rest-services/settings-view.html'"></ng-include>
                 </ag-tab-pane>
 
-                <ag-tab-pane title="Fields">
+                <ag-tab-pane name="fields" selected="view == 'fields'" title="Fields">
                     <ng-include src="'html/api/input-filter-view.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
-                <ag-tab-pane title="Documentation">
+                <ag-tab-pane name="documentation" selected="view == 'documentation'" title="Documentation">
                     <ng-include src="'html/api/rest-services/documentation-view.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
-                <ag-tab-pane title="Source Code">
+                <ag-tab-pane name="source" selected="view == 'source'" title="Source Code">
                     <ng-include 
                         src="'html/api/rest-services/source-code.html'"
                         onload="index = $index; service = restService"></ng-include>
@@ -82,16 +84,16 @@
             </ag-tabs>
 
             <ag-tabs class="panel-body hide" collapse-show criteria="{edit: true}">
-                <ag-tab-pane title="Settings">
+                <ag-tab-pane name="settings" selected="view == 'settings'" title="Settings">
                     <ng-include src="'html/api/rest-services/settings-edit.html'"></ng-include>
                 </ag-tab-pane>
 
-                <ag-tab-pane title="Fields">
+                <ag-tab-pane name="fields" selected="view == 'fields'" title="Fields">
                     <ng-include src="'html/api/input-filter-edit.html'"
                         onload="index = $index"></ng-include>
                 </ag-tab-pane>
 
-                <ag-tab-pane title="Documentation">
+                <ag-tab-pane name="documentation" selected="view == 'documentation'" title="Documentation">
                     <ag-include src="html/api/rest-services/documentation-edit.html"></ag-include>
                 </ag-tab-pane>
             </ag-tabs>

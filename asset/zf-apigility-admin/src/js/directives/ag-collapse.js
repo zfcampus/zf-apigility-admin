@@ -8,15 +8,17 @@ angular.module('ag-admin').directive('collapse', function() {
         scope: {
             show: '&'
         },
-        controller: function($scope, $parse) {
+        controller: function($scope, $parse, $location, $urlRouter) {
             var active = false;
             var body;
             var buttons = [];
             var chevron;
             var conditionals = {};
             var head;
+            var name;
             this.noChevron = false;
             var panel = this;
+            var searchParam;
             var watchers = {};
 
             this.addButton = function(button) {
@@ -39,11 +41,19 @@ angular.module('ag-admin').directive('collapse', function() {
                 });
             };
 
+            $scope.setName = function(panelName) {
+                name = panelName;
+            };
+
             $scope.setNoChevron = function(flag) {
                 panel.noChevron = !!flag;
                 if (chevron) {
                     chevron.remove();
                 }
+            };
+
+            $scope.setSearchParam = function(panelSearchParam) {
+                searchParam = panelSearchParam;
             };
 
             this.setFlags = function(flags) {
@@ -146,14 +156,28 @@ angular.module('ag-admin').directive('collapse', function() {
 
             this.expand = function() {
                 body.addClass('in');
+                if (name && searchParam) {
+                    $location.search(searchParam, name);
+                    $urlRouter.sync();
+                }
             };
 
             this.collapse = function() {
                 body.removeClass('in');
+                if (searchParam) {
+                    $location.search(searchParam, null);
+                    $urlRouter.sync();
+                }
             };
 
             this.toggle = function() {
-                body.toggleClass('in');
+                /* Doing this way to ensure location gets updated */
+                if (body.hasClass('in')) {
+                    panel.collapse();
+                } else {
+                    panel.expand();
+                }
+
                 panel.toggleChevron();
             };
 
@@ -194,6 +218,14 @@ angular.module('ag-admin').directive('collapse', function() {
                 if (!!scope.$eval(attr.active)) {
                     scope.setActive();
                 }
+            }
+
+            if (attr.hasOwnProperty('name')) {
+                scope.setName(attr.name);
+            }
+
+            if (attr.hasOwnProperty('searchparam')) {
+                scope.setSearchParam(attr.searchparam);
             }
 
             if (attr.hasOwnProperty('conditionals')) {
