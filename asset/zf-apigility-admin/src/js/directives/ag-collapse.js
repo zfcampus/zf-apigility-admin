@@ -9,6 +9,7 @@ angular.module('ag-admin').directive('collapse', function() {
             show: '&'
         },
         controller: function($scope, $parse) {
+            var active = false;
             var body;
             var buttons = [];
             var chevron;
@@ -24,6 +25,12 @@ angular.module('ag-admin').directive('collapse', function() {
                     button.criteria[key] = !!flag;
                 });
                 buttons.push(button);
+            };
+
+            $scope.setActive = function() {
+                if (body) {
+                    panel.expand();
+                }
             };
 
             $scope.setConditionals = function(newConditionals) {
@@ -117,6 +124,7 @@ angular.module('ag-admin').directive('collapse', function() {
 
             this.setBody = function (bodyElement) {
                 body = bodyElement;
+
                 if (body.hasClass('in')) {
                     panel.toggleChevron('up');
                 }
@@ -179,6 +187,12 @@ angular.module('ag-admin').directive('collapse', function() {
                 typeof scope.show === 'function') {
                 if (!scope.show()) {
                     element.toggleClass('hide', true);
+                }
+            }
+
+            if (attr.hasOwnProperty('active')) {
+                if (!!scope.$eval(attr.active)) {
+                    scope.setActive();
                 }
             }
 

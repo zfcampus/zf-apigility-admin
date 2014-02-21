@@ -6,8 +6,9 @@
 
 <div class="panel-group tooltip-api">
     <collapse class="panel-info" 
-        conditionals="{edit: false, delete: false}"
-        ng-repeat="restService in api.restServices">
+        ng-repeat="restService in api.restServices"
+        active="{{ activeService == restService.service_name }}"
+        conditionals="{edit: false, delete: false}">
         <collapse-header>
             <h4 class="panel-title pull-left">
                 <span class="glyphicon glyphicon-leaf"></span> {{ restService.service_name }}

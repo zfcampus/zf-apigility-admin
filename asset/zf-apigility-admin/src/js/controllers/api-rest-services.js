@@ -3,34 +3,34 @@
 
 angular.module('ag-admin').controller(
   'ApiRestServicesController', 
-  function ($scope, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
+  function ($scope, $stateParams, $timeout, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
 
-    $scope.ApiRepository = ApiRepository; // used in child controller (input filters)
-    $scope.flash = flash;
-
-    $scope.api = api;
-
-    $scope.dbAdapters = dbAdapters;
-
-    $scope.filterOptions = filters;
-
-    $scope.hydrators = hydrators;
-
-    $scope.validatorOptions = validators;
-
-    $scope.selectors = selectors;
-
-    $scope.sourceCode = [];
-
+    $scope.activeService     = $stateParams.service ? $stateParams.service : '';
+    $scope.edit              = typeof $stateParams.edit === 'boolean' ? $stateParams.edit : false;
+    $scope.view              = $stateParams.view ? $stateParams.view : 'settings';
+    $scope.ApiRepository     = ApiRepository; // used in child controller (input filters)
+    $scope.flash             = flash;
+    $scope.api               = api;
+    $scope.dbAdapters        = dbAdapters;
+    $scope.filterOptions     = filters;
+    $scope.hydrators         = hydrators;
+    $scope.validatorOptions  = validators;
+    $scope.selectors         = selectors;
+    $scope.sourceCode        = [];
     $scope.deleteRestService = false;
+    $scope.toggleSelection   = toggleSelection;
+    $scope.newService        = {
+        restServiceName: '',
+        dbAdapterName:   '',
+        dbTableName:     ''
+    };
 
-    $scope.toggleSelection = toggleSelection;
 
     $scope.resetForm = function () {
-        $scope.showNewRestServiceForm = false;
+        $scope.showNewRestServiceForm     = false;
         $scope.newService.restServiceName = '';
-        $scope.newService.dbAdapterName = '';
-        $scope.newService.dbTableName = '';
+        $scope.newService.dbAdapterName   = '';
+        $scope.newService.dbTableName     = '';
     };
 
     $scope.isLatestVersion = function () {
@@ -47,47 +47,42 @@ angular.module('ag-admin').controller(
         return false;
     };
 
-    $scope.newService = {
-        restServiceName: '',
-        dbAdapterName: '',
-        dbTableName: ''
-    };
-
     $scope.newService.createNewRestService = function () {
-        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName).then(function (restResource) {
-            flash.success = 'New REST Service created';
-            $timeout(function () {
-                ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
-                    $scope.api = api;
-                    $scope.currentVersion = api.currentVersion;
-                });
-            }, 500);
-            $scope.showNewRestServiceForm = false;
-            $scope.newService.restServiceName = '';
-        }, function (response) {
-        });
+        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName)
+            .then(function (restResource) {
+                flash.success = 'New REST Service created';
+                $timeout(function () {
+                    ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
+                        $scope.api = api;
+                        $scope.currentVersion = api.currentVersion;
+                    });
+                }, 500);
+                $scope.showNewRestServiceForm = false;
+                $scope.newService.restServiceName = '';
+            }, function (response) {});
     };
 
     $scope.newService.createNewDbConnectedService = function () {
-        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName).then(function (restResource) {
-            flash.success = 'New DB Connected Service created';
-            $timeout(function () {
-                ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
-                    $scope.api = api;
-                });
-            }, 500);
-            $scope.showNewRestServiceForm = false;
-            $scope.newService.dbAdapterName = '';
-            $scope.newService.dbTableName = '';
-        }, function (response) {
-        });
+        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName)
+            .then(function (restResource) {
+                flash.success = 'New DB Connected Service created';
+                $timeout(function () {
+                    ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
+                        $scope.api = api;
+                    });
+                }, 500);
+                $scope.showNewRestServiceForm = false;
+                $scope.newService.dbAdapterName = '';
+                $scope.newService.dbTableName = '';
+            }, function (response) {});
     };
 
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
-        ApiRepository.saveRestService($scope.api.name, restServiceData).then(function (data) {
-            flash.success = 'REST Service updated';
-        });
+        ApiRepository.saveRestService($scope.api.name, restServiceData)
+            .then(function (data) {
+                flash.success = 'REST Service updated';
+            });
     };
 
     $scope.removeRestService = function (restServiceName) {

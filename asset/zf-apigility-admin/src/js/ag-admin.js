@@ -303,7 +303,7 @@
         }
       });
       $stateProvider.state('ag.api.version.rest', {
-        url: '/rest-services',
+        url: '/rest-services?service&view&edit',
         data: {
           pageTitle: 'REST Services',
           breadcrumb: false
