@@ -12,15 +12,14 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'src/zf-apigility-admin/vendor/jquery/jquery.js',
+      'src/zf-apigility-admin/vendor/lodash/dist/lodash.js',
       'src/zf-apigility-admin/vendor/angular/angular.js',
       'src/zf-apigility-admin/vendor/angular-mocks/angular-mocks.js',
+      'src/zf-apigility-admin/vendor/angular-ui-router/release/angular-ui-router.js',
       'src/zf-apigility-admin/vendor/angular-sanitize/angular-sanitize.js',
-      'src/zf-apigility-admin/vendor/angular-route/angular-route.js',
-      'src/zf-apigility-admin/vendor/lodash/dist/lodash.js',
-      'src/zf-apigility-admin/vendor/hyperagent/dist/hyperagent.js',
       'src/zf-apigility-admin/vendor/ng-tags-input/ng-tags-input.js',
       'src/zf-apigility-admin/vendor/angular-flash/dist/angular-flash.js',
-      'src/zf-apigility-admin/vendor/angular-ui-sortable/src/sortable.js',
+      'src/zf-apigility-admin/vendor/angular-ui-sortable/sortable.js',
       'src/zf-apigility-admin/vendor/angular-ui-select2/src/select2.js',
       'src/zf-apigility-admin/vendor/angular-toggle-switch/angular-toggle-switch.js',
       'src/zf-apigility-admin/js/*.js',
