@@ -1,10 +1,10 @@
 <?php
 $version = 'dist';
-$path    = __DIR__ . '/../asset/zf-apigility-admin/' . $version . '/index.html';
+$path    = __DIR__ . '/../asset/' . $version . '/zf-apigility-admin/index.html';
 $apiBase = $this->url('zf-apigility-admin/api/module');
 $apiBase = substr($apiBase, 0, strrpos($apiBase, '/'));
 
-$basePath = $this->basePath() . '/zf-apigility-admin/' . $version;
+$basePath = $this->basePath() . '/zf-apigility-admin/';
 
 $html = file_get_contents($path);
 $html = str_replace('%BASE_HREF%', $basePath, $html);

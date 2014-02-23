@@ -20,8 +20,8 @@ module.exports = function(grunt) {
 
         // Project settings
         yeoman: {
-            app: 'src',
-            dist: 'dist'
+            app: 'src/zf-apigility-admin',
+            dist: 'dist/zf-apigility-admin'
         },
 
         // Watches files for changes and runs tasks based on the changed files
