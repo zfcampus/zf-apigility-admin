@@ -49,14 +49,20 @@ return array(
             'zf-apigility-admin' => array(
                 'type'  => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route' => '/admin',
-                    'defaults' => array(
-                        'controller' => 'ZF\Apigility\Admin\Controller\App',
-                        'action'     => 'app',
-                    ),
+                    'route' => '/apigility',
                 ),
-                'may_terminate' => true,
+                'may_terminate' => false,
                 'child_routes' => array(
+                    'ui' => array(
+                        'type'  => 'Zend\Mvc\Router\Http\Literal',
+                        'options' => array(
+                            'route' => '/ui',
+                            'defaults' => array(
+                                'controller' => 'ZF\Apigility\Admin\Controller\App',
+                                'action'     => 'app',
+                            ),
+                        ),
+                    ),
                     'api' => array(
                         'type' => 'literal',
                         'options' => array(
