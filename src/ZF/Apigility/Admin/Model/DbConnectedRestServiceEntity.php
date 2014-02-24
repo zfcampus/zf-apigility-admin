@@ -32,7 +32,9 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
                     break;
                 case 'tablename':
                     $this->tableName = $value;
-                    $this->serviceName  = $value;
+                    if (!isset($this->serviceName)) {
+                        $this->serviceName  = $value;
+                    }
                     break;
                 case 'tableservice':
                     $this->tableService = $value;
@@ -78,7 +80,11 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
         $data['hydrator_name'] = $this->hydratorName;
         $data['table_name'] = $this->tableName;
         $data['table_service'] = $this->tableService;
-        $data['service_name'] = $this->tableName;
+
+        if (!isset($data['service_name']) || empty($data['service_name'])) {
+            $data['service_name'] = $this->tableName;
+        }
+
         return $data;
     }
 }
