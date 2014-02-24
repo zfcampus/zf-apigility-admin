@@ -9,7 +9,7 @@ angular.module('ag-admin').directive('agEditInplace', function() {
             'agInputName': '=name',
             validate: '&'
         },
-        templateUrl: '/zf-apigility-admin/src/html/directives/ag-edit-inplace.html',
+        templateUrl: 'html/directives/ag-edit-inplace.html',
         controller: function($scope) {
             var initialValue;
 
