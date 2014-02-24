@@ -24,7 +24,7 @@ angular.module('ag-admin').factory('Hal', function () {
                 return resource;
             }
 
-            var clone = _.cloneDeep(resource);
+            var clone = JSON.parse(JSON.stringify(resource));
             delete clone._links;
             return clone;
         },
@@ -45,7 +45,7 @@ angular.module('ag-admin').factory('Hal', function () {
                 return resource;
             }
 
-            var clone = _.cloneDeep(resource);
+            var clone = JSON.parse(JSON.stringify(resource));
             delete clone._embedded;
             return clone;
         },
@@ -60,10 +60,9 @@ angular.module('ag-admin').factory('Hal', function () {
                 return [];
             }
 
-            var collection = _.cloneDeep(resource._embedded[prop]);
-            return collection;
+            /* Deep clone of embedded resource/collection */
+            return JSON.parse(JSON.stringify(resource._embedded[prop]));
         },
-
         getLink: function (rel, resource) {
             if (typeof resource != 'object' || Array.isArray(resource)) {
                 return false;
