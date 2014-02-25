@@ -3,7 +3,7 @@ return array(
     'zf-mvc-auth' => array(
         'authorization' => array(
             'AuthConfWithConfig\V1\Rest\Foo\Controller' => array(
-                'resource' => array(
+                'entity' => array(
                     'GET' => false,
                     'POST' => false,
                     'PUT' => true,
@@ -19,7 +19,7 @@ return array(
                 ),
             ),
             'AuthConfWithConfig\V1\Rest\Bar\Controller' => array(
-                'resource' => array(
+                'entity' => array(
                     'GET' => false,
                     'POST' => false,
                     'PUT' => true,

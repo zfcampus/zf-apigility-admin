@@ -6,7 +6,7 @@ angular.module('ag-admin').filter('servicetype', function () {
         var parts = input.split('::');
         switch (parts[1]) {
             case '__collection__': return '(Collection)';
-            case '__resource__':   return '(Entity)';
+            case '__entity__':     return '(Entity)';
             default: return '';
         }
     };

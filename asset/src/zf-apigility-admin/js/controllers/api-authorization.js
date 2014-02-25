@@ -14,7 +14,7 @@ angular.module('ag-admin').controller(
         var serviceMethodMap = (function() {
             var services = {};
             angular.forEach(api.restServices, function(service) {
-                var entityName = service.controller_service_name + '::__resource__';
+                var entityName = service.controller_service_name + '::__entity__';
                 var collectionName = service.controller_service_name + '::__collection__';
                 var entityMethods = {
                     GET: false,

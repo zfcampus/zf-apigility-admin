@@ -138,7 +138,7 @@ class AuthorizationModel
             if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                 continue;
             }
-            $entity->addRestService($serviceName, $entity::TYPE_RESOURCE);
+            $entity->addRestService($serviceName, $entity::TYPE_ENTITY);
             $entity->addRestService($serviceName, $entity::TYPE_COLLECTION);
         }
     }
@@ -229,9 +229,16 @@ class AuthorizationModel
                     $config[$newKey] = $privileges;
                 }
             }
+            /**
+             * @todo Remove this stanza for 1.0.0
+             */
             if (isset($value['resource'])) {
-                $newKey = sprintf('%s::__resource__', $service);
+                $newKey = sprintf('%s::__entity__', $service);
                 $config[$newKey] = $value['resource'];
+            }
+            if (isset($value['entity'])) {
+                $newKey = sprintf('%s::__entity__', $service);
+                $config[$newKey] = $value['entity'];
             }
             if (isset($value['collection'])) {
                 $newKey = sprintf('%s::__collection__', $service);
@@ -257,9 +264,13 @@ class AuthorizationModel
                 unset($config[$serviceSpec]);
                 continue;
             }
-            if (preg_match('/^__(?P<type>collection|resource)__$/', $matches['action'], $actionMatches)) {
-                // REST collection or resource
-                $config[$matches['service']][$actionMatches['type']] = $privileges;
+            /**
+             * @todo Remove "resource" from pattern for 1.0.0
+             */
+            if (preg_match('/^__(?P<type>collection|entity|resource)__$/', $matches['action'], $actionMatches)) {
+                // REST collection or entity
+                $type = ($actionMatches['type'] == 'resource') ? 'entity' : $actionMatches['type'];
+                $config[$matches['service']][$type] = $privileges;
             } else {
                 // RPC action
                 $config[$matches['service']]['actions'][$matches['action']] = $privileges;

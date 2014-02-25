@@ -15,11 +15,11 @@ class AuthorizationEntity implements
     Countable,
     IteratorAggregate
 {
-    const TYPE_RESOURCE   = 'resource';
+    const TYPE_ENTITY     = 'entity';
     const TYPE_COLLECTION = 'collection';
 
     protected $allowedRestTypes = array(
-        self::TYPE_RESOURCE,
+        self::TYPE_ENTITY,
         self::TYPE_COLLECTION,
     );
 
@@ -62,18 +62,18 @@ class AuthorizationEntity implements
         }
     }
 
-    public function addRestService($serviceName, $resourceOrCollection, array $privileges = null)
+    public function addRestService($serviceName, $entityOrCollection, array $privileges = null)
     {
-        if (!in_array($resourceOrCollection, $this->allowedRestTypes)) {
+        if (!in_array($entityOrCollection, $this->allowedRestTypes)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid type "%s" provided for %s; must be one of "%s" or "%s"',
-                $resourceOrCollection,
+                $entityOrCollection,
                 __METHOD__,
-                self::TYPE_RESOURCE,
+                self::TYPE_ENTITY,
                 self::TYPE_COLLECTION
             ));
         }
-        $this->addRpcService($serviceName, sprintf('__%s__', $resourceOrCollection), $privileges);
+        $this->addRpcService($serviceName, sprintf('__%s__', $entityOrCollection), $privileges);
         return $this;
     }
 

@@ -108,9 +108,9 @@ class AuthorizationModelTest extends TestCase
                     $config[$newKey] = $privileges;
                 }
             }
-            if (isset($value['resource'])) {
-                $newKey = sprintf('%s::__resource__', $key);
-                $config[$newKey] = $value['resource'];
+            if (isset($value['entity'])) {
+                $newKey = sprintf('%s::__entity__', $key);
+                $config[$newKey] = $value['entity'];
             }
             if (isset($value['collection'])) {
                 $newKey = sprintf('%s::__collection__', $key);
@@ -128,7 +128,7 @@ class AuthorizationModelTest extends TestCase
             preg_match('/^(?P<service>[^:]+)(::(?P<action>.*))?$/', $spec, $matches);
             if (!isset($matches['action'])) {
                 $normalized[$matches['service']]['actions']['index'] = $privileges;
-            } elseif (preg_match('/^__(?P<type>collection|resource)__$/', $matches['action'], $actionMatches)) {
+            } elseif (preg_match('/^__(?P<type>collection|entity)__$/', $matches['action'], $actionMatches)) {
                 $type = $actionMatches['type'];
                 $normalized[$matches['service']][$type] = $privileges;
             } else {
@@ -153,9 +153,9 @@ class AuthorizationModelTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthorizationEntity', $entity);
         $this->assertEquals(6, count($entity));
         $expected = array(
-            'AuthConf\V1\Rest\Foo\Controller::__resource__',
+            'AuthConf\V1\Rest\Foo\Controller::__entity__',
             'AuthConf\V1\Rest\Foo\Controller::__collection__',
-            'AuthConf\V1\Rest\Bar\Controller::__resource__',
+            'AuthConf\V1\Rest\Bar\Controller::__entity__',
             'AuthConf\V1\Rest\Bar\Controller::__collection__',
             'AuthConf\V1\Rpc\Baz\Controller::baz',
             'AuthConf\V1\Rpc\Bat\Controller::bat',
@@ -184,11 +184,11 @@ class AuthorizationModelTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthorizationEntity', $entity);
         $this->assertEquals(9, count($entity));
         $expected = array(
-            'AuthConf\V2\Rest\Foo\Controller::__resource__',
+            'AuthConf\V2\Rest\Foo\Controller::__entity__',
             'AuthConf\V2\Rest\Foo\Controller::__collection__',
-            'AuthConf\V2\Rest\Bar\Controller::__resource__',
+            'AuthConf\V2\Rest\Bar\Controller::__entity__',
             'AuthConf\V2\Rest\Bar\Controller::__collection__',
-            'AuthConf\V2\Rest\New\Controller::__resource__',
+            'AuthConf\V2\Rest\New\Controller::__entity__',
             'AuthConf\V2\Rest\New\Controller::__collection__',
             'AuthConf\V2\Rpc\Baz\Controller::baz',
             'AuthConf\V2\Rpc\Bat\Controller::bat',

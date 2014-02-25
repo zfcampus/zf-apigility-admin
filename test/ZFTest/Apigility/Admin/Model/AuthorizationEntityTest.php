@@ -14,7 +14,7 @@ class AuthorizationEntityTest extends TestCase
     protected function getSeedValuesForEntity()
     {
         return array(
-            'Foo\V1\Rest\Session\Controller::__resource__' => array(
+            'Foo\V1\Rest\Session\Controller::__entity__' => array(
                 'GET' => true,
                 'POST' => true,
                 'PATCH' => true,
@@ -52,7 +52,7 @@ class AuthorizationEntityTest extends TestCase
         $this->assertInstanceOf('Traversable', $entity);
     }
 
-    public function testIteratingEntityReturnsAKeyForEachOfRestResourceAndCollection()
+    public function testIteratingEntityReturnsAKeyForEachOfRestEntityAndCollection()
     {
         $values = $this->getSeedValuesForEntity();
         $entity = new AuthorizationEntity($values);
@@ -61,7 +61,7 @@ class AuthorizationEntityTest extends TestCase
         foreach ($entity as $key => $value) {
             $keys[] = $key;
         }
-        $this->assertContains('Foo\V1\Rest\Session\Controller::__resource__', $keys);
+        $this->assertContains('Foo\V1\Rest\Session\Controller::__entity__', $keys);
         $this->assertContains('Foo\V1\Rest\Session\Controller::__collection__', $keys);
     }
 
@@ -81,7 +81,7 @@ class AuthorizationEntityTest extends TestCase
     public function testCanAddARestServiceAtATime()
     {
         $entity = new AuthorizationEntity();
-        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_RESOURCE, array(
+        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_ENTITY, array(
             'GET' => true,
             'POST' => true,
             'PATCH' => true,
@@ -100,7 +100,7 @@ class AuthorizationEntityTest extends TestCase
         foreach ($entity as $key => $value) {
             $keys[] = $key;
         }
-        $this->assertContains('Foo\V1\Rest\Session\Controller::__resource__', $keys);
+        $this->assertContains('Foo\V1\Rest\Session\Controller::__entity__', $keys);
         $this->assertContains('Foo\V1\Rest\Session\Controller::__collection__', $keys);
     }
 
@@ -154,9 +154,9 @@ class AuthorizationEntityTest extends TestCase
     public function testAddingARestServiceWithoutHttpMethodsProvidesDefaults()
     {
         $entity = new AuthorizationEntity();
-        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_RESOURCE);
-        $this->assertTrue($entity->has('Foo\V1\Rest\Session\Controller::__resource__'));
-        $privileges = $entity->get('Foo\V1\Rest\Session\Controller::__resource__');
+        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_ENTITY);
+        $this->assertTrue($entity->has('Foo\V1\Rest\Session\Controller::__entity__'));
+        $privileges = $entity->get('Foo\V1\Rest\Session\Controller::__entity__');
         $this->assertEquals(array(
             'GET' => false,
             'POST' => false,
