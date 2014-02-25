@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    function ($scope, $stateParams, flash, ApiRepository, ApiAuthorizationRepository) {
+    function ($scope, $state, $stateParams, $timeout, flash, ApiRepository, ApiAuthorizationRepository) {
 
         var moduleName = $stateParams.apiName;
         var version    = $stateParams.version;
@@ -170,6 +170,10 @@ angular.module('ag-admin').controller(
             }
             ApiRepository.saveDocumentation($scope.service);
             $scope.$parent.flash.success = 'Documentation saved.';
+
+            $timeout(function () {
+                $state.go($state.$current.name, {edit: ''}, {reload: true});
+            }, 500);
         };
 
     }
