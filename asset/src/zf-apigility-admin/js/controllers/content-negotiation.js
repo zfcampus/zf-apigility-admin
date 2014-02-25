@@ -1,9 +1,9 @@
-(function(_) {
+(function() {
   'use strict';
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource) {
+  function ($scope, $state, $stateParams, $timeout, flash, selectors, ContentNegotiationResource) {
     var newSelector = {
       content_name: '',
       viewModel: '',
@@ -14,12 +14,12 @@ angular.module('ag-admin').controller(
     $scope.inEdit         = !!$stateParams.edit;
 
     $scope.showNewSelectorForm = false;
-    $scope.newSelector = _.cloneDeep(newSelector);
-    $scope.selectors = _.cloneDeep(selectors);
+    $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
+    $scope.selectors = JSON.parse(JSON.stringify(selectors));
 
     $scope.resetNewSelectorForm = function() {
       $scope.showNewSelectorForm = false;
-      $scope.newSelector = _.cloneDeep(newSelector);
+      $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
     };
 
     $scope.cancelEdit = function () {
@@ -94,9 +94,12 @@ angular.module('ag-admin').controller(
       ContentNegotiationResource.removeSelector(selectorName).then(function () {
         flash.success = 'Selector removed';
 
-        ContentNegotiationResource.getList().then(function (updatedSelectors) {
-          selectors = updatedSelectors;
-          $scope.selectors = _.cloneDeep(selectors);
+        ContentNegotiationResource.getList(true).then(function (updatedSelectors) {
+          $timeout(function() {
+              $state.go($state.current, {}, {
+                  reload: true, inherit: true, notify: true
+              });
+          }, 500);
         });
 
       });
@@ -104,4 +107,4 @@ angular.module('ag-admin').controller(
   }
 );
 
-})(_);
+})();
