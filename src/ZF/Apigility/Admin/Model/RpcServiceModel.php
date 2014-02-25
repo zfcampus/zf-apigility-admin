@@ -83,7 +83,9 @@ class RpcServiceModel
             $data['http_methods'] = $rpcConfig['http_methods'];
         }
 
-        if (isset($rpcConfig['service_name'])) {
+        if (isset($rpcConfig['service_name'])
+            && !empty($rpcConfig['service_name'])
+        ) {
             $data['service_name'] = $rpcConfig['service_name'];
         } else {
             $data['service_name'] = $controllerServiceName;

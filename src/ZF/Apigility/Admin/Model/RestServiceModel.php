@@ -190,7 +190,9 @@ class RestServiceModel implements EventManagerAwareInterface
             $entity = $eventResults->last();
         }
 
-        if (!isset($entity->serviceName)) {
+        if (!isset($entity->serviceName)
+            || empty($entity->serviceName)
+        ) {
             $serviceName = $controllerService;
             $q = preg_quote('\\');
             if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . 'Rest' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerService, $matches)) {
