@@ -6,7 +6,6 @@
 
 namespace ZF\Apigility\Admin;
 
-use Zend\Config\Writer\PhpArray as PhpArrayWriter;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\Configuration\ConfigResource;
@@ -84,7 +83,7 @@ class Module
                     );
                 }
                 $config = $services->get('Config');
-                $writer = new PhpArrayWriter();
+                $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                 $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
                 $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
@@ -112,7 +111,7 @@ class Module
                     );
                 }
                 $config = $services->get('Config');
-                $writer = new PhpArrayWriter();
+                $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                 $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
                 return new Model\ContentNegotiationModel($global);
@@ -133,7 +132,7 @@ class Module
                     );
                 }
                 $config = $services->get('Config');
-                $writer = new PhpArrayWriter();
+                $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                 $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
                 $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
