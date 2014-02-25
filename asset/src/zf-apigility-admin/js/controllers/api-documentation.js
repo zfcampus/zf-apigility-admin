@@ -67,9 +67,17 @@ angular.module('ag-admin').controller(
         $scope.requiresAuthorization = function (method, type) {
             var authorizations = $scope.authorizations;
             if (type == 'entity' || type == 'collection') {
-                return authorizations[type][method];
+                if (authorizations.hasOwnProperty(type) && authorizations[type].hasOwnProperty(method)) {
+                    return authorizations[type][method];
+                }
+                return false;
             }
-            return authorizations[method];
+
+            if (authorizations.hasOwnProperty(method)) {
+                return authorizations[method];
+            }
+
+            return false;
         };
 
         var hasHalMediaType = function (mediatypes) {
