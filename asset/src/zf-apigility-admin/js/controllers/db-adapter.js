@@ -3,8 +3,6 @@
 angular.module('ag-admin').controller(
     'DbAdapterController',
     function ($timeout, $scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
-console.log('Received db adapters');
-console.log(dbAdapters);
         $scope.dbAdapters           = dbAdapters;
         $scope.showNewDbAdapterForm = false;
         $scope.activeAdapter        = $stateParams.adapter ? $stateParams.adapter : '';

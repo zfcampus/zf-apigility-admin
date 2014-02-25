@@ -1,8 +1,10 @@
-(function() {'use strict';
+(function() {
+  'use strict';
 
-angular.module('ag-admin').factory('ContentNegotiationResource', function ($http, flash, apiBasePath) {
+angular.module('ag-admin').factory('ContentNegotiationResource', function ($http, $q, flash, apiBasePath) {
 
     var servicePath = apiBasePath + '/content-negotiation';
+    var selectors;
 
     return {
       prepareSelector: function (selector) {
@@ -17,10 +19,19 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
         return data;
       },
 
-      getList: function () {
+      getList: function (force) {
+        force = !!force;
+
+        if (! force &&
+            ((Array.isArray(selectors) && selectors.length > 0)  ||
+              typeof(selectors) === 'object')) {
+            return $q.when(selectors);
+        }
+
         return $http({method: 'GET', url: servicePath}).then(
           function success(response) {
-            return response.data._embedded.selectors;
+            selectors = response.data._embedded.selectors;
+            return selectors;
           },
           function error() {
             flash.error = 'Unable to fetch content negotiation selectors; you may need to reload the page';

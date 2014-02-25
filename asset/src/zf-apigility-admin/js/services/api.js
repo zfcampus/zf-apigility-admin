@@ -1,50 +1,57 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBasePath, Hal) {
+angular.module('ag-admin').factory('ApiRepository', function ($q, $http, $timeout, apiBasePath, Hal, flash) {
     var moduleApiPath = apiBasePath + '/module';
+    var apis;
+    var apiModels = {};
 
     return {
         currentApiModel: null,
 
         getList: function (force) {
             force = !!force;
+
+            if (! force &&
+                ((Array.isArray(apis) && apis.length > 0)  ||
+                 typeof(apis) === 'object')) {
+                return $q.when(apis);
+            }
+
             var apisModel = [];
             var config = {
                 method: 'GET',
-                url: moduleApiPath,
-                cache: !force
+                url: moduleApiPath
             };
 
             return $http(config).then(
                 function success(response) {
-                    var apis = Hal.pluckCollection('module', response.data);
+                    apis = Hal.pluckCollection('module', response.data);
                     apis = Hal.stripLinks(apis);
-                    return Hal.stripEmbedded(apis);
+                    apis = Hal.stripEmbedded(apis);
+                    return apis;
                 }
             );
         },
 
         getApi: function (name, version, force) {
             force = !!force;
-            var apiModel = {};
-            var deferred = $q.defer();
-
-            // localize this for future use
-            var self = this;
 
             if (typeof version == 'string') {
                 version = parseInt(version.match(/\d/g)[0], 10);
             }
 
-            if (!force && self.currentApiModel && version && self.currentApiModel.name == name && self.currentApiModel.version == version) {
-                deferred.resolve(self.currentApiModel);
-                return deferred.promise;
+            if (!force && apiModels.hasOwnProperty(name) && apiModels[name].hasOwnProperty(version)) {
+                return $q.when(apiModels[name][version]);
             }
 
+            // localize this for future use
+            var self = this;
+
+            var deferred = $q.defer();
+            var apiModel = {};
             var config = {
                 method: 'GET',
-                url: moduleApiPath,
-                cache: !force
+                url: moduleApiPath
             };
             $http(config).then(function (response) {
                 var apis = Hal.pluckCollection('module', response.data);
@@ -125,11 +132,39 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
             }).then(function (api) {
                 deferred.resolve(apiModel);
-                self.currentApiModel = apiModel;
-                self.currentApiModel.version = version;
+                if (!apiModels.hasOwnProperty(name)) {
+                    apiModels[name] = {};
+                }
+                apiModels[name][version] = apiModel;
+                apiModels[name][version].version = version;
              });
 
             return deferred.promise;
+        },
+
+        refreshApi: function (scope, state, force, message, callback) {
+            if (!scope.hasOwnProperty('api')) {
+                console.error('Provided scope does not have an API property; cannot refresh API');
+                return;
+            }
+
+            this.getApi(scope.api.name, scope.api.version, true).then(function (api) {
+                if (message) {
+                    flash.success = message;
+                }
+
+                scope.api = api;
+                scope.currentVersion = api.currentVersion;
+
+                if (!callback || typeof callback !== 'function') {
+                    callback = function() {
+                        state.go(state.current, {}, {
+                            reload: true, inherit: true, notify: true
+                        });
+                    };
+                }
+                $timeout(callback, 500);
+            });
         },
 
         createNewApi: function (name) {

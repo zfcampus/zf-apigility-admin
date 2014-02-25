@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiRpcServicesController', 
-  function ($scope, $state, $stateParams, $timeout, $sce, flash, filters, validators, selectors, ApiRepository, api, toggleSelection) {
+  function ($scope, $state, $stateParams, $sce, flash, filters, validators, selectors, ApiRepository, api, toggleSelection) {
 
     $scope.activeService    = $stateParams.service ? $stateParams.service : '';
     $scope.inEdit           = !!$stateParams.edit;
@@ -36,13 +36,7 @@ angular.module('ag-admin').controller(
     $scope.createNewRpcService = function () {
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute)
             .then(function (rpcResource) {
-                flash.success = 'New RPC Service created';
-                $timeout(function () {
-                    ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
-                        $scope.api = api;
-                        $scope.currentVersion = api.currentVersion;
-                    });
-                }, 500);
+                ApiRepository.refreshApi($scope, $state, true, 'New RPC Service created');
                 $scope.addRpcService = false;
                 $scope.resetForm();
             });
@@ -60,21 +54,17 @@ angular.module('ag-admin').controller(
         var rpcServiceData = _.clone($scope.api.rpcServices[index]);
         ApiRepository.saveRpcService($scope.api.name, rpcServiceData)
             .then(function (data) {
-                flash.success = 'RPC Service updated';
+                ApiRepository.refreshApi($scope, $state, true, 'RPC Service updated', function () {
+                    $scope.cancelEdit();
+                });
             });
     };
 
     $scope.removeRpcService = function (rpcServiceName) {
         ApiRepository.removeRpcService($scope.api.name, rpcServiceName)
             .then(function (data) {
-                flash.success = 'RPC Service deleted';
+                ApiRepository.refreshApi($scope, $state, true, 'RPC Service deleted');
                 $scope.deleteRpcService = false;
-                $timeout(function () {
-                    ApiRepository.getApi($scope.api.name, $scope.api.version, true).then(function (api) {
-                        $scope.api = api;
-                        $scope.currentVersion = api.currentVersion;
-                    });
-                }, 500);
             });
     };
 

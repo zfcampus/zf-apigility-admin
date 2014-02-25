@@ -1,6 +1,6 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiServiceInputController', function ($scope, flash) {
+angular.module('ag-admin').controller('ApiServiceInputController', function ($scope, $state, $timeout, flash) {
     // get services from $parent
     $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
     $scope.filterOptions = $scope.$parent.filterOptions;
@@ -116,6 +116,10 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         var apiRepo = $scope.$parent.ApiRepository;
         apiRepo.saveInputFilter($scope.service, modelInputFilter);
         $scope.$parent.flash.success = 'Input Filter configuration saved.';
+
+        $timeout(function () {
+            $state.go($state.$current.name, {edit: ''}, {reload: true});
+        }, 500);
     };
 });
 
