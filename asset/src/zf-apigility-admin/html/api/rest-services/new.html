@@ -63,7 +63,7 @@
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">DB Adapter Name</label>
-                            <select class="form-control input-xlarge" ng-model="newService.dbAdapterName" ng-options="v.adapter_name as v.adapter_name for (k,v) in dbAdapters"></select>
+                            <select class="form-control input-xlarge" ng-model="newService.dbAdapterName" ng-options="v.adapter_name as v.adapter_name for v in dbAdapters"></select>
                         </div>
 
                         <div class="form-group">

@@ -1,22 +1,30 @@
 (function(_) {
     'use strict';
 
-angular.module('ag-admin').factory('DbAdapterResource', function ($http, apiBasePath, Hal) {
+angular.module('ag-admin').factory('DbAdapterResource', function ($http, $q, apiBasePath, Hal) {
 
     var dbAdapterApiPath = apiBasePath + '/db-adapter';
+    var adapters;
 
     return {
         getList: function (force) {
             force = !!force;
+
+            if (! force &&
+                ((Array.isArray(adapters) && adapters.length > 0)  ||
+                 typeof(adapters) === 'object')) {
+                return $q.when(adapters);
+            }
+
             var config = {
                 method: 'GET',
-                url: dbAdapterApiPath,
-                cache: !force
+                url: dbAdapterApiPath
             };
             return $http(config).then(
                 function success(response) {
-                    var dbAdapters = Hal.pluckCollection('db_adapter', response.data);
-                    return Hal.props(dbAdapters);
+                    adapters = Hal.pluckCollection('db_adapter', response.data);
+                    adapters = Hal.props(adapters);
+                    return adapters;
                 }
             );
         },

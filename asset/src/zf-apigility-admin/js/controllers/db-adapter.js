@@ -2,7 +2,9 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
+    function ($timeout, $scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
+console.log('Received db adapters');
+console.log(dbAdapters);
         $scope.dbAdapters           = dbAdapters;
         $scope.showNewDbAdapterForm = false;
         $scope.activeAdapter        = $stateParams.adapter ? $stateParams.adapter : '';
@@ -29,10 +31,16 @@ angular.module('ag-admin').controller(
             $state.go($state.$current.name, {edit: true}, {notify: false});
         };
 
-        var updateDbAdapters = function (force) {
-            $scope.dbAdapters = [];
+        var updateDbAdapters = function (force, message) {
             DbAdapterResource.getList(force).then(function (updatedAdapters) {
-                $scope.dbAdapters = updatedAdapters;
+                if (message) {
+                    flash.success = message;
+                }
+                $timeout(function() {
+                    $state.go($state.current, {}, {
+                        reload: true, inherit: true, notify: true
+                    });
+                }, 500);
             });
         };
 
@@ -48,8 +56,7 @@ angular.module('ag-admin').controller(
                 charset      :  $scope.charset
             };
             DbAdapterResource.createNewAdapter(options).then(function (dbAdapter) {
-                flash.success = 'Database adapter created';
-                updateDbAdapters(true);
+                updateDbAdapters(true, 'Database adapter created');
                 $scope.resetForm();
             });
         };
@@ -66,15 +73,13 @@ angular.module('ag-admin').controller(
                 charset  :  dbAdapter.charset
             };
             DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(function (dbAdapter) {
-                flash.success = 'Database adapter ' + dbAdapter.adapter_name + ' updated';
-                updateDbAdapters(true);
+                updateDbAdapters(true, 'Database adapter ' + dbAdapter.adapter_name + ' updated');
             });
         };
 
         $scope.removeDbAdapter = function (adapter_name) {
             DbAdapterResource.removeAdapter(adapter_name).then(function () {
-                flash.success = 'Database adapter ' + adapter_name + ' removed';
-                updateDbAdapters(true);
+                updateDbAdapters(true, 'Database adapter ' + adapter_name + ' removed');
                 $scope.deleteDbAdapter = false;
             });
         };
