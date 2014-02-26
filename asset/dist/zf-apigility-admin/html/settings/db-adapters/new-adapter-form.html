@@ -47,10 +47,20 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="control-label" for="dsn">DSN</label>
+                    <div class="controls">
+                        <input type="text" placeholder="(Optional) DSN for database" class="form-control input-xlarge" ng-model="dsn">
+                        <p class="help-block">DSN for the database; can be used to
+                        provide the full database connection specification. Use this if
+                        developing for Google App Engine.</p>
+                    </div>
+                </div>
+
                 <div class="form-group" ng-show="driver && (driver != 'Pdo_Sqlite')">
                     <label class="control-label" for="username">Username</label>
                     <div class="controls">
-                        <input type="text" placeholder="(optional) Username" class="form-control input-xlarge" ng-model="username">
+                        <input type="text" placeholder="(Optional) Username" class="form-control input-xlarge" ng-model="username">
                         <p class="help-block">Username with which to connect</p>
                     </div>
                 </div>

@@ -9,6 +9,11 @@
         <td>{{ dbAdapter.database }}</td>
     </tr>
 
+    <tr ng-show="dbAdapter.dsn">
+        <td>DSN</td>
+        <td>{{ dbAdapter.dsn }}</td>
+    </tr>
+
     <tr ng-show="dbAdapter.username">
         <td>Username</td>
         <td>{{ dbAdapter.username }}</td>
