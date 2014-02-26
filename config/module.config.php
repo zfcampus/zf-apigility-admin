@@ -935,14 +935,14 @@ return array(
             'format' => 'string',
             'basevalue' => 'string|int',
         ),
-        'ZF\ContentNegociation\Validator\Db\NoRecordExists' => array(
+        'ZF\ContentValidation\Validator\Db\NoRecordExists' => array(
         	'adapter' => 'string',
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
             'exclude' => 'string',
         ),
-        'ZF\ContentNegociation\Validator\Db\RecordExists' => array(
+        'ZF\ContentValidation\Validator\Db\RecordExists' => array(
         	'adapter' => 'string',
             'table' => 'string',
             'schema' => 'string',
