@@ -13,6 +13,7 @@ angular.module('ag-admin').controller(
             $scope.adapterName = '';
             $scope.driver      = '';
             $scope.database    = '';
+            $scope.dsn         = '';
             $scope.username    = '';
             $scope.password    = '';
             $scope.hostname    = '';
@@ -53,6 +54,9 @@ angular.module('ag-admin').controller(
                 port         :  $scope.port,
                 charset      :  $scope.charset
             };
+            if ($scope.dsn) {
+                options.dsn = $scope.dsn;
+            }
             DbAdapterResource.createNewAdapter(options).then(function (dbAdapter) {
                 updateDbAdapters(true, 'Database adapter created');
                 $scope.resetForm();
@@ -70,6 +74,9 @@ angular.module('ag-admin').controller(
                 port     :  dbAdapter.port,
                 charset  :  dbAdapter.charset
             };
+            if (dbAdapter.dsn) {
+                options.dsn = dbAdapter.dsn;
+            }
             DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(function (dbAdapter) {
                 updateDbAdapters(true, 'Database adapter ' + dbAdapter.adapter_name + ' updated');
             });
