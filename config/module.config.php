@@ -935,13 +935,15 @@ return array(
             'format' => 'string',
             'basevalue' => 'string|int',
         ),
-        'Zend\Validator\Db\NoRecordExists' => array(
+        'ZF\ContentNegociation\Validator\Db\NoRecordExists' => array(
+        	'adapter' => 'string',
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
             'exclude' => 'string',
         ),
-        'Zend\Validator\Db\RecordExists' => array(
+        'ZF\ContentNegociation\Validator\Db\RecordExists' => array(
+        	'adapter' => 'string',
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
