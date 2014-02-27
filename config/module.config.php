@@ -942,6 +942,20 @@ return array(
             'field' => 'string',
             'exclude' => 'string',
         ),
+        'ZF\ContentValidation\Validator\DbNoRecordExists' => array(
+            'adapter' => 'string',
+            'table' => 'string',
+            'schema' => 'string',
+            'field' => 'string',
+            'exclude' => 'string',
+        ),
+        'ZF\ContentValidation\Validator\DbRecordExists' => array(
+            'adapter' => 'string',
+            'table' => 'string',
+            'schema' => 'string',
+            'field' => 'string',
+            'exclude' => 'string',
+        ),
         'Zend\Validator\Digits' => array(),
         'Zend\Validator\EmailAddress' => array(
             'allow' => 'int',
