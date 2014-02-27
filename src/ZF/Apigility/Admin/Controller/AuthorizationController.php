@@ -53,7 +53,7 @@ class AuthorizationController extends AbstractActionController
         $entity->getLinks()->add(Link::factory(array(
             'rel'   => 'self',
             'route' => array(
-                'name'    => 'zf-apigility-admin/api/module/authorization',
+                'name'    => 'zf-apigility/api/module/authorization',
                 'params'  => array(
                     'name' => $this->moduleName,
                 ),

@@ -46,12 +46,7 @@ return array(
 
     'router' => array(
         'routes' => array(
-            'zf-apigility-admin' => array(
-                'type'  => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route' => '/apigility',
-                ),
-                'may_terminate' => false,
+            'zf-apigility' => array(
                 'child_routes' => array(
                     'ui' => array(
                         'type'  => 'Zend\Mvc\Router\Http\Literal',
@@ -453,22 +448,22 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'content_name',
                 'entity_identifier_name' => 'content_name',
-                'route_name'      => 'zf-apigility-admin/api/content-negotiation'
+                'route_name'      => 'zf-apigility/api/content-negotiation'
             ),
             'ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
                 'entity_identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service',
+                'route_name'      => 'zf-apigility/api/module/rest-service',
             ),
             'ZF\Apigility\Admin\Model\DbAdapterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'adapter_name',
                 'entity_identifier_name' => 'adapter_name',
-                'route_name'      => 'zf-apigility-admin/api/db-adapter',
+                'route_name'      => 'zf-apigility/api/db-adapter',
             ),
             'ZF\Apigility\Admin\Model\InputFilterCollection' => array(
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/input-filter',
+                'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
                 'is_collection'   => true,
                 'collection_name' => 'input_filter',
                 'route_identifier_name' => 'input_filter_name',
@@ -478,15 +473,15 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/input-filter',
+                'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
             ),
             'ZF\Apigility\Admin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'name',
-                'route_name'      => 'zf-apigility-admin/api/module',
+                'route_name'      => 'zf-apigility/api/module',
             ),
             'ZF\Apigility\Admin\Model\RestInputFilterCollection' => array(
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/input-filter',
+                'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
                 'is_collection'   => true,
                 'collection_name' => 'input_filter',
                 'route_identifier_name' => 'input_filter_name',
@@ -495,7 +490,7 @@ return array(
             'ZF\Apigility\Admin\Model\RestInputFilterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/input-filter',
+                'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
                 'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
             ),
@@ -503,30 +498,30 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'rest_documentation',
                 'entity_identifier_name' => 'rest_documentation',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service/rest-doc',
+                'route_name'      => 'zf-apigility/api/module/rest-service/rest-doc',
             ),
             'ZF\Apigility\Admin\Model\RestServiceEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
                 'entity_identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rest-service',
+                'route_name'      => 'zf-apigility/api/module/rest-service',
                 'links'           => array(
                     array(
                         'rel' => 'input_filter',
                         'route' => array(
-                            'name' => 'zf-apigility-admin/api/module/rest-service/input-filter'
+                            'name' => 'zf-apigility/api/module/rest-service/input-filter'
                         ),
                     ),
                     array(
                         'rel' => 'documentation',
                         'route' => array(
-                            'name' => 'zf-apigility-admin/api/module/rest-service/doc',
+                            'name' => 'zf-apigility/api/module/rest-service/doc',
                         ),
                     )
                 ),
             ),
             'ZF\Apigility\Admin\Model\RpcInputFilterCollection' => array(
-                'route_name'      => 'zf-apigility-admin/api/module/rpc-service/input-filter',
+                'route_name'      => 'zf-apigility/api/module/rpc-service/input-filter',
                 'is_collection'   => true,
                 'collection_name' => 'input_filter',
                 'route_identifier_name' => 'input_filter_name',
@@ -535,7 +530,7 @@ return array(
             'ZF\Apigility\Admin\Model\RpcInputFilterEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rpc-service/input-filter',
+                'route_name'      => 'zf-apigility/api/module/rpc-service/input-filter',
                 'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
             ),
@@ -543,18 +538,18 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'controller_service_name',
                 'entity_identifier_name' => 'controller_service_name',
-                'route_name'      => 'zf-apigility-admin/api/module/rpc-service',
+                'route_name'      => 'zf-apigility/api/module/rpc-service',
                 'links'           => array(
                     array(
                         'rel' => 'input_filter',
                         'route' => array(
-                            'name' => 'zf-apigility-admin/api/module/rpc-service/input-filter'
+                            'name' => 'zf-apigility/api/module/rpc-service/input-filter'
                         ),
                     ),
                     array(
                         'rel' => 'documentation',
                         'route' => array(
-                            'name' => 'zf-apigility-admin/api/module/rpc-service/doc',
+                            'name' => 'zf-apigility/api/module/rpc-service/doc',
                         ),
                     )
                 ),
@@ -565,7 +560,7 @@ return array(
     'zf-rest' => array(
         'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
             'listener'                => 'ZF\Apigility\Admin\Model\ContentNegotiationResource',
-            'route_name'              => 'zf-apigility-admin/api/content-negotiation',
+            'route_name'              => 'zf-apigility/api/content-negotiation',
             'route_identifier_name'   => 'content_name',
             'entity_class'            => 'ZF\Apigility\Admin\Model\ContentNegotiationEntity',
             'entity_http_methods'     => array('GET', 'PATCH', 'DELETE'),
@@ -574,7 +569,7 @@ return array(
         ),
         'ZF\Apigility\Admin\Controller\DbAdapter' => array(
             'listener'                => 'ZF\Apigility\Admin\Model\DbAdapterResource',
-            'route_name'              => 'zf-apigility-admin/api/db-adapter',
+            'route_name'              => 'zf-apigility/api/db-adapter',
             'route_identifier_name'   => 'adapter_name',
             'entity_class'            => 'ZF\Apigility\Admin\Model\DbAdapterEntity',
             'entity_http_methods'     => array('GET', 'PATCH', 'DELETE'),
@@ -583,7 +578,7 @@ return array(
         ),
         'ZF\Apigility\Admin\Controller\Module' => array(
             'listener'                => 'ZF\Apigility\Admin\Model\ModuleResource',
-            'route_name'              => 'zf-apigility-admin/api/module',
+            'route_name'              => 'zf-apigility/api/module',
             'route_identifier_name'   => 'name',
             'entity_class'            => 'ZF\Apigility\Admin\Model\ModuleEntity',
             'entity_http_methods'     => array('GET'),
@@ -592,7 +587,7 @@ return array(
         ),
         'ZF\Apigility\Admin\Controller\RpcService' => array(
             'listener'                   => 'ZF\Apigility\Admin\Model\RpcServiceResource',
-            'route_name'                 => 'zf-apigility-admin/api/module/rpc-service',
+            'route_name'                 => 'zf-apigility/api/module/rpc-service',
             'entity_class'               => 'ZF\Apigility\Admin\Model\RpcServiceEntity',
             'route_identifier_name'      => 'controller_service_name',
             'entity_http_methods'        => array('GET', 'PATCH', 'DELETE'),
@@ -602,7 +597,7 @@ return array(
         ),
         'ZF\Apigility\Admin\Controller\RestService' => array(
             'listener'                   => 'ZF\Apigility\Admin\Model\RestServiceResource',
-            'route_name'                 => 'zf-apigility-admin/api/module/rest-service',
+            'route_name'                 => 'zf-apigility/api/module/rest-service',
             'entity_class'               => 'ZF\Apigility\Admin\Model\RestServiceEntity',
             'route_identifier_name'      => 'controller_service_name',
             'entity_http_methods'        => array('GET', 'PATCH', 'DELETE'),
@@ -617,55 +612,55 @@ return array(
         // it to show up in the list of RPC services
         'ZF\Apigility\Admin\Controller\Authentication' => array(
             'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
-            'route_name'   => 'zf-apigility-admin/api/authentication',
+            'route_name'   => 'zf-apigility/api/authentication',
         ),
         'ZF\Apigility\Admin\Controller\Authorization' => array(
             'http_methods' => array('GET', 'PUT'),
-            'route_name'   => 'zf-apigility-admin/api/module/authorization',
+            'route_name'   => 'zf-apigility/api/module/authorization',
         ),
         'ZF\Apigility\Admin\Controller\CacheEnabled' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-apigility-admin/api/cache-enabled',
+            'route_name'   => 'zf-apigility/api/cache-enabled',
         ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
             'http_methods' => array('GET', 'PATCH', 'PUT', 'DELETE'),
-            'route_name'   => 'zf-apigility-admin/api/rest-service/rest-doc',
+            'route_name'   => 'zf-apigility/api/rest-service/rest-doc',
         ),
         'ZF\Apigility\Admin\Controller\Filters' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-apigility-admin/api/filters',
+            'route_name'   => 'zf-apigility/api/filters',
         ),
         'ZF\Apigility\Admin\Controller\Hydrators' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-apigility-admin/api/hydrators',
+            'route_name'   => 'zf-apigility/api/hydrators',
         ),
         'ZF\Apigility\Admin\Controller\InputFilter' => array(
             'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
-            'route_name'   => 'zf-apigility-admin/api/rpc-service/input-filter',
+            'route_name'   => 'zf-apigility/api/rpc-service/input-filter',
         ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
-            'route_name'   => 'zf-apigility-admin/api/module-enable',
+            'route_name'   => 'zf-apigility/api/module-enable',
         ),
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-apigility-admin/api/source',
+            'route_name'   => 'zf-apigility/api/source',
         ),
         'ZF\Apigility\Admin\Controller\Validators' => array(
             'http_methods' => array('GET'),
-            'route_name'   => 'zf-apigility-admin/api/validators',
+            'route_name'   => 'zf-apigility/api/validators',
         ),
         'ZF\Apigility\Admin\Controller\Versioning' => array(
             'http_methods' => array('PATCH'),
-            'route_name'   => 'zf-apigility-admin/api/versioning',
+            'route_name'   => 'zf-apigility/api/versioning',
         ),
         'ZF\Configuration\ConfigController'       => array(
             'http_methods' => array('GET', 'PATCH'),
-            'route_name'   => 'zf-apigility-admin/api/config',
+            'route_name'   => 'zf-apigility/api/config',
         ),
         'ZF\Configuration\ModuleConfigController' => array(
             'http_methods' => array('GET', 'PATCH'),
-            'route_name'   => 'zf-apigility-admin/api/config/module',
+            'route_name'   => 'zf-apigility/api/config/module',
         ),
     ),
 

@@ -460,7 +460,7 @@ class Module
         $links->add(Link::factory(array(
             'rel' => 'self',
             'route' => array(
-                'name' => 'zf-apigility-admin/api/module',
+                'name' => 'zf-apigility/api/module',
                 'params' => array(
                     'name' => $module,
                 ),
@@ -487,7 +487,7 @@ class Module
         $links->add(Link::factory(array(
             'rel' => 'self',
             'route' => array(
-                'name' => sprintf('zf-apigility-admin/api/module/%s-service', $type),
+                'name' => sprintf('zf-apigility/api/module/%s-service', $type),
                 'params' => array(
                     'name' => $module,
                     'controller_service_name' => $service,
@@ -499,7 +499,7 @@ class Module
         $links->add(Link::factory(array(
             'rel' => 'input_filter',
             'route' => array(
-                'name' => sprintf('zf-apigility-admin/api/module/%s-service/input-filter', $type),
+                'name' => sprintf('zf-apigility/api/module/%s-service/input-filter', $type),
                 'params' => array(
                     'name' => $module,
                     'controller_service_name' => $service,
@@ -511,7 +511,7 @@ class Module
         $links->add(Link::factory(array(
             'rel' => 'documentation',
             'route' => array(
-                'name' => sprintf('zf-apigility-admin/api/module/%s-service/doc', $type),
+                'name' => sprintf('zf-apigility/api/module/%s-service/doc', $type),
                 'params' => array(
                     'name' => $module,
                     'controller_service_name' => $service,
@@ -538,7 +538,7 @@ class Module
         if (in_array($type, array('rpc', 'rest'))) {
             $linkType .= '-service';
         }
-        $routeName    = sprintf('zf-apigility-admin/api/module/%s', $linkType);
+        $routeName    = sprintf('zf-apigility/api/module/%s', $linkType);
         $routeParams  = array();
         $routeOptions = array();
         if (null !== $module) {

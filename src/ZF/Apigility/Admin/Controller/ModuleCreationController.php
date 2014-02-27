@@ -48,7 +48,7 @@ class ModuleCreationController extends AbstractActionController
                 $entity->getLinks()->add(Link::factory(array(
                     'rel'   => 'self',
                     'route' => array(
-                        'name'   => 'zf-apigility-admin/api/module',
+                        'name'   => 'zf-apigility/api/module',
                         'params' => array('module' => $module),
                     ),
                 )));

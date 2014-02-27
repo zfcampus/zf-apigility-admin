@@ -42,7 +42,7 @@ class AuthenticationController extends AbstractActionController
                 $response->setStatusCode(201);
                 $response->getHeaders()->addHeaderLine(
                     'Location',
-                    $this->plugin('hal')->createLink('zf-apigility-admin/api/authentication')
+                    $this->plugin('hal')->createLink('zf-apigility/api/authentication')
                 );
                 break;
             case $request::METHOD_PATCH:
@@ -64,7 +64,7 @@ class AuthenticationController extends AbstractActionController
         $entity = new Entity($entity, null);
         $entity->getLinks()->add(Link::factory(array(
             'rel' => 'self',
-            'route' => 'zf-apigility-admin/api/authentication',
+            'route' => 'zf-apigility/api/authentication',
         )));
         $model = new ViewModel(array('payload' => $entity));
         $model->setTerminal(true);

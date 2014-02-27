@@ -158,7 +158,7 @@ class InputFilterController extends AbstractActionController
     {
         $matches = [];
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
-        return sprintf('zf-apigility-admin/api/module/%s-service/input-filter', $matches['type']);
+        return sprintf('zf-apigility/api/module/%s-service/input-filter', $matches['type']);
     }
 
     public function injectEntitySelfLink($links, $route, $module, $controller, $inputFilterName)
