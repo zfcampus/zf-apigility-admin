@@ -35,6 +35,7 @@
                 <ul class="nav navbar-nav">
                     <li ng-class="{active: ('ag.settings' | includedByState)}"><a ui-sref="ag.settings.overview">Settings</a></li>
                     <li ng-class="{active: ('ag.api' | includedByState)}"><a ui-sref="ag.api">APIs</a></li>
+                    <li ng-show="'%DOC_URI%'"><a href="%DOC_URI%">API Docs</a></li>
                 </ul>
             </div>
         </div>
