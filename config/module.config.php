@@ -943,14 +943,14 @@ return array(
             'exclude' => 'string',
         ),
         'ZF\ContentValidation\Validator\DbNoRecordExists' => array(
-        	'adapter' => 'string',
+            'adapter' => 'string',
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
             'exclude' => 'string',
         ),
         'ZF\ContentValidation\Validator\DbRecordExists' => array(
-        	'adapter' => 'string',
+            'adapter' => 'string',
             'table' => 'string',
             'schema' => 'string',
             'field' => 'string',
