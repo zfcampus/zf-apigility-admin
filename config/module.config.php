@@ -930,6 +930,18 @@ return array(
             'format' => 'string',
             'basevalue' => 'string|int',
         ),
+        'Zend\Validator\Db\NoRecordExists' => array(
+            'table' => 'string',
+            'schema' => 'string',
+            'field' => 'string',
+            'exclude' => 'string',
+        ),
+        'Zend\Validator\Db\RecordExists' => array(
+            'table' => 'string',
+            'schema' => 'string',
+            'field' => 'string',
+            'exclude' => 'string',
+        ),
         'ZF\ContentValidation\Validator\DbNoRecordExists' => array(
         	'adapter' => 'string',
             'table' => 'string',
