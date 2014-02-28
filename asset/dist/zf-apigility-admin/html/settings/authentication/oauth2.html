@@ -39,13 +39,18 @@
 
     <table collapse-show="" criteria="{edit: false}" class="table table-striped">
         <tr>
-            <td>PDO DSN</td>
+            <td>{{oauth2.dsn_type}} DSN</td>
             <td>{{oauth2.dsn}}</td>
         </tr>
 
-        <tr>
+        <tr ng-show="oauth2.dsn_type && (oauth2.dsn_type != 'Mongo')">
             <td>Database username</td>
             <td>{{oauth2.username}}</td>
+        </tr>
+
+        <tr ng-show="oauth2.dsn_type && (oauth2.dsn_type == 'Mongo')">
+            <td>Database name</td>
+            <td>{{oauth2.database}}</td>
         </tr>
 
         <tr>
