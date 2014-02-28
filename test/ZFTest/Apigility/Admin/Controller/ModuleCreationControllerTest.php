@@ -109,6 +109,6 @@ class ModuleCreationControllerTest extends TestCase
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
         }
-        return rmdir($dir);
+        return @rmdir($dir);
     }
 }

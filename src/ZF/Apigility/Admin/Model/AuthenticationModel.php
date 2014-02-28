@@ -8,6 +8,7 @@ namespace ZF\Apigility\Admin\Model;
 
 use PDO;
 use PDOException;
+use MongoConnectionException;
 use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Rest\Exception\CreationException;
@@ -37,8 +38,9 @@ class AuthenticationModel
     /**
      * Create authentication configuration
      *
-     * @param  array $authenticationConfig
+     * @param array $authenticationConfig
      * @return AuthenticationEntity
+     * @throws \ZF\Rest\Exception\CreationException
      */
     public function create(array $authenticationConfig)
     {
@@ -50,7 +52,8 @@ class AuthenticationModel
 
         if ($entity->isOAuth2()) {
             $data = $entity->getArrayCopy();
-            $this->validateDsn($data['dsn'], $data['username'], $data['password']);
+            $dsnType = isset($data['dsn_type']) ? $data['dsn_type'] : AuthenticationEntity::DSN_PDO;
+            $this->validateDsn($data['dsn'], $data['username'], $data['password'], $dsnType);
         }
 
         $allData = $entity->getArrayCopy();
@@ -87,7 +90,8 @@ class AuthenticationModel
 
         if ($current->isOAuth2()) {
             $data = $current->getArrayCopy();
-            $this->validateDsn($data['dsn'], $data['username'], $data['password']);
+            $dsnType = isset($data['dsn_type']) ? $data['dsn_type'] : AuthenticationEntity::DSN_PDO;
+            $this->validateDsn($data['dsn'], $data['username'], $data['password'], $dsnType);
         }
 
         $allData = $current->getArrayCopy();
@@ -178,7 +182,9 @@ class AuthenticationModel
     {
         foreach (array_keys($config) as $key) {
             switch ($key) {
+                case 'dsn_type':
                 case 'dsn':
+                case 'database':
                 case 'htdigest':
                 case 'htpasswd':
                 case 'password':
@@ -252,15 +258,21 @@ class AuthenticationModel
         }
 
         $localConfig = $this->localConfig->fetch(true);
-        if (!isset($localConfig['zf-oauth2']['db'])
-            || !is_array($localConfig['zf-oauth2']['db'])
+        if (isset($localConfig['zf-oauth2']['db'])
+            && is_array($localConfig['zf-oauth2']['db'])
         ) {
-            return false;
+            return array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);;
         }
 
-        $oauth2Config = array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);
+        if (isset($localConfig['zf-oauth2']['mongo'])
+            && is_array($localConfig['zf-oauth2']['mongo'])
+        ) {
+            return array_merge($oauth2Config, $localConfig['zf-oauth2']['mongo']);;
+        }
 
-        return $oauth2Config;
+
+
+        return false;
     }
 
     /**
@@ -291,10 +303,21 @@ class AuthenticationModel
             $this->globalConfig->patchKey('router.routes.oauth.options.route', $global['route_match']);
         }
 
-        $toSet = array(
-            'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
-            'db'      => $local,
-        );
+        switch($entity->getDsnType()) {
+            case AuthenticationEntity::DSN_MONGO:
+                $toSet = array(
+                    'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
+                    'mongo'   => $local,
+                );
+                break;
+            case AuthenticationEntity::DSN_PDO:
+            default:
+                $toSet = array(
+                    'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
+                    'db'      => $local,
+                );
+                break;
+        }
 
         $key = 'zf-oauth2';
         $this->localConfig->patchKey($key, $toSet);
@@ -303,19 +326,44 @@ class AuthenticationModel
     /**
      * Validate a DSN
      *
+     * @param  string $dsnType
      * @param  string $dsn
      * @param  string $username
      * @param  string $password
      * @throws Exception\InvalidArgumentException on invalid DSN
+     * @return boolean
      */
-    protected function validateDsn($dsn, $username = null, $password = null)
+    protected function validateDsn($dsn, $username = null, $password = null, $dsnType = AuthenticationEntity::DSN_PDO)
     {
         try {
-            new PDO($dsn, $username, $password);
-        } catch (PDOException $e) {
-            throw new Exception\InvalidArgumentException(
-                sprintf('Invalid DSN "%s" provided', $dsn, $password), 422
-            );
+            $this->{'create' . ucfirst(strtolower($dsnType)) . 'DSN'}($dsn, $username, $password);
+            return true;
+        } catch (MongoConnectionException $mongoException) {
+        } catch (PDOException $pdoException) {
         }
+
+        throw new Exception\InvalidArgumentException(
+            sprintf('Invalid DSN "%s" provided', $dsn), 422
+        );
+    }
+
+    /**
+     * @param $dsn
+     * @return \MongoClient
+     */
+    protected function createMongoDSN($dsn)
+    {
+        return new \MongoClient($dsn);
+    }
+
+    /**
+     * @param $dsn
+     * @param $username
+     * @param $password
+     * @return PDO
+     */
+    protected function createPdoDsn($dsn, $username, $password)
+    {
+        return new PDO($dsn, $username, $password);
     }
 }

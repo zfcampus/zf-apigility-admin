@@ -22,7 +22,10 @@ angular.module('ag-admin').controller(
                 _.forEach($scope.service.documentation, function (val, key) {
                     docs[key] = val;
                 });
-                $scope.service.documentation = docs;
+                _.forEach($scope.service.documentation, function (val, key) {
+                    restDocs[key] = val;
+                });
+                $scope.service.documentation = restDocs;
             }
             if (typeof $scope.service.documentation.collection == 'undefined') {
                 $scope.service.documentation.collection = {};
@@ -49,9 +52,9 @@ angular.module('ag-admin').controller(
             if (Array.isArray($scope.service.documentation)) {
                 docs = {};
                 _.forEach($scope.service.documentation, function (val, key) {
-                    docs[key] = val;
+                    rpcDocs[key] = val;
                 });
-                $scope.service.documentation = docs;
+                $scope.service.documentation = rpcDocs;
             }
             _.forEach($scope.service.http_methods, function (allowed_method) {
                 if (typeof $scope.service.documentation[allowed_method] == 'undefined') {
