@@ -282,36 +282,36 @@ class RpcServiceResource extends AbstractResourceListener
             return;
         }
 
-        $collection = [];
+        $collection = array();
 
         foreach ($inputFilters as $inputFilter) {
             $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
             $links    = $entity->getLinks();
-            $links->add(Link::factory([
+            $links->add(Link::factory(array(
                 'rel' => 'self',
-                'route' => [
+                'route' => array(
                     'name' => 'zf-apigility/api/module/rpc-service/input-filter',
-                    'params' => [
+                    'params' => array(
                         'name' => $this->moduleName,
                         'controller_service_name' => $service->controllerServiceName,
                         'input_filter_name' => $inputFilter['input_filter_name'],
-                    ],
-                ],
-            ]));
+                    ),
+                ),
+            )));
             $collection[] = $entity;
         }
 
         $collection = new HalCollection($collection);
         $collection->setCollectionName('input_filter');
         $collection->setCollectionRoute('zf-apigility/module/rpc-service/input-filter');
-        $collection->setCollectionRouteParams([
+        $collection->setCollectionRouteParams(array(
             'name' => $this->moduleName,
             'controller_service_name' => $service->controllerServiceName,
-        ]);
+        ));
 
-        $service->exchangeArray([
+        $service->exchangeArray(array(
             'input_filters' => $collection,
-        ]);
+        ));
     }
 
     protected function injectDocumentation(RpcServiceEntity $service)
@@ -322,7 +322,7 @@ class RpcServiceResource extends AbstractResourceListener
         }
         $entity = new HalEntity($documentation, 'documentation');
 
-        $service->exchangeArray(['documentation' => $entity]);
+        $service->exchangeArray(array('documentation' => $entity));
     }
 
     /**
@@ -338,8 +338,8 @@ class RpcServiceResource extends AbstractResourceListener
         }
 
         $controller = $this->controllerManager->get($controllerServiceName);
-        $service->exchangeArray([
+        $service->exchangeArray(array(
             'controller_class' => get_class($controller),
-        ]);
+        ));
     }
 }

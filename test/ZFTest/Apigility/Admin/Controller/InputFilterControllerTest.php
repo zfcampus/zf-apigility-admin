@@ -125,22 +125,22 @@ class InputFilterControllerTest extends TestCase
 
     public function testAddInputFilter()
     {
-        $inputFilter = [
-            [
+        $inputFilter = array(
+            array(
                 'name' => 'bar',
-                'validators' => [
-                    [
+                'validators' => array(
+                    array(
                         'name' => 'NotEmpty',
-                        'options' => [
+                        'options' => array(
                             'type' => 127,
-                        ],
-                    ],
-                    [
+                        ),
+                    ),
+                    array(
                         'name' => 'Digits',
-                    ],
-                ],
-            ],
-        ];
+                    ),
+                ),
+            ),
+        );
 
         $request = new Request();
         $request->setMethod('put');

@@ -16,7 +16,7 @@ class ValidatorMetadataModel
      *
      * @var array
      */
-    protected $defaults = [];
+    protected $defaults = array();
 
     /**
      * Unprocessed validator metadata configuration
@@ -36,7 +36,7 @@ class ValidatorMetadataModel
     /**
      * @param array $metadata
      */
-    public function __construct(array $metadata = [])
+    public function __construct(array $metadata = array())
     {
         if (isset($metadata['__all__'])) {
             $this->defaults = $metadata['__all__'];

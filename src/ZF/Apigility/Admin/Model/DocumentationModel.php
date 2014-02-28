@@ -32,34 +32,34 @@ class DocumentationModel
     {
         switch ($type) {
             case self::TYPE_REST:
-                return [
-                    'collection' => [
+                return array(
+                    'collection' => array(
                         'description' => null,
-                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
-                    ],
-                    'entity' => [
+                        'GET'    => array('description' => null, 'request' => null, 'response' => null),
+                        'POST'   => array('description' => null, 'request' => null, 'response' => null),
+                        'PUT'    => array('description' => null, 'request' => null, 'response' => null),
+                        'PATCH'  => array('description' => null, 'request' => null, 'response' => null),
+                        'DELETE' => array('description' => null, 'request' => null, 'response' => null),
+                    ),
+                    'entity' => array(
                         'description' => null,
-                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
-                    ],
+                        'GET'    => array('description' => null, 'request' => null, 'response' => null),
+                        'POST'   => array('description' => null, 'request' => null, 'response' => null),
+                        'PUT'    => array('description' => null, 'request' => null, 'response' => null),
+                        'PATCH'  => array('description' => null, 'request' => null, 'response' => null),
+                        'DELETE' => array('description' => null, 'request' => null, 'response' => null),
+                    ),
                     'description' => null
-                ];
+                );
             case self::TYPE_RPC:
-                return [
+                return array(
                     'description' => null,
-                    'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                    'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                    'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                    'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                    'DELETE' => ['description' => null, 'request' => null, 'response' => null],
-                ];
+                    'GET'    => array('description' => null, 'request' => null, 'response' => null),
+                    'POST'   => array('description' => null, 'request' => null, 'response' => null),
+                    'PUT'    => array('description' => null, 'request' => null, 'response' => null),
+                    'PATCH'  => array('description' => null, 'request' => null, 'response' => null),
+                    'DELETE' => array('description' => null, 'request' => null, 'response' => null),
+                );
         }
     }
 
@@ -70,15 +70,15 @@ class DocumentationModel
         if (isset($value[$controllerServiceName])) {
             return $value[$controllerServiceName];
         }
-        return [];
+        return array();
     }
 
     public function storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, $replace = false)
     {
         $configResource = $this->getDocumentationConfigResource($module);
-        $template = [$controllerServiceName => $this->getSchemaTemplate($controllerType)];
+        $template = array($controllerServiceName => $this->getSchemaTemplate($controllerType));
         $templateFlat = $configResource->traverseArray($template);
-        $documentationFlat = $configResource->traverseArray([$controllerServiceName => $documentation]);
+        $documentationFlat = $configResource->traverseArray(array($controllerServiceName => $documentation));
 
         $validDocumentationFlat = array_intersect_key($documentationFlat, $templateFlat);
 

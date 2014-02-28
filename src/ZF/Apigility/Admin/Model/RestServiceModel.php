@@ -760,8 +760,8 @@ class RestServiceModel implements EventManagerAwareInterface
         $entityConfig     = $this->getConfigForSubkey($baseKey . $original->entityClass);
         $collectionConfig = $this->getConfigForSubkey($baseKey . $original->collectionClass);
 
-        $entityUpdate     = [];
-        $collectionUpdate = [];
+        $entityUpdate     = array();
+        $collectionUpdate = array();
         if ($update->routeIdentifierName
             && $update->routeIdentifierName !== $original->routeIdentifierName
         ) {
@@ -1104,7 +1104,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * @param array|mixed $default
      * @return mixed
      */
-    protected function getConfigForSubkey($subKey, $default = [])
+    protected function getConfigForSubkey($subKey, $default = array())
     {
         $config = $this->configResource->fetch(true);
         $keys   = explode('.', $subKey);

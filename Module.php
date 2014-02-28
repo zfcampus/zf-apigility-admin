@@ -400,9 +400,9 @@ class Module
 
                 $link   = $links->get('input_filter');
                 $params = $link->getRouteParams();
-                $link->setRouteParams(array_merge($params, [
+                $link->setRouteParams(array_merge($params, array(
                     'controller_service_name' => $serviceName
-                ]));
+                )));
             }
 
             if ($links->has('documentation')) {
@@ -410,9 +410,9 @@ class Module
 
                 $link   = $links->get('documentation');
                 $params = $link->getRouteParams();
-                $link->setRouteParams(array_merge($params, [
+                $link->setRouteParams(array_merge($params, array(
                     'controller_service_name' => $serviceName
-                ]));
+                )));
             }
         }
     }

@@ -47,12 +47,12 @@ class ValidatorMetadataModelTest extends TestCase
 
     public function allPlugins()
     {
-        $return = [];
+        $return = array();
         foreach ($this->getConfig() as $plugin => $data) {
             if ('__all__' == $plugin) {
                 continue;
             }
-            $return[$plugin] = [$plugin];
+            $return[$plugin] = array($plugin);
         }
         return $return;
     }

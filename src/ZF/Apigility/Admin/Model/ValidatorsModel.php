@@ -64,10 +64,9 @@ class ValidatorsModel extends AbstractPluginManagerModel
             if (is_array($value)) {
                 return;
             }
-            $value = [
-                'break_chain_on_failure' => 'bool',
+            $value = array(
                 'breakchainonfailure' => 'bool',
-            ];
+            );
         });
         $this->plugins = $plugins;
         return $this->plugins;

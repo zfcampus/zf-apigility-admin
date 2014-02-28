@@ -26,7 +26,6 @@ class DocumentationController extends AbstractActionController
 
     public function indexAction()
     {
-        /** @var HttpRequest $request */
         $request = $this->getRequest();
         $httpMethod = $request->getMethod();
         $module = $this->params()->fromRoute('name', false);
@@ -41,7 +40,9 @@ class DocumentationController extends AbstractActionController
                     $this->model->fetchDocumentation($module, $controllerServiceName),
                     'documentation'
                 );
-                $result->getLinks()->add((new HalLink('self'))->setRoute($routeName));
+                $self = new HalLink('self');
+                $self->setRoute($routeName);
+                $result->getLinks()->add($self);
                 break;
             case HttpRequest::METHOD_PUT:
                 $documentation = $this->bodyParams();
@@ -49,7 +50,9 @@ class DocumentationController extends AbstractActionController
                     $this->model->storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, true),
                     'documentation'
                 );
-                $result->getLinks()->add((new HalLink('self'))->setRoute($routeName));
+                $self = new HalLink('self');
+                $self->setRoute($routeName);
+                $result->getLinks()->add($self);
                 break;
             case HttpRequest::METHOD_PATCH:
                 $documentation = $this->bodyParams();
@@ -57,7 +60,9 @@ class DocumentationController extends AbstractActionController
                     $this->model->storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, false),
                     'documentation'
                 );
-                $result->getLinks()->add((new HalLink('self'))->setRoute($routeName));
+                $self = new HalLink('self');
+                $self->setRoute($routeName);
+                $result->getLinks()->add($self);
                 break;
             case HttpRequest::METHOD_DELETE:
             case HttpRequest::METHOD_POST:
@@ -70,14 +75,14 @@ class DocumentationController extends AbstractActionController
         $e = $this->getEvent();
         $e->setParam('ZFContentNegotiationFallback', 'HalJson');
 
-        $viewModel = new ViewModel(['payload' => $result]);
+        $viewModel = new ViewModel(array('payload' => $result));
         $viewModel->setTerminal(true);
         return $viewModel;
     }
 
     protected function deriveRouteName($route)
     {
-        $matches = [];
+        $matches = array();
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
         return sprintf('zf-apigility/api/module/%s-service/doc', $matches['type']);
     }

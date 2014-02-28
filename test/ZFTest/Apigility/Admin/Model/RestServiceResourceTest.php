@@ -62,7 +62,7 @@ class RestServiceResourceTest extends TestCase
             'BarConf' => new BarConf\Module()
         );
 
-        $this->moduleEntity = new ModuleEntity($this->module, [], [], false);
+        $this->moduleEntity = new ModuleEntity($this->module, array(), array(), false);
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
@@ -113,7 +113,7 @@ class RestServiceResourceTest extends TestCase
      */
     public function testCreateReturnsRestServiceEntityWithControllerServiceNamePopulated()
     {
-        $entity = $this->resource->create([ 'resource_name' => 'test']);
+        $entity = $this->resource->create(array('resource_name' => 'test'));
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $entity);
         $controllerServiceName = $entity->controllerServiceName;
         $this->assertNotEmpty($controllerServiceName);

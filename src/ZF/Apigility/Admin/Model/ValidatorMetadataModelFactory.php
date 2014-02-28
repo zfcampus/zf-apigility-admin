@@ -19,7 +19,7 @@ class ValidatorMetadataModelFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $services)
     {
-        $metadata = [];
+        $metadata = array();
         if ($services->has('Config')) {
             $config = $services->get('Config');
             if (isset($config['validator_metadata'])) {

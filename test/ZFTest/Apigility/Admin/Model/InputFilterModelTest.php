@@ -60,18 +60,18 @@ class InputFilterModelTest extends TestCase
 
     public function testAddInputFilterExistingController()
     {
-        $inputFilter = [
-            'bar' => [
+        $inputFilter = array(
+            'bar' => array(
                 'name' => 'bar',
                 'required' => true,
                 'allow_empty' => true,
-                'validators' => [
-                    [
-                        'name' => 'NotEmpty'
-                    ]
-                ]
-            ]
-        ];
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                ),
+            ),
+        );
         $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputFilter);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
         $this->assertEquals($inputFilter['bar'], $result['bar'], sprintf("Updates: %s\n\nResult: %s\n", var_export($inputFilter, 1), var_export($result, 1)));
@@ -79,18 +79,18 @@ class InputFilterModelTest extends TestCase
 
     public function testAddInputFilterNewController()
     {
-        $inputfilter = [
-            'bar' => [
+        $inputfilter = array(
+            'bar' => array(
                 'name' => 'bar',
                 'required' => true,
                 'allow_empty' => true,
-                'validators' => [
-                    [
-                        'name' => 'NotEmpty'
-                    ]
-                ]
-            ]
-        ];
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                ),
+            ),
+        );
 
         // new controller
         $controller = 'InputFilter\V1\Rest\Bar\Controller';

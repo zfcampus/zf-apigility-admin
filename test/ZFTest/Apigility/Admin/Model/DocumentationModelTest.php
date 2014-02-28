@@ -1,4 +1,8 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Admin\Model;
 
@@ -11,14 +15,13 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
 {
     protected $actualDocData;
 
-    /** @var DocumentationModel */
     protected $docModel = null;
 
     public function setup()
     {
         $this->actualDocData = include __DIR__ . '/TestAsset/module/Doc/config/documentation.config.php';
 
-        $mockModuleUtils = $this->getMock('ZF\Configuration\ModuleUtils', ['getModuleConfigPath'], [], '', false);
+        $mockModuleUtils = $this->getMock('ZF\Configuration\ModuleUtils', array('getModuleConfigPath'), array(), '', false);
         $mockModuleUtils->expects($this->any())
             ->method('getModuleConfigPath')
             ->will($this->returnValue(__DIR__ . '/TestAsset/module/Doc/config/module.config.php'));
@@ -32,16 +35,9 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchRestDocumentation()
     {
-
         $this->assertEquals(
             $this->actualDocData['Doc\\V1\\Rest\\FooBar\\Controller'],
             $this->docModel->fetchDocumentation('Doc', 'Doc\\V1\\Rest\\FooBar\\Controller')
         );
     }
-
-    /*
-    public function testStoreRestDocumentation() {}
-    public function testFetchRpcDocumentation() {}
-    public function testStoreRpcDocumentation() {}
-    */
 }

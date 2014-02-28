@@ -60,16 +60,16 @@ class InputFilterController extends AbstractActionController
                 if ($result instanceof InputFilterCollection) {
                     $result = new HalCollection($result);
                     $result->setCollectionName('input_filter');
-                    $result->getLinks()->add(Link::factory([
+                    $result->getLinks()->add(Link::factory(array(
                         'rel' => 'self',
-                        'route' => [
+                        'route' => array(
                             'name' => $route,
-                            'params' => [
+                            'params' => array(
                                 'name'                    => $module,
                                 'controller_service_name' => $controller,
-                            ],
-                        ],
-                    ]));
+                            ),
+                        ),
+                    )));
                     $result->setEntityRoute($route);
                     break;
                 }
@@ -120,7 +120,7 @@ class InputFilterController extends AbstractActionController
         $e = $this->getEvent();
         $e->setParam('ZFContentNegotiationFallback', 'HalJson');
 
-        $viewModel = new ViewModel(['payload' => $result]);
+        $viewModel = new ViewModel(array('payload' => $result));
         $viewModel->setTerminal(true);
         return $viewModel;
     }
@@ -156,23 +156,23 @@ class InputFilterController extends AbstractActionController
 
     protected function deriveRouteName($route)
     {
-        $matches = [];
+        $matches = array();
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
         return sprintf('zf-apigility/api/module/%s-service/input-filter', $matches['type']);
     }
 
     public function injectEntitySelfLink($links, $route, $module, $controller, $inputFilterName)
     {
-        $links->add(Link::factory([
+        $links->add(Link::factory(array(
             'rel' => 'self',
-            'route' => [
+            'route' => array(
                 'name' => $route,
-                'params' => [
+                'params' => array(
                     'name'                    => $module,
                     'controller_service_name' => $controller,
                     'input_filter_name'       => $inputFilterName,
-                ],
-            ],
-        ]));
+                ),
+            ),
+        )));
     }
 }

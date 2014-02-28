@@ -291,7 +291,7 @@ class DbConnectedRestServiceModelTest extends TestCase
     public function testCreateServiceWithUnderscoreInNameNormalizesClassNamesToCamelCase()
     {
         $originalEntity = $this->getCreationPayload();
-        $originalEntity->exchangeArray(['table_name' => 'bar_baz']);
+        $originalEntity->exchangeArray(array('table_name' => 'bar_baz'));
 
         $result = $this->model->createService($originalEntity);
         $this->assertSame($originalEntity, $result);
