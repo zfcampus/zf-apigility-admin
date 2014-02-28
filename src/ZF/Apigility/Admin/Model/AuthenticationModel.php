@@ -339,9 +339,7 @@ class AuthenticationModel
             $this->{'create' . ucfirst(strtolower($dsnType)) . 'DSN'}($dsn, $username, $password);
             return true;
         } catch (MongoConnectionException $mongoException) {
-
         } catch (PDOException $pdoException) {
-
         }
 
         throw new Exception\InvalidArgumentException(

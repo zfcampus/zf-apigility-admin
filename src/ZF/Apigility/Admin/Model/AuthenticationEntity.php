@@ -143,6 +143,11 @@ class AuthenticationEntity
                 );
                 if ($this->getDsnType() === self::DSN_MONGO) {
                     $array['database'] = $this->database;
+
+                    // Allow server strings that do not include "mongodb://" prefix
+                    if (!empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
+                        $array['dsn'] = 'mongodb://' . $this->dsn;
+                    }
                 }
 
                 return $array;

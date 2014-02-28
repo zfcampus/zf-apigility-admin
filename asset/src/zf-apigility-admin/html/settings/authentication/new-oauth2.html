@@ -17,16 +17,25 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="dsn_type">
-                    <label class="control-label" for="dsn">{{ dsn_type }} DSN</label>
+                <div class="form-group" ng-show="dsn_type == 'PDO'">
+                    <label class="control-label" for="dsn">PDO DSN</label>
                     <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" required="required" ng-model="dsn">
-                    <p class="help-block">The {{ dsn_type }} database source name (DSN).</p>
+                    <p class="help-block">The PDO database source name (DSN).</p>
+                </div>
+
+                <div class="form-group" ng-show="dsn_type == 'Mongo'">
+                    <label class="control-label" for="dsn">Mongo server
+                        connection string</label>
+                    <input type="text" placeholder="(optional) mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db" class="form-control input-xlarge" ng-model="dsn">
+                    <p class="help-block">The MongoClient server connection
+                    string; if not provided, "mongodb://localhost:27017" will be
+                    used. "mongodb://" may be omitted from the string.</p>
                 </div>
 
                 <div class="form-group" ng-show="dsn_type && (dsn_type == 'Mongo')">
-                    <label class="control-label" for="dsn">{{ dsn_type }} Database</label>
+                    <label class="control-label" for="database">Mongo Database</label>
                     <input type="text" class="form-control input-xlarge" required="required" ng-model="database">
-                    <p class="help-block">The {{ dsn_type }} database name (DSN).</p>
+                    <p class="help-block">The Mongo database name.</p>
                 </div>
 
                 <div class="form-group" ng-show="dsn_type && (dsn_type != 'Mongo')">
