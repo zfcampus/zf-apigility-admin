@@ -19,7 +19,7 @@
 
                 <div class="form-group" ng-show="dsn_type == 'PDO'">
                     <label class="control-label" for="dsn">PDO DSN</label>
-                    <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" required="required" ng-model="dsn">
+                    <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" ng-model="dsn">
                     <p class="help-block">The PDO database source name (DSN).</p>
                 </div>
 
@@ -34,7 +34,7 @@
 
                 <div class="form-group" ng-show="dsn_type && (dsn_type == 'Mongo')">
                     <label class="control-label" for="database">Mongo Database</label>
-                    <input type="text" class="form-control input-xlarge" required="required" ng-model="database">
+                    <input type="text" class="form-control input-xlarge" ng-model="database">
                     <p class="help-block">The Mongo database name.</p>
                 </div>
 
