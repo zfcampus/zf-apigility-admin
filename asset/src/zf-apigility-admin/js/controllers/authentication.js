@@ -98,6 +98,7 @@ angular.module('ag-admin').controller(
             function success(authentication) {
                 flash.success = 'Authentication updated';
                 fetchAuthenticationDetails(true);
+                $state.go($state.current, {edit: ''}, {reload: true});
             },
             function error(response) {
                 flash.error('Unable to update authentication; please verify that the DSN is valid.');

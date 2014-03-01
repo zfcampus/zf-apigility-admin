@@ -16,14 +16,31 @@
                         </label>
                     </div>
                 </div>
+            </fieldset>
 
-                <div class="form-group" ng-show="dsn_type == 'PDO'">
+            <fieldset ng-show="dsn_type == 'PDO'">
+                <div class="form-group">
                     <label class="control-label" for="dsn">PDO DSN</label>
                     <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" ng-model="dsn">
                     <p class="help-block">The PDO database source name (DSN).</p>
                 </div>
 
-                <div class="form-group" ng-show="dsn_type == 'Mongo'">
+                <div class="form-group">
+                    <label class="control-label" for="username">Username</label>
+                    <input type="text" placeholder="username" class="form-control input-xlarge" ng-model="username">
+                    <p class="help-block">Username associated with the database holding
+                        OAuth2 credentials (required if not using SQLite).</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="password">Password</label>
+                    <input type="password" placeholder="password" class="form-control input-xlarge" ng-model="password">
+                    <p class="help-block">Password for the username listed (required if not using SQLite).</p>
+                </div>
+            </fieldset>
+
+            <fieldset ng-show="dsn_type == 'Mongo'">
+                <div class="form-group">
                     <label class="control-label" for="dsn">Mongo server
                         connection string</label>
                     <input type="text" placeholder="(optional) mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db" class="form-control input-xlarge" ng-model="dsn">
@@ -32,25 +49,14 @@
                     used. "mongodb://" may be omitted from the string.</p>
                 </div>
 
-                <div class="form-group" ng-show="dsn_type && (dsn_type == 'Mongo')">
+                <div class="form-group">
                     <label class="control-label" for="database">Mongo Database</label>
                     <input type="text" class="form-control input-xlarge" ng-model="database">
                     <p class="help-block">The Mongo database name.</p>
                 </div>
+            </fieldset>
 
-                <div class="form-group" ng-show="dsn_type && (dsn_type != 'Mongo')">
-                    <label class="control-label" for="username">Username</label>
-                    <input type="text" placeholder="username" class="form-control input-xlarge" ng-model="username">
-                    <p class="help-block">Username associated with the database holding
-                        OAuth2 credentials (required if not using SQLite).</p>
-                </div>
-
-                <div class="form-group" ng-show="dsn_type && (dsn_type != 'Mongo')">
-                    <label class="control-label" for="password">Password</label>
-                    <input type="password" placeholder="password" class="form-control input-xlarge" ng-model="password">
-                    <p class="help-block">Password for the username listed (required if not using SQLite).</p>
-                </div>
-
+            <fieldset>
                 <div class="form-group" ng-show="dsn_type">
                     <label class="control-label" for="route_match">OAuth2 route</label>
                     <input type="text" placeholder="/oauth" class="form-control input-xlarge" ng-model="route_match">
