@@ -69,7 +69,7 @@
             <fieldset>
                 <div class="form-group" ng-show="oauth2.dsn_type == 'PDO'">
                     <label class="control-label" for="dsn">PDO DSN</label>
-                    <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" required="required" ng-model="oauth2.dsn">
+                    <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" ng-model="oauth2.dsn">
                     <p class="help-block">The PDO database source name (DSN).</p>
                 </div>
 
@@ -84,7 +84,7 @@
 
                 <div class="form-group" ng-show="oauth2.dsn_type == 'Mongo'">
                     <label class="control-label" for="database">Mongo Database</label>
-                    <input type="text" class="form-control input-xlarge" required="required" ng-model="oauth2.database">
+                    <input type="text" class="form-control input-xlarge" ng-model="oauth2.database">
                     <p class="help-block">The Mongo database name.</p>
                 </div>
 
