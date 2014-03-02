@@ -183,7 +183,9 @@ angular.module('ag-admin').controller(
             dsn_type    : $scope.oauth2.dsn_type,
             database    : $scope.oauth2.database,
             dsn         : $scope.oauth2.dsn,
-            route_match : $scope.oauth2.route_match
+            route_match : $scope.oauth2.route_match,
+            username    : $scope.oauth2.username,
+            password    : $scope.oauth2.password
         };
         updateAuthentication(options);
     };
