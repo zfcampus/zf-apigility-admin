@@ -153,7 +153,9 @@ angular.module('ag-admin').controller(
             dsn_type    : $scope.dsn_type,
             database    : $scope.database,
             dsn         : $scope.dsn,
-            route_match : $scope.route_match
+            route_match : $scope.route_match,
+            username    : $scope.username,
+            password    : $scope.password
         };
         createAuthentication(options);
     };
