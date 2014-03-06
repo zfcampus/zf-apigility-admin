@@ -325,7 +325,6 @@ class Module
         $this->initializeUrlHelper();
 
         if ($result->isEntity()) {
-            $this->initializeUrlHelper();
             $this->injectServiceLinks($result->getPayload(), $result, $e);
             $halPlugin->getEventManager()->attach('renderEntity', array($this, 'onRenderEntity'), 10);
             return;
