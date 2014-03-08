@@ -166,6 +166,32 @@
             </div>
         </collapse-body>
     </collapse>
+
+    <collapse class="panel-success">
+        <collapse-header>
+            <h4 class="panel-title">Service Class Names</h4>
+        </collapse-header>
+
+        <collapse-body class="list-group">
+            <div class="form-group list-group-item">
+                <label class="control-label" for="entity_class">Entity Class</label>
+                <div class="controls">
+                    <input type="text" placeholder="" class="form-control input-xlarge" ng-model="restService.entity_class">
+                    <p class="help-block">The fully qualified class name of the
+                    class representing an entity for this service.</p>
+                </div>
+            </div>
+
+            <div class="form-group list-group-item">
+                <label class="control-label" for="collection_class">Collection Class</label>
+                <div class="controls">
+                    <input type="text" placeholder="" class="form-control input-xlarge" ng-model="restService.collection_class">
+                    <p class="help-block">The fully qualified class name of the
+                    class representing a collection for this service.</p>
+                </div>
+            </div>
+        </collapse-body>
+    </collapse>
 </fieldset>
 
 <div class="ag-new-input btn-group pull-right">
