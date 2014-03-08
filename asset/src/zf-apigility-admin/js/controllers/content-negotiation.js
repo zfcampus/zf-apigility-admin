@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  function ($scope, $state, $stateParams, $timeout, flash, selectors, ContentNegotiationResource) {
+  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource) {
     var newSelector = {
       content_name: '',
       viewModel: '',
@@ -95,11 +95,9 @@ angular.module('ag-admin').controller(
         flash.success = 'Selector removed';
 
         ContentNegotiationResource.getList(true).then(function (updatedSelectors) {
-          $timeout(function() {
-              $state.go($state.current, {}, {
-                  reload: true, inherit: true, notify: true
-              });
-          }, 500);
+          $state.go($state.current, {}, {
+            reload: true, inherit: true, notify: true
+          });
         });
 
       });
