@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    function ($timeout, $scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
+    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
         $scope.dbAdapters           = dbAdapters;
         $scope.showNewDbAdapterForm = false;
         $scope.activeAdapter        = $stateParams.adapter ? $stateParams.adapter : '';
@@ -35,11 +35,9 @@ angular.module('ag-admin').controller(
                 if (message) {
                     flash.success = message;
                 }
-                $timeout(function() {
-                    $state.go($state.current, {}, {
-                        reload: true, inherit: true, notify: true
-                    });
-                }, 500);
+                $state.go($state.current, {}, {
+                    reload: true, inherit: true, notify: true
+                });
             });
         };
 

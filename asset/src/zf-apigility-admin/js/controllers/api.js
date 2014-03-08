@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiController',
-  function($scope, $state, $timeout, flash, apis, ApiRepository) {
+  function($scope, $state, flash, apis, ApiRepository) {
     $scope.showNewApiForm = false;
     $scope.apiList = [];
 
@@ -32,12 +32,11 @@ angular.module('ag-admin').controller(
         form.find('button').attr('disabled', false);
 
         flash.success = 'New API Created';
-        $timeout(function () {
-          ApiRepository.getList(true).then(function(apiCollection) {
-            updateList(apiCollection);
-          });
+
+        ApiRepository.getList(true).then(function(apiCollection) {
+          updateList(apiCollection);
           $state.go('ag.api.version', {apiName: newApi.name, version: 1});
-        }, 500);
+        });
       });
     };
 

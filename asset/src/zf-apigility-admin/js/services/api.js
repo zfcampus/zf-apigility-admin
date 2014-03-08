@@ -1,6 +1,6 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').factory('ApiRepository', function ($q, $http, $timeout, apiBasePath, Hal, flash) {
+angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBasePath, Hal, flash) {
     var moduleApiPath = apiBasePath + '/module';
     var apis;
     var apiModels = {};
@@ -163,7 +163,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, $timeou
                         });
                     };
                 }
-                $timeout(callback, 500);
+                callback();
             });
         },
 

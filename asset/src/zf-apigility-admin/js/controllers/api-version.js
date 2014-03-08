@@ -2,7 +2,7 @@
 
 angular.module('ag-admin').controller(
     'ApiVersionController',
-    function($scope, $timeout, $state, $stateParams, flash, ApiRepository) {
+    function($scope, $state, $stateParams, flash, ApiRepository) {
 
         ApiRepository.getApi($stateParams.apiName, $stateParams.version).then(function (api) {
             $scope.api = api;
@@ -13,9 +13,7 @@ angular.module('ag-admin').controller(
         $scope.createNewApiVersion = function () {
             ApiRepository.createNewVersion($scope.api.name).then(function (data) {
                 flash.success = 'A new version of this API was created';
-                $timeout(function () {
-                    $state.go('ag.api.version', {apiName: $scope.api.name, version: data.version});
-                }, 500);
+                $state.go('ag.api.version', {apiName: $scope.api.name, version: data.version});
             });
         };
 
@@ -28,9 +26,7 @@ angular.module('ag-admin').controller(
         };
 
         $scope.changeVersion = function () {
-            $timeout(function () {
-                $state.go($state.$current, {version: $scope.currentVersion});
-            }, 500);
+            $state.go($state.$current, {version: $scope.currentVersion});
         };
     }
 );
