@@ -54,8 +54,8 @@ Admin UI Improvements
 
 ### General
 
-- [ ] Have a consistent color scheme. 
-  - [ ] It should be consistent with the Zend, ZF2, and/or Apigility website
+- [X] Have a consistent color scheme. 
+  - [X] It should be consistent with the Zend, ZF2, and/or Apigility website
     color scheme. This should pull through to the panel titles, sidebars, table
     highlights, etc.
 
@@ -87,7 +87,7 @@ Admin UI Improvements
   - [X] Consider using _icons_ instead of _text badges_ for different resources
   - [ ] have a glossary of these somewhere.
 
-- [ ] _Every_ resource should be addressable, to allow linking to them directly.
+- [X] _Every_ resource should be addressable, to allow linking to them directly.
 
 - [X] The topnav should have "Settings" and "APIs" items. The latter _may_ be okay
   as a dropdown with the various APIs available.
