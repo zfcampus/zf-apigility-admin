@@ -83,11 +83,11 @@ angular.module('ag-admin').controller(
     };
 
     $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: ''}, {reload: true});
+        $state.go($state.$current.name, {edit: ''}, {reload: true, inherit: true});
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {notify: false});
+        $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
     };
 
     var updateAuthentication = function (options) {
