@@ -1,6 +1,8 @@
 /**
  * zf-apigility-admin styles/overrides
  */
+@import "vendor.less";
+
 @agBlue: #0c0c56;
 @agLightBlue: #4B70A2;
 @agGreen: #004000;
@@ -178,4 +180,15 @@ h1, .h1 {
 
 .ag-chevron {
     padding-left: 1.5em;
+}
+
+table.body-striped {
+    > tbody:nth-child(even) {
+        > tr {
+            > td,
+            > th {
+                background-color: @table-bg-accent;
+            }
+        }
+    }
 }

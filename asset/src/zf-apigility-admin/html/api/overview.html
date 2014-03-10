@@ -1,3 +1,62 @@
+<div class="panel panel-info table-responsive">
+    <div class="panel-heading">
+        <h4 class="panel-title">REST services</h4>
+    </div>
+
+    <table class="table body-striped">
+        <tbody ng-repeat="restService in api.restServices">
+            <tr>
+                <td rowspan="2" width="40%">
+                    <p><strong><a ui-sref=".rest({service: restService.service_name})">
+                        {{ restService.service_name }}
+                    </a></strong></p>
+
+                    <p class="text-muted" ng-show="restService.documentation.description">
+                        {{ restService.documentation.description }}
+                    </p>
+
+                    <p class="text-warning" ng-hide="restService.documentation.description">
+                        <a ui-sref=".rest({service: restService.service_name, view: 'documentation', edit: true})">
+                            Add a description for this service
+                        </a>
+                    </p>
+                </td>
+
+                <td width="60%"><a ui-sref=".rest({service: restService.service_name})">{{ restService.route_match }}</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4 class="panel-title">RPC services</h4>
+    </div>
+
+    <table class="table body-striped">
+        <tbody ng-repeat="rpcService in api.rpcServices">
+            <tr>
+                <td rowspan="2" width="40%">
+                    <p><strong><a ui-sref=".rpc({service: rpcService.service_name})">
+                        {{ rpcService.service_name }}
+                    </a></strong></p>
+
+                    <p class="text-muted" ng-show="rpcService.documentation.description">
+                        {{ rpcService.documentation.description }}
+                    </p>
+
+                    <p class="text-warning" ng-hide="rpcService.documentation.description">
+                        <a ui-sref=".rpc({service: rpcService.service_name, view: 'documentation', edit: true})">
+                            Add a description for this service
+                        </a>
+                    </p>
+                </td>
+                <td width="60%"><a ui-sref=".rpc({service: rpcService.service_name})">{{ rpcService.route_match }}</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <div class="panel panel-info" ng-controller="ApiVersionController">
     <div class="panel-heading">
         <h4 class="panel-title pull-left">Versioning</h4>
@@ -25,28 +84,3 @@
     </div>
 </div>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4 class="panel-title">REST services</h4>
-    </div>
-
-    <table class="table table-striped">
-        <tr ng-repeat="restService in api.restServices">
-            <td width="40%"><strong>{{ restService.service_name }}</strong></td>
-            <td width="60%">{{ restService.route_match }}</td>
-        </tr>
-    </table>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4 class="panel-title">RPC services</h4>
-    </div>
-
-    <table class="table table-striped">
-        <tr ng-repeat="rpcService in api.rpcServices">
-            <td width="40%"><strong>{{ rpcService.service_name }}</strong></td>
-            <td width="60%">{{ rpcService.route_match }}</td>
-        </tr>
-    </table>
-</div>
