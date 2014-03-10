@@ -161,7 +161,7 @@ angular.module('ag-admin').directive('collapse', function() {
                 if (name && searchParam) {
                     var toParams = {};
                     toParams[searchParam] = name;
-                    $state.go($state.$current.name, toParams);
+                    $state.go($state.$current.name, toParams, {reload: false, inherit: true, notify: false});
                 }
             };
 
@@ -174,7 +174,7 @@ angular.module('ag-admin').directive('collapse', function() {
                 if (searchParam) {
                     var toParams = {};
                     toParams[searchParam] = null;
-                    $state.go($state.$current.name, toParams);
+                    $state.go($state.$current.name, toParams, {reload: false, inherit: true, notify: false});
                 }
             };
 

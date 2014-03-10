@@ -159,7 +159,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 if (!callback || typeof callback !== 'function') {
                     callback = function() {
                         state.go(state.current, {}, {
-                            reload: true, inherit: true, notify: true
+                            reload: true, inherit: true
                         });
                     };
                 }

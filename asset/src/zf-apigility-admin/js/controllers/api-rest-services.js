@@ -53,19 +53,19 @@ angular.module('ag-admin').controller(
     $scope.newService.createNewRestService = function () {
         ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName)
             .then(function (restResource) {
-                ApiRepository.refreshApi($scope, $state, true, 'New REST Service created');
                 $scope.showNewRestServiceForm = false;
                 $scope.newService.restServiceName = '';
+                ApiRepository.refreshApi($scope, $state, true, 'New REST Service created');
             }, function (response) {});
     };
 
     $scope.newService.createNewDbConnectedService = function () {
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName)
             .then(function (restResource) {
-                ApiRepository.refreshApi($scope, $state, true, 'New DB Connected Service created');
                 $scope.showNewRestServiceForm = false;
                 $scope.newService.dbAdapterName = '';
                 $scope.newService.dbTableName = '';
+                ApiRepository.refreshApi($scope, $state, true, 'New DB Connected Service created');
             }, function (response) {});
     };
 
