@@ -36,9 +36,9 @@ angular.module('ag-admin').controller(
     $scope.createNewRpcService = function () {
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute)
             .then(function (rpcResource) {
-                ApiRepository.refreshApi($scope, $state, true, 'New RPC Service created');
                 $scope.addRpcService = false;
                 $scope.resetForm();
+                ApiRepository.refreshApi($scope, $state, true, 'New RPC Service created');
             });
     };
 
@@ -63,8 +63,8 @@ angular.module('ag-admin').controller(
     $scope.removeRpcService = function (rpcServiceName) {
         ApiRepository.removeRpcService($scope.api.name, rpcServiceName)
             .then(function (data) {
-                ApiRepository.refreshApi($scope, $state, true, 'RPC Service deleted');
                 $scope.deleteRpcService = false;
+                ApiRepository.refreshApi($scope, $state, true, 'RPC Service deleted');
             });
     };
 
