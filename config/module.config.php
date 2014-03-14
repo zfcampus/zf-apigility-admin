@@ -8,7 +8,7 @@ return array(
     'asset_manager' => array(
         'resolver_configs' => array(
             'paths' => array(
-                __DIR__ . '/../asset/dist',
+                __DIR__ . '/../asset/src',
             ),
         ),
     ),
@@ -31,6 +31,11 @@ return array(
     ),
 
     'controllers' => array(
+        'aliases' => array(
+            'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => 'ZF\Apigility\Admin\Controller\Authentication',
+            'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => 'ZF\Apigility\Admin\Controller\Authentication',
+            'ZF\Apigility\Admin\Controller\OAuth2Authentication' => 'ZF\Apigility\Admin\Controller\Authentication',
+        ),
         'invokables' => array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
             'ZF\Apigility\Admin\Controller\CacheEnabled' => 'ZF\Apigility\Admin\Controller\CacheEnabledController',
@@ -263,8 +268,38 @@ return array(
                                 'options' => array(
                                     'route' => '/authentication',
                                     'defaults' => array(
-                                        'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
                                         'action'     => 'authentication',
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
+                                    ),
+                                ),
+                                'may_terminate' => true,
+                                'child_routes' => array(
+                                    'oauth2' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/oauth2',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\OAuth2Authentication',
+                                            ),
+                                        ),
+                                    ),
+                                    'http-basic' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/http-basic',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\HttpBasicAuthentication',
+                                            ),
+                                        ),
+                                    ),
+                                    'http-digest' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/http-digest',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\HttpDigestAuthentication',
+                                            ),
+                                        ),
                                     ),
                                 ),
                             ),
@@ -295,22 +330,25 @@ return array(
 
     'zf-content-negotiation' => array(
         'controllers' => array(
-            'ZF\Apigility\Admin\Controller\Authentication'     => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Authorization'      => 'HalJson',
-            'ZF\Apigility\Admin\Controller\CacheEnabled'       => 'Json',
-            'ZF\Apigility\Admin\Controller\ContentNegotiation' => 'HalJson',
-            'ZF\Apigility\Admin\Controller\DbAdapter'          => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Documentation'      => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Filters'            => 'Json',
-            'ZF\Apigility\Admin\Controller\Hydrators'          => 'Json',
-            'ZF\Apigility\Admin\Controller\InputFilter'        => 'HalJson',
-            'ZF\Apigility\Admin\Controller\ModuleCreation'     => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Module'             => 'HalJson',
-            'ZF\Apigility\Admin\Controller\RestService'        => 'HalJson',
-            'ZF\Apigility\Admin\Controller\RpcService'         => 'HalJson',
-            'ZF\Apigility\Admin\Controller\Source'             => 'Json',
-            'ZF\Apigility\Admin\Controller\Validators'         => 'Json',
-            'ZF\Apigility\Admin\Controller\Versioning'         => 'Json',
+            'ZF\Apigility\Admin\Controller\Authentication'           => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Authorization'            => 'HalJson',
+            'ZF\Apigility\Admin\Controller\CacheEnabled'             => 'Json',
+            'ZF\Apigility\Admin\Controller\ContentNegotiation'       => 'HalJson',
+            'ZF\Apigility\Admin\Controller\DbAdapter'                => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Documentation'            => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Filters'                  => 'Json',
+            'ZF\Apigility\Admin\Controller\HttpBasicAuthentication'  => 'HalJson',
+            'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Hydrators'                => 'Json',
+            'ZF\Apigility\Admin\Controller\InputFilter'              => 'HalJson',
+            'ZF\Apigility\Admin\Controller\ModuleCreation'           => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Module'                   => 'HalJson',
+            'ZF\Apigility\Admin\Controller\OAuth2Authentication'     => 'HalJson',
+            'ZF\Apigility\Admin\Controller\RestService'              => 'HalJson',
+            'ZF\Apigility\Admin\Controller\RpcService'               => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Source'                   => 'Json',
+            'ZF\Apigility\Admin\Controller\Validators'               => 'Json',
+            'ZF\Apigility\Admin\Controller\Versioning'               => 'Json',
         ),
         'accept_whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
@@ -341,6 +379,14 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
+            'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\Hydrators' => array(
                 'application/json',
                 'application/*+json',
@@ -354,6 +400,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -379,10 +429,6 @@ return array(
             ),
         ),
         'content_type_whitelist' => array(
-            'ZF\Apigility\Admin\Controller\Authentication' => array(
-                'application/json',
-                'application/*+json',
-            ),
             'ZF\Apigility\Admin\Controller\Authorization' => array(
                 'application/json',
                 'application/*+json',
@@ -405,6 +451,14 @@ return array(
             'ZF\Apigility\Admin\Controller\Hydrators' => array(
                 'application/json',
             ),
+            'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\InputFilter' => array(
                 'application/json',
                 'application/*+json',
@@ -415,6 +469,10 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
                 'application/json',
+            ),
+            'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
+                'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
@@ -608,10 +666,8 @@ return array(
     ),
 
     'zf-rpc' => array(
-        // Dummy entry; still handled by ControllerManager, but this will force
-        // it to show up in the list of RPC services
         'ZF\Apigility\Admin\Controller\Authentication' => array(
-            'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
+            'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/authentication',
         ),
         'ZF\Apigility\Admin\Controller\Authorization' => array(
@@ -630,6 +686,14 @@ return array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/filters',
         ),
+        'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => array(
+            'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
+            'route_name'   => 'zf-apigility/api/authentication/http-basic',
+        ),
+        'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => array(
+            'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
+            'route_name'   => 'zf-apigility/api/authentication/http-digest',
+        ),
         'ZF\Apigility\Admin\Controller\Hydrators' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/hydrators',
@@ -641,6 +705,10 @@ return array(
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
             'route_name'   => 'zf-apigility/api/module-enable',
+        ),
+        'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
+            'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
+            'route_name'   => 'zf-apigility/api/authentication/oauth2',
         ),
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),

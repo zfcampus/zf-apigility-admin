@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
@@ -42,7 +43,7 @@ class AuthenticationController extends AbstractActionController
                 $response->setStatusCode(201);
                 $response->getHeaders()->addHeaderLine(
                     'Location',
-                    $this->plugin('hal')->createLink('zf-apigility/api/authentication')
+                    $this->plugin('hal')->createLink($this->getRouteForEntity($entity))
                 );
                 break;
             case $request::METHOD_PATCH:
@@ -61,12 +62,12 @@ class AuthenticationController extends AbstractActionController
                 );
         }
 
-        $entity = new Entity($entity, null);
-        $entity->getLinks()->add(Link::factory(array(
+        $halEntity = new Entity($entity, null);
+        $halEntity->getLinks()->add(Link::factory(array(
             'rel' => 'self',
-            'route' => 'zf-apigility/api/authentication',
+            'route' => $this->getRouteForEntity($entity),
         )));
-        $model = new ViewModel(array('payload' => $entity));
+        $model = new ViewModel(array('payload' => $halEntity));
         $model->setTerminal(true);
         return $model;
     }
@@ -83,5 +84,30 @@ class AuthenticationController extends AbstractActionController
     {
         $this->request = $request;
         return $this;
+    }
+
+    /**
+     * Determine the route to use for a given entity
+     * 
+     * @param  AuthenticationEntity $entity 
+     * @return string
+     */
+    protected function getRouteForEntity(AuthenticationEntity $entity)
+    {
+        $baseRoute = 'zf-apigility/api/authentication';
+
+        if ($entity->isBasic()) {
+            return $baseRoute . '/http-basic';
+        }
+
+        if ($entity->isDigest()) {
+            return $baseRoute . '/http-digest';
+        }
+
+        if ($entity->isOAuth2()) {
+            return $baseRoute . '/oauth2';
+        }
+
+        return $baseRoute;
     }
 }
