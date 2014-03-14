@@ -39,7 +39,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label">Content Negotiation Selector</label>
                 <div class="controls">
-                    <select class="form-control input-xlarge" 
+                    <select class="form-control input-xlarge"
                         ng-model="rpcService.selector" ng-options="v as v for (k,v) in selectors"></select>
                 </div>
             </div>
@@ -47,7 +47,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label" for="accept_whitelist">Accept whitelist</label>
                 <div class="controls">
-                    <tags-input 
+                    <tags-input
                         custom-class="ag-tags"
                         ng-model="rpcService.accept_whitelist"
                         add-on-space="true"
@@ -62,7 +62,7 @@
             <div class="form-group list-group-item">
                 <label class="control-label" for="content_type_whitelist">Content-Type whitelist</label>
                 <div class="controls">
-                    <tags-input 
+                    <tags-input
                         custom-class="ag-tags"
                         ng-model="rpcService.content_type_whitelist"
                         add-on-space="true"
@@ -85,4 +85,3 @@
 
     <div class="clearfix"></div>
 </form>
-

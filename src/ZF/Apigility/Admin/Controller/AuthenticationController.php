@@ -88,8 +88,8 @@ class AuthenticationController extends AbstractActionController
 
     /**
      * Determine the route to use for a given entity
-     * 
-     * @param  AuthenticationEntity $entity 
+     *
+     * @param  AuthenticationEntity $entity
      * @return string
      */
     protected function getRouteForEntity(AuthenticationEntity $entity)
