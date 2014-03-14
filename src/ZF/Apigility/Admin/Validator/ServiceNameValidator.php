@@ -2,12 +2,13 @@
 
 namespace ZF\Apigility\Admin\Validator;
 
-class ModuleNameValidator extends AbstractValidator
+
+class ServiceNameValidator extends AbstractValidator
 {
-    const API_NAME = 'api_name';
+    const SERVICE_NAME = 'service_name';
 
     protected $messageTemplates = array(
-        self::API_NAME => "'%value%' is not a valid api name"
+        self::SERVICE_NAME => "'%value%' is not a valid service name"
     );
 
     public function isValid($value)
@@ -15,7 +16,7 @@ class ModuleNameValidator extends AbstractValidator
         $this->setValue($value);
 
         if (!$this->isValidWordInPhp($value)) {
-            $this->error(self::API_NAME);
+            $this->error(self::SERVICE_NAME);
             return false;
         }
 

@@ -1248,6 +1248,59 @@ return array(
                 ),
             ),
         ),
+        'ZF\Apigility\Admin\InputFilter\Version' => array(
+            array(
+                'name' => 'module',
+                'validators' => array(
+                    array(
+                        'name' => 'ZF\Apigility\Admin\Validator\ModuleNameValidator'
+                    )
+                )
+            ),
+        ),
+        'ZF\Apigility\Admin\InputFilter\RestService\Post' => array(
+            array(
+                'name' => 'resource_name', // @todo resolve this
+                'validators' => array(
+                    array(
+                        'name' => 'ZF\Apigility\Admin\Validator\ServiceNameValidator'
+                    )
+                )
+            ),
+        ),
+        'ZF\Apigility\Admin\InputFilter\RpcService\Post' => array(
+            array(
+                'name' => 'service_name',
+                'validators' => array(
+                    array(
+                        'name' => 'ZF\Apigility\Admin\Validator\ServiceNameValidator'
+                    )
+                )
+            ),
+            array('name' => 'route')
+        ),
+//        'ZF\Apigility\Admin\InputFilter\RestService\Patch' => array(
+//            array('service_name')
+//
+//            array('accept_whitelist'),
+//            array('content_type_whitelist'),
+//            array('selector'),
+//
+//            array('route_match'),
+//            array('page_size'),
+//            array('collection_http_methods'),
+//            array('entity_http_methods'),
+//            array('route_identifier_name'),
+//            array('entity_identifier_name'),
+//            array('hydrator_name'), // class
+//            array('collection_name'),
+//            array('page_size_param'),
+//            array('collection_query_whitelist'),
+//            array('entity_class'), // class
+//            array('collection_class') // class
+//        )
+
+        /*
         'ZF\Apigility\Admin\InputFilter\Authentication' => array(
             // basic auth
             array('accept_schemes'),
@@ -1266,10 +1319,10 @@ return array(
             array('route_match')
         ),
         'ZF\Apigility\Admin\InputFilter\Config' => array(
-            array(/* Random Configuration array */)
+            array() // Random Configuration array
         ),
         'ZF\Apigility\Admin\InputFilter\ModuleConfig' => array(
-            array(/* Random Configuration array */)
+            array() // Random Configuration array
         ),
         'ZF\Apigility\Admin\InputFilter\ModuleCreation' => array(
             array(
@@ -1281,12 +1334,9 @@ return array(
                 ),
             ),
         ),
-        'ZF\Apigility\Admin\InputFilter\Version' => array(
-            array('name' => 'module', array('validators' => array(array('name' => 'ZF\Apigility\Admin\Validator\ModuleNameValidator')))),
-            array('version'), // integer
-        ),
+
         'ZF\Apigility\Admin\InputFilter\Authorization' => array(
-            array(/* This is a nested controller::action => array() */)
+            array() // This is a nested controller::action => array()
         ),
         'ZF\Apigility\Admin\InputFilter\RestService' => array(
             array('resource_name'), // @todo resolve this
@@ -1319,10 +1369,10 @@ return array(
             array('http_methods'),
         ),
         'ZF\Apigility\Admin\InputFilter\InputFilter' => array(
-            array(/* nested array of fields */)
+            array() // nested array of fields
         ),
         'ZF\Apigility\Admin\InputFilter\Documentation' => array(
-            array(/* nested array of fields */)
+            array() // nested array of fields
         ),
         'ZF\Apigility\Admin\InputFilter\DbAdapter' => array(
             array('adapter_name'),
@@ -1332,11 +1382,28 @@ return array(
             array('password')
         ),
         'ZF\Apigility\Admin\InputFilter\ContentNegotiation' => array(
-            array(/* Need documentatoin on this */)
+            array() //  Need documentatoin on this
         ),
+        */
     ),
 
     'zf-content-validation' => array(
+        'ZF\Apigility\Admin\Controller\Module' => array(
+            'POST' => 'ZF\Apigility\Admin\InputFilter\Module\Post',
+        ),
+        'ZF\Apigility\Admin\Controller\Versioning' => array(
+            'PATCH' => 'ZF\Apigility\Admin\InputFilter\Version',
+        ),
+        'ZF\Apigility\Admin\Controller\RestService' => array(
+            'POST' => 'ZF\Apigility\Admin\InputFilter\RestService\Post', // for the collection
+            // 'PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService', // for the entity
+        ),
+        'ZF\Apigility\Admin\Controller\RpcService' => array(
+            'POST' => 'ZF\Apigility\Admin\InputFilter\RpcService\Post', // for the collection
+            // 'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService', // for the entity
+        ),
+
+        /*
         'ZF\Apigility\Admin\Controller\Authentication' => array(
             'POST' => 'ZF\Apigility\Admin\InputFilter\Authentication',
             'PATCH' => 'ZF\Apigility\Admin\InputFilter\Authentication',
@@ -1351,12 +1418,8 @@ return array(
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'PUT' => 'ZF\Apigility\Admin\InputFilter\ModuleCreation',
         ),
-        'ZF\Apigility\Admin\Controller\Versioning' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\Version',
-        ),
-        'ZF\Apigility\Admin\Controller\Module' => array(
-            'POST' => 'ZF\Apigility\Admin\InputFilter\Module\Post',
-        ),
+
+
         'ZF\Apigility\Admin\Controller\Authorization' => array(
             'PUT' => 'ZF\Apigility\Admin\InputFilter\Authorization',
         ),
@@ -1388,5 +1451,6 @@ return array(
             'POST' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
             'DELETE' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
         ),
+        */
     ),
 );
