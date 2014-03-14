@@ -125,13 +125,13 @@ class RpcServiceResource extends AbstractResourceListener
             throw new CreationException('Service by that name already exists', 409);
         }
 
-        if (!isset($data['route'])
-            || !is_string($data['route'])
-            || empty($data['route'])
+        if (!isset($data['route_match'])
+            || !is_string($data['route_match'])
+            || empty($data['route_match'])
         ) {
             throw new CreationException('Unable to create RPC service; missing route');
         }
-        $creationData['route'] = $data['route'];
+        $creationData['route_match'] = $data['route_match'];
 
         if (isset($data['http_methods'])
             && (is_string($data['http_methods']) || is_array($data['http_methods']))
@@ -150,7 +150,7 @@ class RpcServiceResource extends AbstractResourceListener
         try {
             $service = $model->createService(
                 $creationData['service_name'],
-                $creationData['route'],
+                $creationData['route_match'],
                 $creationData['http_methods'],
                 $creationData['selector']
             );

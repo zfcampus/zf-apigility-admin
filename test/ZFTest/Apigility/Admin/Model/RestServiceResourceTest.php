@@ -113,7 +113,7 @@ class RestServiceResourceTest extends TestCase
      */
     public function testCreateReturnsRestServiceEntityWithControllerServiceNamePopulated()
     {
-        $entity = $this->resource->create(array('resource_name' => 'test'));
+        $entity = $this->resource->create(array('service_name' => 'test'));
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $entity);
         $controllerServiceName = $entity->controllerServiceName;
         $this->assertNotEmpty($controllerServiceName);

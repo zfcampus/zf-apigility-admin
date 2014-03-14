@@ -68,8 +68,8 @@ angular.module('ag-admin').controller(
         );
     };
 
-    var createAuthentication = function (options) {
-        AuthenticationRepository.createAuthentication(options).then(
+    var createAuthentication = function (type, options) {
+        AuthenticationRepository.createAuthentication(type, options).then(
             function success(authentication) {
                 flash.success = 'Authentication created';
                 fetchAuthenticationDetails(true);
@@ -90,11 +90,11 @@ angular.module('ag-admin').controller(
         $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
     };
 
-    var updateAuthentication = function (options) {
+    var updateAuthentication = function (type, options) {
         if (options.hasOwnProperty('digest_domains') && typeof options.digest_domains === 'object' && Array.isArray(options.digest_domains)) {
             options.digest_domains = options.digest_domains.join(' ');
         }
-        AuthenticationRepository.updateAuthentication(options).then(
+        AuthenticationRepository.updateAuthentication(type, options).then(
             function success(authentication) {
                 flash.success = 'Authentication updated';
                 fetchAuthenticationDetails(true);
@@ -134,7 +134,7 @@ angular.module('ag-admin').controller(
             realm          : $scope.realm,
             htpasswd       : $scope.htpasswd
         };
-        createAuthentication(options);
+        createAuthentication('http-basic', options);
     };
 
     $scope.createHttpDigestAuthentication = function () {
@@ -145,7 +145,7 @@ angular.module('ag-admin').controller(
             digest_domains : $scope.digest_domains.join(' '),
             nonce_timeout  : $scope.nonce_timeout
         };
-        createAuthentication(options);
+        createAuthentication('http-digest', options);
     };
 
     $scope.createOAuth2Authentication = function () {
@@ -157,7 +157,7 @@ angular.module('ag-admin').controller(
             username    : $scope.username,
             password    : $scope.password
         };
-        createAuthentication(options);
+        createAuthentication('oauth2', options);
     };
 
     $scope.updateHttpBasicAuthentication = function () {
@@ -165,7 +165,7 @@ angular.module('ag-admin').controller(
             realm          :  $scope.httpBasic.realm,
             htpasswd       :  $scope.httpBasic.htpasswd
         };
-        updateAuthentication(options);
+        updateAuthentication('http-basic', options);
     };
 
     $scope.updateHttpDigestAuthentication = function () {
@@ -175,7 +175,7 @@ angular.module('ag-admin').controller(
             digest_domains : $scope.httpDigest.digest_domains.join(' '),
             nonce_timeout  : $scope.httpDigest.nonce_timeout
         };
-        updateAuthentication(options);
+        updateAuthentication('http-digest', options);
     };
 
     $scope.updateOAuth2Authentication = function () {
@@ -187,11 +187,23 @@ angular.module('ag-admin').controller(
             username    : $scope.oauth2.username,
             password    : $scope.oauth2.password
         };
-        updateAuthentication(options);
+        updateAuthentication('oauth2', options);
     };
 
     $scope.removeAuthentication = function () {
-        AuthenticationRepository.removeAuthentication()
+        var type;
+        if ($scope.showHttpBasicAuthentication) {
+            type = 'http-basic';
+        } else if ($scope.showHttpDigestAuthentication) {
+            type = 'http-digest';
+        } else if ($scope.showOAuth2Authentication) {
+            type = 'oauth2';
+        }
+        if (! type) {
+            flash.error = 'Could not delete authentication; could not determine authentication type.'
+            return;
+        }
+        AuthenticationRepository.removeAuthentication(type)
             .then(function (response) {
                 flash.success = 'Authentication removed';
                 fetchAuthenticationDetails(true);

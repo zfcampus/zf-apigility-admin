@@ -175,7 +175,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
         },
 
         createNewRestService: function (apiName, restServiceName) {
-            return $http.post(moduleApiPath + '/' + apiName + '/rest', {resource_name: restServiceName})
+            return $http.post(moduleApiPath + '/' + apiName + '/rest', {service_name: restServiceName})
                 .then(function (response) {
                     return response.data;
                 });
@@ -189,7 +189,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
         },
 
         createNewRpcService: function (apiName, rpcServiceName, rpcServiceRoute) {
-            return $http.post(moduleApiPath + '/' + apiName + '/rpc', {service_name: rpcServiceName, route: rpcServiceRoute})
+            return $http.post(moduleApiPath + '/' + apiName + '/rpc', {service_name: rpcServiceName, route_match: rpcServiceRoute})
                 .then(function (response) {
                     return response.data;
                 });

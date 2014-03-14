@@ -262,21 +262,21 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function createService(RestServiceEntity $details)
     {
-        $resourceName = ucfirst($details->resourceName);
+        $serviceName = ucfirst($details->serviceName);
 
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $resourceName)) {
-            throw new CreationException('Invalid resource name; must be a valid PHP namespace name.');
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
+            throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
         $entity       = new RestServiceEntity();
         $entity->exchangeArray($details->getArrayCopy());
 
         $mediaType         = $this->createMediaType();
-        $controllerService = ($details->controllerServiceName) ? $details->controllerServiceName : $this->createControllerServiceName($resourceName);
-        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($resourceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
-        $resourceClass     = ($details->resourceClass)         ? $details->resourceClass         : $this->createResourceClass($resourceName);
-        $collectionClass   = ($details->collectionClass)       ? $details->collectionClass       : $this->createCollectionClass($resourceName);
-        $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($resourceName, 'entity', $details);
+        $controllerService = ($details->controllerServiceName) ? $details->controllerServiceName : $this->createControllerServiceName($serviceName);
+        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($serviceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
+        $resourceClass     = ($details->resourceClass)         ? $details->resourceClass         : $this->createResourceClass($serviceName);
+        $collectionClass   = ($details->collectionClass)       ? $details->collectionClass       : $this->createCollectionClass($serviceName);
+        $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($serviceName, 'entity', $details);
         $module            = ($details->module)                ? $details->module                : $this->module;
 
         $entity->exchangeArray(array(
@@ -355,34 +355,34 @@ class RestServiceModel implements EventManagerAwareInterface
     }
 
     /**
-     * Generate the controller service name from the module and resource name
+     * Generate the controller service name from the module and service name
      *
      * @param  string $module
-     * @param  string $resourceName
+     * @param  string $serviceName
      * @return string
      */
-    public function createControllerServiceName($resourceName)
+    public function createControllerServiceName($serviceName)
     {
         return sprintf(
             '%s\\V%s\\Rest\\%s\\Controller',
             $this->module,
             $this->moduleEntity->getLatestVersion(),
-            $resourceName
+            $serviceName
         );
     }
 
     /**
-     * Creates a new resource class based on the specified resource name
+     * Creates a new resource class based on the specified service name
      *
-     * @param  string $resourceName
+     * @param  string $serviceName
      * @return string The name of the newly created class
      */
-    public function createResourceClass($resourceName)
+    public function createResourceClass($serviceName)
     {
         $module  = $this->module;
-        $srcPath = $this->getSourcePath($resourceName);
+        $srcPath = $this->getSourcePath($serviceName);
 
-        $className = sprintf('%sResource', $resourceName);
+        $className = sprintf('%sResource', $serviceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -394,7 +394,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $view = new ViewModel(array(
             'module'    => $module,
-            'resource'  => $resourceName,
+            'resource'  => $serviceName,
             'classname' => $className,
             'version'   => $this->moduleEntity->getLatestVersion(),
         ));
@@ -409,7 +409,7 @@ class RestServiceModel implements EventManagerAwareInterface
             '%s\\V%s\\Rest\\%s\\%s',
             $module,
             $this->moduleEntity->getLatestVersion(),
-            $resourceName,
+            $serviceName,
             $className
         );
 
@@ -427,16 +427,16 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Create an entity class for the resource
      *
-     * @param  string $resourceName
+     * @param  string $serviceName
      * @param  string $template Which template to use; defaults to 'entity'
      * @return string The name of the newly created entity class
      */
-    public function createEntityClass($resourceName, $template = 'entity', $details = null)
+    public function createEntityClass($serviceName, $template = 'entity', $details = null)
     {
         $module     = $this->module;
-        $srcPath    = $this->getSourcePath($resourceName);
+        $srcPath    = $this->getSourcePath($serviceName);
 
-        $className = sprintf('%sEntity', $resourceName);
+        $className = sprintf('%sEntity', $serviceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -448,7 +448,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $view = new ViewModel(array(
             'module'    => $module,
-            'resource'  => $resourceName,
+            'resource'  => $serviceName,
             'classname' => $className,
             'version'   => $this->moduleEntity->getLatestVersion(),
             'details'   => $details,
@@ -464,7 +464,7 @@ class RestServiceModel implements EventManagerAwareInterface
             '%s\\V%s\\Rest\\%s\\%s',
             $module,
             $this->moduleEntity->getLatestVersion(),
-            $resourceName,
+            $serviceName,
             $className
         );
         return $fullClassName;
@@ -473,15 +473,15 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Create a collection class for the resource
      *
-     * @param  string $resourceName
+     * @param  string $serviceName
      * @return string The name of the newly created collection class
      */
-    public function createCollectionClass($resourceName)
+    public function createCollectionClass($serviceName)
     {
         $module     = $this->module;
-        $srcPath    = $this->getSourcePath($resourceName);
+        $srcPath    = $this->getSourcePath($serviceName);
 
-        $className = sprintf('%sCollection', $resourceName);
+        $className = sprintf('%sCollection', $serviceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -493,7 +493,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $view = new ViewModel(array(
             'module'    => $module,
-            'resource'  => $resourceName,
+            'resource'  => $serviceName,
             'classname' => $className,
             'version'   => $this->moduleEntity->getLatestVersion(),
         ));
@@ -508,7 +508,7 @@ class RestServiceModel implements EventManagerAwareInterface
             '%s\\V%s\\Rest\\%s\\%s',
             $module,
             $this->moduleEntity->getLatestVersion(),
-            $resourceName,
+            $serviceName,
             $className
         );
         return $fullClassName;
@@ -517,19 +517,19 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Create the route configuration
      *
-     * @param  string $resourceName
+     * @param  string $serviceName
      * @param  string $route
      * @param  string $routeIdentifier
      * @param  string $controllerService
      * @return string
      */
-    public function createRoute($resourceName, $route, $routeIdentifier, $controllerService)
+    public function createRoute($serviceName, $route, $routeIdentifier, $controllerService)
     {
         $filter    = $this->getRouteNameFilter();
         $routeName = sprintf(
             '%s.rest.%s',
             $filter->filter($this->module),
-            $filter->filter($resourceName)
+            $filter->filter($serviceName)
         );
 
         $config = array(
@@ -893,17 +893,17 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Get the source path for the module
      *
-     * @param  string $resourceName
+     * @param  string $serviceName
      * @return string
      */
-    protected function getSourcePath($resourceName)
+    protected function getSourcePath($serviceName)
     {
         $sourcePath = sprintf(
             '%s/src/%s/V%s/Rest/%s',
             $this->modulePath,
             str_replace('\\', '/', $this->module),
             $this->moduleEntity->getLatestVersion(),
-            $resourceName
+            $serviceName
         );
 
         if (!file_exists($sourcePath)) {

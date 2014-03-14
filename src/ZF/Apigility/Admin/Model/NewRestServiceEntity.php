@@ -10,7 +10,7 @@ use ZF\Rest\Exception\CreationException;
 
 class NewRestServiceEntity extends RestServiceEntity
 {
-    protected $resourceName;
+    protected $serviceName;
 
     public function exchangeArray(array $data)
     {
@@ -19,40 +19,39 @@ class NewRestServiceEntity extends RestServiceEntity
             $key = strtolower($key);
             $key = str_replace('_', '', $key);
             switch ($key) {
-                case 'resourcename':
-                    $this->resourceName = $value;
+                case 'servicename':
                     $this->serviceName  = $value;
                     break;
             }
         }
 
-        if (null === $this->resourceName) {
-            throw new CreationException('No resource name provided; cannot create RESTful resource', 422);
+        if (null === $this->serviceName) {
+            throw new CreationException('No service name provided; cannot create RESTful resource', 422);
         }
 
         if (null === $this->routeIdentifierName) {
             $this->routeIdentifierName = sprintf(
                 '%s_id',
-                $this->normalizeResourceNameForIdentifier($this->resourceName)
+                $this->normalizeServiceNameForIdentifier($this->serviceName)
             );
         }
 
         if (null === $this->routeMatch) {
             $this->routeMatch = sprintf(
                 '/%s',
-                $this->normalizeResourceNameForRoute($this->resourceName)
+                $this->normalizeServiceNameForRoute($this->serviceName)
             );
         }
 
         if (null === $this->collectionName) {
-            $this->collectionName = $this->normalizeResourceNameForIdentifier($this->resourceName);
+            $this->collectionName = $this->normalizeServiceNameForIdentifier($this->serviceName);
         }
     }
 
     public function getArrayCopy()
     {
         $return = parent::getArrayCopy();
-        $return['resource_name'] = $this->resourceName;
+        $return['service_name'] = $this->serviceName;
         return $return;
     }
 }
