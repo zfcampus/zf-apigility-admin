@@ -57,19 +57,19 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
         if (null === $this->routeIdentifierName) {
             $this->routeIdentifierName = sprintf(
                 '%s_id',
-                $this->normalizeResourceNameForIdentifier($this->tableName)
+                $this->normalizeServiceNameForIdentifier($this->tableName)
             );
         }
 
         if (null === $this->routeMatch) {
             $this->routeMatch = sprintf(
                 '/%s',
-                $this->normalizeResourceNameForRoute($this->tableName)
+                $this->normalizeServiceNameForRoute($this->tableName)
             );
         }
 
         if (null === $this->collectionName) {
-            $this->collectionName = $this->normalizeResourceNameForIdentifier($this->tableName);
+            $this->collectionName = $this->normalizeServiceNameForIdentifier($this->tableName);
         }
     }
 

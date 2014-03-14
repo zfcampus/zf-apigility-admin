@@ -233,14 +233,14 @@ class RestServiceEntity
         return $array;
     }
 
-    protected function normalizeResourceNameForIdentifier($resourceName)
+    protected function normalizeServiceNameForIdentifier($serviceName)
     {
-        return $this->getIdentifierNormalizationFilter()->filter($resourceName);
+        return $this->getIdentifierNormalizationFilter()->filter($serviceName);
     }
 
-    protected function normalizeResourceNameForRoute($resourceName)
+    protected function normalizeServiceNameForRoute($serviceName)
     {
-        return $this->getRouteNormalizationFilter()->filter($resourceName);
+        return $this->getRouteNormalizationFilter()->filter($serviceName);
     }
 
     /**

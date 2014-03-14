@@ -84,7 +84,7 @@ class RestServiceModelTest extends TestCase
     {
         $payload = new NewRestServiceEntity();
         $payload->exchangeArray(array(
-            'resource_name'              => 'foo',
+            'service_name'               => 'foo',
             'route_match'                => '/api/foo',
             'route_identifier_name'      => 'foo_id',
             'collection_name'            => 'foo',
@@ -102,36 +102,36 @@ class RestServiceModelTest extends TestCase
         return $payload;
     }
 
-    public function testRejectInvalidRestResourceName1()
+    public function testRejectInvalidRestServiceName1()
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
-        $restServiceEntity->exchangeArray(array('resourcename' => 'Foo Bar'));
+        $restServiceEntity->exchangeArray(array('servicename' => 'Foo Bar'));
         $this->codeRest->createService($restServiceEntity);
     }
 
-    public function testRejectInvalidRestResourceName2()
+    public function testRejectInvalidRestServiceName2()
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
-        $restServiceEntity->exchangeArray(array('resourcename' => 'Foo:Bar'));
+        $restServiceEntity->exchangeArray(array('serivcename' => 'Foo:Bar'));
         $this->codeRest->createService($restServiceEntity);
     }
 
-    public function testRejectInvalidRestResourceName3()
+    public function testRejectInvalidRestServiceName3()
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
-        $restServiceEntity->exchangeArray(array('resourcename' => 'Foo/Bar'));
+        $restServiceEntity->exchangeArray(array('servicename' => 'Foo/Bar'));
         $this->codeRest->createService($restServiceEntity);
     }
 
-    public function testCanCreateControllerServiceNameFromResourceNameSpace()
+    public function testCanCreateControllerServiceNameFromServiceNameSpace()
     {
         $this->assertEquals('BarConf\V1\Rest\Foo\Bar\Baz\Controller', $this->codeRest->createControllerServiceName('Foo\Bar\Baz'));
     }
 
-    public function testCanCreateControllerServiceNameFromResourceName()
+    public function testCanCreateControllerServiceNameFromServiceName()
     {
         $this->assertEquals('BarConf\V1\Rest\Foo\Controller', $this->codeRest->createControllerServiceName('Foo'));
     }
@@ -356,7 +356,7 @@ class RestServiceModelTest extends TestCase
     {
         $payload = new NewRestServiceEntity();
         $payload->exchangeArray(array(
-            'resource_name' => 'foo',
+            'service_name' => 'foo',
         ));
         $result  = $this->codeRest->createService($payload);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
