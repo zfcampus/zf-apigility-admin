@@ -228,7 +228,6 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
     {
-$this->markTestSkipped();
         $toCreate = array(
             'dsn'         => 'mongodb://localhost:27017',
             'database'    => 'apigilityTest',
@@ -288,7 +287,6 @@ $this->markTestSkipped();
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()
     {
-$this->markTestSkipped();
         $toCreate = array(
             'dsn'         => 'mongodb:300.300.300.300',
             'database'    => 'wrong',
