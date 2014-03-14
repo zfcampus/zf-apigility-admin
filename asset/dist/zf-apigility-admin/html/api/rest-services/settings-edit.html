@@ -10,7 +10,11 @@
                 <label class="control-label">Route to match</label>
                 <div class="controls">
                     <input type="text" placeholder="/api/your_resource" class="form-control input-xlarge" required="" ng-model="restService.route_match">
-                    <p class="help-block">The base URI for the resource (minus the identifier segment of the URI)</p>
+                    <p class="help-block">
+                        The URI for the service; "[&nbsp;]" indicate optional
+                        segments, and ":varname" indicates a variable URI segment
+                        to capture.
+                    </p>
                 </div>
             </div>
 
