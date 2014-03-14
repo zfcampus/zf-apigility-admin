@@ -175,12 +175,12 @@ class RpcServiceModel
      *
      * @todo   Return the controller service name
      * @param  string $serviceName
-     * @param  string $route
+     * @param  string $routeMatch
      * @param  array $httpMethods
      * @param  null|string $selector
      * @return RpcServiceEntity
      */
-    public function createService($serviceName, $route, $httpMethods, $selector = null)
+    public function createService($serviceName, $routeMatch, $httpMethods, $selector = null)
     {
         $normalizedServiceName = ucfirst($serviceName);
 
@@ -190,7 +190,7 @@ class RpcServiceModel
 
         $controllerData    = $this->createController($normalizedServiceName);
         $controllerService = $controllerData->service;
-        $routeName         = $this->createRoute($route, $normalizedServiceName, $controllerService);
+        $routeName         = $this->createRoute($routeMatch, $normalizedServiceName, $controllerService);
         $this->createRpcConfig($serviceName, $controllerService, $routeName, $httpMethods);
         $this->createContentNegotiationConfig($controllerService, $selector);
 

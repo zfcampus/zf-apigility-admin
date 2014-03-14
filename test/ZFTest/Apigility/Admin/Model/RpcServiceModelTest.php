@@ -80,28 +80,36 @@ class RpcServiceModelTest extends TestCase
 
     public function testRejectSpacesInRpcServiceName1()
     {
-        /** @todo define exception in Rpc namespace */
+        /**
+         * @todo define exception in Rpc namespace
+         */
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo Bar', 'route', array());
     }
 
     public function testRejectSpacesInRpcServiceName2()
     {
-        /** @todo define exception in Rpc namespace */
+        /**
+         * @todo define exception in Rpc namespace
+        */
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo:Bar', 'route', array());
     }
 
     public function testRejectSpacesInRpcServiceName3()
     {
-        /** @todo define exception in Rpc namespace */
+        /**
+         * @todo define exception in Rpc namespace
+        */
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo/Bar', 'route', array());
     }
 
     public function testCanCreateControllerServiceNameFromResourceNameSpace()
     {
-        /** @todo is this the expected behavior? */
+        /**
+         * @todo is this the expected behavior?
+        */
         $this->assertEquals('FooConf\V1\Rpc\Baz\Bat\Foo\Baz\Bat\FooController', $this->codeRpc->createController('Baz\Bat\Foo')->class);
     }
 
