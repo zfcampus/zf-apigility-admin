@@ -175,7 +175,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
         },
 
         createNewRestService: function (apiName, restServiceName) {
-            return $http.post(moduleApiPath + '/' + apiName + '/rest', {resource_name: restServiceName})
+            return $http.post(moduleApiPath + '/' + apiName + '/rest', {service_name: restServiceName})
                 .then(function (response) {
                     return response.data;
                 });
