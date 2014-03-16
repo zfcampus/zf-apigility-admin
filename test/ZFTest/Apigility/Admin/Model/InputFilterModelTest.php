@@ -55,7 +55,7 @@ class InputFilterModelTest extends TestCase
         $this->assertEquals(1, count($result));
         $inputFilter = $result->dequeue();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
-        $this->assertEquals($this->config['input_filters']['InputFilter\V1\Rest\Foo\Validator']['foo'], $inputFilter['foo']);
+        $this->assertEquals($this->config['input_filter_specs']['InputFilter\V1\Rest\Foo\Validator']['foo'], $inputFilter['foo']);
     }
 
     public function testAddInputFilterExistingController()

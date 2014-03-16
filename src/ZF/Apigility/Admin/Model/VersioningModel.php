@@ -238,7 +238,7 @@ class VersioningModel
             ), true);
         }
 
-        // update zf-content-validation and input_filters
+        // update zf-content-validation and input_filter_specs
         if (isset($config['zf-content-validation'])) {
             $newValues = $this->changeVersionArray($config['zf-content-validation'], $previous, $version);
             $this->configResource->patch(array(
@@ -246,10 +246,10 @@ class VersioningModel
             ), true);
         }
 
-        if (isset($config['input_filters'])) {
-            $newValues = $this->changeVersionArray($config['input_filters'], $previous, $version);
+        if (isset($config['input_filter_specs'])) {
+            $newValues = $this->changeVersionArray($config['input_filter_specs'], $previous, $version);
             $this->configResource->patch(array(
-                'input_filters' => $newValues
+                'input_filter_specs' => $newValues
             ), true);
         }
 
@@ -395,8 +395,8 @@ class VersioningModel
 
     /**
      * Update the documentation to add a new $version based on the $previous
-     * 
-     * @param  string $module 
+     *
+     * @param  string $module
      * @param  integer $previous Previous version
      * @param  integer $version New version
      * @return true

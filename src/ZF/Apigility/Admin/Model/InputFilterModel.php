@@ -86,7 +86,7 @@ class InputFilterModel
         }
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
-        if (!array_key_exists($validator, $config['input_filters'])) {
+        if (!array_key_exists($validator, $config['input_filter_specs'])) {
             return false;
         }
 
@@ -96,14 +96,14 @@ class InputFilterModel
 
         // Retrieving the input filter by name
         if ($inputFilterName && $inputFilterName === $validator) {
-            $inputFilter = new $entityType($config['input_filters'][$inputFilterName]);
+            $inputFilter = new $entityType($config['input_filter_specs'][$inputFilterName]);
             $inputFilter['input_filter_name'] = $inputFilterName;
             return $inputFilter;
         }
 
         // Retrieving a collection
         $collection  = new $collectionType();
-        $inputFilter = new $entityType($config['input_filters'][$validator]);
+        $inputFilter = new $entityType($config['input_filter_specs'][$validator]);
         $inputFilter['input_filter_name'] = $validator;
         $collection->enqueue($inputFilter);
         return $collection;
@@ -134,23 +134,23 @@ class InputFilterModel
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
 
-        if (!isset($config['input_filters'])) {
-            $config['input_filters'] = array();
+        if (!isset($config['input_filter_specs'])) {
+            $config['input_filter_specs'] = array();
         }
 
-        if (!isset($config['input_filters'][$validator])) {
-            $config['input_filters'][$validator] = array();
+        if (!isset($config['input_filter_specs'][$validator])) {
+            $config['input_filter_specs'][$validator] = array();
         }
 
-        $config['input_filters'][$validator] = $inputFilter;
+        $config['input_filter_specs'][$validator] = $inputFilter;
 
-        $updated = $configModule->patchKey(array('input_filters', $validator), $inputFilter);
+        $updated = $configModule->patchKey(array('input_filter_specs', $validator), $inputFilter);
         if (!is_array($updated)) {
             return false;
         }
 
         $entityType = $this->getEntityType($controller);
-        $return = new $entityType($updated['input_filters'][$validator]);
+        $return = new $entityType($updated['input_filter_specs'][$validator]);
         $return['input_filter_name'] = $validator;
         return $return;
     }
@@ -173,7 +173,7 @@ class InputFilterModel
         $config       = $configModule->fetch(true);
         $validator    = $config['zf-content-validation'][$controller]['input_filter'];
 
-        if (!isset($config['input_filters'][$validator])) {
+        if (!isset($config['input_filter_specs'][$validator])) {
             return false;
         }
 
@@ -181,11 +181,11 @@ class InputFilterModel
             return false;
         }
 
-        unset($config['input_filters'][$validator]);
+        unset($config['input_filter_specs'][$validator]);
         unset($config['zf-content-validation'][$controller]['input_filter']);
 
-        if (empty($config['input_filters'])) {
-            unset($config['input_filters']);
+        if (empty($config['input_filter_specs'])) {
+            unset($config['input_filter_specs']);
         }
 
         if (empty($config['zf-content-validation'][$controller])) {

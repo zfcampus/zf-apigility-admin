@@ -83,7 +83,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
 
         $inputFilterKey = $this->config['zf-content-validation'][$controller]['input_filter'];
-        $expected = $this->config['input_filters'][$inputFilterKey];
+        $expected = $this->config['input_filter_specs'][$inputFilterKey];
         $expected['input_filter_name'] = $inputFilterKey;
         $this->assertEquals($expected, $inputFilter->getArrayCopy());
     }
@@ -118,7 +118,7 @@ class InputFilterControllerTest extends TestCase
         $entity = $payload->entity;
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
-        $expected = $this->config['input_filters'][$validator];
+        $expected = $this->config['input_filter_specs'][$validator];
         $expected['input_filter_name'] = $validator;
         $this->assertEquals($expected, $entity->getArrayCopy());
     }
@@ -179,7 +179,7 @@ class InputFilterControllerTest extends TestCase
 
         $config    = include $this->basePath . '/module.config.php';
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
-        $expected  = $config['input_filters'][$validator];
+        $expected  = $config['input_filter_specs'][$validator];
         $expected['input_filter_name'] = $validator;
         $this->assertEquals($expected, $entity->getArrayCopy());
     }

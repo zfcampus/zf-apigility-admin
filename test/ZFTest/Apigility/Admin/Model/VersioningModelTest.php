@@ -197,8 +197,8 @@ class VersioningModelTest extends TestCase
         $this->assertArrayHasKey('zf-content-validation', $originalConfig);
         $this->assertArrayHasKey('Version\V1\Rest\Message\Controller', $originalConfig['zf-content-validation']);
         $this->assertArrayHasKey('input_filter', $originalConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']);
-        $this->assertArrayHasKey('input_filters', $originalConfig);
-        $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $originalConfig['input_filters']);
+        $this->assertArrayHasKey('input_filter_specs', $originalConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $originalConfig['input_filter_specs']);
 
         $result = $this->model->createVersion('Version', 2, __DIR__ . '/TestAsset/module/Version/src/Version');
 
@@ -213,10 +213,10 @@ class VersioningModelTest extends TestCase
         $this->assertArrayHasKey('input_filter', $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']);
         $this->assertEquals('Version\V2\Rest\Message\Validator', $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']['input_filter']);
 
-        $this->assertArrayHasKey('input_filters', $updatedConfig);
-        $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $updatedConfig['input_filters']);
-        $this->assertArrayHasKey('Version\V2\Rest\Message\Validator', $updatedConfig['input_filters']);
-        $this->assertEquals($updatedConfig['input_filters']['Version\V1\Rest\Message\Validator'], $updatedConfig['input_filters']['Version\V2\Rest\Message\Validator']);
+        $this->assertArrayHasKey('input_filter_specs', $updatedConfig);
+        $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $updatedConfig['input_filter_specs']);
+        $this->assertArrayHasKey('Version\V2\Rest\Message\Validator', $updatedConfig['input_filter_specs']);
+        $this->assertEquals($updatedConfig['input_filter_specs']['Version\V1\Rest\Message\Validator'], $updatedConfig['input_filter_specs']['Version\V2\Rest\Message\Validator']);
     }
 
     public function testSettingTheApiDefaultVersion()
