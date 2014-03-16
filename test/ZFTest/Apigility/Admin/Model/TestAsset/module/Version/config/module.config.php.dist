@@ -22,7 +22,7 @@ return array (
             ),
         ),
     ),
-    'input_filters' => array(
+    'input_filter_specs' => array(
         'Version\\V1\\Rest\\Message\\Validator' => array(
             array(
                 'name' => 'email',

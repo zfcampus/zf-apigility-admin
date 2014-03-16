@@ -1,6 +1,6 @@
 <?php
 return array(
-    'input_filters' => array(
+    'input_filter_specs' => array(
         'InputFilter\V1\Rest\Foo\Validator' => array(
             'foo' => array(
                 'name' => 'foo',
