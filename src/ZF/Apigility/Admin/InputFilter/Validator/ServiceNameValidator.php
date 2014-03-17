@@ -1,6 +1,6 @@
 <?php
 
-namespace ZF\Apigility\Admin\Validator;
+namespace ZF\Apigility\Admin\InputFilter\Validator;
 
 
 class ServiceNameValidator extends AbstractValidator

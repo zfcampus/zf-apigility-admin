@@ -1,6 +1,6 @@
 <?php
 
-namespace ZF\Apigility\Admin\Validator;
+namespace ZF\Apigility\Admin\InputFilter\Validator;
 
 use Zend\Validator\AbstractValidator as BaseAbstractValidator;
 

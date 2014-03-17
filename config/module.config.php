@@ -1238,218 +1238,71 @@ return array(
     ),
 
     'input_filters' => array(
-        'ZF\Apigility\Admin\Validator\ModuleName' => array(
-            array(
-                'name' => 'name',
-                'validators' => array(
-                    array(
-                        'name' => 'ZF\Apigility\Admin\Validator\ModuleNameValidator',
-                    ),
-                ),
-            ),
-        ),
-        'ZF\Apigility\Admin\InputFilter\Version' => array(
-            array(
-                'name' => 'module',
-                'validators' => array(
-                    array(
-                        'name' => 'ZF\Apigility\Admin\Validator\ModuleNameValidator'
-                    )
-                )
-            ),
-        ),
-        'ZF\Apigility\Admin\InputFilter\RestService\Post' => array(
-            array(
-                'name' => 'resource_name', // @todo resolve this
-                'validators' => array(
-                    array(
-                        'name' => 'ZF\Apigility\Admin\Validator\ServiceNameValidator'
-                    )
-                )
-            ),
-        ),
-        'ZF\Apigility\Admin\InputFilter\RpcService\Post' => array(
-            array(
-                'name' => 'service_name',
-                'validators' => array(
-                    array(
-                        'name' => 'ZF\Apigility\Admin\Validator\ServiceNameValidator'
-                    )
-                )
-            ),
-            array('name' => 'route')
-        ),
-//        'ZF\Apigility\Admin\InputFilter\RestService\Patch' => array(
-//            array('service_name')
-//
-//            array('accept_whitelist'),
-//            array('content_type_whitelist'),
-//            array('selector'),
-//
-//            array('route_match'),
-//            array('page_size'),
-//            array('collection_http_methods'),
-//            array('entity_http_methods'),
-//            array('route_identifier_name'),
-//            array('entity_identifier_name'),
-//            array('hydrator_name'), // class
-//            array('collection_name'),
-//            array('page_size_param'),
-//            array('collection_query_whitelist'),
-//            array('entity_class'), // class
-//            array('collection_class') // class
-//        )
+        'invokables' => array(
+            'ZF\Apigility\Admin\InputFilter\Authentication\BasicAuth' => 'ZF\Apigility\Admin\InputFilter\Authentication\BasicInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Authentication\DigestAuth' => 'ZF\Apigility\Admin\InputFilter\Authentication\DigestInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2InputFilter',
+            'ZF\Apigility\Admin\InputFilter\Authorization' => 'ZF\Apigility\Admin\InputFilter\AuthorizationInputFilter',
+            'ZF\Apigility\Admin\InputFilter\DbAdapter' => 'ZF\Apigility\Admin\InputFilter\DbAdapterInputFilter',
+            'ZF\Apigility\Admin\InputFilter\ContentNegotiation' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiationInputFilter',
 
-        /*
-        'ZF\Apigility\Admin\InputFilter\Authentication' => array(
-            // basic auth
-            array('accept_schemes'),
-            array('realm'),
-            array('htpasswd'),
+            'ZF\Apigility\Admin\InputFilter\Module' => 'ZF\Apigility\Admin\InputFilter\ModuleInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Version' => 'ZF\Apigility\Admin\InputFilter\VersionInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RestService\POST' => 'ZF\Apigility\Admin\InputFilter\RestService\PostInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RestService\PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService\PatchInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RpcService\POST' => 'ZF\Apigility\Admin\InputFilter\RpcService\PostInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RpcService\PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService\PatchInputFilter',
 
-            // digest (also accept_schemes, realm)
-            array('htdigest'),
-            array('nonce_timeout'),
-            array('digest_domains'),
-
-            // db
-            array('dsn'),
-            array('username'),
-            array('password'),
-            array('route_match')
+            'ZF\Apigility\Admin\InputFilter\InputFilter' => 'ZF\Apigility\Admin\InputFilter\InputFilterInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Documentation' => 'ZF\Apigility\Admin\InputFilter\DocumentationInputFilter',
         ),
-        'ZF\Apigility\Admin\InputFilter\Config' => array(
-            array() // Random Configuration array
-        ),
-        'ZF\Apigility\Admin\InputFilter\ModuleConfig' => array(
-            array() // Random Configuration array
-        ),
-        'ZF\Apigility\Admin\InputFilter\ModuleCreation' => array(
-            array(
-                'name' => 'module',
-                'validators' => array(
-                    array(
-                        'name' => 'ZF\Apigility\Admin\Validator\ModuleNameValidator',
-                    ),
-                ),
-            ),
-        ),
-
-        'ZF\Apigility\Admin\InputFilter\Authorization' => array(
-            array() // This is a nested controller::action => array()
-        ),
-        'ZF\Apigility\Admin\InputFilter\RestService' => array(
-            array('resource_name'), // @todo resolve this
-
-            array('accept_whitelist'),
-            array('content_type_whitelist'),
-            array('selector'),
-
-            array('route_match'),
-            array('page_size'),
-            array('collection_http_methods'),
-            array('entity_http_methods'),
-            array('route_identifier_name'),
-            array('entity_identifier_name'),
-            array('hydrator_name'), // class
-            array('collection_name'),
-            array('page_size_param'),
-            array('collection_query_whitelist'),
-            array('entity_class'), // class
-            array('collection_class') // class
-        ),
-        'ZF\Apigility\Admin\InputFilter\RpcService' => array(
-            array('service_name'),
-            array('route'),
-            // @todo resolve this mismatch
-            array('route_match'), // same as route on POST
-            array('accept_whitelist'),
-            array('content_type_whitelist'),
-            array('selector'),
-            array('http_methods'),
-        ),
-        'ZF\Apigility\Admin\InputFilter\InputFilter' => array(
-            array() // nested array of fields
-        ),
-        'ZF\Apigility\Admin\InputFilter\Documentation' => array(
-            array() // nested array of fields
-        ),
-        'ZF\Apigility\Admin\InputFilter\DbAdapter' => array(
-            array('adapter_name'),
-            array('database'),
-            array('driver'),
-            array('username'),
-            array('password')
-        ),
-        'ZF\Apigility\Admin\InputFilter\ContentNegotiation' => array(
-            array() //  Need documentatoin on this
-        ),
-        */
     ),
 
     'zf-content-validation' => array(
         'ZF\Apigility\Admin\Controller\Module' => array(
-            'POST' => 'ZF\Apigility\Admin\InputFilter\Module\Post',
+            'POST' => 'ZF\Apigility\Admin\InputFilter\Module',
         ),
         'ZF\Apigility\Admin\Controller\Versioning' => array(
             'PATCH' => 'ZF\Apigility\Admin\InputFilter\Version',
         ),
         'ZF\Apigility\Admin\Controller\RestService' => array(
-            'POST' => 'ZF\Apigility\Admin\InputFilter\RestService\Post', // for the collection
-            // 'PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService', // for the entity
+            'POST' => 'ZF\Apigility\Admin\InputFilter\RestService\POST', // for the collection
+            'PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService\PATCH', // for the entity
         ),
         'ZF\Apigility\Admin\Controller\RpcService' => array(
-            'POST' => 'ZF\Apigility\Admin\InputFilter\RpcService\Post', // for the collection
-            // 'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService', // for the entity
+            'POST' => 'ZF\Apigility\Admin\InputFilter\RpcService\POST', // for the collection
+            'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService\PATCH', // for the entity
         ),
 
         /*
+         *
+         * // separate this out by each method
         'ZF\Apigility\Admin\Controller\Authentication' => array(
             'POST' => 'ZF\Apigility\Admin\InputFilter\Authentication',
             'PATCH' => 'ZF\Apigility\Admin\InputFilter\Authentication',
             'DELETE' => 'ZF\Apigility\Admin\InputFilter\Authentication',
         ),
-        'ZF\Configuration\ConfigController' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\Config',
+        'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
         ),
-        'ZF\Configuration\ModuleConfigController' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\ModuleConfig',
+        'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
         ),
+
+        // @todo find out what this is (??)
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'PUT' => 'ZF\Apigility\Admin\InputFilter\ModuleCreation',
         ),
 
-
+        // these are shared between RPC and REST
         'ZF\Apigility\Admin\Controller\Authorization' => array(
-            'PUT' => 'ZF\Apigility\Admin\InputFilter\Authorization',
-        ),
-        'ZF\Apigility\Admin\Controller\RpcService' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService', // for the entity
-            'POST' => 'ZF\Apigility\Admin\InputFilter\RpcService', // for the collection
-        ),
-        'ZF\Apigility\Admin\Controller\RestService' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService', // for the entity
-            'POST' => 'ZF\Apigility\Admin\InputFilter\RestService', // for the collection
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authorization',
         ),
         'ZF\Apigility\Admin\Controller\InputFilter' => array(
-            'POST' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
-            'PUT' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
-            'DELETE' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
         ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\Documentation',
-            'PUT' => 'ZF\Apigility\Admin\InputFilter\Documentation',
-            'DELETE' => 'ZF\Apigility\Admin\InputFilter\Documentation',
-        ),
-        'ZF\Apigility\Admin\Controller\DbAdapter' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
-            'POST' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
-            'DELETE' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
-        ),
-        'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
-            'POST' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
-            'DELETE' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',
         ),
         */
     ),
