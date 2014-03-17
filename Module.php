@@ -45,7 +45,7 @@ class Module
         $this->disableOpCache();
 
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'ZF\Apigility\Autoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/ZF/Apigility/Admin/',
                 ),
@@ -577,7 +577,7 @@ class Module
         if (isset($_SERVER['SERVER_SOFTWARE'])
             && preg_match('/^PHP .*? Development Server$/', $_SERVER['SERVER_SOFTWARE'])
         ) {
-            // skip the built-in PHP webserver (OPcache reset is not needed + 
+            // skip the built-in PHP webserver (OPcache reset is not needed +
             // it crashes the server in PHP 5.4 with ZendOptimizer+)
             return;
         }
