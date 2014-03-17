@@ -1213,7 +1213,7 @@ return array(
         ),
     ),
 
-    'input_filters' => array(
+    'input_filter_specs' => array(
         'ZF\Apigility\Admin\ModuleName\Validator' => array(
             array(
                 'name' => 'name',
