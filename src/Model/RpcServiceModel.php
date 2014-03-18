@@ -257,7 +257,7 @@ class RpcServiceModel
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(
-            'code-connected/rpc-controller' => __DIR__ . '/../../../../../view/code-connected/rpc-controller.phtml'
+            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-controller.phtml'
         ));
 
         $view->setTemplate('code-connected/rpc-controller');

@@ -49,9 +49,11 @@
         "zendframework/zend-console": "~2.3"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "ZF\\Apigility\\Admin\\": "src/",
-            "ZFTest\\Apigility\\Admin\\": "test/",
+            "ZFTest\\Apigility\\Admin\\": "test/"
+        },
+        "psr-0": {
             "Test\\": "vendor/"
         },
         "classmap": [
