@@ -16,5 +16,8 @@ class PostInputFilter extends InputFilter
                 ),
             ),
         ));
+        $this->add(array(
+            'name' => 'route_match',
+        ));
     }
 }
