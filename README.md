@@ -2,7 +2,6 @@ Apigility Admin
 ===============
 
 [![Build Status](https://travis-ci.org/zfcampus/zf-apigility-admin.png)](https://travis-ci.org/zfcampus/zf-apigility-admin)
-[![Coverage Status](https://coveralls.io/repos/zfcampus/zf-apigility-admin/badge.png?branch=master)](https://coveralls.io/r/zfcampus/zf-apigility-admin)
 
 This module provides the admin interface and API service for the
 [Apigility](http://apigility.org) project.
