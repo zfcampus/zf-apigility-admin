@@ -1259,6 +1259,24 @@ return array(
     ),
 
     'zf-content-validation' => array(
+        'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\BasicAuth'
+        ),
+        'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\DigestAuth'
+        ),
+        'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2'
+        ),
+
+        'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
+        ),
+
+        //'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
+        //),
+
         'ZF\Apigility\Admin\Controller\Module' => array(
             'POST' => 'ZF\Apigility\Admin\InputFilter\Module',
         ),
@@ -1274,36 +1292,17 @@ return array(
             'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService\PATCH', // for the entity
         ),
 
-        /*
-         *
-         * // separate this out by each method
-        'ZF\Apigility\Admin\Controller\Authentication' => array(
-            'POST' => 'ZF\Apigility\Admin\InputFilter\Authentication',
-            'PATCH' => 'ZF\Apigility\Admin\InputFilter\Authentication',
-            'DELETE' => 'ZF\Apigility\Admin\InputFilter\Authentication',
-        ),
-        'ZF\Apigility\Admin\Controller\DbAdapter' => array(
-            'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
-        ),
-        'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
-            'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
-        ),
+        //'ZF\Apigility\Admin\Controller\InputFilter' => array(
+        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
+        //),
 
-        // @todo find out what this is (??)
-        'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
-            'PUT' => 'ZF\Apigility\Admin\InputFilter\ModuleCreation',
-        ),
+        //'ZF\Apigility\Admin\Controller\Documentation' => array(
+        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',
+        //),
 
-        // these are shared between RPC and REST
-        'ZF\Apigility\Admin\Controller\Authorization' => array(
-            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authorization',
-        ),
-        'ZF\Apigility\Admin\Controller\InputFilter' => array(
-            'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
-        ),
-        'ZF\Apigility\Admin\Controller\Documentation' => array(
-            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',
-        ),
-        */
+        //'ZF\Apigility\Admin\Controller\Authorization' => array(
+        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authorization',
+        //),
+
     ),
 );

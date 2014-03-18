@@ -1,9 +1,12 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZF\Apigility\Admin\InputFilter\Authentication;
 
 use Zend\InputFilter\InputFilter;
-
 
 class OAuth2InputFIlter extends InputFilter
 {
@@ -14,9 +17,11 @@ class OAuth2InputFIlter extends InputFilter
         ));
         $this->add(array(
             'name' => 'username',
+            'required' => false,
         ));
         $this->add(array(
             'name' => 'password',
+            'required' => false,
         ));
         $this->add(array(
             'name' => 'route_match',

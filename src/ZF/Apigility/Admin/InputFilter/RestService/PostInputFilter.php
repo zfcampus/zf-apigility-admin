@@ -1,4 +1,8 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZF\Apigility\Admin\InputFilter\RestService;
 
@@ -24,6 +28,10 @@ class PostInputFilter extends InputFilter
         ));
     }
 
+    /**
+     * Override isValid to provide conditional input checking
+     * @return bool
+     */
     public function isValid()
     {
         $context = $this->getRawValues();
@@ -38,6 +46,10 @@ class PostInputFilter extends InputFilter
         return parent::isValid();
     }
 
+    /**
+     * Override getMessages() to ensure our conditional logic messages can be passed upward
+     * @return array
+     */
     public function getMessages()
     {
         if ($this->localMessage) {
