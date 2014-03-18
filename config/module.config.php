@@ -88,7 +88,7 @@ return array(
                                 'options' => array(
                                     'route' => '/config',
                                     'defaults' => array(
-                                        'controller' => 'ZF\Configuration\ConfigController',
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Config',
                                         'action'     => 'process',
                                     ),
                                 ),
@@ -99,7 +99,7 @@ return array(
                                         'options' => array(
                                             'route' => '/module',
                                             'defaults' => array(
-                                                'controller' => 'ZF\Configuration\ModuleConfigController',
+                                                'controller' => 'ZF\Apigility\Admin\Controller\ModuleConfig',
                                             ),
                                         ),
                                     ),
@@ -678,6 +678,10 @@ return array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/cache-enabled',
         ),
+        'ZF\Apigility\Admin\Controller\Config' => array(
+            'http_methods' => array('GET', 'PATCH'),
+            'route_name'   => 'zf-apigility/api/config',
+        ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
             'http_methods' => array('GET', 'PATCH', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility/api/rest-service/rest-doc',
@@ -702,6 +706,10 @@ return array(
             'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility/api/rpc-service/input-filter',
         ),
+        'ZF\Apigility\Admin\Controller\ModuleConfig' => array(
+            'http_methods' => array('GET', 'PATCH'),
+            'route_name'   => 'zf-apigility/api/config/module',
+        ),
         'ZF\Apigility\Admin\Controller\ModuleCreation' => array(
             'http_methods' => array('PUT'),
             'route_name'   => 'zf-apigility/api/module-enable',
@@ -721,14 +729,6 @@ return array(
         'ZF\Apigility\Admin\Controller\Versioning' => array(
             'http_methods' => array('PATCH'),
             'route_name'   => 'zf-apigility/api/versioning',
-        ),
-        'ZF\Configuration\ConfigController'       => array(
-            'http_methods' => array('GET', 'PATCH'),
-            'route_name'   => 'zf-apigility/api/config',
-        ),
-        'ZF\Configuration\ModuleConfigController' => array(
-            'http_methods' => array('GET', 'PATCH'),
-            'route_name'   => 'zf-apigility/api/config/module',
         ),
     ),
 
