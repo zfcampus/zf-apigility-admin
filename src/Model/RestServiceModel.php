@@ -882,7 +882,7 @@ class RestServiceModel implements EventManagerAwareInterface
     protected function injectResolver(PhpRenderer $renderer, $type)
     {
         $template = sprintf('code-connected/rest-', $type);
-        $path     = sprintf('%s/../../../../../view/code-connected/rest-%s.phtml', __DIR__, $type);
+        $path     = sprintf('%s/../../view/code-connected/rest-%s.phtml', __DIR__, $type);
         $resolver = new Resolver\TemplateMapResolver(array(
             $template => $path,
         ));

@@ -1,9 +1,9 @@
 composer.lock
-test/ZFTest/Apigility/Admin/Model/TestAsset/module/FooConf/config/module.config.php
-test/ZFTest/Apigility/Admin/Model/TestAsset/module/BarConf/config/module.config.php
-test/ZFTest/Apigility/Admin/Model/TestAsset/module/AuthConf/config/module.config.php
-test/ZFTest/Apigility/Admin/Model/TestAsset/module/AuthConfDefaults/config/module.config.php
-test/ZFTest/Apigility/Admin/Model/TestAsset/module/AuthConfWithConfig/config/module.config.php
+test/Model/TestAsset/module/FooConf/config/module.config.php
+test/Model/TestAsset/module/BarConf/config/module.config.php
+test/Model/TestAsset/module/AuthConf/config/module.config.php
+test/Model/TestAsset/module/AuthConfDefaults/config/module.config.php
+test/Model/TestAsset/module/AuthConfWithConfig/config/module.config.php
 vendor/autoload.php
 vendor/bin/
 vendor/bshaffer/

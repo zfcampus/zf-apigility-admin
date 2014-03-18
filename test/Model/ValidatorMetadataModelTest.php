@@ -25,7 +25,7 @@ class ValidatorMetadataModelTest extends TestCase
             return $this->config;
         }
 
-        $configFile = __DIR__ . '/../../../../../config/module.config.php';
+        $configFile = __DIR__ . '/../../config/module.config.php';
         if (!file_exists($configFile)) {
             $this->markTestSkipped('Cannot find module config file!');
         }

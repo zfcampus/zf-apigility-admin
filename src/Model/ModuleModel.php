@@ -147,7 +147,7 @@ class ModuleModel
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(
-            'module/skeleton' => __DIR__ . '/../../../../../view/module/skeleton.phtml'
+            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml'
         ));
 
         $view->setTemplate('module/skeleton');
