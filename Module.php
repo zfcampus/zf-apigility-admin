@@ -283,6 +283,14 @@ class Module
                 $factory  = $services->get('ZF\Apigility\Admin\Model\AuthorizationModelFactory');
                 return new Controller\AuthorizationController($factory);
             },
+            'ZF\Apigility\Admin\Controller\Config' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                return new Controller\ConfigController($services->get('ZF\Configuration\ConfigResource'));
+            },
+            'ZF\Apigility\Admin\Controller\ModuleConfig' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                return new Controller\ModuleConfigController($services->get('ZF\Configuration\ConfigResourceFactory'));
+            },
             'ZF\Apigility\Admin\Controller\ModuleCreation' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
