@@ -1292,9 +1292,9 @@ return array(
             'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService\PATCH', // for the entity
         ),
 
-        //'ZF\Apigility\Admin\Controller\InputFilter' => array(
-        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
-        //),
+        'ZF\Apigility\Admin\Controller\InputFilter' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
+        ),
 
         //'ZF\Apigility\Admin\Controller\Documentation' => array(
         //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',

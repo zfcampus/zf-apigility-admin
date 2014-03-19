@@ -19,7 +19,26 @@ class InputFilterInputFilterTest extends TestCase
 
     public function dataProviderIsValidTrue()
     {
-        return array();
+        //[{"name":"one","required":true,"filters":[{"name":"Zend\\Filter\\Boolea","options":{"casting":false}}],"validators":[],"allow_empty":false,"continue_if_empty":false}]
+        return array(
+            array(
+                array(
+                    array(
+                        'name' => 'myfilter',
+                        'required' => true,
+                        'filters' => array(
+                            array(
+                                'name' => 'Zend\Filter\Boolean',
+                                'options' => array('casting' => false),
+                            )
+                        ),
+                        'validators' => array(),
+                        'allow_empty' => true,
+                        'continue_if_empty' => false,
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -35,7 +54,30 @@ class InputFilterInputFilterTest extends TestCase
 
     public function dataProviderIsValidFalse()
     {
-        return array();
+        return array(
+            array(
+                array('foobar' => 'baz'),
+                array('inputFilter' => array('isValid' => 'Zend\InputFilter\Factory::createInput expects an array or Traversable; received "string"'))
+            ),
+            array(
+                array(
+                    array(
+                        'name' => 'myfilter',
+                        'required' => true,
+                        'filters' => array(
+                            array(
+                                'name' => 'Zend\Filter\Bool',
+                                'options' => array('casting' => false),
+                            )
+                        ),
+                        'validators' => array(),
+                        'allow_empty' => true,
+                        'continue_if_empty' => false,
+                    )
+                ),
+                array('inputFilter' => array('isValid' => 'Zend\Filter\FilterPluginManager::get was unable to fetch or create an instance for Zend\Filter\Bool'))
+            )
+        );
     }
 }
  
