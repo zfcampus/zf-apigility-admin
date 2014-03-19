@@ -8,7 +8,7 @@ namespace ZF\Apigility\Admin\InputFilter\Validator;
 
 class ServiceNameValidator extends AbstractValidator
 {
-    const SERVICE_NAME = 'service_name';
+    const SERVICE_NAME = 'serviceName';
 
     protected $messageTemplates = array(
         self::SERVICE_NAME => "'%value%' is not a valid service name"
