@@ -1273,9 +1273,9 @@ return array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
         ),
 
-        //'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
-        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
-        //),
+        'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
+        ),
 
         'ZF\Apigility\Admin\Controller\Module' => array(
             'POST' => 'ZF\Apigility\Admin\InputFilter\Module',

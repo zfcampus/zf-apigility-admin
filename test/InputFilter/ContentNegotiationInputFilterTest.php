@@ -19,7 +19,13 @@ class ContentNegotiationInputFilterTest extends TestCase
 
     public function dataProviderIsValidTrue()
     {
-        return array();
+        return array(
+            array(
+                array(
+                    'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml')
+                )
+            )
+        );
     }
 
     /**
@@ -35,7 +41,26 @@ class ContentNegotiationInputFilterTest extends TestCase
 
     public function dataProviderIsValidFalse()
     {
-        return array();
+        return array(
+            array(
+                array(
+                    'Zend\View\Model\ViewMode' => array('text/html', 'application/xhtml+xml')
+                ),
+                array('Zend\View\Model\ViewMode' => array('invalidClassName' => 'Class name is invalid'))
+            ),
+            array(
+                array(
+                    'Zend\View\Model\ViewModel' => 'foo'
+                ),
+                array('Zend\View\Model\ViewModel' => array('invalidMediaTypes' => 'Values for the media-types must be provided as an indexed array'))
+            ),
+            array(
+                array(
+                    'Zend\View\Model\ViewModel' => array('texthtml', 'application/xhtml+xml')
+                ),
+                array('Zend\View\Model\ViewModel' => array('invalidMediaTypes' => 'Invalid media type provided'))
+            ),
+        );
     }
 }
  
