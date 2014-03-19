@@ -63,4 +63,3 @@ class ContentNegotiationInputFilterTest extends TestCase
         );
     }
 }
- 

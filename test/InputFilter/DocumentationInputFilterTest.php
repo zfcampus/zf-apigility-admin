@@ -38,4 +38,3 @@ class DocumentationInputFilterTest extends TestCase
         return array();
     }
 }
- 

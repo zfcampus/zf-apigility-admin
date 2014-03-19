@@ -80,4 +80,3 @@ class InputFilterInputFilterTest extends TestCase
         );
     }
 }
- 

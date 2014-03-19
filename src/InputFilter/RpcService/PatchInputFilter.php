@@ -35,15 +35,24 @@ class PatchInputFilter extends PostInputFilter
 
         $this->add(array(
             'name' => 'accept_whitelist',
+            'validators' => array(
+                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator')
+            )
         ));
         $this->add(array(
             'name' => 'content_type_whitelist',
+            'validators' => array(
+                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator')
+            )
         ));
         $this->add(array(
             'name' => 'selector',
         ));
         $this->add(array(
             'name' => 'http_methods',
+            'validators' => array(
+                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator')
+            )
         ));
     }
 }

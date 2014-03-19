@@ -58,4 +58,3 @@ class DbAdapterInputFilterTest extends TestCase
         );
     }
 }
- 

@@ -38,4 +38,3 @@ class PatchInputFilterTest extends TestCase
         return array();
     }
 }
- 

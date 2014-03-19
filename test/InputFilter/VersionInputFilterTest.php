@@ -50,4 +50,3 @@ class VersionInputFilterTest extends TestCase
         );
     }
 }
- 

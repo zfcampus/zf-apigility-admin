@@ -38,4 +38,3 @@ class AuthorizationInputFilterTest extends TestCase
         return array();
     }
 }
- 

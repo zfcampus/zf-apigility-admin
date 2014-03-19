@@ -85,4 +85,3 @@ class PostInputFilterTest extends TestCase
         );
     }
 }
- 

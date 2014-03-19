@@ -57,9 +57,15 @@ class PatchInputFilter extends PostInputFilter
         ));
         $this->add(array(
             'name' => 'collection_http_methods',
+            'validators' => array(
+                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator')
+            )
         ));
         $this->add(array(
             'name' => 'entity_http_methods',
+            'validators' => array(
+                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator')
+            )
         ));
         $this->add(array(
             'name' => 'route_identifier_name',
@@ -78,20 +84,6 @@ class PatchInputFilter extends PostInputFilter
         ));
         $this->add(array(
             'name' => 'collection_query_whitelist',
-        ));
-
-        // things that should be ignored / not sent by client
-        $this->add(array(
-            'name' => 'documentation',
-        ));
-        $this->add(array(
-            'name' => 'input_filter',
-        ));
-        $this->add(array(
-            'name' => '_links',
-        ));
-        $this->add(array(
-            'name' => '_self',
         ));
     }
 }

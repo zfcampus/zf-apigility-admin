@@ -54,4 +54,3 @@ class ModuleInputFilterTest extends TestCase
         );
     }
 }
- 
