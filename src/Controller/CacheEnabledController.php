@@ -16,14 +16,13 @@ class CacheEnabledController extends AbstractActionController
         $cacheEnabled = false;
 
         switch (true) {
-            case (isset($_SERVER['SERVER_SOFTWARE'])
-                && preg_match('/^PHP .*? Development Server$/', $_SERVER['SERVER_SOFTWARE'])):
+            case (php_sapi_name() === 'cli-server'):
                 // built-in PHP webserver never truly enables opcode caching
                 break;
             case (ini_get('opcache.enable')):
                 // zf-configuration has opcache rules for invalidating the cache built-in
                 break;
-            case (ini_get('apc.enabled')):
+            case (ini_get('apc.enabled') && extension_loaded('apc')):
                 // APC
                 $cacheEnabled = true;
                 break;
