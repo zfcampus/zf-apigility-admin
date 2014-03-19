@@ -43,6 +43,14 @@ class PostInputFilterTest extends TestCase
     public function dataProviderIsValidFalse()
     {
         return array(
+            // nothing
+            array(
+                array(),
+                array(
+                    'service_name' => array('isEmpty' => "Value is required and can't be empty"),
+                    'route_match' => array('isEmpty' => "Value is required and can't be empty")
+                )
+            ),
             // missing service_name
             array(
                 array('route_match' => '/bar'),
