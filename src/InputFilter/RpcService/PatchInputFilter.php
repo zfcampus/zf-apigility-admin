@@ -45,19 +45,5 @@ class PatchInputFilter extends PostInputFilter
         $this->add(array(
             'name' => 'http_methods',
         ));
-
-        // things that should be ignored / not sent by client
-        $this->add(array(
-            'name' => 'documentation',
-        ));
-        $this->add(array(
-            'name' => 'input_filter',
-        ));
-        $this->add(array(
-            'name' => '_links',
-        ));
-        $this->add(array(
-            'name' => '_self',
-        ));
     }
 }

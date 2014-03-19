@@ -19,7 +19,22 @@ class PatchInputFilterTest extends TestCase
 
     public function dataProviderIsValidTrue()
     {
-        return array();
+        return array(
+            array(
+                array(
+                    'service_name' => 'Foo',
+                    'route_match' => '/foo',
+                    'module' => 'FooBar',
+                    'controller_service_name' => 'FooBar\V1\Rpc\Foo\Controller',
+                    'controller_class' => 'FooBar\V1\Rpc\Foo\FooController',
+                    'route_name' => 'foobar.rest.foo',
+                    'accept_whitelist' => array('application/vnd.foo.v1+json', 'application/hal+json', 'application/json'),
+                    'content_type_whitelist' => array('application/vnd.foo.v1+json', 'application/json'),
+                    'selector' => 'HalJson',
+                    'http_methods' => array('GET', 'POST', 'PATCH')
+                )
+            )
+        );
     }
 
     /**
@@ -35,7 +50,22 @@ class PatchInputFilterTest extends TestCase
 
     public function dataProviderIsValidFalse()
     {
-        return array();
+        return array(
+            array(
+                array(
+                    'route_match' => '/foo',
+                    'module' => 'FooBar',
+                    'controller_service_name' => 'FooBar\V1\Rpc\Foo\Controller',
+                    'controller_class' => 'FooBar\V1\Rpc\Foo\FooController',
+                    'route_name' => 'foobar.rest.foo',
+                    'accept_whitelist' => array('application/vnd.foo.v1+json', 'application/hal+json', 'application/json'),
+                    'content_type_whitelist' => array('application/vnd.foo.v1+json', 'application/json'),
+                    'selector' => 'HalJson',
+                    'http_methods' => array('GET', 'POST', 'PATCH')
+                ),
+                array('service_name' => array('isEmpty' => "Value is required and can't be empty"))
+            )
+        );
     }
 }
  
