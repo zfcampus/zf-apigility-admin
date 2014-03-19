@@ -37,7 +37,10 @@ class FsPermissionsController extends AbstractActionController
     public function fsPermissionsAction()
     {
         $isWritable = $this->configIsWritable() && $this->moduleIsWritable();
-        $viewModel = new ViewModel(array('fs_perms' => $isWritable));
+        $viewModel = new ViewModel(array(
+            'fs_perms' => $isWritable,
+            'www_user' => getenv('USER') ?: '',
+        ));
         return $viewModel;
     }
 
