@@ -19,7 +19,14 @@ class ModuleInputFilterTest extends TestCase
 
     public function dataProviderIsValidTrue()
     {
-        return array();
+        return array(
+            array(
+                array('name' => 'Foo')
+            ),
+            array(
+                array('name' => 'My_Status')
+            ),
+        );
     }
 
     /**
@@ -35,7 +42,16 @@ class ModuleInputFilterTest extends TestCase
 
     public function dataProviderIsValidFalse()
     {
-        return array();
+        return array(
+            array(
+                array('name' => '_'),
+                array('name' => array('api_name' => "'_' is not a valid api name"))
+            ),
+            array(
+                array('name' => 'My\Status'),
+                array('name' => array('api_name' => "'My\Status' is not a valid api name"))
+            ),
+        );
     }
 }
  
