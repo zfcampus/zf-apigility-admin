@@ -39,6 +39,7 @@ return array(
         'invokables' => array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
             'ZF\Apigility\Admin\Controller\CacheEnabled' => 'ZF\Apigility\Admin\Controller\CacheEnabledController',
+            'ZF\Apigility\Admin\Controller\FsPermissions' => 'ZF\Apigility\Admin\Controller\FsPermissionsController',
         ),
         'factories' => array(
             'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
@@ -80,6 +81,16 @@ return array(
                                     'defaults' => array(
                                         'controller' => 'ZF\Apigility\Admin\Controller\CacheEnabled',
                                         'action'     => 'cacheEnabled',
+                                    ),
+                                ),
+                            ),
+                            'fs-permissions' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/fs-permissions',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\FsPermissions',
+                                        'action'     => 'fsPermissions',
                                     ),
                                 ),
                             ),
@@ -337,6 +348,7 @@ return array(
             'ZF\Apigility\Admin\Controller\DbAdapter'                => 'HalJson',
             'ZF\Apigility\Admin\Controller\Documentation'            => 'HalJson',
             'ZF\Apigility\Admin\Controller\Filters'                  => 'Json',
+            'ZF\Apigility\Admin\Controller\FsPermissions'            => 'Json',
             'ZF\Apigility\Admin\Controller\HttpBasicAuthentication'  => 'HalJson',
             'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => 'HalJson',
             'ZF\Apigility\Admin\Controller\Hydrators'                => 'Json',
@@ -376,6 +388,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Filters' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\FsPermissions' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -447,6 +463,10 @@ return array(
             ),
             'ZF\Apigility\Admin\Controller\Filters' => array(
                 'application/json',
+            ),
+            'ZF\Apigility\Admin\Controller\FsPermissions' => array(
+                'application/json',
+                'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Hydrators' => array(
                 'application/json',
@@ -689,6 +709,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Filters' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/filters',
+        ),
+        'ZF\Apigility\Admin\Controller\FsPermissions' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/fs-permissions',
         ),
         'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => array(
             'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),

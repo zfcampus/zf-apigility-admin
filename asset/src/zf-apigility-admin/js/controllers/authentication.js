@@ -47,7 +47,7 @@ angular.module('ag-admin').controller(
                     $scope.showOAuth2Authentication     = false;
                     $scope.digest_domains               = authentication.digest_domains.split(' ');
                     $scope.httpDigest                   = authentication;
-                    $scope.httpDigest.digest_domains = authentication.digest_domains.split(' ');
+                    $scope.httpDigest.digest_domains    = authentication.digest_domains.split(' ');
                     $scope.httpBasic                    = null;
                     $scope.oauth2                       = null;
                 } else if (authentication.type == 'oauth2') {
@@ -200,7 +200,7 @@ angular.module('ag-admin').controller(
             type = 'oauth2';
         }
         if (! type) {
-            flash.error = 'Could not delete authentication; could not determine authentication type.'
+            flash.error = 'Could not delete authentication; could not determine authentication type.';
             return;
         }
         AuthenticationRepository.removeAuthentication(type)
