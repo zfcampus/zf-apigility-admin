@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
     'ApiDocumentationController',
-    function ($scope, $state, $stateParams, flash, ApiRepository, ApiAuthorizationRepository) {
+    function ($scope, $state, $stateParams, flash, ApiRepository, ApiAuthorizationRepository, agFormHandler) {
 
         var moduleName = $stateParams.apiName;
         var version    = $stateParams.version;
@@ -168,12 +168,17 @@ angular.module('ag-admin').controller(
                 });
                 $scope.service.documentation = docs;
             }
-            ApiRepository.saveDocumentation($scope.service);
-            $scope.$parent.flash.success = 'Documentation saved.';
-
-            $state.go($state.$current.name, {edit: ''}, {reload: true});
+            ApiRepository.saveDocumentation($scope.service).then(
+                function (savedDocs) {
+                    agFormHandler.resetForm($scope);
+                    $scope.$parent.flash.success = 'Documentation saved.';
+                    $state.go($state.$current.name, {edit: ''}, {reload: true});
+                },
+                function (error) {
+                    agFormHandler.reportError(error, $scope);
+                }
+            );
         };
-
     }
 );
 

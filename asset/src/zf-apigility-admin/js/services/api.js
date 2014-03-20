@@ -239,12 +239,18 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
         saveInputFilter: function (api, inputFilter) {
             var url = api._self + '/input-filter';
-            return $http.put(url, inputFilter);
+            return $http.put(url, inputFilter)
+                .then(function (response) {
+                    return response.data;
+                });
         },
 
         saveDocumentation: function (api) {
             var url = api._self + '/doc';
-            return $http.put(url, api.documentation);
+            return $http.put(url, api.documentation)
+                .then(function (response) {
+                    return response.data;
+                });
         },
 
         removeRpcService: function (apiName, rpcServiceName) {
