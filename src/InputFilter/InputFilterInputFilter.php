@@ -8,12 +8,18 @@ namespace ZF\Apigility\Admin\InputFilter;
 
 use Zend\InputFilter\Factory as InputFilterFactory;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\InputFilterPluginManager;
 
 class InputFilterInputFilter implements InputFilterInterface
 {
-
+    protected $inputFilterPluginManager;
     protected $data;
     protected $messages = array();
+
+    public function __construct(InputFilterPluginManager $inputFilterPluginManager = null)
+    {
+        $this->inputFilterPluginManager = $inputFilterPluginManager;
+    }
 
     public function setData($data)
     {
@@ -28,6 +34,7 @@ class InputFilterInputFilter implements InputFilterInterface
     public function isValid()
     {
         $iff = new InputFilterFactory();
+        $iff->setInputFilterManager($this->inputFilterPluginManager);
         $this->messages = array();
         try {
             $iff->createInputFilter($this->data);

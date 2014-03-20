@@ -3,18 +3,25 @@
 namespace ZFTest\Apigility\Admin\InputFilter;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\InputFilter\InputFilterPluginManager;
 use ZF\Apigility\Admin\InputFilter\InputFilterInputFilter;
 
 class InputFilterInputFilterTest extends TestCase
 {
+    protected $inputFilterInputFilter;
+
+    public function setup()
+    {
+        $this->inputFilterInputFilter = new InputFilterInputFilter(new InputFilterPluginManager());
+    }
+
     /**
      * @dataProvider dataProviderIsValidTrue
      */
     public function testIsValidTrue($data)
     {
-        $i = new InputFilterInputFilter;
-        $i->setData($data);
-        $this->assertTrue($i->isValid());
+        $this->inputFilterInputFilter->setData($data);
+        $this->assertTrue($this->inputFilterInputFilter->isValid());
     }
 
     public function dataProviderIsValidTrue()
@@ -46,10 +53,9 @@ class InputFilterInputFilterTest extends TestCase
      */
     public function testIsValidFalse($data, $messages)
     {
-        $i = new InputFilterInputFilter;
-        $i->setData($data);
-        $this->assertFalse($i->isValid());
-        $this->assertEquals($messages, $i->getMessages());
+        $this->inputFilterInputFilter->setData($data);
+        $this->assertFalse($this->inputFilterInputFilter->isValid());
+        $this->assertEquals($messages, $this->inputFilterInputFilter->getMessages());
     }
 
     public function dataProviderIsValidFalse()
