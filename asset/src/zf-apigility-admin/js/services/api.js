@@ -205,22 +205,23 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
         saveRestService: function (apiName, restService) {
             var url = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restService.controller_service_name);
+            var testForEmpty = this.testForEmpty;
             var data = {
                 accept_whitelist: restService.accept_whitelist,
-                collection_class: (restService.collection_class === '' ? null : restService.collection_class),
+                collection_class: testForEmpty(restService.collection_class),
                 collection_http_methods: restService.collection_http_methods,
-                collection_name: (restService.collection_name === '' ? null : restService.collection_name),
+                collection_name: testForEmpty(restService.collection_name),
                 collection_query_whitelist: restService.collection_query_whitelist,
                 content_type_whitelist: restService.content_type_whitelist,
-                entity_class: (restService.entity_class === '' ? null : restService.entity_class),
+                entity_class: testForEmpty(restService.entity_class),
                 entity_http_methods: restService.entity_http_methods,
-                entity_identifier_name: (restService.entity_identifier_name === '' ? null : restService.entity_identifier_name),
-                hydrator_name: (restService.hydrator_name === '' ? null : restService.hydrator_name),
-                page_size: (restService.page_size === '' ? null : restService.page_size),
-                page_size_param: (restService.page_size_param === '' ? null : restService.page_size_param),
-                resource_class: (restService.resource_class === ''  ? null : restService.resource_class),
-                route_identifier_name: (restService.route_identifier_name === '' ? null : restService.route_identifier_name),
-                route_match: (restService.route_match === '' ? null : restService.route_match),
+                entity_identifier_name: testForEmpty(restService.entity_identifier_name),
+                hydrator_name: testForEmpty(restService.hydrator_name),
+                page_size: testForEmpty(restService.page_size),
+                page_size_param: testForEmpty(restService.page_size_param),
+                resource_class: testForEmpty(restService.resource_class),
+                route_identifier_name: testForEmpty(restService.route_identifier_name),
+                route_match: testForEmpty(restService.route_match),
                 selector: restService.selector,
                 service_name: restService.service_name
             };
@@ -256,13 +257,14 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
         saveRpcService: function (apiName, rpcService) {
             var url = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
+            var testForEmpty = this.testForEmpty;
             var data = {
                 accept_whitelist: rpcService.accept_whitelist,
                 content_type_whitelist: rpcService.content_type_whitelist,
-                controller_class: (rpcService.controller_class === '' ? null : rpcService.controller_class),
+                controller_class: testForEmpty(rpcService.controller_class),
                 http_methods: rpcService.http_methods,
-                route_match: (rpcService.route_match === '' ? null : rpcService.route_match),
-                selector: (rpcService.selector === '' ? null : rpcService.selector),
+                route_match: testForEmpty(rpcService.route_match),
+                selector: testForEmpty(rpcService.selector),
                 service_name: rpcService.service_name
             };
             return $http({method: 'patch', url: url, data: data})
@@ -380,6 +382,16 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 config.params[pair[0]] = pair[1];
             });
             return config;
+        },
+
+        testForEmpty: function (value) {
+            if (value === '') {
+                return null;
+            }
+            if (value === undefined) {
+                return null;
+            }
+            return value;
         }
     };
 });
