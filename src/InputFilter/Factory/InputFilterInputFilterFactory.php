@@ -2,23 +2,27 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Factory;
 
+use Zend\InputFilter\Factory as InputFilterFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\Apigility\Admin\InputFilter\InputFilterInputFilter;
 
 class InputFilterInputFilterFactory implements FactoryInterface
 {
-
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $inputFilters
+     * @return InputFilterInputFilter
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $inputFilters)
     {
-        return new InputFilterInputFilter($serviceLocator);
-    }
+        $services = $inputFilters->getServiceLocator();
+        $factory  = new InputFilterFactory();
+        $factory->setInputFilterManager($inputFilters);
+        $factory->getDefaultFilterChain()->setPluginManager($services->get('FilterManager'));
+        $factory->getDefaultValidatorChain()->setPluginManager($services->get('ValidatorManager'));
 
+        return new InputFilter\InputFilterInputFilter($factory);
+    }
 }
- 

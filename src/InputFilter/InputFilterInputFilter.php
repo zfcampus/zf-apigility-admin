@@ -7,23 +7,26 @@
 namespace ZF\Apigility\Admin\InputFilter;
 
 use Zend\InputFilter\Factory as InputFilterFactory;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\InputFilterPluginManager;
+use Zend\InputFilter\InputFilter;
 
-class InputFilterInputFilter implements InputFilterInterface
+class InputFilterInputFilter extends InputFilter
 {
-    protected $inputFilterPluginManager;
-    protected $data;
+    /**
+     * @var array
+     */
     protected $messages = array();
 
-    public function __construct(InputFilterPluginManager $inputFilterPluginManager = null)
-    {
-        $this->inputFilterPluginManager = $inputFilterPluginManager;
-    }
+    /**
+     * @var InputFilterFactory
+     */
+    protected $validationFactory;
 
-    public function setData($data)
+    /**
+     * @param InputFilterFactory $factory 
+     */
+    public function __construct(InputFilterFactory $factory)
     {
-        $this->data = $data;
+        $this->validationFactory = $factory;
     }
 
     /**
@@ -33,74 +36,21 @@ class InputFilterInputFilter implements InputFilterInterface
      */
     public function isValid()
     {
-        $iff = new InputFilterFactory();
-        $iff->setInputFilterManager($this->inputFilterPluginManager);
         $this->messages = array();
         try {
-            $iff->createInputFilter($this->data);
+            $this->validationFactory->createInputFilter($this->data);
         } catch (\Exception $e) {
-            $this->messages['inputFilter'] = array('isValid' => $e->getMessage());
+            $this->messages['inputFilter'] = $e->getMessage();
             return false;
         }
         return true;
     }
 
-    public function getRawValues()
-    {
-        return $this->data;
-    }
-
+    /**
+     * @return array
+     */
     public function getMessages()
     {
         return $this->messages;
     }
-
-    /**#@+
-     * Unnecessary methods required by interface for the purposes of this input filter
-     * @return void
-     */
-    public function count()
-    {
-    }
-
-    public function add($input, $name = null)
-    {
-    }
-
-    public function get($name)
-    {
-    }
-
-    public function has($name)
-    {
-    }
-
-    public function remove($name)
-    {
-    }
-
-    public function setValidationGroup($name)
-    {
-    }
-
-    public function getInvalidInput()
-    {
-    }
-
-    public function getValidInput()
-    {
-    }
-
-    public function getValue($name)
-    {
-    }
-
-    public function getValues()
-    {
-    }
-
-    public function getRawValue($name)
-    {
-    }
-    /**#@-*/
 }
