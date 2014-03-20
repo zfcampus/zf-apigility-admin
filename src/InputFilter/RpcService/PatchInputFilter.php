@@ -8,27 +8,17 @@ namespace ZF\Apigility\Admin\InputFilter\RpcService;
 
 class PatchInputFilter extends PostInputFilter
 {
-    public function __construct()
+    public function init()
     {
         // service_name
-        parent::__construct();
+        parent::init();
 
         // module & controller_service_name
         $this->add(array(
             'name' => 'module',
         ));
-        $this->add(array(
-            'name' => 'controller_service_name',
-        ));
-
-        $this->add(array(
-            'name' => 'controller_class',
-        ));
 
         // route
-        $this->add(array(
-            'name' => 'route_name',
-        ));
         $this->add(array(
             'name' => 'route_match',
         ));

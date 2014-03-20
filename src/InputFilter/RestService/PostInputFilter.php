@@ -12,7 +12,7 @@ class PostInputFilter extends InputFilter
 {
     protected $localMessage;
 
-    public function __construct()
+    public function init()
     {
         $this->add(array(
             'name' => 'service_name',

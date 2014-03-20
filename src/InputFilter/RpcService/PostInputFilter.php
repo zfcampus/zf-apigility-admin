@@ -10,7 +10,7 @@ use Zend\InputFilter\InputFilter;
 
 class PostInputFilter extends InputFilter
 {
-    public function __construct()
+    public function init()
     {
         $this->add(array(
             'name' => 'service_name',

@@ -8,18 +8,9 @@ namespace ZF\Apigility\Admin\InputFilter\RestService;
 
 class PatchInputFilter extends PostInputFilter
 {
-    public function __construct()
+    public function init()
     {
-        // service_name
-        parent::__construct();
-
-        // module & controller_service_name
-        $this->add(array(
-            'name' => 'module',
-        ));
-        $this->add(array(
-            'name' => 'controller_service_name',
-        ));
+        parent::init();
 
         // classes
         $this->add(array(
@@ -32,9 +23,6 @@ class PatchInputFilter extends PostInputFilter
             'name' => 'entity_class',
         ));
 
-        $this->add(array(
-            'name' => 'route_name',
-        ));
         $this->add(array(
             'name' => 'route_match',
         ));
