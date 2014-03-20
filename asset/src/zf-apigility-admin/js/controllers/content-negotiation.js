@@ -18,16 +18,18 @@ angular.module('ag-admin').controller(
     $scope.selectors = JSON.parse(JSON.stringify(selectors));
 
     $scope.resetNewSelectorForm = function() {
+      $scope.$broadcast('ag-form-submit-complete');
+      $scope.$broadcast('ag-form-validation-errors-clear');
       $scope.showNewSelectorForm = false;
       $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
     };
 
     $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: ''}, {reload: true, inherit: true});
+      $state.go($state.$current.name, {edit: ''}, {reload: true, inherit: true});
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
+      $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
     };
 
     $scope.addViewModel = function (viewModel, selector) {
@@ -40,6 +42,8 @@ angular.module('ag-admin').controller(
     };
 
     $scope.resetSelectorForm = function (selector) {
+      $scope.$broadcast('ag-form-submit-complete');
+
       /* Reset to original values */
       var name = selector.content_name;
       var originalSelector;
@@ -49,9 +53,11 @@ angular.module('ag-admin').controller(
         }
         originalSelector = value;
       });
+
       if (! originalSelector) {
         return;
       }
+
       angular.forEach($scope.selectors, function (value, key) {
         if (value.content_name !== originalSelector.content_name) {
           return;
@@ -63,30 +69,77 @@ angular.module('ag-admin').controller(
     $scope.createSelector = function() {
       delete $scope.newSelector.viewModel;
 
-      ContentNegotiationResource.createSelector($scope.newSelector).then(function (selector) {
-        selectors.push(selector);
-        $scope.selectors.push(selector);
-        flash.success = 'New selector created';
-        $scope.resetNewSelectorForm();
-      });
+      ContentNegotiationResource.createSelector($scope.newSelector).then(
+        function (selector) {
+          $scope.$broadcast('ag-form-submit-complete');
+          selectors.push(selector);
+          $scope.selectors.push(selector);
+          flash.success = 'New selector created';
+          $scope.resetNewSelectorForm();
+        },
+        function (error) {
+          $scope.$broadcast('ag-form-submit-complete');
+
+          if (error.status !== 400 && error.status !== 422) {
+            /* generic, non-validation related error! */
+            flash.error = 'Error submitting new API';
+            return;
+          }
+
+          var validationErrors;
+
+          if (error.status === 400) {
+            validationErrors = [ 'Unexpected or missing data processing form' ];
+          } else {
+            validationErrors = error.data.validation_messages;
+          }
+
+          $scope.$broadcast('ag-form-validation-errors', validationErrors);
+          flash.error = 'We were unable to validate your form; please check for errors.';
+        }
+      );
     };
 
     $scope.updateSelector = function (selector) {
       delete selector.viewModel;
       
-      ContentNegotiationResource.updateSelector(selector).then(function (updated) {
-        /* Update original selector on success, so that view matches */
-        var updatedSelector = false;
-        angular.forEach(selectors, function (value, key) {
-          if (updatedSelector || value.content_name !== updated.content_name) {
+      ContentNegotiationResource.updateSelector(selector).then(
+        function (updated) {
+          $scope.$broadcast('ag-form-submit-complete');
+
+          /* Update original selector on success, so that view matches */
+          var updatedSelector = false;
+          angular.forEach(selectors, function (value, key) {
+            if (updatedSelector || value.content_name !== updated.content_name) {
+              return;
+            }
+            selectors[key] = updated;
+            updatedSelector = true;
+          });
+
+          flash.success = 'Selector updated';
+        },
+        function (error) {
+          $scope.$broadcast('ag-form-submit-complete');
+
+          if (error.status !== 400 && error.status !== 422) {
+            /* generic, non-validation related error! */
+            flash.error = 'Error submitting new API';
             return;
           }
-          selectors[key] = updated;
-          updatedSelector = true;
-        });
 
-        flash.success = 'Selector updated';
-      });
+          var validationErrors;
+
+          if (error.status === 400) {
+            validationErrors = [ 'Unexpected or missing data processing form' ];
+          } else {
+            validationErrors = error.data.validation_messages;
+          }
+
+          $scope.$broadcast('ag-form-validation-errors', validationErrors);
+          flash.error = 'We were unable to validate your form; please check for errors.';
+        }
+      );
 
     };
 
