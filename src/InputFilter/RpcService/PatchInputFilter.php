@@ -10,39 +10,41 @@ class PatchInputFilter extends PostInputFilter
 {
     public function init()
     {
-        // service_name
         parent::init();
 
-        // module & controller_service_name
         $this->add(array(
-            'name' => 'module',
-        ));
-
-        // route
-        $this->add(array(
-            'name' => 'route_match',
+            'name' => 'controller_class',
+            'required' => true,
+            'error_message' => 'The Controller Class must be a valid, fully qualified, PHP class name',
         ));
 
         $this->add(array(
             'name' => 'accept_whitelist',
             'validators' => array(
                 array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator')
-            )
+            ),
+            'error_message' => 'The Accept Whitelist must be an array of valid media type expressions',
         ));
         $this->add(array(
             'name' => 'content_type_whitelist',
             'validators' => array(
                 array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator')
-            )
+            ),
+            'error_message' => 'The Content-Type Whitelist must be an array of valid media type expressions',
         ));
         $this->add(array(
             'name' => 'selector',
+            'required' => false,
+            'allow_empty' => true,
+            'error_message' => 'The Content Negotiation Selector must be a valid, defined zf-content-negotiation selector name',
         ));
+
         $this->add(array(
             'name' => 'http_methods',
             'validators' => array(
                 array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator')
-            )
+            ),
+            'error_message' => 'The HTTP Methods must be an array of valid HTTP method names',
         ));
     }
 }

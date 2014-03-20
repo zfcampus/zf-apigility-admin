@@ -19,9 +19,11 @@ class PostInputFilter extends InputFilter
                     'name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator',
                 ),
             ),
+            'error_message' => 'Service Name is required, and must be a valid PHP class name',
         ));
         $this->add(array(
             'name' => 'route_match',
+            'error_message' => 'Route Match is required, and must be a valid URI path',
         ));
     }
 }

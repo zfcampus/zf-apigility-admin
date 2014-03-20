@@ -259,9 +259,10 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
             var data = {
                 accept_whitelist: rpcService.accept_whitelist,
                 content_type_whitelist: rpcService.content_type_whitelist,
+                controller_class: (rpcService.controller_class === '' ? null : rpcService.controller_class),
                 http_methods: rpcService.http_methods,
-                route_match: rpcService.route_match,
-                selector: rpcService.selector,
+                route_match: (rpcService.route_match === '' ? null : rpcService.route_match),
+                selector: (rpcService.selector === '' ? null : rpcService.selector),
                 service_name: rpcService.service_name
             };
             return $http({method: 'patch', url: url, data: data})
