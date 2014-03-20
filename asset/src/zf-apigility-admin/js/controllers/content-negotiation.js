@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource) {
+  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource, agFormHandler) {
     var newSelector = {
       content_name: '',
       viewModel: '',
@@ -18,8 +18,7 @@ angular.module('ag-admin').controller(
     $scope.selectors = JSON.parse(JSON.stringify(selectors));
 
     $scope.resetNewSelectorForm = function() {
-      $scope.$broadcast('ag-form-submit-complete');
-      $scope.$broadcast('ag-form-validation-errors-clear');
+      agFormHandler.resetForm($scope);
       $scope.showNewSelectorForm = false;
       $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
     };
@@ -42,7 +41,7 @@ angular.module('ag-admin').controller(
     };
 
     $scope.resetSelectorForm = function (selector) {
-      $scope.$broadcast('ag-form-submit-complete');
+      agFormHandler.resetForm($scope);
 
       /* Reset to original values */
       var name = selector.content_name;
@@ -71,31 +70,13 @@ angular.module('ag-admin').controller(
 
       ContentNegotiationResource.createSelector($scope.newSelector).then(
         function (selector) {
-          $scope.$broadcast('ag-form-submit-complete');
           selectors.push(selector);
           $scope.selectors.push(selector);
           flash.success = 'New selector created';
           $scope.resetNewSelectorForm();
         },
         function (error) {
-          $scope.$broadcast('ag-form-submit-complete');
-
-          if (error.status !== 400 && error.status !== 422) {
-            /* generic, non-validation related error! */
-            flash.error = 'Error submitting new API';
-            return;
-          }
-
-          var validationErrors;
-
-          if (error.status === 400) {
-            validationErrors = [ 'Unexpected or missing data processing form' ];
-          } else {
-            validationErrors = error.data.validation_messages;
-          }
-
-          $scope.$broadcast('ag-form-validation-errors', validationErrors);
-          flash.error = 'We were unable to validate your form; please check for errors.';
+          agFormHandler.reportError(error, $scope);
         }
       );
     };
@@ -105,7 +86,7 @@ angular.module('ag-admin').controller(
       
       ContentNegotiationResource.updateSelector(selector).then(
         function (updated) {
-          $scope.$broadcast('ag-form-submit-complete');
+          agFormHandler.resetForm($scope);
 
           /* Update original selector on success, so that view matches */
           var updatedSelector = false;
@@ -120,24 +101,7 @@ angular.module('ag-admin').controller(
           flash.success = 'Selector updated';
         },
         function (error) {
-          $scope.$broadcast('ag-form-submit-complete');
-
-          if (error.status !== 400 && error.status !== 422) {
-            /* generic, non-validation related error! */
-            flash.error = 'Error submitting new API';
-            return;
-          }
-
-          var validationErrors;
-
-          if (error.status === 400) {
-            validationErrors = [ 'Unexpected or missing data processing form' ];
-          } else {
-            validationErrors = error.data.validation_messages;
-          }
-
-          $scope.$broadcast('ag-form-validation-errors', validationErrors);
-          flash.error = 'We were unable to validate your form; please check for errors.';
+          agFormHandler.reportError(error, $scope);
         }
       );
 

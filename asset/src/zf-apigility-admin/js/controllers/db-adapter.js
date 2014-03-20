@@ -2,15 +2,14 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
+    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters, agFormHandler) {
         $scope.dbAdapters           = dbAdapters;
         $scope.showNewDbAdapterForm = false;
         $scope.activeAdapter        = $stateParams.adapter ? $stateParams.adapter : '';
         $scope.inEdit               = !!$stateParams.edit;
 
         $scope.resetForm = function () {
-            $scope.$broadcast('ag-form-submit-complete');
-            $scope.$broadcast('ag-form-validation-errors-clear');
+            agFormHandler.resetForm($scope);
             $scope.showNewDbAdapterForm = false;
             $scope.adapterName = '';
             $scope.driver      = '';
@@ -63,24 +62,7 @@ angular.module('ag-admin').controller(
                     $scope.resetForm();
                 },
                 function (error) {
-                    $scope.$broadcast('ag-form-submit-complete');
-
-                    if (error.status !== 400 && error.status !== 422) {
-                        /* generic, non-validation related error! */
-                        flash.error = 'Error submitting new API';
-                        return;
-                    }
-
-                    var validationErrors;
-
-                    if (error.status === 400) {
-                        validationErrors = [ 'Unexpected or missing data processing form' ];
-                    } else {
-                        validationErrors = error.data.validation_messages;
-                    }
-
-                    $scope.$broadcast('ag-form-validation-errors', validationErrors);
-                    flash.error = 'We were unable to validate your form; please check for errors.';
+                    agFormHandler.reportError(error, $scope);
                 }
             );
         };
@@ -101,29 +83,11 @@ angular.module('ag-admin').controller(
             }
             DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(
                 function (dbAdapter) {
-                    $scope.$broadcast('ag-form-submit-complete');
-                    $scope.$broadcast('ag-form-validation-errors-clear');
+                    agFormHandler.resetForm($scope);
                     updateDbAdapters(true, 'Database adapter ' + dbAdapter.adapter_name + ' updated');
                 },
                 function (error) {
-                    $scope.$broadcast('ag-form-submit-complete');
-
-                    if (error.status !== 400 && error.status !== 422) {
-                        /* generic, non-validation related error! */
-                        flash.error = 'Error submitting new API';
-                        return;
-                    }
-
-                    var validationErrors;
-
-                    if (error.status === 400) {
-                        validationErrors = [ 'Unexpected or missing data processing form' ];
-                    } else {
-                        validationErrors = error.data.validation_messages;
-                    }
-
-                    $scope.$broadcast('ag-form-validation-errors', validationErrors);
-                    flash.error = 'We were unable to validate your form; please check for errors.';
+                    agFormHandler.reportError(error, $scope);
                 }
             );
         };
