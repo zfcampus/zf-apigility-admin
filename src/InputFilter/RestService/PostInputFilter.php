@@ -10,21 +10,26 @@ use Zend\InputFilter\InputFilter;
 
 class PostInputFilter extends InputFilter
 {
-    protected $localMessage;
+    protected $localMessages;
+
+    protected $isUpdate = false;
 
     public function init()
     {
         $this->add(array(
             'name' => 'service_name',
+            'required' => false,
             'validators' => array(
                 array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator'),
             ),
         ));
         $this->add(array(
             'name' => 'adapter_name',
+            'required' => false,
         ));
         $this->add(array(
             'name' => 'table_name',
+            'required' => false,
         ));
     }
 
@@ -34,15 +39,10 @@ class PostInputFilter extends InputFilter
      */
     public function isValid()
     {
-        $context = $this->getRawValues();
-        $validationGroup = $this->getValidationGroup($context);
-
-        if (is_string($validationGroup)) {
-            $this->localMessage = $validationGroup;
+        if (!$this->isValidService()) {
             return false;
         }
 
-        $this->setValidationGroup($validationGroup);
         return parent::isValid();
     }
 
@@ -52,38 +52,71 @@ class PostInputFilter extends InputFilter
      */
     public function getMessages()
     {
-        if ($this->localMessage) {
-            return array(
-                'service_name' => array('isValid' => $this->localMessage),
-                'adapter_name' => array('isValid' => $this->localMessage),
-                'table_name' => array('isValid' => $this->localMessage)
-            );
+        if (is_array($this->localMessages) && !empty($this->localMessages)) {
+            return $this->localMessages;
         }
         return parent::getMessages();
     }
 
     /**
-     * @param $context
-     * @return array|string
+     * Is the service valid?
+     *
+     * Ensures that one of the following is present:
+     *
+     * - service_name OR
+     * - adapter_name AND table_name
+     * 
+     * @return bool
      */
-    protected function getValidationGroup($context)
+    protected function isValidService()
     {
-        if ($context['service_name'] === null && $context['adapter_name'] === null && $context['table_name'] === null) {
-            return 'Either service_name or adapter_name and table_name must be present';
+        $context = $this->getRawValues();
+
+        if ((!isset($context['service_name']) || $context['service_name'] === null)
+            && (!isset($context['adapter_name']) || $context['adapter_name'] === null)
+            && (!isset($context['table_name']) || $context['table_name'] === null)
+        ) {
+            $this->localMessages = array(
+                'service_name' => 'You must provide either a Code-Connected service name OR a DB-Connected database adapter and table name',
+            );
+            return false;
         }
 
-        if ($context['service_name'] !== null) {
-            if ($context['adapter_name'] !== null || $context['table_name'] !== null) {
-                return 'service_name cannot be present with adapter_name or table_name';
-            } else {
-                return array('service_name');
-            }
-        } else {
-            if ($context['adapter_name'] === null && $context['table_name'] === null) {
-                return 'adapter_name and table_name must be present if there is no a';
-            } else {
-                return array('adapter_name', 'table_name');
-            }
+        if ($this->isUpdate) {
+            $this->get('service_name')->setRequired(true);
+            return true;
         }
+
+        if (isset($context['service_name']) && $context['service_name'] !== null) {
+            if ((isset($context['adapter_name']) && $context['adapter_name'] !== null)
+                || (isset($context['table_name']) && $context['table_name'] !== null)
+            ) {
+                $this->localMessages = array(
+                    'service_name' => 'You must provide either a Code-Connected service name OR a DB-Connected database adapter and table name',
+                );
+                return false;
+            }
+            return true;
+        } 
+
+        if ((isset($context['adapter_name']) && !empty($context['adapter_name']))
+            && (!isset($context['table_name']) || $context['table_name'] === null)
+        ) {
+            $this->localMessages = array(
+                'table_name' => 'DB-Connected services require both a database adapter and table name',
+            );
+            return false;
+        }
+
+        if ((!isset($context['adapter_name']) || $context['adapter_name'] === null)
+            && (isset($context['table_name']) && !empty($context['table_name']))
+        ) {
+            $this->localMessages = array(
+                'adapter_name' => 'DB-Connected services require both a database adapter and table name',
+            );
+            return false;
+        }
+
+        return true;
     }
 }
