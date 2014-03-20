@@ -85,12 +85,17 @@ angular.module('ag-admin').controller(
 
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
-        ApiRepository.saveRestService($scope.api.name, restServiceData)
-            .then(function (data) {
+        ApiRepository.saveRestService($scope.api.name, restServiceData).then(
+            function (data) {
+                agFormHandler.resetForm($scope);
                 ApiRepository.refreshApi($scope, $state, true, 'REST Service updated', function () {
                     $scope.cancelEdit();
                 });
-            });
+            },
+            function (error) {
+                agFormHandler.reportError(error, $scope);
+            }
+        );
     };
 
     $scope.removeRestService = function (restServiceName) {
