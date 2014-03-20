@@ -26,6 +26,8 @@ angular.module('ag-admin').controller(
     };
 
     $scope.resetForm = function () {
+        $scope.$broadcast('ag-form-submit-complete');
+        $scope.$broadcast('ag-form-validation-errors-clear');
         $scope.showNewRestServiceForm     = false;
         $scope.newService.restServiceName = '';
         $scope.newService.dbAdapterName   = '';
@@ -51,22 +53,61 @@ angular.module('ag-admin').controller(
     };
 
     $scope.newService.createNewRestService = function () {
-        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName)
-            .then(function (restResource) {
-                $scope.showNewRestServiceForm = false;
-                $scope.newService.restServiceName = '';
+        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName).then(
+            function (restResource) {
+                $scope.resetForm();
                 ApiRepository.refreshApi($scope, $state, true, 'New REST Service created');
-            }, function (response) {});
+            },
+            function (error) {
+                $scope.$broadcast('ag-form-submit-complete');
+
+                if (error.status !== 400 && error.status !== 422) {
+                    /* generic, non-validation related error! */
+                    flash.error = 'Error submitting new API';
+                    return;
+                }
+
+                var validationErrors;
+
+                if (error.status === 400) {
+                    validationErrors = [ 'Unexpected or missing data processing form' ];
+                } else {
+                    validationErrors = error.data.validation_messages;
+                }
+
+                $scope.$broadcast('ag-form-validation-errors', validationErrors);
+                flash.error = 'We were unable to validate your form; please check for errors.';
+            }
+        );
     };
 
     $scope.newService.createNewDbConnectedService = function () {
-        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName)
-            .then(function (restResource) {
-                $scope.showNewRestServiceForm = false;
-                $scope.newService.dbAdapterName = '';
-                $scope.newService.dbTableName = '';
+        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName).then(
+            function (restResource) {
+                $scope.resetForm();
                 ApiRepository.refreshApi($scope, $state, true, 'New DB Connected Service created');
-            }, function (response) {});
+            },
+            function (error) {
+                $scope.$broadcast('ag-form-submit-complete');
+
+                if (error.status !== 400 && error.status !== 422) {
+                    /* generic, non-validation related error! */
+                    flash.error = 'Error submitting new API';
+                    return;
+                }
+
+                var validationErrors;
+
+                if (error.status === 400) {
+                    validationErrors = [ 'Unexpected or missing data processing form' ];
+                } else {
+                    validationErrors = error.data.validation_messages;
+                }
+
+                $scope.$broadcast('ag-form-validation-errors', validationErrors);
+                flash.error = 'We were unable to validate your form; please check for errors.';
+            }
+        );
     };
 
     $scope.cancelEdit = function () {
