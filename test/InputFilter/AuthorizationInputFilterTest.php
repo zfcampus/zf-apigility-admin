@@ -19,7 +19,19 @@ class AuthorizationInputFilterTest extends TestCase
 
     public function dataProviderIsValidTrue()
     {
-        return array();
+        return array(
+            // empty
+            array(
+                array()
+            ),
+            // with values
+            array(
+                array(
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('POST' => true, 'GET' => false),
+                    'Foo\V1\Rpc\Boom\Controller::boom' => array('GET' => true, 'DELETE' => false, 'PATCH' => true)
+                )
+            )
+        );
     }
 
     /**
@@ -35,6 +47,34 @@ class AuthorizationInputFilterTest extends TestCase
 
     public function dataProviderIsValidFalse()
     {
-        return array();
+        return array(
+            // invalid controller name
+            array(
+                array(
+                    'Foo\V1\Rest\Bar\Controller' => array(),
+                ),
+                array(
+                    'Foo\V1\Rest\Bar\Controller' => array('invalidClassName' => 'Class service name is invalid, must be serviceName::method')
+                )
+            ),
+            // not an array for values
+            array(
+                array(
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => 'GET=true',
+                ),
+                array(
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('invalidHttpMethod' => 'Values for each controller must be an http method keyd array of true/false values')
+                )
+            ),
+            // Invalid HTTP method
+            array(
+                array(
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('MYMETHOD' => true),
+                ),
+                array(
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('invalidHttpMethod' => 'Invalid header (MYMETHOD) provided.')
+                )
+            ),
+        );
     }
 }

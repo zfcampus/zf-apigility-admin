@@ -23,6 +23,9 @@ class DigestInputFilter extends InputFilter
         ));
         $this->add(array(
             'name' => 'nonce_timeout',
+            'validators' => array(
+                array('name' => 'Zend\Validator\Digits')
+            )
         ));
         $this->add(array(
             'name' => 'digest_domains',

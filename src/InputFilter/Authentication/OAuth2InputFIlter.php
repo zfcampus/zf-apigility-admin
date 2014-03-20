@@ -8,12 +8,15 @@ namespace ZF\Apigility\Admin\InputFilter\Authentication;
 
 use Zend\InputFilter\InputFilter;
 
-class OAuth2InputFIlter extends InputFilter
+class OAuth2InputFilter extends InputFilter
 {
     public function __construct()
     {
         $this->add(array(
             'name' => 'dsn',
+        ));
+        $this->add(array(
+            'name' => 'dsn_type',
         ));
         $this->add(array(
             'name' => 'username',

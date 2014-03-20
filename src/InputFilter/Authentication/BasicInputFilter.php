@@ -20,6 +20,14 @@ class BasicInputFilter extends InputFilter
         ));
         $this->add(array(
             'name' => 'htpasswd',
+            /*
+             * may need ot customize this, File\Exists doesn't work with validator chain context
+            'validators' => array(
+                array(
+                    'name' => 'Zend\Validator\File\Exists'
+                )
+            )
+            */
         ));
     }
 }
