@@ -23,6 +23,6 @@ class InputFilterInputFilterFactory implements FactoryInterface
         $factory->getDefaultFilterChain()->setPluginManager($services->get('FilterManager'));
         $factory->getDefaultValidatorChain()->setPluginManager($services->get('ValidatorManager'));
 
-        return new InputFilter\InputFilterInputFilter($factory);
+        return new InputFilterInputFilter($factory);
     }
 }

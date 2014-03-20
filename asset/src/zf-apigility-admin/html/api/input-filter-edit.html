@@ -1,16 +1,17 @@
 <div ng-controller="ApiServiceInputController">
+<form ag-form>
     <div class="ag-new-input">
         <button class="btn btn-info pull-left" title="Help"
             data-toggle="modal" data-target="#inputHelp">
             <i class="glyphicon glyphicon-info-sign"></i>
         </button>
 
-        <form class="form-inline pull-right" ng-submit="addInput()">
+        <div class="form-inline pull-right">
             <div class="form-group">
                 <input type="text" class="form-control input-xlarge" placeholder="Field name" ng-model="newInput">
             </div>
-            <button type="submit" class="btn btn-sm btn-primary">Create New Field</button>
-        </form>
+            <button type="button" ng-click="addInput()" class="btn btn-sm btn-primary">Create New Field</button>
+        </div>
     </div>
     <div class="ag-new-input clearfix"></div>
 
@@ -50,5 +51,6 @@
             collapse-flag flags="{edit: false}" click="cancelEdit">Cancel</button>
         <button type="submit" class="btn btn-sm btn-success" ng-click="saveInput()">Save Changes</button>
     </div>
+</form>
 </div>
 
