@@ -6091,5 +6091,6 @@ table.body-striped > tbody:nth-child(even) > tr > th {
   background-color: #f9f9f9;
 }
 .panel.ag-validation-error {
+  clear: both;
   margin-top: 1em;
 }
