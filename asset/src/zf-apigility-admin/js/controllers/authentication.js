@@ -71,13 +71,31 @@ angular.module('ag-admin').controller(
     var createAuthentication = function (type, options) {
         AuthenticationRepository.createAuthentication(type, options).then(
             function success(authentication) {
+                $scope.$broadcast('ag-form-submit-complete');
                 flash.success = 'Authentication created';
                 fetchAuthenticationDetails(true);
                 $scope.removeAuthenticationForm = false;
                 $scope.resetForm();
             },
             function error(response) {
-                flash.error('Unable to create authentication; please verify that the DSN is valid.');
+                $scope.$broadcast('ag-form-submit-complete');
+
+                if (response.status !== 400 && response.status !== 422) {
+                    /* generic, non-validation related error! */
+                    flash.error('Error create authentication; please verify that all data submitted is valid.');
+                    return;
+                }
+
+                var validationErrors;
+
+                if (response.status === 400) {
+                    validationErrors = [ 'Unexpected or missing data processing form' ];
+                } else {
+                    validationErrors = response.data.validation_messages;
+                }
+
+                $scope.$broadcast('ag-form-validation-errors', validationErrors);
+                flash.error = 'We were unable to validate your form; please check for errors.';
             }
         );
     };
@@ -96,17 +114,36 @@ angular.module('ag-admin').controller(
         }
         AuthenticationRepository.updateAuthentication(type, options).then(
             function success(authentication) {
+                $scope.$broadcast('ag-form-submit-complete');
                 flash.success = 'Authentication updated';
                 fetchAuthenticationDetails(true);
                 $state.go($state.current, {edit: ''}, {reload: true});
             },
             function error(response) {
-                flash.error('Unable to update authentication; please verify that the DSN is valid.');
+                $scope.$broadcast('ag-form-submit-complete');
+
+                if (response.status !== 400 && response.status !== 422) {
+                    /* generic, non-validation related error! */
+                    flash.error('Error create authentication; please verify that all data submitted is valid.');
+                    return;
+                }
+
+                var validationErrors;
+
+                if (response.status === 400) {
+                    validationErrors = [ 'Unexpected or missing data processing form' ];
+                } else {
+                    validationErrors = response.data.validation_messages;
+                }
+
+                $scope.$broadcast('ag-form-validation-errors', validationErrors);
+                flash.error = 'We were unable to validate your form; please check for errors.';
             }
         );
     };
 
     $scope.resetForm = function () {
+        $scope.$broadcast('ag-form-validation-errors-clear');
         $scope.showHttpBasicAuthenticationForm  = false;
         $scope.showHttpDigestAuthenticationForm = false;
         $scope.showOAuth2AuthenticationForm     = false;
