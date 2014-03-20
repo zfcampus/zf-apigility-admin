@@ -41,7 +41,7 @@ class AuthorizationInputFilter implements InputFilterInterface
                 continue;
             }
 
-            foreach ($httpMethods as $httpMethod => $isRequred) {
+            foreach ($httpMethods as $httpMethod => $isRequired) {
                 if (!in_array($httpMethod, array('GET', 'POST', 'PUT', 'PATCH', 'DELETE'))) {
                     $this->messages[$className]['invalidHttpMethod'] = 'Invalid header (' . $httpMethod . ') provided.';
                     $isValid = false;

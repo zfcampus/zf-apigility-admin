@@ -1298,13 +1298,13 @@ return array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
         ),
 
-        //'ZF\Apigility\Admin\Controller\Documentation' => array(
-        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',
-        //),
+        'ZF\Apigility\Admin\Controller\Documentation' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',
+        ),
 
-        //'ZF\Apigility\Admin\Controller\Authorization' => array(
-        //    'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authorization',
-        //),
+        'ZF\Apigility\Admin\Controller\Authorization' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authorization',
+        ),
 
     ),
 );
