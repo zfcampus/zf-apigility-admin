@@ -39,6 +39,13 @@ class OAuth2InputFilterTest extends TestCase
                     'username' => 'barfoo',
                 ),
             ),
+            'mongo-without-dsn' => array(
+                array(
+                    'dsn_type' => 'Mongo',
+                    'database' => 'oauth2',
+                    'route_match' => '/oauth2',
+                ),
+            ),
         );
     }
 
@@ -65,6 +72,15 @@ class OAuth2InputFilterTest extends TestCase
                     'dsn',
                     'dsn_type',
                     'route_match',
+                ),
+            ),
+            'mongo-without-database' => array(
+                array(
+                    'dsn_type' => 'Mongo',
+                    'route_match' => '/oauth2',
+                ),
+                array(
+                    'database',
                 ),
             ),
         );
