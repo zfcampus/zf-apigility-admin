@@ -205,7 +205,33 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
         saveRestService: function (apiName, restService) {
             var url = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restService.controller_service_name);
-            return $http({method: 'patch', url: url, data: restService})
+            var testForEmpty = this.testForEmpty;
+            var data = {
+                accept_whitelist: restService.accept_whitelist,
+                collection_class: testForEmpty(restService.collection_class),
+                collection_http_methods: restService.collection_http_methods,
+                collection_name: testForEmpty(restService.collection_name),
+                collection_query_whitelist: restService.collection_query_whitelist,
+                content_type_whitelist: restService.content_type_whitelist,
+                entity_class: testForEmpty(restService.entity_class),
+                entity_http_methods: restService.entity_http_methods,
+                entity_identifier_name: testForEmpty(restService.entity_identifier_name),
+                hydrator_name: testForEmpty(restService.hydrator_name),
+                page_size: testForEmpty(restService.page_size),
+                page_size_param: testForEmpty(restService.page_size_param),
+                resource_class: testForEmpty(restService.resource_class),
+                route_identifier_name: testForEmpty(restService.route_identifier_name),
+                route_match: testForEmpty(restService.route_match),
+                selector: restService.selector,
+                service_name: restService.service_name
+            };
+            if (restService.hasOwnProperty('adapter_name') && restService.adapter_name) {
+                data.adapter_name = restService.adapter_name;
+            }
+            if (restService.hasOwnProperty('table_name') && restService.table_name) {
+                data.table_name = restService.table_name;
+            }
+            return $http({method: 'patch', url: url, data: data})
                 .then(function (response) {
                     return response.data;
                 });
@@ -213,12 +239,18 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
         saveInputFilter: function (api, inputFilter) {
             var url = api._self + '/input-filter';
-            return $http.put(url, inputFilter);
+            return $http.put(url, inputFilter)
+                .then(function (response) {
+                    return response.data;
+                });
         },
 
         saveDocumentation: function (api) {
             var url = api._self + '/doc';
-            return $http.put(url, api.documentation);
+            return $http.put(url, api.documentation)
+                .then(function (response) {
+                    return response.data;
+                });
         },
 
         removeRpcService: function (apiName, rpcServiceName) {
@@ -231,7 +263,17 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
         saveRpcService: function (apiName, rpcService) {
             var url = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcService.controller_service_name);
-            return $http({method: 'patch', url: url, data: rpcService})
+            var testForEmpty = this.testForEmpty;
+            var data = {
+                accept_whitelist: rpcService.accept_whitelist,
+                content_type_whitelist: rpcService.content_type_whitelist,
+                controller_class: testForEmpty(rpcService.controller_class),
+                http_methods: rpcService.http_methods,
+                route_match: testForEmpty(rpcService.route_match),
+                selector: testForEmpty(rpcService.selector),
+                service_name: rpcService.service_name
+            };
+            return $http({method: 'patch', url: url, data: data})
                 .then(function (response) {
                     return response.data;
                 });
@@ -346,6 +388,16 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 config.params[pair[0]] = pair[1];
             });
             return config;
+        },
+
+        testForEmpty: function (value) {
+            if (value === '') {
+                return null;
+            }
+            if (value === undefined) {
+                return null;
+            }
+            return value;
         }
     };
 });

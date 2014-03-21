@@ -44,15 +44,9 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
           method: 'POST',
           url: servicePath,
           data: this.prepareSelector(selector)
-        }).then(
-          function success(response) {
-            return response.data;
-          },
-          function error(response) {
-            flash.error = 'Unable to create selector; please try again';
-            return response;
-          }
-        );
+        }).then(function success(response) {
+          return response.data;
+        });
       },
 
       updateSelector: function (selector) {
@@ -65,15 +59,9 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
           method: 'PATCH',
           url: updatePath,
           data: data
-        }).then(
-          function success(response) {
-            return response.data;
-          },
-          function error(response) {
-            flash.error = 'Unable to create selector; please try again';
-            return response;
-          }
-        );
+        }).then(function success(response) {
+          return response.data;
+        });
       },
 
       removeSelector: function (selectorName) {

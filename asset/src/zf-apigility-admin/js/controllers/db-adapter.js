@@ -2,13 +2,14 @@
 
 angular.module('ag-admin').controller(
     'DbAdapterController',
-    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters) {
+    function ($scope, $state, $stateParams, flash, DbAdapterResource, dbAdapters, agFormHandler) {
         $scope.dbAdapters           = dbAdapters;
         $scope.showNewDbAdapterForm = false;
         $scope.activeAdapter        = $stateParams.adapter ? $stateParams.adapter : '';
         $scope.inEdit               = !!$stateParams.edit;
 
         $scope.resetForm = function () {
+            agFormHandler.resetForm($scope);
             $scope.showNewDbAdapterForm = false;
             $scope.adapterName = '';
             $scope.driver      = '';
@@ -35,7 +36,7 @@ angular.module('ag-admin').controller(
                 if (message) {
                     flash.success = message;
                 }
-                $state.go($state.current, {}, {
+                $state.go($state.current, {edit: ''}, {
                     reload: true, inherit: true, notify: true
                 });
             });
@@ -55,10 +56,15 @@ angular.module('ag-admin').controller(
             if ($scope.dsn) {
                 options.dsn = $scope.dsn;
             }
-            DbAdapterResource.createNewAdapter(options).then(function (dbAdapter) {
-                updateDbAdapters(true, 'Database adapter created');
-                $scope.resetForm();
-            });
+            DbAdapterResource.createNewAdapter(options).then(
+                function (dbAdapter) {
+                    updateDbAdapters(true, 'Database adapter created');
+                    $scope.resetForm();
+                },
+                function (error) {
+                    agFormHandler.reportError(error, $scope);
+                }
+            );
         };
 
         $scope.saveDbAdapter = function (index) {
@@ -75,9 +81,15 @@ angular.module('ag-admin').controller(
             if (dbAdapter.dsn) {
                 options.dsn = dbAdapter.dsn;
             }
-            DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(function (dbAdapter) {
-                updateDbAdapters(true, 'Database adapter ' + dbAdapter.adapter_name + ' updated');
-            });
+            DbAdapterResource.saveAdapter(dbAdapter.adapter_name, options).then(
+                function (dbAdapter) {
+                    agFormHandler.resetForm($scope);
+                    updateDbAdapters(true, 'Database adapter ' + dbAdapter.adapter_name + ' updated');
+                },
+                function (error) {
+                    agFormHandler.reportError(error, $scope);
+                }
+            );
         };
 
         $scope.removeDbAdapter = function (adapter_name) {

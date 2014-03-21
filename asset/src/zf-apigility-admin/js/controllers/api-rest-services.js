@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiRestServicesController', 
-  function ($scope, $state, $stateParams, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection) {
+  function ($scope, $state, $stateParams, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection, agFormHandler) {
 
     $scope.activeService     = $stateParams.service ? $stateParams.service : '';
     $scope.inEdit            = !!$stateParams.edit;
@@ -26,6 +26,7 @@ angular.module('ag-admin').controller(
     };
 
     $scope.resetForm = function () {
+        agFormHandler.resetForm($scope);
         $scope.showNewRestServiceForm     = false;
         $scope.newService.restServiceName = '';
         $scope.newService.dbAdapterName   = '';
@@ -51,22 +52,27 @@ angular.module('ag-admin').controller(
     };
 
     $scope.newService.createNewRestService = function () {
-        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName)
-            .then(function (restResource) {
-                $scope.showNewRestServiceForm = false;
-                $scope.newService.restServiceName = '';
+        ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName).then(
+            function (restResource) {
+                $scope.resetForm();
                 ApiRepository.refreshApi($scope, $state, true, 'New REST Service created');
-            }, function (response) {});
+            },
+            function (error) {
+                agFormHandler.reportError(error, $scope);
+            }
+        );
     };
 
     $scope.newService.createNewDbConnectedService = function () {
-        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName)
-            .then(function (restResource) {
-                $scope.showNewRestServiceForm = false;
-                $scope.newService.dbAdapterName = '';
-                $scope.newService.dbTableName = '';
+        ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName).then(
+            function (restResource) {
+                $scope.resetForm();
                 ApiRepository.refreshApi($scope, $state, true, 'New DB Connected Service created');
-            }, function (response) {});
+            },
+            function (error) {
+                agFormHandler.reportError(error, $scope);
+            }
+        );
     };
 
     $scope.cancelEdit = function () {
@@ -79,12 +85,17 @@ angular.module('ag-admin').controller(
 
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
-        ApiRepository.saveRestService($scope.api.name, restServiceData)
-            .then(function (data) {
+        ApiRepository.saveRestService($scope.api.name, restServiceData).then(
+            function (data) {
+                agFormHandler.resetForm($scope);
                 ApiRepository.refreshApi($scope, $state, true, 'REST Service updated', function () {
                     $scope.cancelEdit();
                 });
-            });
+            },
+            function (error) {
+                agFormHandler.reportError(error, $scope);
+            }
+        );
     };
 
     $scope.removeRestService = function (restServiceName) {

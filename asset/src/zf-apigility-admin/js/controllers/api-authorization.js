@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
     'ApiAuthorizationController',
-    function ($scope, $stateParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository) {
+    function ($scope, $stateParams, flash, api, apiAuthorizations, authentication, ApiAuthorizationRepository, agFormHandler) {
         $scope.api = api;
         $scope.apiAuthorizations = apiAuthorizations;
         $scope.authentication = authentication;
@@ -76,8 +76,15 @@ angular.module('ag-admin').controller(
         };
 
         $scope.saveAuthorization = function () {
-            flash.success = 'Authorization settings saved';
-            ApiAuthorizationRepository.saveApiAuthorizations($stateParams.apiName, $scope.apiAuthorizations);
+            ApiAuthorizationRepository.saveApiAuthorizations($stateParams.apiName, $scope.apiAuthorizations).then(
+                function (savedAuthorizations) {
+                    agFormHandler.resetForm($scope);
+                    flash.success = 'Authorization settings saved';
+                },
+                function (error) {
+                    agFormHandler.reportError(error, $scope);
+                }
+            );
         };
 
         $scope.updateColumn = function ($event, column) {

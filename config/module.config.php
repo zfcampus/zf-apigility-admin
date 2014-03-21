@@ -1237,26 +1237,74 @@ return array(
         ),
     ),
 
-    'input_filter_specs' => array(
-        'ZF\Apigility\Admin\ModuleName\Validator' => array(
-            array(
-                'name' => 'name',
-                'validators' => array(
-                    array(
-                        'name' => 'regex',
-                        'options' => array(
-                            'pattern' => '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/',
-                            'message' => 'Invalid API name; must be a valid PHP namespace name',
-                        ),
-                    ),
-                ),
-            ),
+    'input_filters' => array(
+        'invokables' => array(
+            'ZF\Apigility\Admin\InputFilter\Authentication\BasicAuth' => 'ZF\Apigility\Admin\InputFilter\Authentication\BasicInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Authentication\DigestAuth' => 'ZF\Apigility\Admin\InputFilter\Authentication\DigestInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2InputFilter',
+            'ZF\Apigility\Admin\InputFilter\Authorization' => 'ZF\Apigility\Admin\InputFilter\AuthorizationInputFilter',
+            'ZF\Apigility\Admin\InputFilter\DbAdapter' => 'ZF\Apigility\Admin\InputFilter\DbAdapterInputFilter',
+            'ZF\Apigility\Admin\InputFilter\ContentNegotiation' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiationInputFilter',
+
+            'ZF\Apigility\Admin\InputFilter\Module' => 'ZF\Apigility\Admin\InputFilter\ModuleInputFilter',
+            'ZF\Apigility\Admin\InputFilter\Version' => 'ZF\Apigility\Admin\InputFilter\VersionInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RestService\POST' => 'ZF\Apigility\Admin\InputFilter\RestService\PostInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RestService\PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService\PatchInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RpcService\POST' => 'ZF\Apigility\Admin\InputFilter\RpcService\PostInputFilter',
+            'ZF\Apigility\Admin\InputFilter\RpcService\PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService\PatchInputFilter',
+
+            'ZF\Apigility\Admin\InputFilter\Documentation' => 'ZF\Apigility\Admin\InputFilter\DocumentationInputFilter',
         ),
+        'factories' => array(
+            'ZF\Apigility\Admin\InputFilter\InputFilter' => 'ZF\Apigility\Admin\InputFilter\Factory\InputFilterInputFilterFactory',
+        )
     ),
 
     'zf-content-validation' => array(
-        'ZF\Apigility\Admin\Controller\Module' => array(
-            'input_filter' => 'ZF\Apigility\Admin\ModuleName\Validator',
+        'ZF\Apigility\Admin\Controller\HttpBasicAuthentication' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\BasicAuth'
         ),
+        'ZF\Apigility\Admin\Controller\HttpDigestAuthentication' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\DigestAuth'
+        ),
+        'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2'
+        ),
+
+        'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
+        ),
+
+        'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
+        ),
+
+        'ZF\Apigility\Admin\Controller\Module' => array(
+            'POST' => 'ZF\Apigility\Admin\InputFilter\Module',
+        ),
+        'ZF\Apigility\Admin\Controller\Versioning' => array(
+            'PATCH' => 'ZF\Apigility\Admin\InputFilter\Version',
+        ),
+        'ZF\Apigility\Admin\Controller\RestService' => array(
+            'POST' => 'ZF\Apigility\Admin\InputFilter\RestService\POST', // for the collection
+            'PATCH' => 'ZF\Apigility\Admin\InputFilter\RestService\PATCH', // for the entity
+        ),
+        'ZF\Apigility\Admin\Controller\RpcService' => array(
+            'POST' => 'ZF\Apigility\Admin\InputFilter\RpcService\POST', // for the collection
+            'PATCH' => 'ZF\Apigility\Admin\InputFilter\RpcService\PATCH', // for the entity
+        ),
+
+        'ZF\Apigility\Admin\Controller\InputFilter' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\InputFilter',
+        ),
+
+        'ZF\Apigility\Admin\Controller\Documentation' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Documentation',
+        ),
+
+        'ZF\Apigility\Admin\Controller\Authorization' => array(
+            'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authorization',
+        ),
+
     ),
 );

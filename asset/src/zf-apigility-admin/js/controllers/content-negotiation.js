@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource) {
+  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource, agFormHandler) {
     var newSelector = {
       content_name: '',
       viewModel: '',
@@ -18,16 +18,17 @@ angular.module('ag-admin').controller(
     $scope.selectors = JSON.parse(JSON.stringify(selectors));
 
     $scope.resetNewSelectorForm = function() {
+      agFormHandler.resetForm($scope);
       $scope.showNewSelectorForm = false;
       $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
     };
 
     $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: ''}, {reload: true, inherit: true});
+      $state.go($state.$current.name, {edit: ''}, {reload: true, inherit: true});
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
+      $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
     };
 
     $scope.addViewModel = function (viewModel, selector) {
@@ -40,6 +41,8 @@ angular.module('ag-admin').controller(
     };
 
     $scope.resetSelectorForm = function (selector) {
+      agFormHandler.resetForm($scope);
+
       /* Reset to original values */
       var name = selector.content_name;
       var originalSelector;
@@ -49,9 +52,11 @@ angular.module('ag-admin').controller(
         }
         originalSelector = value;
       });
+
       if (! originalSelector) {
         return;
       }
+
       angular.forEach($scope.selectors, function (value, key) {
         if (value.content_name !== originalSelector.content_name) {
           return;
@@ -63,30 +68,42 @@ angular.module('ag-admin').controller(
     $scope.createSelector = function() {
       delete $scope.newSelector.viewModel;
 
-      ContentNegotiationResource.createSelector($scope.newSelector).then(function (selector) {
-        selectors.push(selector);
-        $scope.selectors.push(selector);
-        flash.success = 'New selector created';
-        $scope.resetNewSelectorForm();
-      });
+      ContentNegotiationResource.createSelector($scope.newSelector).then(
+        function (selector) {
+          selectors.push(selector);
+          $scope.selectors.push(selector);
+          flash.success = 'New selector created';
+          $scope.resetNewSelectorForm();
+        },
+        function (error) {
+          agFormHandler.reportError(error, $scope);
+        }
+      );
     };
 
     $scope.updateSelector = function (selector) {
       delete selector.viewModel;
       
-      ContentNegotiationResource.updateSelector(selector).then(function (updated) {
-        /* Update original selector on success, so that view matches */
-        var updatedSelector = false;
-        angular.forEach(selectors, function (value, key) {
-          if (updatedSelector || value.content_name !== updated.content_name) {
-            return;
-          }
-          selectors[key] = updated;
-          updatedSelector = true;
-        });
+      ContentNegotiationResource.updateSelector(selector).then(
+        function (updated) {
+          agFormHandler.resetForm($scope);
 
-        flash.success = 'Selector updated';
-      });
+          /* Update original selector on success, so that view matches */
+          var updatedSelector = false;
+          angular.forEach(selectors, function (value, key) {
+            if (updatedSelector || value.content_name !== updated.content_name) {
+              return;
+            }
+            selectors[key] = updated;
+            updatedSelector = true;
+          });
+
+          flash.success = 'Selector updated';
+        },
+        function (error) {
+          agFormHandler.reportError(error, $scope);
+        }
+      );
 
     };
 

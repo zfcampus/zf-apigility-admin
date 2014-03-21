@@ -1,6 +1,6 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiServiceInputController', function ($scope, $state, flash) {
+angular.module('ag-admin').controller('ApiServiceInputController', function ($scope, $state, flash, agFormHandler) {
     // get services from $parent
     $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
     $scope.filterOptions = $scope.$parent.filterOptions;
@@ -114,10 +114,16 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         _.forEach(modelInputFilter, removeUnderscoreProperties);
 
         var apiRepo = $scope.$parent.ApiRepository;
-        apiRepo.saveInputFilter($scope.service, modelInputFilter);
-        $scope.$parent.flash.success = 'Input Filter configuration saved.';
-
-        $state.go($state.$current.name, {edit: ''}, {reload: true});
+        apiRepo.saveInputFilter($scope.service, modelInputFilter).then(
+            function (savedInputFilter) {
+                agFormHandler.resetForm($scope);
+                $scope.$parent.flash.success = 'Input Filter configuration saved.';
+                $state.go($state.$current.name, {edit: ''}, {reload: true});
+            },
+            function (error) {
+                agFormHandler.reportError(error, $scope);
+            }
+        );
     };
 });
 

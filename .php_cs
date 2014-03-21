@@ -13,7 +13,7 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
                 return false;
             case (strrpos($path, '/test/Bootstrap.php')):
                 return false;
-            case (strrpos($path, '/test/ZFTest/Apigility/Admin/Model/TestAsset/')):
+            case (strrpos($path, '/test/Model/TestAsset/')):
                 return false;
             case (strrpos($path, '/vendor/')):
                 return false;

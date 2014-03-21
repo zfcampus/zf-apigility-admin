@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiController',
-  function($scope, $state, flash, apis, ApiRepository) {
+  function($scope, $state, flash, apis, ApiRepository, agFormHandler) {
     $scope.showNewApiForm = false;
     $scope.apiList = [];
 
@@ -23,24 +23,29 @@ angular.module('ag-admin').controller(
       var form = angular.element($event.target);
       form.find('input').attr('disabled', true);
       form.find('button').attr('disabled', true);
+      form.find('.ag-validation-error').remove();
 
-      ApiRepository.createNewApi($scope.apiName).then(function (newApi) {
-        // reset form, repopulate, redirect to new
-        $scope.dismissModal();
-        $scope.resetForm();
-        form.find('input').attr('disabled', false);
-        form.find('button').attr('disabled', false);
+      ApiRepository.createNewApi($scope.apiName).then(
+        function (newApi) {
+          // reset form, repopulate, redirect to new
+          $scope.dismissModal();
+          $scope.resetForm();
 
-        flash.success = 'New API Created';
+          flash.success = 'New API Created';
 
-        ApiRepository.getList(true).then(function(apiCollection) {
-          updateList(apiCollection);
-          $state.go('ag.api.version', {apiName: newApi.name, version: 1});
-        });
-      });
+          ApiRepository.getList(true).then(function (apiCollection) {
+            updateList(apiCollection);
+            $state.go('ag.api.version', {apiName: newApi.name, version: 1});
+          });
+        },
+        function (error) {
+          agFormHandler.reportError(error, $scope);
+        }
+      );
     };
 
     $scope.resetForm = function () {
+      agFormHandler.resetForm($scope);
       $scope.showNewApiForm = false;
       $scope.apiName = '';
     };

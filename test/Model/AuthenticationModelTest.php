@@ -228,6 +228,10 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
     {
+        if (!extension_loaded('mongo')) {
+            $this->markTestSkipped('mongo extension must be loaded to run this test');
+        }
+
         $toCreate = array(
             'dsn'         => 'mongodb://localhost:27017',
             'database'    => 'apigilityTest',
@@ -287,6 +291,10 @@ class AuthenticationModelTest extends TestCase
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()
     {
+        if (!extension_loaded('mongo')) {
+            $this->markTestSkipped('mongo extension must be loaded to run this test');
+        }
+
         $toCreate = array(
             'dsn'         => 'mongodb:300.300.300.300',
             'database'    => 'wrong',
