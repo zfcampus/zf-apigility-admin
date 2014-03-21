@@ -16,7 +16,7 @@
     <div class="panel-body">
         <ag-tabs parent="newService">
             <ag-tab-pane title="Code-Connected"><div class="panel"><div class="panel-body">
-                <form class="form" ng-submit="newService.createNewRestService()">
+                <form class="form" ng-submit="newService.createNewRestService()" ag-form="">
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">REST Service Name</label>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <form class="form" ng-show="dbAdapters.length > 0" ng-submit="newService.createNewDbConnectedService()">
+                <form class="form" ng-show="dbAdapters.length > 0" ng-submit="newService.createNewDbConnectedService()" ag-form="">
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">DB Adapter Name</label>
