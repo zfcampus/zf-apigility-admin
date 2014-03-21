@@ -1,26 +1,39 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Admin\InputFilter\Authentication;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\InputFilter\Authentication\DigestInputFilter;
+use Zend\InputFilter\Factory;
 
 class DigestInputFilterTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderIsValidTrue
-     */
-    public function testIsValidTrue($data)
+    public function setUp()
     {
-        $i = new DigestInputFilter;
-        $i->setData($data);
-        $this->assertTrue($i->isValid());
+        $this->htdigest = sys_get_temp_dir() . '/' . uniqid() . '.htdigest';
+        touch($this->htdigest);
     }
 
-    public function dataProviderIsValidTrue()
+    public function tearDown()
+    {
+        unlink($this->htdigest);
+    }
+
+    public function getInputFilter()
+    {
+        $factory = new Factory();
+        return $factory->createInputFilter(array(
+            'type' => 'ZF\Apigility\Admin\InputFilter\Authentication\DigestInputFilter',
+        ));
+    }
+
+    public function dataProviderIsValid()
     {
         return array(
-            array(
+            'valid' => array(
                 array(
                     'accept_schemes' => array('digest'),
                     'digest_domains' => 'foo.local',
@@ -32,45 +45,74 @@ class DigestInputFilterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderIsValidFalse
-     */
-    public function testIsValidFalse($data, $messages)
-    {
-        $i = new DigestInputFilter;
-        $i->setData($data);
-        $this->assertFalse($i->isValid());
-        $this->assertEquals($messages, $i->getMessages());
-    }
-
-    public function dataProviderIsValidFalse()
+    public function dataProviderIsInvalid()
     {
         return array(
-            // nothing sent
-            array(
+            'no-data' => array(
                 array(),
                 array(
-                    'accept_schemes' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'digest_domains' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'realm' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'htdigest' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'nonce_timeout' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                )
+                    'accept_schemes',
+                    'digest_domains',
+                    'realm',
+                    'htdigest',
+                    'nonce_timeout',
+                ),
             ),
-            // noonce is digit
-            array(
+            'nonce-is-not-a-digit' => array(
                 array(
-                   'accept_schemes' => array('digest'),
+                    'accept_schemes' => array('digest'),
                     'digest_domains' => 'foo.local',
                     'realm' => 'My Realm',
-                    'htdigest' => 'tmp/file.htpasswd',
-                    'nonce_timeout' => 'foo'
+                    'htdigest' => '%HTDIGEST%',
+                    'nonce_timeout' => 'foo',
                 ),
                 array(
-                    'nonce_timeout' => array('notDigits' => 'The input must contain only digits'),
-                )
-            )
+                    'nonce_timeout',
+                ),
+            ),
+            'invalid-htdigest' => array(
+                array(
+                    'accept_schemes' => array('digest'),
+                    'digest_domains' => 'foo.local',
+                    'realm' => 'My Realm',
+                    'htdigest' => '/foo/bar/baz/bat.htpasswd',
+                    'nonce_timeout' => 3600,
+                ),
+                array(
+                    'htdigest',
+                ),
+            ),
         );
     }
+
+    /**
+     * @dataProvider dataProviderIsValid
+     */
+    public function testIsValid($data)
+    {
+        $data['htdigest'] = $this->htdigest;
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertTrue($filter->isValid(), var_export($filter->getMessages(), 1));
+    }
+
+    /**
+     * @dataProvider dataProviderIsInvalid
+     */
+    public function testIsInvalid($data, $expectedMessageKeys)
+    {
+        if (isset($data['htdigest'])) {
+            $data['htdigest'] = str_replace('%HTDIGEST%', $this->htdigest, $data['htdigest']);
+        }
+
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertFalse($filter->isValid());
+
+        $messages = $filter->getMessages();
+        $messageKeys = array_keys($messages);
+        sort($expectedMessageKeys);
+        sort($messageKeys);
+        $this->assertEquals($expectedMessageKeys, $messageKeys);
+    }
 }
- 

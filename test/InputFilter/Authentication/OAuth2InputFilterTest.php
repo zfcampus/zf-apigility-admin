@@ -1,85 +1,98 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Admin\InputFilter\Authentication;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\InputFilter\Factory;
 use ZF\Apigility\Admin\InputFilter\Authentication\OAuth2InputFilter;
 
 class OAuth2InputFilterTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderIsValidTrue
-     */
-    public function testIsValidTrue($data)
+    public function getInputFilter()
     {
-        $i = new OAuth2InputFilter;
-        $i->setData($data);
-        $this->assertTrue($i->isValid());
+        $factory = new Factory;
+        return $factory->createInputFilter(array(
+            'type' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2InputFilter',
+        ));
     }
 
-    public function dataProviderIsValidTrue()
+    public function dataProviderIsValid()
     {
         return array(
-            // minimal
-            array(
+            'minimal' => array(
                 array(
                     'dsn' => 'sqlite://:memory:',
                     'dsn_type' => 'PDO',
                     'route_match' => '/foo',
-                )
+                ),
             ),
-            // full
-            array(
+            'full' => array(
                 array(
                     'dsn' => 'sqlite://:memory:',
                     'dsn_type' => 'PDO',
                     'password' => 'foobar',
                     'route_match' => '/foo',
-                    'username' => 'barfoo'
-                )
-            )
+                    'username' => 'barfoo',
+                ),
+            ),
         );
     }
 
-    /**
-     * @dataProvider dataProviderIsValidFalse
-     */
-    public function testIsValidFalse($data, $messages)
-    {
-        $i = new OAuth2InputFilter;
-        $i->setData($data);
-        $this->assertFalse($i->isValid());
-        $this->assertEquals($messages, $i->getMessages());
-    }
-
-    public function dataProviderIsValidFalse()
+    public function dataProviderIsInvalid()
     {
         return array(
-            // empty
-            array(
+            'empty' => array(
                 array(),
                 array(
-                    'dsn' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'dsn_type' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'route_match' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                )
+                    'dsn',
+                    'dsn_type',
+                    'route_match',
+                ),
             ),
-            // null
-            array(
+            'empty-values' => array(
                 array(
                     'dsn' => '',
                     'dsn_type' => '',
                     'password' => '',
                     'route_match' => '',
-                    'username' => ''
+                    'username' => '',
                 ),
                 array(
-                    'dsn' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'dsn_type' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                    'route_match' => array('isEmpty' => 'Value is required and can\'t be empty'),
-                )
+                    'dsn',
+                    'dsn_type',
+                    'route_match',
+                ),
             ),
         );
     }
+
+    /**
+     * @dataProvider dataProviderIsValid
+     */
+    public function testIsValid($data)
+    {
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertTrue($filter->isValid(), var_export($filter->getMessages(), 1));
+    }
+
+    /**
+     * @dataProvider dataProviderIsInvalid
+     */
+    public function testIsInvalid($data, $expectedMessageKeys)
+    {
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertFalse($filter->isValid());
+
+        $messages = $filter->getMessages();
+        $messageKeys = array_keys($messages);
+        sort($expectedMessageKeys);
+        sort($messageKeys);
+        $this->assertEquals($expectedMessageKeys, $messageKeys);
+    }
 }
- 
