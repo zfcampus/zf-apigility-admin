@@ -1,52 +1,96 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Admin\InputFilter;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\InputFilter\VersionInputFilter;
+use Zend\InputFilter\Factory;
 
 class VersionInputFilterTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderIsValidTrue
-     */
-    public function testIsValidTrue($data)
+    public function getInputFilter()
     {
-        $i = new VersionInputFilter;
-        $i->setData($data);
-        $this->assertTrue($i->isValid());
+        $factory = new Factory();
+        return $factory->createInputFilter(array(
+            'type' => 'ZF\Apigility\Admin\InputFilter\VersionInputFilter',
+        ));
     }
 
-    public function dataProviderIsValidTrue()
+    public function dataProviderIsValid()
     {
         return array(
-            array(
+            'valid' => array(
                 array(
                     'module' => 'foo',
-                    'version' => '5'
-                )
-            )
+                    'version' => 5,
+                ),
+            ),
+            'version-with-alphas' => array(
+                array(
+                    'module' => 'foo',
+                    'version' => 'alpha',
+                ),
+            ),
+            'version-with-mixed' => array(
+                array(
+                    'module' => 'foo',
+                    'version' => 'alpha_1',
+                ),
+            ),
+        );
+    }
+
+    public function dataProviderIsInvalid()
+    {
+        return array(
+            'empty' => array(
+                array(),
+                array('module', 'version'),
+            ),
+            'missing-module' => array(
+                array('version' => 'foo'),
+                array('module'),
+            ),
+            'missing-version' => array(
+                array('module' => 'foo'),
+                array('version'),
+            ),
+            'version-with-spaces' => array(
+                array('module' => 'foo', 'version' => 'foo bar'),
+                array('version'),
+            ),
+            'version-with-dashes' => array(
+                array('module' => 'foo', 'version' => 'foo-bar'),
+                array('version'),
+            ),
         );
     }
 
     /**
-     * @dataProvider dataProviderIsValidFalse
+     * @dataProvider dataProviderIsValid
      */
-    public function testIsValidFalse($data, $messages)
+    public function testIsValid($data)
     {
-        $i = new VersionInputFilter;
-        $i->setData($data);
-        $this->assertFalse($i->isValid());
-        $this->assertEquals($messages, $i->getMessages());
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertTrue($filter->isValid());
     }
 
-    public function dataProviderIsValidFalse()
+    /**
+     * @dataProvider dataProviderIsInvalid
+     */
+    public function testIsInvalid($data, $expectedMessageKeys)
     {
-        return array(
-            array(
-                array('module' => 'foo'),
-                array('version' => array('isEmpty' => 'Value is required and can\'t be empty'))
-            )
-        );
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertFalse($filter->isValid());
+        $messages = $filter->getMessages();
+        $messageKeys = array_keys($messages);
+        sort($expectedMessageKeys);
+        sort($messageKeys);
+        $this->assertEquals($expectedMessageKeys, $messageKeys);
     }
 }
