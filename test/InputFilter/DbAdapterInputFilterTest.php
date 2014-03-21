@@ -1,60 +1,87 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Admin\InputFilter;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\InputFilter\DbAdapterInputFilter;
+use Zend\InputFilter\Factory;
 
 class DbAdapterInputFilterTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderIsValidTrue
-     */
-    public function testIsValidTrue($data)
+    public function getInputFilter()
     {
-        $i = new DbAdapterInputFilter;
-        $i->setData($data);
-        $this->assertTrue($i->isValid());
+        $factory = new Factory();
+        return $factory->createInputFilter(array(
+            'type' => 'ZF\Apigility\Admin\InputFilter\DbAdapterInputFilter',
+        ));
     }
 
-    public function dataProviderIsValidTrue()
+    public function dataProviderIsValid()
     {
         return array(
-            array(
-                array('adapter_name' => 'Db\Status', 'database' => '/path/to/foobar', 'driver' => 'pdo_sqlite')
-            )
+            'valid' => array(
+                array(
+                    'adapter_name' => 'Db\Status',
+                    'database' => '/path/to/foobar',
+                    'driver' => 'pdo_sqlite',
+                ),
+            ),
+        );
+    }
+
+    public function dataProviderIsInvalid()
+    {
+        return array(
+            'missing-adapter-name' => array(
+                array(
+                    'database' => '/path/to/foobar',
+                    'driver' => 'pdo_sqlite',
+                ),
+                array('adapter_name'),
+            ),
+            'missing-database' => array(
+                array(
+                    'adapter_name' => 'Db\Status',
+                    'driver' => 'pdo_sqlite',
+                ),
+                array('database'),
+            ),
+            'missing-driver' => array(
+                array(
+                    'adapter_name' => 'Db\Status',
+                    'database' => '/path/to/foobar',
+                ),
+                array('driver'),
+            ),
         );
     }
 
     /**
-     * @dataProvider dataProviderIsValidFalse
+     * @dataProvider dataProviderIsValid
      */
-    public function testIsValidFalse($data, $messages)
+    public function testIsValid($data)
     {
-        $i = new DbAdapterInputFilter;
-        $i->setData($data);
-        $this->assertFalse($i->isValid());
-        $this->assertEquals($messages, $i->getMessages());
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertTrue($filter->isValid());
     }
 
-    public function dataProviderIsValidFalse()
+    /**
+     * @dataProvider dataProviderIsInvalid
+     */
+    public function testIsInvalid($data, $expectedMessageKeys)
     {
-        return array(
-            // adapter_name must be present
-            array(
-                array('database' => '/path/to/foobar', 'driver' => 'pdo_sqlite'),
-                array('adapter_name' => array('isEmpty' => 'Value is required and can\'t be empty'))
-            ),
-            // database must be present
-            array(
-                array('adapter_name' => 'Db\Status', 'driver' => 'pdo_sqlite'),
-                array('database' => array('isEmpty' => 'Value is required and can\'t be empty'))
-            ),
-            // driver must be present
-            array(
-                array('adapter_name' => 'Db\Status', 'database' => '/path/to/foobar'),
-                array('driver' => array('isEmpty' => 'Value is required and can\'t be empty'))
-            ),
-        );
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertFalse($filter->isValid());
+
+        $messages = $filter->getMessages();
+        $messageKeys = array_keys($messages);
+        sort($expectedMessageKeys);
+        sort($messageKeys);
+        $this->assertEquals($expectedMessageKeys, $messageKeys);
     }
 }
