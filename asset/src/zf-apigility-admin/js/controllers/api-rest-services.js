@@ -54,8 +54,9 @@ angular.module('ag-admin').controller(
     $scope.newService.createNewRestService = function () {
         ApiRepository.createNewRestService($scope.api.name, $scope.newService.restServiceName).then(
             function (restResource) {
+                flash.success = 'New Code-Connected REST service created; please wait for the list to refresh';
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, $state, true, 'New REST Service created');
+                ApiRepository.refreshApi($scope, $state, true, 'Finished reloading REST service list');
             },
             function (error) {
                 agFormHandler.reportError(error, $scope);
@@ -66,8 +67,9 @@ angular.module('ag-admin').controller(
     $scope.newService.createNewDbConnectedService = function () {
         ApiRepository.createNewDbConnectedService($scope.api.name, $scope.newService.dbAdapterName, $scope.newService.dbTableName).then(
             function (restResource) {
+                flash.success = 'New DB-Connected REST service created; please wait for the list to refresh';
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, $state, true, 'New DB Connected Service created');
+                ApiRepository.refreshApi($scope, $state, true, 'Finished reloading REST service list');
             },
             function (error) {
                 agFormHandler.reportError(error, $scope);
@@ -76,11 +78,11 @@ angular.module('ag-admin').controller(
     };
 
     $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: ''}, {reload: true, inherit: true});
+        $state.go($state.$current.name, {edit: null}, {reload: false, notify: false, inherit: true});
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {notify: true, inherit: true});
+        $state.go($state.$current.name, {edit: true}, {reload: false, notify: false, inherit: true});
     };
 
     $scope.saveRestService = function (index) {
