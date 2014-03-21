@@ -1,4 +1,8 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZF\Apigility\Admin\InputFilter\Validator;
 
@@ -8,30 +12,31 @@ class MediaTypeArrayValidator extends AbstractValidator
 {
     const MEDIA_TYPE_ARRAY = 'mediaTypeArray';
 
+    /**
+     * @var array
+     */
     protected $messageTemplates = array(
         self::MEDIA_TYPE_ARRAY => "'%value%' is not a correctly formatted media type"
     );
 
     /**
-     * Returns true if and only if $value meets the validation requirements
-     *
-     * If $value fails validation, then this method returns false, and
-     * getMessages() will return an array of messages that explain why the
-     * validation failed.
-     *
      * @param  mixed $value
      * @return bool
      * @throws Exception\RuntimeException If validation of $value is impossible
      */
     public function isValid($value)
     {
+        if (is_string($value)) {
+            $value = (array) $value;
+        }
+
         foreach ($value as $mediaType) {
-            // preg_match('#a-zA-Z0-9!\#$%^&\*_-\+{}\|\'.`~]+/[a-zA-Z0-9!\#$%^&\*_-\+{}\|\'.`~]+#', $mediaType)
-            if (strpos($mediaType, '/') === false) {
+            if (! preg_match('#^[a-z-]+/[a-z0-9*_+.-]+#i', $mediaType)) {
                 $this->error(self::MEDIA_TYPE_ARRAY, $mediaType);
                 return false;
             }
         }
+
         return true;
     }
 }
