@@ -34,7 +34,7 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
             return selectors;
           },
           function error() {
-            flash.error = 'Unable to fetch content negotiation selectors; you may need to reload the page';
+            flash.to('ag-flash-error').error = 'Unable to fetch content negotiation selectors; you may need to reload the page';
           }
         );
       },

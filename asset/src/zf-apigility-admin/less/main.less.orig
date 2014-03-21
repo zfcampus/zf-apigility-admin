@@ -193,11 +193,12 @@ table.body-striped {
     }
 }
 
+<<<<<<< HEAD
 .panel.ag-validation-error {
     clear: both;
     margin-top: 1em;
 }
-
+=======
 .alert {
     margin-bottom: 0px;
     position: fixed;
@@ -207,7 +208,4 @@ table.body-striped {
     right: 0;
     text-align: center;
 }
-
-.alert-error {
-    .alert-variant(@alert-danger-bg; @alert-danger-border; @alert-danger-text);
-}
+>>>>>>> ralphschindler/hotfix/ui-flash-message-positioning

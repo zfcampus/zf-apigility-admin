@@ -60,7 +60,16 @@
         </div>
     </div>
 
-    <div flash-alert active-class="in" class="alert fade fade-out">
+    <div flash-alert="info" active-class="in" class="alert fade fade-out">
+        <span class="alert-message">{{flash.message}}</span>
+    </div>
+
+    <div flash-alert="success" active-class="in" class="alert fade fade-out">
+        <span class="alert-message">{{flash.message}}</span>
+    </div>
+
+    <div flash-alert="error" active-class="in" class="alert fade fade-out" duration="0">
+        <button type="button" class="close" ng-click="hide()">&times;</button>
         <span class="alert-message">{{flash.message}}</span>
     </div>
 
