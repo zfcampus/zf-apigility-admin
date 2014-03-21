@@ -6,18 +6,11 @@
 
 namespace ZF\Apigility\Admin\InputFilter;
 
-use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\InputFilter;
 
-class ContentNegotiationInputFilter implements InputFilterInterface
+class ContentNegotiationInputFilter extends InputFilter
 {
-
-    protected $data;
     protected $messages = array();
-
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
 
     /**
      * Is the data set valid?
@@ -28,21 +21,30 @@ class ContentNegotiationInputFilter implements InputFilterInterface
     {
         $this->messages = array();
         $isValid = true;
+
         foreach ($this->data as $className => $mediaTypes) {
-            if (!class_exists($className, true)) {
-                $this->messages[$className]['invalidClassName'] = 'Class name is invalid';
+            if (! class_exists($className)) {
+                $this->messages[$className][] = 'Class name (' . $className . ') does not exist';
                 $isValid = false;
+                continue;
+            }
+
+            $interfaces = class_implements($className);
+            if (false === $interfaces || ! in_array('Zend\View\Model\ModelInterface', $interfaces)) {
+                $this->messages[$className][] = 'Class name (' . $className . ') is invalid; must be a valid Zend\View\Model\ModelInterface class';
+                $isValid = false;
+                continue;
             }
 
             if (!is_array($mediaTypes)) {
-                $this->messages[$className]['invalidMediaTypes'] = 'Values for the media-types must be provided as an indexed array';
+                $this->messages[$className][] = 'Values for the media-types must be provided as an indexed array';
                 $isValid = false;
                 continue;
             }
 
             foreach ($mediaTypes as $mediaType) {
                 if (strpos($mediaType, '/') === false) {
-                    $this->messages[$className]['invalidMediaTypes'] = 'Invalid media type provided';
+                    $this->messages[$className][] = 'Invalid media type (' . $mediaType . ') provided';
                     $isValid = false;
                 }
             }
@@ -51,62 +53,11 @@ class ContentNegotiationInputFilter implements InputFilterInterface
         return $isValid;
     }
 
-    public function getRawValues()
-    {
-        return $this->data;
-    }
-
+    /**
+     * @return array
+     */
     public function getMessages()
     {
         return $this->messages;
     }
-
-    /**#@+
-     * Unnecessary methods required by interface for the purposes of this input filter
-     * @return void
-     */
-    public function count()
-    {
-    }
-
-    public function add($input, $name = null)
-    {
-    }
-
-    public function get($name)
-    {
-    }
-
-    public function has($name)
-    {
-    }
-
-    public function remove($name)
-    {
-    }
-
-    public function setValidationGroup($name)
-    {
-    }
-
-    public function getInvalidInput()
-    {
-    }
-
-    public function getValidInput()
-    {
-    }
-
-    public function getValue($name)
-    {
-    }
-
-    public function getValues()
-    {
-    }
-
-    public function getRawValue($name)
-    {
-    }
-    /**#@-*/
 }
