@@ -10,7 +10,30 @@ use Zend\InputFilter\InputFilter;
 
 class DocumentationInputFilter extends InputFilter
 {
+    /**
+     * @var array
+     */
     protected $messages = array();
+
+    /**
+     * @var array
+     */
+    protected $validHttpMethodDocumentationKeys = array(
+        'description',
+        'request',
+        'response',
+    );
+
+    /**
+     * @var array
+     */
+    protected $validHttpMethods = array(
+        'GET',
+        'POST',
+        'PUT',
+        'PATCH',
+        'DELETE',
+    );
 
     /**
      * Is the data set valid?
@@ -19,8 +42,6 @@ class DocumentationInputFilter extends InputFilter
      */
     public function isValid()
     {
-        static $validHttpMethods = array('GET', 'POST', 'PUT', 'PATCH', 'DELETE');
-
         $this->messages = array();
         $isValid = true;
 
@@ -30,89 +51,99 @@ class DocumentationInputFilter extends InputFilter
         }
 
         foreach ($this->data as $key => $data) {
-
-            if (in_array($key, $validHttpMethods)) {
+            if (in_array($key, $this->validHttpMethods)) {
 
                 // valid HTTP method?
                 if (isset($this->data['collection']) || isset($this->data['entity'])) {
-                    $this->messages[$key]['invalidKey'] = 'HTTP methods cannot be present when "collection" or "entity" is also present';
+                    $this->messages[$key][] = 'HTTP methods cannot be present when "collection" or "entity" is also present; please verify data for "' . $key . '"';
                     $isValid = false;
                     continue;
                 }
 
-                if ($this->isValidHttpMethodDocumentation($data) === false) {
+                if (! $this->isValidHttpMethodDocumentation($data)) {
                     $isValid = false;
                     continue;
                 }
 
-            } elseif (in_array($key, array('collection', 'entity'))) {
+                continue;
+            }
 
+            if (in_array($key, array('collection', 'entity'))) {
                 // valid collection or entity
-                if (!is_array($data)) {
-                    $this->messages[$key]['invalidData'] = 'Collections and entities methods must be an array of HTTP methods';
+                if (! is_array($data)) {
+                    $this->messages[$key][] = 'Collections and entities methods must be an array of HTTP methods; received invalid entry for "' . $key . '"';
                     $isValid = false;
                     continue;
                 }
-                foreach ($data as $subKey => $subData) {
-                    if (in_array($subKey, $validHttpMethods)) {
 
-                        if ($this->isValidHttpMethodDocumentation($subData) === false) {
+                foreach ($data as $subKey => $subData) {
+                    if (in_array($subKey, $this->validHttpMethods)) {
+                        if (! $this->isValidHttpMethodDocumentation($subData)) {
                             $isValid = false;
                             continue;
                         }
 
                     } elseif ($subKey === 'description') {
                         if (!is_string($subData)) {
-                            $this->messages[$key]['invalidDescription'] = 'Description must be provided as a string';
+                            $this->messages[$key][] = 'Description must be provided as a string; please verify description for "' . $subKey . '"';
                             $isValid = false;
                             continue;
                         }
                     } else {
-                        $this->messages[$key]['invalidKey'] = 'Key must be description or an HTTP indexed list';
+                        $this->messages[$key][] = 'Key must be description or an HTTP indexed list; please verify documentation for "' . $subKey . '"';
                         $isValid = false;
                         continue;
                     }
                 }
 
-            } elseif ($key === 'description') {
+                continue;
+            }
 
+            if ($key === 'description') {
                 // documentation checking
                 if (!is_string($data)) {
-                    $this->messages[$key]['invalidDescription'] = 'Description must be provided as a string';
+                    $this->messages[$key][] = 'Description must be provided as a string; please verify description for "' . $key . '"';
                     $isValid = false;
                     continue;
                 }
 
-            } else {
-
-                // everything else is invalid
-                $this->messages[$key]['invalidKey'] = 'An invalid key was encountered in the top position, '
-                    . 'must be one of an HTTP method, collection, entity, or description';
-                $isValid = false;
                 continue;
             }
 
+            // everything else is invalid
+            $this->messages[$key][] = 'An invalid key was encountered in the top position for "' . $key . '"; '
+                . 'must be one of an HTTP method, collection, entity, or description';
+            $isValid = false;
         }
 
         return $isValid;
     }
 
+    /**
+     * @param  array $data 
+     * @return bool
+     */
     public function isValidHttpMethodDocumentation($data)
     {
         foreach ($data as $key => $value) {
-            if (in_array($key, array('description', 'request', 'response'))) {
+            if (in_array($key, $this->validHttpMethodDocumentationKeys)) {
                 if ($value !== null && !is_string($value)) {
-                    $this->messages[$key]['invalidElement'] = 'Documentable elements must be strings';
+                    $this->messages[$key][] = 'Documentable elements must be strings; please verify "' . $key . '"';
                     return false;
                 }
-            } else {
-                $this->messages[$key]['invalidElement'] = 'Documentable elements must be any or all of description, request or response';
-                return false;
+                continue;
             }
+
+            $this->messages[$key][] = 'Documentable elements must be any or all of description, request or response; please verify "' . $key . '"';
+            return false;
         }
+
         return true;
     }
 
+    /**
+     * @return void
+     */
     public function getMessages()
     {
         return $this->messages;
