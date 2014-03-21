@@ -1,56 +1,80 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Admin\InputFilter;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\InputFilter\ModuleInputFilter;
+use Zend\InputFilter\Factory;
 
 class ModuleInputFilterTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderIsValidTrue
-     */
-    public function testIsValidTrue($data)
+    public function getInputFilter()
     {
-        $i = new ModuleInputFilter;
-        $i->setData($data);
-        $this->assertTrue($i->isValid());
+        $factory = new Factory();
+        return $factory->createInputFilter(array(
+            'type' => 'ZF\Apigility\Admin\InputFilter\ModuleInputFilter',
+        ));
     }
 
-    public function dataProviderIsValidTrue()
+    public function dataProviderIsValid()
     {
         return array(
-            array(
-                array('name' => 'Foo')
+            'singular-namespace' => array(
+                array('name' => 'Foo'),
             ),
-            array(
-                array('name' => 'My_Status')
+            'underscore_namespace' => array(
+                array('name' => 'My_Status'),
             ),
         );
     }
 
-    /**
-     * @dataProvider dataProviderIsValidFalse
-     */
-    public function testIsValidFalse($data, $messages)
-    {
-        $i = new ModuleInputFilter;
-        $i->setData($data);
-        $this->assertFalse($i->isValid());
-        $this->assertEquals($messages, $i->getMessages());
-    }
-
-    public function dataProviderIsValidFalse()
+    public function dataProviderIsInvalid()
     {
         return array(
-            array(
+            'missing-name' => array(
+                array(),
+                array('name'),
+            ),
+            'empty-name' => array(
+                array('name' => ''),
+                array('name'),
+            ),
+            'underscore-only' => array(
                 array('name' => '_'),
-                array('name' => array('api_name' => "'_' is not a valid api name"))
+                array('name'),
             ),
-            array(
+            'namespace-separator' => array(
                 array('name' => 'My\Status'),
-                array('name' => array('api_name' => "'My\Status' is not a valid api name"))
+                array('name'),
             ),
         );
+    }
+
+    /**
+     * @dataProvider dataProviderIsValid
+     */
+    public function testIsValid($data)
+    {
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertTrue($filter->isValid());
+    }
+
+    /**
+     * @dataProvider dataProviderIsInvalid
+     */
+    public function testIsInvalid($data, $expectedMessageKeys)
+    {
+        $filter = $this->getInputFilter();
+        $filter->setData($data);
+        $this->assertFalse($filter->isValid());
+        $messages = $filter->getMessages();
+        $messageKeys = array_keys($messages);
+        sort($expectedMessageKeys);
+        sort($messageKeys);
+        $this->assertEquals($expectedMessageKeys, $messageKeys);
     }
 }

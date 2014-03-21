@@ -10,7 +10,7 @@ use Zend\InputFilter\InputFilter;
 
 class ModuleInputFilter extends InputFilter
 {
-    public function __construct()
+    public function init()
     {
         $this->add(array(
             'name' => 'name',
@@ -19,6 +19,7 @@ class ModuleInputFilter extends InputFilter
                     'name' => 'ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator',
                 ),
             ),
+            'error_message' => 'The API name must be a valid PHP namespace',
         ));
     }
 }
