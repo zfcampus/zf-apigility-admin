@@ -289,10 +289,10 @@
         },
         resolve: {
           apiAuthorizations: ['$stateParams', 'ApiAuthorizationRepository', function ($stateParams, ApiAuthorizationRepository) {
-              return ApiAuthorizationRepository.getApiAuthorization($stateParams.apiName, $stateParams.version);
+            return ApiAuthorizationRepository.getApiAuthorization($stateParams.apiName, $stateParams.version, true);
           }],
           authentication: ['AuthenticationRepository', function (AuthenticationRepository) {
-              return AuthenticationRepository.hasAuthentication();
+            return AuthenticationRepository.hasAuthentication();
           }]
         },
         views: {
