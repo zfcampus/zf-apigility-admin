@@ -83,8 +83,8 @@ abstract class AbstractValidator extends BaseAbstractValidator
      *
      * Verify that the string is not a PHP keyword and/or will be usable as a
      * variable name, namespace, or class name.
-     * 
-     * @param  string $word 
+     *
+     * @param  string $word
      * @return bool
      */
     public function isValidWordInPhp($word)

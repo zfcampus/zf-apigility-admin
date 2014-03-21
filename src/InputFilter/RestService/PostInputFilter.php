@@ -10,10 +10,19 @@ use Zend\InputFilter\InputFilter;
 
 class PostInputFilter extends InputFilter
 {
+    /**
+     * @var array
+     */
     protected $localMessages;
 
+    /**
+     * @var bool
+     */
     protected $isUpdate = false;
 
+    /**
+     * Initialize input filter
+     */
     public function init()
     {
         $this->add(array(
@@ -65,7 +74,7 @@ class PostInputFilter extends InputFilter
      *
      * - service_name OR
      * - adapter_name AND table_name
-     * 
+     *
      * @return bool
      */
     protected function isValidService()
@@ -97,7 +106,7 @@ class PostInputFilter extends InputFilter
                 return false;
             }
             return true;
-        } 
+        }
 
         if ((isset($context['adapter_name']) && !empty($context['adapter_name']))
             && (!isset($context['table_name']) || $context['table_name'] === null)

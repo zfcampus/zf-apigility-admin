@@ -22,7 +22,7 @@ class InputFilterInputFilter extends InputFilter
     protected $validationFactory;
 
     /**
-     * @param InputFilterFactory $factory 
+     * @param InputFilterFactory $factory
      */
     public function __construct(InputFilterFactory $factory)
     {
@@ -39,11 +39,11 @@ class InputFilterInputFilter extends InputFilter
         $this->messages = array();
         try {
             $this->validationFactory->createInputFilter($this->data);
+            return true;
         } catch (\Exception $e) {
             $this->messages['inputFilter'] = $e->getMessage();
             return false;
         }
-        return true;
     }
 
     /**

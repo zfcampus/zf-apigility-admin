@@ -120,7 +120,7 @@ class DocumentationInputFilter extends InputFilter
     }
 
     /**
-     * @param  array $data 
+     * @param  array $data
      * @return bool
      */
     public function isValidHttpMethodDocumentation($data)

@@ -18,7 +18,7 @@ class ModuleNameValidator extends AbstractValidator
     );
 
     /**
-     * @param  mixed $value 
+     * @param  mixed $value
      * @return bool
      */
     public function isValid($value)
