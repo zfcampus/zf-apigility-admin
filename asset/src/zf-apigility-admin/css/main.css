@@ -6098,10 +6098,13 @@ table.body-striped > tbody:nth-child(even) > tr > th {
   margin-bottom: 0px;
   position: fixed;
   bottom: 0px;
-  z-index: 50;
+  z-index: -50;
   left: 0;
   right: 0;
   text-align: center;
+}
+.alert.in {
+  z-index: 50;
 }
 .alert-error {
   background-color: #f2dede;
