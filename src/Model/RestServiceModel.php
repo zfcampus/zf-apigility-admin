@@ -757,47 +757,86 @@ class RestServiceModel implements EventManagerAwareInterface
         $service = $original->controllerServiceName;
         $baseKey = 'zf-hal.metadata_map.';
 
-        $entityConfig     = $this->getConfigForSubkey($baseKey . $original->entityClass);
-        $collectionConfig = $this->getConfigForSubkey($baseKey . $original->collectionClass);
+        $entityClass      = $update->entityClass     ?: $original->entityClass;
+        $collectionClass  = $update->collectionClass ?: $original->collectionClass;
+        $halConfig        = $this->getConfigForSubkey('zf-hal.metadata_map');
+
+        $entityUpdated     = false;
+        $collectionUpdated = false;
+
+        // Do we have a new entity class?
+        if (!isset($halConfig[$entityClass])) {
+            $data = array($entityClass => array(
+                'entity_identifier_name' => $update->entityIdentifierName ?: $original->entityIdentifierName,
+                'route_name'             => $update->routeName            ?: $original->routeName,
+                'route_identifier_name'  => $update->routeIdentifierName  ?: $original->routeIdentifierName,
+            ));
+            $hydratorName = $update->hydratorName ?: $original->hydratorName;
+            if ($hydratorName) {
+                $data[$entityClass]['hydrator'] = $hydratorName;
+            }
+            $data = array('zf-hal' => array('metadata_map' => $data));
+            $this->configResource->patch($data, true);
+            $entityUpdated = true;
+        }
+
+        // Do we have a new collection class?
+        if (!isset($halConfig[$collectionClass])) {
+            $data = array($collectionClass => array(
+                'entity_identifier_name' => $update->entityIdentifierName ?: $original->entityIdentifierName,
+                'route_name'             => $update->routeName            ?: $original->routeName,
+                'route_identifier_name'  => $update->routeIdentifierName  ?: $original->routeIdentifierName,
+                'is_collection'          => true,
+            ));
+            $data = array('zf-hal' => array('metadata_map' => $data));
+            $this->configResource->patch($data, true);
+            $collectionUpdated = true;
+        }
 
         $entityUpdate     = array();
         $collectionUpdate = array();
-        if ($update->routeIdentifierName
+        if ((! $entityUpdated && ! $collectionUpdated)
+            && $update->routeIdentifierName
             && $update->routeIdentifierName !== $original->routeIdentifierName
         ) {
             $entityUpdate['route_identifier_name']     = $update->routeIdentifierName;
             $collectionUpdate['route_identifier_name'] = $update->routeIdentifierName;
         }
 
-        if ($update->entityIdentifierName
+        if ((! $entityUpdated && ! $collectionUpdated)
+            && $update->entityIdentifierName
             && $update->entityIdentifierName !== $original->entityIdentifierName
         ) {
             $entityUpdate['entity_identifier_name']     = $update->entityIdentifierName;
             $collectionUpdate['entity_identifier_name'] = $update->entityIdentifierName;
         }
 
-        if ($update->routeName
+        if ((! $entityUpdated && ! $collectionUpdated)
+            && $update->routeName
             && $update->routeName !== $original->routeName
         ) {
             $entityUpdate['route_name']     = $update->routeName;
             $collectionUpdate['route_name'] = $update->routeName;
         }
 
-        if ($update->hydratorName
+        if (! $entityUpdated
+            && $update->hydratorName
             && $update->hydratorName !== $original->hydratorName
         ) {
             $entityUpdate['hydrator'] = $update->hydratorName;
         }
 
-        if (!empty($entityUpdate)) {
+        if (! $entityUpdated && ! empty($entityUpdate)) {
+            $entityConfig = $this->getConfigForSubkey($baseKey . $entityClass);
             $update = ArrayUtils::merge($entityConfig, $entityUpdate);
-            $key = $baseKey . $original->entityClass;
+            $key = $baseKey . $entityClass;
             $this->configResource->patchKey($key, $update);
         }
 
-        if (!empty($collectionUpdate)) {
+        if (! $collectionUpdated && ! empty($collectionUpdate)) {
+            $collectionConfig = $this->getConfigForSubkey($baseKey . $collectionClass);
             $update = ArrayUtils::merge($collectionConfig, $collectionUpdate);
-            $key = $baseKey . $original->collectionClass;
+            $key = $baseKey . $collectionClass;
             $this->configResource->patchKey($key, $update);
         }
     }
@@ -1008,11 +1047,11 @@ class RestServiceModel implements EventManagerAwareInterface
             return;
         }
 
-        $config = $config['zf-hal']['metadata_map'];
-
         $entityClass     = $this->deriveEntityClass($controllerServiceName, $metadata, $config);
         $collectionClass = $this->deriveCollectionClass($controllerServiceName, $metadata, $config);
-        $merge           = array();
+
+        $config = $config['zf-hal']['metadata_map'];
+        $merge  = array();
 
         if (isset($config[$entityClass])) {
             $merge['entity_class'] = $entityClass;

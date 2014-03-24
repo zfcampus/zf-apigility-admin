@@ -383,6 +383,22 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals('Zend\Stdlib\Hydrator\ObjectProperty', $service->hydratorName);
     }
 
+    public function testFetchServiceUsesEntityAndCollectionClassesDiscoveredInRestConfiguration()
+    {
+        $details = $this->getCreationPayload();
+        $details->exchangeArray(array(
+            'entity_class'     => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
+            'collection_class' => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
+        ));
+        $result  = $this->codeRest->createService($details);
+
+        $service = $this->codeRest->fetch('BarConf\V1\Rest\Foo\Controller');
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $service);
+
+        $this->assertEquals('ZFTest\Apigility\Admin\Model\TestAsset\Entity', $service->entityClass);
+        $this->assertEquals('ZFTest\Apigility\Admin\Model\TestAsset\Collection', $service->collectionClass);
+    }
+
     public function testCanUpdateRouteForExistingService()
     {
         $details  = $this->getCreationPayload();
@@ -417,6 +433,8 @@ class RestServiceModelTest extends TestCase
             'collection_query_whitelist' => array('f', 's'),
             'collection_http_methods'    => array('GET'),
             'entity_http_methods'        => array('GET'),
+            'entity_class'               => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
+            'collection_class'           => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
         );
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
@@ -487,6 +505,52 @@ class RestServiceModelTest extends TestCase
 
         $entityName     = $original->entityClass;
         $collectionName = $original->collectionClass;
+        $this->assertArrayHasKey($entityName, $config);
+        $this->assertArrayHasKey($collectionName, $config);
+
+        $entityConfig     = $config[$entityName];
+        $collectionConfig = $config[$collectionName];
+
+        $this->assertArrayHasKey('route_identifier_name', $entityConfig);
+        $this->assertEquals($options['route_identifier_name'], $entityConfig['route_identifier_name']);
+        $this->assertArrayHasKey('route_identifier_name', $collectionConfig);
+        $this->assertEquals($options['route_identifier_name'], $collectionConfig['route_identifier_name']);
+
+        $this->assertArrayHasKey('route_name', $entityConfig);
+        $this->assertEquals($options['route_name'], $entityConfig['route_name']);
+        $this->assertArrayHasKey('route_name', $collectionConfig);
+        $this->assertEquals($options['route_name'], $collectionConfig['route_name']);
+
+        $this->assertArrayHasKey('hydrator', $entityConfig);
+        $this->assertEquals($options['hydrator_name'], $entityConfig['hydrator']);
+        $this->assertArrayNotHasKey('hydrator', $collectionConfig);
+    }
+
+    public function testCanUpdateHalConfigForExistingServiceAndProvideNewEntityAndCollectionClasses()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'entity_class'          => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
+            'collection_class'      => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
+            'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
+            'route_identifier_name' => 'custom_foo_id',
+            'route_name'            => 'my/custom/route',
+        );
+        $patch = new RestServiceEntity();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateHalConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-hal', $config);
+        $this->assertArrayHasKey('metadata_map', $config['zf-hal']);
+        $config = $config['zf-hal']['metadata_map'];
+
+        $entityName     = $patch->entityClass;
+        $collectionName = $patch->collectionClass;
+
         $this->assertArrayHasKey($entityName, $config);
         $this->assertArrayHasKey($collectionName, $config);
 
