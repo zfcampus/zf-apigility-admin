@@ -48,11 +48,11 @@ angular.module('ag-admin').controller(
     };
 
     $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: null}, {reload: false, notify: false, inherit: true});
+        $state.go($state.$current.name, {edit: null}, {reload: true, notify: true, inherit: true});
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {reload: false, notify: true, inherit: true});
+        $state.go($state.$current.name, {edit: true}, {reload: true, notify: true, inherit: true});
     };
 
     $scope.saveRpcService = function (index) {
