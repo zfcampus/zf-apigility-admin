@@ -82,7 +82,7 @@ angular.module('ag-admin').controller(
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {reload: false, notify: false, inherit: true});
+        $state.go($state.$current.name, {edit: true}, {reload: false, notify: true, inherit: true});
     };
 
     $scope.saveRestService = function (index) {
