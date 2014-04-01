@@ -32,44 +32,6 @@
     <p class="text-muted">{{ input.error_message }}
 </p></div></div>
 
-<div ng-show="input.validators.length > 0">
-<collapse class="panel-warning">
-    <collapse-header>
-        <h4 class="panel-title">
-            <i class="glyphicon glyphicon-ok"></i>
-            Validators
-        </h4>
-    </collapse-header>
-
-    <collapse-body>
-        <collapse class="panel panel-blank" ng-repeat="validator in input.validators">
-            <collapse-header>
-                <h4 class="panel-title">
-                    {{validator.name}}
-                </h4>
-            </collapse-header>
-        
-            <collapse-body class="list-group in">
-                <li class="list-group-item" ng-repeat="(optionName, optionValue) in validator.options">
-                    <div class="form-group form-horizontal">
-                        <label class="control-label col-sm-4">{{optionName}}:</label>
-
-                        <div class="col-sm-7">
-                            <p class="form-control-static input-xlarge" ng-show="validatorOptions[validator.name][optionName] == 'bool'" ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
-                                {{optionValue && 'Yes' || 'No'}}
-                            </p>
-                            <p class="form-control-static input-xlarge" ng-show="validatorOptions[validator.name][optionName] != 'bool'">
-                                {{ optionValue }}
-                            </p>
-                        </div>
-                    </div>
-                </li>
-            </collapse-body>
-        </collapse>
-    </collapse-body>
-</collapse>
-</div>
-
 <div ng-show="input.filters.length > 0">
 <collapse class="panel-warning">
     <collapse-header>
@@ -97,6 +59,44 @@
                                 {{optionValue && 'Yes' || 'No'}}
                             </p>
                             <p class="form-control-static input-xlarge" ng-show="filterOptions[filter.name][optionName] != 'bool'">
+                                {{ optionValue }}
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </collapse-body>
+        </collapse>
+    </collapse-body>
+</collapse>
+</div>
+
+<div ng-show="input.validators.length > 0">
+<collapse class="panel-warning">
+    <collapse-header>
+        <h4 class="panel-title">
+            <i class="glyphicon glyphicon-ok"></i>
+            Validators
+        </h4>
+    </collapse-header>
+
+    <collapse-body>
+        <collapse class="panel panel-blank" ng-repeat="validator in input.validators">
+            <collapse-header>
+                <h4 class="panel-title">
+                    {{validator.name}}
+                </h4>
+            </collapse-header>
+        
+            <collapse-body class="list-group in">
+                <li class="list-group-item" ng-repeat="(optionName, optionValue) in validator.options">
+                    <div class="form-group form-horizontal">
+                        <label class="control-label col-sm-4">{{optionName}}:</label>
+
+                        <div class="col-sm-7">
+                            <p class="form-control-static input-xlarge" ng-show="validatorOptions[validator.name][optionName] == 'bool'" ng-class="{true: 'text-info', false: 'text-muted'}[optionValue]">
+                                {{optionValue && 'Yes' || 'No'}}
+                            </p>
+                            <p class="form-control-static input-xlarge" ng-show="validatorOptions[validator.name][optionName] != 'bool'">
                                 {{ optionValue }}
                             </p>
                         </div>
