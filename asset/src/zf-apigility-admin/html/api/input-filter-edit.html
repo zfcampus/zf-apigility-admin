@@ -8,7 +8,10 @@
 
         <div class="form-inline pull-right">
             <div class="form-group">
-                <input type="text" class="form-control input-xlarge" placeholder="Field name" ng-model="newInput">
+                <input
+                    type="text" class="form-control input-xlarge" placeholder="Field name"
+                    ag-on-enter="addInput()"
+                    ng-model="newInput">
             </div>
             <button type="button" ng-click="addInput()" class="btn btn-sm btn-primary">Create New Field</button>
         </div>
