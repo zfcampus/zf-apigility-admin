@@ -58,6 +58,11 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 var api = _.find(apis, function (m) {
                     return m.name === name;
                 });
+                
+                if (api === undefined) {
+                    flash.error = 'API "' + name + '" not found';
+                    return $q.reject(404);
+                }
 
                 _.forEach(Hal.stripLinks(api), function (value, key) {
                     apiModel[key] = value;
@@ -68,6 +73,11 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
 
                 if (!version) {
                     version = api.versions[api.versions.length - 1];
+                }
+
+                if (-1 === api.versions.indexOf(version)) {
+                    flash.error = 'Version "' + version + '" of API "' + name + '" not found';
+                    return $q.reject(404);
                 }
 
                 return api;
