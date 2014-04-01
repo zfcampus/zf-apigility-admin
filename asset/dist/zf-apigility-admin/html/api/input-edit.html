@@ -1,4 +1,9 @@
 <div class="panel panel-default"><div class="panel-body">
+  <label class="control-label">Description</label>
+  <textarea class="form-control input-xlarge" ng-model="input.description"></textarea>
+</div></div>
+
+<div class="panel panel-default"><div class="panel-body">
     <label class="control-label">Required</label>
     <toggle-switch model="input.required" class="small pull-right"></toggle-switch>
 </div></div>
@@ -14,8 +19,9 @@
 </div></div>
 
 <div class="panel panel-default"><div class="panel-body">
-  <label class="control-label">Description</label>
-  <textarea class="form-control input-xlarge" ng-model="input.description"></textarea>
+    <label class="control-label">Error Message</label>
+    <textarea class="form-control input-xlarge" ng-model="input.error_message"></textarea>
+    <p class="help-block">Error message to display if field does not validate</p>
 </div></div>
 
 <collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
