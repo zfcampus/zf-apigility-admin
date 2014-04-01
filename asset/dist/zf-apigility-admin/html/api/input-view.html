@@ -1,4 +1,9 @@
 <div class="panel panel-default"><div class="panel-body">
+  <label class="control-label">Description</label>
+  <p class="text-muted">{{ input.description }}</p>
+</div></div>
+
+<div class="panel panel-default"><div class="panel-body">
     <span class="form-control-static input-xlarge pull-right" ng-class="{true: 'text-info', false: 'text-muted'}[input.required]">
         <strong>{{input.required && 'Yes' || 'No'}}</strong>
     </span>
@@ -21,6 +26,11 @@
 
     <label class="control-label">Continue if Empty</label>
 </div></div>
+
+<div ng-show="input.error_message" class="panel panel-default"><div class="panel-body">
+    <label class="control-label">Error Message</label>
+    <p class="text-muted">{{ input.error_message }}
+</p></div></div>
 
 <div ng-show="input.validators.length > 0">
 <collapse class="panel-warning">
