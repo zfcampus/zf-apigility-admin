@@ -5,17 +5,17 @@
 
 <div class="panel panel-default"><div class="panel-body">
     <label class="control-label">Required</label>
-    <toggle-switch model="input.required" class="small pull-right"></toggle-switch>
+    <toggle-switch model="input.required" class="small pull-right" on-label="Yes" off-label="No"></toggle-switch>
 </div></div>
 
 <div class="panel panel-default"><div class="panel-body">
     <label class="control-label">Allow Empty</label>
-    <toggle-switch model="input.allow_empty" class="small pull-right"></toggle-switch>
+    <toggle-switch model="input.allow_empty" class="small pull-right" on-label="Yes" off-label="No"></toggle-switch>
 </div></div>
 
 <div class="panel panel-default"><div class="panel-body">
     <label class="control-label">Continue if Empty</label>
-    <toggle-switch model="input.continue_if_empty" class="small pull-right"></toggle-switch>
+    <toggle-switch model="input.continue_if_empty" class="small pull-right" on-label="Yes" off-label="No"></toggle-switch>
 </div></div>
 
 <div class="panel panel-default"><div class="panel-body">
@@ -233,6 +233,8 @@
                             <toggle-switch 
                                 ng-show="validator._newOptionName && (validatorOptions[validator.name][validator._newOptionName] == 'bool')"
                                 model="validator._newOptionValue"
+                                on-label="Yes"
+                                off-label="No"
                                 class="small"></toggle-switch>
                             <input 
                                 type="text" class="form-control input-xlarge" 
