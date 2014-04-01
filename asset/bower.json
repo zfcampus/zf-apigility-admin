@@ -33,7 +33,7 @@
         "sass-bootstrap-glyphicons": "~1.0.0",
         "lodash": "~2.4.1",
         "ng-tags-input": "~1.1.0",
-        "angular-toggle-switch": "~0.2.5"
+        "angular-toggle-switch": "~0.3.0"
     },
     "devDependencies": {
         "angular-mocks": "1.2.10",
