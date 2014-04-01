@@ -111,7 +111,17 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
             }
         }
         var modelInputFilter = _.cloneDeep($scope.service.input_filter);
+
         _.forEach(modelInputFilter, removeUnderscoreProperties);
+        _.forEach(modelInputFilter, function (input) {
+            if (! input.hasOwnProperty('error_message')) {
+                return;
+            }
+            if (input.error_message.length) {
+                return;
+            }
+            delete input.error_message;
+        });
 
         var apiRepo = $scope.$parent.ApiRepository;
         apiRepo.saveInputFilter($scope.service, modelInputFilter).then(
