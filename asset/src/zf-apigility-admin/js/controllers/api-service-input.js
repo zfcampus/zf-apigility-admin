@@ -33,7 +33,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         $scope.newInput = '';
     };
 
-    $scope.validateInputName = function (name) {
+    $scope.validateInputName = function (name, current) {
         // Test first to see if we have a value
         if (!name || name === null || name === '' || name.match(/^\s+$/)) {
             flash.error = 'Field name can not be empty!';
@@ -43,6 +43,9 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         // Test to see if we already have an input by this name first
         var found = false;
         $scope.service.input_filter.every(function (input) {
+            if (input === current) {
+                return true;
+            }
             if (name === input.name) {
                 found = true;
                 return false;

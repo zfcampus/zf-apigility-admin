@@ -31,21 +31,23 @@ angular.module('ag-admin').directive('agEditInplace', function() {
 
             scope.setInitialValue(scope.agInputName);
 
-                var name = angular.element(element.children()[0]);
+            var name = angular.element(element.children()[0]);
             var form = angular.element(element.children()[1]);
 
             if (attr.hasOwnProperty('validate') &&
                 typeof scope.validate === 'function') {
-                form.on('submit', function (event) {
+                scope.submit = function (event) {
                     if (scope.validate(scope.agInputName)) {
                         scope.isFormVisible = false;
                     }
-                });
+                };
             } else {
-                form.on('submit', function (event) {
+                scope.submit = function (event) {
                     scope.isFormVisible = false;
-                });
+                };
             }
+
+            form.on('submit', scope.submit);
 
             scope.$watch('isFormVisible', function(newVal) {
                 if (newVal) {
