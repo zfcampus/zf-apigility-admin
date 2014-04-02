@@ -1,19 +1,19 @@
 <div ng-controller="ApiServiceInputController">
-<form ag-form="">
     <div class="ag-new-input">
         <button class="btn btn-info pull-left" title="Help" data-toggle="modal" data-target="#inputHelp">
             <i class="glyphicon glyphicon-info-sign"></i>
         </button>
 
-        <div class="form-inline pull-right">
+        <form class="form-inline pull-right">
             <div class="form-group">
-                <input type="text" class="form-control input-xlarge" placeholder="Field name" ng-model="newInput">
+                <input type="text" class="form-control input-xlarge" placeholder="Field name" ag-on-enter="addInput()" ng-model="newInput">
             </div>
             <button type="button" ng-click="addInput()" class="btn btn-sm btn-primary">Create New Field</button>
-        </div>
+        </form>
     </div>
     <div class="ag-new-input clearfix"></div>
 
+<form ag-form="">
     <div class="ag panel-group tooltip-api">
         <collapse class="panel-success" ng-repeat="input in service.input_filter">
             <collapse-header>
@@ -21,7 +21,7 @@
                 <h4 class="panel-title">
                     <i class="glyphicon glyphicon-tasks"></i>
 
-                    <ag-edit-inplace name="input.name" validate="validateInputName(input.name)"></ag-edit-inplace>
+                    <ag-edit-inplace name="input.name" validate="validateInputName(input.name, input)"></ag-edit-inplace>
 
                     <button type="button" class="btn btn-sm btn-danger pull-right" title="Remove field" collapse-button="" ng-click="removeInput($index)">
                         <i class="glyphicon glyphicon-trash"></i>
