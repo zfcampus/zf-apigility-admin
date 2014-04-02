@@ -28,7 +28,7 @@
         "angular-ui-router": "0.2.8-bowratic-tedium",
         "angular-ui-select2": "~0.0.5",
         "angular-ui-sortable": "~0.10.0",
-        "bootstrap": "~3.0.3",
+        "bootstrap": "~3.1.1",
         "jquery": "~2.0.3",
         "sass-bootstrap-glyphicons": "~1.0.0",
         "lodash": "~2.4.1",
