@@ -7,6 +7,7 @@
         <div class="form-group">
             <input 
                 type="text" class="form-control input-xlarge"
+                ag-on-enter="submit()"
                 ng-model="agInputName">
         </div>
 
@@ -17,7 +18,7 @@
                 Cancel
             </button>
             <button type="button" class="btn btn-sm btn-success"
-                ng-click="isFormVisible = false">
+                ng-click="submit()">
                 Change field name
             </button>
         </div>
