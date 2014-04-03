@@ -209,6 +209,18 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('monkeyPatches', function () {
+        // monkeypatch FileProcessor to include utf-8
+        var FileProcessor = require('grunt-usemin/lib/fileprocessor');
+        FileProcessor.prototype.replaceWithOld = FileProcessor.prototype.replaceWith;
+        FileProcessor.prototype.replaceWith = function replaceWith(block) {
+            var script = FileProcessor.prototype.replaceWithOld(block);
+            if (script.match(/<script src/)) {
+                script = script.replace('></script>', ' charset="utf-8"></script>');
+            }
+            return script;
+        };
+    });
 
     grunt.registerTask('serve', function(target) {
         grunt.task.run([
@@ -233,6 +245,7 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'uglify',
+        'monkeyPatches',
         'usemin'
     ]);
 
