@@ -6,17 +6,17 @@
     <table class="table table-striped">
         <tr>
             <td>Collection Class</td>
-            <td><button data-toggle="modal" data-target="#myModal{{index}}" class="btn-link" ng-click="getSourceCode(service.collection_class, 'Collection')">{{ service.collection_class }}.php</button></td>
+            <td><button data-toggle="modal" data-target="#myModal{{index}}" data-doclink="{{service.collection_class}}" class="btn-link" ng-click="getSourceCode(service.collection_class, 'Collection')">{{ service.collection_class }}.php</button></td>
         </tr>
 
         <tr>
             <td>Entity Class</td>
-            <td><button data-toggle="modal" data-target="#myModal{{index}}" class="btn-link" ng-click="getSourceCode(service.entity_class, 'Entity')">{{ service.entity_class }}.php</button></td>
+            <td><button data-toggle="modal" data-target="#myModal{{index}}" data-doclink="{{service.entity_class}}" class="btn-link" ng-click="getSourceCode(service.entity_class, 'Entity')">{{ service.entity_class }}.php</button></td>
         </tr>
 
         <tr ng-hide="service.adapter_name">
             <td>Resource Class</td>
-            <td><button data-toggle="modal" data-target="#myModal{{index}}" class="btn-link" ng-click="getSourceCode(service.resource_class, 'Resource')">{{ service.resource_class }}.php</button></td>
+            <td><button data-toggle="modal" data-target="#myModal{{index}}" data-doclink="{{service.resource_class}}" class="btn-link" ng-click="getSourceCode(service.resource_class, 'Resource')">{{ service.resource_class }}.php</button></td>
         </tr>
     </table>
 </div>
