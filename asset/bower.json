@@ -25,6 +25,7 @@
         "angular-route": "~1.2.10",
         "angular-flash": "~0.1.11",
         "angular-sanitize": "~1.2.10",
+        "angular-ui-bootstrap-bower": "~0.10",
         "angular-ui-router": "0.2.8-bowratic-tedium",
         "angular-ui-select2": "~0.0.5",
         "angular-ui-sortable": "~0.10.0",

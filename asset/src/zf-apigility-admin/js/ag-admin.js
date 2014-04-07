@@ -5,6 +5,7 @@
    * Declare and configure modules
    */
   angular.module('ag-admin', [
+    'ui.bootstrap',
     'ui.router',
     'ngSanitize',
     'ngTagsInput',
