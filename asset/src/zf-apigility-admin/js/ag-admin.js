@@ -212,18 +212,14 @@
         data: {
           pageTitle: 'APIs'
         },
-        resolve: {
-          apis: ['ApiRepository', function(ApiRepository) {
-            return ApiRepository.getList(true);
-          }]
-        },
         views: {
           'content@': {
             templateUrl: 'html/api/index.html',
             controller: 'ApiController'
           },
           'sidebar@': {
-            templateUrl: 'html/api/index-sidebar.html'
+            templateUrl: 'html/api/index-sidebar.html',
+            controller: 'CreateApiController'
           }
         }
       });
