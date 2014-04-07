@@ -5,6 +5,7 @@
    * Declare and configure modules
    */
   angular.module('ag-admin', [
+    'ui.bootstrap',
     'ui.router',
     'ngSanitize',
     'ngTagsInput',
@@ -211,18 +212,14 @@
         data: {
           pageTitle: 'APIs'
         },
-        resolve: {
-          apis: ['ApiRepository', function(ApiRepository) {
-            return ApiRepository.getList(true);
-          }]
-        },
         views: {
           'content@': {
             templateUrl: 'html/api/index.html',
             controller: 'ApiController'
           },
           'sidebar@': {
-            templateUrl: 'html/api/index-sidebar.html'
+            templateUrl: 'html/api/index-sidebar.html',
+            controller: 'CreateApiController'
           }
         }
       });

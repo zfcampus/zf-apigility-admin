@@ -1,5 +1,5 @@
 <div class="panel-group tooltip-api">
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">General Settings</h4>
         </collapse-header>
@@ -27,9 +27,9 @@
                 </p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 
-    <collapse class="panel-default" show="isDbConnected(restService)">
+    <ag-collapse class="panel-default" show="isDbConnected(restService)">
         <collapse-header>
             <h4 class="panel-title">Database Settings</h4>
         </collapse-header>
@@ -50,9 +50,9 @@
                 <p class="list-group-item-text">{{ restService.table_service }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">REST Parameters</h4>
         </collapse-header>
@@ -88,9 +88,9 @@
                 <p class="list-group-item-text">{{ restService.collection_query_whitelist.join(', ') || 'n/a' }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">Content Negotiation</h4>
         </collapse-header>
@@ -111,9 +111,9 @@
                 <p class="list-group-item-text">{{ restService.content_type_whitelist.join(', ') || 'n/a' }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">Service/Class/Route Names</h4>
         </collapse-header>
@@ -144,6 +144,6 @@
                 <p class="list-group-item-text">{{ restService.route_name }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 </div>
 

@@ -1,4 +1,4 @@
-<collapse class="panel-blank">
+<ag-collapse class="panel-blank">
     <collapse-body>
         <p>Click on the file name to show the source code.</p>
     </collapse-body>
@@ -9,7 +9,7 @@
             <td><button data-toggle="modal" data-target="#myModal{{index}}" data-doclink="{{service.controller_class}}" class="btn-link" ng-click="getSourceCode(service.controller_class, 'Controller Service')">{{ service.controller_class }}.php</button></td>
         </tr>
     </table>
-</collapse>
+</ag-collapse>
 
 <div class="modal fade" id="myModal{{index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">

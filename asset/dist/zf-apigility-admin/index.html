@@ -66,10 +66,8 @@
         <span class="alert-message">{{flash.message}}</span>
     </div>
 
-    <ng-include src="'html/modals/help-content-negotiation.html'"></ng-include>
-    <ng-include src="'html/modals/help-input-filter.html'"></ng-include>
-    <ag-cache-modal></ag-cache-modal>
-    <ag-fs-perms-modal></ag-fs-perms-modal>
+    <div ng-controller="agCacheModal"></div>
+    <div ng-controller="agFsPermsModal"></div>
 
     <script src="js/vendor-ui.js" charset="utf-8"></script>
     <script src="js/vendor-util.js" charset="utf-8"></script>

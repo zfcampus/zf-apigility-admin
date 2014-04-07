@@ -24,7 +24,7 @@
     <p class="help-block">Error message to display if field does not validate</p>
 </div></div>
 
-<collapse class="panel-warning" conditionals="{newFilterFormVisible: false}">
+<ag-collapse class="panel-warning" conditionals="{newFilterFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title">
             <i class="glyphicon glyphicon-filter"></i>
@@ -43,7 +43,7 @@
     
     <collapse-body>
         <div ui-sortable="{handle: '.filter-handle'}" ng-model="input.filters">
-            <collapse class="panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="filter in input.filters">
+            <ag-collapse class="panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="filter in input.filters">
                 <collapse-header>
                     <h4 class="panel-title">
                         <i class="glyphicon glyphicon-resize-vertical filter-handle"></i>
@@ -127,7 +127,7 @@
                         <div class="clearfix"></div>
                     </li>
                 </collapse-body>
-            </collapse>
+            </ag-collapse>
         </div>
 
         <div 
@@ -148,9 +148,9 @@
             </div>
         </div>
     </collapse-body>
-</collapse>
+</ag-collapse>
 
-<collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
+<ag-collapse class="panel-warning" conditionals="{newValidatorFormVisible: false}">
     <collapse-header>
         <h4 class="panel-title pull-left">
             <i class="glyphicon glyphicon-ok"></i> Validators
@@ -167,7 +167,7 @@
 
     <collapse-body>
         <div ui-sortable="{handle: '.validator-handle'}" ng-model="input.validators">
-            <collapse class="panel panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="validator in input.validators">
+            <ag-collapse class="panel panel-blank" conditionals="{newOptionFormVisible: false}" ng-repeat="validator in input.validators">
                 <collapse-header>
                     <h4 class="panel-title">
                         <i class="glyphicon glyphicon-resize-vertical validator-handle"></i>
@@ -252,7 +252,7 @@
                         <div class="clearfix"></div>
                     </li>
                 </collapse-body>
-            </collapse>
+            </ag-collapse>
         </div>
 
         <div class="panel panel-blank hide"
@@ -272,5 +272,5 @@
             </div>
         </div>
     </collapse-body>
-</collapse>
+</ag-collapse>
 

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-angular.module('ag-admin').directive('collapse', function() {
+angular.module('ag-admin').directive('agCollapse', function() {
     return {
         restrict: 'E',
         transclude: true,
@@ -250,7 +250,7 @@ angular.module('ag-admin').directive('collapse', function() {
 }).directive('collapseHeader', function () {
     /* <collapse-header ...></collapse-header> */
     return {
-        require: '^collapse',
+        require: '^agCollapse',
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attr, panelCtrl) {
@@ -282,7 +282,7 @@ angular.module('ag-admin').directive('collapse', function() {
 }).directive('collapseBody', function () {
     /* <collapse-body ...></collapse-body> */
     return {
-        require: '^collapse',
+        require: '^agCollapse',
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attr, panelCtrl) {
@@ -294,7 +294,7 @@ angular.module('ag-admin').directive('collapse', function() {
 }).directive('collapseButton', function () {
     /* <collapse-button [criteria="{...}"]>...</collapse-button> */
     return {
-        require: '^collapse',
+        require: '^agCollapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
             var clickAction;
@@ -328,7 +328,7 @@ angular.module('ag-admin').directive('collapse', function() {
 }).directive('collapseFlag', function() {
     /* <a collapse-flag flags="{...}"></a> */
     return {
-        require: '^collapse',
+        require: '^agCollapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
             var clickAction;
@@ -358,7 +358,7 @@ angular.module('ag-admin').directive('collapse', function() {
 }).directive('collapseShow', function() {
     /* <div collapse-show criteria="{...}" class="hide">...</div> */
     return {
-        require: '^collapse',
+        require: '^agCollapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
             if (!attr.hasOwnProperty('criteria')) {

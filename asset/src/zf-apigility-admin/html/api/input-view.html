@@ -33,7 +33,7 @@
 </div></div>
 
 <div ng-show="input.filters.length > 0">
-<collapse class="panel-warning">
+<ag-collapse class="panel-warning">
     <collapse-header>
         <h4 class="panel-title">
             <i class="glyphicon glyphicon-filter"></i>
@@ -42,7 +42,7 @@
     </collapse-header>
     
     <collapse-body>
-        <collapse class="panel-blank" ng-repeat="filter in input.filters">
+        <ag-collapse class="panel-blank" ng-repeat="filter in input.filters">
             <collapse-header>
                 <h4 class="panel-title">
                     {{filter.name}}
@@ -70,13 +70,13 @@
                     </div>
                 </li>
             </collapse-body>
-        </collapse>
+        </ag-collapse>
     </collapse-body>
-</collapse>
+</ag-collapse>
 </div>
 
 <div ng-show="input.validators.length > 0">
-<collapse class="panel-warning">
+<ag-collapse class="panel-warning">
     <collapse-header>
         <h4 class="panel-title">
             <i class="glyphicon glyphicon-ok"></i>
@@ -85,7 +85,7 @@
     </collapse-header>
 
     <collapse-body>
-        <collapse class="panel panel-blank" ng-repeat="validator in input.validators">
+        <ag-collapse class="panel panel-blank" ng-repeat="validator in input.validators">
             <collapse-header>
                 <h4 class="panel-title">
                     {{validator.name}}
@@ -113,8 +113,8 @@
                     </div>
                 </li>
             </collapse-body>
-        </collapse>
+        </ag-collapse>
     </collapse-body>
-</collapse>
+</ag-collapse>
 </div>
 

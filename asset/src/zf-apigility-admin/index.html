@@ -73,14 +73,11 @@
         <span class="alert-message">{{flash.message}}</span>
     </div>
 
-    <ng-include src="'html/modals/help-content-negotiation.html'"></ng-include>
-    <ng-include src="'html/modals/help-input-filter.html'"></ng-include>
-    <ag-cache-modal></ag-cache-modal>
-    <ag-fs-perms-modal></ag-fs-perms-modal>
+    <div ng-controller="agCacheModal"></div>
+    <div ng-controller="agFsPermsModal"></div>
 
     <!-- build:js js/vendor-ui.js -->
     <script src="vendor/jquery/jquery.js"></script>
-    <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
     <script src="vendor/jquery-ui/ui/jquery-ui.js"></script>
     <script src="vendor/select2/select2.js"></script>
     <!-- endbuild -->
@@ -89,6 +86,8 @@
     <!-- endbuild -->
     <!-- build:js js/vendor-angular.js -->
     <script src="vendor/angular/angular.js"></script>
+    <script src="vendor/angular-ui-bootstrap-bower/ui-bootstrap.js"></script>
+    <script src="vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
     <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="vendor/angular-sanitize/angular-sanitize.js"></script>
     <script src="vendor/angular-flash/dist/angular-flash.js"></script>
@@ -99,8 +98,11 @@
     <!-- endbuild -->
     <!-- build:js js/app.js -->
     <script src="js/ag-admin.js"></script>
+    <script src="js/controllers/ag-cache-modal.js"></script>
+    <script src="js/controllers/ag-fs-perms-modal.js"></script>
     <script src="js/controllers/api.js"></script>
     <script src="js/controllers/api-authorization.js"></script>
+    <script src="js/controllers/api-create.js"></script>
     <script src="js/controllers/api-documentation.js"></script>
     <script src="js/controllers/api-list.js"></script>
     <script src="js/controllers/api-overview.js"></script>
@@ -112,15 +114,12 @@
     <script src="js/controllers/content-negotiation.js"></script>
     <script src="js/controllers/dashboard.js"></script>
     <script src="js/controllers/db-adapter.js"></script>
-    <script src="js/directives/ag-cache-modal.js"></script>
     <script src="js/directives/ag-collapse.js"></script>
     <script src="js/directives/ag-comment.js"></script>
     <script src="js/directives/ag-edit-inplace.js"></script>
     <script src="js/directives/ag-form.js"></script>
-    <script src="js/directives/ag-fs-perms-modal.js"></script>
     <script src="js/directives/ag-hover.js"></script>
     <script src="js/directives/ag-include.js"></script>
-    <script src="js/directives/ag-modal-dismiss.js"></script>
     <script src="js/directives/ag-on-enter.js"></script>
     <script src="js/directives/ag-tabs.js"></script>
     <script src="js/filters/authorizationservicename.js"></script>

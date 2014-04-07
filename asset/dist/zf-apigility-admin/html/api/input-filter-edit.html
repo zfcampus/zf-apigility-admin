@@ -1,6 +1,6 @@
 <div ng-controller="ApiServiceInputController">
     <div class="ag-new-input">
-        <button class="btn btn-info pull-left" title="Help" data-toggle="modal" data-target="#inputHelp">
+        <button class="btn btn-info pull-left" title="Help" ng-click="help()" data-toggle="modal" data-target="#inputHelp">
             <i class="glyphicon glyphicon-info-sign"></i>
         </button>
 
@@ -15,7 +15,7 @@
 
 <form ag-form="">
     <div class="ag panel-group tooltip-api">
-        <collapse class="panel-success" ng-repeat="input in service.input_filter">
+        <ag-collapse class="panel-success" ng-repeat="input in service.input_filter">
             <collapse-header>
 
                 <h4 class="panel-title">
@@ -36,7 +36,7 @@
                     <ng-include src="'html/api/input-edit.html'" onload="index = $index; input = input"></ng-include>
                 </div>
             </collapse-body>
-        </collapse>
+        </ag-collapse>
     </div>
 
     <div class="ag-new-input btn-group pull-right">

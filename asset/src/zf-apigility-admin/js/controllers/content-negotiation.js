@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ContentNegotiationController',
-  function ($scope, $state, $stateParams, flash, selectors, ContentNegotiationResource, agFormHandler) {
+  function ($scope, $state, $stateParams, $modal, flash, selectors, ContentNegotiationResource, agFormHandler) {
     var newSelector = {
       content_name: '',
       viewModel: '',
@@ -16,6 +16,13 @@ angular.module('ag-admin').controller(
     $scope.showNewSelectorForm = false;
     $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
     $scope.selectors = JSON.parse(JSON.stringify(selectors));
+
+    $scope.help = function() {
+        $modal.open({
+            templateUrl: 'html/modals/help-content-negotiation.html',
+            keyboard: true
+        });
+    };
 
     $scope.resetNewSelectorForm = function() {
       agFormHandler.resetForm($scope);

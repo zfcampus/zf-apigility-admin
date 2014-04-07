@@ -1,10 +1,17 @@
 (function(_) {'use strict';
 
-angular.module('ag-admin').controller('ApiServiceInputController', function ($scope, $state, flash, agFormHandler) {
+angular.module('ag-admin').controller('ApiServiceInputController', function ($scope, $state, $modal, flash, agFormHandler) {
     // get services from $parent
     $scope.service = (typeof $scope.$parent.restService != 'undefined') ? $scope.$parent.restService : $scope.$parent.rpcService;
     $scope.filterOptions = $scope.$parent.filterOptions;
     $scope.validatorOptions = $scope.$parent.validatorOptions;
+
+    $scope.help = function () {
+        $modal.open({
+            templateUrl: 'html/modals/help-input-filter.html',
+            keyboard: true
+        });
+    };
 
     $scope.addInput = function() {
         // Test first to see if we have a value
