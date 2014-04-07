@@ -73,8 +73,8 @@
         <span class="alert-message">{{flash.message}}</span>
     </div>
 
-    <ag-cache-modal></ag-cache-modal>
-    <ag-fs-perms-modal></ag-fs-perms-modal>
+    <div ng-controller="agCacheModal"></div>
+    <div ng-controller="agFsPermsModal"></div>
 
     <!-- build:js js/vendor-ui.js -->
     <script src="vendor/jquery/jquery.js"></script>
@@ -98,6 +98,8 @@
     <!-- endbuild -->
     <!-- build:js js/app.js -->
     <script src="js/ag-admin.js"></script>
+    <script src="js/controllers/ag-cache-modal.js"></script>
+    <script src="js/controllers/ag-fs-perms-modal.js"></script>
     <script src="js/controllers/api.js"></script>
     <script src="js/controllers/api-authorization.js"></script>
     <script src="js/controllers/api-documentation.js"></script>
@@ -111,12 +113,10 @@
     <script src="js/controllers/content-negotiation.js"></script>
     <script src="js/controllers/dashboard.js"></script>
     <script src="js/controllers/db-adapter.js"></script>
-    <script src="js/directives/ag-cache-modal.js"></script>
     <script src="js/directives/ag-collapse.js"></script>
     <script src="js/directives/ag-comment.js"></script>
     <script src="js/directives/ag-edit-inplace.js"></script>
     <script src="js/directives/ag-form.js"></script>
-    <script src="js/directives/ag-fs-perms-modal.js"></script>
     <script src="js/directives/ag-hover.js"></script>
     <script src="js/directives/ag-include.js"></script>
     <script src="js/directives/ag-modal-dismiss.js"></script>
