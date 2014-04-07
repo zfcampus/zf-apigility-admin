@@ -5,7 +5,7 @@
 </div>
 
 <div class="panel-group tooltip-api" id="accordion">
-    <collapse class="panel-info" ng-repeat="rpcService in api.rpcServices" active="{{ activeService == rpcService.service_name }}" name="{{ rpcService.service_name }}" searchparam="service" conditionals="{{ {edit: inEdit, delete: false} }}">
+    <ag-collapse class="panel-info" ng-repeat="rpcService in api.rpcServices" active="{{ activeService == rpcService.service_name }}" name="{{ rpcService.service_name }}" searchparam="service" conditionals="{{ {edit: inEdit, delete: false} }}">
         <collapse-header>
             <h4 class="panel-title">
                 <i class="btn btn-small glyphicon glyphicon-fire"></i>
@@ -80,5 +80,5 @@
                 </ag-tab-pane>
             </ag-tabs>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 </div>

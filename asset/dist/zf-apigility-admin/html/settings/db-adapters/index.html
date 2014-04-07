@@ -1,7 +1,7 @@
 <ag-include src="html/settings/db-adapters/new-adapter-form.html"></ag-include>
 
 <div class="ag panel-group tooltip-api">
-  <collapse class="panel-info" ng-repeat="dbAdapter in dbAdapters" active="{{ activeAdapter == dbAdapter.adapter_name }}" name="{{ dbAdapter.adapter_name }}" searchparam="adapter" conditionals="{{ {edit: inEdit, delete: false} }}">
+  <ag-collapse class="panel-info" ng-repeat="dbAdapter in dbAdapters" active="{{ activeAdapter == dbAdapter.adapter_name }}" name="{{ dbAdapter.adapter_name }}" searchparam="adapter" conditionals="{{ {edit: inEdit, delete: false} }}">
     <collapse-header>
       <h4 class="panel-title">
         <span class="glyphicon glyphicon-book"></span>
@@ -50,5 +50,5 @@
         <ng-include src="'html/settings/db-adapters/edit.html'"></ng-include>
       </div>
     </collapse-body>
-  </collapse>
+  </ag-collapse>
 </div>

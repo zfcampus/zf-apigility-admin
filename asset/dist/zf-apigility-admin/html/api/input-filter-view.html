@@ -5,7 +5,7 @@
         </p>
     </div></div>
 
-    <collapse class="panel-default" ng-repeat="input in service.input_filter">
+    <ag-collapse class="panel-default" ng-repeat="input in service.input_filter">
         <collapse-header>
             <h4 class="panel-title">
                 <i class="glyphicon glyphicon-tasks"></i>
@@ -18,5 +18,5 @@
                 <ng-include src="'html/api/input-view.html'" onload="index = $index; input = input"></ng-include>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 </div>

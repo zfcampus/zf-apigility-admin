@@ -1,7 +1,7 @@
 <ag-include src="html/settings/content-negotiation/new-selector-form.html"></ag-include>
 
 <div class="ag panel-group tooltip-api">
-  <collapse class="panel-info" ng-repeat="selector in selectors" active="{{ activeSelector == selector.content_name }}" name="{{ selector.content_name }}" searchparam="selector" conditionals="{{ {deleteSelector: false, editSelector: inEdit} }}">
+  <ag-collapse class="panel-info" ng-repeat="selector in selectors" active="{{ activeSelector == selector.content_name }}" name="{{ selector.content_name }}" searchparam="selector" conditionals="{{ {deleteSelector: false, editSelector: inEdit} }}">
     <collapse-header>
       <h4 class="panel-title">
         <i class="glyphicon glyphicon-tags"></i> {{ selector.content_name }}
@@ -49,5 +49,5 @@
         <ng-include src="'html/settings/content-negotiation/edit.html'"></ng-include>
       </div>
     </collapse-body>
-  </collapse>
+  </ag-collapse>
 </div>
