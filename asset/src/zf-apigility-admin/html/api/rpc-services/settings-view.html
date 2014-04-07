@@ -1,5 +1,5 @@
 <div class="panel-group tooltip-api">
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">General Settings</h4>
         </collapse-header>
@@ -15,9 +15,9 @@
                 <p class="list-group-item-text">{{ rpcService.http_methods.join(', ') }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">Content Negotiation</h4>
         </collapse-header>
@@ -38,9 +38,9 @@
                 <p class="list-group-item-text">{{ rpcService.content_type_whitelist.join(', ') || 'n/a' }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 
-    <collapse class="panel-default">
+    <ag-collapse class="panel-default">
         <collapse-header>
             <h4 class="panel-title">Service/Route Names</h4>
         </collapse-header>
@@ -56,5 +56,5 @@
                 <p class="list-group-item-text">{{ rpcService.route_name }}</p>
             </div>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 </div>

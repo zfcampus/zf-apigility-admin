@@ -5,7 +5,7 @@
 </div>
 
 <div class="panel-group tooltip-api" id="accordion">
-    <collapse class="panel-info"
+    <ag-collapse class="panel-info"
         ng-repeat="rpcService in api.rpcServices"
         active="{{ activeService == rpcService.service_name }}"
         name="{{ rpcService.service_name }}"
@@ -101,6 +101,6 @@
                 </ag-tab-pane>
             </ag-tabs>
         </collapse-body>
-    </collapse>
+    </ag-collapse>
 </div>
 
