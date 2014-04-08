@@ -1,9 +1,14 @@
 (function() {
     'use strict';
 
-angular.module('ag-admin').controller('ApiOverviewController', function ( $scope, flash, api, ApiRepository) {
-    $scope.api = api;
-    $scope.defaultApiVersion = api.default_version;
+angular.module('ag-admin').controller('ApiOverviewController', function ($scope, $state, flash, ApiRepository) {
+    $scope.api = {};
+    $scope.defaultApiVersion = 1;
+
+    var updateApi = function (api) {
+        $scope.api = api;
+        $scope.defaultApiVersion = api.default_version;
+    };
 
     $scope.setDefaultApiVersion = function () {
         flash.info = 'Setting the default API version to ' + $scope.defaultApiVersion;
@@ -12,6 +17,16 @@ angular.module('ag-admin').controller('ApiOverviewController', function ( $scope
             $scope.defaultApiVersion = data.version;
         });
     };
+
+    $scope.$on('api.version.update', function () {
+        ApiRepository.getApi($state.params.apiName, $state.params.version, true).then(function (api) {
+            updateApi(api);
+        });
+    });
+
+    ApiRepository.getApi($state.params.apiName, $state.params.version).then(function (api) {
+        updateApi(api);
+    });
 });
 
 })();

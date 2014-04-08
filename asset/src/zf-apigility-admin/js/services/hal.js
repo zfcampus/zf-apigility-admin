@@ -8,14 +8,14 @@ angular.module('ag-admin').factory('Hal', function () {
         },
 
         stripLinks: function (resource) {
-            if (typeof resource != 'object') {
+            if (typeof resource !== 'object') {
                 return resource;
             }
 
             if (Array.isArray(resource)) {
                 var self = this;
                 _.forEach(resource, function (resourceItem, key) {
-                    resource.key = self.stripLinks(resourceItem);
+                    resource[key] = self.stripLinks(resourceItem);
                 });
                 return resource;
             }
@@ -24,7 +24,7 @@ angular.module('ag-admin').factory('Hal', function () {
                 return resource;
             }
 
-            var clone = JSON.parse(JSON.stringify(resource));
+            var clone = _.cloneDeep(resource);
             delete clone._links;
             return clone;
         },
@@ -36,7 +36,7 @@ angular.module('ag-admin').factory('Hal', function () {
             if (Array.isArray(resource)) {
                 var self = this;
                 _.forEach(resource, function (resourceItem, key) {
-                    resource.key = self.stripEmbedded(resourceItem);
+                    resource[key] = self.stripEmbedded(resourceItem);
                 });
                 return resource;
             }
@@ -45,7 +45,7 @@ angular.module('ag-admin').factory('Hal', function () {
                 return resource;
             }
 
-            var clone = JSON.parse(JSON.stringify(resource));
+            var clone = _.cloneDeep(resource);
             delete clone._embedded;
             return clone;
         },
@@ -61,7 +61,7 @@ angular.module('ag-admin').factory('Hal', function () {
             }
 
             /* Deep clone of embedded resource/collection */
-            return JSON.parse(JSON.stringify(resource._embedded[prop]));
+            return _.cloneDeep(resource._embedded[prop]);
         },
         getLink: function (rel, resource) {
             if (typeof resource != 'object' || Array.isArray(resource)) {
