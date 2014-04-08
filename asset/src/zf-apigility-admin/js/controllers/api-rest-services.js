@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiRestServicesController', 
-  function ($scope, $state, $stateParams, $sce, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection, agFormHandler) {
+  function ($scope, $state, $stateParams, $sce, $modal, flash, filters, hydrators, validators, selectors, ApiRepository, api, dbAdapters, toggleSelection, agFormHandler) {
 
     $scope.activeService     = $stateParams.service ? $stateParams.service : '';
     $scope.inEdit            = !!$stateParams.edit;
@@ -118,6 +118,10 @@ angular.module('ag-admin').controller(
                 } else {
                     $scope.sourceCode = '';
                 }
+                $modal.open({
+                    scope: $scope,
+                    templateUrl: 'html/modals/source-code.html'
+                });
             });
     };
 });

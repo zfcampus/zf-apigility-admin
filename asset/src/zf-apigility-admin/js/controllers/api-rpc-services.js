@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiRpcServicesController', 
-  function ($scope, $state, $stateParams, $sce, flash, filters, validators, selectors, ApiRepository, api, toggleSelection, agFormHandler) {
+  function ($scope, $state, $stateParams, $sce, $modal, flash, filters, validators, selectors, ApiRepository, api, toggleSelection, agFormHandler) {
 
     $scope.activeService    = $stateParams.service ? $stateParams.service : '';
     $scope.inEdit           = !!$stateParams.edit;
@@ -88,6 +88,10 @@ angular.module('ag-admin').controller(
                 } else {
                     $scope.sourceCode = '';
                 }
+                $modal.open({
+                    scope: $scope,
+                    templateUrl: 'html/modals/source-code.html'
+                });
             });
     };
 });
