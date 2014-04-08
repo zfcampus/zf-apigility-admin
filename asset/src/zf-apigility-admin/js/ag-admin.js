@@ -219,7 +219,7 @@
           },
           'sidebar@': {
             templateUrl: 'html/api/index-sidebar.html',
-            controller: 'CreateApiController'
+            controller: 'CreateApiButtonController'
           }
         }
       });
