@@ -20,6 +20,16 @@ return array (
                     ),
                 ),
             ),
+            'version.rpc.ping' => array (
+                'type' => 'Segment',
+                'options' => array (
+                    'route' => '/api/ping',
+                    'defaults' => array (
+                        'controller' => 'Version\\V1\\Rpc\\Ping\\Controller',
+                        'action' => 'ping',
+                    ),
+                ),
+            ),
         ),
     ),
     'input_filter_specs' => array(
@@ -177,6 +187,11 @@ return array (
         'factories' => array(
             'Version\V1\Rest\Comment\Model' => 'Version\V1\Rest\Comment\CommentModelFactory',
             'Version\V1\Rest\Comment\CommentResource' => 'Version\V1\Rest\Comment\CommentResourceFactory',
+        ),
+    ),
+    'controllers' => array(
+        'invokables' => array(
+            'Version\V1\Rpc\Ping\Controller' => 'Version\V1\Rpc\Ping\PingController',
         ),
     ),
 );

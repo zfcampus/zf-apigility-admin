@@ -269,6 +269,14 @@ class VersioningModel
             ), true);
         }
 
+        // update controllers
+        if (isset($config['controllers'])) {
+            $newValues = $this->changeVersionArray($config['controllers'], $previous, $version);
+            $this->configResource->patch(array(
+                'controllers' => $newValues
+            ), true);
+        }
+
         return true;
     }
 

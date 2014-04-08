@@ -9,9 +9,13 @@ angular.module('ag-admin').controller(
     var updateList = function (apiCollection) {
       var apiList = [];
       angular.forEach(apiCollection, function (api) {
+        var version = api.default_version;
+        if (api.versions.length > 0) {
+          version = api.versions.pop();
+        }
         apiList.push({
           apiName: api.name,
-          version: api.versions.pop()
+          version: version
         });
       });
       $scope.apiList = apiList;
