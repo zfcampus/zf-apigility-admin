@@ -11,6 +11,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
         controller: function($scope, $parse, $state) {
             var active = false;
             var body;
+            var bodyDisplayCallback;
             var buttons = [];
             var chevron;
             var conditionals = {};
@@ -136,8 +137,9 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 head = headScope;
             };
 
-            this.setBody = function (bodyElement) {
+            this.setBody = function (bodyElement, displayCallback) {
                 body = bodyElement;
+                bodyDisplayCallback = displayCallback;
 
                 if (body.hasClass('in')) {
                     panel.toggleChevron('up');
@@ -159,7 +161,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
             };
 
             this.expand = function() {
-                body.addClass('in');
+                bodyDisplayCallback(true);
 
                 if (name && searchParam) {
                     var toParams = {};
@@ -173,7 +175,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
                     return;
                 }
 
-                body.removeClass('in');
+                bodyDisplayCallback(false);
 
                 if (searchParam) {
                     var toParams = {};
@@ -283,14 +285,43 @@ angular.module('ag-admin').directive('agCollapse', function() {
         template: '<div class="panel-heading" ng-transclude></div>',
         replace: true
     };
-}).directive('collapseBody', function () {
+}).directive('collapseBody', function (AgTemplateInjector) {
     /* <collapse-body ...></collapse-body> */
     return {
         require: '^agCollapse',
         restrict: 'E',
         transclude: true,
+        scope: true,
         link: function(scope, element, attr, panelCtrl) {
-            panelCtrl.setBody(element);
+            var displayCallback = function (flag) {
+                element.toggleClass('in', flag);
+            };
+
+            if (attr.hasOwnProperty('contentTemplate')) {
+                /* template-driven; get templates */
+                var contentTemplate = scope.$eval(attr.contentTemplate);
+                var emptyTemplate   = AgTemplateInjector.defaultEmptyTemplate;
+                if (attr.hasOwnProperty('emptyTemplate')) {
+                    emptyTemplate = scope.$eval(attr.emptyTemplate);
+                }
+
+                /* create display callback */
+                displayCallback = function (flag) {
+                    var template = (flag) ? contentTemplate : emptyTemplate;
+                    AgTemplateInjector.fetchTemplate(template).then(function (contents) {
+                        AgTemplateInjector.populateElement(element, contents, scope);
+                        element.toggleClass('in', flag);
+                    });
+                };
+
+                /* render default content */
+                var template = element.hasClass('in') ? contentTemplate : emptyTemplate;
+                AgTemplateInjector.fetchTemplate(template).then(function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope);
+                });
+            }
+
+            panelCtrl.setBody(element, displayCallback);
         },
         template: '<div class="panel-collapse collapse" ng-transclude></div>',
         replace: true

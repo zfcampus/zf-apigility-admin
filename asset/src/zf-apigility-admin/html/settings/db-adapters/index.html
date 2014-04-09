@@ -57,12 +57,11 @@
     </collapse-header>
 
     <collapse-body>
-      <div collapse-show criteria="{edit: false}">
-        <ng-include src="'html/settings/db-adapters/view.html'"></ng-include>
-      </div>
-      <div collapse-show criteria="{edit: true}" class="hide">
-        <ng-include src="'html/settings/db-adapters/edit.html'"></ng-include>
-      </div>
+        <div
+            collapse-show
+            criteria="{edit: false}"
+            default-template="'html/settings/db-adapters/view.html'"
+            toggled-template="'html/settings/db-adapters/edit.html'"></div>
     </collapse-body>
   </ag-collapse>
 </div>
