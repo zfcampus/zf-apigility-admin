@@ -17,10 +17,19 @@ angular.module('ag-admin').directive('agTabs', function() {
 
             $scope.select = function(pane) {
                 angular.forEach(panes, function(pane) {
-                    pane.selected = false;
+                    if (pane.selected === true) {
+                        pane.selected = false;
+                        angular.forEach(pane.getWatchers(), function (watcher) {
+                            watcher.deselect(pane);
+                        });
+                    }
                 });
 
                 pane.selected = true;
+                angular.forEach(pane.getWatchers(), function (watcher) {
+                    watcher.select(pane);
+                });
+
                 if (pane.name && pane.searchParam) {
                     var toParams = {};
                     toParams[pane.searchParam] = pane.name;
@@ -66,7 +75,21 @@ angular.module('ag-admin').directive('agTabs', function() {
         restrict: 'E',
         transclude: true,
         scope: { title: '@' },
+        controller: function ($scope) {
+            var watchers = [];
+            
+            /* controller method so child scopes can call it */
+            this.addWatcher = function (watcher) {
+                watchers.push(watcher);
+            };
+
+            /* Scoped so that the tab controller can call it */
+            $scope.getWatchers = function () {
+                return watchers;
+            };
+        },
         link: function(scope, element, attr, tabsCtrl) {
+
             if (attr.hasOwnProperty('active')) {
               scope.active = !!scope.$eval(attr.active);
             }
@@ -85,6 +108,52 @@ angular.module('ag-admin').directive('agTabs', function() {
         '<div class="tab-pane" ng-class="{active: selected}" ng-transclude>' +
         '</div>',
         replace: true
+    };
+}).directive('agTabPaneVariableContent', function (AgTemplateInjector) {
+    /* <ag-tab-pane-variable-content [empty-template="expression"]
+     * content-template="expession"></ag-tab-pane-variable-content> */
+    return {
+        require: '^agTabPane',
+        restrict: 'E',
+        transclude: true,
+        link: function (scope, element, attr, tab) {
+            var emptyTemplate = AgTemplateInjector.defaultEmptyTemplate;
+            var contentTemplate;
+
+            /* content-template property is required */
+            if (! attr.hasOwnProperty('contentTemplate')) {
+                console.error('Missing content-template property in ag-dynamic-dom directive; cannot continue');
+                return;
+            }
+            contentTemplate = scope.$eval(attr.contentTemplate);
+
+            /* Retrieve and evaluate empty-template property if present */
+            if (attr.hasOwnProperty('emptyTemplate')) {
+                emptyTemplate = scope.$eval(attr.emptyTemplate);
+            }
+
+            /* Set the contents to the empty template to begin */
+            AgTemplateInjector.fetchTemplate(emptyTemplate).then(function (contents) {
+                AgTemplateInjector.populateElement(element, contents, scope);
+            });
+
+            /* Define the select method for the scope */
+            scope.select = function (scope) {
+                AgTemplateInjector.fetchTemplate(contentTemplate).then(function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope);
+                });
+            };
+
+            /* Define the deselect method for the scope */
+            scope.deselect = function (scope) {
+                AgTemplateInjector.fetchTemplate(emptyTemplate).then(function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope);
+                });
+            };
+
+            /* Add the scope as a watch on the tab pane */
+            tab.addWatcher(scope);
+        }
     };
 });
 
