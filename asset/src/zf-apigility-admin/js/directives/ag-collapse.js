@@ -71,7 +71,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 });
             };
 
-            this.addConditionalWatcher = function(conditionalCriteria, element) {
+            this.addConditionalWatcher = function(conditionalCriteria, displayCallback) {
                 angular.forEach(conditionalCriteria, function(value, flag) {
                     if (!conditionals.hasOwnProperty(flag)) {
                         conditionals[flag] = false;
@@ -89,7 +89,9 @@ angular.module('ag-admin').directive('agCollapse', function() {
                         /* cast to bool */
                         newVal = !!newVal;
                         conditionals[flag] = newVal;
-                        element.toggleClass('hide', value !== newVal);
+                        if (typeof displayCallback === 'function') {
+                            displayCallback(newVal, value);
+                        }
                     });
                 });
             };
@@ -109,7 +111,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
             };
 
             $scope.hideContainerButtons = this.hideContainerButtons = function(state) {
-                var bodyExpanded = body.hasClass('in');
+                var bodyExpanded = body.element.hasClass('in');
                 angular.forEach(buttons, function(button) {
                     if (state.hasOwnProperty('leave') && state.leave) {
                         button.element.toggleClass('hide', true);
@@ -137,14 +139,14 @@ angular.module('ag-admin').directive('agCollapse', function() {
             this.setBody = function (bodyElement) {
                 body = bodyElement;
 
-                if (body.hasClass('in')) {
+                if (body.element.hasClass('in')) {
                     panel.toggleChevron('up');
                 }
 
                 $scope.$watch(function () {
-                    return body.attr('class');
+                    return body.element.attr('class');
                 }, function (newClass) {
-                    if (body.hasClass('in')) {
+                    if (body.element.hasClass('in')) {
                         panel.toggleChevron('up');
                     } else {
                         panel.toggleChevron('down');
@@ -158,13 +160,11 @@ angular.module('ag-admin').directive('agCollapse', function() {
 
             this.expand = function() {
                 /* Rebuild content, if necessary */
-                if (body.getWatchers) {
-                    angular.forEach(body.getWatchers(), function (watcher) {
-                        watcher.select(body);
-                    });
-                }
+                angular.forEach(body.scope.getWatchers(), function (watcher) {
+                    watcher.select(body.scope);
+                });
 
-                body.addClass('in');
+                body.element.addClass('in');
 
                 if (name && searchParam) {
                     var toParams = {};
@@ -178,14 +178,12 @@ angular.module('ag-admin').directive('agCollapse', function() {
                     return;
                 }
 
-                body.removeClass('in');
+                body.element.removeClass('in');
 
                 /* Destroy content, if necessary */
-                if (body.getWatchers) {
-                    angular.forEach(body.getWatchers(), function (watcher) {
-                        watcher.deselect(body);
-                    });
-                }
+                angular.forEach(body.scope.getWatchers(), function (watcher) {
+                    watcher.deselect(body.scope);
+                });
 
                 if (searchParam) {
                     var toParams = {};
@@ -196,7 +194,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
 
             this.toggle = function() {
                 /* Doing this way to ensure location gets updated */
-                if (body.hasClass('in')) {
+                if (body.element.hasClass('in')) {
                     panel.collapse();
                 } else {
                     panel.expand();
@@ -211,7 +209,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 }
 
                 if (typeof flag === 'undefined' || flag === null) {
-                    if (body.hasClass('in')) {
+                    if (body.element.hasClass('in')) {
                         flag = 'up';
                     } else {
                         flag = 'down';
@@ -315,7 +313,10 @@ angular.module('ag-admin').directive('agCollapse', function() {
             };
         },
         link: function(scope, element, attr, panelCtrl) {
-            panelCtrl.setBody(element);
+            panelCtrl.setBody({
+                element: element,
+                scope: scope
+            });
         },
         template: '<div class="panel-collapse collapse" ng-transclude></div>',
         replace: true
@@ -384,12 +385,16 @@ angular.module('ag-admin').directive('agCollapse', function() {
             });
         }
     };
-}).directive('collapseShow', function() {
-    /* <div collapse-show criteria="{...}" class="hide">...</div> */
+}).directive('collapseShow', function(AgTemplateInjector) {
+    /* <div collapse-show criteria="{...}" [default-template="expr" toggled-template="expr"] class="hide">...</div> */
     return {
         require: '^agCollapse',
         restrict: 'A',
         link: function(scope, element, attr, panelCtrl) {
+            var displayCallback = function (flag, compare) {
+                element.toggleClass('hide', compare !== flag);
+            };
+
             if (!attr.hasOwnProperty('criteria')) {
                 return;
             }
@@ -400,7 +405,26 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 return;
             }
 
-            panelCtrl.addConditionalWatcher(criteria, element);
+            if (attr.hasOwnProperty('defaultTemplate') && attr.hasOwnProperty('toggledTemplate')) {
+                /* template-driven; get templates */
+                var defaultTemplate = scope.$eval(attr.defaultTemplate);
+                var toggledTemplate = scope.$eval(attr.toggledTemplate);
+
+                /* create display callback */
+                displayCallback = function (flag, compare) {
+                    var template = (flag === compare) ? defaultTemplate : toggledTemplate;
+                    AgTemplateInjector.fetchTemplate(template).then(function (contents) {
+                        AgTemplateInjector.populateElement(element, contents, scope);
+                    });
+                };
+
+                /* render default content */
+                AgTemplateInjector.fetchTemplate(defaultTemplate).then(function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope);
+                });
+            }
+
+            panelCtrl.addConditionalWatcher(criteria, displayCallback);
         }
     };
 }).directive('collapseBodyVariableContent', function (AgTemplateInjector) {

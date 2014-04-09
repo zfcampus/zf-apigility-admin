@@ -55,13 +55,9 @@
     </collapse-header>
 
     <collapse-body>
-      <div collapse-show criteria="{editSelector: false}">
-        <ng-include src="'html/settings/content-negotiation/view.html'"></ng-include>
-      </div>
-
-      <div collapse-show criteria="{editSelector: true}" class="hide">
-        <ng-include src="'html/settings/content-negotiation/edit.html'"></ng-include>
-      </div>
+        <div collapse-show criteria="{editSelector: false}"
+            default-template="'html/settings/content-negotiation/view.html'"
+            toggled-template="'html/settings/content-negotiation/edit.html'"></div>
     </collapse-body>
   </ag-collapse>
 </div>
