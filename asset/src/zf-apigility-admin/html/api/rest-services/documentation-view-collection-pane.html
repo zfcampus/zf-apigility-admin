@@ -1,0 +1,20 @@
+<div class="panel-body">
+    <div ng-show="restService.documentation.collection.description">
+        <div ng-bind-html="restService.documentation.collection.description"></div>
+    </div>
+
+    <div class="text-muted" ng-hide="restService.documentation.collection.description">
+        No collection description yet provided.
+    </div>
+
+    <div class="panel panel-default"><div class="panel-body">
+    <ag-tabs pills>
+        <ag-tab-pane 
+            title="{{method}}"
+            ng-repeat="method in restService.collection_http_methods"
+            ng-init="methodData = restService.documentation.collection[method]; restPart = 'collection'"><div class="panel-body">
+            <ag-tab-pane-variable-content content-template="'html/api/documentation-method-view.html'"></ag-tab-pane-variable-content>
+        </div></ag-tab-pane>
+    </ag-tabs>
+    </div></div>
+</div>

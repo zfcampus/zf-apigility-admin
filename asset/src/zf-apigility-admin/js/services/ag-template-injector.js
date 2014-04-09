@@ -29,9 +29,13 @@ angular.module('ag-admin').factory(
       );
     };
 
-    var populateElement = function (element, contents, scope) {
+    var populateElement = function (element, contents, scope, onloadExpr) {
       element.html(contents);
       $compile(element.contents())(scope.$parent);
+
+      if (onloadExpr) {
+        scope.$eval(onloadExpr);
+      }
     };
 
     return {

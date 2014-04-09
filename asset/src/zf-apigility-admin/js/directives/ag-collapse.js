@@ -157,7 +157,15 @@ angular.module('ag-admin').directive('agCollapse', function() {
             };
 
             this.expand = function() {
+                /* Rebuild content, if necessary */
+                if (body.getWatchers) {
+                    angular.forEach(body.getWatchers(), function (watcher) {
+                        watcher.select(body);
+                    });
+                }
+
                 body.addClass('in');
+
                 if (name && searchParam) {
                     var toParams = {};
                     toParams[searchParam] = name;
@@ -171,6 +179,14 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 }
 
                 body.removeClass('in');
+
+                /* Destroy content, if necessary */
+                if (body.getWatchers) {
+                    angular.forEach(body.getWatchers(), function (watcher) {
+                        watcher.deselect(body);
+                    });
+                }
+
                 if (searchParam) {
                     var toParams = {};
                     toParams[searchParam] = null;
@@ -285,6 +301,19 @@ angular.module('ag-admin').directive('agCollapse', function() {
         require: '^agCollapse',
         restrict: 'E',
         transclude: true,
+        controller: function ($scope) {
+            var watchers = [];
+            
+            /* controller method so child scopes can call it */
+            this.addWatcher = function (watcher) {
+                watchers.push(watcher);
+            };
+
+            /* Scoped so that the tab controller can call it */
+            $scope.getWatchers = function () {
+                return watchers;
+            };
+        },
         link: function(scope, element, attr, panelCtrl) {
             panelCtrl.setBody(element);
         },
@@ -372,6 +401,58 @@ angular.module('ag-admin').directive('agCollapse', function() {
             }
 
             panelCtrl.addConditionalWatcher(criteria, element);
+        }
+    };
+}).directive('collapseBodyVariableContent', function (AgTemplateInjector) {
+    /* <collapse-body-variable-content [empty-template="expression"]
+     * content-template="expession"></collapse-body-variable-content> */
+    return {
+        require: '^collapseBody',
+        restrict: 'E',
+        transclude: true,
+        link: function (scope, element, attr, body) {
+            var emptyTemplate = AgTemplateInjector.defaultEmptyTemplate;
+            var contentTemplate;
+            var onloadExpr;
+
+            /* content-template property is required */
+            if (! attr.hasOwnProperty('contentTemplate')) {
+                console.error('Missing content-template property in collapse-body-variable-content directive; cannot continue');
+                return;
+            }
+            contentTemplate = scope.$eval(attr.contentTemplate);
+
+            /* Retrieve and evaluate empty-template property if present */
+            if (attr.hasOwnProperty('emptyTemplate')) {
+                emptyTemplate = scope.$eval(attr.emptyTemplate);
+            }
+
+            /* Retrieve the onload expression, if any */
+            if (attr.hasOwnProperty('onload')) {
+                onloadExpr = attr.onload;
+            }
+
+            /* Set the contents to the empty template to begin */
+            AgTemplateInjector.fetchTemplate(emptyTemplate).then(function (contents) {
+                AgTemplateInjector.populateElement(element, contents, scope);
+            });
+
+            /* Define the select method for the scope */
+            scope.select = function (scope) {
+                AgTemplateInjector.fetchTemplate(contentTemplate).then(function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope, onloadExpr);
+                });
+            };
+
+            /* Define the deselect method for the scope */
+            scope.deselect = function (scope) {
+                AgTemplateInjector.fetchTemplate(emptyTemplate).then(function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope);
+                });
+            };
+
+            /* Add the scope as a watch on the collapse body */
+            body.addWatcher(scope);
         }
     };
 });

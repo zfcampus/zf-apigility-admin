@@ -119,10 +119,11 @@ angular.module('ag-admin').directive('agTabs', function() {
         link: function (scope, element, attr, tab) {
             var emptyTemplate = AgTemplateInjector.defaultEmptyTemplate;
             var contentTemplate;
+            var onloadExpr;
 
             /* content-template property is required */
             if (! attr.hasOwnProperty('contentTemplate')) {
-                console.error('Missing content-template property in ag-dynamic-dom directive; cannot continue');
+                console.error('Missing content-template property in ag-tab-pane-variable-content directive; cannot continue');
                 return;
             }
             contentTemplate = scope.$eval(attr.contentTemplate);
@@ -130,6 +131,11 @@ angular.module('ag-admin').directive('agTabs', function() {
             /* Retrieve and evaluate empty-template property if present */
             if (attr.hasOwnProperty('emptyTemplate')) {
                 emptyTemplate = scope.$eval(attr.emptyTemplate);
+            }
+
+            /* Retrieve the onload expression, if any */
+            if (attr.hasOwnProperty('onload')) {
+                onloadExpr = attr.onload;
             }
 
             /* Set the contents to the empty template to begin */
@@ -140,7 +146,7 @@ angular.module('ag-admin').directive('agTabs', function() {
             /* Define the select method for the scope */
             scope.select = function (scope) {
                 AgTemplateInjector.fetchTemplate(contentTemplate).then(function (contents) {
-                    AgTemplateInjector.populateElement(element, contents, scope);
+                    AgTemplateInjector.populateElement(element, contents, scope, onloadExpr);
                 });
             };
 
