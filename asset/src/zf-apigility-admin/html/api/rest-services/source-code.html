@@ -7,25 +7,25 @@
         <tr>
             <td>Collection Class</td>
             <td><button 
-                data-doclink="{{service.collection_class}}"
+                data-doclink="{{restService.collection_class}}"
                 class="btn-link"
-                ng-click="getSourceCode(service.collection_class, 'Collection')">{{ service.collection_class }}.php</button></td>
+                ng-click="getSourceCode(restService.collection_class, 'Collection')">{{ restService.collection_class }}.php</button></td>
         </tr>
 
         <tr>
             <td>Entity Class</td>
             <td><button
-                data-doclink="{{service.entity_class}}"
+                data-doclink="{{restService.entity_class}}"
                 class="btn-link"
-                ng-click="getSourceCode(service.entity_class, 'Entity')">{{ service.entity_class }}.php</button></td>
+                ng-click="getSourceCode(restService.entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
         </tr>
 
         <tr ng-hide="service.adapter_name">
             <td>Resource Class</td>
             <td><button
-                data-doclink="{{service.resource_class}}"
+                data-doclink="{{restService.resource_class}}"
                 class="btn-link"
-                ng-click="getSourceCode(service.resource_class, 'Resource')">{{ service.resource_class }}.php</td>
+                ng-click="getSourceCode(restService.resource_class, 'Resource')">{{ restService.resource_class }}.php</td>
         </tr>
     </table>
 </div>
