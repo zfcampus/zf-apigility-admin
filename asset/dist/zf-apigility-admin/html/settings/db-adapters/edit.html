@@ -54,7 +54,7 @@
         <div class="form-group" ng-show="dbAdapter.driver != 'Pdo_Sqlite'">
             <label class="control-label" for="password">Password</label>
             <div class="controls">
-                <input type="password" placeholder="(Optional) Password" class="form-control input-xlarge" ng-model="dbAdapter.password">
+                <input type="text" placeholder="(Optional) Password" class="form-control input-xlarge" ng-model="dbAdapter.password">
                 <p class="help-block">Password with which to connect</p>
             </div>
         </div>
@@ -85,7 +85,7 @@
     </fieldset>
 
     <div class="btn-group pull-right">
-        <button type="button" collapse-flag="" flags="{edit: false}" click="cancelEdit" class="btn btn-sm btn-default">Cancel
+        <button type="button" class="btn btn-sm btn-default" ag-cancel-edit="">Cancel
         <button type="submit" class="btn btn-sm btn-success">Save</button>
     </button></div>
 

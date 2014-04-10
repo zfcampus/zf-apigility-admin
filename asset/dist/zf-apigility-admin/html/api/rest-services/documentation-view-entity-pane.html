@@ -1,0 +1,17 @@
+<div class="panel-body">
+    <div ng-show="restService.documentation.entity.description">
+        <div ng-bind-html="restService.documentation.entity.description"></div>
+    </div>
+
+    <div class="text-muted" ng-hide="restService.documentation.entity.description">
+        No entity description yet provided.
+    </div>
+
+    <div class="panel panel-default"><div class="panel-body">
+    <ag-tabs pills="">
+        <ag-tab-pane ng-repeat="method in restService.entity_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.entity[method]; restPart = 'entity'; service=restService"><div class="panel-body">
+            <ag-tab-pane-variable-content content-template="'html/api/documentation-method-view.html'"></ag-tab-pane-variable-content>
+        </div></ag-tab-pane>
+    </ag-tabs>
+    </div></div>
+</div>

@@ -13,41 +13,13 @@
 
             <div class="panel panel-default"><div class="panel-body">
             <ag-tabs pills="">
-                <ag-tab-pane title="Collection"><div class="panel-body">
-                    <div ng-show="restService.documentation.collection.description">
-                        <div ng-bind-html="restService.documentation.collection.description"></div>
-                    </div>
+                <ag-tab-pane title="Collection">
+                    <ag-tab-pane-variable-content content-template="'html/api/rest-services/documentation-view-collection-pane.html'"></ag-tab-pane-variable-content>
+                </ag-tab-pane>
 
-                    <div class="text-muted" ng-hide="restService.documentation.collection.description">
-                        No collection description yet provided.
-                    </div>
-
-                    <div class="panel panel-default"><div class="panel-body">
-                    <ag-tabs pills="">
-                        <ag-tab-pane title="{{method}}" ng-repeat="method in restService.collection_http_methods" ng-init="methodData = restService.documentation.collection[method]; restPart = 'collection'"><div class="panel-body">
-                            <ag-include src="html/api/documentation-method-view.html"></ag-include>
-                        </div></ag-tab-pane>
-                    </ag-tabs>
-                    </div></div>
-                </div></ag-tab-pane>
-
-                <ag-tab-pane title="Entity"><div class="panel-body">
-                    <div ng-show="restService.documentation.entity.description">
-                        <div ng-bind-html="restService.documentation.entity.description"></div>
-                    </div>
-
-                    <div class="text-muted" ng-hide="restService.documentation.entity.description">
-                        No entity description yet provided.
-                    </div>
-
-                    <div class="panel panel-default"><div class="panel-body">
-                    <ag-tabs pills="">
-                        <ag-tab-pane ng-repeat="method in restService.entity_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.entity[method]; restPart = 'entity'; service=restService"><div class="panel-body">
-                            <ag-include src="html/api/documentation-method-view.html"></ag-include>
-                        </div></ag-tab-pane>
-                    </ag-tabs>
-                    </div></div>
-                </div></ag-tab-pane>
+                <ag-tab-pane title="Entity">
+                    <ag-tab-pane-variable-content content-template="'html/api/rest-services/documentation-view-entity-pane.html'"></ag-tab-pane-variable-content>
+                </ag-tab-pane>
             </ag-tabs>
             </div></div>
         </div>
