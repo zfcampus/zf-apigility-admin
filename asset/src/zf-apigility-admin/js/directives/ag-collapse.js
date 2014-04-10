@@ -160,17 +160,40 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 chevron = chevronElement;
             };
 
-            this.expand = function() {
+            this.expand = function(completionAction) {
+                if (body.hasClass('in')) {
+                    /* nothing to do */
+                    if (typeof completionAction === 'function') {
+                        completionAction();
+                    }
+                    return;
+                }
+
                 bodyDisplayCallback(true);
 
                 if (name && searchParam) {
                     var toParams = {};
                     toParams[searchParam] = name;
-                    $state.go($state.$current.name, toParams, {reload: false, inherit: true, notify: false});
+                    $state.go($state.$current.name, toParams, {reload: false, inherit: true, notify: false}).then(
+                        function (success) {
+                            if (typeof completionAction === 'function') {
+                                completionAction();
+                            }
+                            return success;
+                        }
+                    );
                 }
             };
 
-            this.collapse = function() {
+            this.collapse = function(completionAction) {
+                if (! body.hasClass('in')) {
+                    /* nothing to do */
+                    if (typeof completionAction === 'function') {
+                        completionAction();
+                    }
+                    return;
+                }
+
                 if (panel.noChevron) {
                     return;
                 }
@@ -180,7 +203,14 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 if (searchParam) {
                     var toParams = {};
                     toParams[searchParam] = null;
-                    $state.go($state.$current.name, toParams, {reload: false, inherit: true, notify: false});
+                    $state.go($state.$current.name, toParams, {reload: false, inherit: true, notify: false}).then(
+                        function (success) {
+                            if (typeof completionAction === 'function') {
+                                completionAction();
+                            }
+                            return success;
+                        }
+                    );
                 }
             };
 
@@ -342,21 +372,21 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 }
             }
 
-            if (attr.hasOwnProperty('click')) {
-                clickAction = scope.$eval(attr.click);
+            if (attr.hasOwnProperty('collapseClick')) {
+                clickAction = scope.$eval(attr.collapseClick);
             }
 
             panelCtrl.addButton({criteria: criteria, element: element});
 
             element.addClass('hide');
 
-            element.on('click', function(event) {
-                panelCtrl.expand();
+            element.on('click', function (event) {
+                panelCtrl.expand(function () {
+                    if (typeof clickAction === 'function') {
+                        clickAction(event, element);
+                    }
+                });
                 panelCtrl.showContainerButtons();
-                if (typeof clickAction === 'function') {
-                    clickAction(event, element);
-                }
-                event.stopPropagation();
             });
         }
     };
@@ -378,13 +408,13 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 return;
             }
 
-            if (attr.hasOwnProperty('click')) {
-                clickAction = scope.$eval(attr.click);
+            if (attr.hasOwnProperty('collapseClick')) {
+                clickAction = scope.$eval(attr.collapseClick);
             }
 
             element.on('click', function(event) {
                 panelCtrl.setFlags(flags);
-                if (clickAction) {
+                if (typeof clickAction === 'function') {
                     clickAction(event, element);
                 }
             });
@@ -395,6 +425,7 @@ angular.module('ag-admin').directive('agCollapse', function() {
     return {
         require: '^agCollapse',
         restrict: 'A',
+        transclude: true,
         link: function(scope, element, attr, panelCtrl) {
             var displayCallback = function (flag, compare) {
                 element.toggleClass('hide', compare !== flag);

@@ -78,11 +78,26 @@ angular.module('ag-admin').controller(
     };
 
     $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: null}, {reload: true, notify: true, inherit: true});
+console.log('[cancel edit] triggered');
+console.log($state);
+        $state.go('ag.api.version.rest', {edit: null}, {notify: true, location: true}).then(null, 
+            function (error) {
+                console.log('[cancel edit] ERROR in state transition');
+                console.log(arguments);
+            }
+        );
     };
 
     $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {reload: true, notify: true, inherit: true});
+console.log('[start edit] triggered');
+console.log($state);
+        $scope.state = $state;
+        $state.go('ag.api.version.rest', {edit: true}, {notify: true, location: true}).then(null,
+            function (error) {
+                console.log('[start edit] ERROR in state transition');
+                console.log(arguments);
+            }
+        );
     };
 
     $scope.saveRestService = function (index) {
