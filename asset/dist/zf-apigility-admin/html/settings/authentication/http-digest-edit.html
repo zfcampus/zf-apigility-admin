@@ -1,0 +1,35 @@
+<div class="panel-body"><form class="form" ng-submit="updateHttpDigestAuthentication()" ag-form="">
+    <fieldset>
+        <div class="form-group">
+            <label class="control-label" for="realm">Realm</label>
+            <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpDigest.realm">
+            <p class="help-block">HTTP authentication realm</p>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="htdigest">Location of htdigest file</label>
+            <input type="text" placeholder="data/htdigest" class="form-control input-xlarge" required="required" ng-model="httpDigest.htdigest">
+            <p class="help-block">Location on the filesystem of the htdigest file</p>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="digest_domains">Digest domains</label>
+            <tags-input custom-class="ag-tags" ng-model="httpDigest.digest_domains" add-on-space="true" min-length="1" max-length="256" allowed-tags-pattern="^/[a-zA-Z0-9_+./%-]*$" placeholder="Add a path">
+            </tags-input>
+            <p class="help-block">Space-separated list of URI paths for which authentication will be applied</p>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="nonce_timeout">Nonce timeout</label>
+            <input type="text" placeholder="3600" class="form-control input-xlarge" required="required" ng-model="httpDigest.nonce_timeout">
+            <p class="help-block">Expiration in seconds for inactive authentication</p>
+        </div>
+    </fieldset>
+
+    <div class="btn-group pull-right">
+        <button type="button" title="Cancel" class="btn btn-sm btn-default" ag-cancel-edit="">Cancel</button>
+        <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
+    </div>
+
+    <div class="clearfix"></div>
+</form></div>

@@ -1,0 +1,17 @@
+<div class="panel-body">
+    <div class="form-group">
+        <label class="control-label">Description</label>
+        <div class="controls">
+            <textarea placeholder="Insert the Collection description here" class="form-control input-xlarge" required="" rows="3" ng-model="restService.documentation.collection.description"></textarea>
+            <p class="help-block">The description of the Collection</p>
+        </div>
+    </div>
+
+    <div class="panel panel-default"><div class="panel-body">
+    <ag-tabs pills="">
+        <ag-tab-pane ng-repeat="method in restService.collection_http_methods" title="{{method}}" ng-init="methodData = restService.documentation.collection[method]; restPart = 'collection'"><div class="panel-body">
+            <ag-tab-pane-variable-content content-template="'html/api/documentation-method-edit.html'"></ag-tab-pane-variable-content>
+        </div></ag-tab-pane>
+    </ag-tabs>
+    </div></div>
+</div>

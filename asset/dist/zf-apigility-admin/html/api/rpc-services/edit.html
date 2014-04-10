@@ -1,0 +1,13 @@
+<ag-tabs>
+    <ag-tab-pane name="settings" active="{{ view == 'settings' }}" searchparam="view" title="Settings">
+        <ng-include src="'html/api/rpc-services/settings-edit.html'"></ng-include>
+    </ag-tab-pane>
+
+    <ag-tab-pane name="fields" active="{{ view == 'fields' }}" searchparam="view" title="Fields">
+        <ng-include src="'html/api/input-filter-edit.html'" onload="index = $index"></ng-include>
+    </ag-tab-pane>
+
+    <ag-tab-pane name="documentation" active="{{ view == 'documentation' }}" searchparam="view" title="Documentation">
+        <ag-include src="html/api/rpc-services/documentation-edit.html"></ag-include>
+    </ag-tab-pane>
+</ag-tabs>

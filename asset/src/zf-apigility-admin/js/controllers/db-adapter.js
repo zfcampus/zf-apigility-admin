@@ -23,14 +23,6 @@ angular.module('ag-admin').controller(
             return true;
         };
 
-        $scope.cancelEdit = function () {
-            $state.go($state.$current.name, {edit: null}, {reload: false, notify: false, inherit: true});
-        };
-
-        $scope.startEdit = function () {
-            $state.go($state.$current.name, {edit: true}, {reload: false, notify: false, inherit: true});
-        };
-
         var updateDbAdapters = function (force, message) {
             DbAdapterResource.getList(force).then(function (updatedAdapters) {
                 if (message) {

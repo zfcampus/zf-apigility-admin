@@ -77,21 +77,13 @@ angular.module('ag-admin').controller(
         );
     };
 
-    $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: null}, {reload: true, notify: true, inherit: true});
-    };
-
-    $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {reload: true, notify: true, inherit: true});
-    };
-
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
         ApiRepository.saveRestService($scope.api.name, restServiceData).then(
             function (data) {
                 agFormHandler.resetForm($scope);
                 ApiRepository.refreshApi($scope, $state, true, 'REST Service updated', function () {
-                    $scope.cancelEdit();
+                    $state.go($state.$current.name, { edit: null });
                 });
             },
             function (error) {

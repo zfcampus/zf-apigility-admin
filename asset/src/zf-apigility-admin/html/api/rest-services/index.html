@@ -18,17 +18,17 @@
             <div class="btn-group pull-right" ng-show="isLatestVersion()">
                 <button
                     type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-flag flags="{edit: false}" 
                     collapse-button criteria="{delete: false, edit: true}"
-                    click="cancelEdit">
+                    ui-sref="ag.api.version.rest({ edit: null})"
+                    ui-sref-options="{ notify: false }">
                     Cancel
                 </button>
 
                 <button 
                     type="button" class="btn btn-sm btn-success" title="Edit service"
-                    collapse-flag flags="{edit: true}"
                     collapse-button criteria="{delete: false, edit: false}"
-                    click="startEdit">
+                    ui-sref="ag.api.version.rest({ edit: true })"
+                    ui-sref-options="{ notify: false }">
                     <span class="glyphicon glyphicon-edit"></span>
                 </button>
 
@@ -42,63 +42,17 @@
 
             <div class="clearfix"></div>
 
-            <div collapse-show criteria="{delete: true}" class="panel panel-danger hide">
-                <div class="panel-heading">Remove REST service</div>
-
-                <div class="panel-body">
-                    <p>Are you sure you want to delete the service?</p>
-
-                    <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-sm btn-default"
-                            collapse-flag flags="{delete: false}">
-                            No
-                        </button>
-                        <button type="button" class="btn btn-sm btn-danger"
-                            ng-click="removeRestService(restService.controller_service_name)">
-                            Yes
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <span collapse-show
+                criteria="{delete: false}"
+                default-template="'html/empty-content.html'"
+                toggled-template="'html/api/rest-services/remove.html'"></span>
         </collapse-header>
 
         <collapse-body>
-            <ag-tabs class="panel-body" collapse-show criteria="{edit: false}">
-                <ag-tab-pane name="settings" active="{{ view == 'settings' }}" searchparam="view" title="Settings">
-                    <ng-include src="'html/api/rest-services/settings-view.html'"></ng-include>
-                </ag-tab-pane>
-
-                <ag-tab-pane name="fields" active="{{ view == 'fields' }}" searchparam="view" title="Fields">
-                    <ng-include src="'html/api/input-filter-view.html'"
-                        onload="index = $index"></ng-include>
-                </ag-tab-pane>
-
-                <ag-tab-pane name="documentation" active="{{ view == 'documentation' }}" searchparam="view" title="Documentation">
-                    <ng-include src="'html/api/rest-services/documentation-view.html'"
-                        onload="index = $index"></ng-include>
-                </ag-tab-pane>
-
-                <ag-tab-pane name="source" active="{{ view == 'source' }}" searchparam="view" title="Source Code">
-                    <ng-include 
-                        src="'html/api/rest-services/source-code.html'"
-                        onload="index = $index; service = restService"></ng-include>
-                </ag-tab-pane>
-            </ag-tabs>
-
-            <ag-tabs class="panel-body hide" collapse-show criteria="{edit: true}">
-                <ag-tab-pane name="settings" active="{{ view == 'settings' }}" searchparam="view" title="Settings">
-                    <ng-include src="'html/api/rest-services/settings-edit.html'"></ng-include>
-                </ag-tab-pane>
-
-                <ag-tab-pane name="fields" active="{{ view == 'fields' }}" searchparam="view" title="Fields">
-                    <ng-include src="'html/api/input-filter-edit.html'"
-                        onload="index = $index"></ng-include>
-                </ag-tab-pane>
-
-                <ag-tab-pane name="documentation" active="{{ view == 'documentation' }}" searchparam="view" title="Documentation">
-                    <ag-include src="html/api/rest-services/documentation-edit.html"></ag-include>
-                </ag-tab-pane>
-            </ag-tabs>
+            <div collapse-show
+                criteria="{edit: false}"
+                default-template="'html/api/rest-services/view.html'"
+                toggled-template="'html/api/rest-services/edit.html'"></div>
         </collapse-body>
     </ag-collapse>
 </div>

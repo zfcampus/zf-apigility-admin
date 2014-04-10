@@ -19,26 +19,14 @@
     </div>
 </div>
 
-<div ng-show="showHttpBasicAuthenticationForm">
-    <ag-include src="html/settings/authentication/new-http-basic.html"></ag-include>
-</div>
+<ag-conditional-include condition="showHttpBasicAuthenticationForm" src="html/settings/authentication/new-http-basic.html"></ag-conditional-include>
 
-<div ng-show="showHttpBasicAuthentication">
-    <ag-include src="html/settings/authentication/http-basic.html"></ag-include>
-</div>
+<ag-conditional-include condition="showHttpBasicAuthentication" src="html/settings/authentication/http-basic.html"></ag-conditional-include>
 
-<div ng-show="showHttpDigestAuthenticationForm">
-    <ag-include src="html/settings/authentication/new-http-digest.html"></ag-include>
-</div>
+<ag-conditional-include condition="showHttpDigestAuthenticationForm" src="html/settings/authentication/new-http-digest.html"></ag-conditional-include>
 
-<div ng-show="showHttpDigestAuthentication">
-    <ag-include src="html/settings/authentication/http-digest.html"></ag-include>
-</div>
+<ag-conditional-include condition="showHttpDigestAuthentication" src="html/settings/authentication/http-digest.html"></ag-conditional-include>
 
-<div ng-show="showOAuth2AuthenticationForm">
-    <ag-include src="html/settings/authentication/new-oauth2.html"></ag-include>
-</div>
+<ag-conditional-include condition="showOAuth2AuthenticationForm" src="html/settings/authentication/new-oauth2.html"></ag-conditional-include>
 
-<div ng-show="showOAuth2Authentication">
-    <ag-include src="html/settings/authentication/oauth2.html"></ag-include>
-</div>
+<ag-conditional-include condition="showOAuth2Authentication" src="html/settings/authentication/oauth2.html"></ag-conditional-include>

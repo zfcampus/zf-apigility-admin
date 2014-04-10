@@ -1,0 +1,18 @@
+<div class="panel panel-danger">
+    <div class="panel-heading">Remove REST service</div>
+
+    <div class="panel-body">
+        <p>Are you sure you want to delete the service?</p>
+
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-sm btn-default"
+                collapse-flag flags="{delete: false}">
+                No
+            </button>
+            <button type="button" class="btn btn-sm btn-danger"
+                ng-click="removeRestService(restService.controller_service_name)">
+                Yes
+            </button>
+        </div>
+    </div>
+</div>

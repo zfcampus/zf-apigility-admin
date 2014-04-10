@@ -1,0 +1,19 @@
+<ag-tabs>
+    <ag-tab-pane name="settings" active="{{ view == 'settings' }}" searchparam="view" title="Settings">
+        <ng-include src="'html/api/rpc-services/settings-view.html'"></ng-include>
+    </ag-tab-pane>
+
+    <ag-tab-pane name="fields" active="{{ view == 'fields' }}" searchparam="view" title="Fields">
+        <ng-include src="'html/api/input-filter-view.html'" onload="index = $index"></ng-include>
+    </ag-tab-pane>
+
+    <ag-tab-pane name="documentation" active="{{ view == 'documentation' }}" searchparam="view" title="Documentation">
+        <ng-include src="'html/api/rpc-services/documentation-view.html'"></ng-include>
+    </ag-tab-pane>
+
+    <ag-tab-pane name="source" active="{{ view == 'source' }}" searchparam="view" title="Source Code" title="Source Code">
+        <ng-include 
+            src="'html/api/rpc-services/source-code.html'"
+            onload="index = $index; service = rpcService"></ng-include>
+    </ag-tab-pane>
+</ag-tabs>

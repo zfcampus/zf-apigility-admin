@@ -16,53 +16,43 @@
         <div class="btn-group pull-right">
             <button
                 type="button" title="Cancel" class="btn btn-sm btn-default"
-                collapse-flag flags="{edit: false}" click="cancelEdit"
-                collapse-button criteria="{delete: false, edit: true}">
+                collapse-button criteria="{delete: false, edit: true}"
+                ui-sref="ag.settings.db-adapters({ edit: null})"
+                ui-sref-options="{ notify: false }">
                 Cancel
             </button>
 
             <button 
                 type="button" class="btn btn-sm btn-success" title="Edit adapter"
-                collapse-flag flags="{edit: true}" click="startEdit"
-                collapse-button criteria="{delete: false, edit: false}">
-                <span class="glyphicon glyphicon-edit"></span>
+                collapse-button criteria="{delete: false, edit: false}"
+                ui-sref="ag.settings.db-adapters({ edit: true})"
+                ui-sref-options="{ notify: false }">
+                <i class="glyphicon glyphicon-edit"></i>
             </button>
 
             <button 
                 type="button" class="btn btn-sm btn-danger" title="Remove adapter"
                 collapse-flag flags="{delete: true}"
                 collapse-button criteria="{delete: false}">
-                <span class="glyphicon glyphicon-trash"></span>
+                <i class="glyphicon glyphicon-trash"></i>
             </button>
         </div>
       </h4>
 
       <div class="clearfix"></div>
 
-      <div collapse-show criteria="{delete: true}" class="panel panel-danger hide">
-          <div class="panel-heading"><h4 class="panel-title">Remove DB Adapter</h4></div>
-          <div class="panel-body">
-          <form ng-submit="removeDbAdapter(dbAdapter.adapter_name)">
-              <p>Are you sure you want to delete the Adapter</p>
-
-              <div class="btn-group pull-right">
-                <button collapse-flag flags="{delete: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
-                <button type="submit" class="btn btn-sm btn-danger">Yes</button>
-              </div>
-
-              <div class="clearfix"></div>
-          </form>
-          </div>
-      </div>
+      <span collapse-show
+          criteria="{delete: false}"
+          default-template="'html/empty-content.html'"
+          toggled-template="'html/settings/db-adapters/remove.html'"></span>
     </collapse-header>
 
     <collapse-body>
-      <div collapse-show criteria="{edit: false}">
-        <ng-include src="'html/settings/db-adapters/view.html'"></ng-include>
-      </div>
-      <div collapse-show criteria="{edit: true}" class="hide">
-        <ng-include src="'html/settings/db-adapters/edit.html'"></ng-include>
-      </div>
+        <div
+            collapse-show
+            criteria="{edit: false}"
+            default-template="'html/settings/db-adapters/view.html'"
+            toggled-template="'html/settings/db-adapters/edit.html'"></div>
     </collapse-body>
   </ag-collapse>
 </div>

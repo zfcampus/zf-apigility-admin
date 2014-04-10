@@ -1,0 +1,23 @@
+<table class="table table-striped">
+    <tr>
+        <td>Realm</td>
+        <td>{{httpDigest.realm}}</td>
+    </tr>
+
+    <tr>
+        <td>htdigest Location</td>
+        <td>{{httpDigest.htdigest}}</td>
+    </tr>
+
+    <tr>
+        <td>Digest Domains</td>
+        <td>
+            <p ng-repeat="domain in httpDigest.digest_domains">{{domain}}</p>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Nonce Timeout</td>
+        <td>{{httpDigest.nonce_timeout}}</td>
+    </tr>
+</table>

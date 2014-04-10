@@ -12,7 +12,7 @@
             <div class="panel panel-default"><div class="panel-body">
             <ag-tabs pills="">
                 <ag-tab-pane ng-repeat="method in rpcService.http_methods" title="{{method}}" ng-init="methodData = rpcService.documentation[method]; service=rpcService"><div class="panel-body">
-                    <ag-include src="html/api/documentation-method-view.html"></ag-include>
+                    <ag-tab-pane-variable-content content-template="'html/api/documentation-method-view.html'"></ag-tab-pane-variable-content>
                 </div></ag-tab-pane>
             </ag-tabs>
             </div></div>
