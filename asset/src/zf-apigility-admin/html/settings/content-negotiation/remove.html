@@ -1,0 +1,15 @@
+<div class="panel panel-danger">
+    <div class="panel-heading"><h4 class="panel-title">Remove Selector</h4></div>
+    <div class="panel-body">
+    <form ng-submit="removeSelector(selector.content_name)">
+        <p>Are you sure you want to delete the Selector?</p>
+
+        <div class="btn-group pull-right">
+        <button collapse-flag flags="{deleteSelector: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-danger">Yes</button>
+        </div>
+
+        <div class="clearfix"></div>
+    </form>
+    </div>
+</div>

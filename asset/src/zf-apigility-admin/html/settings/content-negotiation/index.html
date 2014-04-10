@@ -14,15 +14,17 @@
         <div class="btn-group pull-right">
             <button
                 type="button" title="Cancel" class="btn btn-sm btn-default"
-                collapse-flag flags="{editSelector: false}" collapse-click="cancelEdit"
-                collapse-button criteria="{deleteSelector: false, editSelector: true}">
+                collapse-button criteria="{deleteSelector: false, editSelector: true}"
+                ui-sref="ag.settings.content-negotiation({ edit: null})"
+                ui-sref-options="{ notify: false }">
                 Cancel
             </button>
 
             <button 
                 type="button" class="btn btn-sm btn-success" title="Edit selector"
-                collapse-flag flags="{editSelector: true}" collapse-click="startEdit"
-                collapse-button criteria="{deleteSelector: false, editSelector: false}">
+                collapse-button criteria="{deleteSelector: false, editSelector: false}"
+                ui-sref="ag.settings.content-negotiation({ edit: true})"
+                ui-sref-options="{ notify: false }">
                 <i class="glyphicon glyphicon-edit"></i>
             </button>
 
@@ -37,21 +39,10 @@
 
       <div class="clearfix"></div>
 
-      <div collapse-show criteria="{deleteSelector: true}" class="panel panel-danger hide">
-          <div class="panel-heading"><h4 class="panel-title">Remove Selector</h4></div>
-          <div class="panel-body">
-          <form ng-submit="removeSelector(selector.content_name)">
-              <p>Are you sure you want to delete the Selector?</p>
-
-              <div class="btn-group pull-right">
-                <button collapse-flag flags="{deleteSelector: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
-                <button type="submit" class="btn btn-sm btn-danger">Yes</button>
-              </div>
-
-              <div class="clearfix"></div>
-          </form>
-          </div>
-      </div>
+      <span collapse-show
+          criteria="{deleteSelector: false}"
+          default-template="'html/empty-content.html'"
+          toggled-template="'html/settings/content-negotiation/remove.html'"></span>
     </collapse-header>
 
     <collapse-body>

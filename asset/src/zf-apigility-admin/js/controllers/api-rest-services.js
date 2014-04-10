@@ -77,36 +77,13 @@ angular.module('ag-admin').controller(
         );
     };
 
-    $scope.cancelEdit = function () {
-console.log('[cancel edit] triggered');
-console.log($state);
-        $state.go('ag.api.version.rest', {edit: null}, {notify: true, location: true}).then(null, 
-            function (error) {
-                console.log('[cancel edit] ERROR in state transition');
-                console.log(arguments);
-            }
-        );
-    };
-
-    $scope.startEdit = function () {
-console.log('[start edit] triggered');
-console.log($state);
-        $scope.state = $state;
-        $state.go('ag.api.version.rest', {edit: true}, {notify: true, location: true}).then(null,
-            function (error) {
-                console.log('[start edit] ERROR in state transition');
-                console.log(arguments);
-            }
-        );
-    };
-
     $scope.saveRestService = function (index) {
         var restServiceData = _.clone($scope.api.restServices[index]);
         ApiRepository.saveRestService($scope.api.name, restServiceData).then(
             function (data) {
                 agFormHandler.resetForm($scope);
                 ApiRepository.refreshApi($scope, $state, true, 'REST Service updated', function () {
-                    $scope.cancelEdit();
+                    $state.go($state.$current.name, { edit: null });
                 });
             },
             function (error) {

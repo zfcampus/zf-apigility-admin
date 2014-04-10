@@ -47,21 +47,13 @@ angular.module('ag-admin').controller(
         );
     };
 
-    $scope.cancelEdit = function () {
-        $state.go($state.$current.name, {edit: null}, {reload: true, notify: true, inherit: true});
-    };
-
-    $scope.startEdit = function () {
-        $state.go($state.$current.name, {edit: true}, {reload: true, notify: true, inherit: true});
-    };
-
     $scope.saveRpcService = function (index) {
         var rpcServiceData = _.clone($scope.api.rpcServices[index]);
         ApiRepository.saveRpcService($scope.api.name, rpcServiceData).then(
             function (data) {
                 agFormHandler.resetForm($scope);
                 ApiRepository.refreshApi($scope, $state, true, 'RPC Service updated', function () {
-                    $scope.cancelEdit();
+                    $state.go($state.$current.name, { edit: null });
                 });
             },
             function (error) {

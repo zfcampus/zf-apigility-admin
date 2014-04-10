@@ -1,0 +1,23 @@
+<div class="panel-body"><form class="form" ng-submit="updateHttpBasicAuthentication()" ag-form>
+    <fieldset>
+        <div class="form-group">
+            <label class="control-label" for="realm">Authentication Realm</label>
+            <input type="text" placeholder="api" class="form-control input-xlarge" required="required" ng-model="httpBasic.realm">
+            <p class="help-block">The Authentication Realm for the HTTP Basic Authentication</p>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="htpasswd">Location of htpasswd file</label>
+            <input type="text" placeholder="data/htpasswd" class="form-control input-xlarge" required="required" ng-model="httpBasic.htpasswd">
+            <p class="help-block">Location on the filesystem of the htpasswd file</p>
+        </div>
+    </fieldset>
+
+    <div class="btn-group pull-right">
+        <button
+            type="button" title="Cancel" class="btn btn-sm btn-default" ag-cancel-edit>Cancel</button>
+        <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
+    </div>
+
+    <div class="clearfix"></div>
+</form></div>

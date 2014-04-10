@@ -19,123 +19,31 @@
                     type="button" class="btn btn-sm btn-success" title="Edit settings"
                     collapse-flag flags="{edit: true}" collapse-click="startEdit"
                     collapse-button criteria="{delete: false, edit: false}">
-                    <span class="glyphicon glyphicon-edit"></span>
+                    <i class="glyphicon glyphicon-edit"></i>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-danger" title="Remove Authentication"
                     collapse-flag flags="{delete: true}"
                     collapse-button criteria="{delete: false}">
-                    <span class="glyphicon glyphicon-trash"></span>
+                    <i class="glyphicon glyphicon-trash"></i>
                 </button>
             </div>
         </h4>
 
         <div class="clearfix"></div>
 
-        <div collapse-show criteria="{delete: true}" class="panel panel-danger hide">
-            <div class="panel-heading"><h4 class="panel-title">Remove Authentication</h4></div>
-            <div class="panel-body">
-                <form ng-submit="removeAuthentication()">
-                    <p>Are you sure you want to remove authentication?</p>
-
-                    <div class="btn-group pull-right">
-                        <button collapse-flag flags="{delete: false}" type="button" class="btn btn-sm btn-default">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-danger">Yes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <span collapse-show
+            criteria="{delete: false}"
+            default-template="'html/empty-content.html'"
+            toggled-template="'html/settings/authentication/remove.html'"></span>
     </collapse-header>
 
-    <table collapse-show criteria="{edit: false}" class="table table-striped">
-        <tr ng-show="oauth2.dsn_type == 'PDO'">
-            <td>PDO DSN</td>
-            <td>{{oauth2.dsn}}</td>
-        </tr>
-
-        <tr ng-show="oauth2.username && (oauth2.dsn_type == 'PDO')">
-            <td>Database username</td>
-            <td>{{oauth2.username}}</td>
-        </tr>
-
-        <tr ng-show="oauth2.password && (oauth2.dsn_type == 'PDO')">
-            <td>Database password</td>
-            <td>{{oauth2.password}}</td>
-        </tr>
-
-        <tr ng-show="oauth2.dsn_type == 'Mongo'">
-            <td>Mongo server connection string</td>
-            <td>{{oauth2.dsn}}</td>
-        </tr>
-
-        <tr ng-show="oauth2.database && (oauth2.dsn_type == 'Mongo')">
-            <td>Database name</td>
-            <td>{{oauth2.database}}</td>
-        </tr>
-
-        <tr>
-            <td>OAuth2 route</td>
-            <td>{{oauth2.route_match}}</td>
-        </tr>
-    </table>
-
-    <collapse-body collapse-show criteria="{edit: true}">
-        <div class="panel-body"><form ag-form class="form" ng-submit="updateOAuth2Authentication()">
-            <fieldset ng-show="oauth2.dsn_type == 'PDO'">
-                <div class="form-group">
-                    <label class="control-label" for="dsn">PDO DSN</label>
-                    <input type="text" placeholder="sqlite::memory:" class="form-control input-xlarge" ng-model="oauth2.dsn">
-                    <p class="help-block">The PDO database source name (DSN).</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="username">PDO Username</label>
-                    <input type="text" placeholder="username" class="form-control input-xlarge" ng-model="oauth2.username">
-                    <p class="help-block">Username associated with the database holding
-                        OAuth2 credentials (required if not using SQLite).</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="password">PDO Password</label>
-                    <input type="password" placeholder="password" class="form-control input-xlarge" ng-model="oauth2.password">
-                    <p class="help-block">Password for the username listed (required if not using SQLite).</p>
-                </div>
-            </fieldset>
-
-            <fieldset ng-show="oauth2.dsn_type == 'Mongo'">
-                <div class="form-group">
-                    <label class="control-label" for="dsn">Mongo server
-                        connection string</label>
-                    <input type="text" placeholder="(optional) mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db" class="form-control input-xlarge" ng-model="oauth2.dsn">
-                    <p class="help-block">The MongoClient server connection
-                    string; if not provided, "mongodb://localhost:27017" will be
-                    used. "mongodb://" may be omitted from the string.</p>
-                </div>
-
-                <div class="form-group" ng-show="oauth2.dsn_type == 'Mongo'">
-                    <label class="control-label" for="database">Mongo Database</label>
-                    <input type="text" class="form-control input-xlarge" ng-model="oauth2.database">
-                    <p class="help-block">The Mongo database name.</p>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="route_match">OAuth2 route</label>
-                    <input type="text" placeholder="/oauth" class="form-control input-xlarge" ng-model="oauth2.route_match">
-                    <p class="help-block">Base URI to use as the OAuth2 server endpoint.</p>
-                </div>
-            </fieldset>
-
-            <div class="btn-group pull-right">
-                <button
-                    type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-flag flags="{edit: false}" click="cancelEdit">Cancel</button>
-                <button type="submit" title="Save" class="btn btn-sm btn-success">Save</button>
-            </div>
-
-            <div class="clearfix"></div>
-        </form></div>
+    <collapse-body>
+        <span
+            collapse-show
+            criteria="{edit: false}"
+            default-template="'html/settings/authentication/oauth2-view.html'"
+            toggled-template="'html/settings/authentication/oauth2-edit.html'"></span>
     </collapse-body>
 </ag-collapse>
 

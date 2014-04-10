@@ -30,14 +30,6 @@ angular.module('ag-admin').controller(
       $scope.newSelector = JSON.parse(JSON.stringify(newSelector));
     };
 
-    $scope.cancelEdit = function () {
-      $state.go($state.$current.name, {edit: null}, {reload: false, notify: false, inherit: true});
-    };
-
-    $scope.startEdit = function () {
-      $state.go($state.$current.name, {edit: true}, {reload: false, notify: false, inherit: true});
-    };
-
     $scope.addViewModel = function (viewModel, selector) {
       selector.selectors[viewModel] = [];
       $scope.newSelector.viewModel = '';

@@ -1,0 +1,31 @@
+<table class="table table-striped">
+    <tr ng-show="oauth2.dsn_type == 'PDO'">
+        <td>PDO DSN</td>
+        <td>{{oauth2.dsn}}</td>
+    </tr>
+
+    <tr ng-show="oauth2.username && (oauth2.dsn_type == 'PDO')">
+        <td>Database username</td>
+        <td>{{oauth2.username}}</td>
+    </tr>
+
+    <tr ng-show="oauth2.password && (oauth2.dsn_type == 'PDO')">
+        <td>Database password</td>
+        <td>{{oauth2.password}}</td>
+    </tr>
+
+    <tr ng-show="oauth2.dsn_type == 'Mongo'">
+        <td>Mongo server connection string</td>
+        <td>{{oauth2.dsn}}</td>
+    </tr>
+
+    <tr ng-show="oauth2.database && (oauth2.dsn_type == 'Mongo')">
+        <td>Database name</td>
+        <td>{{oauth2.database}}</td>
+    </tr>
+
+    <tr>
+        <td>OAuth2 route</td>
+        <td>{{oauth2.route_match}}</td>
+    </tr>
+</table>
