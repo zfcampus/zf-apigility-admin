@@ -88,12 +88,10 @@ angular.module('ag-admin').directive('agCollapse', function() {
                     }
 
                     watchers[flag].push(function(newVal) {
-console.log('In conditional watcher for ' + flag + '; received value ' + value);
                         /* cast to bool */
                         newVal = !!newVal;
                         conditionals[flag] = newVal;
                         if (typeof displayCallback === 'function') {
-console.log('Triggering display callback');
                             displayCallback(newVal, value);
                         }
                     });
@@ -437,10 +435,7 @@ console.log('Triggering display callback');
         transclude: true,
         link: function(scope, element, attr, panelCtrl) {
             var displayCallback = function (flag, compare) {
-console.log('Toggling element hide status: ' + flag + ' comparing to ' + compare);
-console.log('Current hidden status: ' + element.hasClass('hide'));
                 element.toggleClass('hide', compare !== flag);
-console.log('Toggled hidden status: ' + element.hasClass('hide'));
             };
 
             if (!attr.hasOwnProperty('criteria')) {
