@@ -1,0 +1,13 @@
+<div class="panel-body">
+    <select class="input-xlarge" ui-select2="{placeholder: 'Select Filter', width: '300px' }" type="text" ng-model="input._newFilterName">
+        <option ng-repeat="(key, value) in filterOptions" value="{{key}}">{{key}}</option>
+    </select>
+
+    <div class="btn-group pull-right">
+        <button 
+            type="button" class="btn btn-sm btn-default"
+            collapse-flag flags="{newFilterFormVisible: false}">Cancel</button>
+        <button type="button" class="btn btn-sm btn-primary"
+            ng-click="addFilter(input)">Add Filter</button>
+    </div>
+</div>
