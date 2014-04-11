@@ -122,15 +122,34 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
         }
         var modelInputFilter = _.cloneDeep($scope.service.input_filter);
 
+        /* Trim out items that should not be submitted to the API */
         _.forEach(modelInputFilter, removeUnderscoreProperties);
         _.forEach(modelInputFilter, function (input) {
-            if (! input.hasOwnProperty('error_message')) {
-                return;
+            if (input.hasOwnProperty('error_message') &&
+                !input.error_message.length
+            ) {
+                delete input.error_message;
             }
-            if (input.error_message.length) {
-                return;
+
+            if (input.hasOwnProperty('showNewFilterForm')) {
+                delete input.showNewFilterForm;
             }
-            delete input.error_message;
+
+            if (input.hasOwnProperty('showNewValidatorForm')) {
+                delete input.showNewValidatorForm;
+            }
+
+            _.forEach(input.filters, function (filter) {
+                if (filter.hasOwnProperty('showNewOptionForm')) {
+                    delete filter.showNewOptionForm;
+                }
+            });
+
+            _.forEach(input.validators, function (validator) {
+                if (validator.hasOwnProperty('showNewOptionForm')) {
+                    delete validator.showNewOptionForm;
+                }
+            });
         });
 
         var apiRepo = $scope.$parent.ApiRepository;
