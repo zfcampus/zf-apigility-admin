@@ -3,242 +3,70 @@ Apigility Admin
 
 [![Build Status](https://travis-ci.org/zfcampus/zf-apigility-admin.png)](https://travis-ci.org/zfcampus/zf-apigility-admin)
 
-This module provides the admin interface and API service for the
-[Apigility](http://apigility.org) project.
-
-API Resources
--------------
-
-### `authentication`
-
-- HTTP basic authentication:
-  ```javascript
-  {
-      "accept_schemes": [ "basic" ],
-      "realm": "The HTTP authentication realm to use",
-      "htpasswd": "path on filesystem to htpasswd file"
-  }
-  ```
-
-- HTTP digest authentication:
-  ```javascript
-  {
-      "accept_schemes": [ "digest" ],
-      "realm": "The HTTP authentication realm to use",
-      "htdigest": "path on filesystem to htdigest file",
-      "nonce_timeout": "integer; seconds",
-      "digest_domains": "Space-separated list of URIs under authentication"
-  }
-  ```
-
-- OAuth2 authentication:
-  ```javascript
-  {
-      "dsn": "PDO DSN of database containing OAuth2 schema",
-      "username": "Username associated with DSN",
-      "password": "Password associated with DSN",
-      "route_match": "Literal route to match indicating where OAuth2 login/authorization exists"
-  }
-  ```
-
-### `authorization`
-
-```javascript
-{
-    "Rest\Controller\Service\Name::__resource__": {
-        "GET": bool,
-        "POST": bool,
-        "PUT": bool,
-        "PATCH": bool,
-        "DELETE": bool
-    },
-    "Rest\Controller\Service\Name::__collection__": {
-        "GET": bool,
-        "POST": bool,
-        "PUT": bool,
-        "PATCH": bool,
-        "DELETE": bool
-    },
-    "Rpc\Controller\Service\Name::actionName": {
-        "GET": bool,
-        "POST": bool,
-        "PUT": bool,
-        "PATCH": bool,
-        "DELETE": bool
-    }
-}
-```
-
-REST services have an entry for each of their resource and collection instances.
-RPC services have an entry per action name that is exposed (this will typically
-only be one). Each service has a list of HTTP methods, with a flag. A `false`
-value indicates that no authorization is required; a `true` value indicates that
-authorization is required.
-
-**Note**: If the `deny_by_default` flag is set in the application, then the
-meaning of the flags is reversed; `true` then means the method is public,
-`false` means it requires authentication.
-
-### `db-adapter`
-
-```javascript
-{
-    "adapter_name": "Service name for the DB adapter",
-    "database": "Name of the database",
-    "driver": "Driver used to make the connection"
-}
-```
-
-Additionally, any other properties used to create the `Zend\Db\Adapter\Adapter`
-instance may be composed: e.g., "username", "password", etc.
-
-### `inputfilter`
-
-```javascript
-{
-    "input_name": {
-        "name": "name of the input; should match key of object",
-        "validators": [
-            {
-                "name": "Name of validator service",
-                "options": {
-                    "key": "value pairs to specify behavior of validator"
-                }
-            }
-        ]
-    }
-}
-```
-
-An input filter may contain any number of inputs, and the format follows that
-used by `Zend\InputFilter\Factory` as described here:
-http://zf2.readthedocs.org/en/latest/modules/zend.input-filter.intro.html
-
-Currently, we do not expose the `required` flag for inputs, utilize filters, nor
-allow nesting input filters.
-
-### `module`
-
-```javascript
-{
-    "name": "normalized module name",
-    "namespace": "PHP namespace of the module",
-    "is_vendor": "boolean value indicating whether or not this is a vendor (3rd party) module",
-    "versions": [
-        "Array",
-        "of",
-        "available versions"
-    ]
-}
-```
-
-Additionally, the `module` resource composes relational links for [RPC](#rpc)
-and [REST](#rest) resources; these use the relations "rpc" and "rest",
-respectively.
-
-### `rpc`
-
-```javascript
-{
-    "controller_service_name": "name of the controller service; this is the identifier, and required",
-    "accept_whitelist": [
-        "(Optional)",
-        "List",
-        "of",
-        "whitelisted",
-        "Accept",
-        "mediatypes"
-    ],
-    "content_type_whitelist": [
-        "(Optional)",
-        "List",
-        "of",
-        "whitelisted",
-        "Content-Type",
-        "mediatypes"
-    ],
-    "http_options": [
-        "(Required)",
-        "List",
-        "of",
-        "allowed",
-        "Request methods"
-    ],
-    "input_filter": "(Optional) Present in returned RPC services, when one or more input filters are present; see the inputfilter resource for details",
-    "route_match": "(Required) String indicating Segment route to match",
-    "route_name": "(Only in representation) Name of route associated with endpoint",
-    "selector": "(Optional) Content-Negotiation selector to use; Json by default"
-}
-```
-
-### `rest`
-
-```javascript
-{
-    "controller_service_name": "name of the controller service; this is the identifier, and required",
-    "accept_whitelist": [
-        "(Optional)",
-        "List",
-        "of",
-        "whitelisted",
-        "Accept",
-        "mediatypes"
-    ],
-    "adapter_name": "(Only in DB-Connected resources) Name of Zend\\DB adapter service used for this resource",
-    "collection_class": "(Only in representation) Name of class representing collection",
-    "collection_http_options": [
-        "(Required)",
-        "List",
-        "of",
-        "allowed",
-        "Request methods",
-        "on collections"
-    ],
-    "collection_query_whitelist": [
-        "(Optional)",
-        "List",
-        "of",
-        "whitelisted",
-        "query string parameters",
-        "to pass to resource for collections"
-    ],
-    "content_type_whitelist": [
-        "(Optional)",
-        "List",
-        "of",
-        "whitelisted",
-        "Content-Type",
-        "mediatypes"
-    ],
-    "entity_class": "(Only in representation) Name of class representing resource entity",
-    "entity_identifier_name": "(Optional) Name of entity field representing the identifier; defaults to 'id'",
-    "hydrator_name": "(Only in DB-Connected resources) Name of Zend\\Stdlib\\Hydrator service used for this resource",
-    "route_identifier_name": "(Optional) Name of route parameter representing the resource identifier; defaults to resource_name + _id",
-    "input_filter": "(Optional) Present in returned REST services, when one or more input filters are present; see the inputfilter resource for details",
-    "module": "(Only in representation) Name of module in which resource resides",
-    "page_size": "(Optional) Integer representing number of entities to return in a given page in a collection; defaults to 25",
-    "page_size_param": "(Optional) Name of query string parameter used for pagination; defaults to 'page'",
-    "resource_class": "(Only in representation) Name of class representing resource handling operations",
-    "resource_http_options": [
-        "(Required)",
-        "List",
-        "of",
-        "allowed",
-        "Request methods",
-        "on individual resources"
-    ],
-    "route_match": "(Optional) String indicating Segment route to match; defaults to /resource_name[/:route_identifier_name]",
-    "route_name": "(Only in representation) Name of route associated with api service",
-    "selector": "(Optional) Content-Negotiation selector to use; HalJson by default",
-    "table_name": "(Only in DB-Connected resources) Name of database table used for this resource",
-    "table_service": "(Only in DB-Connected resources) Name of TableGateway service used for this resource"
-}
-```
-
-API services
+Introduction
 ------------
 
-### `/admin/api/config`
+The `zf-apigility-admin` modules delivers the backend management API and UI that is responsible
+for the RAD development of API's.
+
+> *NOTE:* it is advisable to NOT enable this module in production systems.
+
+Installation
+------------
+
+Run the following `composer` command:
+
+```console
+$ composer require "zfcampus/zf-apigility-admin:~1.0-dev"
+```
+
+Alternately, manually add the following to your `composer.json`, in the `require` section:
+
+```javascript
+"require": {
+    "zfcampus/zf-apigility-admin": "~1.0-dev"
+}
+```
+
+And then run `composer update` to ensure the module is installed.
+
+Finally, add the module name to your project's `config/application.config.php` under the `modules`
+key:
+
+```php
+return array(
+    /* ... */
+    'modules' => array(
+        /* ... */
+        'ZF\Apigility\Admin',
+    ),
+    /* ... */
+);
+```
+
+Configuration
+-------------
+
+There is no custom user level configuration for this module.
+
+Since this particular module is responsible for providing API's and the UI experience, it has a
+significant amount of configuration that it requires for it's proper functioning in a development
+environment.  Since it is highly unlikely that developers would need to modify the system-level
+configuration, it is omitted in this README, but is located at
+[config/module.config.php](config/module.config.php), if you are interested in seeing what
+the configuration entails.
+
+Routes
+------
+
+This module exposes HTTP accessible API endpoints and static assets.
+
+API Endpoints
+-------------
+
+All routes are prefixed with `/apigility` by default.
+
+### `api/config`
 
 This endpoint is for examining the application configuration, and providing
 overrides of individual values in it. All overrides are written to a single
@@ -263,7 +91,7 @@ configuration via the `zf-configuration/config-file` key.
 
 - Errors: `application/problem+json`
 
-### `/admin/api/authentication`
+### `api/authentication`
 
 This REST endpoint is for creating, updating, and deleting the authentication
 configuration for your application. It uses the [authentication
@@ -286,7 +114,7 @@ resource](#authentication).
 
 - Errors: `application/problem+json`
 
-### `/admin/api/db-adapter[/:adapter\_name]`
+### `api/db-adapter[/:adapter\_name]`
 
 This REST endpoint is for creating, updating, and deleting named `Zend\Db`
 adapters; it uses the [db-adapter resource](#db-adapter).
@@ -306,7 +134,7 @@ adapters; it uses the [db-adapter resource](#db-adapter).
 
 - Errors: `application/problem+json`
 
-### `/admin/api/module/:name/authorization?version=:version`
+### `api/module/:name/authorization?version=:version`
 
 This REST endpoint is for fetching and updating the authorization
 configuration for your application. It uses the [authorization
@@ -332,7 +160,7 @@ resource](#authorization).
 
 - Errors: `application/problem+json`
 
-### `/admin/api/db-adapter[/:adapter\_name]`
+### `api/db-adapter[/:adapter\_name]`
 
 This REST endpoint is for creating, updating, and deleting named `Zend\Db`
 adapters; it uses the [db-adapter resource](#db-adapter).
@@ -353,13 +181,13 @@ adapters; it uses the [db-adapter resource](#db-adapter).
 - Errors: `application/problem+json`
 
 
-### `/admin/api/config/module?module={module name}`
+### `api/config/module?module={module name}`
 
 This operates exactly like the `/admin/api/config` endpoint, but expects a known
 module name. When provided, it allows you to introspect and manipulate the
 configuration file for that module.
 
-### `/admin/api/module.enable`
+### `api/module.enable`
 
 This endpoint will Apigility-enable (Apigilify) an existing module.
 
@@ -381,7 +209,7 @@ This endpoint will Apigility-enable (Apigilify) an existing module.
 
 - Errors: `application/problem+json`
 
-### `/admin/api/validators`
+### `api/validators`
 
 This endpoint provides a sorted list of all registered validator plugins; the
 use case is for building a drop-down of available plugins when creating an
@@ -405,7 +233,7 @@ input filter for a service.
 
 - Errors: `application/problem+json`
 
-### `/admin/api/versioning`
+### `api/versioning`
 
 This endpoint is for adding a new version to an existing API. If no version is
 passed in the payload, the version number is simply incremented.
@@ -432,7 +260,7 @@ passed in the payload, the version number is simply incremented.
 
 - Errors: `application/problem+json`
 
-### `/admin/api/module[/:name]`
+### `api/module[/:name]`
 
 This is the canonical endpoint for [Module resources](#module).
 
@@ -457,7 +285,7 @@ This is the canonical endpoint for [Module resources](#module).
 
 - Errors: `application/problem+json`
 
-### `/admin/api/module/:name/rpc[/:controller\_service\_name]`
+### `api/module/:name/rpc[/:controller\_service\_name]`
 
 This is the canonical endpoint for [RPC resources](#rpc).
 
@@ -489,7 +317,7 @@ This is the canonical endpoint for [RPC resources](#rpc).
 
 - Errors: `application/problem+json`
 
-### `/admin/api/module/:name/rpc/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
+### `api/module/:name/rpc/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
 
 This service is for creating, updating, and deleting named [input filters](#inputfilter)
 associated with a given RPC service.
@@ -514,7 +342,7 @@ associated with a given RPC service.
 
 - Errors: `application/problem+json`
 
-### `/admin/api/module/:name/rest[/:controller\_service\_name]`
+### `api/module/:name/rest[/:controller\_service\_name]`
 
 This is the canonical endpoint for [REST resources](#rest).
 
@@ -558,7 +386,7 @@ return them as well):
 
 - Errors: `application/problem+json`
 
-### `/admin/api/module/:name/rest/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
+### `api/module/:name/rest/:controller\_service\_name/inputfilter[/:input\_filter\_name]`
 
 This service is for creating, updating, and deleting named [input filters](#inputfilter)
 associated with a given REST service.
@@ -582,3 +410,76 @@ associated with a given REST service.
 - Resource Methods: `GET`, `PUT`, `DELETE`
 
 - Errors: `application/problem+json`
+
+
+ZF2 Events
+----------
+
+### Listeners
+
+#### ZF\Apigility\Admin\Module
+
+This listener is attached to `MvcEvent::EVENT_RENDER` at priority `100`.  It is responsible for
+conditionally attaching a listener depending on if the controller service result is that of
+an _entity_ or that of a _collection_.  For both result based listeners, they are attached
+to the `ZF\Hal\Plugin\Hal` events of `renderEntity` and `renderCollection.entity`, which
+ensures they will be dispatched when the HAL plugin has an opportunity to start rendering.
+
+ZF2 Services
+------------
+
+### Models
+
+Many of the model services provided by `zf-apigility-admin` either deal with the generation and
+modification of PHP code, or the generation and modification of PHP based configuration files.
+
+- `ZF\Apigility\Admin\Model\AuthenticationModel` - responsible for creating and modifying the
+  authentication specific configuration of basic, digest and OAuth2 strategies. Sensitive
+  information will be written to local configuration files while structural information is
+  written to global and module files.
+- `ZF\Apigility\Admin\Model\AuthorizationModelFactory` - responsible for writing the authorization
+  specific details (the ACL matrix of allow/disallow) to the module configuration file.
+- `ZF\Apigility\Admin\Model\ContentNegotiationModel` - responsible for writing custom content-
+  negotiation selectors to the global configuration file.
+- `ZF\Apigility\Admin\Model\ContentNegotiationResource` - REST resource that consumes the
+  `ContentNegotiationModel` in order to expose an API endpoint for content-negotiation
+  configuration management.
+- `ZF\Apigility\Admin\Model\DbAdapterModel` - responsible for writing database adapter specific
+  configuration between application level global and local configuration files.  Sensitive
+  information is written to local configuration files.
+- `ZF\Apigility\Admin\Model\DbAdapterResource` - REST resource that consumes the `DbAdapterModel`
+  in order to expose an API endpoint for database adapter configuration management.
+- `ZF\Apigility\Admin\Model\DbConnectedRestServiceModel` - responsible for writing the required
+  configuration information necessary to expose a database table as a REST resource.
+- `ZF\Apigility\Admin\Model\DocumentationModel` - responsible for writing a special named
+  file in the module's configuration directory that will contain all custom API documentation
+  for requests, responses, and all other documentable elements of an API.
+- `ZF\Apigility\Admin\Model\InputFilterModel` - responsible for writing the input filter
+  specification configuration for each module.
+- `ZF\Apigility\Admin\Model\FiltersModel` - responsible for providing, through the API, a list of
+  built-in filters and their metadata.
+- `ZF\Apigility\Admin\Model\HydratorsModel` - responsible for configuring and managing the
+  global list of hydrators.
+- `ZF\Apigility\Admin\Model\ModuleModel` - responsible for aggregating module information including
+  REST and RPC services and exposing this information through the API.  Additionally, when creating
+  a new module, this will create the code artifacts necessary for an Apigility enabled module.
+- `ZF\Apigility\Admin\Model\ModuleResource` - responsible for exposing the `ModuleModel` as a
+  REST resource in the Apigility API.
+- `ZF\Apigility\Admin\Model\RestServiceModel` - responsible for presenting REST services, as they
+  are defined in `zf-rest` in a way that can be created and modified, to be used in the UI.
+- `ZF\Apigility\Admin\Model\RestServiceResource` - responsible for consuming `RestServiceModel` and
+  exposing this model as a REST resource in the Apigility API.
+- `ZF\Apigility\Admin\Model\RestServiceModelFactory` - responsible for creating `RestServiceModel`'s
+- `ZF\Apigility\Admin\Model\RpcServiceModel` - responsible for presenting RPC services, as they are
+  defined in `zf-rpc` in a way that can be created and modified, to be used in the UI.
+- `ZF\Apigility\Admin\Model\RpcServiceResource` - responsible for consuming `RpcServiceModel`'s and
+  exposing this model as a REST resource in the Apigility API.
+- `ZF\Apigility\Admin\Model\RpcServiceModelFactory` - responsible for creating `RpcServiceModel`'s
+- `ZF\Apigility\Admin\Model\ValidatorsModel` - responsible for providing, through the API, a list of
+  built-in validators.
+- `ZF\Apigility\Admin\Model\ValidatorMetadataModel` - responsible for providing metadata about
+  validators provided through, and in conjunction with the `ValidatorModel` and validator API.
+- `ZF\Apigility\Admin\Model\VersioningModel` - responsible for modeling the workflow and module
+  code creation artifacts that are required to increase the version of a particular Apigility
+  based REST or RPC service.
+- `ZF\Apigility\Admin\Model\VersioningModelFactory` - responsible for createing `VersioningModel`'s
