@@ -51,7 +51,7 @@ module.exports = function(grunt) {
                 ]
             },
             html2js: {
-            files: ['<%= yeoman.app %>/html/{,**/}*.html'],
+                files: ['<%= yeoman.app %>/html/{,**/}*.html'],
                 tasks: ['html2js']
             }
         },
@@ -61,9 +61,7 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: '.jshintrc',
                 reporter: require('jshint-stylish'),
-                ignores: [
-                  '<%= yeoman.app %>/js/templates.js'
-                ],
+                ignores: ['<%= yeoman.app %>/js/templates.js'],
             },
             all: [
                 'Gruntfile.js',
