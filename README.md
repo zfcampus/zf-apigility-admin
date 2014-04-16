@@ -394,6 +394,240 @@ The minimum structure for creating a new REST service will appear as follows:
 }
 ```
 
+API Models
+----------
+
+The following is a list of various models either returned via the API endpoints listed above, or
+expected for the request bodies.
+
+### `authentication`
+
+#### HTTP Basic authentication:
+
+```JSON
+{
+    "accept_schemes": [ "basic" ],
+    "realm": "The HTTP authentication realm to use",
+    "htpasswd": "path on filesystem to htpasswd file"
+}
+```
+
+#### HTTP Digest authentication:
+
+```JSON
+{
+    "accept_schemes": [ "digest" ],
+    "realm": "The HTTP authentication realm to use",
+    "htdigest": "path on filesystem to htdigest file",
+    "nonce_timeout": "integer; seconds",
+    "digest_domains": "Space-separated list of URIs under authentication"
+}
+```
+
+#### OAuth2 authentication:
+
+```JSON
+{
+    "dsn": "PDO DSN of database containing OAuth2 schema",
+    "username": "Username associated with DSN",
+    "password": "Password associated with DSN",
+    "route_match": "Literal route to match indicating where OAuth2 login/authorization exists"
+}
+```
+
+### `authorization`
+
+```JSON
+{
+    "Rest\Controller\Service\Name::__resource__": {
+        "GET": bool,
+        "POST": bool,
+        "PUT": bool,
+        "PATCH": bool,
+        "DELETE": bool
+    },
+    "Rest\Controller\Service\Name::__collection__": {
+        "GET": bool,
+        "POST": bool,
+        "PUT": bool,
+        "PATCH": bool,
+        "DELETE": bool
+    },
+    "Rpc\Controller\Service\Name::actionName": {
+        "GET": bool,
+        "POST": bool,
+        "PUT": bool,
+        "PATCH": bool,
+        "DELETE": bool
+    }
+}
+```
+
+REST services have an entry for each of their entity and collection instances.
+RPC services have an entry per action name that is exposed (this will typically
+only be one). Each service has a list of HTTP methods, with a flag. A `false`
+value indicates that no authorization is required; a `true` value indicates that
+authorization is required.
+
+> **Note**: If the `deny_by_default` flag is set in the application, then the
+> meaning of the flags is reversed; `true` then means the method is public,
+> `false` means it requires authentication.
+
+### `db-adapter`
+
+```JSON
+{
+    "adapter_name": "Service name for the DB adapter",
+    "database": "Name of the database",
+    "driver": "Driver used to make the connection"
+}
+```
+
+Additionally, any other properties used to create the `Zend\Db\Adapter\Adapter`
+instance may be composed: e.g., "username", "password", etc.
+
+### `inputfilter`
+
+```JSON
+{
+    "input_name": {
+        "name": "name of the input; should match key of object",
+        "validators": [
+            {
+                "name": "Name of validator service",
+                "options": {
+                    "key": "value pairs to specify behavior of validator"
+                }
+            }
+        ]
+    }
+}
+```
+
+An input filter may contain any number of inputs, and the format follows that
+used by `Zend\InputFilter\Factory` as described in the [Zend Framework 2 input filter documentation]
+(http://framework.zend.com/manual/2.3/en/modules/zend.input-filter.intro.html).
+
+Currently, we do not allow nesting input filters.
+
+### `module`
+
+```JSON
+{
+    "name": "normalized module name",
+    "namespace": "PHP namespace of the module",
+    "is_vendor": "boolean value indicating whether or not this is a vendor (3rd party) module",
+    "versions": [
+        "Array",
+        "of",
+        "available versions"
+    ]
+}
+```
+
+Additionally, the `module` resource composes relational links for [RPC](#rpc)
+and [REST](#rest) resources; these use the relations "rpc" and "rest",
+respectively.
+
+### `rpc`
+
+```JSON
+{
+    "controller_service_name": "name of the controller service; this is the identifier, and required",
+    "accept_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Accept",
+        "mediatypes"
+    ],
+    "content_type_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Content-Type",
+        "mediatypes"
+    ],
+    "http_options": [
+        "(Required)",
+        "List",
+        "of",
+        "allowed",
+        "Request methods"
+    ],
+    "input_filter": "(Optional) Present in returned RPC services, when one or more input filters are present; see the inputfilter resource for details",
+    "route_match": "(Required) String indicating Segment route to match",
+    "route_name": "(Only in representation) Name of route associated with endpoint",
+    "selector": "(Optional) Content-Negotiation selector to use; Json by default"
+}
+```
+
+### `rest`
+
+```JSON
+{
+    "controller_service_name": "name of the controller service; this is the identifier, and required",
+    "accept_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Accept",
+        "mediatypes"
+    ],
+    "adapter_name": "(Only in DB-Connected resources) Name of Zend\\DB adapter service used for this resource",
+    "collection_class": "(Only in representation) Name of class representing collection",
+    "collection_http_options": [
+        "(Required)",
+        "List",
+        "of",
+        "allowed",
+        "Request methods",
+        "on collections"
+    ],
+    "collection_query_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "query string parameters",
+        "to pass to resource for collections"
+    ],
+    "content_type_whitelist": [
+        "(Optional)",
+        "List",
+        "of",
+        "whitelisted",
+        "Content-Type",
+        "mediatypes"
+    ],
+    "entity_class": "(Only in representation) Name of class representing resource entity",
+    "entity_identifier_name": "(Optional) Name of entity field representing the identifier; defaults to 'id'",
+    "hydrator_name": "(Only in DB-Connected resources) Name of Zend\\Stdlib\\Hydrator service used for this resource",
+    "route_identifier_name": "(Optional) Name of route parameter representing the resource identifier; defaults to resource_name + _id",
+    "input_filter": "(Optional) Present in returned REST services, when one or more input filters are present; see the inputfilter resource for details",
+    "module": "(Only in representation) Name of module in which resource resides",
+    "page_size": "(Optional) Integer representing number of entities to return in a given page in a collection; defaults to 25",
+    "page_size_param": "(Optional) Name of query string parameter used for pagination; defaults to 'page'",
+    "resource_class": "(Only in representation) Name of class representing resource handling operations",
+    "resource_http_options": [
+        "(Required)",
+        "List",
+        "of",
+        "allowed",
+        "Request methods",
+        "on individual resources"
+    ],
+    "route_match": "(Optional) String indicating Segment route to match; defaults to /resource_name[/:route_identifier_name]",
+    "route_name": "(Only in representation) Name of route associated with api service",
+    "selector": "(Optional) Content-Negotiation selector to use; HalJson by default",
+    "table_name": "(Only in DB-Connected resources) Name of database table used for this resource",
+    "table_service": "(Only in DB-Connected resources) Name of TableGateway service used for this resource"
+}
+```
+
 ZF2 Events
 ----------
 
