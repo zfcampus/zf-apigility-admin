@@ -49,6 +49,10 @@ module.exports = function(grunt) {
                     '<%= yeoman.app %>/{,**/}*.html',
                     '<%= yeoman.app %>/css/{,**/}*.css'
                 ]
+            },
+            html2js: {
+            files: ['<%= yeoman.app %>/html/{,**/}*.html'],
+                tasks: ['html2js']
             }
         },
 
@@ -56,7 +60,10 @@ module.exports = function(grunt) {
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
-                reporter: require('jshint-stylish')
+                reporter: require('jshint-stylish'),
+                ignores: [
+                  '<%= yeoman.app %>/js/templates.js'
+                ],
             },
             all: [
                 'Gruntfile.js',
@@ -206,7 +213,18 @@ module.exports = function(grunt) {
                 configFile: 'karma.conf.js',
                 singleRun: true
             }
-        }
+        },
+
+        //Collect all html views into single template
+        html2js: {
+          options: {
+            base: '<%= yeoman.app %>'
+          },
+          main: {
+            src: ['<%= yeoman.app %>/html/**/*.html'],
+            dest: '<%= yeoman.app %>/js/templates.js'
+          },
+        },
     });
 
     grunt.registerTask('monkeyPatches', function () {
@@ -238,6 +256,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'html2js',
         'useminPrepare',
         'concurrent:dist',
         'concat',

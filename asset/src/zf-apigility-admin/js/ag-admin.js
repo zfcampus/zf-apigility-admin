@@ -13,7 +13,8 @@
     'angular-flash.flash-alert-directive',
     'ui.sortable',
     'ui.select2',
-    'toggle-switch'
+    'toggle-switch',
+    'templates-main'
   ]).config(
     function($provide, $stateProvider, $urlRouterProvider) {
       // setup the API Base Path (this should come from initial ui load/php)
