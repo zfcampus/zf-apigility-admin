@@ -11,6 +11,7 @@ angular.module('ag-admin').controller(
     $scope.ApiRepository     = ApiRepository; // used in child controller (input filters)
     $scope.flash             = flash;
     $scope.api               = api;
+    $scope.version           = $stateParams.version;
     $scope.dbAdapters        = dbAdapters;
     $scope.filterOptions     = filters;
     $scope.hydrators         = hydrators;
