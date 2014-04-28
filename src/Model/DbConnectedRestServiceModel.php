@@ -53,6 +53,12 @@ class DbConnectedRestServiceModel
 
         $dbConnectedEntity = new DbConnectedRestServiceEntity();
         $dbConnectedEntity->exchangeArray(array_merge($entity->getArrayCopy(), $config));
+
+        // If no override resource class is present, remove it from the returned entity
+        if (! isset($config['resource_class'])) {
+            $dbConnectedEntity->exchangeArray(array('resource_class' => null));
+        }
+
         return $dbConnectedEntity;
     }
 
