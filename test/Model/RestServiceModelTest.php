@@ -46,7 +46,7 @@ class RestServiceModelTest extends TestCase
     {
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
-        foreach (glob($basePath . '/src/BarConf/V*') as $dir) {
+        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
             $this->removeDir($dir);
         }
         copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');

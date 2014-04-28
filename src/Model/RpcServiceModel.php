@@ -208,9 +208,13 @@ class RpcServiceModel
         $serviceName = $entity->controllerServiceName;
         $routeName   = $entity->routeName;
 
-        $this->deleteRouteConfig($routeName);
+        $this->deleteRouteConfig($routeName, $serviceName);
         $this->deleteRpcConfig($serviceName);
         $this->deleteContentNegotiationConfig($serviceName);
+        $this->deleteContentValidationConfig($serviceName);
+        $this->deleteVersioningConfig($routeName, $serviceName);
+        $this->deleteAuthorizationConfig($serviceName);
+        $this->deleteControllersConfig($serviceName);
         return true;
     }
 
@@ -466,11 +470,65 @@ class RpcServiceModel
      * Removes the route configuration for a named route
      *
      * @param  string $routeName
+     * @param  string $serviceName
      */
-    public function deleteRouteConfig($routeName)
+    public function deleteRouteConfig($routeName, $serviceName)
     {
+        if (false === strstr($serviceName, '\\V1\\')) {
+            // > V1; nothing to do
+            return;
+        }
+
         $key = array('router', 'routes', $routeName);
         $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete any versionin configuration for a service
+     *
+     * Only for version 1; later versions will do nothing
+     * 
+     * @param  string $routeName 
+     * @param  string $serviceName 
+     */
+    public function deleteVersioningConfig($routeName, $serviceName)
+    {
+        if (false === strstr($serviceName, '\\V1\\')) {
+            // > V1; nothing to do
+            return;
+        }
+
+        $config = $this->configResource->fetch(true);
+        if (! isset($config['zf-versioning']['uri'])) {
+            return;
+        }
+
+        if (! in_array($routeName, $config['zf-versioning']['uri'], true)) {
+            return;
+        }
+
+        $versioning = array_filter($config['zf-versioning']['uri'], function ($value) use ($routeName){
+            if ($routeName === $value) {
+                return false;
+            }
+            return true;
+        });
+
+        $key = array('zf-versioning', 'uri');
+        $this->configResource->patchKey($key, $versioning);
+    }
+
+    /**
+     * Remove any controller service configuration for a service
+     * 
+     * @param  string $serviceName 
+     */
+    public function deleteControllersConfig($serviceName)
+    {
+        foreach (array('invokables', 'factories') as $serviceType) {
+            $key = array('controllers', $serviceType, $serviceName);
+            $this->configResource->deleteKey($key);
+        }
     }
 
     /**
@@ -499,6 +557,28 @@ class RpcServiceModel
         $this->configResource->deleteKey($key);
 
         $key = array('zf-content-negotiation', 'content_type_whitelist', $serviceName);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete content-validation configuration associated with a service
+     * 
+     * @param  string $serviceName 
+     */
+    public function deleteContentValidationConfig($serviceName)
+    {
+        $key = array('zf-content-validation', $serviceName);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete authorization configuration associated with a service
+     * 
+     * @param  string $serviceName 
+     */
+    public function deleteAuthorizationConfig($serviceName)
+    {
+        $key = array('zf-mvc-auth', 'authorization', $serviceName);
         $this->configResource->deleteKey($key);
     }
 
