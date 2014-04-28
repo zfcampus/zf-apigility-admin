@@ -14,7 +14,7 @@
             <td><button data-doclink="{{restService.entity_class}}" class="btn-link" ng-click="getSourceCode(restService.entity_class, 'Entity')">{{ restService.entity_class }}.php</button></td>
         </tr>
 
-        <tr ng-hide="service.adapter_name">
+        <tr ng-show="restService.resource_class">
             <td>Resource Class</td>
             <td><button data-doclink="{{restService.resource_class}}" class="btn-link" ng-click="getSourceCode(restService.resource_class, 'Resource')">{{ restService.resource_class }}.php</button></td>
         </tr>
