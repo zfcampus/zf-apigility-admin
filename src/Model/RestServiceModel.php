@@ -351,6 +351,12 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $this->deleteRoute($service);
         $this->deleteRestConfig($service);
+        $this->deleteContentNegotiationConfig($service);
+        $this->deleteContentValidationConfig($service);
+        $this->deleteHalConfig($service);
+        $this->deleteAuthorizationConfig($service);
+        $this->deleteVersioningConfig($service);
+        $this->deleteServiceManagerConfig($service);
         return true;
     }
 
@@ -848,6 +854,12 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function deleteRoute(RestServiceEntity $entity)
     {
+        $serviceName = $entity->controllerServiceName;
+        if (false === strstr($serviceName, '\\V1\\')) {
+            // service > v1; do not delete route
+            return;
+        }
+
         $route = $entity->routeName;
         $key   = array('router', 'routes', $route);
         $this->configResource->deleteKey($key);
@@ -864,6 +876,116 @@ class RestServiceModel implements EventManagerAwareInterface
         $controllerService = $entity->controllerServiceName;
         $key = array('zf-rest', $controllerService);
         $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete content-negotiation configuration associated with a service
+     * 
+     * @param  RestServiceEntity $entity 
+     */
+    public function deleteContentNegotiationConfig(RestServiceEntity $entity)
+    {
+        $controller = $entity->controllerServiceName;
+
+        $key = array('zf-content-negotiation', 'controllers', $controller);
+        $this->configResource->deleteKey($key);
+
+        $key[1] = 'accept_whitelist';
+        $this->configResource->deleteKey($key);
+
+        $key[1] = 'content_type_whitelist';
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete content-validation configuration associated with a service
+     * 
+     * @param  RestServiceEntity $entity 
+     */
+    public function deleteContentValidationConfig(RestServiceEntity $entity)
+    {
+        $controllerService = $entity->controllerServiceName;
+        $key = array('zf-content-validation', $controllerService);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete HAL configuration for the service
+     * 
+     * @param  RestServiceEntity $entity 
+     */
+    public function deleteHalConfig(RestServiceEntity $entity)
+    {
+        $key = array('zf-hal', 'metadata_map');
+        $entityClass = $entity->entityClass;
+        array_push($key, $entityClass);
+        $this->configResource->deleteKey($key);
+
+        $collectionClass = $entity->collectionClass;
+        $key[2] = $collectionClass;
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete any authorization configuration for a service
+     * 
+     * @param  RestServiceEntity $entity 
+     */
+    public function deleteAuthorizationConfig(RestServiceEntity $entity)
+    {
+        $controllerService = $entity->controllerServiceName;
+        $key = array('zf-mvc-auth', 'authorization', $controllerService);
+        $this->configResource->deleteKey($key);
+    }
+
+    /**
+     * Delete versioning configuration for a service
+     *
+     * Removes the route name from zf-versioning.
+     * 
+     * @param  RestServiceEntity $entity 
+     */
+    public function deleteVersioningConfig(RestServiceEntity $entity)
+    {
+        $serviceName = $entity->controllerServiceName;
+        if (false === strstr($serviceName, '\\V1\\')) {
+            // service > v1; do not delete route
+            return;
+        }
+
+        $config = $this->configResource->fetch(true);
+        if (! isset($config['zf-versioning']['uri'])) {
+            return;
+        }
+
+        $route = $entity->routeName;
+        if (! in_array($route, $config['zf-versioning']['uri'], true)) {
+            return;
+        }
+
+        $versioning = array_filter($config['zf-versioning']['uri'], function ($value) use ($route){
+            if ($route === $value) {
+                return false;
+            }
+            return true;
+        });
+
+        $key = array('zf-versioning', 'uri');
+        $this->configResource->patchKey($key, $versioning);
+    }
+
+    /**
+     * Delete any service manager configuration for the resource
+     * 
+     * @param  RestServiceEntity $entity 
+     */
+    public function deleteServiceManagerConfig(RestServiceEntity $entity)
+    {
+        $resourceClass = $entity->resourceClass;
+        foreach (array('invokables', 'factories') as $serviceType) {
+            $key = array('service_manager', $serviceType, $resourceClass);
+            $this->configResource->deleteKey($key);
+        }
     }
 
     /**
