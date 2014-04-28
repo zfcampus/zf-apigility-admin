@@ -487,9 +487,9 @@ class RpcServiceModel
      * Delete any versionin configuration for a service
      *
      * Only for version 1; later versions will do nothing
-     * 
-     * @param  string $routeName 
-     * @param  string $serviceName 
+     *
+     * @param  string $routeName
+     * @param  string $serviceName
      */
     public function deleteVersioningConfig($routeName, $serviceName)
     {
@@ -507,7 +507,7 @@ class RpcServiceModel
             return;
         }
 
-        $versioning = array_filter($config['zf-versioning']['uri'], function ($value) use ($routeName){
+        $versioning = array_filter($config['zf-versioning']['uri'], function ($value) use ($routeName) {
             if ($routeName === $value) {
                 return false;
             }
@@ -520,8 +520,8 @@ class RpcServiceModel
 
     /**
      * Remove any controller service configuration for a service
-     * 
-     * @param  string $serviceName 
+     *
+     * @param  string $serviceName
      */
     public function deleteControllersConfig($serviceName)
     {
@@ -562,8 +562,8 @@ class RpcServiceModel
 
     /**
      * Delete content-validation configuration associated with a service
-     * 
-     * @param  string $serviceName 
+     *
+     * @param  string $serviceName
      */
     public function deleteContentValidationConfig($serviceName)
     {
@@ -573,8 +573,8 @@ class RpcServiceModel
 
     /**
      * Delete authorization configuration associated with a service
-     * 
-     * @param  string $serviceName 
+     *
+     * @param  string $serviceName
      */
     public function deleteAuthorizationConfig($serviceName)
     {

@@ -880,8 +880,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * Delete content-negotiation configuration associated with a service
-     * 
-     * @param  RestServiceEntity $entity 
+     *
+     * @param  RestServiceEntity $entity
      */
     public function deleteContentNegotiationConfig(RestServiceEntity $entity)
     {
@@ -899,8 +899,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * Delete content-validation configuration associated with a service
-     * 
-     * @param  RestServiceEntity $entity 
+     *
+     * @param  RestServiceEntity $entity
      */
     public function deleteContentValidationConfig(RestServiceEntity $entity)
     {
@@ -911,8 +911,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * Delete HAL configuration for the service
-     * 
-     * @param  RestServiceEntity $entity 
+     *
+     * @param  RestServiceEntity $entity
      */
     public function deleteHalConfig(RestServiceEntity $entity)
     {
@@ -928,8 +928,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * Delete any authorization configuration for a service
-     * 
-     * @param  RestServiceEntity $entity 
+     *
+     * @param  RestServiceEntity $entity
      */
     public function deleteAuthorizationConfig(RestServiceEntity $entity)
     {
@@ -942,8 +942,8 @@ class RestServiceModel implements EventManagerAwareInterface
      * Delete versioning configuration for a service
      *
      * Removes the route name from zf-versioning.
-     * 
-     * @param  RestServiceEntity $entity 
+     *
+     * @param  RestServiceEntity $entity
      */
     public function deleteVersioningConfig(RestServiceEntity $entity)
     {
@@ -963,7 +963,7 @@ class RestServiceModel implements EventManagerAwareInterface
             return;
         }
 
-        $versioning = array_filter($config['zf-versioning']['uri'], function ($value) use ($route){
+        $versioning = array_filter($config['zf-versioning']['uri'], function ($value) use ($route) {
             if ($route === $value) {
                 return false;
             }
@@ -976,8 +976,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * Delete any service manager configuration for the resource
-     * 
-     * @param  RestServiceEntity $entity 
+     *
+     * @param  RestServiceEntity $entity
      */
     public function deleteServiceManagerConfig(RestServiceEntity $entity)
     {
