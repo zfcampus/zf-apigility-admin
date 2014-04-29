@@ -221,7 +221,13 @@ class RpcServiceModel
 
         if ($recursive) {
             $className = substr($entity->controllerServiceName, 0, strrpos($entity->controllerServiceName, '\\')) . 
-                         '\\' . $entity->serviceName . 'Controller';
+                '\\' . $entity->serviceName . 'Controller';
+            if (!class_exists($className)) {
+                throw new Exception\RuntimeException(sprintf(
+                    'I cannot determine the class name, tried with "%s"',
+                    $className
+                ), 400);
+            }
             $reflection = new ReflectionClass($className);
             Utility::recursiveDelete(dirname($reflection->getFileName()));
         }

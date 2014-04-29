@@ -304,7 +304,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->model->deleteService($originalEntity, true);
 
         $barbazPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Barbaz';
-        $this->assertTrue(!file_exists($barbazPath));
+        $this->assertFalse(file_exists($barbazPath));
     }
 
     public function testCreateServiceWithUnderscoreInNameNormalizesClassNamesToCamelCase()
