@@ -12,6 +12,7 @@ use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\RpcServiceModel;
+use ZF\Apigility\Admin\Model\VersioningModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -43,9 +44,8 @@ class RpcServiceModelTest extends TestCase
     {
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
-        $srcPath    = $basePath . '/src';
-        if (is_dir($srcPath)) {
-            $this->removeDir($srcPath);
+        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
+            $this->removeDir($dir);
         }
         copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
     }
@@ -426,9 +426,53 @@ class RpcServiceModelTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
 
+        $this->assertInternalType('array', $config);
+        $this->assertInternalType('array', $config['zf-rpc']);
+        $this->assertInternalType('array', $config['zf-versioning']);
+        $this->assertInternalType('array', $config['router']['routes']);
+        $this->assertInternalType('array', $config['zf-content-negotiation']);
+        $this->assertInternalType('array', $config['controllers']);
+
         $this->assertArrayNotHasKey($result->routeName, $config['router']['routes']);
         $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-rpc']);
         $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-content-negotiation']['controllers']);
+        $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-content-negotiation']['accept_whitelist']);
+        $this->assertArrayNotHasKey($result->controllerServiceName, $config['zf-content-negotiation']['content_type_whitelist']);
+        $this->assertNotContains($result->routeName, $config['zf-versioning']['uri']);
+        foreach ($config['controllers'] as $serviceType => $services) {
+            $this->assertArrayNotHasKey($result->controllerServiceName, $services);
+        }
+    }
+
+    /**
+     * @depends testDeleteServiceRemovesExpectedConfigurationElements
+     */
+    public function testDeletingNewerVersionOfServiceDoesNotRemoveRouteOrVersioningConfiguration()
+    {
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        $path = __DIR__ . '/TestAsset/module/FooConf';
+        $versioningModel = new VersioningModel($this->resource->factory('FooConf'));
+        $this->assertTrue($versioningModel->createVersion('FooConf', 2));
+
+        $serviceName = str_replace('1', '2', $result->controllerServiceName);
+        $service = $this->codeRpc->fetch($serviceName);
+        $this->assertTrue($this->codeRpc->deleteService($service));
+
+        $config = include($path . '/config/module.config.php');
+        $this->assertInternalType('array', $config);
+        $this->assertInternalType('array', $config['zf-versioning']);
+        $this->assertInternalType('array', $config['router']['routes']);
+
+        $this->assertArrayHasKey($result->controllerServiceName, $config['zf-rpc']);
+        $this->assertArrayNotHasKey($serviceName, $config['zf-rpc']);
+        $this->assertArrayHasKey($result->routeName, $config['router']['routes'], 'Route DELETED');
+        $this->assertContains($result->routeName, $config['zf-versioning']['uri'], 'Versioning DELETED');
     }
 
     /**
