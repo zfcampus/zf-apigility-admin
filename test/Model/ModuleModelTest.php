@@ -175,7 +175,7 @@ class ModuleModelTest extends TestCase
     public function testCreateModule()
     {
         $module     = 'Foo';
-        $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
         mkdir("$modulePath/module", 0777, true);
         mkdir("$modulePath/config", 0777, true);
@@ -195,12 +195,57 @@ class ModuleModelTest extends TestCase
     }
 
     /**
+     * @depends testCreateModule
+     */
+    public function testDeleteModule()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+
+        mkdir("$modulePath/module", 0777, true);
+        mkdir("$modulePath/config", 0777, true);
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array("modules" => array());');
+        $this->assertTrue($this->model->createModule($module, $modulePath));
+        $config = include $modulePath . '/config/application.config.php';
+        $this->assertArrayHasKey('modules', $config, var_export($config, 1));
+
+        // Now try and delete
+        $this->assertTrue($this->model->deleteModule($module, $modulePath, false));
+
+        $config = include $modulePath . '/config/application.config.php';
+        $this->assertArrayHasKey('modules', $config, var_export($config, 1));
+        $this->assertNotContains($module, $config['modules']);
+        $this->assertTrue(file_exists(sprintf('%s/module/%s', $modulePath, $module)));
+
+        $this->removeDir($modulePath);
+        return true;
+    }
+
+    /**
+     * @depends testCreateModule
+     */
+    public function testDeleteModuleRecursively()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+
+        mkdir("$modulePath/module", 0777, true);
+        mkdir("$modulePath/config", 0777, true);
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array("modules" => array());');
+        $this->assertTrue($this->model->createModule($module, $modulePath));
+
+        // Now try and delete
+        $this->assertTrue($this->model->deleteModule($module, $modulePath, true));
+        $this->assertFalse(file_exists(sprintf('%s/module/%s', $modulePath, $module)), shell_exec('tree ' . $modulePath));
+    }
+
+    /**
      * @group 22
      */
     public function testReturnFalseWhenTryingToCreateAModuleThatAlreadyExistsInConfiguration()
     {
         $module     = 'Foo';
-        $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
         mkdir("$modulePath/module", 0777, true);
         mkdir("$modulePath/config", 0777, true);
@@ -315,7 +360,7 @@ class ModuleModelTest extends TestCase
     public function testAttemptingToCreateModuleThatAlreadyExistsRaises409Exception()
     {
         $module = 'Foo';
-        $this->modulePath = $modulePath = sys_get_temp_dir() . "/" . uniqid(__NAMESPACE__ . '_');
+        $this->modulePath = $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
         mkdir("$modulePath/module", 0777, true);
         mkdir("$modulePath/config", 0777, true);

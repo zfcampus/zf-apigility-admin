@@ -14,6 +14,7 @@ use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\NewRestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
+use ZF\Apigility\Admin\Model\VersioningModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -45,9 +46,8 @@ class RestServiceModelTest extends TestCase
     {
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
-        $srcPath    = $basePath . '/src';
-        if (is_dir($srcPath)) {
-            $this->removeDir($srcPath);
+        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
+            $this->removeDir($dir);
         }
         copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
     }
@@ -631,6 +631,65 @@ class RestServiceModelTest extends TestCase
 
         $this->setExpectedException('ZF\Apigility\Admin\Exception\RuntimeException', 'find', 404);
         $this->codeRest->fetch($service->controllerServiceName);
+    }
+
+    /**
+     * @depends testCanDeleteAService
+     */
+    public function testDeletingAServiceRemovesAllRelatedConfigKeys()
+    {
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName));
+        $path = __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $config = include($path);
+        $this->assertInternalType('array', $config);
+        $this->assertInternalType('array', $config['zf-rest']);
+        $this->assertInternalType('array', $config['zf-versioning']);
+        $this->assertInternalType('array', $config['router']['routes']);
+        $this->assertInternalType('array', $config['zf-content-negotiation']);
+        $this->assertInternalType('array', $config['service_manager']);
+        $this->assertInternalType('array', $config['zf-hal']);
+
+        $this->assertArrayNotHasKey('BarConf\V1\Rest\Foo\Controller', $config['zf-rest'], 'REST entry not deleted');
+        $this->assertArrayNotHasKey('bar-conf.rest.foo', $config['router']['routes'], 'Route not deleted');
+        $this->assertNotContains('bar-conf.rest.foo', $config['zf-versioning']['uri'], 'Versioning not deleted');
+        $this->assertArrayNotHasKey('BarConf\\V1\\Rest\\Foo\\Controller', $config['zf-content-negotiation']['controllers'], 'Content Negotiation controllers entry not deleted');
+        $this->assertArrayNotHasKey('BarConf\V1\Rest\Foo\Controller', $config['zf-content-negotiation']['accept_whitelist'], 'Content Negotiation accept whitelist entry not deleted');
+        $this->assertArrayNotHasKey('BarConf\V1\Rest\Foo\Controller', $config['zf-content-negotiation']['content_type_whitelist'], 'Content Negotiation content-type whitelist entry not deleted');
+        foreach ($config['service_manager'] as $serviceType => $services) {
+            $this->assertArrayNotHasKey('BarConf\V1\Rest\Foo\FooResource', $services, 'Service entry not deleted');
+        }
+        $this->assertArrayNotHasKey('BarConf\V1\Rest\Foo\FooEntity', $config['zf-hal']['metadata_map'], 'HAL entity not deleted');
+        $this->assertArrayNotHasKey('BarConf\V1\Rest\Foo\FooCollection', $config['zf-hal']['metadata_map'], 'HAL collection not deleted');
+    }
+
+    /**
+     * @depends testDeletingAServiceRemovesAllRelatedConfigKeys
+     */
+    public function testDeletingNewerVersionOfServiceDoesNotRemoveRouteOrVersioningConfiguration()
+    {
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $path = __DIR__ . '/TestAsset/module/BarConf';
+        $versioningModel = new VersioningModel($this->resource->factory('BarConf'));
+        $this->assertTrue($versioningModel->createVersion('BarConf', 2));
+
+        $serviceName = str_replace('1', '2', $service->controllerServiceName);
+        $service = $this->codeRest->fetch($serviceName);
+        $this->assertTrue($this->codeRest->deleteService($serviceName));
+
+        $config = include($path . '/config/module.config.php');
+        $this->assertInternalType('array', $config);
+        $this->assertInternalType('array', $config['zf-versioning']);
+        $this->assertInternalType('array', $config['router']['routes']);
+
+        $this->assertArrayHasKey('BarConf\V1\Rest\Foo\Controller', $config['zf-rest']);
+        $this->assertArrayNotHasKey('BarConf\V2\Rest\Foo\Controller', $config['zf-rest']);
+        $this->assertArrayHasKey('bar-conf.rest.foo', $config['router']['routes'], 'Route DELETED');
+        $this->assertContains('bar-conf.rest.foo', $config['zf-versioning']['uri'], 'Versioning DELETED');
     }
 
     /**

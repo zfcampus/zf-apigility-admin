@@ -376,16 +376,19 @@ class Module
 
     protected function injectModuleResourceRelationalLinks(Model\ModuleEntity $module, $links, HalJsonModel $model)
     {
-        $moduleName = $module['name'];
+        $moduleData = $module->getArrayCopy();
+        $moduleName = $moduleData['name'];
 
         $this->injectLinksForServicesByType('authorization', array(), $links, $moduleName);
 
-        $this->injectLinksForServicesByType('rest', $module['rest'], $links, $moduleName);
-        unset($module['rest']);
+        $this->injectLinksForServicesByType('rest', $moduleData['rest'], $links, $moduleName);
+        unset($moduleData['rest']);
 
-        $this->injectLinksForServicesByType('rpc', $module['rpc'], $links, $moduleName);
-        unset($module['rpc']);
+        $this->injectLinksForServicesByType('rpc', $moduleData['rpc'], $links, $moduleName);
+        unset($moduleData['rpc']);
 
+        $module = new Model\ModuleEntity($module->getNamespace(), array(), array(), $module->isVendor());
+        $module->exchangeArray($moduleData);
         $replacement = new Entity($module, $moduleName);
         $replacement->setLinks($links);
         $model->setPayload($replacement);

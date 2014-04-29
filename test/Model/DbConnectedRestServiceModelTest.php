@@ -48,8 +48,8 @@ class DbConnectedRestServiceModelTest extends TestCase
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
         $srcPath    = $basePath . '/src';
-        if (is_dir($srcPath)) {
-            $this->removeDir($srcPath);
+        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
+            $this->removeDir($dir);
         }
         copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
     }
@@ -216,6 +216,10 @@ class DbConnectedRestServiceModelTest extends TestCase
         $asArray = $result->getArrayCopy();
         foreach ($originalData as $key => $value) {
             $this->assertArrayHasKey($key, $asArray);
+            if ($key === 'resource_class') {
+                $this->assertNull($asArray[$key], sprintf("Failed asserting that resource_class is null\nEntity is: %s\n", var_export($asArray, 1)));
+                continue;
+            }
             $this->assertEquals($value, $asArray[$key], sprintf("Failed testing key '%s'\nEntity is: %s\n", $key, var_export($asArray, 1)));
         }
         foreach ($config['zf-apigility']['db-connected']['BarConf\Rest\Barbaz\BarbazResource'] as $key => $value) {
@@ -259,12 +263,14 @@ class DbConnectedRestServiceModelTest extends TestCase
         $originalEntity->exchangeArray($newProps);
         $result = $this->model->updateService($originalEntity);
 
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity', $result);
+
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
         $this->assertArrayHasKey('zf-apigility', $config);
         $this->assertArrayHasKey('db-connected', $config['zf-apigility']);
-        $this->assertArrayHasKey($result->resourceClass, $config['zf-apigility']['db-connected']);
+        $this->assertArrayHasKey('BarConf\V1\Rest\Barbaz\BarbazResource', $config['zf-apigility']['db-connected']);
 
-        $resourceConfig = $config['zf-apigility']['db-connected'][$result->resourceClass];
+        $resourceConfig = $config['zf-apigility']['db-connected']['BarConf\V1\Rest\Barbaz\BarbazResource'];
         $this->assertArrayHasKey('adapter_name', $resourceConfig);
         $this->assertArrayHasKey('table_service', $resourceConfig);
         $this->assertArrayHasKey('table_name', $resourceConfig);
