@@ -210,7 +210,7 @@ EOD;
 
         $replacement = preg_replace(
             '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
-            "use ZF\Apigility\Provider\ApigilityProviderInterface;\n\nclass $1 implements ApigilityProviderInterface\n{",
+            "\nuse ZF\Apigility\Provider\ApigilityProviderInterface;\n\nclass $1 implements ApigilityProviderInterface\n{",
             $content
         );
 
@@ -325,7 +325,6 @@ EOD;
      * @return array
      */
     protected function getVersionsByModule($moduleName, $module)
-
     {
         if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
             throw new Exception\InvalidArgumentException(
@@ -346,7 +345,7 @@ EOD;
             $path = sprintf('%s/src/%s', $path, str_replace('\\', '/', $moduleName));
         }
         if (!file_exists($path)) {
-            return array();
+            return array(1);
         }
 
         $versions  = array();

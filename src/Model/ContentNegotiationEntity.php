@@ -36,7 +36,7 @@ class ContentNegotiationEntity
     {
         $this->config = array();
         foreach ($array as $key => $value) {
-            switch(strtolower($key)) {
+            switch (strtolower($key)) {
                 case 'content_name':
                     $this->name = $value;
                     break;

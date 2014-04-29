@@ -303,7 +303,7 @@ class AuthenticationModel
             $this->globalConfig->patchKey('router.routes.oauth.options.route', $global['route_match']);
         }
 
-        switch($entity->getDsnType()) {
+        switch ($entity->getDsnType()) {
             case AuthenticationEntity::DSN_MONGO:
                 $toSet = array(
                     'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',

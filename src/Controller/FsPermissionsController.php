@@ -16,7 +16,7 @@ class FsPermissionsController extends AbstractActionController
 {
     /**
      * Path to the root directory
-     * 
+     *
      * @var string
      */
     protected $root;
@@ -46,7 +46,7 @@ class FsPermissionsController extends AbstractActionController
 
     /**
      * Is the application root writable?
-     * 
+     *
      * @return bool
      */
     protected function rootIsWritable()
@@ -61,7 +61,7 @@ class FsPermissionsController extends AbstractActionController
 
     /**
      * Are the config and config/autoload directories writable?
-     * 
+     *
      * @return bool
      */
     protected function configIsWritable()
@@ -80,7 +80,7 @@ class FsPermissionsController extends AbstractActionController
 
     /**
      * Is the module directory writable?
-     * 
+     *
      * @return bool
      */
     protected function moduleIsWritable()

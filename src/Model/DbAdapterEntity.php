@@ -35,7 +35,7 @@ class DbAdapterEntity
     {
         $this->config = array();
         foreach ($array as $key => $value) {
-            switch(strtolower($key)) {
+            switch (strtolower($key)) {
                 case 'adapter_name':
                     $this->name = $value;
                     break;
