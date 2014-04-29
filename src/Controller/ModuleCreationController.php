@@ -11,7 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\View\ApiProblemModel;
+use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
@@ -34,13 +34,17 @@ class ModuleCreationController extends AbstractActionController
             case $request::METHOD_PUT:
                 $module = $this->bodyParam('module', false);
                 if (!$module) {
-                    return new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity');
+                    return new ApiProblemResponse(
+                        new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                    );
                 }
 
                 $result = $this->moduleModel->updateModule($module);
 
                 if (!$result) {
-                    return new ApiProblem(500, 'Unable to Apigilify the module');
+                    return new ApiProblemResponse(
+                        new ApiProblem(500, 'Unable to Apigilify the module')
+                    );
                 }
 
                 $metadata = new ModuleEntity($module);
@@ -57,7 +61,7 @@ class ModuleCreationController extends AbstractActionController
                 return $model;
 
             default:
-                return new ApiProblemModel(
+                return new ApiProblemResponse(
                     new ApiProblem(405, 'Only the method PUT is allowed for this URI')
                 );
         }

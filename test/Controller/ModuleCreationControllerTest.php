@@ -37,13 +37,13 @@ class ModuleCreationControllerTest extends TestCase
     /**
      * @dataProvider invalidRequestMethods
      */
-    public function testProcessWithInvalidRequestMethodReturnsApiProblemModel($method)
+    public function testProcessWithInvalidRequestMethodReturnsApiProblemResponse($method)
     {
         $request = new Request();
         $request->setMethod($method);
         $this->controller->setRequest($request);
         $result = $this->controller->apiEnableAction();
-        $this->assertInstanceOf('ZF\ApiProblem\View\ApiProblemModel', $result);
+        $this->assertInstanceOf('ZF\ApiProblem\ApiProblemResponse', $result);
         $apiProblem = $result->getApiProblem();
         $this->assertEquals(405, $apiProblem->status);
     }
