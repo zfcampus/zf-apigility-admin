@@ -354,6 +354,11 @@ EOD;
                 $versions[] = (int) $matches['version'];
             }
         }
+
+        if (empty($versions)) {
+            return array(1);
+        }
+
         sort($versions);
         return $versions;
     }
