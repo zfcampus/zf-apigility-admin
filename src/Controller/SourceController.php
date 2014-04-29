@@ -89,7 +89,7 @@ class SourceController extends AbstractActionController
         $lineCount = count($lines);
         $padLength = strlen($lineCount);
         $code      = '<code><span style="color: #000000">';
-        foreach($lines as $i => $line) {
+        foreach ($lines as $i => $line) {
             $lineNumber = str_pad($i + 1,  $padLength, '0', STR_PAD_LEFT);
             $code .= sprintf('<br /><span style="color: #999999">%s  </span>%s', $lineNumber, $line);
         }

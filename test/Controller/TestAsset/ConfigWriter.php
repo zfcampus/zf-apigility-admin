@@ -6,7 +6,6 @@
 
 namespace ZFTest\Apigility\Admin\Controller\TestAsset;
 
-use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as BaseWriter;
 
 class ConfigWriter extends BaseWriter

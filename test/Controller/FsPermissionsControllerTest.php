@@ -10,7 +10,6 @@ use FilesystemIterator;
 use PHPUnit_Framework_TestCase as TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Zend\Http\Request;
 use ZF\Apigility\Admin\Controller\FsPermissionsController;
 
 class FsPermissionsControllerTest extends TestCase
@@ -33,7 +32,7 @@ class FsPermissionsControllerTest extends TestCase
 
     public function removeDir($directory)
     {
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
             $path->isFile() ? unlink($path->getPathname()) : rmdir($path->getPathname());
         }
         rmdir($directory);

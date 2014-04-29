@@ -141,7 +141,7 @@ class VersioningModel
             $previous,
             $nsSep
         );
-        while(false !== ( $file = readdir($dir)) ) {
+        while (false !== ( $file = readdir($dir)) ) {
             if (($file == '.') || ($file == '..')) {
                 continue;
             }
@@ -214,7 +214,7 @@ class VersioningModel
 
                     // change version in mediatype
                     if (in_array($key, array('accept_whitelist', 'content_type_whitelist'))) {
-                        foreach ($newValues as $k => $v){
+                        foreach ($newValues as $k => $v) {
                             foreach ($v as $index => $mediatype) {
                                 if (strstr($mediatype, '.v' . $previous . '+')) {
                                     $newValues[$k][$index] = 'application/vnd.' . $this->getModuleNameFilter()->filter($module) . '.v' . $version . '+json';
