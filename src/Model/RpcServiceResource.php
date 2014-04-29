@@ -265,7 +265,10 @@ class RpcServiceResource extends AbstractResourceListener
         if ($entity instanceof ApiProblem) {
             return $entity;
         }
-        return $this->getModel()->deleteService($entity);
+        $request   = $this->getEvent()->getRequest();
+        $recursive = $request->getQuery('recursive', false);
+
+        return $this->getModel()->deleteService($entity, $recursive);
     }
 
     /**

@@ -289,9 +289,22 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->model->deleteService($originalEntity);
 
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $barbazPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Barbaz';
+
+        $this->assertTrue(file_exists($barbazPath));
         $this->assertArrayHasKey('zf-apigility', $config);
         $this->assertArrayHasKey('db-connected', $config['zf-apigility']);
         $this->assertArrayNotHasKey($originalEntity->resourceClass, $config['zf-apigility']['db-connected']);
+    }
+
+    public function testDeleteServiceRecursive()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $this->model->createService($originalEntity);
+        $this->model->deleteService($originalEntity, true);
+
+        $barbazPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Barbaz';
+        $this->assertTrue(!file_exists($barbazPath));
     }
 
     public function testCreateServiceWithUnderscoreInNameNormalizesClassNamesToCamelCase()

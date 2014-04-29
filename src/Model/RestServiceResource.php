@@ -216,22 +216,18 @@ class RestServiceResource extends AbstractResourceListener
         $model  = $this->getModel();
         $entity = $model->fetch($id);
 
-        $request = $this->getEvent()->getRequest();
-        $flag = $request->getQuery('delete', false);
+        $request   = $this->getEvent()->getRequest();
+        $recursive = $request->getQuery('recursive', false);
 
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
                     $model   = $this->restFactory->factory($this->getModuleName(), RestServiceModelFactory::TYPE_DB_CONNECTED);
-                    $model->deleteService($entity);
+                    $model->deleteService($entity, $recursive);
                     break;
                 case ($entity instanceof RestServiceEntity):
                 default:
-                    $model->deleteService($entity->controllerServiceName);
-                    if (false !== $flag) {
-                        $reflection = new ReflectionClass($entity->resourceClass);
-                        Utility::recursiveDelete(dirname($reflection->getFileName()));
-                    }
+                    $model->deleteService($entity->controllerServiceName, $recursive);
             }
         } catch (\Exception $e) {
             throw new \Exception('Error deleting REST service', 500, $e);
