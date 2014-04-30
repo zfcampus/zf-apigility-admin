@@ -211,7 +211,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 }
 
                 return $http.delete(uri, config).then(function () {
-                    return self.getList();
+                    return self.getList(true);
                 });
             });
         },
