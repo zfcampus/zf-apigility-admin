@@ -659,7 +659,7 @@ return array(
             'route_name'              => 'zf-apigility/api/module',
             'route_identifier_name'   => 'name',
             'entity_class'            => 'ZF\Apigility\Admin\Model\ModuleEntity',
-            'entity_http_methods'     => array('GET'),
+            'entity_http_methods'     => array('GET', 'DELETE'),
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'module',
         ),

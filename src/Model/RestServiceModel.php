@@ -18,6 +18,8 @@ use ZF\Apigility\Admin\Exception;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 use ZF\Rest\Exception\CreationException;
+use ZF\Apigility\Admin\Utility;
+use ReflectionClass;
 
 class RestServiceModel implements EventManagerAwareInterface
 {
@@ -336,9 +338,10 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @todo   Remove content-negotiation and/or HAL configuration?
      * @param  string $controllerService
+     * @param  bool   $recursive
      * @return true
      */
-    public function deleteService($controllerService)
+    public function deleteService($controllerService, $recursive = false)
     {
         try {
             $service = $this->fetch($controllerService);
@@ -357,6 +360,11 @@ class RestServiceModel implements EventManagerAwareInterface
         $this->deleteAuthorizationConfig($service);
         $this->deleteVersioningConfig($service);
         $this->deleteServiceManagerConfig($service);
+
+        if ($recursive) {
+            $reflection = new ReflectionClass($service->resourceClass);
+            Utility::recursiveDelete(dirname($reflection->getFileName()));
+        }
         return true;
     }
 

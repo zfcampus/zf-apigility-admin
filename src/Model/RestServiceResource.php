@@ -14,6 +14,8 @@ use ZF\Hal\Entity as HalEntity;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
+use ReflectionClass;
+use ZF\Apigility\Admin\Utility;
 
 class RestServiceResource extends AbstractResourceListener
 {
@@ -214,15 +216,18 @@ class RestServiceResource extends AbstractResourceListener
         $model  = $this->getModel();
         $entity = $model->fetch($id);
 
+        $request   = $this->getEvent()->getRequest();
+        $recursive = $request->getQuery('recursive', false);
+
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
                     $model   = $this->restFactory->factory($this->getModuleName(), RestServiceModelFactory::TYPE_DB_CONNECTED);
-                    $model->deleteService($entity);
+                    $model->deleteService($entity, $recursive);
                     break;
                 case ($entity instanceof RestServiceEntity):
                 default:
-                    $model->deleteService($entity->controllerServiceName);
+                    $model->deleteService($entity->controllerServiceName, $recursive);
             }
         } catch (\Exception $e) {
             throw new \Exception('Error deleting REST service', 500, $e);

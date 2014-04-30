@@ -109,4 +109,24 @@ class ModuleResource extends AbstractResourceListener
     {
         return $this->modules->getModules();
     }
+
+    /**
+     * Delete a module (and, optionally, all code within it)
+     *
+     * @param  string $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        $request = $this->getEvent()->getRequest();
+        $recursive = $request->getQuery('recursive', false);
+
+        $module = $this->modules->getModule($id);
+        if (!$module instanceof ModuleEntity) {
+            return new ApiProblem(404, 'Module not found or is not apigility-enabled');
+        }
+
+        $name = $module->getName();
+        return $this->modules->deleteModule($name, $this->modulePath, $recursive);
+    }
 }

@@ -11,10 +11,12 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
+use ZF\Apigility\Admin\Utility;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 use ZF\Rest\Exception\PatchException;
 use ZF\Rest\Exception\CreationException;
+use ReflectionClass;
 
 class RpcServiceModel
 {
@@ -201,9 +203,10 @@ class RpcServiceModel
      * Delete a service
      *
      * @param  RpcServiceEntity $entity
+     * @param  bool $recursive
      * @return true
      */
-    public function deleteService(RpcServiceEntity $entity)
+    public function deleteService(RpcServiceEntity $entity, $recursive = false)
     {
         $serviceName = $entity->controllerServiceName;
         $routeName   = $entity->routeName;
@@ -215,6 +218,19 @@ class RpcServiceModel
         $this->deleteVersioningConfig($routeName, $serviceName);
         $this->deleteAuthorizationConfig($serviceName);
         $this->deleteControllersConfig($serviceName);
+
+        if ($recursive) {
+            $className = substr($entity->controllerServiceName, 0, strrpos($entity->controllerServiceName, '\\')) .
+                '\\' . $entity->serviceName . 'Controller';
+            if (!class_exists($className)) {
+                throw new Exception\RuntimeException(sprintf(
+                    'I cannot determine the class name, tried with "%s"',
+                    $className
+                ), 400);
+            }
+            $reflection = new ReflectionClass($className);
+            Utility::recursiveDelete(dirname($reflection->getFileName()));
+        }
         return true;
     }
 
