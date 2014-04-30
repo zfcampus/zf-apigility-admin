@@ -422,7 +422,12 @@ class RpcServiceModelTest extends TestCase
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
 
+        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
+        $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
+         
         $this->codeRpc->deleteService($result);
+        $this->assertTrue(file_exists($servicePath));
+
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
 
@@ -442,6 +447,22 @@ class RpcServiceModelTest extends TestCase
         foreach ($config['controllers'] as $serviceType => $services) {
             $this->assertArrayNotHasKey($result->controllerServiceName, $services);
         }
+    }
+
+    public function testDeleteServiceRecursive()
+    {
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
+        $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
+        
+        $this->codeRpc->deleteService($result, true);
+        $this->assertTrue(!file_exists($servicePath));
     }
 
     /**

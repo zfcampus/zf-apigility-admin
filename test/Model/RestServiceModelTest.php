@@ -629,8 +629,22 @@ class RestServiceModelTest extends TestCase
 
         $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName));
 
+        $fooPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo';
+        $this->assertTrue(file_exists($fooPath));
+
         $this->setExpectedException('ZF\Apigility\Admin\Exception\RuntimeException', 'find', 404);
         $this->codeRest->fetch($service->controllerServiceName);
+    }
+
+    public function testCanDeleteAServiceRecursive()
+    {
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName, true));
+        
+        $fooPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo';
+        $this->assertFalse(file_exists($fooPath));
     }
 
     /**

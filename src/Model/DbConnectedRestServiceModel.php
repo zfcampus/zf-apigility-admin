@@ -7,6 +7,8 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\Filter\StaticFilter;
+use ZF\Apigility\Admin\Utility;
+use ReflectionClass;
 
 class DbConnectedRestServiceModel
 {
@@ -131,12 +133,18 @@ class DbConnectedRestServiceModel
      * Deelte a DB-Connected service
      *
      * @param  DbConnectedRestServiceEntity $entity
+     * @param  bool $recursive
      * @return true
      */
-    public function deleteService(DbConnectedRestServiceEntity $entity)
+    public function deleteService(DbConnectedRestServiceEntity $entity, $recursive = false)
     {
         $this->restModel->deleteService($entity->controllerServiceName);
         $this->deleteDbConnectedConfig($entity);
+        
+        if ($recursive) {
+            $reflection = new ReflectionClass($entity->entityClass);
+            Utility::recursiveDelete(dirname($reflection->getFileName()));
+        }
         return true;
     }
 
