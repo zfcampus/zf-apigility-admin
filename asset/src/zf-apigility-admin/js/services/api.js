@@ -205,9 +205,13 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
         },
 
-        removeRestService: function (apiName, restServiceName) {
-            var url = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
-            return $http.delete(url)
+        removeRestService: function (apiName, restServiceName, recursive) {
+            var url    = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
+            var config = {};
+            if ( !!recursive ) {
+                config.params = { recursive: 1 };
+            }
+            return $http.delete(url, config)
                 .then(function (response) {
                     return response.data;
                 });
@@ -263,9 +267,13 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
         },
 
-        removeRpcService: function (apiName, rpcServiceName) {
-            var url = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
-            return $http.delete(url)
+        removeRpcService: function (apiName, rpcServiceName, recursive) {
+            var url    = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
+            var config = {};
+            if ( !!recursive ) {
+                config.params = { recursive: 1 };
+            }
+            return $http.delete(url, config)
                 .then(function (response) {
                     return response.data;
                 });
