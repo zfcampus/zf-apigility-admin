@@ -1,0 +1,9 @@
+namespace <?php echo $module ?>\V<?php echo $version ?>\Rpc\<?php echo $servicename ?>;
+
+class <?php echo $classfactory, "\n"; ?>
+{
+    public function __invoke($controllers)
+    {
+        return new <?php echo $classname ?>();
+    }
+}

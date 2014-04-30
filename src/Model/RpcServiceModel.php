@@ -234,6 +234,56 @@ class RpcServiceModel
         return true;
     }
 
+    public function createFactoryController($serviceName)
+    {
+        $module     = $this->module;
+        $modulePath = $this->modules->getModulePath($module);
+        $version    = $this->moduleEntity->getLatestVersion();
+
+        $srcPath = sprintf(
+                '%s/src/%s/V%s/Rpc/%s',
+                $modulePath,
+                str_replace('\\', '/', $module),
+                $version,
+                $serviceName
+        );
+
+        $className         = sprintf('%sController', $serviceName);
+        $classFactory      = sprintf('%sControllerFactory', $serviceName);
+        $classPath         = sprintf('%s/%s.php', $srcPath, $classFactory);
+        $controllerService = sprintf('%s\\V%s\\Rpc\\%s\\Controller', $module, $version, $serviceName);
+
+        if (file_exists($classPath)) {
+            throw new Exception\RuntimeException(sprintf(
+                    'The controller factory "%s" already exists',
+                    $className
+            ));
+        }
+
+        $view = new ViewModel(array(
+                'module'       => $module,
+                'classname'    => $className,
+                'classfactory' => $classFactory,
+                'servicename'  => $serviceName,
+                'version'      => $version,
+        ));
+
+        $resolver = new Resolver\TemplateMapResolver(array(
+                'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-factory.phtml'
+        ));
+
+        $view->setTemplate('code-connected/rpc-controller');
+        $renderer = new PhpRenderer();
+        $renderer->setResolver($resolver);
+
+        if (!file_put_contents($classPath,
+                "<" . "?php\n" . $renderer->render($view))) {
+                return false;
+        }
+
+        return sprintf('%s\\V%s\\Rpc\\%s\\%s', $module, $version, $serviceName, $classFactory);
+    }
+
     /**
      * Create a controller in the current module named for the given service
      *
@@ -289,14 +339,17 @@ class RpcServiceModel
             return false;
         }
 
-        $fullClassName = sprintf('%s\\V%s\\Rpc\\%s\\%s', $module, $version, $serviceName, $className);
+        $fullClassFactory = $this->createFactoryController($serviceName);
+
         $this->configResource->patch(array(
             'controllers' => array(
-                'invokables' => array(
-                    $controllerService => $fullClassName,
+                'factories' => array(
+                    $controllerService => $fullClassFactory,
                 ),
             ),
         ), true);
+
+        $fullClassName = sprintf('%s\\V%s\\Rpc\\%s\\%s', $module, $version, $serviceName, $className);
 
         return (object) array(
             'class'   => $fullClassName,

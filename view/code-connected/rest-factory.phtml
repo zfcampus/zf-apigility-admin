@@ -1,0 +1,9 @@
+namespace <?php echo $module ?>\V<?php echo $version ?>\Rest\<?php echo $resource ?>;
+
+class <?php echo $classfactory, "\n"; ?>
+{
+    public function __invoke($services)
+    {
+        return new <?php echo $classresource ?>();
+    }
+}

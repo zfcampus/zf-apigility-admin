@@ -164,9 +164,18 @@ class RestServiceModelTest extends TestCase
 
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
         $this->assertArrayHasKey('service_manager', $config);
-        $this->assertArrayHasKey('invokables', $config['service_manager']);
-        $this->assertArrayHasKey($resourceClass, $config['service_manager']['invokables']);
-        $this->assertEquals($resourceClass, $config['service_manager']['invokables'][$resourceClass]);
+        $this->assertArrayHasKey('factories', $config['service_manager']);
+        $this->assertArrayHasKey($resourceClass, $config['service_manager']['factories']);
+        $this->assertEquals($resourceClass . 'Factory', $config['service_manager']['factories'][$resourceClass]);
+    }
+
+    public function testCreateResourceClassCreateFactory()
+    {
+        $resourceClass = $this->codeRest->createResourceClass('Foo');
+
+        $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $resourceClass . 'Factory');
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
+        $this->assertTrue(file_exists($path));
     }
 
     public function testCreateEntityClassReturnsClassNameCreated()
