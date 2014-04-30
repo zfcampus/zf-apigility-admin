@@ -145,8 +145,8 @@ class RpcServiceModelTest extends TestCase
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $config     = include $configFile;
         $expected = array(
-            'controllers' => array('invokables' => array(
-                $controllerService => $className,
+            'controllers' => array('factories' => array(
+                $controllerService => $className . 'Factory',
             )),
         );
         $this->assertEquals($expected, $config);
@@ -269,8 +269,8 @@ class RpcServiceModelTest extends TestCase
 
         $configFile = $this->modules->getModuleConfigPath($this->module);
         $expected   = array(
-            'controllers' => array('invokables' => array(
-                'FooConf\V1\Rpc\HelloWorld\Controller' => 'FooConf\V1\Rpc\HelloWorld\HelloWorldController',
+            'controllers' => array('factories' => array(
+                'FooConf\V1\Rpc\HelloWorld\Controller' => 'FooConf\V1\Rpc\HelloWorld\HelloWorldControllerFactory',
             )),
             'router' => array('routes' => array(
                 'foo-conf.rpc.hello-world' => array(
@@ -321,6 +321,10 @@ class RpcServiceModelTest extends TestCase
         $class     = 'FooConf\V1\Rpc\HelloWorld\HelloWorldController';
         $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/V1/Rpc/HelloWorld/HelloWorldController.php', __DIR__);
         $this->assertTrue(file_exists($classFile));
+        
+        $classFactoryFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/V1/Rpc/HelloWorld/HelloWorldControllerFactory.php', __DIR__);
+        $this->assertTrue(file_exists($classFactoryFile));
+        
         require_once $classFile;
         $controllerClass = new ReflectionClass($class);
         $this->assertTrue($controllerClass->isSubclassOf('Zend\Mvc\Controller\AbstractActionController'));

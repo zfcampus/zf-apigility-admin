@@ -384,6 +384,47 @@ class RestServiceModel implements EventManagerAwareInterface
             $serviceName
         );
     }
+    
+    public function createFactoryClass($serviceName)
+    {
+    	$module  = $this->module;
+    	$srcPath = $this->getSourcePath($serviceName);
+    	
+    	$classResource = sprintf('%sResource', $serviceName);
+    	$className 	   = sprintf('%sResourceFactory', $serviceName);
+    	$classPath     = sprintf('%s/%s.php', $srcPath, $className);
+    	
+    	if (file_exists($classPath)) {
+    		throw new Exception\RuntimeException(sprintf(
+    				'The resource factory "%s" already exists',
+    				$className
+    		));
+    	}
+    	
+    	$view = new ViewModel(array(
+    			'module'        => $module,
+    			'resource'      => $serviceName,
+    			'classfactory'  => $className,
+    			'classresource' => $classResource,
+    			'version'       => $this->moduleEntity->getLatestVersion(),
+    	));
+    	if (!$this->createClassFile($view, 'factory', $classPath)) {
+    		throw new Exception\RuntimeException(sprintf(
+    				'Unable to create resource factory "%s"; unable to write file',
+    				$className
+    		));
+    	}
+    	
+    	$fullClassName = sprintf(
+    			'%s\\V%s\\Rest\\%s\\%s',
+    			$module,
+    			$this->moduleEntity->getLatestVersion(),
+    			$serviceName,
+    			$className
+    	);
+    	  	  	
+    	return $fullClassName;
+    }
 
     /**
      * Creates a new resource class based on the specified service name
@@ -427,14 +468,16 @@ class RestServiceModel implements EventManagerAwareInterface
             $className
         );
 
+        $factoryClassName = $this->createFactoryClass($serviceName);
+        
         $this->configResource->patch(array(
-            'service_manager' => array(
-                'invokables' => array(
-                    $fullClassName => $fullClassName,
-                ),
-            ),
+        		'service_manager' => array(
+        				'factories' => array(
+        						$fullClassName => $factoryClassName,
+        				),
+        		),
         ), true);
-
+        
         return $fullClassName;
     }
 
@@ -1022,7 +1065,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         return false;
     }
-
+   
     /**
      * Get a renderer instance
      *
