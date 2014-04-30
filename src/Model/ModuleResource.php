@@ -112,8 +112,8 @@ class ModuleResource extends AbstractResourceListener
 
     /**
      * Delete a module (and, optionally, all code within it)
-     * 
-     * @param  string $id 
+     *
+     * @param  string $id
      * @return bool
      */
     public function delete($id)

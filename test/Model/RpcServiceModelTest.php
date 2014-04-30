@@ -424,7 +424,7 @@ class RpcServiceModelTest extends TestCase
 
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
         $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
-         
+
         $this->codeRpc->deleteService($result);
         $this->assertTrue(file_exists($servicePath));
 
@@ -460,7 +460,7 @@ class RpcServiceModelTest extends TestCase
 
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
         $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
-        
+
         $this->codeRpc->deleteService($result, true);
         $this->assertFalse(file_exists($servicePath));
     }

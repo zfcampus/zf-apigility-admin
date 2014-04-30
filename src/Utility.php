@@ -8,7 +8,7 @@ namespace ZF\Apigility\Admin;
 class Utility
 {
     /**
-     * Recursive delete 
+     * Recursive delete
      *
      * @param  string $dir
      * @return boolean

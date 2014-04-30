@@ -140,7 +140,7 @@ class DbConnectedRestServiceModel
     {
         $this->restModel->deleteService($entity->controllerServiceName);
         $this->deleteDbConnectedConfig($entity);
-        
+
         if ($recursive) {
             $reflection = new ReflectionClass($entity->entityClass);
             Utility::recursiveDelete(dirname($reflection->getFileName()));

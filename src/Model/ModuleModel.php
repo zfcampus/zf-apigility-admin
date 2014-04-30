@@ -222,10 +222,10 @@ class ModuleModel
 
     /**
      * Delete an existing module
-     * 
-     * @param  string $module 
-     * @param  string $path 
-     * @param  bool $recursive 
+     *
+     * @param  string $module
+     * @param  string $path
+     * @param  bool $recursive
      * @return boolean
      */
     public function deleteModule($module, $path = '.', $recursive = false)
@@ -425,9 +425,9 @@ class ModuleModel
 
     /**
      * Write application configuration
-     * 
-     * @param  array $application 
-     * @param  string $path 
+     *
+     * @param  array $application
+     * @param  string $path
      * @return bool
      */
     protected function writeApplicationConfig(array $application, $path)

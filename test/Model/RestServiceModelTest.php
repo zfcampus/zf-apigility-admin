@@ -642,7 +642,7 @@ class RestServiceModelTest extends TestCase
         $service = $this->codeRest->createService($details);
 
         $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName, true));
-        
+
         $fooPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo';
         $this->assertFalse(file_exists($fooPath));
     }

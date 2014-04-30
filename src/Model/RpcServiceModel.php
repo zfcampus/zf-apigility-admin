@@ -220,7 +220,7 @@ class RpcServiceModel
         $this->deleteControllersConfig($serviceName);
 
         if ($recursive) {
-            $className = substr($entity->controllerServiceName, 0, strrpos($entity->controllerServiceName, '\\')) . 
+            $className = substr($entity->controllerServiceName, 0, strrpos($entity->controllerServiceName, '\\')) .
                 '\\' . $entity->serviceName . 'Controller';
             if (!class_exists($className)) {
                 throw new Exception\RuntimeException(sprintf(
