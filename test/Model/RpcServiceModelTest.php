@@ -321,10 +321,10 @@ class RpcServiceModelTest extends TestCase
         $class     = 'FooConf\V1\Rpc\HelloWorld\HelloWorldController';
         $classFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/V1/Rpc/HelloWorld/HelloWorldController.php', __DIR__);
         $this->assertTrue(file_exists($classFile));
-        
+
         $classFactoryFile = sprintf('%s/TestAsset/module/FooConf/src/FooConf/V1/Rpc/HelloWorld/HelloWorldControllerFactory.php', __DIR__);
         $this->assertTrue(file_exists($classFactoryFile));
-        
+
         require_once $classFile;
         $controllerClass = new ReflectionClass($class);
         $this->assertTrue($controllerClass->isSubclassOf('Zend\Mvc\Controller\AbstractActionController'));

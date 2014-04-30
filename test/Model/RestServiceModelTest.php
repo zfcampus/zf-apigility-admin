@@ -171,13 +171,13 @@ class RestServiceModelTest extends TestCase
 
     public function testCreateResourceClassCreateFactory()
     {
-    	$resourceClass = $this->codeRest->createResourceClass('Foo');
-   
-    	$className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $resourceClass . 'Factory');
-    	$path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
-    	$this->assertTrue(file_exists($path));
+        $resourceClass = $this->codeRest->createResourceClass('Foo');
+
+        $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $resourceClass . 'Factory');
+        $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
+        $this->assertTrue(file_exists($path));
     }
-    
+
     public function testCreateEntityClassReturnsClassNameCreated()
     {
         $entityClass = $this->codeRest->createEntityClass('Foo');
