@@ -462,7 +462,7 @@ class RpcServiceModelTest extends TestCase
         $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
         
         $this->codeRpc->deleteService($result, true);
-        $this->assertTrue(!file_exists($servicePath));
+        $this->assertFalse(file_exists($servicePath));
     }
 
     /**
