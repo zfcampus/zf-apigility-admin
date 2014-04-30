@@ -4,6 +4,7 @@
 angular.module('ag-admin').controller('ApiOverviewController', function ($scope, $state, flash, ApiRepository) {
     $scope.api = {};
     $scope.defaultApiVersion = 1;
+    $scope.deleteApiPanelIsCollapsed = true;
 
     var updateApi = function (api) {
         $scope.api = api;
@@ -23,6 +24,14 @@ angular.module('ag-admin').controller('ApiOverviewController', function ($scope,
             updateApi(api);
         });
     });
+
+    $scope.removeApi = function (recursive) {
+        var name = $state.params.apiName;
+        ApiRepository.removeApi($state.params.apiName, !!recursive).then(function () {
+            flash.success = 'Deleted API "' + name + '"';
+            $state.go('^');
+        });
+    };
 
     ApiRepository.getApi($state.params.apiName, $state.params.version).then(function (api) {
         updateApi(api);

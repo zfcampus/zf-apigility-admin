@@ -184,6 +184,38 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
         },
 
+        removeApi: function (name, recursive) {
+            var deferred = $q.defer();
+            var self = this;
+            var config = {
+                method: 'GET',
+                url: moduleApiPath
+            };
+            return $http(config).then(function (response) {
+                var apis = Hal.pluckCollection('module', response.data);
+                var api = _.find(apis, function (m) {
+                    return m.name === name;
+                });
+                
+                if (api === undefined) {
+                    flash.error = 'API "' + name + '" not found';
+                    return $q.reject(404);
+                }
+
+                return api;
+            }).then(function (api) {
+                var uri = Hal.getLink('self', api);
+                var config = {};
+                if ( !!recursive ) {
+                    config.params = { recursive: 1 };
+                }
+
+                return $http.delete(uri, config).then(function () {
+                    return self.getList(true);
+                });
+            });
+        },
+
         createNewRestService: function (apiName, restServiceName) {
             return $http.post(moduleApiPath + '/' + apiName + '/rest', {service_name: restServiceName})
                 .then(function (response) {
@@ -205,9 +237,13 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
         },
 
-        removeRestService: function (apiName, restServiceName) {
-            var url = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
-            return $http.delete(url)
+        removeRestService: function (apiName, restServiceName, recursive) {
+            var url    = moduleApiPath + '/' + apiName + '/rest/' + encodeURIComponent(restServiceName);
+            var config = {};
+            if ( !!recursive ) {
+                config.params = { recursive: 1 };
+            }
+            return $http.delete(url, config)
                 .then(function (response) {
                     return response.data;
                 });
@@ -263,9 +299,13 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
         },
 
-        removeRpcService: function (apiName, rpcServiceName) {
-            var url = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
-            return $http.delete(url)
+        removeRpcService: function (apiName, rpcServiceName, recursive) {
+            var url    = moduleApiPath + '/' + apiName + '/rpc/' + encodeURIComponent(rpcServiceName);
+            var config = {};
+            if ( !!recursive ) {
+                config.params = { recursive: 1 };
+            }
+            return $http.delete(url, config)
                 .then(function (response) {
                     return response.data;
                 });

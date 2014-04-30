@@ -63,8 +63,8 @@ angular.module('ag-admin').controller(
         );
     };
 
-    $scope.removeRpcService = function (rpcServiceName) {
-        ApiRepository.removeRpcService($scope.api.name, rpcServiceName)
+    $scope.removeRpcService = function (rpcServiceName, recursive) {
+        ApiRepository.removeRpcService($scope.api.name, rpcServiceName, !!recursive)
             .then(function (data) {
                 $scope.deleteRpcService = false;
                 ApiRepository.refreshApi($scope, $state, true, 'RPC Service deleted');

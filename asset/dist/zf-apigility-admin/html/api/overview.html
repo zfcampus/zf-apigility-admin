@@ -78,3 +78,38 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+<div class="panel panel-danger">
+    <div class="panel-heading" ng-click="deleteApiPanelIsCollapsed = !deleteApiPanelIsCollapsed">
+        <h4 class="panel-title">Delete API</h4>
+    </div>
+
+    <div class="panel-body" collapse="deleteApiPanelIsCollapsed">
+        <p>Are you sure you want to delete this API?</p>
+
+        <p>
+            By default, deleting the API only removes the API module from the
+            application configuration. You can re-enable it by re-adding the
+            module to your application configuration at a later date.
+        </p>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" ng-model="recursive">
+                Delete all files associated with this API?
+            </label>
+        </div>
+
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-sm btn-default" ng-click="deleteApiPanelIsCollapsed = !deleteApiPanelIsCollapsed">
+                No
+            </button>
+
+            <button type="button" class="btn btn-sm btn-danger" ng-click="removeApi(recursive)">
+                Yes
+            </button>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>

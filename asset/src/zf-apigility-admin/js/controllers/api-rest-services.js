@@ -93,8 +93,8 @@ angular.module('ag-admin').controller(
         );
     };
 
-    $scope.removeRestService = function (restServiceName) {
-        ApiRepository.removeRestService($scope.api.name, restServiceName)
+    $scope.removeRestService = function (restServiceName, recursive) {
+        ApiRepository.removeRestService($scope.api.name, restServiceName, !!recursive)
             .then(function (data) {
                 ApiRepository.refreshApi($scope, $state, true, 'REST Service deleted');
                 $scope.deleteRestService = false;
