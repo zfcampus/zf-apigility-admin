@@ -4,11 +4,18 @@
     <div class="panel-body">
         <p>Are you sure you want to delete the service?</p>
 
+        <div class="form-group">
+            <label>
+                <input type="checkbox" ng-model="recursive">
+                Delete all files and directories for this service?
+            </label>
+        </div>
+
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-sm btn-default" collapse-flag="" flags="{delete: false}">
                 No
             </button>
-            <button type="button" class="btn btn-sm btn-danger" ng-click="removeRestService(restService.controller_service_name)">
+            <button type="button" class="btn btn-sm btn-danger" ng-click="removeRestService(restService.controller_service_name, recursive)">
                 Yes
             </button>
         </div>
