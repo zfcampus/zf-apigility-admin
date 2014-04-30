@@ -26,7 +26,11 @@ angular.module('ag-admin').controller('ApiOverviewController', function ($scope,
     });
 
     $scope.removeApi = function (recursive) {
-        console.log('Called removeApi(' + recursive + ')');
+        var name = $state.params.apiName;
+        ApiRepository.removeApi($state.params.apiName, !!recursive).then(function () {
+            flash.success = 'Deleted API "' + name + '"';
+            $state.go('^');
+        });
     };
 
     ApiRepository.getApi($state.params.apiName, $state.params.version).then(function (api) {

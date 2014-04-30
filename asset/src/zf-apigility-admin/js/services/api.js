@@ -184,6 +184,38 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
         },
 
+        removeApi: function (name, recursive) {
+            var deferred = $q.defer();
+            var self = this;
+            var config = {
+                method: 'GET',
+                url: moduleApiPath
+            };
+            return $http(config).then(function (response) {
+                var apis = Hal.pluckCollection('module', response.data);
+                var api = _.find(apis, function (m) {
+                    return m.name === name;
+                });
+                
+                if (api === undefined) {
+                    flash.error = 'API "' + name + '" not found';
+                    return $q.reject(404);
+                }
+
+                return api;
+            }).then(function (api) {
+                var uri = Hal.getLink('self', api);
+                var config = {};
+                if ( !!recursive ) {
+                    config.params = { recursive: 1 };
+                }
+
+                return $http.delete(uri, config).then(function () {
+                    return self.getList();
+                });
+            });
+        },
+
         createNewRestService: function (apiName, restServiceName) {
             return $http.post(moduleApiPath + '/' + apiName + '/rest', {service_name: restServiceName})
                 .then(function (response) {
