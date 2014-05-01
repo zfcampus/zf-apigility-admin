@@ -18,7 +18,7 @@ class PatchInputFilter extends PostInputFilter
         $this->add(array(
             'name' => 'resource_class',
             'required' => true,
-            'allow_empty' => false,
+            'allow_empty' => true,
             'error_message' => 'The Resource Class must be a valid class name',
         ));
         $this->add(array(
