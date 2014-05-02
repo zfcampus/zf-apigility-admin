@@ -91,9 +91,8 @@ angular.module('ag-admin').controller(
         ApiRepository.saveRestService($scope.api.name, restServiceData).then(
             function (data) {
                 agFormHandler.resetForm($scope);
-                ApiRepository.refreshApi($scope, $state, true, 'REST Service updated', function () {
-                    $state.go($state.$current.name, { edit: null });
-                });
+                flash.success = 'REST Service updated';
+                $state.go($state.$current.name, { edit: null }, {reload: true});
             },
             function (error) {
                 agFormHandler.reportError(error, $scope);
