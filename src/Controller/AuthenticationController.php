@@ -67,9 +67,7 @@ class AuthenticationController extends AbstractActionController
             'rel' => 'self',
             'route' => $this->getRouteForEntity($entity),
         )));
-        $model = new ViewModel(array('payload' => $halEntity));
-        $model->setTerminal(true);
-        return $model;
+        return new ViewModel(array('payload' => $halEntity));
     }
 
     /**
