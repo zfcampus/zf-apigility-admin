@@ -166,7 +166,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 scope.api = api;
                 scope.currentVersion = api.currentVersion;
 
-                if (!callback || typeof callback !== 'function') {
+                if (typeof callback !== 'function') {
                     return;
                 }
                 callback();
