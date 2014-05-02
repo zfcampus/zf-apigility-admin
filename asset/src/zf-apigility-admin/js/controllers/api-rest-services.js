@@ -42,6 +42,12 @@ angular.module('ag-admin').controller(
         $state.go($state.$current.name, {edit: ''}, {reload: true});
     }
 
+    $scope.toggleEditState = function (service, flag) {
+        flag = !!flag;
+        $state.go($state.$current.name, {service: service, edit: (flag ? true : null)}, {notify: false});
+        $scope.inEdit = flag;
+    };
+
     $scope.isDbConnected = function (restService) {
         if (typeof restService !== 'object' || typeof restService === 'undefined') {
             return false;
@@ -57,7 +63,9 @@ angular.module('ag-admin').controller(
             function (restResource) {
                 flash.success = 'New Code-Connected REST service created; please wait for the list to refresh';
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, $state, true, 'Finished reloading REST service list');
+                ApiRepository.refreshApi($scope, $state, true, 'Finished reloading REST service list', function () {
+                    $state.reload();
+                });
             },
             function (error) {
                 agFormHandler.reportError(error, $scope);

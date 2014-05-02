@@ -13,11 +13,11 @@
                 {{ rpcService.service_name }}
 
                 <div class="btn-group pull-right service-buttons" ng-show="isLatestVersion()">
-                    <button type="button" title="Cancel" class="btn btn-sm btn-default" collapse-button="" criteria="{delete: false, edit: true}" ui-sref="ag.api.version.rpc({ edit: null})" ui-sref-options="{ notify: false }">
+                    <button type="button" title="Cancel" class="btn btn-sm btn-default" ng-show="inEdit" collapse-button="" criteria="{delete: false}" ng-click="toggleEditState(rpcService.service_name, false)">
                         Cancel
                     </button>
 
-                    <button type="button" class="btn btn-sm btn-success" title="Edit service" collapse-button="" criteria="{delete: false, edit: false}" ui-sref="ag.api.version.rpc({ edit: true })" ui-sref-options="{ notify: false }">
+                    <button type="button" class="btn btn-sm btn-success" title="Edit service" ng-show="!inEdit" collapse-button="" criteria="{delete: false}" ng-click="toggleEditState(rpcService.service_name, true)">
                         <i class="glyphicon glyphicon-edit"></i>
                     </button>
 
@@ -32,8 +32,8 @@
             <span collapse-show="" criteria="{delete: false}" default-template="'html/empty-content.html'" toggled-template="'html/api/rpc-services/remove.html'"></span>
         </collapse-header>
 
-        <collapse-body>
-            <div collapse-show="" criteria="{edit: false}" default-template="'html/api/rpc-services/view.html'" toggled-template="'html/api/rpc-services/edit.html'"></div>
+        <collapse-body ng-class="{in: (activeService == rpcService.service_name)}">
+            <ag-toggle-include condition="inEdit" on-template="html/api/rpc-services/edit.html" off-template="html/api/rpc-services/view.html"></ag-toggle-include>
         </collapse-body>
     </ag-collapse>
 </div>
