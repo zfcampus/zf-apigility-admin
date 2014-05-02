@@ -38,6 +38,7 @@ class Module
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
+        $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
     }
 
     public function getAutoloaderConfig()
@@ -342,6 +343,29 @@ class Module
             $this->mvcEvent = $e;
             $halPlugin->getEventManager()->attach('renderCollection.entity', array($this, 'onRenderCollectionEntity'), 10);
         }
+    }
+
+    /**
+     * Tell browsers not to cache responses from the admin API
+     *
+     * @param  \Zend\Mvc\MvcEvent $e
+     */
+    public function onFinish($e)
+    {
+        $matches = $e->getRouteMatch();
+        if (!$matches instanceof RouteMatch) {
+            // In 404's, we do not have a route match... nor do we need to do
+            // anything
+            return;
+        }
+
+        if (! $matches->getParam('is_apigility_admin_api', false)) {
+            // Not part of the Apigility Admin API; nothing to do
+            return;
+        }
+
+        $response = $e->getResponse();
+        $response->getHeaders()->addHeaderLine('Cache-Control', 'no-cache');
     }
 
     protected function initializeUrlHelper()
