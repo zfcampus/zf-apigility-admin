@@ -120,9 +120,7 @@ class InputFilterController extends AbstractActionController
         $e = $this->getEvent();
         $e->setParam('ZFContentNegotiationFallback', 'HalJson');
 
-        $viewModel = new ViewModel(array('payload' => $result));
-        $viewModel->setTerminal(true);
-        return $viewModel;
+        return new ViewModel(array('payload' => $result));
     }
 
     /**

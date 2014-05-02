@@ -64,9 +64,7 @@ class AuthorizationController extends AbstractActionController
                 ),
             )
         )));
-        $model = new ViewModel(array('payload' => $entity));
-        $model->setTerminal(true);
-        return $model;
+        return new ViewModel(array('payload' => $entity));
     }
 
     /**

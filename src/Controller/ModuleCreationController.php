@@ -56,9 +56,7 @@ class ModuleCreationController extends AbstractActionController
                         'params' => array('module' => $module),
                     ),
                 )));
-                $model    = new ViewModel(array('payload' => $entity));
-                $model->setTerminal(true);
-                return $model;
+                return new ViewModel(array('payload' => $entity));
 
             default:
                 return new ApiProblemResponse(
