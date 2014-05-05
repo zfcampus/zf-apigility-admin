@@ -2207,90 +2207,122 @@ angular.module("html/empty.html", []).run(["$templateCache", function($templateC
 
 angular.module("html/index.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/index.html",
-    "<div class=\"container\">\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-8\">\n" +
-    "            <div class=\"panel panel-info\">\n" +
-    "                <div class=\"panel-heading\">\n" +
-    "                    <h4 class=\"panel-title\">\n" +
-    "                        <a ui-sref=\"ag.api\">APIs</a>\n" +
-    "                    </h4>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <div class=\"panel-body\" ng-show=\"!dashboard.modules.length\">\n" +
-    "                    <p class=\"text-warning\">\n" +
-    "                        No APIs;\n" +
-    "                        <a ui-sref=\"ag.api\">would you like to create one now?</a>\n" +
-    "                    </p>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <ul class=\"list-group\">\n" +
-    "                    <li ng-repeat=\"api in dashboard.modules\" class=\"list-group-item\">\n" +
-    "                        <a ui-sref=\"ag.api.version({apiName: api.name, version: api.latestVersion})\">\n" +
-    "                            {{ api.name }} (v{{ api.latestVersion }})\n" +
-    "                        </a>\n" +
-    "                    </li>\n" +
-    "                </ul>\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"col-md-12\">\n" +
+    "        <div class=\"panel panel-info\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <a ui-sref=\"ag.api\">APIs</a>\n" +
+    "                </h4>\n" +
     "            </div>\n" +
+    "\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.modules.length\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    No APIs;\n" +
+    "                    <a ui-sref=\"ag.api\">would you like to create one now?</a>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <ul class=\"list-group\">\n" +
+    "                <li ng-repeat=\"api in dashboard.modules\" class=\"list-group-item\">\n" +
+    "                    <h4><a ui-sref=\"ag.api.version({apiName: api.name, version: api.latestVersion})\">\n" +
+    "                        {{ api.name }} (v{{ api.latestVersion }})\n" +
+    "                    </a></h4>\n" +
+    "\n" +
+    "                    <div class=\"row\">\n" +
+    "                        <div class=\"col-sm-2 col-sm-offset-1\"><b>REST Services:</b></div>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-9 list-group\">\n" +
+    "                            <p class=\"list-group-item\" ng-repeat=\"service in api.rest\">\n" +
+    "                                <a ui-sref=\"ag.api.version.rest({service: service, version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    {{ service }}\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "\n" +
+    "                            <p ng-hide=\"api.rest.length\" class=\"text-warning list-group-item\">\n" +
+    "                                No REST services configured; \n" +
+    "                                <a ui-sref=\"ag.api.version.rest({version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    would you like to create one?\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                    <div class=\"row\">\n" +
+    "                        <div class=\"col-sm-2 col-sm-offset-1\"><b>RPC Services:</b></div>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-9 list-group\">\n" +
+    "                            <p class=\"list-group-item\" ng-repeat=\"service in api.rpc\">\n" +
+    "                                <a ui-sref=\"ag.api.version.rpc({service: service, version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    {{ service }}\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "\n" +
+    "                            <p ng-hide=\"api.rpc.length\" class=\"text-warning list-group-item\">\n" +
+    "                                No RPC services configured; \n" +
+    "                                <a ui-sref=\"ag.api.version.rpc({version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    would you like to create one?\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                </li>\n" +
+    "            </ul>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "        <div class=\"panel panel-info\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <i class=\"glyphicon glyphicon-lock\"></i>\n" +
+    "                    <a ui-sref=\"ag.settings.authentication\">Authentication</a>\n" +
+    "                </h4>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.authentication\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <table class=\"table\">\n" +
+    "                <ag-conditional-include\n" +
+    "                    condition=\"isHttpBasicAuthentication(dashboard.authentication)\"\n" +
+    "                    src=\"html/settings/authentication/http-basic-view.html\"></ag-conditional-include>\n" +
+    "                <ag-conditional-include\n" +
+    "                    condition=\"isHttpDigestAuthentication(dashboard.authentication)\"\n" +
+    "                    src=\"html/settings/authentication/http-digest-view.html\"></ag-conditional-include>\n" +
+    "                <ag-conditional-include\n" +
+    "                    condition=\"isOAuth2(dashboard.authentication)\"\n" +
+    "                    src=\"html/settings/authentication/oauth2-view.html\"></ag-conditional-include>\n" +
+    "            </table>\n" +
     "        </div>\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"row\">\n" +
-    "        <p>&nbsp;</p>\n" +
-    "    </div>\n" +
-    "\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-4\">\n" +
-    "            <div class=\"panel panel-info\">\n" +
-    "                <div class=\"panel-heading\">\n" +
-    "                    <h4 class=\"panel-title\">\n" +
-    "                        <i class=\"glyphicon glyphicon-lock\"></i>\n" +
-    "                        <a ui-sref=\"ag.settings.authentication\">Authentication</a>\n" +
-    "                    </h4>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <div class=\"panel-body\" ng-show=\"!dashboard.authentication\">\n" +
-    "                    <p class=\"text-warning\">\n" +
-    "                        No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
-    "                    </p>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <table class=\"table\">\n" +
-    "                    <ag-conditional-include\n" +
-    "                        condition=\"isHttpBasicAuthentication(dashboard.authentication)\"\n" +
-    "                        src=\"html/settings/authentication/http-basic-view.html\"></ag-conditional-include>\n" +
-    "                    <ag-conditional-include\n" +
-    "                        condition=\"isHttpDigestAuthentication(dashboard.authentication)\"\n" +
-    "                        src=\"html/settings/authentication/http-digest-view.html\"></ag-conditional-include>\n" +
-    "                    <ag-conditional-include\n" +
-    "                        condition=\"isOAuth2(dashboard.authentication)\"\n" +
-    "                        src=\"html/settings/authentication/oauth2-view.html\"></ag-conditional-include>\n" +
-    "                </table>\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "        <div class=\"panel panel-info\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <i class=\"glyphicon glyphicon-book\"></i>\n" +
+    "                    <a ui-sref=\"ag.settings.db-adapters\">Database Adapters</a>\n" +
+    "                </h4>\n" +
     "            </div>\n" +
-    "        </div>\n" +
     "\n" +
-    "        <div class=\"col-md-4\">\n" +
-    "            <div class=\"panel panel-info\">\n" +
-    "                <div class=\"panel-heading\">\n" +
-    "                    <h4 class=\"panel-title\">\n" +
-    "                        <i class=\"glyphicon glyphicon-book\"></i>\n" +
-    "                        <a ui-sref=\"ag.settings.db-adapters\">Database Adapters</a>\n" +
-    "                    </h4>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <div class=\"panel-body\" ng-show=\"!dashboard.dbAdapters.length\">\n" +
-    "                    <p class=\"text-warning\">\n" +
-    "                        No database adapters configured;\n" +
-    "                        <a ui-sref=\"ag.settings.db-adapters\">would you like to set one up now?</a>\n" +
-    "                    </p>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <ul class=\"list-group\">\n" +
-    "                    <li ng-repeat=\"adapter in dashboard.dbAdapters\" class=\"list-group-item\">\n" +
-    "                        <a ui-sref=\"ag.settings.db-adapters({adapter: adapter.adapter_name})\">{{ adapter.adapter_name }}</a>\n" +
-    "                    </li>\n" +
-    "                </ul>\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.dbAdapters.length\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    No database adapters configured;\n" +
+    "                    <a ui-sref=\"ag.settings.db-adapters\">would you like to set one up now?</a>\n" +
+    "                </p>\n" +
     "            </div>\n" +
+    "\n" +
+    "            <ul class=\"list-group\">\n" +
+    "                <li ng-repeat=\"adapter in dashboard.dbAdapters\" class=\"list-group-item\">\n" +
+    "                    <a ui-sref=\"ag.settings.db-adapters({adapter: adapter.adapter_name})\">{{ adapter.adapter_name }}</a>\n" +
+    "                </li>\n" +
+    "            </ul>\n" +
     "        </div>\n" +
     "    </div>\n" +
     "</div>\n" +
