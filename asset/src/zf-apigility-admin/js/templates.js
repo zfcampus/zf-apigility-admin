@@ -1,4 +1,4 @@
-angular.module('templates-main', ['html/api/authorization.html', 'html/api/documentation-method-edit.html', 'html/api/documentation-method-view.html', 'html/api/index-sidebar.html', 'html/api/index.html', 'html/api/input-edit.html', 'html/api/input-filter-edit.html', 'html/api/input-filter-view.html', 'html/api/input-filter/filter-new.html', 'html/api/input-view.html', 'html/api/overview.html', 'html/api/rest-services/documentation-edit-collection-pane.html', 'html/api/rest-services/documentation-edit-entity-pane.html', 'html/api/rest-services/documentation-edit.html', 'html/api/rest-services/documentation-view-collection-pane.html', 'html/api/rest-services/documentation-view-entity-pane.html', 'html/api/rest-services/documentation-view.html', 'html/api/rest-services/edit.html', 'html/api/rest-services/index.html', 'html/api/rest-services/new.html', 'html/api/rest-services/remove.html', 'html/api/rest-services/settings-edit.html', 'html/api/rest-services/settings-view.html', 'html/api/rest-services/source-code.html', 'html/api/rest-services/view.html', 'html/api/rpc-services/documentation-edit.html', 'html/api/rpc-services/documentation-view.html', 'html/api/rpc-services/edit.html', 'html/api/rpc-services/index.html', 'html/api/rpc-services/new.html', 'html/api/rpc-services/remove.html', 'html/api/rpc-services/settings-edit.html', 'html/api/rpc-services/settings-view.html', 'html/api/rpc-services/source-code.html', 'html/api/rpc-services/view.html', 'html/api/sidebar.html', 'html/breadcrumbs.html', 'html/content.html', 'html/directives/ag-edit-inplace.html', 'html/empty-content.html', 'html/empty.html', 'html/index.html', 'html/modals/cache-check.html', 'html/modals/create-api-form.html', 'html/modals/fs-perms.html', 'html/modals/help-content-negotiation.html', 'html/modals/help-input-filter.html', 'html/modals/source-code.html', 'html/settings/authentication/http-basic-edit.html', 'html/settings/authentication/http-basic-view.html', 'html/settings/authentication/http-basic.html', 'html/settings/authentication/http-digest-edit.html', 'html/settings/authentication/http-digest-view.html', 'html/settings/authentication/http-digest.html', 'html/settings/authentication/index.html', 'html/settings/authentication/new-http-basic.html', 'html/settings/authentication/new-http-digest.html', 'html/settings/authentication/new-oauth2.html', 'html/settings/authentication/oauth2-edit.html', 'html/settings/authentication/oauth2-view.html', 'html/settings/authentication/oauth2.html', 'html/settings/authentication/remove.html', 'html/settings/content-negotiation/edit.html', 'html/settings/content-negotiation/index.html', 'html/settings/content-negotiation/new-selector-form.html', 'html/settings/content-negotiation/remove.html', 'html/settings/content-negotiation/view.html', 'html/settings/dashboard.html', 'html/settings/db-adapters/edit.html', 'html/settings/db-adapters/index.html', 'html/settings/db-adapters/new-adapter-form.html', 'html/settings/db-adapters/remove.html', 'html/settings/db-adapters/view.html', 'html/settings/sidebar.html', 'html/view-navigation.html']);
+angular.module('templates-main', ['html/api/authorization.html', 'html/api/documentation-method-edit.html', 'html/api/documentation-method-view.html', 'html/api/index-sidebar.html', 'html/api/index.html', 'html/api/input-edit.html', 'html/api/input-filter-edit.html', 'html/api/input-filter-view.html', 'html/api/input-filter/filter-new.html', 'html/api/input-view.html', 'html/api/overview.html', 'html/api/rest-services/documentation-edit-collection-pane.html', 'html/api/rest-services/documentation-edit-entity-pane.html', 'html/api/rest-services/documentation-edit.html', 'html/api/rest-services/documentation-view-collection-pane.html', 'html/api/rest-services/documentation-view-entity-pane.html', 'html/api/rest-services/documentation-view.html', 'html/api/rest-services/edit.html', 'html/api/rest-services/index.html', 'html/api/rest-services/new.html', 'html/api/rest-services/remove.html', 'html/api/rest-services/settings-edit.html', 'html/api/rest-services/settings-view.html', 'html/api/rest-services/source-code.html', 'html/api/rest-services/view.html', 'html/api/rpc-services/documentation-edit.html', 'html/api/rpc-services/documentation-view.html', 'html/api/rpc-services/edit.html', 'html/api/rpc-services/index.html', 'html/api/rpc-services/new.html', 'html/api/rpc-services/remove.html', 'html/api/rpc-services/settings-edit.html', 'html/api/rpc-services/settings-view.html', 'html/api/rpc-services/source-code.html', 'html/api/rpc-services/view.html', 'html/api/sidebar.html', 'html/breadcrumbs.html', 'html/content.html', 'html/dashboard-sidebar.html', 'html/directives/ag-edit-inplace.html', 'html/empty-content.html', 'html/empty.html', 'html/index.html', 'html/modals/cache-check.html', 'html/modals/create-api-form.html', 'html/modals/fs-perms.html', 'html/modals/help-content-negotiation.html', 'html/modals/help-input-filter.html', 'html/modals/source-code.html', 'html/settings/authentication/http-basic-edit.html', 'html/settings/authentication/http-basic-view.html', 'html/settings/authentication/http-basic.html', 'html/settings/authentication/http-digest-edit.html', 'html/settings/authentication/http-digest-view.html', 'html/settings/authentication/http-digest.html', 'html/settings/authentication/index.html', 'html/settings/authentication/new-http-basic.html', 'html/settings/authentication/new-http-digest.html', 'html/settings/authentication/new-oauth2.html', 'html/settings/authentication/oauth2-edit.html', 'html/settings/authentication/oauth2-view.html', 'html/settings/authentication/oauth2.html', 'html/settings/authentication/remove.html', 'html/settings/content-negotiation/edit.html', 'html/settings/content-negotiation/index.html', 'html/settings/content-negotiation/new-selector-form.html', 'html/settings/content-negotiation/remove.html', 'html/settings/content-negotiation/view.html', 'html/settings/dashboard.html', 'html/settings/db-adapters/edit.html', 'html/settings/db-adapters/index.html', 'html/settings/db-adapters/new-adapter-form.html', 'html/settings/db-adapters/remove.html', 'html/settings/db-adapters/view.html', 'html/settings/sidebar.html', 'html/view-navigation.html']);
 
 angular.module("html/api/authorization.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/api/authorization.html",
@@ -2155,6 +2155,13 @@ angular.module("html/content.html", []).run(["$templateCache", function($templat
     "");
 }]);
 
+angular.module("html/dashboard-sidebar.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("html/dashboard-sidebar.html",
+    "<img src=\"img/ag-hero.png\" alt=\"Apigility\" class=\"scale\">\n" +
+    "\n" +
+    "");
+}]);
+
 angular.module("html/directives/ag-edit-inplace.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/directives/ag-edit-inplace.html",
     "<span>\n" +
@@ -2200,7 +2207,125 @@ angular.module("html/empty.html", []).run(["$templateCache", function($templateC
 
 angular.module("html/index.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/index.html",
-    "Apigility Dashboard\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"col-md-12\">\n" +
+    "        <div class=\"panel panel-info\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <a ui-sref=\"ag.api\">APIs</a>\n" +
+    "                </h4>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.modules.length\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    No APIs;\n" +
+    "                    <a ui-sref=\"ag.api\">would you like to create one now?</a>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <ul class=\"list-group\">\n" +
+    "                <li ng-repeat=\"api in dashboard.modules\" class=\"list-group-item\">\n" +
+    "                    <h4><a ui-sref=\"ag.api.version({apiName: api.name, version: api.latestVersion})\">\n" +
+    "                        {{ api.name }} (v{{ api.latestVersion }})\n" +
+    "                    </a></h4>\n" +
+    "\n" +
+    "                    <div class=\"row\">\n" +
+    "                        <div class=\"col-sm-2 col-sm-offset-1\"><b>REST Services:</b></div>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-9 list-group\">\n" +
+    "                            <p class=\"list-group-item\" ng-repeat=\"service in api.rest\">\n" +
+    "                                <a ui-sref=\"ag.api.version.rest({service: service, version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    {{ service }}\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "\n" +
+    "                            <p ng-hide=\"api.rest.length\" class=\"text-warning list-group-item\">\n" +
+    "                                No REST services configured; \n" +
+    "                                <a ui-sref=\"ag.api.version.rest({version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    would you like to create one?\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                    <div class=\"row\">\n" +
+    "                        <div class=\"col-sm-2 col-sm-offset-1\"><b>RPC Services:</b></div>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-9 list-group\">\n" +
+    "                            <p class=\"list-group-item\" ng-repeat=\"service in api.rpc\">\n" +
+    "                                <a ui-sref=\"ag.api.version.rpc({service: service, version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    {{ service }}\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "\n" +
+    "                            <p ng-hide=\"api.rpc.length\" class=\"text-warning list-group-item\">\n" +
+    "                                No RPC services configured; \n" +
+    "                                <a ui-sref=\"ag.api.version.rpc({version: api.latestVersion, apiName: api.name})\">\n" +
+    "                                    would you like to create one?\n" +
+    "                                </a>\n" +
+    "                            </p>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                </li>\n" +
+    "            </ul>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "        <div class=\"panel panel-info\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <i class=\"glyphicon glyphicon-lock\"></i>\n" +
+    "                    <a ui-sref=\"ag.settings.authentication\">Authentication</a>\n" +
+    "                </h4>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.authentication\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <table class=\"table\">\n" +
+    "                <ag-conditional-include\n" +
+    "                    condition=\"isHttpBasicAuthentication(dashboard.authentication)\"\n" +
+    "                    src=\"html/settings/authentication/http-basic-view.html\"></ag-conditional-include>\n" +
+    "                <ag-conditional-include\n" +
+    "                    condition=\"isHttpDigestAuthentication(dashboard.authentication)\"\n" +
+    "                    src=\"html/settings/authentication/http-digest-view.html\"></ag-conditional-include>\n" +
+    "                <ag-conditional-include\n" +
+    "                    condition=\"isOAuth2(dashboard.authentication)\"\n" +
+    "                    src=\"html/settings/authentication/oauth2-view.html\"></ag-conditional-include>\n" +
+    "            </table>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "        <div class=\"panel panel-info\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <i class=\"glyphicon glyphicon-book\"></i>\n" +
+    "                    <a ui-sref=\"ag.settings.db-adapters\">Database Adapters</a>\n" +
+    "                </h4>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.dbAdapters.length\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    No database adapters configured;\n" +
+    "                    <a ui-sref=\"ag.settings.db-adapters\">would you like to set one up now?</a>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <ul class=\"list-group\">\n" +
+    "                <li ng-repeat=\"adapter in dashboard.dbAdapters\" class=\"list-group-item\">\n" +
+    "                    <a ui-sref=\"ag.settings.db-adapters({adapter: adapter.adapter_name})\">{{ adapter.adapter_name }}</a>\n" +
+    "                </li>\n" +
+    "            </ul>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</div>\n" +
     "");
 }]);
 
@@ -2539,7 +2664,7 @@ angular.module("html/settings/authentication/http-basic.html", []).run(["$templa
     "    conditionals=\"{{ {edit: inEdit, delete: false} }}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
-    "            <span class=\"glyphicon glyphicon-lock\"></span>\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
     "\n" +
     "            HTTP Basic Settings\n" +
     "\n" +
@@ -2668,7 +2793,7 @@ angular.module("html/settings/authentication/http-digest.html", []).run(["$templ
     "    conditionals=\"{edit: inEdit, delete: false}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
-    "            <span class=\"glyphicon glyphicon-lock\"></span>\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
     "\n" +
     "            HTTP Digest Settings\n" +
     "\n" +
@@ -3029,7 +3154,7 @@ angular.module("html/settings/authentication/oauth2.html", []).run(["$templateCa
     "    conditionals=\"{edit: inEdit, delete: false}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
-    "            <span class=\"glyphicon glyphicon-lock\"></span>\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
     "\n" +
     "            OAuth2 Settings\n" +
     "\n" +
@@ -3347,7 +3472,76 @@ angular.module("html/settings/content-negotiation/view.html", []).run(["$templat
 
 angular.module("html/settings/dashboard.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/settings/dashboard.html",
-    "<h2>Apigility Dashboard</h2>\n" +
+    "<div class=\"panel panel-info\">\n" +
+    "    <div class=\"panel-heading\">\n" +
+    "        <h4 class=\"panel-title\">\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
+    "            <a ui-sref=\"ag.settings.authentication\">Authentication</a>\n" +
+    "        </h4>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"panel-body\" ng-show=\"!dashboard.authentication\">\n" +
+    "        <p class=\"text-warning\">\n" +
+    "            No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
+    "        </p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <table class=\"table\">\n" +
+    "        <ag-conditional-include\n" +
+    "            condition=\"isHttpBasicAuthentication(dashboard.authentication)\"\n" +
+    "            src=\"html/settings/authentication/http-basic-view.html\"></ag-conditional-include>\n" +
+    "        <ag-conditional-include\n" +
+    "            condition=\"isHttpDigestAuthentication(dashboard.authentication)\"\n" +
+    "            src=\"html/settings/authentication/http-digest-view.html\"></ag-conditional-include>\n" +
+    "        <ag-conditional-include\n" +
+    "            condition=\"isOAuth2(dashboard.authentication)\"\n" +
+    "            src=\"html/settings/authentication/oauth2-view.html\"></ag-conditional-include>\n" +
+    "    </table>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"panel panel-info\">\n" +
+    "    <div class=\"panel-heading\">\n" +
+    "        <h4 class=\"panel-title\">\n" +
+    "            <i class=\"glyphicon glyphicon-tags\"></i>\n" +
+    "            <a ui-sref=\"ag.settings.content-negotiation\">Content Negotiation</a>\n" +
+    "        </h4>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"panel-body\" ng-show=\"!dashboard.contentNegotiation.length\">\n" +
+    "        <p class=\"text-warning\">\n" +
+    "            No content negotiation selector rules configured;\n" +
+    "            <a ui-sref=\"ag.settings.content-negotiation\">would you like to set one up now?</a>\n" +
+    "        </p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <ul class=\"list-group\">\n" +
+    "        <li ng-repeat=\"selector in dashboard.contentNegotiation\" class=\"list-group-item\">\n" +
+    "            <a ui-sref=\"ag.settings.content-negotiation({selector: selector.content_name})\">{{ selector.content_name }}</a>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"panel panel-info\">\n" +
+    "    <div class=\"panel-heading\">\n" +
+    "        <h4 class=\"panel-title\">\n" +
+    "            <i class=\"glyphicon glyphicon-book\"></i>\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters\">Database Adapters</a>\n" +
+    "        </h4>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"panel-body\" ng-show=\"!dashboard.dbAdapters.length\">\n" +
+    "        <p class=\"text-warning\">\n" +
+    "            No database adapters configured;\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters\">would you like to set one up now?</a>\n" +
+    "        </p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <ul class=\"list-group\">\n" +
+    "        <li ng-repeat=\"adapter in dashboard.dbAdapters\" class=\"list-group-item\">\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters({adapter: adapter.adapter_name})\">{{ adapter.adapter_name }}</a>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
+    "</div>\n" +
     "");
 }]);
 
@@ -3463,7 +3657,7 @@ angular.module("html/settings/db-adapters/index.html", []).run(["$templateCache"
     "    conditionals=\"{{ {edit: inEdit, delete: false} }}\">\n" +
     "    <collapse-header>\n" +
     "      <h4 class=\"panel-title\">\n" +
-    "        <span class=\"glyphicon glyphicon-book\"></span>\n" +
+    "        <i class=\"glyphicon glyphicon-book\"></i>\n" +
     "\n" +
     "        {{ dbAdapter.adapter_name }}\n" +
     "\n" +

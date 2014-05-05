@@ -42,11 +42,13 @@ return array(
             'ZF\Apigility\Admin\Controller\FsPermissions' => 'ZF\Apigility\Admin\Controller\FsPermissionsController',
         ),
         'factories' => array(
+            'ZF\Apigility\Admin\Controller\Dashboard' => 'ZF\Apigility\Admin\Controller\DashboardControllerFactory',
             'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
             'ZF\Apigility\Admin\Controller\Filters' => 'ZF\Apigility\Admin\Controller\FiltersControllerFactory',
             'ZF\Apigility\Admin\Controller\Hydrators' => 'ZF\Apigility\Admin\Controller\HydratorsControllerFactory',
-            'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
             'ZF\Apigility\Admin\Controller\InputFilter' => 'ZF\Apigility\Admin\Controller\InputFilterControllerFactory',
+            'ZF\Apigility\Admin\Controller\SettingsDashboard' => 'ZF\Apigility\Admin\Controller\DashboardControllerFactory',
+            'ZF\Apigility\Admin\Controller\Validators' => 'ZF\Apigility\Admin\Controller\ValidatorsControllerFactory',
         ),
     ),
 
@@ -75,6 +77,26 @@ return array(
                         ),
                         'may_terminate' => false,
                         'child_routes' => array(
+                            'dashboard' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/dashboard',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Dashboard',
+                                        'action'     => 'dashboard',
+                                    ),
+                                ),
+                            ),
+                            'settings-dashboard' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/settings-dashboard',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\SettingsDashboard',
+                                        'action'     => 'settingsDashboard',
+                                    ),
+                                ),
+                            ),
                             'cache-enabled' => array(
                                 'type' => 'literal',
                                 'options' => array(
@@ -346,6 +368,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Authorization'            => 'HalJson',
             'ZF\Apigility\Admin\Controller\CacheEnabled'             => 'Json',
             'ZF\Apigility\Admin\Controller\ContentNegotiation'       => 'HalJson',
+            'ZF\Apigility\Admin\Controller\Dashboard'                => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'                => 'HalJson',
             'ZF\Apigility\Admin\Controller\Documentation'            => 'HalJson',
             'ZF\Apigility\Admin\Controller\Filters'                  => 'Json',
@@ -359,6 +382,7 @@ return array(
             'ZF\Apigility\Admin\Controller\OAuth2Authentication'     => 'HalJson',
             'ZF\Apigility\Admin\Controller\RestService'              => 'HalJson',
             'ZF\Apigility\Admin\Controller\RpcService'               => 'HalJson',
+            'ZF\Apigility\Admin\Controller\SettingsDashboard'        => 'HalJson',
             'ZF\Apigility\Admin\Controller\Source'                   => 'Json',
             'ZF\Apigility\Admin\Controller\Validators'               => 'Json',
             'ZF\Apigility\Admin\Controller\Versioning'               => 'Json',
@@ -377,6 +401,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Dashboard' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -424,6 +452,10 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
+            'ZF\Apigility\Admin\Controller\SettingsDashboard' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\Source' => array(
                 'application/json',
                 'application/*+json',
@@ -455,6 +487,10 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\Dashboard' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -492,6 +528,10 @@ return array(
                 'application/json',
             ),
             'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\SettingsDashboard' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -703,6 +743,10 @@ return array(
             'http_methods' => array('GET', 'PATCH'),
             'route_name'   => 'zf-apigility/api/config',
         ),
+        'ZF\Apigility\Admin\Controller\Dashboard' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/dashboard',
+        ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
             'http_methods' => array('GET', 'PATCH', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility/api/rest-service/rest-doc',
@@ -742,6 +786,10 @@ return array(
         'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
             'http_methods' => array('GET', 'POST', 'PATCH', 'DELETE'),
             'route_name'   => 'zf-apigility/api/authentication/oauth2',
+        ),
+        'ZF\Apigility\Admin\Controller\SettingsDashboard' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/settings-dashboard',
         ),
         'ZF\Apigility\Admin\Controller\Source' => array(
             'http_methods' => array('GET'),
