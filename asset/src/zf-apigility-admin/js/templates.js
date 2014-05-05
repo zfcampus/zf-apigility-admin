@@ -3400,7 +3400,7 @@ angular.module("html/settings/dashboard.html", []).run(["$templateCache", functi
     "    <div class=\"panel-heading\">\n" +
     "        <h4 class=\"panel-title\">\n" +
     "            <i class=\"glyphicon glyphicon-book\"></i>\n" +
-    "            <a ui-sref=\"ag.settings.db-adapters\">Database Adatpters</a>\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters\">Database Adapters</a>\n" +
     "        </h4>\n" +
     "    </div>\n" +
     "\n" +
