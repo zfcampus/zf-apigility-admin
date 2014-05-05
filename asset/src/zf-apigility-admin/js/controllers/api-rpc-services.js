@@ -34,13 +34,21 @@ angular.module('ag-admin').controller(
         $state.go($state.$current.name, {edit: ''}, {reload: true});
     }
 
+    $scope.toggleEditState = function (service, flag) {
+        flag = !!flag;
+        $state.go($state.$current.name, {service: service, edit: (flag ? true : null)}, {notify: false});
+        $scope.inEdit = flag;
+    };
 
     $scope.createNewRpcService = function () {
         ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(
             function (rpcResource) {
+                flash.success = 'New RPC service created; please wait for the list to refresh';
                 $scope.addRpcService = false;
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, $state, true, 'New RPC Service created');
+                ApiRepository.refreshApi($scope, $state, true, 'Finished reloading RPC service list', function () {
+                    $state.reload();
+                });
             },
             function (error) {
                 agFormHandler.reportError(error, $scope);

@@ -21,25 +21,25 @@
             <div class="btn-group pull-right service-buttons" ng-show="isLatestVersion()">
                 <button
                     type="button" title="Cancel" class="btn btn-sm btn-default"
-                    collapse-button criteria="{delete: false, edit: true}"
-                    ui-sref="ag.api.version.rest({ edit: null})"
-                    ui-sref-options="{ notify: false }">
+                    collapse-button criteria="{delete: false}"
+                    ng-show="inEdit"
+                    ng-click="toggleEditState(restService.service_name, false)">
                     Cancel
                 </button>
 
                 <button 
                     type="button" class="btn btn-sm btn-success" title="Edit service"
-                    collapse-button criteria="{delete: false, edit: false}"
-                    ui-sref="ag.api.version.rest({ edit: true })"
-                    ui-sref-options="{ notify: false }">
-                    <span class="glyphicon glyphicon-edit"></span>
+                    collapse-button criteria="{delete: false}"
+                    ng-show="!inEdit"
+                    ng-click="toggleEditState(restService.service_name, true)">
+                    <i class="glyphicon glyphicon-edit"></i>
                 </button>
 
                 <button 
                     type="button" class="btn btn-sm btn-danger" title="Remove service"
                     collapse-flag flags="{delete: true}"
                     collapse-button criteria="{delete: false}">
-                    <span class="glyphicon glyphicon-trash"></span>
+                    <i class="glyphicon glyphicon-trash"></i>
                 </button>
             </div>
 
@@ -52,10 +52,10 @@
         </collapse-header>
 
         <collapse-body>
-            <div collapse-show
-                criteria="{edit: false}"
-                default-template="'html/api/rest-services/view.html'"
-                toggled-template="'html/api/rest-services/edit.html'"></div>
+            <ag-toggle-include
+                condition="inEdit"
+                on-template="html/api/rest-services/edit.html"
+                off-template="html/api/rest-services/view.html"></ag-toggle-include>
         </collapse-body>
     </ag-collapse>
 </div>

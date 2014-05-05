@@ -33,7 +33,7 @@ angular.module('ag-admin').directive('agTabs', function() {
                 if (pane.name && pane.searchParam) {
                     var toParams = {};
                     toParams[pane.searchParam] = pane.name;
-                    $state.go($state.$current.name, toParams, {inherit:true, notify: true});
+                    $state.go($state.$current.name, toParams);
                 }
             };
 

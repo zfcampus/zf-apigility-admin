@@ -69,7 +69,8 @@ return array(
                         'options' => array(
                             'route' => '/api',
                             'defaults' => array(
-                                'action' => false,
+                                'is_apigility_admin_api' => true,
+                                'action'                 => false,
                             ),
                         ),
                         'may_terminate' => false,
