@@ -2539,7 +2539,7 @@ angular.module("html/settings/authentication/http-basic.html", []).run(["$templa
     "    conditionals=\"{{ {edit: inEdit, delete: false} }}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
-    "            <span class=\"glyphicon glyphicon-lock\"></span>\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
     "\n" +
     "            HTTP Basic Settings\n" +
     "\n" +
@@ -2668,7 +2668,7 @@ angular.module("html/settings/authentication/http-digest.html", []).run(["$templ
     "    conditionals=\"{edit: inEdit, delete: false}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
-    "            <span class=\"glyphicon glyphicon-lock\"></span>\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
     "\n" +
     "            HTTP Digest Settings\n" +
     "\n" +
@@ -3029,7 +3029,7 @@ angular.module("html/settings/authentication/oauth2.html", []).run(["$templateCa
     "    conditionals=\"{edit: inEdit, delete: false}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
-    "            <span class=\"glyphicon glyphicon-lock\"></span>\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
     "\n" +
     "            OAuth2 Settings\n" +
     "\n" +
@@ -3349,10 +3349,19 @@ angular.module("html/settings/dashboard.html", []).run(["$templateCache", functi
   $templateCache.put("html/settings/dashboard.html",
     "<div class=\"panel panel-info\">\n" +
     "    <div class=\"panel-heading\">\n" +
-    "        <h4 class=\"panel-title\"><a ui-sref=\"ag.settings.authentication\">Authentication</a></h4>\n" +
+    "        <h4 class=\"panel-title\">\n" +
+    "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
+    "            <a ui-sref=\"ag.settings.authentication\">Authentication</a>\n" +
+    "        </h4>\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"panel-body\" ng-switch=\"dashboard.authentication.type\">\n" +
+    "    <div class=\"panel-body\" ng-show=\"!dashboard.authentication\">\n" +
+    "        <p class=\"text-warning\">\n" +
+    "            No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
+    "        </p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <table class=\"table\">\n" +
     "        <ag-conditional-include\n" +
     "            condition=\"isHttpBasicAuthentication(dashboard.authentication)\"\n" +
     "            src=\"html/settings/authentication/http-basic-view.html\"></ag-conditional-include>\n" +
@@ -3362,10 +3371,51 @@ angular.module("html/settings/dashboard.html", []).run(["$templateCache", functi
     "        <ag-conditional-include\n" +
     "            condition=\"isOAuth2(dashboard.authentication)\"\n" +
     "            src=\"html/settings/authentication/oauth2-view.html\"></ag-conditional-include>\n" +
-    "        <p ng-show=\"!dashboard.authentication\" class=\"text-warning\">\n" +
-    "            No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
-    "        </p>\n" +
     "    </table>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"panel panel-info\">\n" +
+    "    <div class=\"panel-heading\">\n" +
+    "        <h4 class=\"panel-title\">\n" +
+    "            <i class=\"glyphicon glyphicon-tags\"></i>\n" +
+    "            <a ui-sref=\"ag.settings.content-negotiation\">Content Negotiation</a>\n" +
+    "        </h4>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"panel-body\" ng-show=\"!dashboard.contentNegotiation.length\">\n" +
+    "        <p class=\"text-warning\">\n" +
+    "            No content negotiation selector rules configured;\n" +
+    "            <a ui-sref=\"ag.settings.content-negotiation\">would you like to set one up now?</a>\n" +
+    "        </p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <ul class=\"list-group\">\n" +
+    "        <li ng-repeat=\"selector in dashboard.contentNegotiation\" class=\"list-group-item\">\n" +
+    "            <a ui-sref=\"ag.settings.content-negotiation({selector: selector.content_name})\">{{ selector.content_name }}</a>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"panel panel-info\">\n" +
+    "    <div class=\"panel-heading\">\n" +
+    "        <h4 class=\"panel-title\">\n" +
+    "            <i class=\"glyphicon glyphicon-book\"></i>\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters\">Database Adatpters</a>\n" +
+    "        </h4>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"panel-body\" ng-show=\"!dashboard.dbAdapters.length\">\n" +
+    "        <p class=\"text-warning\">\n" +
+    "            No database adapters configured;\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters\">would you like to set one up now?</a>\n" +
+    "        </p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <ul class=\"list-group\">\n" +
+    "        <li ng-repeat=\"adapter in dashboard.dbAdapters\" class=\"list-group-item\">\n" +
+    "            <a ui-sref=\"ag.settings.db-adapters({adapter: adapter.adapter_name})\">{{ adapter.adapter_name }}</a>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
     "</div>\n" +
     "");
 }]);
@@ -3482,7 +3532,7 @@ angular.module("html/settings/db-adapters/index.html", []).run(["$templateCache"
     "    conditionals=\"{{ {edit: inEdit, delete: false} }}\">\n" +
     "    <collapse-header>\n" +
     "      <h4 class=\"panel-title\">\n" +
-    "        <span class=\"glyphicon glyphicon-book\"></span>\n" +
+    "        <i class=\"glyphicon glyphicon-book\"></i>\n" +
     "\n" +
     "        {{ dbAdapter.adapter_name }}\n" +
     "\n" +
