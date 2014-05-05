@@ -5935,3 +5935,7 @@ table.body-striped > tbody:nth-child(even) > tr > th {
 .alert-error .alert-link {
   color: #843534;
 }
+.scale {
+  max-width: 100%;
+  max-height: 100%;
+}

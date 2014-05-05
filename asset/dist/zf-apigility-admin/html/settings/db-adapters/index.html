@@ -4,7 +4,7 @@
   <ag-collapse class="panel-info" ng-repeat="dbAdapter in dbAdapters" active="{{ activeAdapter == dbAdapter.adapter_name }}" name="{{ dbAdapter.adapter_name }}" searchparam="adapter" conditionals="{{ {edit: inEdit, delete: false} }}">
     <collapse-header>
       <h4 class="panel-title">
-        <span class="glyphicon glyphicon-book"></span>
+        <i class="glyphicon glyphicon-book"></i>
 
         {{ dbAdapter.adapter_name }}
 

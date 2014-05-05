@@ -8,6 +8,7 @@ namespace ZF\Apigility\Admin\Model;
 
 use InvalidArgumentException;
 use ReflectionClass;
+use ZF\Hal\Collection;
 
 class ModuleEntity
 {
@@ -160,20 +161,20 @@ class ModuleEntity
                     $this->isVendor = (bool) $value;
                     break;
                 case 'rest':
-                    if (!is_array($value)) {
-                        throw new InvalidArgumentException(
-                            'REST services must be an array; received "%s"',
+                    if (!is_array($value) && ! $value instanceof Collection) {
+                        throw new InvalidArgumentException(sprintf(
+                            'REST services must be an array or ZF\Hal\Collection; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))
-                        );
+                        ));
                     }
                     $this->restServices = $value;
                     break;
                 case 'rpc':
-                    if (!is_array($value)) {
-                        throw new InvalidArgumentException(
-                            'RPC services must be an array; received "%s"',
+                    if (!is_array($value) && ! $value instanceof Collection) {
+                        throw new InvalidArgumentException(sprintf(
+                            'RPC services must be an array or ZF\Hal\Collection; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))
-                        );
+                        ));
                     }
                     $this->rpcServices = $value;
                     break;

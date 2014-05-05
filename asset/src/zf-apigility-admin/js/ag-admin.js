@@ -30,7 +30,7 @@
 
               var home = {
                 title: 'Home',
-                href: 'ag.settings.overview',
+                href: 'ag.dashboard',
                 active: false
               };
 
@@ -146,6 +146,26 @@
           }
         }
       });
+      $stateProvider.state('ag.dashboard', {
+        url: '/',
+        data: {
+          pageTitle: 'Apigility'
+        },
+        resolve: {
+          dashboard: ['DashboardRepository', function (DashboardRepository) {
+            return DashboardRepository.fetch();
+          }]
+        },
+        views: {
+          'sidebar@': {
+            templateUrl: 'html/dashboard-sidebar.html'
+          },
+          'content@': {
+            templateUrl: 'html/index.html',
+            controller: 'DashboardController'
+          }
+        }
+      });
       $stateProvider.state('ag.settings', {
         abstract: true,
         url: '/settings'
@@ -155,9 +175,15 @@
         data: {
           pageTitle: 'Settings'
         },
+        resolve: {
+          dashboard: ['SettingsDashboardRepository', function (SettingsDashboardRepository) {
+            return SettingsDashboardRepository.fetch();
+          }]
+        },
         views: {
           'content@': {
-            templateUrl: 'html/settings/dashboard.html'
+            templateUrl: 'html/settings/dashboard.html',
+            controller: 'SettingsDashboardController'
           }
         }
       });
@@ -336,7 +362,7 @@
         }
       });
 
-      $urlRouterProvider.otherwise('/settings/overview');
+      $urlRouterProvider.otherwise('/');
     }
   );
 
