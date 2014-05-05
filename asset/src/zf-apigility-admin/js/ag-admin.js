@@ -157,7 +157,8 @@
         },
         views: {
           'content@': {
-            templateUrl: 'html/settings/dashboard.html'
+            templateUrl: 'html/settings/dashboard.html',
+            controller: 'SettingsDashboardController'
           }
         }
       });

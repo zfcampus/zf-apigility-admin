@@ -3347,7 +3347,26 @@ angular.module("html/settings/content-negotiation/view.html", []).run(["$templat
 
 angular.module("html/settings/dashboard.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/settings/dashboard.html",
-    "<h2>Apigility Dashboard</h2>\n" +
+    "<div class=\"panel panel-info\">\n" +
+    "    <div class=\"panel-heading\">\n" +
+    "        <h4 class=\"panel-title\"><a ui-sref=\"ag.settings.authentication\">Authentication</a></h4>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"panel-body\" ng-switch=\"dashboard.authentication.type\">\n" +
+    "        <ag-conditional-include\n" +
+    "            condition=\"isHttpBasicAuthentication(dashboard.authentication)\"\n" +
+    "            src=\"html/settings/authentication/http-basic-view.html\"></ag-conditional-include>\n" +
+    "        <ag-conditional-include\n" +
+    "            condition=\"isHttpDigestAuthentication(dashboard.authentication)\"\n" +
+    "            src=\"html/settings/authentication/http-digest-view.html\"></ag-conditional-include>\n" +
+    "        <ag-conditional-include\n" +
+    "            condition=\"isOAuth2(dashboard.authentication)\"\n" +
+    "            src=\"html/settings/authentication/oauth2-view.html\"></ag-conditional-include>\n" +
+    "        <p ng-show=\"!dashboard.authentication\" class=\"text-warning\">\n" +
+    "            No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
+    "        </p>\n" +
+    "    </table>\n" +
+    "</div>\n" +
     "");
 }]);
 

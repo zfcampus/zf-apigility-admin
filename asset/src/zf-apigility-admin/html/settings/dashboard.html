@@ -1,1 +1,20 @@
-<h2>Apigility Dashboard</h2>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4 class="panel-title"><a ui-sref="ag.settings.authentication">Authentication</a></h4>
+    </div>
+
+    <div class="panel-body" ng-switch="dashboard.authentication.type">
+        <ag-conditional-include
+            condition="isHttpBasicAuthentication(dashboard.authentication)"
+            src="html/settings/authentication/http-basic-view.html"></ag-conditional-include>
+        <ag-conditional-include
+            condition="isHttpDigestAuthentication(dashboard.authentication)"
+            src="html/settings/authentication/http-digest-view.html"></ag-conditional-include>
+        <ag-conditional-include
+            condition="isOAuth2(dashboard.authentication)"
+            src="html/settings/authentication/oauth2-view.html"></ag-conditional-include>
+        <p ng-show="!dashboard.authentication" class="text-warning">
+            No authentication configured; <a ui-sref="ag.settings.authentication">would you like to set it up now?</a>
+        </p>
+    </table>
+</div>
