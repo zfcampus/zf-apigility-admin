@@ -3,7 +3,22 @@
 
 angular.module('ag-admin').controller(
     'SettingsDashboardController',
-    function ($scope, $state, flash, SettingsDashboardRepository) {
+    function ($scope, $state, dashboard) {
+        if (dashboard.authentication) {
+            switch (dashboard.authentication.type) {
+                case 'http_basic':
+                    $scope.httpBasic = dashboard.authentication;
+                    break;
+                case 'http_digest':
+                    $scope.httpDigest = dashboard.authentication;
+                    break;
+                case 'oauth2':
+                    $scope.oauth2 = dashboard.authentication;
+                    break;
+            }
+        }
+
+        $scope.dashboard = dashboard;
 
         $scope.isHttpBasicAuthentication = function (authentication) {
             if (!authentication) {
@@ -25,33 +40,6 @@ angular.module('ag-admin').controller(
             }
             return (authentication.type == 'oauth2');
         };
-
-        var fetch = function () {
-            SettingsDashboardRepository.fetch().then(
-                function (dashboard) {
-                    $scope.dashboard = dashboard;
-
-                    if (dashboard.authentication) {
-                        switch (dashboard.authentication.type) {
-                            case 'http_basic':
-                                $scope.httpBasic = dashboard.authentication;
-                                break;
-                            case 'http_digest':
-                                $scope.httpDigest = dashboard.authentication;
-                                break;
-                            case 'oauth2':
-                                $scope.oauth2 = dashboard.authentication;
-                                break;
-                        }
-                    }
-                },
-                function (err) {
-                    flash.error = 'Unable to fetch settings dashboard';
-                }
-            );
-        };
-
-        fetch();
     }
 );
 

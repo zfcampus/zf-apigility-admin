@@ -151,6 +151,11 @@
         data: {
           pageTitle: 'Apigility'
         },
+        resolve: {
+          dashboard: ['DashboardRepository', function (DashboardRepository) {
+            return DashboardRepository.fetch();
+          }]
+        },
         views: {
           'sidebar@': {
             templateUrl: 'html/dashboard-sidebar.html'
@@ -169,6 +174,11 @@
         url: '/overview',
         data: {
           pageTitle: 'Settings'
+        },
+        resolve: {
+          dashboard: ['SettingsDashboardRepository', function (SettingsDashboardRepository) {
+            return SettingsDashboardRepository.fetch();
+          }]
         },
         views: {
           'content@': {
