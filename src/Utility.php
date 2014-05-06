@@ -15,7 +15,7 @@ class Utility
      */
     public static function recursiveDelete($dir)
     {
-        if (false === ($dh = @opendir($dir)))  {
+        if (false === ($dh = @opendir($dir))) {
             return false;
         } while (false !== ($obj = readdir($dh))) {
             if ($obj == '.' || $obj == '..') {
