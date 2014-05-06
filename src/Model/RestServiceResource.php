@@ -14,8 +14,6 @@ use ZF\Hal\Entity as HalEntity;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
-use ReflectionClass;
-use ZF\Apigility\Admin\Utility;
 
 class RestServiceResource extends AbstractResourceListener
 {
