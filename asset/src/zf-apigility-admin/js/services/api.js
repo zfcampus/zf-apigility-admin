@@ -340,7 +340,7 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
         },
 
         setDefaultApiVersion: function (apiName, defaultApiVersion) {
-            return $http({method: 'patch', url: '/admin/api/default-version', data: {module: apiName, version: defaultApiVersion}})
+            return $http({method: 'patch', url: apiBasePath + '/default-version', data: {module: apiName, version: defaultApiVersion}})
                 .then(function (response) {
                     return response.data;
                 });
