@@ -152,24 +152,20 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
             return deferred.promise;
         },
 
-        refreshApi: function (scope, state, force, message, callback) {
+        refreshApi: function (scope, force, message) {
             if (!scope.hasOwnProperty('api')) {
                 console.error('Provided scope does not have an API property; cannot refresh API');
                 return;
             }
 
-            this.getApi(scope.api.name, scope.api.version, true).then(function (api) {
+            return this.getApi(scope.api.name, scope.api.version, true).then(function (api) {
                 if (message) {
                     flash.success = message;
                 }
 
                 scope.api = api;
                 scope.currentVersion = api.currentVersion;
-
-                if (typeof callback !== 'function') {
-                    return;
-                }
-                callback();
+                return api;
             });
         },
 

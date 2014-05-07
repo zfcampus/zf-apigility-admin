@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'ApiRpcServicesController', 
-  function ($scope, $state, $stateParams, $sce, $modal, flash, filters, validators, selectors, ApiRepository, api, toggleSelection, agFormHandler) {
+  function ($scope, $state, $stateParams, $sce, $modal, $timeout, flash, filters, validators, selectors, ApiRepository, api, toggleSelection, agFormHandler) {
 
     $scope.activeService    = $stateParams.service ? $stateParams.service : '';
     $scope.inEdit           = !!$stateParams.edit;
@@ -41,13 +41,16 @@ angular.module('ag-admin').controller(
     };
 
     $scope.createNewRpcService = function () {
-        ApiRepository.createNewRpcService($scope.api.name, $scope.rpcServiceName, $scope.rpcServiceRoute).then(
+        var newServiceName = $scope.rpcServiceName;
+        ApiRepository.createNewRpcService($scope.api.name, newServiceName, $scope.rpcServiceRoute).then(
             function (rpcResource) {
                 flash.success = 'New RPC service created; please wait for the list to refresh';
                 $scope.addRpcService = false;
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, $state, true, 'Finished reloading RPC service list', function () {
-                    $state.reload();
+                ApiRepository.refreshApi($scope, true, 'Finished reloading RPC service list', function () {
+                    return $timeout(function () {
+                        $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
+                    }, 100);
                 });
             },
             function (error) {
@@ -61,7 +64,7 @@ angular.module('ag-admin').controller(
         ApiRepository.saveRpcService($scope.api.name, rpcServiceData).then(
             function (data) {
                 agFormHandler.resetForm($scope);
-                ApiRepository.refreshApi($scope, $state, true, 'RPC Service updated', function () {
+                ApiRepository.refreshApi($scope, true, 'RPC Service updated', function () {
                     $state.go($state.$current.name, { edit: null });
                 });
             },
@@ -75,7 +78,7 @@ angular.module('ag-admin').controller(
         ApiRepository.removeRpcService($scope.api.name, rpcServiceName, !!recursive)
             .then(function (data) {
                 $scope.deleteRpcService = false;
-                ApiRepository.refreshApi($scope, $state, true, 'RPC Service deleted');
+                ApiRepository.refreshApi($scope, true, 'RPC Service deleted');
             });
     };
 
