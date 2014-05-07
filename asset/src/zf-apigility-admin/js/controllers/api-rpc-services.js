@@ -47,7 +47,7 @@ angular.module('ag-admin').controller(
                 flash.success = 'New RPC service created; please wait for the list to refresh';
                 $scope.addRpcService = false;
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, true, 'Finished reloading RPC service list', function () {
+                ApiRepository.refreshApi($scope, true, 'Finished reloading RPC service list').then(function () {
                     return $timeout(function () {
                         $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
                     }, 100);
