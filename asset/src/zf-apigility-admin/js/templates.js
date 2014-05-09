@@ -2391,6 +2391,12 @@ angular.module("html/modals/cache-check.html", []).run(["$templateCache", functi
     "            </tr>\n" +
     "\n" +
     "            <tr>\n" +
+    "                <td>Zend Data Cache</td>\n" +
+    "                <td><kbd>zend_datacache.apc_compatibility</kbd></td>\n" +
+    "                <td><kbd>\"0\"</kbd> or <kbd>\"Off\"</kbd></td>\n" +
+    "            </tr>\n" +
+    "\n" +
+    "            <tr>\n" +
     "                <td>Zend Optimizer+</td>\n" +
     "                <td><kbd>zend_optimizerplus.enable</kbd></td>\n" +
     "                <td><kbd>\"0\"</kbd></td>\n" +
