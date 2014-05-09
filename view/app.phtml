@@ -5,7 +5,7 @@ $apiBase = $this->url('zf-apigility/api/module');
 $apiBase = substr($apiBase, 0, strrpos($apiBase, '/'));
 $docUri  = (class_exists('ZF\Apigility\Documentation\Module')) ? $this->url('zf-apigility/documentation') : '';
 
-$basePath = rtrim($this->basePath(), '/') . '/zf-apigility-admin';
+$basePath = $this->serverUrl(rtrim($this->basePath(), '/') . '/zf-apigility-admin');
 
 $html = file_get_contents($path);
 $html = str_replace('%BASE_HREF%', $basePath, $html);
