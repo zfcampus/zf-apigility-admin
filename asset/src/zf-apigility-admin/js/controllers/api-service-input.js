@@ -87,7 +87,7 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
 
     $scope.addFilterOption = function (filter) {
         if ($scope.filterOptions[filter.name][filter._newOptionName] == 'bool') {
-            filter._newOptionValue = (filter._newOptionValue === 'true');
+            filter._newOptionValue = (filter._newOptionValue === true);
         }
         filter.options[filter._newOptionName] = filter._newOptionValue;
         filter._newOptionName = '';
