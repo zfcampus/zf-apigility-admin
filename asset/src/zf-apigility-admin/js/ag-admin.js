@@ -157,9 +157,6 @@
           }]
         },
         views: {
-          'sidebar@': {
-            templateUrl: 'html/dashboard-sidebar.html'
-          },
           'content@': {
             templateUrl: 'html/index.html',
             controller: 'DashboardController'

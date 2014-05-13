@@ -5782,6 +5782,9 @@ h1,
 .h1 {
   color: #004000;
 }
+.align-right {
+  text-align: right;
+}
 .navbar > .container-fluid .navbar-brand {
   padding: 10px 15px;
 }
