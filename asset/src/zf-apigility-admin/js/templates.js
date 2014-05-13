@@ -2525,9 +2525,10 @@ angular.module("html/modals/help-content-negotiation.html", []).run(["$templateC
     "</div>\n" +
     "\n" +
     "<div class=\"modal-footer\">\n" +
-    "    <p style=\"float:left\">\n" +
+    "    <p class=\"pull-left\">\n" +
     "    <i class=\"glyphicon glyphicon-info-sign\"></i> <a href=\"https://apigility.org/documentation/api-primer/content-negotiation\" target=\"_blank\">More information here</a>\n" +
     "    </p>\n" +
+    "    <div class=\"clearfix\"></div>\n" +
     "    <button type=\"button\" class=\"btn btn-default\" ng-click=\"$close()\">Close</button>\n" +
     "</div>\n" +
     "");
@@ -2615,9 +2616,10 @@ angular.module("html/modals/help-input-filter.html", []).run(["$templateCache", 
     "</div>\n" +
     "\n" +
     "<div class=\"modal-footer\">\n" +
-    "    <p style=\"float:left\">\n" +
+    "    <p class=\"pull-left\">\n" +
     "    <i class=\"glyphicon glyphicon-info-sign\"></i> <a href=\"https://apigility.org/documentation/content-validation/basic-usage\" target=\"_blank\">More information here</a>\n" +
     "    </p>\n" +
+    "    <div class=\"clearfix\"></div>\n" +
     "    <button type=\"button\" ng-click=\"$close()\" class=\"btn btn-default\">Close</button>\n" +
     "</div>\n" +
     "\n" +
