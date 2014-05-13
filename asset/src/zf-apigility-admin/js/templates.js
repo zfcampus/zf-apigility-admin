@@ -2209,6 +2209,22 @@ angular.module("html/index.html", []).run(["$templateCache", function($templateC
   $templateCache.put("html/index.html",
     "<div class=\"row\">\n" +
     "    <div class=\"col-md-12\">\n" +
+    "        <div class=\"panel panel-info\" ng-show=\"!dashboard.modules.length\">\n" +
+    "            <div class=\"panel-heading\">\n" +
+    "                <h4 class=\"panel-title\">\n" +
+    "                    <i class=\"glyphicon glyphicon-question-sign\"></i> Getting started\n" +
+    "                </h4>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"panel-body\" ng-show=\"!dashboard.modules.length\">\n" +
+    "                <p class=\"text-warning\">\n" +
+    "                    Don't know where to start?\n" +
+    "                    <a href=\"https://apigility.org/documentation\">Read the documentation</a>\n" +
+    "                    or <a href=\"https://apigility.org/video\">watch the screencast</a>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
     "        <div class=\"panel panel-info\">\n" +
     "            <div class=\"panel-heading\">\n" +
     "                <h4 class=\"panel-title\">\n" +
@@ -2216,6 +2232,7 @@ angular.module("html/index.html", []).run(["$templateCache", function($templateC
     "                </h4>\n" +
     "            </div>\n" +
     "\n" +
+    "           \n" +
     "            <div class=\"panel-body\" ng-show=\"!dashboard.modules.length\">\n" +
     "                <p class=\"text-warning\">\n" +
     "                    No APIs;\n" +
@@ -2510,8 +2527,16 @@ angular.module("html/modals/help-content-negotiation.html", []).run(["$templateC
     "</div>\n" +
     "\n" +
     "<div class=\"modal-footer\">\n" +
+    "    <p class=\"pull-left\">\n" +
+    "        <a href=\"https://apigility.org/documentation/api-primer/content-negotiation\" target=\"_blank\">\n" +
+    "            <i class=\"glyphicon glyphicon-info-sign\"></i>\n" +
+    "            More information\n" +
+    "        </a>\n" +
+    "    </p>\n" +
     "    <button type=\"button\" class=\"btn btn-default\" ng-click=\"$close()\">Close</button>\n" +
     "</div>\n" +
+    "\n" +
+    "<div class=\"clearfix\"></div>\n" +
     "");
 }]);
 
@@ -2597,8 +2622,17 @@ angular.module("html/modals/help-input-filter.html", []).run(["$templateCache", 
     "</div>\n" +
     "\n" +
     "<div class=\"modal-footer\">\n" +
+    "    <p class=\"pull-left\">\n" +
+    "        <a href=\"https://apigility.org/documentation/content-validation/basic-usage\" target=\"_blank\">\n" +
+    "            <i class=\"glyphicon glyphicon-info-sign\"></i>\n" +
+    "            More information\n" +
+    "        </a>\n" +
+    "    </p>\n" +
+    "\n" +
     "    <button type=\"button\" ng-click=\"$close()\" class=\"btn btn-default\">Close</button>\n" +
     "</div>\n" +
+    "\n" +
+    "<div class=\"clearfix\"></div>\n" +
     "\n" +
     "");
 }]);
@@ -2848,24 +2882,30 @@ angular.module("html/settings/authentication/http-digest.html", []).run(["$templ
 angular.module("html/settings/authentication/index.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/settings/authentication/index.html",
     "<div ng-show=\"showAuthenticationSetup()\">\n" +
-    "    <p>\n" +
+    "    <div class=\"panel\">\n" +
+    "        <p>\n" +
     "        There is currently NO Authentication. Select <b>ONE</b> of the\n" +
     "        authentication methods below for your application:\n" +
-    "    </p>\n" +
+    "        </p>\n" +
     "    \n" +
-    "    <div class=\"btn-group\">\n" +
-    "        <button ng-click=\"showHttpBasicAuthenticationForm = true\" class=\"btn btn-sm btn-primary\" title=\"HTTP Basic\">\n" +
-    "            HTTP Basic\n" +
-    "        </button>\n" +
+    "        <div class=\"btn-group\">\n" +
+    "            <button ng-click=\"showHttpBasicAuthenticationForm = true\" class=\"btn btn-sm btn-primary\" title=\"HTTP Basic\">\n" +
+    "                HTTP Basic\n" +
+    "            </button>\n" +
     "\n" +
-    "        <button ng-click=\"showHttpDigestAuthenticationForm = true\" class=\"btn btn-sm btn-primary\" title=\"HTTP Digest\">\n" +
-    "            HTTP Digest\n" +
-    "        </button>\n" +
+    "            <button ng-click=\"showHttpDigestAuthenticationForm = true\" class=\"btn btn-sm btn-primary\" title=\"HTTP Digest\">\n" +
+    "                HTTP Digest\n" +
+    "            </button>\n" +
     "\n" +
-    "        <button ng-click=\"showOAuth2AuthenticationForm = true\" class=\"btn btn-sm btn-primary\" title=\"OAuth2\">\n" +
-    "            OAuth2\n" +
-    "        </button>\n" +
+    "            <button ng-click=\"showOAuth2AuthenticationForm = true\" class=\"btn btn-sm btn-primary\" title=\"OAuth2\">\n" +
+    "                OAuth2\n" +
+    "            </button>\n" +
+    "        </div>\n" +
     "    </div>\n" +
+    "\n" +
+    "    <p><a href=\"https://apigility.org/documentation/auth/authentication-about\" target=\"_blank\">\n" +
+    "        <i class=\"glyphicon glyphicon-info-sign\"></i> More Information\n" +
+    "    </p>\n" +
     "</div>\n" +
     "\n" +
     "<ag-conditional-include condition=\"showHttpBasicAuthenticationForm\"\n" +
@@ -3490,6 +3530,10 @@ angular.module("html/settings/dashboard.html", []).run(["$templateCache", functi
     "        <p class=\"text-warning\">\n" +
     "            No authentication configured; <a ui-sref=\"ag.settings.authentication\">would you like to set it up now?</a>\n" +
     "        </p>\n" +
+    "\n" +
+    "        <p><a href=\"https://apigility.org/documentation/auth/authentication-about\" target=\"_blank\">\n" +
+    "            <i class=\"glyphicon glyphicon-info-sign\"></i> More information\n" +
+    "        </a></p>    \n" +
     "    </div>\n" +
     "\n" +
     "    <table class=\"table\">\n" +
@@ -3518,6 +3562,10 @@ angular.module("html/settings/dashboard.html", []).run(["$templateCache", functi
     "            No content negotiation selector rules configured;\n" +
     "            <a ui-sref=\"ag.settings.content-negotiation\">would you like to set one up now?</a>\n" +
     "        </p>\n" +
+    "\n" +
+    "        <p><a href=\"https://apigility.org/documentation/api-primer/content-negotiation\" target=\"_blank\">\n" +
+    "            <i class=\"glyphicon glyphicon-info-sign\"></i> More information\n" +
+    "        </a></p>    \n" +
     "    </div>\n" +
     "\n" +
     "    <ul class=\"list-group\">\n" +
