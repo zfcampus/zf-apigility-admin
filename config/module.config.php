@@ -858,7 +858,7 @@ return array(
             'archive' => 'string',
             'target' => 'string',
         ),
-        'Zend\Filter\DateTimeForatter' => array(
+        'Zend\Filter\DateTimeFormatter' => array(
             'format' => 'string',
         ),
         'Zend\Filter\Decompress' => array(
@@ -909,7 +909,7 @@ return array(
             'use_upload_extension' => 'bool',
             'use_upload_name' => 'bool',
         ),
-        'Zend\Filter\File\Uppercase' => array(
+        'Zend\Filter\File\UpperCase' => array(
             'encoding' => 'string',
         ),
         'Zend\Filter\HtmlEntities' => array(
