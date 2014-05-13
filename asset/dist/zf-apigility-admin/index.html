@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <base href="%BASE_HREF%/">
 
+    <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="stylesheet" href="css/apigility.css"/>
 
 </head>
@@ -49,11 +50,31 @@
     <div class="container">
         <div class="row">
             <aside ui-view="sidebar" class="col-md-3 ag-sidebar" role="complementary"></aside>
-
             <main ui-view="content" class="ag col-md-9" role="main"></main>
         </div>
     </div>
 
+    <footer>
+        <hr>
+
+        <div class="container center-block">
+            <p class="pull-left">&copy; 2013 - 2014 by <a href="http://www.zend.com">Zend Technologies</a> Ltd.</p>
+
+            <p class="pull-right align-right">
+                Proudly built with <a href="http://framework.zend.com">ZF2</a>;
+                get more information at <a href="https://apigility.org">apigility.org</a>.
+                <br>
+                <a href="https://apigility.org/documentation" target="_blank">
+                    <i class="glyphicon glyphicon-arrow-right"></i>
+                    <i class="glyphicon glyphicon-book"></i>
+                    Documentation
+                </a>
+            </p>
+        </div>
+
+        <div class="clearfix"></div>
+    </footer>        
+                                                                    
     <div flash-alert="info" active-class="in" class="alert fade fade-out">
         <span class="alert-message">{{flash.message}}</span>
     </div>
