@@ -1,5 +1,20 @@
 <div class="row">
     <div class="col-md-12">
+        <div class="panel panel-info" ng-show="!dashboard.modules.length">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <i class="glyphicon glyphicon-question-sign"></i> Getting started
+                </h4>
+            </div>
+            <div class="panel-body" ng-show="!dashboard.modules.length">
+                <p class="text-warning">
+                    Don't you know how to start?
+                    <a href="https://apigility.org/documentation">Read the documentation</a>
+                    or <a href="https://apigility.org/video">watch the screencast</a>
+                </p>
+            </div>
+        </div>
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -7,6 +22,7 @@
                 </h4>
             </div>
 
+           
             <div class="panel-body" ng-show="!dashboard.modules.length">
                 <p class="text-warning">
                     No APIs;

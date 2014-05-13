@@ -149,7 +149,7 @@
       $stateProvider.state('ag.dashboard', {
         url: '/',
         data: {
-          pageTitle: 'Apigility'
+          pageTitle: 'Apigility',
         },
         resolve: {
           dashboard: ['DashboardRepository', function (DashboardRepository) {
@@ -157,9 +157,6 @@
           }]
         },
         views: {
-          'sidebar@': {
-            templateUrl: 'html/dashboard-sidebar.html'
-          },
           'content@': {
             templateUrl: 'html/index.html',
             controller: 'DashboardController'

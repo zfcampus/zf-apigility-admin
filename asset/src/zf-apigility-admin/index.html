@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <base href="%BASE_HREF%/" />
 
+    <link rel="icon" type="image/png" href="img/favicon.png" />
     <!-- build:css css/apigility.css -->
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="vendor/jquery-ui/themes/ui-lightness/jquery-ui.css" />
@@ -38,6 +39,7 @@
                     <li ng-class="{active: ('ag.settings' | includedByState)}"><a ui-sref="ag.settings.overview">Settings</a></li>
                     <li ng-class="{active: ('ag.api' | includedByState)}"><a ui-sref="ag.api">APIs</a></li>
                     <li ng-show="'%DOC_URI%'"><a href="%DOC_URI%">API Docs</a></li>
+                    <li><a href="https://apigility.org/documentation" target="_blank">Apigility documentation</a></li>
                 </ul>
             </div>
         </div>
@@ -57,11 +59,18 @@
     <div class="container">
         <div class="row">
             <aside ui-view="sidebar" class="col-md-3 ag-sidebar" role="complementary"></aside>
-
             <main ui-view="content" class="ag col-md-9" role="main"></main>
         </div>
     </div>
 
+    <footer>
+        <hr>
+            <div class="container center-block">
+                <p style="float:left">&copy; 2013 - 2014 by <a href="http://www.zend.com">Zend Technologies</a> Ltd.</p>
+                <p style="float:right">Proudly built with <a href="http://framework.zend.com">ZF2</a>, more information on <a href="http://apigility.org">apigility.org</a></p>
+            </div>
+    </footer>        
+                                                                    
     <div flash-alert="info" active-class="in" class="alert fade fade-out">
         <span class="alert-message">{{flash.message}}</span>
     </div>
