@@ -91,6 +91,7 @@ class DbConnectedRestServiceModelTest extends TestCase
             'adapter_name'               => 'DB\Barbaz',
             'table_name'                 => 'barbaz',
             'hydrator_name'              => 'ObjectProperty',
+            'entity_identifier_name'     => 'barbaz_id',
             'resource_http_methods'      => array('GET', 'PATCH'),
             'collection_http_methods'    => array('GET', 'POST'),
             'collection_query_whitelist' => array('sort', 'filter'),
@@ -230,6 +231,41 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->assertEquals($entity->resourceClass . '\\Table', $asArray['table_service']);
     }
 
+    /**
+     * @group 166
+     */
+    public function testOnFetchWillRetainResourceClassIfEventFetchFlagIsFalse()
+    {
+        $originalData = array(
+            'controller_service_name' => 'BarConf\Rest\Barbaz\Controller',
+            'resource_class'          => 'BarConf\Rest\Barbaz\BarbazResource',
+            'route_name'              => 'bar-conf.rest.barbaz',
+            'route_match'             => '/api/barbaz',
+            'entity_class'            => 'BarConf\Rest\Barbaz\BarbazEntity',
+        );
+        $entity = new RestServiceEntity();
+        $entity->exchangeArray($originalData);
+        $config = array( 'zf-apigility' => array('db-connected' => array(
+            'BarConf\Rest\Barbaz\BarbazResource' => array(
+                'adapter_name'  => 'Db\Barbaz',
+                'table_name'    => 'barbaz',
+                'hydrator_name' => 'ObjectProperty',
+            ),
+        )));
+
+        $event = new Event();
+        $event->setParam('entity', $entity);
+        $event->setParam('config', $config);
+        $event->setParam('fetch', false);
+        $result = $this->model->onFetch($event);
+
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity', $result);
+        $this->assertEquals('BarConf\Rest\Barbaz\BarbazResource', $result->resourceClass);
+        $asArray = $result->getArrayCopy();
+        $this->assertArrayHasKey('resource_class', $asArray);
+        $this->assertEquals('BarConf\Rest\Barbaz\BarbazResource', $asArray['resource_class']);
+    }
+
     public function testUpdateServiceReturnsUpdatedDbConnectedRestServiceEntity()
     {
         $originalEntity = $this->getCreationPayload();
@@ -279,6 +315,31 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->assertEquals($newProps['adapter_name'], $resourceConfig['adapter_name']);
         $this->assertEquals($newProps['table_service'], $resourceConfig['table_service']);
         $this->assertEquals('barbaz', $resourceConfig['table_name']);
+        $this->assertEquals($newProps['hydrator_name'], $resourceConfig['hydrator_name']);
+    }
+
+    /**
+     * @group 166
+     */
+    public function testUpdateServiceUpdatesEntityIdentifierNameAndHydrator()
+    {
+        $originalEntity = $this->getCreationPayload();
+        $this->model->createService($originalEntity);
+
+        $newProps = array(
+            'entity_identifier_name' => 'id',
+            'hydrator_name'          => 'Zend\\Stdlib\\Hydrator\\ClassMethods',
+        );
+        $originalEntity->exchangeArray($newProps);
+        $result = $this->model->updateService($originalEntity);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-apigility', $config);
+        $this->assertArrayHasKey('db-connected', $config['zf-apigility']);
+        $this->assertArrayHasKey('BarConf\V1\Rest\Barbaz\BarbazResource', $config['zf-apigility']['db-connected']);
+
+        $resourceConfig = $config['zf-apigility']['db-connected']['BarConf\V1\Rest\Barbaz\BarbazResource'];
+        $this->assertEquals($newProps['entity_identifier_name'], $resourceConfig['entity_identifier_name']);
         $this->assertEquals($newProps['hydrator_name'], $resourceConfig['hydrator_name']);
     }
 
