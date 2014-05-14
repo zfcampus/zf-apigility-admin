@@ -45,6 +45,7 @@ class RestServiceResource extends AbstractResourceListener
     /**
      * @param  RestServiceModelFactory $restFactory
      * @param  InputFilterModel $inputFilterModel
+     * @param  DocumentationModel $documentationModel
      */
     public function __construct(RestServiceModelFactory $restFactory, InputFilterModel $inputFilterModel, DocumentationModel $documentationModel)
     {
@@ -181,7 +182,7 @@ class RestServiceResource extends AbstractResourceListener
 
         // Make sure we have an entity first
         $model  = $this->getModel();
-        $entity = $model->fetch($id);
+        $entity = $model->fetch($id, false);
 
         $entity->exchangeArray($data);
 
@@ -212,7 +213,7 @@ class RestServiceResource extends AbstractResourceListener
     {
         // Make sure we have an entity first
         $model  = $this->getModel();
-        $entity = $model->fetch($id);
+        $entity = $model->fetch($id, false);
 
         $request   = $this->getEvent()->getRequest();
         $recursive = $request->getQuery('recursive', false);

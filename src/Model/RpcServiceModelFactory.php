@@ -42,6 +42,8 @@ class RpcServiceModelFactory
     /**
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
+     * @param  SharedEventManagerInterface $sharedEvents
+     * @param  ModuleModel $moduleModel
      */
     public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory, SharedEventManagerInterface $sharedEvents, ModuleModel $moduleModel)
     {
