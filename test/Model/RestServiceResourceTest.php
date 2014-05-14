@@ -10,7 +10,10 @@ use BarConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionObject;
 use Zend\Config\Writer\PhpArray;
+use Zend\EventManager\SharedEventManager;
+use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
+use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
@@ -117,5 +120,52 @@ class RestServiceResourceTest extends TestCase
         $controllerServiceName = $entity->controllerServiceName;
         $this->assertNotEmpty($controllerServiceName);
         $this->assertContains('\\Test\\', $controllerServiceName);
+    }
+
+    /**
+     * @group 166
+     */
+    public function testPatchOfADbConnectedServiceUpdatesDbConnectedConfiguration()
+    {
+        $moduleManager           = $this->moduleManager;
+        $moduleUtils             = $this->modules;
+        $writer                  = $this->writer;
+        $configResourceFactory   = $this->configFactory;
+        $moduleModel             = new ModuleModel($moduleManager, array(), array());
+        $sharedEvents            = new SharedEventManager();
+        $restServiceModelFactory = new RestServiceModelFactory($moduleUtils, $configResourceFactory, $sharedEvents, $moduleModel);
+        $resource                = new RestServiceResource($restServiceModelFactory, $this->filter, $this->docs);
+
+        $sharedEvents->attach('ZF\Apigility\Admin\Model\RestServiceModel', 'fetch', 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch');
+
+        $r = new ReflectionObject($resource);
+        $prop = $r->getProperty('moduleName');
+        $prop->setAccessible(true);
+        $prop->setValue($resource, 'BarConf');
+
+        $entity = $resource->create(array(
+            'adapter_name' => 'Db\Test',
+            'table_name'   => 'test',
+        ));
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity', $entity);
+
+        $id = $entity->controllerServiceName;
+        $updateData = array(
+            'entity_identifier_name' => 'test_id',
+            'hydrator_name' => 'Zend\Stdlib\Hydrator\ObjectProperty',
+        );
+        $resource->patch($id, $updateData);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertInternalType('array', $config);
+        $this->assertArrayHasKey('BarConf\\V1\\Rest\\Test\\TestEntity', $config['zf-hal']['metadata_map']);
+        $this->assertArrayHasKey('BarConf\\V1\\Rest\\Test\\TestResource', $config['zf-apigility']['db-connected']);
+        $halConfig = $config['zf-hal']['metadata_map']['BarConf\\V1\\Rest\\Test\\TestEntity'];
+        $agConfig  = $config['zf-apigility']['db-connected']['BarConf\\V1\\Rest\\Test\\TestResource'];
+
+        $this->assertEquals('test_id', $halConfig['entity_identifier_name']);
+        $this->assertEquals('test_id', $agConfig['entity_identifier_name']);
+        $this->assertEquals('Zend\\Stdlib\\Hydrator\\ObjectProperty', $halConfig['hydrator']);
+        $this->assertEquals('Zend\\Stdlib\\Hydrator\\ObjectProperty', $agConfig['hydrator_name']);
     }
 }

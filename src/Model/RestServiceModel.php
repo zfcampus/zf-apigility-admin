@@ -152,9 +152,10 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * @param  string $controllerService
+     * @param  bool $isAFetchOperation If this is for a non-fetch operation, pass boolean false; allows listeners to include additional data necessary for clean updates.
      * @return RestServiceEntity|false
      */
-    public function fetch($controllerService)
+    public function fetch($controllerService, $isAFetchOperation = true)
     {
         $config = $this->configResource->fetch(true);
         if (!isset($config['zf-rest'])
@@ -185,6 +186,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $eventResults = $this->getEventManager()->trigger(__FUNCTION__, $this, array(
             'entity' => $entity,
             'config' => $config,
+            'fetch'  => $isAFetchOperation,
         ), function ($r) {
             return ($r instanceof RestServiceEntity);
         });

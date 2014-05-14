@@ -57,7 +57,7 @@ class DbConnectedRestServiceModel
         $dbConnectedEntity->exchangeArray(array_merge($entity->getArrayCopy(), $config));
 
         // If no override resource class is present, remove it from the returned entity
-        if (! isset($config['resource_class'])) {
+        if ($e->getParam('fetch', true) && ! isset($config['resource_class'])) {
             $dbConnectedEntity->exchangeArray(array('resource_class' => null));
         }
 
@@ -126,11 +126,19 @@ class DbConnectedRestServiceModel
         $updatedProps   = $this->updateDbConnectedConfig($entity);
         $updatedEntity->exchangeArray($updatedProps);
         $this->updateHalConfig($entity);
+
+        // Determine whether or not the resource class should be returned with the entity
+        $config = $this->restModel->configResource->fetch(true);
+        $config = $config['zf-apigility']['db-connected'][$entity->resourceClass];
+        if (! isset($config['resource_class'])) {
+            $entity->exchangeArray(array('resource_class' => null));
+        }
+
         return $updatedEntity;
     }
 
     /**
-     * Deelte a DB-Connected service
+     * Delete a DB-Connected service
      *
      * @param  DbConnectedRestServiceEntity $entity
      * @param  bool $recursive
