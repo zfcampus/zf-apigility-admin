@@ -5785,6 +5785,9 @@ h1,
 .align-right {
   text-align: right;
 }
+.navbar {
+  min-height: 71px;
+}
 .navbar > .container-fluid .navbar-brand {
   padding: 10px 15px;
 }
