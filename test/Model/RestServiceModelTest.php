@@ -815,4 +815,30 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals(array(), $test['collection_http_methods']);
         $this->assertEquals(array(), $test['entity_http_methods']);
     }
+
+    /**
+     * @group 170
+     */
+    public function testUpdateRestWillUpdateCollectionName()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        $options = array(
+            'collection_name' => 'foo_bars',
+        );
+        $patch = new RestServiceEntity();
+        $patch->exchangeArray($options);
+
+        $this->codeRest->updateRestConfig($original, $patch);
+
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+        $this->assertArrayHasKey('zf-rest', $config);
+        $this->assertArrayHasKey($original->controllerServiceName, $config['zf-rest']);
+        $test = $config['zf-rest'][$original->controllerServiceName];
+
+        foreach ($options as $key => $value) {
+            $this->assertEquals($value, $test[$key]);
+        }
+    }
 }
