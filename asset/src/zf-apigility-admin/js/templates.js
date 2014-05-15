@@ -2905,7 +2905,7 @@ angular.module("html/settings/authentication/index.html", []).run(["$templateCac
     "\n" +
     "    <p><a href=\"https://apigility.org/documentation/auth/authentication-about\" target=\"_blank\">\n" +
     "        <i class=\"glyphicon glyphicon-info-sign\"></i> More Information\n" +
-    "    </p>\n" +
+    "    </a></p>\n" +
     "</div>\n" +
     "\n" +
     "<ag-conditional-include condition=\"showHttpBasicAuthenticationForm\"\n" +
