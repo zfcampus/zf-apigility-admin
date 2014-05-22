@@ -123,6 +123,14 @@ class DbConnectedRestServiceModel
     public function updateService(DbConnectedRestServiceEntity $entity)
     {
         $updatedEntity  = $this->restModel->updateService($entity);
+
+        // We need the resource class in order to update db-connected config!
+        if (! $entity->resourceClass && $updatedEntity->resourceClass) {
+            $entity->exchangeArray(array(
+                'resource_class' => $updatedEntity->resourceClass,
+            ));
+        }
+
         $updatedProps   = $this->updateDbConnectedConfig($entity);
         $updatedEntity->exchangeArray($updatedProps);
         $this->updateHalConfig($entity);

@@ -320,7 +320,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $controllerService = $update->controllerServiceName;
 
         try {
-            $original = $this->fetch($controllerService);
+            $original = $this->fetch($controllerService, false);
         } catch (Exception\RuntimeException $e) {
             throw new Exception\RuntimeException(sprintf(
                 'Cannot update REST service "%s"; not found',
@@ -333,7 +333,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $this->updateContentNegotiationConfig($original, $update);
         $this->updateHalConfig($original, $update);
 
-        return $this->fetch($controllerService);
+        return $this->fetch($controllerService, false);
     }
 
     /**
