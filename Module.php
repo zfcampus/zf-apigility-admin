@@ -14,6 +14,7 @@ use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Entity;
 use ZF\Hal\View\HalJsonModel;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use ReflectionClass;
 
 class Module
 {
@@ -39,8 +40,43 @@ class Module
         $events   = $app->getEventManager();
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
+        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), 600);
     }
-
+       
+    /**
+     * Adjust the filter options in presence of adapters of Zend\Filter
+     *
+     * @param  \Zend\Mvc\MvcEvent $e
+     */
+    public function onRoute(MvcEvent $e)
+    {
+    	$request = $e->getRequest();
+    	if (!$request->isPut()) {
+    		return;
+    	}
+  		$data = json_decode($request->getContent());
+   		if (!isset($data[0]->filters)) {
+   			return;
+   		}
+   		for ($i=0; $i < count($data[0]->filters); $i++) {
+   			if (!isset($data[0]->filters[$i]->name)) {
+   				continue;
+   			}
+   			$filter = $data[0]->filters[$i]->name;
+   			$class  = new ReflectionClass($filter);
+   			// if filter implements CompressionAlgorithmInterface or EncryptionAlgorithmInterface
+   			// we change the filter's name to the parent and we add the adapter param to filter's name
+   			if ($class->implementsInterface('Zend\Filter\Compress\CompressionAlgorithmInterface') ||
+        		$class->implementsInterface('Zend\Filter\Encrypt\EncryptionAlgorithmInterface')) {
+   				$name    = substr($filter, 0, strrpos($filter, '\\'));
+   				$adapter = substr($filter, strrpos($filter, '\\') + 1);
+   				$data[0]->filters[$i]->name = $name;
+   				$data[0]->filters[$i]->options->adapter = $adapter; 
+   			}
+   		}
+   		$request->setContent(json_encode($data));
+    }
+    
     public function getAutoloaderConfig()
     {
         $this->disableOpCache();
