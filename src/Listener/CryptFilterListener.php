@@ -10,6 +10,7 @@ use ReflectionClass;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
+use ZF\ContentNegotiation\ParameterDataContainer;
 
 class CryptFilterListener extends AbstractListenerAggregate
 {
@@ -50,6 +51,10 @@ class CryptFilterListener extends AbstractListenerAggregate
         if (! $data) {
             // No data; nothing to do
             return;
+        }
+
+        if ($data instanceof ParameterDataContainer) {
+            $data = $data->getBodyParams();
         }
 
         if (! isset($data['filters'])) {
