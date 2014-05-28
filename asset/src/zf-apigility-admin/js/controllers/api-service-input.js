@@ -139,6 +139,11 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
                 delete input.showNewValidatorForm;
             }
 
+            if (input.hasOwnProperty('file_upload') && input.file_upload) {
+                input.type = 'Zend\\InputFilter\\FileInput';
+                delete input.file_upload;
+            }
+
             _.forEach(input.filters, function (filter) {
                 if (filter.hasOwnProperty('showNewOptionForm')) {
                     delete filter.showNewOptionForm;
