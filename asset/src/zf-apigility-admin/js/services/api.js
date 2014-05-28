@@ -380,6 +380,11 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 });
             }
 
+            if (typeof data.type === 'string' &&
+                data.type == 'Zend\\InputFilter\\FileInput') {
+                data.file_upload = true;
+            }
+
             if (typeof data.required == 'undefined') {
                 data.required = true;
             } else {
