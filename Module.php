@@ -39,6 +39,9 @@ class Module
         $events   = $app->getEventManager();
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
+        $events->attachAggregate(
+            $this->sm->get('ZF\Apigility\Admin\Listener\CryptFilterListener')
+        );
     }
 
     public function getAutoloaderConfig()
