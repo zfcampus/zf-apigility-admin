@@ -213,6 +213,11 @@ angular.module("html/api/input-edit.html", []).run(["$templateCache", function($
     "</div></div>\n" +
     "\n" +
     "<div class=\"panel panel-default\"><div class=\"panel-body\">\n" +
+    "    <label class=\"control-label\">Will this field be a file upload?</label>\n" +
+    "    <toggle-switch model=\"input.file_upload\" class=\"small pull-right\" on-label=\"Yes\" off-label=\"No\"></toggle-switch>\n" +
+    "</div></div>\n" +
+    "\n" +
+    "<div class=\"panel panel-default\"><div class=\"panel-body\">\n" +
     "    <label class=\"control-label\">Required</label>\n" +
     "    <toggle-switch model=\"input.required\" class=\"small pull-right\" on-label=\"Yes\" off-label=\"No\"></toggle-switch>\n" +
     "</div></div>\n" +
@@ -599,6 +604,14 @@ angular.module("html/api/input-view.html", []).run(["$templateCache", function($
     "<div class=\"panel panel-default\"><div class=\"panel-body\">\n" +
     "  <label class=\"control-label\">Description</label>\n" +
     "  <p class=\"text-muted\">{{ input.description }}</p>\n" +
+    "</div></div>\n" +
+    "\n" +
+    "<div class=\"panel panel-default\"><div class=\"panel-body\">\n" +
+    "    <span class=\"form-control-static input-xlarge pull-right\" ng-class=\"{true: 'text-info', false: 'text-muted'}[input.file_upload]\">\n" +
+    "        <strong>{{input.file_upload && 'Yes' || 'No'}}</strong>\n" +
+    "    </span>\n" +
+    "\n" +
+    "    <label class=\"control-label\">Is this field a file upload?</label>\n" +
     "</div></div>\n" +
     "\n" +
     "<div class=\"panel panel-default\"><div class=\"panel-body\">\n" +
