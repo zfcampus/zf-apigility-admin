@@ -3691,7 +3691,7 @@ angular.module("html/settings/db-adapters/edit.html", []).run(["$templateCache",
     "            </div>\n" +
     "        </div>\n" +
     "\n" +
-    "        <div class=\"form-group\">\n" +
+    "        <div class=\"form-group\" ng-show=\"dbAdapter.driver && (dbAdapter.driver != 'Pdo_Pgsql') && (dbAdapter.driver != 'Pgsql')\">\n" +
     "            <label class=\"control-label\" for=\"charset\">Charset</label>\n" +
     "            <div class=\"controls\">\n" +
     "                <input type=\"text\" placeholder=\"(Optional) Charset\" class=\"form-control input-xlarge\" ng-model=\"dbAdapter.charset\">\n" +
@@ -3867,7 +3867,7 @@ angular.module("html/settings/db-adapters/new-adapter-form.html", []).run(["$tem
     "                    </div>\n" +
     "                </div>\n" +
     "\n" +
-    "                <div class=\"form-group\">\n" +
+    "                <div class=\"form-group\" ng-show=\"driver && (driver != 'Pdo_Pgsql') && (driver != 'Pgsql')\">\n" +
     "                    <label class=\"control-label\" for=\"charset\">Charset</label>\n" +
     "                    <div class=\"controls\">\n" +
     "                        <input type=\"text\" placeholder=\"(Optional) Charset\" class=\"form-control input-xlarge\" ng-model=\"charset\">\n" +

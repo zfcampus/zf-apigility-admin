@@ -41,6 +41,12 @@ class DbAdapterModel
     {
         $key = 'db.adapters.' . $name;
 
+        if (strstr($adapterConfig['driver'], 'Pgsql')
+            && isset($adapterConfig['charset'])
+        ) {
+            unset($adapterConfig['charset']);
+        }
+
         $this->globalConfig->patchKey($key, array());
         $this->localConfig->patchKey($key, $adapterConfig);
 

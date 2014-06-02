@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" ng-show="driver && (driver != 'Pdo_Pgsql') && (driver != 'Pgsql')">
                     <label class="control-label" for="charset">Charset</label>
                     <div class="controls">
                         <input type="text" placeholder="(Optional) Charset" class="form-control input-xlarge" ng-model="charset">
