@@ -29,6 +29,11 @@ class DbAdapterInputFilter extends InputFilter
             'error_message' => 'Please provide a Database Adapter driver name available to Zend Framework',
         ));
         $this->add(array(
+            'name' => 'dsn',
+            'required' => false,
+            'allow_empty' => true,
+        ));
+        $this->add(array(
             'name' => 'username',
             'required' => false,
             'allow_empty' => true,
