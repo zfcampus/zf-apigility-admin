@@ -13,6 +13,11 @@ manage APIs in Apigility.
 >
 > **DO NOT** enable this module in production systems.
 
+Requirements
+------------
+  
+Please see the [composer.json](composer.json) file.
+
 Installation
 ------------
 
