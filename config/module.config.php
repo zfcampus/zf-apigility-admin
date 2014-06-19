@@ -613,7 +613,6 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
                 'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
-                'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
             ),
             'ZF\Apigility\Admin\Model\DocumentationEntity' => array(
@@ -653,7 +652,6 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
                 'route_name'      => 'zf-apigility/api/module/rpc-service/input-filter',
-                'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
             ),
             'ZF\Apigility\Admin\Model\RpcServiceEntity' => array(
