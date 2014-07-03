@@ -86,7 +86,10 @@ class InputFilterModel
         }
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
-        if (!array_key_exists($validator, $config['input_filter_specs'])) {
+        if (! isset($config['input_filter_specs'])
+            || ! is_array($config['input_filter_specs'])
+            || ! array_key_exists($validator, $config['input_filter_specs'])
+        ) {
             return false;
         }
 
