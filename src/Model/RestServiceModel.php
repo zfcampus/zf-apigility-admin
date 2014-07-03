@@ -394,7 +394,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $srcPath = $this->getSourcePath($serviceName);
 
         $classResource = sprintf('%sResource', $serviceName);
-        $className 	   = sprintf('%sResourceFactory', $serviceName);
+        $className       = sprintf('%sResourceFactory', $serviceName);
         $classPath     = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
