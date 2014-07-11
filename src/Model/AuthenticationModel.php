@@ -165,7 +165,7 @@ class AuthenticationModel
                 $type   = array_shift($config['accept_schemes']);
                 $realm  = isset($config['realm']) ? $config['realm'] : 'api';
                 return new AuthenticationEntity($type, $realm, $config);
-            case (isset($config['dsn'])):
+            case (isset($config['dsn']) || isset($config['dsn_type'])):
                 return new AuthenticationEntity(AuthenticationEntity::TYPE_OAUTH2, $config);
         }
     }
