@@ -181,7 +181,7 @@ class AuthenticationEntity
                     $this->database = $value;
                     break;
                 case 'dsn':
-                    $this->dsn = $value;
+                    $this->dsn = $value ?: 'mongodb://localhost:27017';
                     break;
                 case 'htdigest':
                     $this->htdigest = $value;
