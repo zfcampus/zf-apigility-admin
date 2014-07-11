@@ -287,6 +287,35 @@ class AuthenticationModelTest extends TestCase
     }
 
     /**
+     * @group 172
+     */
+    public function testRemovingOAuth2MongoConfigurationRemovesConfigurationFromEachFile()
+    {
+        if (!extension_loaded('mongo')) {
+            $this->markTestSkipped('mongo extension must be loaded to run this test');
+        }
+
+        $toCreate = array(
+            'dsn_type'    => 'mongo',
+            'dsn'         => 'mongodb://localhost:27017/apigility',
+            'route_match' => '/api/oauth',
+        );
+
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create($toCreate);
+
+        $model->remove();
+
+        $global = include $this->globalConfigPath;
+        $this->assertArrayNotHasKey('oauth', $global['router']['routes']);
+        $this->assertFalse(isset($global['router']['routes']['oauth']));
+        $local = include $this->localConfigPath;
+        $this->assertFalse(isset($local['router']['routes']['oauth']));
+        $this->assertArrayNotHasKey('mongo', $local['zf-oauth2']);
+        $this->assertArrayNotHasKey('storage', $local['zf-oauth2']);
+    }
+
+    /**
      * @group zf-oauth2-19
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()

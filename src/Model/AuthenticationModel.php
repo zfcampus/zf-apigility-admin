@@ -121,6 +121,7 @@ class AuthenticationModel
         $configKeys = array(
             'zf-mvc-auth.authentication.http',
             'zf-oauth2.db',
+            'zf-oauth2.mongo',
             'zf-oauth2.storage',
             'router.routes.oauth',
         );
