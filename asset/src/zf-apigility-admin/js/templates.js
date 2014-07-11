@@ -3210,7 +3210,7 @@ angular.module("html/settings/authentication/oauth2.html", []).run(["$templateCa
   $templateCache.put("html/settings/authentication/oauth2.html",
     "<ag-collapse class=\"panel-info\"\n" +
     "    no-chevron\n" +
-    "    conditionals=\"{edit: inEdit, delete: false}\">\n" +
+    "    conditionals=\"{{ {edit: inEdit, delete: false} }}\">\n" +
     "    <collapse-header>\n" +
     "        <h4 class=\"panel-title\">\n" +
     "            <i class=\"glyphicon glyphicon-lock\"></i>\n" +
