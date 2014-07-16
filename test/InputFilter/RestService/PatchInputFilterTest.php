@@ -57,6 +57,41 @@ class PatchInputFilterTest extends TestCase
                 'selector' => 'HalJson',
                 'service_name' => 'Baz_Bat',
             )),
+            'page_size-negative' => array(array(
+                'accept_whitelist' => array (
+                    0 => 'application/vnd.foo_bar.v1+json',
+                    1 => 'application/hal+json',
+                    2 => 'application/json',
+                ),
+                'collection_class' => 'Zend\Paginator\Paginator',
+                'collection_http_methods' => array (
+                    0 => 'GET',
+                    1 => 'POST',
+                ),
+                'collection_name' => 'foo_bar',
+                'collection_query_whitelist' => array (
+                ),
+                'content_type_whitelist' => array (
+                    0 => 'application/vnd.foo_bar.v1+json',
+                    1 => 'application/json',
+                ),
+                'entity_class' => 'StdClass',
+                'entity_http_methods' => array (
+                    0 => 'GET',
+                    1 => 'PATCH',
+                    2 => 'PUT',
+                    3 => 'DELETE',
+                ),
+                'entity_identifier_name' => 'id',
+                'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+                'page_size' => -1,
+                'page_size_param' => NULL,
+                'resource_class' => 'Foo_Bar\\V1\\Rest\\Baz_Bat\\Baz_BatResource',
+                'route_identifier_name' => 'foo_bar_id',
+                'route_match' => '/foo_bar[/:foo_bar_id]',
+                'selector' => 'HalJson',
+                'service_name' => 'Baz_Bat',
+            )),
         );
     }
 

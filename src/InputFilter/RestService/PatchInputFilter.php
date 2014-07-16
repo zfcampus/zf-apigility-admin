@@ -6,6 +6,8 @@
 
 namespace ZF\Apigility\Admin\InputFilter\RestService;
 
+use Zend\Validator\Callback as CallbackValidator;
+
 class PatchInputFilter extends PostInputFilter
 {
     protected $isUpdate = true;
@@ -68,9 +70,22 @@ class PatchInputFilter extends PostInputFilter
             'allow_empty' => true,
             'continue_if_empty' => true,
             'validators' => array(
-                array('name' => 'Zend\Validator\Digits')
+                new CallbackValidator(function ($value) {
+                    if (intval($value) != $value) {
+                        return false;
+                    }
+
+                    $value = intval($value);
+                    if ($value === -1
+                        || $value > 0
+                    ) {
+                        return true;
+                    }
+
+                    return false;
+                }),
             ),
-            'error_message' => 'The Page Size must be an integer',
+            'error_message' => 'The Page Size must be either a positive integer or the value "-1" (disabling pagination)',
         ));
         $this->add(array(
             'name' => 'collection_http_methods',
