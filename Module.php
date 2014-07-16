@@ -37,6 +37,7 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
+        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
         $events->attachAggregate(
@@ -311,6 +312,28 @@ class Module
                 return new Controller\VersioningController($factory);
             },
         ));
+    }
+
+    /**
+     * Ensure the render_collections flag of the HAL view helper is enabled
+     * regardless of the configuration setting if we match an admin service.
+     *
+     * @param MvcEvent $e
+     */
+    public function onRoute(MvcEvent $e)
+    {
+        $matches = $e->getRouteMatch();
+        if (! $matches
+            || 0 !== strpos($matches->getParam('controller'), 'ZF\Apigility\Admin\\')
+        ) {
+            return;
+        }
+
+        $app      = $e->getTarget();
+        $services = $app->getServiceManager();
+        $helpers  = $services->get('ViewHelperManager');
+        $hal      = $helpers->get('Hal');
+        $hal->setRenderCollections(true);
     }
 
     /**

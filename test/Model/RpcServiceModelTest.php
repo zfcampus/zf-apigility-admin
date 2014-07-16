@@ -489,7 +489,7 @@ class RpcServiceModelTest extends TestCase
         $service = $this->codeRpc->fetch($serviceName);
         $this->assertTrue($this->codeRpc->deleteService($service));
 
-        $config = include($path . '/config/module.config.php');
+        $config = include $path . '/config/module.config.php';
         $this->assertInternalType('array', $config);
         $this->assertInternalType('array', $config['zf-versioning']);
         $this->assertInternalType('array', $config['router']['routes']);
