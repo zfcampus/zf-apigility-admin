@@ -97,10 +97,10 @@ class DbAdapterModelTest extends TestCase
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create('Db\New', $toCreate);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertDbConfigEquals(array(), 'Db\New', $global);
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertDbConfigEquals($toCreate, 'Db\New', $local);
     }
 
@@ -126,11 +126,11 @@ class DbAdapterModelTest extends TestCase
         $model = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
         $model->create('Db\New', array('driver' => 'Pdo_Sqlite', 'database' => __FILE__));
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertDbConfigEquals(array(), 'Db\Old', $global);
         $this->assertDbConfigEquals(array(), 'Db\New', $global);
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertDbConfigEquals($localSeedConfig['db']['adapters']['Db\Old'], 'Db\Old', $local);
         $this->assertDbConfigEquals($localSeedConfig['db']['adapters']['Db\Old'], 'Db\New', $local);
     }
@@ -273,7 +273,7 @@ class DbAdapterModelTest extends TestCase
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create('Db\New', $toCreate);
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
 
         $expected = $toCreate;
         unset($expected['charset']);
