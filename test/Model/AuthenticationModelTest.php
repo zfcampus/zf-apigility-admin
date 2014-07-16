@@ -101,13 +101,13 @@ class AuthenticationModelTest extends TestCase
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create($toCreate);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertAuthenticationConfigEquals('http', array(
             'accept_schemes' => array('basic'),
             'realm'          => 'zendcon',
         ), $global);
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertAuthenticationConfigEquals('http', array(
             'htpasswd'       => __DIR__ . '/htpasswd',
         ), $local);
@@ -206,7 +206,7 @@ class AuthenticationModelTest extends TestCase
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create($toCreate);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertArrayHasKey('router', $global);
         $this->assertArrayHasKey('routes', $global['router']);
         $this->assertArrayHasKey('oauth', $global['router']['routes']);
@@ -214,7 +214,7 @@ class AuthenticationModelTest extends TestCase
         $this->assertArrayHasKey('route', $global['router']['routes']['oauth']['options']);
         $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertEquals(array(
             'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
             'db' => array(
@@ -242,7 +242,7 @@ class AuthenticationModelTest extends TestCase
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create($toCreate);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertArrayHasKey('router', $global);
         $this->assertArrayHasKey('routes', $global['router']);
         $this->assertArrayHasKey('oauth', $global['router']['routes']);
@@ -250,7 +250,7 @@ class AuthenticationModelTest extends TestCase
         $this->assertArrayHasKey('route', $global['router']['routes']['oauth']['options']);
         $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertEquals(array(
             'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
             'mongo' => array(

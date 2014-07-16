@@ -93,7 +93,7 @@ class ContentNegotiationTest extends TestCase
         $model = $this->createModelFromConfigArray(array());
         $model->create('Json', $toCreate);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertContentConfigEquals($toCreate, 'Json', $global);
     }
 
@@ -114,7 +114,7 @@ class ContentNegotiationTest extends TestCase
             ),
         );
         $model->update('Json', $toUpdate);
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertContentConfigEquals($toUpdate, 'Json', $global);
     }
 
@@ -130,7 +130,7 @@ class ContentNegotiationTest extends TestCase
         $model->create('Json', $toCreate);
 
         $model->remove('Json');
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertArrayNotHasKey('Json', $global['zf-content-negotiation']['selectors']);
     }
 
@@ -152,7 +152,7 @@ class ContentNegotiationTest extends TestCase
         );
         $model->create('Foo', $toCreate2);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertContentConfigContains($toCreate, 'Json', $global);
         $this->assertContentConfigContains($toCreate2, 'Foo', $global);
 
