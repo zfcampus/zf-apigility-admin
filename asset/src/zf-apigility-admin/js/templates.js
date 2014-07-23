@@ -3700,6 +3700,55 @@ angular.module("html/settings/db-adapters/edit.html", []).run(["$templateCache",
     "        </div>\n" +
     "    </fieldset>\n" +
     "\n" +
+    "    <ag-collapse class=\"panel-default\">\n" +
+    "        <collapse-header>\n" +
+    "            <h4 class=\"panel-title\">Driver Options</h4>\n" +
+    "        </collapse-header>\n" +
+    "\n" +
+    "        <collapse-body>\n" +
+    "            <li\n" +
+    "                class=\"list-group-item\"\n" +
+    "                ng-repeat=\"(optionKey, optionValue) in dbAdapter.driver_options\">\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label>Option:</label>\n" +
+    "                    <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"optionKey\">\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label>Value:</label>\n" +
+    "                    <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"optionValue\">\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"btn-group ag-new-input pull-right\">\n" +
+    "                    <button type=\"button\" class=\"btn btn-sm btn-danger\"\n" +
+    "                        ng-click=\"removeDriverOption(dbAdapter, optionKey)\">Remove Option</button>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"clearfix\"></div>\n" +
+    "            </li>\n" +
+    "\n" +
+    "            <li class=\"list-group-item\">\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label>Option:</label>\n" +
+    "                    <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"dbAdapter._newOptionKey\">\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label>Value:</label>\n" +
+    "                    <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"dbAdapter._newOptionValue\">\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"btn-group ag-new-input pull-right\">\n" +
+    "                    <button type=\"button\" class=\"btn btn-sm btn-primary\"\n" +
+    "                        ng-click=\"addDriverOption(dbAdapter)\">Add Option</button>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"clearfix\"></div>\n" +
+    "            </li>\n" +
+    "        </collapse-body>\n" +
+    "    </ag-collapse>\n" +
+    "\n" +
     "    <div class=\"btn-group pull-right\">\n" +
     "        <button type=\"button\" class=\"btn btn-sm btn-default\" ag-cancel-edit>Cancel</a>\n" +
     "        <button type=\"submit\" class=\"btn btn-sm btn-success\">Save</button>\n" +
@@ -3876,6 +3925,55 @@ angular.module("html/settings/db-adapters/new-adapter-form.html", []).run(["$tem
     "                </div>\n" +
     "            </fieldset>\n" +
     "\n" +
+    "            <ag-collapse class=\"panel-default\">\n" +
+    "                <collapse-header>\n" +
+    "                    <h4 class=\"panel-title\">Driver Options</h4>\n" +
+    "                </collapse-header>\n" +
+    "\n" +
+    "                <collapse-body>\n" +
+    "                    <li\n" +
+    "                        class=\"list-group-item\"\n" +
+    "                        ng-repeat=\"(optionKey, optionValue) in driver_options\">\n" +
+    "\n" +
+    "                        <div class=\"form-group\">\n" +
+    "                            <label>Option:</label>\n" +
+    "                            <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"optionKey\">\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <div class=\"form-group\">\n" +
+    "                            <label>Value:</label>\n" +
+    "                            <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"optionValue\">\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <div class=\"btn-group ag-new-input pull-right\">\n" +
+    "                            <button type=\"button\" class=\"btn btn-sm btn-danger\"\n" +
+    "                                ng-click=\"removeNewDriverOption(driver_options, optionKey)\">Remove Option</button>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <div class=\"clearfix\"></div>\n" +
+    "                    </li>\n" +
+    "\n" +
+    "                    <li class=\"list-group-item\">\n" +
+    "                        <div class=\"form-group\">\n" +
+    "                            <label>Option:</label>\n" +
+    "                            <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"newOptionKey\">\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <div class=\"form-group\">\n" +
+    "                            <label>Value:</label>\n" +
+    "                            <input type=\"text\" class=\"form-control input-xlarge\" ng-model=\"newOptionValue\">\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <div class=\"btn-group ag-new-input pull-right\">\n" +
+    "                            <button type=\"button\" class=\"btn btn-sm btn-primary\"\n" +
+    "                                ng-click=\"addNewDriverOption(driver_options)\">Add Option</button>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <div class=\"clearfix\"></div>\n" +
+    "                    </li>\n" +
+    "                </collapse-body>\n" +
+    "            </ag-collapse>\n" +
+    "\n" +
     "            <div class=\"btn-group pull-right\">\n" +
     "                <a ng-click=\"resetForm()&&(showNewDbAdapterForm = false)\" class=\"btn btn-sm btn-default\">Cancel</a>\n" +
     "                <button type=\"submit\" class=\"btn btn-sm btn-primary\">Create DB Adapter</button>\n" +
@@ -3952,6 +4050,25 @@ angular.module("html/settings/db-adapters/view.html", []).run(["$templateCache",
     "    <tr ng-show=\"dbAdapter.charset\">\n" +
     "        <td>Charset</td>\n" +
     "        <td>{{ dbAdapter.charset }}</td>\n" +
+    "    </tr>\n" +
+    "\n" +
+    "    <tr ng-show=\"dbAdapter.driver_options\">\n" +
+    "        <td colspan=\"2\">\n" +
+    "        <ag-collapse class=\"panel-default\">\n" +
+    "            <collapse-header>\n" +
+    "                <h4 class=\"panel-title\">Driver Options</h4>\n" +
+    "            </collapse-header>\n" +
+    "\n" +
+    "            <collapse-body>\n" +
+    "                <table class=\"table table-striped\">\n" +
+    "                    <tr ng-repeat=\"(optionKey, optionValue) in dbAdapter.driver_options\">\n" +
+    "                        <td>{{ optionKey }}</td>\n" +
+    "                        <td>{{ optionValue }}</td>\n" +
+    "                    </tr>\n" +
+    "                </table>\n" +
+    "            </collapse-body>\n" +
+    "        </ag-collapse>\n" +
+    "        </td>\n" +
     "    </tr>\n" +
     "</table>\n" +
     "\n" +

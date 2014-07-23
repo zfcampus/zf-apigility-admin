@@ -98,6 +98,55 @@
                 </div>
             </fieldset>
 
+            <ag-collapse class="panel-default">
+                <collapse-header>
+                    <h4 class="panel-title">Driver Options</h4>
+                </collapse-header>
+
+                <collapse-body>
+                    <li
+                        class="list-group-item"
+                        ng-repeat="(optionKey, optionValue) in driver_options">
+
+                        <div class="form-group">
+                            <label>Option:</label>
+                            <input type="text" class="form-control input-xlarge" ng-model="optionKey">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Value:</label>
+                            <input type="text" class="form-control input-xlarge" ng-model="optionValue">
+                        </div>
+
+                        <div class="btn-group ag-new-input pull-right">
+                            <button type="button" class="btn btn-sm btn-danger"
+                                ng-click="removeNewDriverOption(driver_options, optionKey)">Remove Option</button>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="form-group">
+                            <label>Option:</label>
+                            <input type="text" class="form-control input-xlarge" ng-model="newOptionKey">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Value:</label>
+                            <input type="text" class="form-control input-xlarge" ng-model="newOptionValue">
+                        </div>
+
+                        <div class="btn-group ag-new-input pull-right">
+                            <button type="button" class="btn btn-sm btn-primary"
+                                ng-click="addNewDriverOption(driver_options)">Add Option</button>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </li>
+                </collapse-body>
+            </ag-collapse>
+
             <div class="btn-group pull-right">
                 <a ng-click="resetForm()&&(showNewDbAdapterForm = false)" class="btn btn-sm btn-default">Cancel</a>
                 <button type="submit" class="btn btn-sm btn-primary">Create DB Adapter</button>
