@@ -7,6 +7,8 @@
 namespace ZF\Apigility\Admin\InputFilter;
 
 use Zend\InputFilter\InputFilter;
+use Zend\Stdlib\ArrayUtils;
+use Zend\Validator\Callback as CallbackValidator;
 
 class DbAdapterInputFilter extends InputFilter
 {
@@ -61,6 +63,17 @@ class DbAdapterInputFilter extends InputFilter
             'name' => 'charset',
             'required' => false,
             'allow_empty' => true,
+        ));
+        $this->add(array(
+            'name' => 'driver_options',
+            'required' => false,
+            'allow_empty' => true,
+            'validators' => array(
+                new CallbackValidator(function ($value) {
+                    return ArrayUtils::isHashTable($value);
+                }),
+            ),
+            'error_message' => 'Driver options must be provided as a set of key/value pairs',
         ));
     }
 }

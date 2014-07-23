@@ -38,5 +38,24 @@
         <td>Charset</td>
         <td>{{ dbAdapter.charset }}</td>
     </tr>
+
+    <tr ng-show="dbAdapter.driver_options">
+        <td colspan="2">
+        <ag-collapse class="panel-default">
+            <collapse-header>
+                <h4 class="panel-title">Driver Options</h4>
+            </collapse-header>
+
+            <collapse-body>
+                <table class="table table-striped">
+                    <tr ng-repeat="(optionKey, optionValue) in dbAdapter.driver_options">
+                        <td>{{ optionKey }}</td>
+                        <td>{{ optionValue }}</td>
+                    </tr>
+                </table>
+            </collapse-body>
+        </ag-collapse>
+        </td>
+    </tr>
 </table>
 
