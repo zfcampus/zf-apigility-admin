@@ -1177,7 +1177,7 @@ angular.module("html/api/rest-services/new.html", []).run(["$templateCache", fun
     "\n" +
     "                        <p>\n" +
     "                            You can create adapters on the \n" +
-    "                            <a ng-href=\"/admin#/global/db-adapters\">Database Adapters setting page</a>.\n" +
+    "                            <a ui-sref=\"ag.settings.db-adapters\">Database Adapters setting page</a>.\n" +
     "                        </p>\n" +
     "                    </div>\n" +
     "                </div>\n" +
@@ -2164,7 +2164,6 @@ angular.module("html/breadcrumbs.html", []).run(["$templateCache", function($tem
 
 angular.module("html/content.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/content.html",
-    "\n" +
     "");
 }]);
 
