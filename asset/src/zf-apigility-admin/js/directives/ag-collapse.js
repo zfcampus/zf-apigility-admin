@@ -339,17 +339,21 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 /* create display callback */
                 displayCallback = function (flag) {
                     var template = (flag) ? contentTemplate : emptyTemplate;
-                    AgTemplateInjector.fetchTemplate(template).then(function (contents) {
-                        AgTemplateInjector.populateElement(element, contents, scope);
-                        element.toggleClass('in', flag);
-                    });
+                    AgTemplateInjector.fetchTemplate(template).then(
+                        function (contents) {
+                            AgTemplateInjector.populateElement(element, contents, scope);
+                            element.toggleClass('in', flag);
+                        }
+                    );
                 };
 
                 /* render default content */
                 var template = element.hasClass('in') ? contentTemplate : emptyTemplate;
-                AgTemplateInjector.fetchTemplate(template).then(function (contents) {
-                    AgTemplateInjector.populateElement(element, contents, scope);
-                });
+                AgTemplateInjector.fetchTemplate(template).then(
+                    function (contents) {
+                        AgTemplateInjector.populateElement(element, contents, scope);
+                    }
+                );
             }
 
             panelCtrl.setBody(element, displayCallback);
@@ -456,15 +460,19 @@ angular.module('ag-admin').directive('agCollapse', function() {
                 /* create display callback */
                 displayCallback = function (flag, compare) {
                     var template = (flag === compare) ? defaultTemplate : toggledTemplate;
-                    AgTemplateInjector.fetchTemplate(template).then(function (contents) {
-                        AgTemplateInjector.populateElement(element, contents, scope);
-                    });
+                    AgTemplateInjector.fetchTemplate(template).then(
+                        function (contents) {
+                            AgTemplateInjector.populateElement(element, contents, scope);
+                        }
+                    );
                 };
 
                 /* render default content */
-                AgTemplateInjector.fetchTemplate(defaultTemplate).then(function (contents) {
-                    AgTemplateInjector.populateElement(element, contents, scope);
-                });
+                AgTemplateInjector.fetchTemplate(defaultTemplate).then(
+                    function (contents) {
+                        AgTemplateInjector.populateElement(element, contents, scope);
+                    }
+                );
             }
 
             panelCtrl.addConditionalWatcher(criteria, displayCallback);

@@ -10,7 +10,7 @@ angular.module('ag-admin').factory('DashboardRepository', function ($http, apiBa
             };
 
             return $http(config).then(
-                function success(response) {
+                function (response) {
                     var data = response.data;
 
                     var authentication;

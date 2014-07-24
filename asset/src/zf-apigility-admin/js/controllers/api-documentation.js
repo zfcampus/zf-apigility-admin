@@ -60,9 +60,11 @@ angular.module('ag-admin').controller(
             });
         }
 
-        ApiAuthorizationRepository.getServiceAuthorizations($scope.service, moduleName, version).then(function (authorizations) {
-            $scope.authorizations = authorizations;
-        });
+        ApiAuthorizationRepository.getServiceAuthorizations($scope.service, moduleName, version).then(
+            function (authorizations) {
+                $scope.authorizations = authorizations;
+            }
+        );
 
         $scope.requiresAuthorization = function (method, type) {
             var authorizations = $scope.authorizations;
@@ -173,7 +175,8 @@ angular.module('ag-admin').controller(
                     agFormHandler.resetForm($scope);
                     $scope.$parent.flash.success = 'Documentation saved.';
                     $state.go($state.$current.name, {edit: ''}, {reload: true});
-                },
+                }
+            ).catch(
                 function (error) {
                     agFormHandler.reportError(error, $scope);
                 }

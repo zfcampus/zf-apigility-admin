@@ -80,7 +80,8 @@ angular.module('ag-admin').controller(
                 function (savedAuthorizations) {
                     agFormHandler.resetForm($scope);
                     flash.success = 'Authorization settings saved';
-                },
+                }
+            ).catch(
                 function (error) {
                     agFormHandler.reportError(error, $scope);
                 }

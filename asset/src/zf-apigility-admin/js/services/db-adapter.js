@@ -21,7 +21,7 @@ angular.module('ag-admin').factory('DbAdapterResource', function ($http, $q, api
                 url: dbAdapterApiPath
             };
             return $http(config).then(
-                function success(response) {
+                function (response) {
                     adapters = Hal.pluckCollection('db_adapter', response.data);
                     adapters = Hal.props(adapters);
                     return adapters;
@@ -30,24 +30,27 @@ angular.module('ag-admin').factory('DbAdapterResource', function ($http, $q, api
         },
 
         createNewAdapter: function (options) {
-            return $http.post(dbAdapterApiPath, options)
-                .then(function (response) {
+            return $http.post(dbAdapterApiPath, options).then(
+                function (response) {
                     return Hal.props(response.data);
-                });
+                }
+            );
         },
 
         saveAdapter: function (name, data) {
-            return $http({method: 'patch', url: dbAdapterApiPath + '/' + encodeURIComponent(name), data: data})
-                .then(function (response) {
+            return $http({method: 'patch', url: dbAdapterApiPath + '/' + encodeURIComponent(name), data: data}).then(
+                function (response) {
                     return Hal.props(response.data);
-                });
+                }
+            );
         },
 
         removeAdapter: function (name) {
-            return $http.delete(dbAdapterApiPath + '/' + encodeURIComponent(name))
-                .then(function (response) {
+            return $http.delete(dbAdapterApiPath + '/' + encodeURIComponent(name)).then(
+                function (response) {
                     return true;
-                });
+                }
+            );
         }
     };
 });

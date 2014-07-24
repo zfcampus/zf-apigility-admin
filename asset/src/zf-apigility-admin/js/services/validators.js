@@ -8,10 +8,11 @@ angular.module('ag-admin').factory(
         return {
             getList: function () {
                 var promise = $http({method: 'GET', url: servicePath}).then(
-                    function success(response) {
+                    function (response) {
                         return response.data.validators;
-                    },
-                    function error() {
+                    }
+                ).catch(
+                    function () {
                         flash.error = 'Unable to fetch validators for validator dropdown; you may need to reload the page';
                         return false;
                     }

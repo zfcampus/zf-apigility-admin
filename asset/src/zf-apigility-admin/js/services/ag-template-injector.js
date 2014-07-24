@@ -20,7 +20,8 @@ angular.module('ag-admin').factory(
         function (result) {
           templates[template] = result.data;
           return templates[template];
-        },
+        }
+      ).catch(
         function (error) {
           console.error('Unable to fetch template ' + template);
           console.error(error);

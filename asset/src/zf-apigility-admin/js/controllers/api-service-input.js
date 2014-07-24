@@ -163,7 +163,8 @@ angular.module('ag-admin').controller('ApiServiceInputController', function ($sc
                 agFormHandler.resetForm($scope);
                 $scope.$parent.flash.success = 'Fields configuration saved.';
                 $state.go($state.$current.name, {edit: null}, {reload: true});
-            },
+            }
+        ).catch(
             function (error) {
                 agFormHandler.reportError(error, $scope);
             }
