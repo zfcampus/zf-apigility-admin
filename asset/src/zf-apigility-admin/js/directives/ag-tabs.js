@@ -139,22 +139,28 @@ angular.module('ag-admin').directive('agTabs', function() {
             }
 
             /* Set the contents to the empty template to begin */
-            AgTemplateInjector.fetchTemplate(emptyTemplate).then(function (contents) {
-                AgTemplateInjector.populateElement(element, contents, scope);
-            });
+            AgTemplateInjector.fetchTemplate(emptyTemplate).then(
+                function (contents) {
+                    AgTemplateInjector.populateElement(element, contents, scope);
+                }
+            );
 
             /* Define the select method for the scope */
             scope.select = function (scope) {
-                AgTemplateInjector.fetchTemplate(contentTemplate).then(function (contents) {
-                    AgTemplateInjector.populateElement(element, contents, scope, onloadExpr);
-                });
+                AgTemplateInjector.fetchTemplate(contentTemplate).then(
+                    function (contents) {
+                        AgTemplateInjector.populateElement(element, contents, scope, onloadExpr);
+                    }
+                );
             };
 
             /* Define the deselect method for the scope */
             scope.deselect = function (scope) {
-                AgTemplateInjector.fetchTemplate(emptyTemplate).then(function (contents) {
-                    AgTemplateInjector.populateElement(element, contents, scope);
-                });
+                AgTemplateInjector.fetchTemplate(emptyTemplate).then(
+                    function (contents) {
+                        AgTemplateInjector.populateElement(element, contents, scope);
+                    }
+                );
             };
 
             /* Add the scope as a watch on the tab pane */

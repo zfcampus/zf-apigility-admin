@@ -33,7 +33,8 @@ angular.module('ag-admin').controller(
            */
           $rootScope.$broadcast('api.updateList');
           $state.go('ag.api.version', {apiName: newApi.name, version: 1});
-        },
+        }
+      ).catch(
         function (error) {
           agFormHandler.reportError(error, $scope);
         }

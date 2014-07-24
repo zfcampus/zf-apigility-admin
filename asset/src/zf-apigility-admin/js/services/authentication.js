@@ -10,43 +10,50 @@ angular.module('ag-admin').factory(
         return {
             hasAuthentication: function() {
                 return this.fetch({cache: false}).then(
-                    function success(response) {
+                    function (response) {
                         var configured = true;
                         if (response === '') {
                             configured = false;
                         }
                         return { configured: configured };
-                    },
-                    function error(response) {
+                    }
+                ).catch(
+                    function (response) {
                         return { configured: false };
                     }
                 );
             },
             fetch: function(options) {
-                return $http.get(authenticationPath, options)
-                    .then(function (response) {
+                return $http.get(authenticationPath, options).then(
+                    function (response) {
                         return response.data;
-                    });
+                    }
+                );
             },
             createAuthentication: function (type, options) {
-                return $http.post(authenticationPath + '/' + type, options)
-                    .then(function (response) {
+                return $http.post(authenticationPath + '/' + type, options).then(
+                    function (response) {
                         return response.data;
-                    });
+                    }
+                );
             },
             updateAuthentication: function (type, data) {
-                return $http({method: 'patch', url: authenticationPath + '/' + type, data: data})
-                    .then(function (response) {
+                return $http({method: 'patch', url: authenticationPath + '/' + type, data: data}).then(
+                    function (response) {
                         return response.data;
-                    });
+                    }
+                );
             },
             removeAuthentication: function (type) {
-                return $http.delete(authenticationPath + '/' + type)
-                    .then(function (response) {
-                    return true;
-                }, function (error) {
-                    return false;
-                });
+                return $http.delete(authenticationPath + '/' + type).then(
+                    function (response) {
+                        return true;
+                    }
+                ).catch(
+                    function (error) {
+                        return false;
+                    }
+                );
             }
         };
     }

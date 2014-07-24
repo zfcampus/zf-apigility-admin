@@ -29,11 +29,12 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
         }
 
         return $http({method: 'GET', url: servicePath}).then(
-          function success(response) {
+          function (response) {
             selectors = response.data._embedded.selectors;
             return selectors;
-          },
-          function error() {
+          }
+        ).catch(
+          function () {
             flash.to('ag-flash-error').error = 'Unable to fetch content negotiation selectors; you may need to reload the page';
           }
         );
@@ -44,9 +45,11 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
           method: 'POST',
           url: servicePath,
           data: this.prepareSelector(selector)
-        }).then(function success(response) {
-          return response.data;
-        });
+        }).then(
+          function (response) {
+            return response.data;
+          }
+        );
       },
 
       updateSelector: function (selector) {
@@ -59,9 +62,11 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
           method: 'PATCH',
           url: updatePath,
           data: data
-        }).then(function success(response) {
-          return response.data;
-        });
+        }).then(
+          function (response) {
+            return response.data;
+          }
+        );
       },
 
       removeSelector: function (selectorName) {
@@ -71,10 +76,11 @@ angular.module('ag-admin').factory('ContentNegotiationResource', function ($http
           method: 'DELETE',
           url: updatePath
         }).then(
-          function success(response) {
+          function (response) {
             return response.data;
-          },
-          function error(response) {
+          }
+        ).catch(
+          function (response) {
             flash.error = 'Unable to remove selector; please try again';
             return response;
           }

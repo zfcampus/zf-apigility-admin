@@ -64,12 +64,15 @@ angular.module('ag-admin').controller(
             function (restResource) {
                 flash.success = 'New Code-Connected REST service created; please wait for the list to refresh';
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, true, 'Finished reloading REST service list').then(function () {
-                    return $timeout(function () {
-                        $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
-                    }, 100);
-                });
-            },
+                ApiRepository.refreshApi($scope, true, 'Finished reloading REST service list').then(
+                    function () {
+                        return $timeout(function () {
+                            $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
+                        }, 100);
+                    }
+                );
+            }
+        ).catch(
             function (error) {
                 agFormHandler.reportError(error, $scope);
             }
@@ -82,12 +85,15 @@ angular.module('ag-admin').controller(
             function (restResource) {
                 flash.success = 'New DB-Connected REST service created; please wait for the list to refresh';
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, true, 'Finished reloading REST service list').then(function () {
-                    return $timeout(function () {
-                        $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
-                    }, 100);
-                });
-            },
+                ApiRepository.refreshApi($scope, true, 'Finished reloading REST service list').then(
+                    function () {
+                        return $timeout(function () {
+                            $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
+                        }, 100);
+                    }
+                );
+            }
+        ).catch(
             function (error) {
                 agFormHandler.reportError(error, $scope);
             }
@@ -101,7 +107,8 @@ angular.module('ag-admin').controller(
                 agFormHandler.resetForm($scope);
                 flash.success = 'REST Service updated';
                 $state.go($state.$current.name, { edit: null }, {reload: true});
-            },
+            }
+        ).catch(
             function (error) {
                 agFormHandler.reportError(error, $scope);
             }
@@ -109,16 +116,17 @@ angular.module('ag-admin').controller(
     };
 
     $scope.removeRestService = function (restServiceName, recursive) {
-        ApiRepository.removeRestService($scope.api.name, restServiceName, !!recursive)
-            .then(function (data) {
+        ApiRepository.removeRestService($scope.api.name, restServiceName, !!recursive).then(
+            function (data) {
                 ApiRepository.refreshApi($scope, true, 'REST Service deleted');
                 $scope.deleteRestService = false;
-            });
+            }
+        );
     };
 
     $scope.getSourceCode = function (className, classType) {
-        ApiRepository.getSourceCode ($scope.api.name, className)
-            .then(function (data) {
+        ApiRepository.getSourceCode ($scope.api.name, className).then(
+            function (data) {
                 $scope.filename = className + '.php';
                 $scope.classType = classType + ' Class';
                 if (typeof data.source === 'string') {
@@ -130,7 +138,8 @@ angular.module('ag-admin').controller(
                     scope: $scope,
                     templateUrl: 'html/modals/source-code.html'
                 });
-            });
+            }
+        );
     };
 });
 
