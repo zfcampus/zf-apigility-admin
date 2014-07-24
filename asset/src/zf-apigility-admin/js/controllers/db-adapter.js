@@ -27,14 +27,16 @@ angular.module('ag-admin').controller(
         };
 
         var updateDbAdapters = function (force, message) {
-            DbAdapterResource.getList(force).then(function (updatedAdapters) {
-                if (message) {
-                    flash.success = message;
+            DbAdapterResource.getList(force).then(
+                function (updatedAdapters) {
+                    if (message) {
+                        flash.success = message;
+                    }
+                    $state.go($state.current, {edit: ''}, {
+                        reload: true, inherit: true, notify: true
+                    });
                 }
-                $state.go($state.current, {edit: ''}, {
-                    reload: true, inherit: true, notify: true
-                });
-            });
+            );
         };
 
         $scope.addNewDriverOption = function (options) {
@@ -150,10 +152,12 @@ angular.module('ag-admin').controller(
         };
 
         $scope.removeDbAdapter = function (adapter_name) {
-            DbAdapterResource.removeAdapter(adapter_name).then(function () {
-                updateDbAdapters(true, 'Database adapter ' + adapter_name + ' removed');
-                $scope.deleteDbAdapter = false;
-            });
+            DbAdapterResource.removeAdapter(adapter_name).then(
+                function () {
+                    updateDbAdapters(true, 'Database adapter ' + adapter_name + ' removed');
+                    $scope.deleteDbAdapter = false;
+                }
+            );
         };
     }
 );

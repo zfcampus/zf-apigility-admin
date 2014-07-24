@@ -600,6 +600,7 @@ return array(
             'ZF\Apigility\Admin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'name',
+                'entity_identifier_name' => 'name',
                 'route_name'      => 'zf-apigility/api/module',
             ),
             'ZF\Apigility\Admin\Model\RestInputFilterCollection' => array(

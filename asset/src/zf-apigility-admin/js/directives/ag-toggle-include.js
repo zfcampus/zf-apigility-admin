@@ -16,10 +16,12 @@ angular.module('ag-admin').directive('agToggleInclude',
                 scope.$watch(attr.condition, function (value) {
                     value = !!value;
                     var template = value ? attr.onTemplate : attr.offTemplate;
-                    AgTemplateInjector.fetchTemplate(template).then(function (contents) {
-                        element.html(contents);
-                        $compile(element.contents())(scope);
-                    });
+                    AgTemplateInjector.fetchTemplate(template).then(
+                        function (contents) {
+                            element.html(contents);
+                            $compile(element.contents())(scope);
+                        }
+                    );
                 });
             }
         };

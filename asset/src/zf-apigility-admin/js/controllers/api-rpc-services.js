@@ -47,12 +47,15 @@ angular.module('ag-admin').controller(
                 flash.success = 'New RPC service created; please wait for the list to refresh';
                 $scope.addRpcService = false;
                 $scope.resetForm();
-                ApiRepository.refreshApi($scope, true, 'Finished reloading RPC service list').then(function () {
-                    return $timeout(function () {
-                        $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
-                    }, 100);
-                });
-            },
+                ApiRepository.refreshApi($scope, true, 'Finished reloading RPC service list').then(
+                    function () {
+                        return $timeout(function () {
+                            $state.go('.', { service: newServiceName, view: 'settings' }, { reload: true });
+                        }, 100);
+                    }
+                );
+            }
+        ).catch(
             function (error) {
                 agFormHandler.reportError(error, $scope);
             }
@@ -67,7 +70,8 @@ angular.module('ag-admin').controller(
                 ApiRepository.refreshApi($scope, true, 'RPC Service updated', function () {
                     $state.go($state.$current.name, { edit: null });
                 });
-            },
+            }
+        ).catch(
             function (error) {
                 agFormHandler.reportError(error, $scope);
             }
@@ -75,16 +79,17 @@ angular.module('ag-admin').controller(
     };
 
     $scope.removeRpcService = function (rpcServiceName, recursive) {
-        ApiRepository.removeRpcService($scope.api.name, rpcServiceName, !!recursive)
-            .then(function (data) {
+        ApiRepository.removeRpcService($scope.api.name, rpcServiceName, !!recursive).then(
+            function (data) {
                 $scope.deleteRpcService = false;
                 ApiRepository.refreshApi($scope, true, 'RPC Service deleted');
-            });
+            }
+        );
     };
 
     $scope.getSourceCode = function (className, classType) {
-        ApiRepository.getSourceCode($scope.api.name, className)
-            .then(function (data) {
+        ApiRepository.getSourceCode($scope.api.name, className).then(
+            function (data) {
                 $scope.filename = className + '.php';
                 $scope.classType = classType + ' Class';
                 if (typeof data.source === 'string') {
@@ -96,7 +101,8 @@ angular.module('ag-admin').controller(
                     scope: $scope,
                     templateUrl: 'html/modals/source-code.html'
                 });
-            });
+            }
+        );
     };
 });
 

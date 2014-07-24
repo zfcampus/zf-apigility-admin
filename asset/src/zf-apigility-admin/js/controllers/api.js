@@ -22,14 +22,18 @@ angular.module('ag-admin').controller(
     };
 
     $scope.$on('api.updateList', function () {
-      ApiRepository.getList(true).then(function (apiCollection) {
-        updateList(apiCollection);
-      });
+      ApiRepository.getList(true).then(
+          function (apiCollection) {
+            updateList(apiCollection);
+        }
+    );
     });
 
-    ApiRepository.getList().then(function (apiCollection) {
-      updateList(apiCollection);
-    });
+    ApiRepository.getList().then(
+        function (apiCollection) {
+            updateList(apiCollection);
+        }
+    );
   }
 );
 })();

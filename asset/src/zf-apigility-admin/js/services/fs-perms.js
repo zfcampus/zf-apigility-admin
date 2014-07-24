@@ -10,10 +10,11 @@ angular.module('ag-admin').factory(
     return {
       getFsPermsStatus: function () {
         return $http({method: 'GET', url: servicePath}).then(
-          function success(response) {
+          function (response) {
             return response.data;
-          },
-          function error() {
+          }
+        ).catch(
+          function () {
             flash.error = 'Unable to fetch API filesystem writability status; you may need to refresh the page.';
           }
         );

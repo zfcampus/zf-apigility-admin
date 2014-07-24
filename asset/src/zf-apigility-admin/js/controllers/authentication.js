@@ -30,8 +30,8 @@ angular.module('ag-admin').controller(
     };
 
     var fetchAuthenticationDetails = function (force) {
-        AuthenticationRepository.fetch({cache: !force})
-            .then(function (authentication) {
+        AuthenticationRepository.fetch({cache: !force}).then(
+            function (authentication) {
                 if (authentication.type == 'http_basic') {
                     $scope.showSetupButtons             = false;
                     $scope.showHttpBasicAuthentication  = true;
@@ -61,7 +61,9 @@ angular.module('ag-admin').controller(
                 } else {
                     enableSetupButtons();
                 }
-            }, function (err) {
+            }
+        ).catch(
+            function (err) {
                 enableSetupButtons();
                 return false;
             }
@@ -70,13 +72,14 @@ angular.module('ag-admin').controller(
 
     var createAuthentication = function (type, options) {
         AuthenticationRepository.createAuthentication(type, options).then(
-            function success(authentication) {
+            function (authentication) {
                 flash.success = 'Authentication created';
                 fetchAuthenticationDetails(true);
                 $scope.removeAuthenticationForm = false;
                 $scope.resetForm();
-            },
-            function error(response) {
+            }
+        ).catch(
+            function (response) {
                 agFormHandler.reportError(response, $scope);
             }
         );
@@ -95,13 +98,14 @@ angular.module('ag-admin').controller(
             options.digest_domains = options.digest_domains.join(' ');
         }
         AuthenticationRepository.updateAuthentication(type, options).then(
-            function success(authentication) {
+            function (authentication) {
                 agFormHandler.resetForm($scope);
                 flash.success = 'Authentication updated';
                 fetchAuthenticationDetails(true);
                 $state.go($state.current, {edit: ''}, {reload: true});
-            },
-            function error(response) {
+            }
+        ).catch(
+            function (response) {
                 agFormHandler.reportError(response, $scope);
             }
         );
@@ -205,11 +209,12 @@ angular.module('ag-admin').controller(
             flash.error = 'Could not delete authentication; could not determine authentication type.';
             return;
         }
-        AuthenticationRepository.removeAuthentication(type)
-            .then(function (response) {
+        AuthenticationRepository.removeAuthentication(type).then(
+            function (response) {
                 flash.success = 'Authentication removed';
                 fetchAuthenticationDetails(true);
-            });
+            }
+        );
     };
 
     fetchAuthenticationDetails(true);
