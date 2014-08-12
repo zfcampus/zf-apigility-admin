@@ -134,10 +134,10 @@ class ModuleModel
             ), 409);
         }
 
-        mkdir("$modulePath/config", 0777, true);
-        mkdir("$modulePath/view", 0777, true);
-        mkdir("$modulePath/src/$module/V1/Rest", 0777, true);
-        mkdir("$modulePath/src/$module/V1/Rpc", 0777, true);
+        mkdir("$modulePath/config", 0775, true);
+        mkdir("$modulePath/view", 0775, true);
+        mkdir("$modulePath/src/$module/V1/Rest", 0775, true);
+        mkdir("$modulePath/src/$module/V1/Rpc", 0775, true);
 
         if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;

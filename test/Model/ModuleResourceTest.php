@@ -31,7 +31,7 @@ class ModuleResourceTest extends TestCase
             sys_get_temp_dir(),
             uniqid(str_replace('\\', '_', __NAMESPACE__) . '_')
         );
-        mkdir($this->modulePath . '/config', 0777, true);
+        mkdir($this->modulePath . '/config', 0775, true);
         $this->seedApplicationConfig();
         $this->setupModuleAutoloader();
         $this->resource->setModulePath($this->modulePath);
@@ -144,8 +144,8 @@ class ModuleResourceTest extends TestCase
 
         $r    = new ReflectionClass($moduleClass);
         $path = dirname($r->getFileName());
-        mkdir(sprintf('%s/V2', $path), 0777, true);
-        mkdir(sprintf('%s/V3', $path), 0777, true);
+        mkdir(sprintf('%s/V2', $path), 0775, true);
+        mkdir(sprintf('%s/V3', $path), 0775, true);
 
         $modules = array(
             $moduleName => new $moduleClass,

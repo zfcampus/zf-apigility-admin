@@ -177,8 +177,8 @@ class ModuleModelTest extends TestCase
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
-        mkdir("$modulePath/module", 0777, true);
-        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
 
         $this->assertTrue($this->model->createModule($module, $modulePath));
@@ -202,8 +202,8 @@ class ModuleModelTest extends TestCase
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
-        mkdir("$modulePath/module", 0777, true);
-        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array("modules" => array());');
         $this->assertTrue($this->model->createModule($module, $modulePath));
         $config = include $modulePath . '/config/application.config.php';
@@ -229,8 +229,8 @@ class ModuleModelTest extends TestCase
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
-        mkdir("$modulePath/module", 0777, true);
-        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array("modules" => array());');
         $this->assertTrue($this->model->createModule($module, $modulePath));
 
@@ -247,8 +247,8 @@ class ModuleModelTest extends TestCase
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
-        mkdir("$modulePath/module", 0777, true);
-        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . "?php return array(\n    'modules' => array(\n        'Foo',\n    )\n);");
 
         $this->assertFalse($this->model->createModule($module, $modulePath));
@@ -362,8 +362,8 @@ class ModuleModelTest extends TestCase
         $module = 'Foo';
         $this->modulePath = $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
-        mkdir("$modulePath/module", 0777, true);
-        mkdir("$modulePath/config", 0777, true);
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
 
         $this->assertTrue($this->model->createModule($module, $modulePath));

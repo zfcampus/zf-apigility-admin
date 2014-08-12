@@ -118,7 +118,7 @@ class RpcServiceModelTest extends TestCase
         $serviceName = 'Bar';
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
         if (!is_dir($moduleSrcPath)) {
-            mkdir($moduleSrcPath, 0777, true);
+            mkdir($moduleSrcPath, 0775, true);
         }
 
         $result = $this->codeRpc->createController($serviceName);
