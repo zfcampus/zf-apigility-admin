@@ -392,7 +392,8 @@ class Module
             return;
         }
 
-        if ($e->getRequest()->isGet()) {
+        $request = $e->getRequest();
+        if ($request->isGet() || $request->isHead()) {
             $this->disableHttpCache($e->getResponse()->getHeaders());
         }
     }
