@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin;
 
+use Zend\Http\Header\GenericHeader;
 use Zend\Http\Header\GenericMultiHeader;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
@@ -664,7 +665,7 @@ class Module
      */
     protected function disableHttpCache($headers)
     {
-        $headers->addHeaderLine('Expires', 0);
+        $headers->addHeader(new GenericHeader('Expires', '0'));
         $headers->addHeaderLine('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
         $headers->addHeader(new GenericMultiHeader('Cache-Control', 'no-store, no-cache, must-revalidate'));
         $headers->addHeader(new GenericMultiHeader('Cache-Control', 'post-check=0, pre-check=0'));
