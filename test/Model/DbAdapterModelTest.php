@@ -32,7 +32,7 @@ class DbAdapterModelTest extends TestCase
     public function createConfigMocks()
     {
         if (!is_dir($this->configPath)) {
-            mkdir($this->configPath, 0777, true);
+            mkdir($this->configPath, 0775, true);
         }
 
         $contents = "<" . "?php\nreturn array();";
