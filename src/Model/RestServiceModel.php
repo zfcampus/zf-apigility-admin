@@ -1122,7 +1122,7 @@ class RestServiceModel implements EventManagerAwareInterface
         );
 
         if (!file_exists($sourcePath)) {
-            mkdir($sourcePath, 0777, true);
+            mkdir($sourcePath, 0775, true);
         }
 
         return $sourcePath;
