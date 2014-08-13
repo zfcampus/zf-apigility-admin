@@ -1605,7 +1605,7 @@ angular.module("html/api/rest-services/settings-view.html", []).run(["$templateC
     "        <collapse-body class=\"list-group\">\n" +
     "            <div class=\"list-group-item\">\n" +
     "                <h4 class=\"list-group-item-heading\">Controller Service Name</h4>\n" +
-    "                <p class=\"list-group-item-text\">{{ restService.controller_service_name }}</p>\n" +
+    "                <p class=\"list-group-item-text\">{{ restService.controller_service_name | controllerservicename }}</p>\n" +
     "            </div>\n" +
     "\n" +
     "            <div class=\"list-group-item\">\n" +
@@ -2074,7 +2074,7 @@ angular.module("html/api/rpc-services/settings-view.html", []).run(["$templateCa
     "        <collapse-body class=\"list-group\">\n" +
     "            <div class=\"list-group-item\">\n" +
     "                <h4 class=\"list-group-item-heading\">Controller Service Name</h4>\n" +
-    "                <p class=\"list-group-item-text\">{{ rpcService.controller_service_name }}</p>\n" +
+    "                <p class=\"list-group-item-text\">{{ rpcService.controller_service_name | controllerservicename }}</p>\n" +
     "            </div>\n" +
     "\n" +
     "            <div class=\"list-group-item\">\n" +
