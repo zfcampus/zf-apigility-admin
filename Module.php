@@ -40,6 +40,7 @@ class Module
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
         $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'normalizeMatchedControllerServiceName'), -20);
+        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'normalizeMatchedInputFilterName'), -20);
         $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
@@ -329,6 +330,18 @@ class Module
         $matches->setParam('controller_service_name', str_replace('-', '\\', $controller));
     }
 
+    public function normalizeMatchedInputFilterName($e)
+    {
+        $matches = $e->getRouteMatch();
+        if (! $matches || ! $matches->getParam('input_filter_name')) {
+            return;
+        }
+
+        // Replace '-' with namespace separator
+        $controller = $matches->getParam('input_filter_name');
+        $matches->setParam('input_filter_name', str_replace('-', '\\', $controller));
+    }
+
     /**
      * Ensure the render_collections flag of the HAL view helper is enabled
      * regardless of the configuration setting if we match an admin service.
@@ -454,6 +467,9 @@ class Module
         if ($entity instanceof Model\RestServiceEntity || $entity instanceof Model\RpcServiceEntity) {
             return $this->normalizeEntityControllerServiceName($entity, $links, $model);
         }
+        if ($entity instanceof Model\InputFilterEntity) {
+            return $this->normalizeEntityInputFilterName($entity, $links, $model);
+        }
     }
 
     protected function injectModuleResourceRelationalLinks(Model\ModuleEntity $module, $links, HalJsonModel $model)
@@ -482,6 +498,19 @@ class Module
             'controller_service_name' => str_replace('\\', '-', $entity->controllerServiceName),
         ));
         $halEntity = new Entity($entity, $entity->controllerServiceName);
+
+        if ($links->has('self')) {
+            $links->remove('self');
+        }
+        $halEntity->setLinks($links);
+
+        $model->setPayload($halEntity);
+    }
+
+    protected function normalizeEntityInputFilterName(Model\InputFilterEntity $entity, $links, HalJsonModel $model)
+    {
+        $entity['input_filter_name'] = str_replace('\\', '-', $entity['input_filter_name']);
+        $halEntity = new Entity($entity, $entity['input_filter_name']);
 
         if ($links->has('self')) {
             $links->remove('self');
@@ -527,6 +556,26 @@ class Module
             }
             return;
         }
+
+        if ($entity instanceof Model\InputFilterEntity
+            || (is_array($entity) && isset($entity['input_filter_name']))
+        ) {
+            switch (true) {
+                case ($entity instanceof Model\RestInputFilterEntity):
+                    $type = 'rest-service';
+                    break;
+                case ($entity instanceof Model\RpcInputFilterEntity):
+                    $type = 'rpc-service';
+                    break;
+            }
+            $links       = $halEntity->getLinks();
+
+            if (! $links->has('self')) {
+                $route  = sprintf('zf-apigility/api/module/%s/input-filter', $type);
+                $hal->injectSelfLink($halEntity, $route, 'input_filter_name');
+            }
+            return;
+        }
     }
 
     /**
@@ -548,6 +597,10 @@ class Module
             || $entity instanceof Model\RpcServiceEntity
         ) {
             return $this->injectServiceCollectionRelationalLinks($entity, $e);
+        }
+
+        if ($entity instanceof Model\InputFilterEntity) {
+            return $this->normalizeInputFilterEntityName($entity, $e);
         }
     }
 
@@ -636,6 +689,12 @@ class Module
         )));
 
         $e->setParam('entity', $halEntity);
+    }
+
+    protected function normalizeInputFilterEntityName($entity, $e)
+    {
+        $entity['input_filter_name'] = str_replace('\\', '-', $entity['input_filter_name']);
+        $e->setParam('entity', $entity);
     }
 
     /**

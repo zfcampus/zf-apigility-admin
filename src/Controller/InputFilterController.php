@@ -66,7 +66,7 @@ class InputFilterController extends AbstractActionController
                             'name' => $route,
                             'params' => array(
                                 'name'                    => $module,
-                                'controller_service_name' => $controller,
+                                'controller_service_name' => str_replace('\\', '-', $controller),
                             ),
                         ),
                     )));
