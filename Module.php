@@ -6,6 +6,8 @@
 
 namespace ZF\Apigility\Admin;
 
+use Zend\Http\Header\GenericHeader;
+use Zend\Http\Header\GenericMultiHeader;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\Configuration\ConfigResource;
@@ -390,8 +392,10 @@ class Module
             return;
         }
 
-        $response = $e->getResponse();
-        $response->getHeaders()->addHeaderLine('Cache-Control', 'no-cache');
+        $request = $e->getRequest();
+        if ($request->isGet() || $request->isHead()) {
+            $this->disableHttpCache($e->getResponse()->getHeaders());
+        }
     }
 
     protected function initializeUrlHelper()
@@ -651,5 +655,21 @@ class Module
             // WinCache; just disable it
             ini_set('wincache.ocenabled', '0');
         }
+    }
+
+    /**
+     * Prepare cache-busting headers for GET requests
+     *
+     * Invoked from the onFinish() method for GET requests to disable client-side HTTP caching.
+     * 
+     * @param \Zend\Http\Headers $headers 
+     */
+    protected function disableHttpCache($headers)
+    {
+        $headers->addHeader(new GenericHeader('Expires', '0'));
+        $headers->addHeaderLine('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+        $headers->addHeader(new GenericMultiHeader('Cache-Control', 'no-store, no-cache, must-revalidate'));
+        $headers->addHeader(new GenericMultiHeader('Cache-Control', 'post-check=0, pre-check=0'));
+        $headers->addHeaderLine('Pragma', 'no-cache');
     }
 }
