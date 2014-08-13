@@ -26,7 +26,7 @@ angular.module('ag-admin').controller(
           $modalInstance.close(newApi);
           resetForm();
 
-          flash.success = 'New API created; redirecting momentarily';
+          flash.success = 'New API is being created... Please wait';
 
           /* Angular has no way to emit to sibling controllers; use the
            * $rootScope to broadcast downwards instead.
@@ -34,7 +34,7 @@ angular.module('ag-admin').controller(
           $timeout(function () {
             $rootScope.$broadcast('api.updateList');
             $state.go('ag.api.version', {apiName: newApi.name, version: 1});
-          }, 500);
+          }, 2000);
         }
       ).catch(
         function (error) {

@@ -2164,7 +2164,6 @@ angular.module("html/breadcrumbs.html", []).run(["$templateCache", function($tem
 
 angular.module("html/content.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("html/content.html",
-    "\n" +
     "");
 }]);
 

@@ -35,7 +35,7 @@ angular.module('ag-admin').controller(
         var name = $state.params.apiName;
         ApiRepository.removeApi($state.params.apiName, !!recursive).then(
             function () {
-                flash.success = 'Deleted API "' + name + '"; redirecting to API overview momentarily';
+                flash.success = 'API "' + name + '" is being deleted... Please wait';
                 $timeout(function () {
                     $state.go('^');
                 }, 500);
