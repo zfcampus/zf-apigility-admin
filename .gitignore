@@ -19,3 +19,6 @@ vendor/sebastian/
 vendor/symfony/
 vendor/zendframework/
 vendor/zfcampus/
+.buildpath
+.project
+.settings/
