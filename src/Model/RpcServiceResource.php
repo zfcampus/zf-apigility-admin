@@ -286,8 +286,9 @@ class RpcServiceResource extends AbstractResourceListener
         }
 
         $collection = array();
-
+        $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
+            $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
             $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
             $links    = $entity->getLinks();
             $links->add(Link::factory(array(
@@ -296,7 +297,7 @@ class RpcServiceResource extends AbstractResourceListener
                     'name' => 'zf-apigility/api/module/rpc-service/input-filter',
                     'params' => array(
                         'name' => $this->moduleName,
-                        'controller_service_name' => $service->controllerServiceName,
+                        'controller_service_name' => $parentName,
                         'input_filter_name' => $inputFilter['input_filter_name'],
                     ),
                 ),

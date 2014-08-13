@@ -12,10 +12,12 @@ angular.module('ag-admin').controller(
         $scope.editable = (version == api.versions[api.versions.length - 1]);
 
         var serviceMethodMap = (function() {
+            var serviceNameNormalization = new RegExp('-', 'g');
             var services = {};
             angular.forEach(api.restServices, function(service) {
-                var entityName = service.controller_service_name + '::__entity__';
-                var collectionName = service.controller_service_name + '::__collection__';
+                var serviceName = service.controller_service_name.replace(serviceNameNormalization, '\\');
+                var entityName = serviceName + '::__entity__';
+                var collectionName = serviceName + '::__collection__';
                 var entityMethods = {
                     GET: false,
                     POST: false,
@@ -41,7 +43,7 @@ angular.module('ag-admin').controller(
             });
 
             angular.forEach(api.rpcServices, function(service) {
-                var serviceName = service.controller_service_name;
+                var serviceName = service.controller_service_name.replace(serviceNameNormalization, '\\');
                 var serviceMethods = {
                     GET: false,
                     POST: false,

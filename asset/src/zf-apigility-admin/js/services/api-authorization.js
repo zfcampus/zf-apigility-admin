@@ -32,7 +32,7 @@ angular.module('ag-admin').factory('ApiAuthorizationRepository', function ($http
                     var authorizations = {};
                     var complete = false;
                     var matches;
-                    var controllerServiceName = service.controller_service_name;
+                    var controllerServiceName = service.controller_service_name.replace(/-/g, '\\');
                     controllerServiceName = controllerServiceName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
                     var serviceRegex = new RegExp('^' + controllerServiceName + '::(.*?)$');
                     var actionRegex  = new RegExp('^__([^_]+)__$');
