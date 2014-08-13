@@ -39,6 +39,7 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
+        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'updateMatchedControllerServiceName'), -20);
         $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
@@ -314,6 +315,18 @@ class Module
                 return new Controller\VersioningController($factory);
             },
         ));
+    }
+
+    public function updateMatchedControllerServiceName($e)
+    {
+        $matches = $e->getRouteMatch();
+        if (! $matches || ! $matches->getParam('controller_service_name')) {
+            return;
+        }
+
+        // Replace '-' with namespace separator
+        $controller = $matches->getParam('controller_service_name');
+        $matches->setParam('controller_service_name', str_replace('-', '\\', $controller));
     }
 
     /**
