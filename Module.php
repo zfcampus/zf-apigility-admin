@@ -39,7 +39,7 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
-        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'updateMatchedControllerServiceName'), -20);
+        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'normalizeMatchedControllerServiceName'), -20);
         $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
@@ -317,7 +317,7 @@ class Module
         ));
     }
 
-    public function updateMatchedControllerServiceName($e)
+    public function normalizeMatchedControllerServiceName($e)
     {
         $matches = $e->getRouteMatch();
         if (! $matches || ! $matches->getParam('controller_service_name')) {
@@ -349,6 +349,34 @@ class Module
         $helpers  = $services->get('ViewHelperManager');
         $hal      = $helpers->get('Hal');
         $hal->setRenderCollections(true);
+
+        $hal->getEventManager()->attach(
+            array('renderCollection', 'renderEntity', 'renderCollection.Entity'),
+            function ($e) use ($matches) {
+                if ($matches->getParam('controller_service_name')) {
+                    $matches->setParam(
+                        'controller_service_name',
+                        str_replace('\\', '-', $matches->getParam('controller_service_name'))
+                    );
+                }
+            }
+        );
+
+        $hal->getEventManager()->attach(
+            array('renderEntity', 'renderCollection.Entity'),
+            function ($e) {
+                $entity = $e->getParam('entity');
+                if (! $entity instanceof Model\RestServiceEntity
+                    && ! $entity instanceof Model\RpcServiceEntity
+                ) {
+                    return;
+                }
+
+                $entity->exchangeArray(array(
+                    'controller_service_name' => str_replace('\\', '-', $entity->controllerServiceName),
+                ));
+            }
+        );
     }
 
     /**
