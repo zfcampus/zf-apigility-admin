@@ -38,7 +38,7 @@ angular.module('ag-admin').controller(
                 flash.success = 'API "' + name + '" is being deleted... Please wait';
                 $timeout(function () {
                     $state.go('^');
-                }, 500);
+                }, 2000);
             }
         );
     };
