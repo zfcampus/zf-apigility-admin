@@ -6,6 +6,8 @@
 
 namespace ZF\Apigility\Admin;
 
+use Zend\Http\Header\GenericHeader;
+use Zend\Http\Header\GenericMultiHeader;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\Configuration\ConfigResource;
@@ -37,8 +39,12 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
+        $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
         $events->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), 100);
         $events->attach(MvcEvent::EVENT_FINISH, array($this, 'onFinish'), 1000);
+        $events->attachAggregate(
+            $this->sm->get('ZF\Apigility\Admin\Listener\CryptFilterListener')
+        );
     }
 
     public function getAutoloaderConfig()
@@ -311,6 +317,28 @@ class Module
     }
 
     /**
+     * Ensure the render_collections flag of the HAL view helper is enabled
+     * regardless of the configuration setting if we match an admin service.
+     *
+     * @param MvcEvent $e
+     */
+    public function onRoute(MvcEvent $e)
+    {
+        $matches = $e->getRouteMatch();
+        if (! $matches
+            || 0 !== strpos($matches->getParam('controller'), 'ZF\Apigility\Admin\\')
+        ) {
+            return;
+        }
+
+        $app      = $e->getTarget();
+        $services = $app->getServiceManager();
+        $helpers  = $services->get('ViewHelperManager');
+        $hal      = $helpers->get('Hal');
+        $hal->setRenderCollections(true);
+    }
+
+    /**
      * Inject links into Module resources for the service services
      *
      * @param  \Zend\Mvc\MvcEvent $e
@@ -364,8 +392,10 @@ class Module
             return;
         }
 
-        $response = $e->getResponse();
-        $response->getHeaders()->addHeaderLine('Cache-Control', 'no-cache');
+        $request = $e->getRequest();
+        if ($request->isGet() || $request->isHead()) {
+            $this->disableHttpCache($e->getResponse()->getHeaders());
+        }
     }
 
     protected function initializeUrlHelper()
@@ -625,5 +655,21 @@ class Module
             // WinCache; just disable it
             ini_set('wincache.ocenabled', '0');
         }
+    }
+
+    /**
+     * Prepare cache-busting headers for GET requests
+     *
+     * Invoked from the onFinish() method for GET requests to disable client-side HTTP caching.
+     * 
+     * @param \Zend\Http\Headers $headers 
+     */
+    protected function disableHttpCache($headers)
+    {
+        $headers->addHeader(new GenericHeader('Expires', '0'));
+        $headers->addHeaderLine('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+        $headers->addHeader(new GenericMultiHeader('Cache-Control', 'no-store, no-cache, must-revalidate'));
+        $headers->addHeader(new GenericMultiHeader('Cache-Control', 'post-check=0, pre-check=0'));
+        $headers->addHeaderLine('Pragma', 'no-cache');
     }
 }

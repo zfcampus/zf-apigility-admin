@@ -49,7 +49,7 @@ class FsPermissionsControllerTest extends TestCase
 
     public function testReturnsTrueIfConfigAndModuleDirectoriesExistAndAreWritable()
     {
-        mkdir($this->wd . '/config/autoload', 0777, true);
+        mkdir($this->wd . '/config/autoload', 0775, true);
         mkdir($this->wd . '/module');
 
         $result = $this->controller->fsPermissionsAction();

@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" ng-show="dbAdapter.driver && (dbAdapter.driver != 'Pdo_Pgsql') && (dbAdapter.driver != 'Pgsql')">
             <label class="control-label" for="charset">Charset</label>
             <div class="controls">
                 <input type="text" placeholder="(Optional) Charset" class="form-control input-xlarge" ng-model="dbAdapter.charset">
@@ -83,6 +83,55 @@
             </div>
         </div>
     </fieldset>
+
+    <ag-collapse class="panel-default">
+        <collapse-header>
+            <h4 class="panel-title">Driver Options</h4>
+        </collapse-header>
+
+        <collapse-body>
+            <li
+                class="list-group-item"
+                ng-repeat="(optionKey, optionValue) in dbAdapter.driver_options">
+
+                <div class="form-group">
+                    <label>Option:</label>
+                    <input type="text" class="form-control input-xlarge" ng-model="optionKey">
+                </div>
+
+                <div class="form-group">
+                    <label>Value:</label>
+                    <input type="text" class="form-control input-xlarge" ng-model="optionValue">
+                </div>
+
+                <div class="btn-group ag-new-input pull-right">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        ng-click="removeDriverOption(dbAdapter, optionKey)">Remove Option</button>
+                </div>
+
+                <div class="clearfix"></div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="form-group">
+                    <label>Option:</label>
+                    <input type="text" class="form-control input-xlarge" ng-model="dbAdapter._newOptionKey">
+                </div>
+
+                <div class="form-group">
+                    <label>Value:</label>
+                    <input type="text" class="form-control input-xlarge" ng-model="dbAdapter._newOptionValue">
+                </div>
+
+                <div class="btn-group ag-new-input pull-right">
+                    <button type="button" class="btn btn-sm btn-primary"
+                        ng-click="addDriverOption(dbAdapter)">Add Option</button>
+                </div>
+
+                <div class="clearfix"></div>
+            </li>
+        </collapse-body>
+    </ag-collapse>
 
     <div class="btn-group pull-right">
         <button type="button" class="btn btn-sm btn-default" ag-cancel-edit>Cancel</a>

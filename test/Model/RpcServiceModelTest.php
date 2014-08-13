@@ -118,7 +118,7 @@ class RpcServiceModelTest extends TestCase
         $serviceName = 'Bar';
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
         if (!is_dir($moduleSrcPath)) {
-            mkdir($moduleSrcPath, 0777, true);
+            mkdir($moduleSrcPath, 0775, true);
         }
 
         $result = $this->codeRpc->createController($serviceName);
@@ -489,7 +489,7 @@ class RpcServiceModelTest extends TestCase
         $service = $this->codeRpc->fetch($serviceName);
         $this->assertTrue($this->codeRpc->deleteService($service));
 
-        $config = include($path . '/config/module.config.php');
+        $config = include $path . '/config/module.config.php';
         $this->assertInternalType('array', $config);
         $this->assertInternalType('array', $config['zf-versioning']);
         $this->assertInternalType('array', $config['router']['routes']);

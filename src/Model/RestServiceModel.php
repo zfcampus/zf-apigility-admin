@@ -394,7 +394,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $srcPath = $this->getSourcePath($serviceName);
 
         $classResource = sprintf('%sResource', $serviceName);
-        $className 	   = sprintf('%sResourceFactory', $serviceName);
+        $className       = sprintf('%sResourceFactory', $serviceName);
         $classPath     = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -1122,7 +1122,7 @@ class RestServiceModel implements EventManagerAwareInterface
         );
 
         if (!file_exists($sourcePath)) {
-            mkdir($sourcePath, 0777, true);
+            mkdir($sourcePath, 0775, true);
         }
 
         return $sourcePath;

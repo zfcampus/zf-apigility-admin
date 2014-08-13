@@ -14,10 +14,12 @@ angular.module('ag-admin').directive('agConditionalInclude',
                 scope.$watch(attr.condition, function (value) {
                     value = !!value;
                     var template = value ? attr.src : AgTemplateInjector.defaultEmptyTemplate;
-                    AgTemplateInjector.fetchTemplate(template).then(function (contents) {
-                        element.html(contents);
-                        $compile(element.contents())(scope);
-                    });
+                    AgTemplateInjector.fetchTemplate(template).then(
+                        function (contents) {
+                            element.html(contents);
+                            $compile(element.contents())(scope);
+                        }
+                    );
                 });
             }
         };

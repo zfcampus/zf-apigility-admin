@@ -272,13 +272,15 @@
             return ValidatorsServicesRepository.getList();
           }],
           selectors: ['ContentNegotiationResource', function (ContentNegotiationResource) {
-            return ContentNegotiationResource.getList().then(function (selectors) {
-              var selectorNames = [];
-              angular.forEach(selectors, function (selector) {
-                selectorNames.push(selector.content_name);
-              });
-              return selectorNames;
-            });
+            return ContentNegotiationResource.getList().then(
+              function (selectors) {
+                var selectorNames = [];
+                angular.forEach(selectors, function (selector) {
+                  selectorNames.push(selector.content_name);
+                });
+                return selectorNames;
+              }
+            );
           }]
         },
         views: {

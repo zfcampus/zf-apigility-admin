@@ -666,7 +666,7 @@ class RestServiceModelTest extends TestCase
 
         $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName));
         $path = __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
-        $config = include($path);
+        $config = include $path;
         $this->assertInternalType('array', $config);
         $this->assertInternalType('array', $config['zf-rest']);
         $this->assertInternalType('array', $config['zf-versioning']);
@@ -704,7 +704,7 @@ class RestServiceModelTest extends TestCase
         $service = $this->codeRest->fetch($serviceName);
         $this->assertTrue($this->codeRest->deleteService($serviceName));
 
-        $config = include($path . '/config/module.config.php');
+        $config = include $path . '/config/module.config.php';
         $this->assertInternalType('array', $config);
         $this->assertInternalType('array', $config['zf-versioning']);
         $this->assertInternalType('array', $config['router']['routes']);

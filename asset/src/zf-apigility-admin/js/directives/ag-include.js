@@ -14,10 +14,12 @@ angular.module('ag-admin').directive('agInclude',
 
                 var src = attr.hasOwnProperty('condition') ? scope.$eval(attr.condition) : attr.src;
 
-                AgTemplateInjector.fetchTemplate(src).then(function (contents) {
-                    element.html(contents);
-                    $compile(element.contents())(scope);
-                });
+                AgTemplateInjector.fetchTemplate(src).then(
+                    function (contents) {
+                        element.html(contents);
+                        $compile(element.contents())(scope);
+                    }
+                );
             }
         };
     }

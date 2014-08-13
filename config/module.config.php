@@ -20,6 +20,9 @@ return array(
     ),
 
     'service_manager' => array(
+        'invokables' => array(
+            'ZF\Apigility\Admin\Listener\CryptFilterListener' => 'ZF\Apigility\Admin\Listener\CryptFilterListener',
+        ),
         'factories' => array(
             'ZF\Apigility\Admin\Model\DocumentationModel' => 'ZF\Apigility\Admin\Model\DocumentationModelFactory',
             'ZF\Apigility\Admin\Model\FiltersModel' => 'ZF\Apigility\Admin\Model\FiltersModelFactory',
@@ -597,6 +600,7 @@ return array(
             'ZF\Apigility\Admin\Model\ModuleEntity' => array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'name',
+                'entity_identifier_name' => 'name',
                 'route_name'      => 'zf-apigility/api/module',
             ),
             'ZF\Apigility\Admin\Model\RestInputFilterCollection' => array(
@@ -610,7 +614,6 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
                 'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
-                'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
             ),
             'ZF\Apigility\Admin\Model\DocumentationEntity' => array(
@@ -650,7 +653,6 @@ return array(
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'input_filter_name',
                 'route_name'      => 'zf-apigility/api/module/rpc-service/input-filter',
-                'route_identifier_name' => 'input_filter_name',
                 'entity_identifier_name' => 'input_filter_name',
             ),
             'ZF\Apigility\Admin\Model\RpcServiceEntity' => array(

@@ -32,7 +32,7 @@ class DbAdapterModelTest extends TestCase
     public function createConfigMocks()
     {
         if (!is_dir($this->configPath)) {
-            mkdir($this->configPath, 0777, true);
+            mkdir($this->configPath, 0775, true);
         }
 
         $contents = "<" . "?php\nreturn array();";
@@ -97,10 +97,10 @@ class DbAdapterModelTest extends TestCase
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create('Db\New', $toCreate);
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertDbConfigEquals(array(), 'Db\New', $global);
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertDbConfigEquals($toCreate, 'Db\New', $local);
     }
 
@@ -126,11 +126,11 @@ class DbAdapterModelTest extends TestCase
         $model = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
         $model->create('Db\New', array('driver' => 'Pdo_Sqlite', 'database' => __FILE__));
 
-        $global = include($this->globalConfigPath);
+        $global = include $this->globalConfigPath;
         $this->assertDbConfigEquals(array(), 'Db\Old', $global);
         $this->assertDbConfigEquals(array(), 'Db\New', $global);
 
-        $local  = include($this->localConfigPath);
+        $local  = include $this->localConfigPath;
         $this->assertDbConfigEquals($localSeedConfig['db']['adapters']['Db\Old'], 'Db\Old', $local);
         $this->assertDbConfigEquals($localSeedConfig['db']['adapters']['Db\Old'], 'Db\New', $local);
     }
@@ -253,5 +253,64 @@ class DbAdapterModelTest extends TestCase
         $this->assertArrayNotHasKey('Db\New', $global['db']['adapters']);
         $local = include $this->localConfigPath;
         $this->assertArrayNotHasKey('Db\New', $local['db']['adapters']);
+    }
+
+    public function postgresDbTypes()
+    {
+        return array(
+            'pdo'    => array('Pdo_Pgsql'),
+            'native' => array('Pgsql'),
+        );
+    }
+
+    /**
+     * @group 184
+     * @dataProvider postgresDbTypes
+     */
+    public function testCreatingPostgresConfigDoesNotIncludeCharset($driver)
+    {
+        $toCreate = array('driver' => $driver, 'database' => 'test', 'username' => 'test', 'password' => 'test', 'charset' => 'UTF-8');
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create('Db\New', $toCreate);
+
+        $local  = include $this->localConfigPath;
+
+        $expected = $toCreate;
+        unset($expected['charset']);
+
+        $this->assertDbConfigEquals($expected, 'Db\New', $local);
+    }
+
+    /**
+     * @group 184
+     * @dataProvider postgresDbTypes
+     */
+    public function testUpdatingPostgresConfigDoesNotAllowCharset($driver)
+    {
+        $toCreate = array('driver' => $driver, 'database' => 'test', 'username' => 'test', 'password' => 'test', 'charset' => 'UTF-8');
+        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model->create('Db\New', $toCreate);
+
+        $newConfig = array(
+            'driver'   => $driver,
+            'database' => 'zf_apigility',
+            'username' => 'test',
+            'password' => 'test',
+            'charset'  => 'latin-1',
+        );
+        $entity = $model->update('Db\New', $newConfig);
+
+        // Ensure the entity returned from the update is what we expect
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbAdapterEntity', $entity);
+        $entity = $entity->getArrayCopy();
+        $expected = array_merge(array('adapter_name' => 'Db\New'), $newConfig);
+        unset($expected['charset']);
+
+        $this->assertEquals($expected, $entity);
+
+        // Ensure fetching the entity after an update will return what we expect
+        $config = include $this->localConfigPath;
+        unset($expected['adapter_name']);
+        $this->assertDbConfigEquals($expected, 'Db\New', $config);
     }
 }

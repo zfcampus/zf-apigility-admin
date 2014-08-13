@@ -305,7 +305,7 @@ class RpcServiceModel
         );
 
         if (!file_exists($srcPath)) {
-            mkdir($srcPath, 0777, true);
+            mkdir($srcPath, 0775, true);
         }
 
         $className         = sprintf('%sController', $serviceName);

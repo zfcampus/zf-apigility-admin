@@ -73,7 +73,8 @@ angular.module('ag-admin').controller(
           $scope.selectors.push(selector);
           flash.success = 'New selector created';
           $scope.resetNewSelectorForm();
-        },
+        }
+      ).catch(
         function (error) {
           agFormHandler.reportError(error, $scope);
         }
@@ -98,7 +99,8 @@ angular.module('ag-admin').controller(
           });
 
           flash.success = 'Selector updated';
-        },
+        }
+      ).catch(
         function (error) {
           agFormHandler.reportError(error, $scope);
         }
@@ -107,16 +109,19 @@ angular.module('ag-admin').controller(
     };
 
     $scope.removeSelector = function (selectorName) {
-      ContentNegotiationResource.removeSelector(selectorName).then(function () {
-        flash.success = 'Selector removed';
+      ContentNegotiationResource.removeSelector(selectorName).then(
+        function () {
+          flash.success = 'Selector removed';
 
-        ContentNegotiationResource.getList(true).then(function (updatedSelectors) {
-          $state.go($state.current, {}, {
-            reload: true, inherit: true, notify: true
-          });
-        });
-
-      });
+          ContentNegotiationResource.getList(true).then(
+            function (updatedSelectors) {
+              $state.go($state.current, {}, {
+                reload: true, inherit: true, notify: true
+              });
+            }
+          );
+        }
+      );
     };
   }
 );

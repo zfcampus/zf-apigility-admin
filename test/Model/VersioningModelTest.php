@@ -91,7 +91,7 @@ class VersioningModelTest extends TestCase
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc"));
         $this->assertTrue(file_exists(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rest"));
 
-        $config = include($this->moduleConfigFile);
+        $config = include $this->moduleConfigFile;
         $this->assertArrayHasKey('router', $config);
         $this->assertEquals('Version\\V1\\Rest\Message\Controller', $config['router']['routes']['version.rest.message']['options']['defaults']['controller']);
         $this->assertEquals('Version\\V1\\Rest\Comment\Controller', $config['router']['routes']['version.rest.comment']['options']['defaults']['controller']);

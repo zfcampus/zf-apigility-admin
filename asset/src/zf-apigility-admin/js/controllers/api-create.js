@@ -3,7 +3,7 @@
 
 angular.module('ag-admin').controller(
   'CreateApiController',
-  function($scope, $modalInstance, $rootScope, $state, flash, ApiRepository, agFormHandler) {
+  function($scope, $modalInstance, $rootScope, $state, $timeout, flash, ApiRepository, agFormHandler) {
     $scope.apiName = '';
 
     var resetForm = function () {
@@ -26,14 +26,17 @@ angular.module('ag-admin').controller(
           $modalInstance.close(newApi);
           resetForm();
 
-          flash.success = 'New API Created';
+          flash.success = 'New API created; redirecting momentarily';
 
           /* Angular has no way to emit to sibling controllers; use the
            * $rootScope to broadcast downwards instead.
            */
-          $rootScope.$broadcast('api.updateList');
-          $state.go('ag.api.version', {apiName: newApi.name, version: 1});
-        },
+          $timeout(function () {
+            $rootScope.$broadcast('api.updateList');
+            $state.go('ag.api.version', {apiName: newApi.name, version: 1});
+          }, 500);
+        }
+      ).catch(
         function (error) {
           agFormHandler.reportError(error, $scope);
         }

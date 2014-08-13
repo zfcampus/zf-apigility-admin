@@ -10,10 +10,11 @@ angular.module('ag-admin').factory(
     return {
       getCacheStatus: function () {
         return $http({method: 'GET', url: servicePath}).then(
-          function success(response) {
+          function (response) {
             return response.data.cache_enabled;
-          },
-          function error() {
+          }
+        ).catch(
+          function () {
             flash.error = 'Unable to fetch API opcode cache status; you may need to refresh the page.';
           }
         );

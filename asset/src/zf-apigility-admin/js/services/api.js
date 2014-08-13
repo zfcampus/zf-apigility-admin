@@ -53,101 +53,113 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 method: 'GET',
                 url: moduleApiPath
             };
-            $http(config).then(function (response) {
-                var apis = Hal.pluckCollection('module', response.data);
-                var api = _.find(apis, function (m) {
-                    return m.name === name;
-                });
-                
-                if (api === undefined) {
-                    flash.error = 'API "' + name + '" not found';
-                    return $q.reject(404);
-                }
-
-                _.forEach(Hal.stripLinks(api), function (value, key) {
-                    apiModel[key] = value;
-                });
-
-                apiModel.restServices = [];
-                apiModel.rpcServices  = [];
-
-                if (!version) {
-                    version = api.versions[api.versions.length - 1];
-                }
-
-                if (-1 === api.versions.indexOf(version)) {
-                    flash.error = 'Version "' + version + '" of API "' + name + '" not found';
-                    return $q.reject(404);
-                }
-
-                return api;
-            }).then(function (api) {
-                // Now load REST endpoints
-                var config = self.getHttpConfigFromLink('rest', api);
-                config.method = 'GET';
-                config.params.version = version;
-                return $http(config).then(function (response) {
-                    apiModel.restServices = Hal.pluckCollection('rest', response.data);
-                    _.forEach(apiModel.restServices, function (restService, index) {
-                        restService._self = Hal.getLink('self', restService);
-                        restService.input_filter = [];
-                        restService.documentation = [];
-                        if (! restService._embedded) {
-                            return;
-                        }
-
-                        if (restService._embedded && restService._embedded.input_filters && restService._embedded.input_filters[0]) {
-                            restService.input_filter = Hal.props(restService._embedded.input_filters[0]);
-                            _.forEach(restService.input_filter, function (value, key) {
-                                self.marshalInputFilter(restService, value, key);
-                            });
-                            restService.input_filter = _.toArray(restService.input_filter);
-                        }
-
-                        if (restService._embedded.documentation) {
-                            var documentation = Hal.pluckCollection('documentation', restService);
-                            restService.documentation = Hal.props(documentation);
-                        }
+            $http(config).then(
+                function (response) {
+                    var apis = Hal.pluckCollection('module', response.data);
+                    var api = _.find(apis, function (m) {
+                        return m.name === name;
                     });
-                    return api;
-                });
-            }).then(function (api) {
-                var config = self.getHttpConfigFromLink('rpc', api);
-                config.method = 'GET';
-                config.params.version = version;
-                return $http(config).then(function (response) {
-                    apiModel.rpcServices = Hal.pluckCollection('rpc', response.data);
-                    _.forEach(apiModel.rpcServices, function (rpcService, index) {
-                        rpcService._self = Hal.getLink('self', rpcService);
-                        rpcService.input_filter = [];
-                        rpcService.documentation = [];
-                        if (! rpcService._embedded) {
-                            return;
-                        }
+                    
+                    if (api === undefined) {
+                        flash.error = 'API "' + name + '" not found';
+                        return $q.reject(404);
+                    }
 
-                        if (rpcService._embedded.input_filters && rpcService._embedded.input_filters[0]) {
-                            rpcService.input_filter = Hal.props(rpcService._embedded.input_filters[0]);
-                            _.forEach(rpcService.input_filter, function (value, key) {
-                                self.marshalInputFilter(rpcService, value, key);
-                            });
-                            rpcService.input_filter = _.toArray(rpcService.input_filter);
-                        }
-
-                        if (rpcService._embedded.documentation) {
-                            var documentation = Hal.pluckCollection('documentation', rpcService);
-                            rpcService.documentation = Hal.props(documentation);
-                        }
+                    _.forEach(Hal.stripLinks(api), function (value, key) {
+                        apiModel[key] = value;
                     });
+
+                    apiModel.restServices = [];
+                    apiModel.rpcServices  = [];
+
+                    if (!version) {
+                        version = api.versions[api.versions.length - 1];
+                    }
+
+                    if (-1 === api.versions.indexOf(version)) {
+                        flash.error = 'Version "' + version + '" of API "' + name + '" not found';
+                        return $q.reject(404);
+                    }
+
                     return api;
-                });
-            }).then(function (api) {
-                deferred.resolve(apiModel);
-                if (!apiModels.hasOwnProperty(name)) {
-                    apiModels[name] = {};
                 }
-                apiModels[name][version] = apiModel;
-                apiModels[name][version].version = version;
-             });
+            ).then(
+                function (api) {
+                    // Now load REST endpoints
+                    var config = self.getHttpConfigFromLink('rest', api);
+                    config.method = 'GET';
+                    config.params.version = version;
+                    return $http(config).then(
+                        function (response) {
+                            apiModel.restServices = Hal.pluckCollection('rest', response.data);
+                            _.forEach(apiModel.restServices, function (restService, index) {
+                                restService._self = Hal.getLink('self', restService);
+                                restService.input_filter = [];
+                                restService.documentation = [];
+                                if (! restService._embedded) {
+                                    return;
+                                }
+
+                                if (restService._embedded && restService._embedded.input_filters && restService._embedded.input_filters[0]) {
+                                    restService.input_filter = Hal.props(restService._embedded.input_filters[0]);
+                                    _.forEach(restService.input_filter, function (value, key) {
+                                        self.marshalInputFilter(restService, value, key);
+                                    });
+                                    restService.input_filter = _.toArray(restService.input_filter);
+                                }
+
+                                if (restService._embedded.documentation) {
+                                    var documentation = Hal.pluckCollection('documentation', restService);
+                                    restService.documentation = Hal.props(documentation);
+                                }
+                            });
+                            return api;
+                        }
+                    );
+                }
+            ).then(
+                function (api) {
+                    var config = self.getHttpConfigFromLink('rpc', api);
+                    config.method = 'GET';
+                    config.params.version = version;
+                    return $http(config).then(
+                        function (response) {
+                            apiModel.rpcServices = Hal.pluckCollection('rpc', response.data);
+                            _.forEach(apiModel.rpcServices, function (rpcService, index) {
+                                rpcService._self = Hal.getLink('self', rpcService);
+                                rpcService.input_filter = [];
+                                rpcService.documentation = [];
+                                if (! rpcService._embedded) {
+                                    return;
+                                }
+
+                                if (rpcService._embedded.input_filters && rpcService._embedded.input_filters[0]) {
+                                    rpcService.input_filter = Hal.props(rpcService._embedded.input_filters[0]);
+                                    _.forEach(rpcService.input_filter, function (value, key) {
+                                        self.marshalInputFilter(rpcService, value, key);
+                                    });
+                                    rpcService.input_filter = _.toArray(rpcService.input_filter);
+                                }
+
+                                if (rpcService._embedded.documentation) {
+                                    var documentation = Hal.pluckCollection('documentation', rpcService);
+                                    rpcService.documentation = Hal.props(documentation);
+                                }
+                            });
+                            return api;
+                        }
+                    );
+                }
+            ).then(
+                function (api) {
+                    deferred.resolve(apiModel);
+                    if (!apiModels.hasOwnProperty(name)) {
+                        apiModels[name] = {};
+                    }
+                    apiModels[name][version] = apiModel;
+                    apiModels[name][version].version = version;
+                }
+            );
 
             return deferred.promise;
         },
@@ -158,22 +170,25 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 return;
             }
 
-            return this.getApi(scope.api.name, scope.api.version, true).then(function (api) {
-                if (message) {
-                    flash.success = message;
-                }
+            return this.getApi(scope.api.name, scope.api.version, true).then(
+                function (api) {
+                    if (message) {
+                        flash.success = message;
+                    }
 
-                scope.api = api;
-                scope.currentVersion = api.currentVersion;
-                return api;
-            });
+                    scope.api = api;
+                    scope.currentVersion = api.currentVersion;
+                    return api;
+                }
+            );
         },
 
         createNewApi: function (name) {
-            return $http.post(moduleApiPath, {name: name})
-                .then(function (response) {
+            return $http.post(moduleApiPath, {name: name}).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         removeApi: function (name, recursive) {
@@ -183,50 +198,61 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 method: 'GET',
                 url: moduleApiPath
             };
-            return $http(config).then(function (response) {
-                var apis = Hal.pluckCollection('module', response.data);
-                var api = _.find(apis, function (m) {
-                    return m.name === name;
-                });
-                
-                if (api === undefined) {
-                    flash.error = 'API "' + name + '" not found';
-                    return $q.reject(404);
-                }
+            return $http(config).then(
+                function (response) {
+                    var apis = Hal.pluckCollection('module', response.data);
+                    var api = _.find(apis, function (m) {
+                        return m.name === name;
+                    });
+                    
+                    if (api === undefined) {
+                        flash.error = 'API "' + name + '" not found';
+                        return $q.reject(404);
+                    }
 
-                return api;
-            }).then(function (api) {
-                var uri = Hal.getLink('self', api);
-                var config = {};
-                if ( !!recursive ) {
-                    config.params = { recursive: 1 };
+                    return api;
                 }
+            ).then(
+                function (api) {
+                    var uri = Hal.getLink('self', api);
+                    var config = {};
+                    if ( !!recursive ) {
+                        config.params = { recursive: 1 };
+                    }
 
-                return $http.delete(uri, config).then(function () {
-                    return self.getList(true);
-                });
-            });
+                    return $http.delete(uri, config).then(
+                        function () {
+                            return self.getList(true);
+                        }
+                    );
+                }
+            );
         },
 
         createNewRestService: function (apiName, restServiceName) {
-            return $http.post(moduleApiPath + '/' + apiName + '/rest', {service_name: restServiceName})
-                .then(function (response) {
+            return $http.post(moduleApiPath + '/' + apiName + '/rest', {service_name: restServiceName}).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         createNewDbConnectedService: function(apiName, dbAdapterName, dbTableName) {
             return $http.post(moduleApiPath + '/' + apiName + '/rest', {adapter_name: dbAdapterName, table_name: dbTableName})
-                .then(function (response) {
-                    return response.data;
-                });
+                .then(
+                    function (response) {
+                        return response.data;
+                    }
+                );
         },
 
         createNewRpcService: function (apiName, rpcServiceName, rpcServiceRoute) {
             return $http.post(moduleApiPath + '/' + apiName + '/rpc', {service_name: rpcServiceName, route_match: rpcServiceRoute})
-                .then(function (response) {
-                    return response.data;
-                });
+                .then(
+                    function (response) {
+                        return response.data;
+                    }
+                );
         },
 
         removeRestService: function (apiName, restServiceName, recursive) {
@@ -235,10 +261,11 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
             if ( !!recursive ) {
                 config.params = { recursive: 1 };
             }
-            return $http.delete(url, config)
-                .then(function (response) {
+            return $http.delete(url, config).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         saveRestService: function (apiName, restService) {
@@ -269,26 +296,29 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
             if (restService.hasOwnProperty('table_name') && restService.table_name) {
                 data.table_name = restService.table_name;
             }
-            return $http({method: 'patch', url: url, data: data})
-                .then(function (response) {
+            return $http({method: 'patch', url: url, data: data}).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         saveInputFilter: function (api, inputFilter) {
             var url = api._self + '/input-filter';
-            return $http.put(url, inputFilter)
-                .then(function (response) {
+            return $http.put(url, inputFilter).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         saveDocumentation: function (api) {
             var url = api._self + '/doc';
-            return $http.put(url, api.documentation)
-                .then(function (response) {
+            return $http.put(url, api.documentation).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         removeRpcService: function (apiName, rpcServiceName, recursive) {
@@ -297,10 +327,11 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
             if ( !!recursive ) {
                 config.params = { recursive: 1 };
             }
-            return $http.delete(url, config)
-                .then(function (response) {
+            return $http.delete(url, config).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         saveRpcService: function (apiName, rpcService) {
@@ -315,31 +346,36 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                 selector: testForEmpty(rpcService.selector),
                 service_name: rpcService.service_name
             };
-            return $http({method: 'patch', url: url, data: data})
-                .then(function (response) {
+            return $http({method: 'patch', url: url, data: data}).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         getSourceCode: function (apiName, className) {
-            return $http.get(apiBasePath + '/source?module=' + apiName + '&class=' + className)
-                .then(function(response) {
+            return $http.get(apiBasePath + '/source?module=' + apiName + '&class=' + className).then(
+                function(response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         createNewVersion: function (apiName) {
-            return $http({method: 'patch', url: apiBasePath + '/versioning', data: {module: apiName}})
-                .then(function (response) {
+            return $http({method: 'patch', url: apiBasePath + '/versioning', data: {module: apiName}}).then(
+                function (response) {
                     return response.data;
-                });
+                }
+            );
         },
 
         setDefaultApiVersion: function (apiName, defaultApiVersion) {
             return $http({method: 'patch', url: apiBasePath + '/default-version', data: {module: apiName, version: defaultApiVersion}})
-                .then(function (response) {
-                    return response.data;
-                });
+                .then(
+                    function (response) {
+                        return response.data;
+                    }
+                );
         },
 
         getLatestVersion: function (api) {
@@ -378,6 +414,11 @@ angular.module('ag-admin').factory('ApiRepository', function ($q, $http, apiBase
                         filter.options = {};
                     }
                 });
+            }
+
+            if (typeof data.type === 'string' &&
+                data.type == 'Zend\\InputFilter\\FileInput') {
+                data.file_upload = true;
             }
 
             if (typeof data.required == 'undefined') {
