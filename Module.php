@@ -772,13 +772,13 @@ class Module
      * Prepare cache-busting headers for GET requests
      *
      * Invoked from the onFinish() method for GET requests to disable client-side HTTP caching.
-     * 
-     * @param \Zend\Http\Headers $headers 
+     *
+     * @param \Zend\Http\Headers $headers
      */
     protected function disableHttpCache($headers)
     {
         $headers->addHeader(new GenericHeader('Expires', '0'));
-        $headers->addHeaderLine('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+        // $headers->addHeaderLine('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
         $headers->addHeader(new GenericMultiHeader('Cache-Control', 'no-store, no-cache, must-revalidate'));
         $headers->addHeader(new GenericMultiHeader('Cache-Control', 'post-check=0, pre-check=0'));
         $headers->addHeaderLine('Pragma', 'no-cache');
