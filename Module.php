@@ -772,8 +772,8 @@ class Module
      * Prepare cache-busting headers for GET requests
      *
      * Invoked from the onFinish() method for GET requests to disable client-side HTTP caching.
-     * 
-     * @param \Zend\Http\Headers $headers 
+     *
+     * @param \Zend\Http\Headers $headers
      */
     protected function disableHttpCache($headers)
     {
