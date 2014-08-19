@@ -5,20 +5,6 @@
  */
 
 return array(
-    'asset_manager' => array(
-        'resolver_configs' => array(
-            'paths' => array(
-                __DIR__ . '/../asset/dist',
-            ),
-        ),
-    ),
-
-    'view_manager' => array(
-        'template_map' => array(
-            'zf/app/app' => __DIR__ . '/../view/app.phtml',
-        )
-    ),
-
     'service_manager' => array(
         'invokables' => array(
             'ZF\Apigility\Admin\Listener\CryptFilterListener' => 'ZF\Apigility\Admin\Listener\CryptFilterListener',
