@@ -38,8 +38,8 @@ class Module
 
     /**
      * Ensure the UI module is loaded
-     * 
-     * @param ModuleManagerInterface $modules 
+     *
+     * @param ModuleManagerInterface $modules
      */
     public function init(ModuleManagerInterface $modules)
     {
