@@ -8,6 +8,8 @@ namespace ZF\Apigility\Admin;
 
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Header\GenericMultiHeader;
+use Zend\ModuleManager\ModuleEvent;
+use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\Configuration\ConfigResource;
@@ -33,6 +35,21 @@ class Module
      * @var \Zend\ServiceManager\ServiceLocatorInterface
      */
     protected $sm;
+
+    /**
+     * Ensure the UI module is loaded
+     * 
+     * @param ModuleManagerInterface $modules 
+     */
+    public function init(ModuleManagerInterface $modules)
+    {
+        $loaded = $modules->getLoadedModules();
+        if (isset($loaded['ZF\Apigility\Admin\Ui'])) {
+            return;
+        }
+
+        $modules->loadModule('ZF\Apigility\Admin\Ui');
+    }
 
     public function onBootstrap(MvcEvent $e)
     {
