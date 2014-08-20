@@ -8,7 +8,6 @@ namespace ZF\Apigility\Admin;
 
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Header\GenericMultiHeader;
-use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
