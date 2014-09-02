@@ -17,8 +17,7 @@
         "issues": "https://github.com/zfcampus/zf-apigility-admin/issues"
     },
     "repositories": [
-        { "type": "composer", "url": "https://packages.zendframework.com/" },
-        { "type": "vcs", "url": "file:///home/matthew/git/modules/zfcampus/zf-apigility-admin-ui/.git" }
+        { "type": "composer", "url": "https://packages.zendframework.com/" }
     ],
     "extra": {
         "branch-alias": {
