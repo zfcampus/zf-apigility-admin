@@ -752,7 +752,9 @@ class Module
 
     protected function getServiceType($service)
     {
-        if (strstr($service, '\\Rest\\')) {
+        if (strstr($service, '\\Rest\\')
+            || strstr($service, '-Rest-')
+        ) {
             return 'rest';
         }
         return 'rpc';
