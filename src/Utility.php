@@ -17,7 +17,9 @@ class Utility
     {
         if (false === ($dh = @opendir($dir))) {
             return false;
-        } while (false !== ($obj = readdir($dh))) {
+        }
+
+        while (false !== ($obj = readdir($dh))) {
             if ($obj == '.' || $obj == '..') {
                 continue;
             }
@@ -25,6 +27,7 @@ class Utility
                 self::recursiveDelete($dir . '/' . $obj);
             }
         }
+
         closedir($dh);
         @rmdir($dir);
         return true;
