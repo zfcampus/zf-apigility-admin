@@ -71,5 +71,4 @@ class SourceControllerTest extends TestCase
         $this->assertEquals($result->getVariable('module'), $request->getQuery()->module);
         $this->assertEquals($result->getVariable('class'), $request->getQuery()->class);
     }
-
 }

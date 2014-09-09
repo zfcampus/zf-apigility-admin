@@ -118,7 +118,7 @@ class Module
                 if (!$services->has('ZF\Configuration\ModuleUtils')
                     || !$services->has('ZF\Configuration\ConfigResourceFactory')
                     || !$services->has('ZF\Apigility\Admin\Model\ModuleModel')
-                ) {;
+                ) {
                     throw new ServiceNotCreatedException(
                         'ZF\Apigility\Admin\Model\AuthorizationModelFactory is missing one or more dependencies from ZF\Configuration'
                     );
@@ -752,7 +752,9 @@ class Module
 
     protected function getServiceType($service)
     {
-        if (strstr($service, '\\Rest\\')) {
+        if (strstr($service, '\\Rest\\')
+            || strstr($service, '-Rest-')
+        ) {
             return 'rest';
         }
         return 'rpc';

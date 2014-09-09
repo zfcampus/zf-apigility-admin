@@ -151,5 +151,4 @@ class DocumentationModel
         $docArray = (file_exists($docConfigPath)) ? include $docConfigPath : array();
         return $this->configFactory->createConfigResource($docArray, $docConfigPath);
     }
-
 }

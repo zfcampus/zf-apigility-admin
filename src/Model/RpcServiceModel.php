@@ -276,9 +276,11 @@ class RpcServiceModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents($classPath,
-                "<" . "?php\n" . $renderer->render($view))) {
-                return false;
+        if (!file_put_contents(
+            $classPath,
+            "<" . "?php\n" . $renderer->render($view)
+        )) {
+            return false;
         }
 
         return sprintf('%s\\V%s\\Rpc\\%s\\%s', $module, $version, $serviceName, $classFactory);

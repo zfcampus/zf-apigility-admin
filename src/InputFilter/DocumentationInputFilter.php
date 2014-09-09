@@ -52,7 +52,6 @@ class DocumentationInputFilter extends InputFilter
 
         foreach ($this->data as $key => $data) {
             if (in_array($key, $this->validHttpMethods)) {
-
                 // valid HTTP method?
                 if (isset($this->data['collection']) || isset($this->data['entity'])) {
                     $this->messages[$key][] = 'HTTP methods cannot be present when "collection" or "entity" is also present; please verify data for "' . $key . '"';
@@ -82,7 +81,6 @@ class DocumentationInputFilter extends InputFilter
                             $isValid = false;
                             continue;
                         }
-
                     } elseif ($subKey === 'description') {
                         if (!is_string($subData)) {
                             $this->messages[$key][] = 'Description must be provided as a string; please verify description for "' . $subKey . '"';

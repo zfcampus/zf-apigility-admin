@@ -262,13 +262,13 @@ class AuthenticationModel
         if (isset($localConfig['zf-oauth2']['db'])
             && is_array($localConfig['zf-oauth2']['db'])
         ) {
-            return array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);;
+            return array_merge($oauth2Config, $localConfig['zf-oauth2']['db']);
         }
 
         if (isset($localConfig['zf-oauth2']['mongo'])
             && is_array($localConfig['zf-oauth2']['mongo'])
         ) {
-            return array_merge($oauth2Config, $localConfig['zf-oauth2']['mongo']);;
+            return array_merge($oauth2Config, $localConfig['zf-oauth2']['mongo']);
         }
 
 

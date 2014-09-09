@@ -84,5 +84,4 @@ class DocumentationController extends AbstractActionController
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
         return sprintf('zf-apigility/api/module/%s-service/doc', $matches['type']);
     }
-
 }
