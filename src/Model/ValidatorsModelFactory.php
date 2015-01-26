@@ -35,6 +35,9 @@ class ValidatorsModelFactory implements FactoryInterface
             ));
         }
 
-        return new ValidatorsModel($services->get('ValidatorManager'), $services->get('ZF\Apigility\Admin\Model\ValidatorMetadataModel'));
+        return new ValidatorsModel(
+            $services->get('ValidatorManager'),
+            $services->get('ZF\Apigility\Admin\Model\ValidatorMetadataModel')
+        );
     }
 }

@@ -17,7 +17,8 @@ abstract class AbstractPluginManagerModelTest extends TestCase
     public function setUp()
     {
         $this->markTestIncomplete(
-            'Please define the setUp() method in your extending test case, and set the plugins, model, and namespace properties'
+            'Please define the setUp() method in your extending test case,'
+            . ' and set the plugins, model, and namespace properties'
         );
     }
 

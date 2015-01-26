@@ -12,8 +12,6 @@ use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\VersioningModel;
 use ZF\Configuration\ConfigResource;
 
-require_once __DIR__ . '/TestAsset/module/Version/Module.php';
-
 class VersioningModelTest extends TestCase
 {
     public function setUp()
@@ -93,12 +91,15 @@ class VersioningModelTest extends TestCase
 
         $config = include $this->moduleConfigFile;
         $this->assertArrayHasKey('router', $config);
+        // @codingStandardsIgnoreStart
         $this->assertEquals('Version\\V1\\Rest\Message\Controller', $config['router']['routes']['version.rest.message']['options']['defaults']['controller']);
         $this->assertEquals('Version\\V1\\Rest\Comment\Controller', $config['router']['routes']['version.rest.comment']['options']['defaults']['controller']);
+        // @codingStandardsIgnoreEnd
 
         $this->assertArrayHasKey('zf-rest', $config);
         $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\Controller', $config['zf-rest']);
         $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\Controller', $config['zf-rest'], var_export($config, 1));
+        // @codingStandardsIgnoreStart
         $this->assertEquals('Version\\V1\\Rest\\Message\\MessageResource', $config['zf-rest']['Version\\V1\\Rest\\Message\\Controller']['listener']);
         $this->assertEquals('Version\\V2\\Rest\\Message\\MessageResource', $config['zf-rest']['Version\\V2\\Rest\\Message\\Controller']['listener']);
         $this->assertEquals('Version\\V1\\Rest\\Message\\MessageEntity', $config['zf-rest']['Version\\V1\\Rest\\Message\\Controller']['entity_class']);
@@ -111,6 +112,7 @@ class VersioningModelTest extends TestCase
         $this->assertEquals('Version\\V2\\Rest\\Comment\\CommentEntity', $config['zf-rest']['Version\\V2\\Rest\\Comment\\Controller']['entity_class']);
         $this->assertEquals('Version\\V1\\Rest\\Comment\\CommentCollection', $config['zf-rest']['Version\\V1\\Rest\\Comment\\Controller']['collection_class']);
         $this->assertEquals('Version\\V2\\Rest\\Comment\\CommentCollection', $config['zf-rest']['Version\\V2\\Rest\\Comment\\Controller']['collection_class']);
+        // @codingStandardsIgnoreEnd
 
         $this->assertArrayHasKey('zf-hal', $config);
         $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\MessageEntity', $config['zf-hal']['metadata_map']);
@@ -123,22 +125,62 @@ class VersioningModelTest extends TestCase
         $this->assertArrayHasKey('Version\\V2\\Rest\\Comment\\CommentCollection', $config['zf-hal']['metadata_map']);
 
         $this->assertArrayHasKey('zf-apigility', $config);
-        $this->assertArrayHasKey('Version\\V1\\Rest\\Message\\MessageResource', $config['zf-apigility']['db-connected']);
-        $this->assertEquals('Version\\V1\\Rest\\Message\\Controller', $config['zf-apigility']['db-connected']['Version\\V1\\Rest\\Message\\MessageResource']['controller_service_name']);
-        $this->assertEquals('Version\\V1\\Rest\\Message\\MessageResource\\Table', $config['zf-apigility']['db-connected']['Version\\V1\\Rest\\Message\\MessageResource']['table_service']);
-        $this->assertArrayHasKey('Version\\V2\\Rest\\Message\\MessageResource', $config['zf-apigility']['db-connected']);
-        $this->assertEquals('Version\\V2\\Rest\\Message\\Controller', $config['zf-apigility']['db-connected']['Version\\V2\\Rest\\Message\\MessageResource']['controller_service_name']);
-        $this->assertEquals('Version\\V2\\Rest\\Message\\MessageResource\\Table', $config['zf-apigility']['db-connected']['Version\\V2\\Rest\\Message\\MessageResource']['table_service']);
+        $this->assertArrayHasKey(
+            'Version\\V1\\Rest\\Message\\MessageResource',
+            $config['zf-apigility']['db-connected']
+        );
+        // @codingStandardsIgnoreStart
+        $this->assertEquals(
+            'Version\\V1\\Rest\\Message\\Controller',
+            $config['zf-apigility']['db-connected']['Version\\V1\\Rest\\Message\\MessageResource']['controller_service_name']
+        );
+        $this->assertEquals(
+            'Version\\V1\\Rest\\Message\\MessageResource\\Table',
+            $config['zf-apigility']['db-connected']['Version\\V1\\Rest\\Message\\MessageResource']['table_service']
+        );
+        // @codingStandardsIgnoreEnd
+        $this->assertArrayHasKey(
+            'Version\\V2\\Rest\\Message\\MessageResource',
+            $config['zf-apigility']['db-connected']
+        );
+        // @codingStandardsIgnoreStart
+        $this->assertEquals(
+            'Version\\V2\\Rest\\Message\\Controller',
+            $config['zf-apigility']['db-connected']['Version\\V2\\Rest\\Message\\MessageResource']['controller_service_name']
+        );
+        // @codingStandardsIgnoreEnd
+        $this->assertEquals(
+            'Version\\V2\\Rest\\Message\\MessageResource\\Table',
+            $config['zf-apigility']['db-connected']['Version\\V2\\Rest\\Message\\MessageResource']['table_service']
+        );
 
         $this->assertArrayHasKey('service_manager', $config);
-        $this->assertEquals('Version\V1\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\V1\Rest\Comment\Model']);
-        $this->assertEquals('Version\V1\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V1\Rest\Comment\CommentResource']);
-        $this->assertEquals('Version\V2\Rest\Comment\CommentModelFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\Model']);
-        $this->assertEquals('Version\V2\Rest\Comment\CommentResourceFactory', $config['service_manager']['factories']['Version\V2\Rest\Comment\CommentResource']);
+        $this->assertEquals(
+            'Version\V1\Rest\Comment\CommentModelFactory',
+            $config['service_manager']['factories']['Version\V1\Rest\Comment\Model']
+        );
+        $this->assertEquals(
+            'Version\V1\Rest\Comment\CommentResourceFactory',
+            $config['service_manager']['factories']['Version\V1\Rest\Comment\CommentResource']
+        );
+        $this->assertEquals(
+            'Version\V2\Rest\Comment\CommentModelFactory',
+            $config['service_manager']['factories']['Version\V2\Rest\Comment\Model']
+        );
+        $this->assertEquals(
+            'Version\V2\Rest\Comment\CommentResourceFactory',
+            $config['service_manager']['factories']['Version\V2\Rest\Comment\CommentResource']
+        );
 
         $this->assertArrayHasKey('controllers', $config);
-        $this->assertEquals('Version\V1\Rpc\Ping\PingController', $config['controllers']['invokables']['Version\V1\Rpc\Ping\Controller']);
-        $this->assertEquals('Version\V2\Rpc\Ping\PingController', $config['controllers']['invokables']['Version\V2\Rpc\Ping\Controller']);
+        $this->assertEquals(
+            'Version\V1\Rpc\Ping\PingController',
+            $config['controllers']['invokables']['Version\V1\Rpc\Ping\Controller']
+        );
+        $this->assertEquals(
+            'Version\V2\Rpc\Ping\PingController',
+            $config['controllers']['invokables']['Version\V2\Rpc\Ping\Controller']
+        );
 
         $this->removeDir(__DIR__ . "/TestAsset/module/Version/src/Version/V2");
     }
@@ -157,7 +199,9 @@ class VersioningModelTest extends TestCase
         );
         $pattern2 = str_replace('1', '2', $pattern1);
 
-        $controller = file_get_contents(__DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc/Bar/BarController.php");
+        $controller = file_get_contents(
+            __DIR__ . "/TestAsset/module/Version/src/Version/V2/Rpc/Bar/BarController.php"
+        );
         $this->assertNotRegExp($pattern1, $controller);
         $this->assertRegExp($pattern2, $controller);
 
@@ -200,7 +244,10 @@ class VersioningModelTest extends TestCase
         $originalConfig = include __DIR__ . '/TestAsset/module/Version/config/module.config.php';
         $this->assertArrayHasKey('zf-content-validation', $originalConfig);
         $this->assertArrayHasKey('Version\V1\Rest\Message\Controller', $originalConfig['zf-content-validation']);
-        $this->assertArrayHasKey('input_filter', $originalConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']);
+        $this->assertArrayHasKey(
+            'input_filter',
+            $originalConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']
+        );
         $this->assertArrayHasKey('input_filter_specs', $originalConfig);
         $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $originalConfig['input_filter_specs']);
 
@@ -210,17 +257,32 @@ class VersioningModelTest extends TestCase
 
         $this->assertArrayHasKey('zf-content-validation', $updatedConfig);
         $this->assertArrayHasKey('Version\V1\Rest\Message\Controller', $updatedConfig['zf-content-validation']);
-        $this->assertArrayHasKey('input_filter', $updatedConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']);
-        $this->assertEquals('Version\V1\Rest\Message\Validator', $updatedConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']['input_filter']);
+        $this->assertArrayHasKey(
+            'input_filter',
+            $updatedConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']
+        );
+        $this->assertEquals(
+            'Version\V1\Rest\Message\Validator',
+            $updatedConfig['zf-content-validation']['Version\V1\Rest\Message\Controller']['input_filter']
+        );
 
         $this->assertArrayHasKey('Version\V2\Rest\Message\Controller', $updatedConfig['zf-content-validation']);
-        $this->assertArrayHasKey('input_filter', $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']);
-        $this->assertEquals('Version\V2\Rest\Message\Validator', $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']['input_filter']);
+        $this->assertArrayHasKey(
+            'input_filter',
+            $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']
+        );
+        $this->assertEquals(
+            'Version\V2\Rest\Message\Validator',
+            $updatedConfig['zf-content-validation']['Version\V2\Rest\Message\Controller']['input_filter']
+        );
 
         $this->assertArrayHasKey('input_filter_specs', $updatedConfig);
         $this->assertArrayHasKey('Version\V1\Rest\Message\Validator', $updatedConfig['input_filter_specs']);
         $this->assertArrayHasKey('Version\V2\Rest\Message\Validator', $updatedConfig['input_filter_specs']);
-        $this->assertEquals($updatedConfig['input_filter_specs']['Version\V1\Rest\Message\Validator'], $updatedConfig['input_filter_specs']['Version\V2\Rest\Message\Validator']);
+        $this->assertEquals(
+            $updatedConfig['input_filter_specs']['Version\V1\Rest\Message\Validator'],
+            $updatedConfig['input_filter_specs']['Version\V2\Rest\Message\Validator']
+        );
     }
 
     public function testSettingTheApiDefaultVersion()
@@ -249,9 +311,21 @@ class VersioningModelTest extends TestCase
         $newDocsConfig = include $this->moduleDocsConfigFile;
         $this->assertArrayHasKey('Version\V2\Rest\Message\Controller', $newDocsConfig);
         $this->assertArrayHasKey('Version\V2\Rest\Comment\Controller', $newDocsConfig);
-        $this->assertEquals($docsConfig['Version\V1\Rest\Message\Controller'], $newDocsConfig['Version\V1\Rest\Message\Controller']);
-        $this->assertEquals($docsConfig['Version\V1\Rest\Message\Controller'], $newDocsConfig['Version\V2\Rest\Message\Controller']);
-        $this->assertEquals($docsConfig['Version\V1\Rest\Comment\Controller'], $newDocsConfig['Version\V1\Rest\Comment\Controller']);
-        $this->assertEquals($docsConfig['Version\V1\Rest\Comment\Controller'], $newDocsConfig['Version\V2\Rest\Comment\Controller']);
+        $this->assertEquals(
+            $docsConfig['Version\V1\Rest\Message\Controller'],
+            $newDocsConfig['Version\V1\Rest\Message\Controller']
+        );
+        $this->assertEquals(
+            $docsConfig['Version\V1\Rest\Message\Controller'],
+            $newDocsConfig['Version\V2\Rest\Message\Controller']
+        );
+        $this->assertEquals(
+            $docsConfig['Version\V1\Rest\Comment\Controller'],
+            $newDocsConfig['Version\V1\Rest\Comment\Controller']
+        );
+        $this->assertEquals(
+            $docsConfig['Version\V1\Rest\Comment\Controller'],
+            $newDocsConfig['Version\V2\Rest\Comment\Controller']
+        );
     }
 }

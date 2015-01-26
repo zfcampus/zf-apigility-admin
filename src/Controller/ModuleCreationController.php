@@ -35,7 +35,12 @@ class ModuleCreationController extends AbstractActionController
                 $module = $this->bodyParam('module', false);
                 if (!$module) {
                     return new ApiProblemResponse(
-                        new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                        new ApiProblem(
+                            422,
+                            'Module parameter not provided',
+                            'https://tools.ietf.org/html/rfc4918',
+                            'Unprocessable Entity'
+                        )
                     );
                 }
 

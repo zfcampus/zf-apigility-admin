@@ -21,7 +21,13 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->actualDocData = include __DIR__ . '/TestAsset/module/Doc/config/documentation.config.php';
 
-        $mockModuleUtils = $this->getMock('ZF\Configuration\ModuleUtils', array('getModuleConfigPath'), array(), '', false);
+        $mockModuleUtils = $this->getMock(
+            'ZF\Configuration\ModuleUtils',
+            array('getModuleConfigPath'),
+            array(),
+            '',
+            false
+        );
         $mockModuleUtils->expects($this->any())
             ->method('getModuleConfigPath')
             ->will($this->returnValue(__DIR__ . '/TestAsset/module/Doc/config/module.config.php'));

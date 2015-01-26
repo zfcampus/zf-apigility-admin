@@ -92,7 +92,11 @@ class InputFilterController extends AbstractActionController
                 $result = $this->model->update($module, $controller, $inputFilter);
                 if (!$result) {
                     return new ApiProblemResponse(
-                        new ApiProblem(500, 'There was an unexpected error updating the input filter; please verify the module and controller specified are valid')
+                        new ApiProblem(
+                            500,
+                            'There was an unexpected error updating the input filter;'
+                            . ' please verify the module and controller specified are valid'
+                        )
                     );
                 }
 

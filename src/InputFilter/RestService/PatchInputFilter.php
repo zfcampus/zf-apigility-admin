@@ -61,7 +61,8 @@ class PatchInputFilter extends PostInputFilter
             'name' => 'selector',
             'required' => false,
             'allow_empty' => true,
-            'error_message' => 'The Content Negotiation Selector must be a valid, defined zf-content-negotiation selector',
+            'error_message' => 'The Content Negotiation Selector must be a valid,'
+                . ' defined zf-content-negotiation selector',
         ));
 
         $this->add(array(
@@ -85,7 +86,8 @@ class PatchInputFilter extends PostInputFilter
                     return false;
                 }),
             ),
-            'error_message' => 'The Page Size must be either a positive integer or the value "-1" (disabling pagination)',
+            'error_message' => 'The Page Size must be either a positive integer'
+                . ' or the value "-1" (disabling pagination)',
         ));
         $this->add(array(
             'name' => 'collection_http_methods',

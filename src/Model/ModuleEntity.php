@@ -54,8 +54,12 @@ class ModuleEntity
      * @param  bool $isVendor
      * @throws InvalidArgumentException for modules that do not exist
      */
-    public function __construct($namespace, array $restServices = array(), array $rpcServices = array(), $isVendor = null)
-    {
+    public function __construct(
+        $namespace,
+        array $restServices = array(),
+        array $rpcServices = array(),
+        $isVendor = null
+    ) {
         if (!class_exists($namespace . '\\Module')) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid module "%s"; no Module class exists for that module',

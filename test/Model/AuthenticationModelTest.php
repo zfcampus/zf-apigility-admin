@@ -212,7 +212,11 @@ class AuthenticationModelTest extends TestCase
         $this->assertArrayHasKey('oauth', $global['router']['routes']);
         $this->assertArrayHasKey('options', $global['router']['routes']['oauth']);
         $this->assertArrayHasKey('route', $global['router']['routes']['oauth']['options']);
-        $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
+        $this->assertEquals(
+            '/api/oauth',
+            $global['router']['routes']['oauth']['options']['route'],
+            var_export($global, 1)
+        );
 
         $local  = include $this->localConfigPath;
         $this->assertEquals(array(
@@ -248,7 +252,11 @@ class AuthenticationModelTest extends TestCase
         $this->assertArrayHasKey('oauth', $global['router']['routes']);
         $this->assertArrayHasKey('options', $global['router']['routes']['oauth']);
         $this->assertArrayHasKey('route', $global['router']['routes']['oauth']['options']);
-        $this->assertEquals('/api/oauth', $global['router']['routes']['oauth']['options']['route'], var_export($global, 1));
+        $this->assertEquals(
+            '/api/oauth',
+            $global['router']['routes']['oauth']['options']['route'],
+            var_export($global, 1)
+        );
 
         $local  = include $this->localConfigPath;
         $this->assertEquals(array(

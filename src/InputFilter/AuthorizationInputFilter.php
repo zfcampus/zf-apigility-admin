@@ -24,12 +24,14 @@ class AuthorizationInputFilter extends InputFilter
         foreach ($this->data as $className => $httpMethods) {
             // validate the structure of the controller service name / method
             if (strpos($className, '::') === false) {
-                $this->messages[$className][] = 'Class service name is invalid, must be serviceName::method, serviceName::__collection__, or serviceName::__entity__';
+                $this->messages[$className][] = 'Class service name is invalid, must be serviceName::method,'
+                    . ' serviceName::__collection__, or serviceName::__entity__';
                 $isValid = false;
             }
 
             if (!is_array($httpMethods)) {
-                $this->messages[$className][] = 'Values for each controller must be an http method keyed array of true/false values';
+                $this->messages[$className][] = 'Values for each controller must be an http method'
+                    . ' keyed array of true/false values';
                 $isValid = false;
                 continue;
             }

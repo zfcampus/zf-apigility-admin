@@ -86,7 +86,8 @@ class PostInputFilter extends InputFilter
             && (!isset($context['table_name']) || $context['table_name'] === null)
         ) {
             $this->localMessages = array(
-                'service_name' => 'You must provide either a Code-Connected service name OR a DB-Connected database adapter and table name',
+                'service_name' => 'You must provide either a Code-Connected service name'
+                    . ' OR a DB-Connected database adapter and table name',
             );
             return false;
         }
@@ -101,7 +102,8 @@ class PostInputFilter extends InputFilter
                 || (isset($context['table_name']) && $context['table_name'] !== null)
             ) {
                 $this->localMessages = array(
-                    'service_name' => 'You must provide either a Code-Connected service name OR a DB-Connected database adapter and table name',
+                    'service_name' => 'You must provide either a Code-Connected service name'
+                        . ' OR a DB-Connected database adapter and table name',
                 );
                 return false;
             }

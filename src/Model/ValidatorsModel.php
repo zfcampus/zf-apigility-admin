@@ -35,7 +35,8 @@ class ValidatorsModel extends AbstractPluginManagerModel
 
         if (null === $metadata) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an instance of Zend\Validator\ValidatorMetadataModel as the second argument to the constructor',
+                '%s expects an instance of Zend\Validator\ValidatorMetadataModel'
+                . ' as the second argument to the constructor',
                 __CLASS__
             ));
         }
