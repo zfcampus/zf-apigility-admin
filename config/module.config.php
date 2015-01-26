@@ -1282,6 +1282,7 @@ return array(
             'ZF\Apigility\Admin\InputFilter\Authorization' => 'ZF\Apigility\Admin\InputFilter\AuthorizationInputFilter',
             'ZF\Apigility\Admin\InputFilter\DbAdapter' => 'ZF\Apigility\Admin\InputFilter\DbAdapterInputFilter',
             'ZF\Apigility\Admin\InputFilter\ContentNegotiation' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiationInputFilter',
+            'ZF\Apigility\Admin\InputFilter\CreateContentNegotiation' => 'ZF\Apigility\Admin\InputFilter\CreateContentNegotiationInputFilter',
 
             'ZF\Apigility\Admin\InputFilter\Module' => 'ZF\Apigility\Admin\InputFilter\ModuleInputFilter',
             'ZF\Apigility\Admin\InputFilter\Version' => 'ZF\Apigility\Admin\InputFilter\VersionInputFilter',
@@ -1314,6 +1315,7 @@ return array(
 
         'ZF\Apigility\Admin\Controller\ContentNegotiation' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\ContentNegotiation',
+            'POST' => 'ZF\Apigility\Admin\InputFilter\CreateContentNegotiation',
         ),
 
         'ZF\Apigility\Admin\Controller\Module' => array(
