@@ -21,8 +21,6 @@ use ZF\Apigility\Admin\Model\RestServiceResource;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
-require_once __DIR__ . '/TestAsset/module/BarConf/Module.php';
-
 class RestServiceResourceTest extends TestCase
 {
     /**
@@ -133,10 +131,19 @@ class RestServiceResourceTest extends TestCase
         $configResourceFactory   = $this->configFactory;
         $moduleModel             = new ModuleModel($moduleManager, array(), array());
         $sharedEvents            = new SharedEventManager();
-        $restServiceModelFactory = new RestServiceModelFactory($moduleUtils, $configResourceFactory, $sharedEvents, $moduleModel);
+        $restServiceModelFactory = new RestServiceModelFactory(
+            $moduleUtils,
+            $configResourceFactory,
+            $sharedEvents,
+            $moduleModel
+        );
         $resource                = new RestServiceResource($restServiceModelFactory, $this->filter, $this->docs);
 
-        $sharedEvents->attach('ZF\Apigility\Admin\Model\RestServiceModel', 'fetch', 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch');
+        $sharedEvents->attach(
+            'ZF\Apigility\Admin\Model\RestServiceModel',
+            'fetch',
+            'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch'
+        );
 
         $r = new ReflectionObject($resource);
         $prop = $r->getProperty('moduleName');

@@ -16,7 +16,8 @@ class InputFilterModelFactory implements FactoryInterface
     {
         if (! $services->has('ZF\Configuration\ConfigResourceFactory')) {
             throw new ServiceNotCreatedException(sprintf(
-                '%s\\InputFilterModel requires that the ZF\Configuration\ConfigResourceFactory service be present; service not found',
+                '%s\\InputFilterModel requires that the ZF\Configuration\ConfigResourceFactory'
+                . ' service be present; service not found',
                 __NAMESPACE__
             ));
         }

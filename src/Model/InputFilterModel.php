@@ -132,7 +132,10 @@ class InputFilterModel
 
         if (!isset($config['zf-content-validation'][$controller])) {
             $validatorName = $validatorName ?: $this->generateValidatorName($controller);
-            $config = $configModule->patchKey(array('zf-content-validation', $controller, 'input_filter'), $validatorName);
+            $config = $configModule->patchKey(
+                array('zf-content-validation', $controller, 'input_filter'),
+                $validatorName
+            );
         }
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
@@ -210,7 +213,7 @@ class InputFilterModel
      */
     protected function generateValidatorName($controller)
     {
-        if (strtolower(substr($controller, -11)) === '\controller' ) {
+        if (strtolower(substr($controller, -11)) === '\controller') {
             return substr($controller, 0, strlen($controller) - 11) . '\Validator';
         }
         return $controller . '\Validator';

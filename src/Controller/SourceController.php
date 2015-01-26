@@ -33,25 +33,45 @@ class SourceController extends AbstractActionController
                 $module = urldecode($this->params()->fromQuery('module', false));
                 if (!$module) {
                     return new ApiProblemModel(
-                        new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                        new ApiProblem(
+                            422,
+                            'Module parameter not provided',
+                            'https://tools.ietf.org/html/rfc4918',
+                            'Unprocessable Entity'
+                        )
                     );
                 }
                 $result = $this->moduleModel->getModule($module);
                 if (!$result) {
                     return new ApiProblemModel(
-                        new ApiProblem(422, 'The module specified doesn\'t exist', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                        new ApiProblem(
+                            422,
+                            'The module specified doesn\'t exist',
+                            'https://tools.ietf.org/html/rfc4918',
+                            'Unprocessable Entity'
+                        )
                     );
                 }
 
                 $class = urldecode($this->params()->fromQuery('class', false));
                 if (!$class) {
                     return new ApiProblemModel(
-                        new ApiProblem(422, 'Class parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                        new ApiProblem(
+                            422,
+                            'Class parameter not provided',
+                            'https://tools.ietf.org/html/rfc4918',
+                            'Unprocessable Entity'
+                        )
                     );
                 }
                 if (!class_exists($class)) {
                     return new ApiProblemModel(
-                        new ApiProblem(422, 'The class specified doesn\'t exist', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                        new ApiProblem(
+                            422,
+                            'The class specified doesn\'t exist',
+                            'https://tools.ietf.org/html/rfc4918',
+                            'Unprocessable Entity'
+                        )
                     );
                 }
 
@@ -62,7 +82,7 @@ class SourceController extends AbstractActionController
                     'module' => $module,
                     'class'  => $class,
                     'file'   => $fileName,
-                    'source' => $this->highlight_file_with_num($fileName)
+                    'source' => $this->highlightFileWithNum($fileName)
                 );
 
                 $model = new ViewModel($metadata);
@@ -82,7 +102,7 @@ class SourceController extends AbstractActionController
      * @param  string $file
      * @return string
      */
-    protected function highlight_file_with_num($file)
+    protected function highlightFileWithNum($file)
     {
         $code      = substr(highlight_file($file, true), 36, -15);
         $lines     = explode('<br />', $code);
@@ -90,7 +110,7 @@ class SourceController extends AbstractActionController
         $padLength = strlen($lineCount);
         $code      = '<code><span style="color: #000000">';
         foreach ($lines as $i => $line) {
-            $lineNumber = str_pad($i + 1,  $padLength, '0', STR_PAD_LEFT);
+            $lineNumber = str_pad($i + 1, $padLength, '0', STR_PAD_LEFT);
             $code .= sprintf('<br /><span style="color: #999999">%s  </span>%s', $lineNumber, $line);
         }
         $code .= '</span></code>';

@@ -162,12 +162,47 @@ class ModuleModelTest extends TestCase
         $unique  = array();
         foreach ($modules as $module) {
             $name = $module->getNamespace();
-            $this->assertArrayHasKey($name, $expected, sprintf('Failed asserting module "%s" is in list', $name));
-            $this->assertNotContains($name, $unique, sprintf('Failed asserting module "%s" was not previously declared', $name));
+            $this->assertArrayHasKey(
+                $name,
+                $expected,
+                sprintf('Failed asserting module "%s" is in list', $name)
+            );
+            $this->assertNotContains(
+                $name,
+                $unique,
+                sprintf('Failed asserting module "%s" was not previously declared', $name)
+            );
             $expectedMetadata = $expected[$name];
-            $this->assertSame($expectedMetadata['vendor'], $module->isVendor(), sprintf('Failed asserting module "%s" vendor flag matches "%s" (received "%s")', $name, var_export($expectedMetadata['vendor'], 1), var_export($module->isVendor(), 1)));
-            $this->assertSame($expectedMetadata['rest'], $module->getRestServices(), sprintf('Failed asserting module "%s" rest services match expectations; expected [ %s ], received [ %s ]', $name, var_export($expectedMetadata['rest'], 1), var_export($module->getRestServices(), 1)));
-            $this->assertSame($expectedMetadata['rpc'], $module->getRpcServices(), sprintf('Failed asserting module "%s" rpc services match expectations; expected [ %s ], received [ %s ]', $name, var_export($expectedMetadata['rpc'], 1), var_export($module->getRpcServices(), 1)));
+            $this->assertSame(
+                $expectedMetadata['vendor'],
+                $module->isVendor(),
+                sprintf(
+                    'Failed asserting module "%s" vendor flag matches "%s" (received "%s")',
+                    $name,
+                    var_export($expectedMetadata['vendor'], 1),
+                    var_export($module->isVendor(), 1)
+                )
+            );
+            $this->assertSame(
+                $expectedMetadata['rest'],
+                $module->getRestServices(),
+                sprintf(
+                    'Failed asserting module "%s" rest services match expectations; expected [ %s ], received [ %s ]',
+                    $name,
+                    var_export($expectedMetadata['rest'], 1),
+                    var_export($module->getRestServices(), 1)
+                )
+            );
+            $this->assertSame(
+                $expectedMetadata['rpc'],
+                $module->getRpcServices(),
+                sprintf(
+                    'Failed asserting module "%s" rpc services match expectations; expected [ %s ], received [ %s ]',
+                    $name,
+                    var_export($expectedMetadata['rpc'], 1),
+                    var_export($module->getRpcServices(), 1)
+                )
+            );
             $unique[] = $name;
         }
     }
@@ -204,7 +239,10 @@ class ModuleModelTest extends TestCase
 
         mkdir("$modulePath/module", 0775, true);
         mkdir("$modulePath/config", 0775, true);
-        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array("modules" => array());');
+        file_put_contents(
+            "$modulePath/config/application.config.php",
+            '<' . '?php return array("modules" => array());'
+        );
         $this->assertTrue($this->model->createModule($module, $modulePath));
         $config = include $modulePath . '/config/application.config.php';
         $this->assertArrayHasKey('modules', $config, var_export($config, 1));
@@ -231,12 +269,18 @@ class ModuleModelTest extends TestCase
 
         mkdir("$modulePath/module", 0775, true);
         mkdir("$modulePath/config", 0775, true);
-        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array("modules" => array());');
+        file_put_contents(
+            "$modulePath/config/application.config.php",
+            '<' . '?php return array("modules" => array());'
+        );
         $this->assertTrue($this->model->createModule($module, $modulePath));
 
         // Now try and delete
         $this->assertTrue($this->model->deleteModule($module, $modulePath, true));
-        $this->assertFalse(file_exists(sprintf('%s/module/%s', $modulePath, $module)), shell_exec('tree ' . $modulePath));
+        $this->assertFalse(
+            file_exists(sprintf('%s/module/%s', $modulePath, $module)),
+            shell_exec('tree ' . $modulePath)
+        );
     }
 
     /**
@@ -249,7 +293,10 @@ class ModuleModelTest extends TestCase
 
         mkdir("$modulePath/module", 0775, true);
         mkdir("$modulePath/config", 0775, true);
-        file_put_contents("$modulePath/config/application.config.php", '<' . "?php return array(\n    'modules' => array(\n        'Foo',\n    )\n);");
+        file_put_contents(
+            "$modulePath/config/application.config.php",
+            '<' . "?php return array(\n    'modules' => array(\n        'Foo',\n    )\n);"
+        );
 
         $this->assertFalse($this->model->createModule($module, $modulePath));
     }
@@ -360,7 +407,9 @@ class ModuleModelTest extends TestCase
     public function testAttemptingToCreateModuleThatAlreadyExistsRaises409Exception()
     {
         $module = 'Foo';
-        $this->modulePath = $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+        $this->modulePath = $modulePath = sys_get_temp_dir()
+          . "/"
+          . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
 
         mkdir("$modulePath/module", 0775, true);
         mkdir("$modulePath/config", 0775, true);

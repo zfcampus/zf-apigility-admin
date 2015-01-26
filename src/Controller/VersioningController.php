@@ -26,7 +26,12 @@ class VersioningController extends AbstractActionController
         $module = $this->bodyParam('module', false);
         if (!$module) {
             return new ApiProblemModel(
-                new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                new ApiProblem(
+                    422,
+                    'Module parameter not provided',
+                    'https://tools.ietf.org/html/rfc4918',
+                    'Unprocessable Entity'
+                )
             );
         }
 
@@ -34,7 +39,12 @@ class VersioningController extends AbstractActionController
 
         if (!$version || !is_numeric($version)) {
             return new ApiProblemModel(
-                new ApiProblem(422, 'Missing or invalid version', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                new ApiProblem(
+                    422,
+                    'Missing or invalid version',
+                    'https://tools.ietf.org/html/rfc4918',
+                    'Unprocessable Entity'
+                )
             );
         }
 
@@ -56,7 +66,12 @@ class VersioningController extends AbstractActionController
         $module = $this->bodyParam('module', false);
         if (!$module) {
             return new ApiProblemModel(
-                new ApiProblem(422, 'Module parameter not provided', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                new ApiProblem(
+                    422,
+                    'Module parameter not provided',
+                    'https://tools.ietf.org/html/rfc4918',
+                    'Unprocessable Entity'
+                )
             );
         }
 
@@ -82,7 +97,12 @@ class VersioningController extends AbstractActionController
             $result = $model->createVersion($module, $version);
         } catch (Exception\InvalidArgumentException $ex) {
             return new ApiProblemModel(
-                new ApiProblem(422, 'Invalid module and/or version', 'https://tools.ietf.org/html/rfc4918', 'Unprocessable Entity')
+                new ApiProblem(
+                    422,
+                    'Invalid module and/or version',
+                    'https://tools.ietf.org/html/rfc4918',
+                    'Unprocessable Entity'
+                )
             );
         }
 

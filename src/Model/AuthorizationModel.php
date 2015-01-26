@@ -151,8 +151,12 @@ class AuthorizationModel
      * @param array $config Used to determine action associated with RPC service (via route config)
      * @param int $version
      */
-    protected function createDefaultPrivilegesForRpcServices(array $services, AuthorizationEntity $entity, array $config, $version)
-    {
+    protected function createDefaultPrivilegesForRpcServices(
+        array $services,
+        AuthorizationEntity $entity,
+        array $config,
+        $version
+    ) {
         foreach ($services as $serviceName => $serviceConfig) {
             if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                 continue;

@@ -12,8 +12,6 @@ use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
 
-require_once __DIR__ . '/TestAsset/module/InputFilter/Module.php';
-
 class InputFilterModelTest extends TestCase
 {
     public function setUp()
@@ -55,7 +53,10 @@ class InputFilterModelTest extends TestCase
         $this->assertEquals(1, count($result));
         $inputFilter = $result->dequeue();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $inputFilter);
-        $this->assertEquals($this->config['input_filter_specs']['InputFilter\V1\Rest\Foo\Validator']['foo'], $inputFilter['foo']);
+        $this->assertEquals(
+            $this->config['input_filter_specs']['InputFilter\V1\Rest\Foo\Validator']['foo'],
+            $inputFilter['foo']
+        );
     }
 
     public function testAddInputFilterExistingController()
@@ -74,7 +75,11 @@ class InputFilterModelTest extends TestCase
         );
         $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputFilter);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
-        $this->assertEquals($inputFilter['bar'], $result['bar'], sprintf("Updates: %s\n\nResult: %s\n", var_export($inputFilter, 1), var_export($result, 1)));
+        $this->assertEquals(
+            $inputFilter['bar'],
+            $result['bar'],
+            sprintf("Updates: %s\n\nResult: %s\n", var_export($inputFilter, 1), var_export($result, 1))
+        );
     }
 
     public function testAddInputFilterNewController()
@@ -99,12 +104,19 @@ class InputFilterModelTest extends TestCase
         $this->assertEquals($inputfilter['bar'], $result['bar']);
 
         $config = include $this->basePath . '/module.config.php';
-        $this->assertEquals('InputFilter\V1\Rest\Bar\Validator', $config['zf-content-validation'][$controller]['input_filter']);
+        $this->assertEquals(
+            'InputFilter\V1\Rest\Bar\Validator',
+            $config['zf-content-validation'][$controller]['input_filter']
+        );
     }
 
     public function testRemoveInputFilter()
     {
-        $this->assertTrue($this->model->remove('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', 'InputFilter\V1\Rest\Foo\Validator'));
+        $this->assertTrue($this->model->remove(
+            'InputFilter',
+            'InputFilter\V1\Rest\Foo\Controller',
+            'InputFilter\V1\Rest\Foo\Validator'
+        ));
     }
 
     public function testModuleExists()

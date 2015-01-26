@@ -49,7 +49,8 @@ class OAuth2InputFilter extends InputFilter
                     }),
                 ),
             ),
-            'error_message' => 'Please provide a valid DSN (value will vary based on whether you are selecting Mongo or PDO for the DSN type)',
+            'error_message' => 'Please provide a valid DSN (value will vary based on'
+                . ' whether you are selecting Mongo or PDO for the DSN type)',
         ));
         $this->add(array(
             'name' => 'database',

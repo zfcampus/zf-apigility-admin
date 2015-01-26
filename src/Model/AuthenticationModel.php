@@ -344,7 +344,8 @@ class AuthenticationModel
         }
 
         throw new Exception\InvalidArgumentException(
-            sprintf('Invalid DSN "%s" provided', $dsn), 422
+            sprintf('Invalid DSN "%s" provided', $dsn),
+            422
         );
     }
 

@@ -31,7 +31,8 @@ class ContentNegotiationInputFilter extends InputFilter
 
             $interfaces = class_implements($className);
             if (false === $interfaces || ! in_array('Zend\View\Model\ModelInterface', $interfaces)) {
-                $this->messages[$className][] = 'Class name (' . $className . ') is invalid; must be a valid Zend\View\Model\ModelInterface class';
+                $this->messages[$className][] = 'Class name (' . $className . ') is invalid;'
+                    . ' must be a valid Zend\View\Model\ModelInterface class';
                 $isValid = false;
                 continue;
             }

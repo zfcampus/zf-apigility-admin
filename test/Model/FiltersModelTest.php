@@ -54,7 +54,11 @@ class FiltersModelTest extends TestCase
         $filters = $this->model->fetchAll();
         foreach ($filters as $service => $metadata) {
             $this->assertInternalType('string', $service);
-            $this->assertInternalType('array', $metadata, sprintf('Key "%s" does not have array metadata: "%s"', $service, var_export($metadata, 1)));
+            $this->assertInternalType(
+                'array',
+                $metadata,
+                sprintf('Key "%s" does not have array metadata: "%s"', $service, var_export($metadata, 1))
+            );
         }
     }
 }

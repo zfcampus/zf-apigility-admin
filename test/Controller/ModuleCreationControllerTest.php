@@ -56,7 +56,10 @@ class ModuleCreationControllerTest extends TestCase
         mkdir($tmpDir);
         mkdir("$tmpDir/module/Foo", 0775, true);
         mkdir("$tmpDir/config");
-        file_put_contents("$tmpDir/config/application.config.php", '<' . '?php return array(\'modules\'=>array(\'Foo\'));');
+        file_put_contents(
+            "$tmpDir/config/application.config.php",
+            '<' . '?php return array(\'modules\'=>array(\'Foo\'));'
+        );
         file_put_contents("$tmpDir/module/Foo/Module.php", "<" . "?php\n\nnamespace Foo;\n\nclass Module\n{\n}");
         chdir($tmpDir);
 

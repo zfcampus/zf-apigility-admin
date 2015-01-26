@@ -47,8 +47,11 @@ class RestServiceResource extends AbstractResourceListener
      * @param  InputFilterModel $inputFilterModel
      * @param  DocumentationModel $documentationModel
      */
-    public function __construct(RestServiceModelFactory $restFactory, InputFilterModel $inputFilterModel, DocumentationModel $documentationModel)
-    {
+    public function __construct(
+        RestServiceModelFactory $restFactory,
+        InputFilterModel $inputFilterModel,
+        DocumentationModel $documentationModel
+    ) {
         $this->restFactory = $restFactory;
         $this->inputFilterModel = $inputFilterModel;
         $this->documentationModel = $documentationModel;
@@ -189,7 +192,10 @@ class RestServiceResource extends AbstractResourceListener
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
-                    $model   = $this->restFactory->factory($this->getModuleName(), RestServiceModelFactory::TYPE_DB_CONNECTED);
+                    $model   = $this->restFactory->factory(
+                        $this->getModuleName(),
+                        RestServiceModelFactory::TYPE_DB_CONNECTED
+                    );
                     $updated = $model->updateService($entity);
                     break;
                 case ($entity instanceof RestServiceEntity):
@@ -221,7 +227,10 @@ class RestServiceResource extends AbstractResourceListener
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
-                    $model   = $this->restFactory->factory($this->getModuleName(), RestServiceModelFactory::TYPE_DB_CONNECTED);
+                    $model   = $this->restFactory->factory(
+                        $this->getModuleName(),
+                        RestServiceModelFactory::TYPE_DB_CONNECTED
+                    );
                     $model->deleteService($entity, $recursive);
                     break;
                 case ($entity instanceof RestServiceEntity):
@@ -284,7 +293,10 @@ class RestServiceResource extends AbstractResourceListener
 
     protected function injectDocumentation(RestServiceEntity $service)
     {
-        $documentation = $this->documentationModel->fetchDocumentation($this->moduleName, $service->controllerServiceName);
+        $documentation = $this->documentationModel->fetchDocumentation(
+            $this->moduleName,
+            $service->controllerServiceName
+        );
         if (!$documentation) {
             return;
         }

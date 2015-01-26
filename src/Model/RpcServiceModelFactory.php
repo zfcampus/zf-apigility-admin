@@ -45,8 +45,12 @@ class RpcServiceModelFactory
      * @param  SharedEventManagerInterface $sharedEvents
      * @param  ModuleModel $moduleModel
      */
-    public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory, SharedEventManagerInterface $sharedEvents, ModuleModel $moduleModel)
-    {
+    public function __construct(
+        ModuleUtils $modules,
+        ConfigResourceFactory $configFactory,
+        SharedEventManagerInterface $sharedEvents,
+        ModuleModel $moduleModel
+    ) {
         $this->modules            = $modules;
         $this->configFactory      = $configFactory;
         $this->sharedEventManager = $sharedEvents;

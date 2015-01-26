@@ -153,7 +153,9 @@ class RestServiceModel implements EventManagerAwareInterface
 
     /**
      * @param  string $controllerService
-     * @param  bool $isAFetchOperation If this is for a non-fetch operation, pass boolean false; allows listeners to include additional data necessary for clean updates.
+     * @param  bool $isAFetchOperation If this is for a non-fetch operation,
+     *     pass boolean false; allows listeners to include additional data
+     *     necessary for clean updates.
      * @return RestServiceEntity|false
      */
     public function fetch($controllerService, $isAFetchOperation = true)
@@ -199,8 +201,11 @@ class RestServiceModel implements EventManagerAwareInterface
             || empty($entity->serviceName)
         ) {
             $serviceName = $controllerService;
-            $q = preg_quote('\\');
-            if (preg_match('#' . $q . 'V[^' . $q . ']+' . $q . 'Rest' . $q . '(?<service>[^' . $q . ']+)' . $q . 'Controller#', $controllerService, $matches)) {
+            $pattern = vsprintf(
+                '#%sV[^%s]+%sRest%s(?P<service>[^%s]+)%sController#',
+                array_fill(0, 6, preg_quote('\\'))
+            );
+            if (preg_match($pattern, $controllerService, $matches)) {
                 $serviceName = $matches['service'];
             }
             $entity->exchangeArray(array(
@@ -277,12 +282,24 @@ class RestServiceModel implements EventManagerAwareInterface
         $entity->exchangeArray($details->getArrayCopy());
 
         $mediaType         = $this->createMediaType();
-        $controllerService = ($details->controllerServiceName) ? $details->controllerServiceName : $this->createControllerServiceName($serviceName);
-        $routeName         = ($details->routeName)             ? $details->routeName             : $this->createRoute($serviceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
-        $resourceClass     = ($details->resourceClass)         ? $details->resourceClass         : $this->createResourceClass($serviceName);
-        $collectionClass   = ($details->collectionClass)       ? $details->collectionClass       : $this->createCollectionClass($serviceName);
-        $entityClass       = ($details->entityClass)           ? $details->entityClass           : $this->createEntityClass($serviceName, 'entity', $details);
-        $module            = ($details->module)                ? $details->module                : $this->module;
+        $controllerService = ($details->controllerServiceName)
+            ? $details->controllerServiceName
+            : $this->createControllerServiceName($serviceName);
+        $routeName         = ($details->routeName)
+            ? $details->routeName
+            : $this->createRoute($serviceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
+        $resourceClass     = ($details->resourceClass)
+            ? $details->resourceClass
+            : $this->createResourceClass($serviceName);
+        $collectionClass   = ($details->collectionClass)
+            ? $details->collectionClass
+            : $this->createCollectionClass($serviceName);
+        $entityClass       = ($details->entityClass)
+            ? $details->entityClass
+            : $this->createEntityClass($serviceName, 'entity', $details);
+        $module            = ($details->module)
+            ? $details->module
+            : $this->module;
 
         $entity->exchangeArray(array(
             'collection_class'        => $collectionClass,
@@ -399,8 +416,8 @@ class RestServiceModel implements EventManagerAwareInterface
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
-                    'The resource factory "%s" already exists',
-                    $className
+                'The resource factory "%s" already exists',
+                $className
             ));
         }
 
@@ -413,17 +430,17 @@ class RestServiceModel implements EventManagerAwareInterface
         ));
         if (!$this->createClassFile($view, 'factory', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
-                    'Unable to create resource factory "%s"; unable to write file',
-                    $className
+                'Unable to create resource factory "%s"; unable to write file',
+                $className
             ));
         }
 
         $fullClassName = sprintf(
-                '%s\\V%s\\Rest\\%s\\%s',
-                $module,
-                $this->moduleEntity->getLatestVersion(),
-                $serviceName,
-                $className
+            '%s\\V%s\\Rest\\%s\\%s',
+            $module,
+            $this->moduleEntity->getLatestVersion(),
+            $serviceName,
+            $className
         );
 
         return $fullClassName;
@@ -1267,12 +1284,28 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        if (!preg_match('#' . preg_quote($module) . '(?P<version>' . preg_quote('\\') . 'V[a-zA-Z0-9_]+)?' . preg_quote('\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+        $q = preg_quote('\\');
+        $pattern = sprintf(
+            '#%s(?P<version>%sV[a-zA-Z0-9]+)%sRest%s(?P<service>[^%s]+)%sController#',
+            preg_quote($module),
+            $q,
+            $q,
+            $q,
+            $q,
+            $q
+        );
+        if (! preg_match($pattern, $controllerServiceName, $matches)) {
             return null;
         }
 
         if (isset($matches['version']) && ! empty($matches['version'])) {
-            return sprintf('%s%s\\Rest\\%s\\%sEntity', $module, $matches['version'], $matches['service'], $matches['service']);
+            return sprintf(
+                '%s%s\\Rest\\%s\\%sEntity',
+                $module,
+                $matches['version'],
+                $matches['service'],
+                $matches['service']
+            );
         }
 
         return sprintf('%s\\Rest\\%s\\%sEntity', $module, $matches['service'], $matches['service']);
@@ -1296,12 +1329,28 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
-        if (!preg_match('#' . preg_quote($module) . '(?P<version>' . preg_quote('\\') . 'V[a-zA-Z0-9_]+)?' . preg_quote('\\Rest\\') . '(?P<service>[^\\\\]+)' . preg_quote('\\Controller') . '#', $controllerServiceName, $matches)) {
+        $q = preg_quote('\\');
+        $pattern = sprintf(
+            '#%s(?P<version>%sV[a-zA-Z0-9_]+)?%sRest%s(?P<service>[^%s]+)%sController#',
+            preg_quote($module),
+            $q,
+            $q,
+            $q,
+            $q,
+            $q
+        );
+        if (! preg_match($pattern, $controllerServiceName, $matches)) {
             return null;
         }
 
         if (isset($matches['version']) && ! empty($matches['version'])) {
-            return sprintf('%s%s\\Rest\\%s\\%sCollection', $module, $matches['version'], $matches['service'], $matches['service']);
+            return sprintf(
+                '%s%s\\Rest\\%s\\%sCollection',
+                $module,
+                $matches['version'],
+                $matches['service'],
+                $matches['service']
+            );
         }
 
         return sprintf('%s\\Rest\\%s\\%sCollection', $module, $matches['service'], $matches['service']);

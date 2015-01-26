@@ -47,7 +47,13 @@ class DocumentationController extends AbstractActionController
             case HttpRequest::METHOD_PUT:
                 $documentation = $this->bodyParams();
                 $result = new HalEntity(
-                    $this->model->storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, true),
+                    $this->model->storeDocumentation(
+                        $module,
+                        $controllerType,
+                        $controllerServiceName,
+                        $documentation,
+                        true
+                    ),
                     'documentation'
                 );
                 $self = new HalLink('self');
@@ -57,7 +63,13 @@ class DocumentationController extends AbstractActionController
             case HttpRequest::METHOD_PATCH:
                 $documentation = $this->bodyParams();
                 $result = new HalEntity(
-                    $this->model->storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, false),
+                    $this->model->storeDocumentation(
+                        $module,
+                        $controllerType,
+                        $controllerServiceName,
+                        $documentation,
+                        false
+                    ),
                     'documentation'
                 );
                 $self = new HalLink('self');

@@ -35,13 +35,17 @@ class ContentNegotiationInputFilterTest extends TestCase
                 array(
                     __CLASS__ => array('text/html', 'application/xhtml+xml'),
                 ),
-                array(__CLASS__ => array('Class name (' . __CLASS__ . ') is invalid; must be a valid Zend\View\Model\ModelInterface class')),
+                array(__CLASS__ => array(
+                    'Class name (' . __CLASS__ . ') is invalid; must be a valid Zend\View\Model\ModelInterface class',
+                )),
             ),
             'media-types-not-array' => array(
                 array(
                     'Zend\View\Model\ViewModel' => 'foo',
                 ),
-                array('Zend\View\Model\ViewModel' => array('Values for the media-types must be provided as an indexed array')),
+                array('Zend\View\Model\ViewModel' => array(
+                    'Values for the media-types must be provided as an indexed array',
+                )),
             ),
             'invalid-media-type' => array(
                 array(
