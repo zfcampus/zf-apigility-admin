@@ -23,16 +23,6 @@ class ContentNegotiationInputFilter extends InputFilter
         $isValid = true;
 
         foreach ($this->data as $className => $mediaTypes) {
-            if ($className === 'content_name' && is_string($mediaTypes)) {
-                continue;
-            }
-
-            if ($className === 'content_name' && ! is_string($mediaTypes)) {
-                $this->messages[$className][] = 'Content name (' . $className . ') is invalid; must be a string';
-                $isValid = false;
-                continue;
-            }
-
             if (! class_exists($className)) {
                 $this->messages[$className][] = 'Class name (' . $className . ') does not exist';
                 $isValid = false;

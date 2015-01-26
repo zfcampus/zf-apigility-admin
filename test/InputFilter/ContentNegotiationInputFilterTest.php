@@ -19,12 +19,6 @@ class ContentNegotiationInputFilterTest extends TestCase
                     'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                 ),
             ),
-            'with-content-name' => array(
-                array(
-                    'content_name' => 'test',
-                    'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                )
-            ),
         );
     }
 
