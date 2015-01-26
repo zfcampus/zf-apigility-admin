@@ -63,7 +63,7 @@ class ContentNegotiationInputFilterTest extends TestCase
     {
         $filter = new ContentNegotiationInputFilter;
         $filter->setData($data);
-        $this->assertTrue($filter->isValid());
+        $this->assertTrue($filter->isValid(), var_export($filter->getMessages(), 1));
     }
 
     /**
