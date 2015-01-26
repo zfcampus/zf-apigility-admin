@@ -18,11 +18,6 @@ use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
-require_once __DIR__ . '/TestAsset/module/AuthConf/Module.php';
-require_once __DIR__ . '/TestAsset/module/AuthConfDefaults/Module.php';
-require_once __DIR__ . '/TestAsset/module/AuthConfWithConfig/Module.php';
-require_once __DIR__ . '/TestAsset/module/FooConf/Module.php';
-
 class AuthorizationModelTest extends TestCase
 {
     /**
@@ -79,7 +74,11 @@ class AuthorizationModelTest extends TestCase
         $this->writer   = new PhpArray();
         $this->modules  = new ModuleUtils($this->moduleManager);
         $this->resource = new ResourceFactory($this->modules, $this->writer);
-        $this->model    = new AuthorizationModel($this->moduleEntity, $this->modules, $this->resource->factory($this->module));
+        $this->model    = new AuthorizationModel(
+            $this->moduleEntity,
+            $this->modules,
+            $this->resource->factory($this->module)
+        );
     }
 
     public function tearDown()

@@ -73,8 +73,13 @@ class DocumentationModel
         return array();
     }
 
-    public function storeDocumentation($module, $controllerType, $controllerServiceName, $documentation, $replace = false)
-    {
+    public function storeDocumentation(
+        $module,
+        $controllerType,
+        $controllerServiceName,
+        $documentation,
+        $replace = false
+    ) {
         $configResource = $this->getDocumentationConfigResource($module);
         $template = array($controllerServiceName => $this->getSchemaTemplate($controllerType));
         $templateFlat = $configResource->traverseArray($template);

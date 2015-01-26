@@ -101,7 +101,9 @@ class AuthenticationEntity
 
     public function __construct($type = self::TYPE_BASIC, $realmOrParams = 'api', array $params = array())
     {
-        $this->type = in_array($type, array(self::TYPE_BASIC, self::TYPE_DIGEST, self::TYPE_OAUTH2)) ? $type : self::TYPE_BASIC;
+        $this->type = in_array($type, array(self::TYPE_BASIC, self::TYPE_DIGEST, self::TYPE_OAUTH2))
+            ? $type
+            : self::TYPE_BASIC;
 
         if ($type === self::TYPE_OAUTH2
             && is_array($realmOrParams)

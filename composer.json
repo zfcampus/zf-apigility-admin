@@ -53,8 +53,8 @@
         "zfcampus/zf-versioning": "~1.0"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "*@dev",
         "phpunit/PHPUnit": "3.7.*",
+        "squizlabs/php_codesniffer": "~2.0",
         "zendframework/zend-config": "~2.3",
         "zendframework/zend-loader": "~2.3"
     },
@@ -63,11 +63,22 @@
             "ZF\\Apigility\\Admin\\": "src/",
             "ZFTest\\Apigility\\Admin\\": "test/"
         },
-        "psr-0": {
-            "Test\\": "vendor/"
-        },
         "classmap": [
             "Module.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Test\\": "vendor/"
+        },
+        "psr-4": {
+            "AuthConf\\": "test/Model/TestAsset/module/AuthConf/",
+            "AuthConfDefaults\\": "test/Model/TestAsset/module/AuthConfDefaults/",
+            "AuthConfWithConfig\\": "test/Model/TestAsset/module/AuthConfWithConfig/",
+            "BarConf\\": "test/Model/TestAsset/module/BarConf/src/BarConf/",
+            "FooConf\\": "test/Model/TestAsset/module/FooConf/src/FooConf/",
+            "InputFilter\\": "test/Model/TestAsset/module/InputFilter/",
+            "Version\\": "test/Model/TestAsset/module/Version/src/Version/"
+        }
     }
 }

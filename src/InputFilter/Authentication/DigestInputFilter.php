@@ -31,7 +31,8 @@ class DigestInputFilter extends InputFilter
                     }),
                 ),
             ),
-            'error_message' => 'Accept Schemes must be an array containing one or more of the values "basic" or "digest"',
+            'error_message' => 'Accept Schemes must be an array containing one or more'
+                . ' of the values "basic" or "digest"',
         ));
         $this->add(array(
             'name' => 'realm',

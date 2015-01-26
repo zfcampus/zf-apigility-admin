@@ -36,7 +36,8 @@ class PatchInputFilter extends PostInputFilter
             'name' => 'selector',
             'required' => false,
             'allow_empty' => true,
-            'error_message' => 'The Content Negotiation Selector must be a valid, defined zf-content-negotiation selector name',
+            'error_message' => 'The Content Negotiation Selector must be a valid,'
+                . ' defined zf-content-negotiation selector name',
         ));
 
         $this->add(array(

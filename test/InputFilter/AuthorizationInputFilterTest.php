@@ -34,7 +34,10 @@ class AuthorizationInputFilterTest extends TestCase
                     'Foo\V1\Rest\Bar\Controller' => array(),
                 ),
                 array(
-                    'Foo\V1\Rest\Bar\Controller' => array('Class service name is invalid, must be serviceName::method, serviceName::__collection__, or serviceName::__entity__'),
+                    'Foo\V1\Rest\Bar\Controller' => array(
+                        'Class service name is invalid, must be serviceName::method,'
+                        . ' serviceName::__collection__, or serviceName::__entity__',
+                    ),
                 ),
             ),
             'values-not-array' => array(
@@ -42,7 +45,9 @@ class AuthorizationInputFilterTest extends TestCase
                     'Foo\V1\Rest\Bar\Controller::__entity__' => 'GET=true',
                 ),
                 array(
-                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('Values for each controller must be an http method keyed array of true/false values'),
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => array(
+                        'Values for each controller must be an http method keyed array of true/false values',
+                    ),
                 ),
             ),
             'invalid-http-method' => array(

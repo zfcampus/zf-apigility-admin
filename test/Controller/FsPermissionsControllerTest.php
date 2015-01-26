@@ -32,7 +32,13 @@ class FsPermissionsControllerTest extends TestCase
 
     public function removeDir($directory)
     {
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        foreach (new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $directory,
+                FilesystemIterator::SKIP_DOTS
+            ),
+            RecursiveIteratorIterator::CHILD_FIRST
+        ) as $path) {
             $path->isFile() ? unlink($path->getPathname()) : rmdir($path->getPathname());
         }
         rmdir($directory);
@@ -78,6 +84,8 @@ class FsPermissionsControllerTest extends TestCase
 
     public function testReturnsFalseIfConfigAndModuleDirectoriesExistButAreNotWritable()
     {
-        $this->markTestSkipped('Unable to determine how to test this case, as requires having a directory not owned by test runner');
+        $this->markTestSkipped(
+            'Unable to determine how to test this case, as requires having a directory not owned by test runner'
+        );
     }
 }

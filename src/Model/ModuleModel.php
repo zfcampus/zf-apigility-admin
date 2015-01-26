@@ -200,7 +200,8 @@ class ModuleModel
 
         $replacement = preg_replace(
             '/' . "\n" . 'class\s([a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*)\s{/i',
-            "\nuse ZF\Apigility\Provider\ApigilityProviderInterface;\n\nclass $1 implements ApigilityProviderInterface\n{",
+            "\nuse ZF\Apigility\Provider\ApigilityProviderInterface;\n\n'
+            . 'class $1 implements ApigilityProviderInterface\n{",
             $content
         );
 
@@ -432,7 +433,7 @@ class ModuleModel
      */
     protected function writeApplicationConfig(array $application, $path)
     {
-        copy ("$path/config/application.config.php", "$path/config/application.config.old");
+        copy("$path/config/application.config.php", "$path/config/application.config.old");
         $content = <<<EOD
 <?php
 /**

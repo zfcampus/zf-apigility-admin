@@ -269,7 +269,13 @@ class DbAdapterModelTest extends TestCase
      */
     public function testCreatingPostgresConfigDoesNotIncludeCharset($driver)
     {
-        $toCreate = array('driver' => $driver, 'database' => 'test', 'username' => 'test', 'password' => 'test', 'charset' => 'UTF-8');
+        $toCreate = array(
+            'driver' => $driver,
+            'database' => 'test',
+            'username' => 'test',
+            'password' => 'test',
+            'charset' => 'UTF-8',
+        );
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create('Db\New', $toCreate);
 
@@ -287,7 +293,13 @@ class DbAdapterModelTest extends TestCase
      */
     public function testUpdatingPostgresConfigDoesNotAllowCharset($driver)
     {
-        $toCreate = array('driver' => $driver, 'database' => 'test', 'username' => 'test', 'password' => 'test', 'charset' => 'UTF-8');
+        $toCreate = array(
+            'driver' => $driver,
+            'database' => 'test',
+            'username' => 'test',
+            'password' => 'test',
+            'charset' => 'UTF-8',
+        );
         $model    = $this->createModelFromConfigArrays(array(), array());
         $model->create('Db\New', $toCreate);
 

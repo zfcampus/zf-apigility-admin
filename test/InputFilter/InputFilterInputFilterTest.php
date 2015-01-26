@@ -15,7 +15,6 @@ class InputFilterInputFilterTest extends TestCase
 
     public function dataProviderIsValid()
     {
-        //[{"name":"one","required":true,"filters":[{"name":"Zend\\Filter\\Boolea","options":{"casting":false}}],"validators":[],"allow_empty":false,"continue_if_empty":false}]
         return array(
             array(
                 array(
@@ -42,7 +41,10 @@ class InputFilterInputFilterTest extends TestCase
         return array(
             array(
                 array('foobar' => 'baz'),
-                array('inputFilter' => 'Zend\InputFilter\Factory::createInput expects an array or Traversable; received "string"'),
+                array(
+                    'inputFilter' => 'Zend\InputFilter\Factory::createInput expects'
+                    . ' an array or Traversable; received "string"',
+                ),
             ),
             array(
                 array(
@@ -60,7 +62,10 @@ class InputFilterInputFilterTest extends TestCase
                         'continue_if_empty' => false,
                     )
                 ),
-                array('inputFilter' => 'Zend\Filter\FilterPluginManager::get was unable to fetch or create an instance for Zend\Filter\Bool'),
+                array(
+                    'inputFilter' => 'Zend\Filter\FilterPluginManager::get was unable'
+                    . ' to fetch or create an instance for Zend\Filter\Bool'
+                ),
             ),
         );
     }

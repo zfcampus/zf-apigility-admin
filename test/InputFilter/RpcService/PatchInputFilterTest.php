@@ -23,8 +23,15 @@ class PatchInputFilterTest extends TestCase
                     'service_name' => 'Foo',
                     'route_match' => '/foo',
                     'controller_class' => 'FooBar\V1\Rpc\Foo\FooController',
-                    'accept_whitelist' => array('application/vnd.foo.v1+json', 'application/hal+json', 'application/json'),
-                    'content_type_whitelist' => array('application/vnd.foo.v1+json', 'application/json'),
+                    'accept_whitelist' => array(
+                        'application/vnd.foo.v1+json',
+                        'application/hal+json',
+                        'application/json'
+                    ),
+                    'content_type_whitelist' => array(
+                        'application/vnd.foo.v1+json',
+                        'application/json'
+                    ),
                     'selector' => 'HalJson',
                     'http_methods' => array('GET', 'POST', 'PATCH'),
                 )
@@ -39,8 +46,15 @@ class PatchInputFilterTest extends TestCase
                 array(
                     'route_match' => '/foo',
                     'controller_class' => 'FooBar\V1\Rpc\Foo\FooController',
-                    'accept_whitelist' => array('application/vnd.foo.v1+json', 'application/hal+json', 'application/json'),
-                    'content_type_whitelist' => array('application/vnd.foo.v1+json', 'application/json'),
+                    'accept_whitelist' => array(
+                        'application/vnd.foo.v1+json',
+                        'application/hal+json',
+                        'application/json'
+                    ),
+                    'content_type_whitelist' => array(
+                        'application/vnd.foo.v1+json',
+                        'application/json'
+                    ),
                     'selector' => 'HalJson',
                     'http_methods' => array('GET', 'POST', 'PATCH'),
                 ),
@@ -51,8 +65,14 @@ class PatchInputFilterTest extends TestCase
                     'service_name' => 'Foo',
                     'route_match' => null,
                     'controller_class' => null,
-                    'accept_whitelist' => array('application/vnd.foo.v1+json', 'application/hal+json', 'application/json'),
-                    'content_type_whitelist' => array('application/vnd.foo.v1+json', 'application/json'),
+                    'accept_whitelist' => array(
+                        'application/vnd.foo.v1+json',
+                        'application/hal+json', 'application/json'
+                    ),
+                    'content_type_whitelist' => array(
+                        'application/vnd.foo.v1+json',
+                        'application/json'
+                    ),
                     'selector' => null,
                     'http_methods' => array('GET', 'POST', 'PATCH')
                 ),
