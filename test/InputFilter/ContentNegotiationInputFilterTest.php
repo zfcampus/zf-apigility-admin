@@ -19,6 +19,12 @@ class ContentNegotiationInputFilterTest extends TestCase
                     'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                 ),
             ),
+            'with-content-name' => array(
+                array(
+                    'content_name' => 'test',
+                    'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
+                )
+            ),
         );
     }
 
@@ -63,7 +69,7 @@ class ContentNegotiationInputFilterTest extends TestCase
     {
         $filter = new ContentNegotiationInputFilter;
         $filter->setData($data);
-        $this->assertTrue($filter->isValid());
+        $this->assertTrue($filter->isValid(), var_export($filter->getMessages(), 1));
     }
 
     /**
