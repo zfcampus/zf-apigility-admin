@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\InputFilter\InputFilterInterface;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
@@ -20,6 +21,19 @@ class ContentNegotiationResource extends AbstractResourceListener
     public function __construct(ContentNegotiationModel $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Inject the input filter.
+     *
+     * Primarily present for testing; input filters will be injected via event
+     * normally.
+     *
+     * @param InputFilterInterface $inputFilter
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        $this->inputFilter = $inputFilter;
     }
 
     public function fetch($id)
@@ -38,9 +52,7 @@ class ContentNegotiationResource extends AbstractResourceListener
 
     public function create($data)
     {
-        if (is_object($data)) {
-            $data = (array) $data;
-        }
+        $data = $this->getInputFilter()->getValues();
 
         if (!isset($data['content_name'])) {
             throw new CreationException('Missing content_name', 422);
@@ -59,11 +71,9 @@ class ContentNegotiationResource extends AbstractResourceListener
 
     public function patch($id, $data)
     {
-        if (is_object($data)) {
-            $data = (array) $data;
-        }
+        $data = $this->getInputFilter()->getValues();
 
-        if (! is_array($data) || ! isset($data['selectors'])) {
+        if (empty($data) || ! array_key_exists('selectors', $data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 

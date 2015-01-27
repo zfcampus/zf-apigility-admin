@@ -8,6 +8,8 @@ namespace ZFTest\Apigility\Admin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
+use ZF\Apigility\Admin\InputFilter\ContentNegotiationInputFilter;
+use ZF\Apigility\Admin\InputFilter\CreateContentNegotiationInputFilter;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Apigility\Admin\Model\ContentNegotiationResource;
 use ZF\Configuration\ConfigResource;
@@ -61,29 +63,41 @@ class ContentNegotiationResourceTest extends TestCase
 
     public function testCreateShouldAcceptContentNameAndReturnNewEntity()
     {
+        $data = array('content_name' => 'Test');
         $resource = $this->createResourceFromConfigArray(array());
-        $data = (object) array('content_name' => 'Test');
-        $entity = $resource->create($data);
+        $createFilter = new CreateContentNegotiationInputFilter();
+        $createFilter->setData($data);
+        $resource->setInputFilter($createFilter);
+
+        $entity = $resource->create(array());
+
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $entity);
         $this->assertEquals('Test', $entity->name);
     }
 
     public function testUpdateShouldAcceptContentNameAndSelectorsAndReturnUpdatedEntity()
     {
+        $data = array('content_name' => 'Test');
         $resource = $this->createResourceFromConfigArray(array());
-        $data = (object) array('content_name' => 'Test');
-        $entity = $resource->create($data);
+        $createFilter = new CreateContentNegotiationInputFilter();
+        $createFilter->setData($data);
+        $resource->setInputFilter($createFilter);
 
-        $data = (object) array('selectors' => array(
+        $entity = $resource->create(array());
+
+        $data = array('selectors' => array(
             'Zend\View\Model\ViewModel' => array(
                 'text/html',
                 'application/xhtml+xml',
             ),
         ));
+        $updateFilter = new ContentNegotiationInputFilter();
+        $updateFilter->setData($data);
+        $resource->setInputFilter($updateFilter);
 
-        $entity = $resource->patch('Test', $data);
+        $entity = $resource->patch('Test', array());
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $entity);
         $this->assertEquals('Test', $entity->name);
-        $this->assertEquals($data->selectors, $entity->config);
+        $this->assertEquals($data['selectors'], $entity->config);
     }
 }
