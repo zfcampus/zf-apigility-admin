@@ -35,7 +35,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                     ),
                 ),
                 array(
-                    'content_name' => array('No content_name was provided; must be present for new negotiators.'),
+                    'content_name' => array(
+                        'isEmpty' => 'Value is required and can\'t be empty'
+                    ),
                 ),
             ),
             'null-content-name' => array(
@@ -45,9 +47,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                         'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                     ),
                 ),
-                array(
-                    'content_name' => array('Content name provided is invalid; must be a string'),
-                ),
+                array('content_name' => array(
+                    'isEmpty' => 'Value is required and can\'t be empty',
+                )),
             ),
             'bool-content-name' => array(
                 array(
@@ -56,9 +58,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                         'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                     ),
                 ),
-                array(
-                    'content_name' => array('Content name provided is invalid; must be a string'),
-                ),
+                array('content_name' => array(
+                    'invalidType' => 'Value must be a string; received boolean',
+                )),
             ),
             'int-content-name' => array(
                 array(
@@ -67,9 +69,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                         'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                     )
                 ),
-                array(
-                    'content_name' => array('Content name provided is invalid; must be a string'),
-                ),
+                array('content_name' => array(
+                    'invalidType' => 'Value must be a string; received integer',
+                )),
             ),
             'float-content-name' => array(
                 array(
@@ -78,9 +80,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                         'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                     )
                 ),
-                array(
-                    'content_name' => array('Content name provided is invalid; must be a string'),
-                ),
+                array('content_name' => array(
+                    'invalidType' => 'Value must be a string; received double',
+                )),
             ),
             'array-content-name' => array(
                 array(
@@ -89,9 +91,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                         'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                     )
                 ),
-                array(
-                    'content_name' => array('Content name provided is invalid; must be a string'),
-                ),
+                array('content_name' => array(
+                    'invalidType' => 'Value must be a string; received array',
+                )),
             ),
             'object-content-name' => array(
                 array(
@@ -100,9 +102,9 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                         'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                     ),
                 ),
-                array(
-                    'content_name' => array('Content name provided is invalid; must be a string'),
-                ),
+                array('content_name' => array(
+                    'invalidType' => 'Value must be a string; received stdClass',
+                )),
             ),
         );
     }
