@@ -14,11 +14,11 @@ class ContentNegotiationInputFilterTest extends TestCase
     public function dataProviderIsValid()
     {
         return array(
-            'valid' => array(
+            'valid' => array(array('selectors' =>
                 array(
                     'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
                 ),
-            ),
+            )),
         );
     }
 
@@ -26,32 +26,37 @@ class ContentNegotiationInputFilterTest extends TestCase
     {
         return array(
             'class-does-not-exist' => array(
-                array(
+                array('selectors' => array(
                     'Zend\View\Model\ViewMode' => array('text/html', 'application/xhtml+xml'),
-                ),
-                array('Zend\View\Model\ViewMode' => array('Class name (Zend\View\Model\ViewMode) does not exist')),
+                )),
+                array('selectors' => array(
+                    'classNotFound' => 'Class name (Zend\View\Model\ViewMode) does not exist',
+                )),
             ),
             'class-is-not-view-model' => array(
-                array(
+                array('selectors' => array(
                     __CLASS__ => array('text/html', 'application/xhtml+xml'),
-                ),
-                array(__CLASS__ => array(
-                    'Class name (' . __CLASS__ . ') is invalid; must be a valid Zend\View\Model\ModelInterface class',
+                )),
+                array('selectors' => array(
+                    'invalidViewModel' => 'Class name (' . __CLASS__ . ') is invalid;'
+                    . ' must be a valid Zend\View\Model\ModelInterface instance',
                 )),
             ),
             'media-types-not-array' => array(
-                array(
+                array('selectors' => array(
                     'Zend\View\Model\ViewModel' => 'foo',
-                ),
-                array('Zend\View\Model\ViewModel' => array(
-                    'Values for the media-types must be provided as an indexed array',
+                )),
+                array('selectors' => array(
+                    'invalidMediaTypes' => 'Values for the media-types must be provided as an indexed array',
                 )),
             ),
             'invalid-media-type' => array(
-                array(
+                array('selectors' => array(
                     'Zend\View\Model\ViewModel' => array('texthtml', 'application/xhtml+xml'),
-                ),
-                array('Zend\View\Model\ViewModel' => array('Invalid media type (texthtml) provided')),
+                )),
+                array('selectors' => array(
+                    'invalidMediaType' => 'Invalid media type (texthtml) provided',
+                )),
             ),
         );
     }
@@ -73,6 +78,7 @@ class ContentNegotiationInputFilterTest extends TestCase
     {
         $filter = new ContentNegotiationInputFilter;
         $filter->setData($data);
+        $input = $filter->get('selectors');
         $this->assertFalse($filter->isValid());
         $this->assertEquals($messages, $filter->getMessages());
     }

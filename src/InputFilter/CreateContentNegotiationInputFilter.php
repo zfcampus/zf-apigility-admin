@@ -6,47 +6,18 @@
 
 namespace ZF\Apigility\Admin\InputFilter;
 
+use Zend\InputFilter\Input;
+use Zend\Validator\Regex;
+
 class CreateContentNegotiationInputFilter extends ContentNegotiationInputFilter
 {
-    /**
-     * Is the data set valid?
-     *
-     * @return bool
-     */
-    public function isValid()
+    public function __construct()
     {
-        $this->messages = array();
-        $isValid = true;
-
-        if (! array_key_exists('content_name', $this->data)) {
-            $this->messages['content_name'][] = 'No content_name was provided; must be present for new negotiators.';
-            $isValid = false;
-        }
-
-        if (array_key_exists('content_name', $this->data) && ! is_string($this->data['content_name'])) {
-            $this->messages['content_name'][] = 'Content name provided is invalid; must be a string';
-            $isValid = false;
-        }
-
-        if (! $isValid) {
-            return false;
-        }
-
-        $contentName = $this->data['content_name'];
-        unset($this->data['content_name']);
-
-        $isValid = parent::isValid();
-
-        $this->data['content_name'] = $contentName;
-
-        return $isValid;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
+        $input = new Input('content_name');
+        $input->setRequired(true);
+        $chain = $input->getValidatorChain();
+        $chain->attach(new Validator\IsStringValidator());
+        $this->add($input);
+        parent::__construct();
     }
 }
