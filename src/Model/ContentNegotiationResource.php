@@ -49,7 +49,12 @@ class ContentNegotiationResource extends AbstractResourceListener
         $name = $data['content_name'];
         unset($data['content_name']);
 
-        return $this->model->create($name, $data);
+        $selectors = array();
+        if (isset($data['selectors'])) {
+            $selectors = (array) $data['selectors'];
+        }
+
+        return $this->model->create($name, $selectors);
     }
 
     public function patch($id, $data)
@@ -58,15 +63,15 @@ class ContentNegotiationResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data) || ! isset($data['selectors'])) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 
-        if (empty($data)) {
+        if (empty($data['selectors'])) {
             return new ApiProblem(400, 'No data provided for update');
         }
 
-        return $this->model->update($id, $data);
+        return $this->model->update($id, (array) $data['selectors']);
     }
 
     public function delete($id)

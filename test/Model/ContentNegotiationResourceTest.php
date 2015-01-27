@@ -67,4 +67,23 @@ class ContentNegotiationResourceTest extends TestCase
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $entity);
         $this->assertEquals('Test', $entity->name);
     }
+
+    public function testUpdateShouldAcceptContentNameAndSelectorsAndReturnUpdatedEntity()
+    {
+        $resource = $this->createResourceFromConfigArray(array());
+        $data = (object) array('content_name' => 'Test');
+        $entity = $resource->create($data);
+
+        $data = (object) array('selectors' => array(
+            'Zend\View\Model\ViewModel' => array(
+                'text/html',
+                'application/xhtml+xml',
+            ),
+        ));
+
+        $entity = $resource->patch('Test', $data);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $entity);
+        $this->assertEquals('Test', $entity->name);
+        $this->assertEquals($data->selectors, $entity->config);
+    }
 }
