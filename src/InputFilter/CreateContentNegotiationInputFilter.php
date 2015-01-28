@@ -13,11 +13,14 @@ class CreateContentNegotiationInputFilter extends ContentNegotiationInputFilter
 {
     public function __construct()
     {
+        parent::__construct();
+
+        $this->get('selectors')->setRequired(false);
+
         $input = new Input('content_name');
         $input->setRequired(true);
         $chain = $input->getValidatorChain();
         $chain->attach(new Validator\IsStringValidator());
         $this->add($input);
-        parent::__construct();
     }
 }
