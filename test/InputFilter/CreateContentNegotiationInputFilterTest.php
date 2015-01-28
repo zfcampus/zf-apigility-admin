@@ -14,7 +14,12 @@ class CreateContentNegotiationInputFilterTest extends TestCase
     public function dataProviderIsValid()
     {
         return array(
-            'with-content-name' => array(
+            'content-name-only' => array(
+                array(
+                    'content_name' => 'test',
+                ),
+            ),
+            'content-name-and-selectors' => array(
                 array(
                     'content_name' => 'test',
                     'selectors' => array(
