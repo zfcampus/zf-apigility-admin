@@ -129,6 +129,16 @@ class Module
 
                 return new Model\AuthorizationModelFactory($moduleUtils, $configFactory, $moduleModel);
             },
+            'ZF\Apigility\Admin\Model\DbAutodiscoveryModel' => function ($services) {
+                if (!$services->has('Config')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\DbAutodiscoveryModel service because Config service is not present'
+                    );
+                }
+                $config = $services->get('Config');
+
+                return new Model\DbAutodiscoveryModel($config);
+            },
             'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
@@ -171,6 +181,28 @@ class Module
                 }
                 $model = $services->get('ZF\Apigility\Admin\Model\DbAdapterModel');
                 return new Model\DbAdapterResource($model);
+            },
+            'ZF\Apigility\Admin\Model\DoctrineAdapterModel' => function ($services) {
+                if (!$services->has('Config')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service because Config service is not present'
+                    );
+                }
+                $config = $services->get('Config');
+                $writer = $services->get('ZF\Configuration\ConfigWriter');
+
+                $global = new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer);
+                $local  = new ConfigResource($config, 'config/autoload/doctrine.local.php', $writer);
+                return new Model\DoctrineAdapterModel($global, $local);
+            },
+            'ZF\Apigility\Admin\Model\DoctrineAdapterResource' => function ($services) {
+                if (!$services->has('ZF\Apigility\Admin\Model\DoctrineAdapterModel')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\DoctrineAdapterResource service because ZF\Apigility\Admin\Model\DoctrineAdapterModel service is not present'
+                    );
+                }
+                $model = $services->get('ZF\Apigility\Admin\Model\DoctrineAdapterModel');
+                return new Model\DoctrineAdapterResource($model);
             },
             'ZF\Apigility\Admin\Model\ModuleModel' => function ($services) {
                 if (!$services->has('ModuleManager')) {
@@ -223,6 +255,11 @@ class Module
 
                 // Wire DB-Connected fetch listener
                 $sharedEvents->attach(__NAMESPACE__ . '\Model\RestServiceModel', 'fetch', 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch');
+                $sharedEvents->attach(
+                    __NAMESPACE__ . '\Model\RestServiceModel',
+                    'fetch',
+                    'ZF\Apigility\Doctrine\Admin\Model\DoctrineRestServiceModel::onFetch'
+                );
 
                 return new Model\RestServiceModelFactory($moduleUtils, $configFactory, $sharedEvents, $moduleModel);
             },
