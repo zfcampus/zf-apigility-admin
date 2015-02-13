@@ -116,7 +116,6 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                         continue;
                     }
                     $item['fields']['filters'] = $this->filters['integer'];
-                    $item['fields']['validators'][] = $this->validators['integer'];
                 }
 
 

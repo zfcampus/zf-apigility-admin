@@ -29,9 +29,6 @@ abstract class AbstractAutodiscoveryModel implements ServiceLocatorAwareInterfac
                 'max' => 1,
             ),
         ),
-        'integer' => array(
-            'name' => 'Application\Validator\Int',
-        ),
         'unique' => array(
             'name' => 'ZF\ContentValidation\Validator\DbNoRecordExists',
             'options' => array(),

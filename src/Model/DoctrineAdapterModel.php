@@ -93,8 +93,6 @@ class DoctrineAdapterModel
             $adapters[] = new DoctrineAdapterEntity($name, $adapterConfig);
         }
 
-        //$adapters = array();
-
         return $adapters;
     }
 
