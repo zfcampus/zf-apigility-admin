@@ -58,10 +58,8 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                     'name' => $column->getName(),
                     'type' => $column->getDataType(),
                     'required' => !$column->isNullable(),
-                    'fields' => array(
-                        'filters' => array(),
-                        'validators' => array(),
-                    ),
+                    'filters' => array(),
+                    'validators' => array(),
                     'constraints' => array(),
                 );
 
@@ -82,7 +80,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                                     'table' => $constraintObj->getReferencedTableName(),
                                     'field' => $constraintObj->getReferencedColumns()[0] //TODO: handle composite key constraint
                                 );
-                                $item['fields']['validators'][] = $validator;
+                                $item['validators'][] = $validator;
                                 break;
                             case 'UNIQUE':
                                 $validator = $this->validators['unique'];
@@ -91,7 +89,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                                     'table' => $tableName,
                                     'field' => $column->getName(),
                                 );
-                                $item['fields']['validators'][] = $validator;
+                                $item['validators'][] = $validator;
                                 break;
                         }
                     }
@@ -100,22 +98,24 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                 if (in_array(strtolower($column->getDataType()), array('varchar', 'text'))) {
                     $item['length'] = $column->getCharacterMaximumLength();
                     if (in_array('Primary key', array_values($item['constraints']))) {
-                        unset($item['fields']);
+                        unset($item['filters']);
+                        unset($item['validators']);
                         $tableData['columns'][] = $item;
                         continue;
                     }
-                    $item['fields']['filters'] = $this->filters['text'];
+                    $item['filters'] = $this->filters['text'];
                     $validator = $this->validators['text'];
                     $validator['options']['max'] = $column->getCharacterMaximumLength();
-                    $item['fields']['validators'][] = $validator;
+                    $item['validators'][] = $validator;
                 } elseif (in_array(strtolower($column->getDataType()), array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'))) {
                     $item['length'] = $column->getNumericPrecision();
                     if (in_array('Primary key', array_values($item['constraints']))) {
-                        unset($item['fields']);
+                        unset($item['filters']);
+                        unset($item['validators']);
                         $tableData['columns'][] = $item;
                         continue;
                     }
-                    $item['fields']['filters'] = $this->filters['integer'];
+                    $item['filters'] = $this->filters['integer'];
                 }
 
 

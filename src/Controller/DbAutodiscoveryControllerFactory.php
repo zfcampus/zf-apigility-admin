@@ -14,7 +14,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package ZF\Apigility\Admin\Controller
  */
-class AutodiscoveryControllerFactory implements FactoryInterface
+class DbAutodiscoveryControllerFactory implements FactoryInterface
 {
     /**
      * Create service
@@ -25,9 +25,9 @@ class AutodiscoveryControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllers)
     {
         $services = $controllers->getServiceLocator();
-        /** @var \ZF\Apigility\Admin\Model\AutodiscoveryModel $model */
-        $model = $services->get('ZF\Apigility\Admin\Model\AutodiscoveryModel');
-        return new AutodiscoveryController($model);
+        /** @var \ZF\Apigility\Admin\Model\DbAutodiscoveryModel $model */
+        $model = $services->get('ZF\Apigility\Admin\Model\DbAutodiscoveryModel');
+        return new DbAutodiscoveryController($model);
     }
 
 }

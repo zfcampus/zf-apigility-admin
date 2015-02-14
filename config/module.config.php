@@ -299,7 +299,7 @@ return array(
                                     'db-autodiscovery' => array(
                                         'type' => 'segment',
                                         'options' => array(
-                                            'route' => '/autodiscovery',
+                                            'route' => '/:version/autodiscovery/:adapter_name',
                                             'defaults' => array(
                                                 'controller' => 'ZF\Apigility\Admin\Controller\DbAutodiscovery',
                                                 'action' => 'discover',

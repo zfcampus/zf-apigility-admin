@@ -35,8 +35,8 @@ class DbAutodiscoveryController extends AbstractActionController
     public function discoverAction()
     {
         $module = $this->params()->fromRoute('name', false);
-        $version = $this->params()->fromQuery('version', false);
-        $adapter_name = urldecode($this->params()->fromQuery('adapter_name', false));
+        $version = $this->params()->fromRoute('version', false);
+        $adapter_name = urldecode($this->params()->fromRoute('adapter_name', false));
 
         $data = $this->model->fetchColumns($module, $version, $adapter_name);
 
