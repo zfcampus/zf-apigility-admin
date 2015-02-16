@@ -50,7 +50,8 @@
         "zfcampus/zf-oauth2": "~1.0",
         "zfcampus/zf-rest": "~1.0",
         "zfcampus/zf-rpc": "~1.0",
-        "zfcampus/zf-versioning": "~1.0"
+        "zfcampus/zf-versioning": "~1.0",
+        "zfcampus/zf-apigility-doctrine": "~1.0"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*",
