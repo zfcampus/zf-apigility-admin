@@ -29,5 +29,4 @@ class DbAutodiscoveryControllerFactory implements FactoryInterface
         $model = $services->get('ZF\Apigility\Admin\Model\DbAutodiscoveryModel');
         return new DbAutodiscoveryController($model);
     }
-
 }

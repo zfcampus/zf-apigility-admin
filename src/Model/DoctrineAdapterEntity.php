@@ -64,5 +64,4 @@ class DoctrineAdapterEntity implements ArraySerializableInterface
             'adapter_name' => 'doctrine.entitymanager.' . $this->name,
         ), $this->config);
     }
-
-} 
+}

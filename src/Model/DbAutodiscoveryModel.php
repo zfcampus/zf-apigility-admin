@@ -37,7 +37,6 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
         $tableNames = $metadata->getTableNames();
 
         foreach ($tableNames as $tableName) {
-
             if ($this->moduleHasService($module, $version, $tableName)) {
                 continue;
             }
@@ -53,7 +52,6 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
 
             /** @var \Zend\Db\Metadata\Object\ColumnObject $column */
             foreach ($table->getColumns() as $column) {
-
                 $item = array(
                     'name' => $column->getName(),
                     'type' => $column->getDataType(),
@@ -65,7 +63,6 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
 
                 foreach ($constraints as $constraint) {
                     if ($column->getName() == $constraint['column']) {
-
                         $item['constraints'][] = ucfirst(strtolower($constraint['type']));
 
                         switch (strtoupper($constraint['type'])) {
@@ -120,12 +117,10 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
 
 
                 $tableData['columns'][] = $item;
-
             }
             $tables[] = $tableData;
         }
         return $tables;
-
     }
 
     /**

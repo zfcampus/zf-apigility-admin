@@ -115,4 +115,4 @@ class DoctrineAdapterModel
         }
         return new DoctrineAdapterEntity($name, $config['doctrine']['connection'][$name]);
     }
-} 
+}

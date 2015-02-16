@@ -89,7 +89,6 @@ class DoctrineAdapterResource extends AbstractResourceListener
         }
 
         return $this->model->update($id, $data);
-
     }
 
     /**
@@ -101,5 +100,4 @@ class DoctrineAdapterResource extends AbstractResourceListener
         $this->model->remove($id);
         return true;
     }
-
-} 
+}
