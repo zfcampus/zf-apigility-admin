@@ -69,13 +69,18 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                             case 'PRIMARY KEY':
                                 break;
                             case 'FOREIGN KEY':
-                                $constraintObj = $this->getConstraintForColumn($metadata, $tableName, $column->getName());
+                                $constraintObj = $this->getConstraintForColumn(
+                                    $metadata,
+                                    $tableName,
+                                    $column->getName()
+                                );
 
                                 $validator = $this->validators['foreign_key'];
                                 $validator['options'] = array(
                                     'adapter' => $adapter_name,
                                     'table' => $constraintObj->getReferencedTableName(),
-                                    'field' => $constraintObj->getReferencedColumns()[0] //TODO: handle composite key constraint
+                                    //TODO: handle composite key constraint
+                                    'field' => $constraintObj->getReferencedColumns()[0]
                                 );
                                 $item['validators'][] = $validator;
                                 break;
@@ -104,7 +109,8 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                     $validator = $this->validators['text'];
                     $validator['options']['max'] = $column->getCharacterMaximumLength();
                     $item['validators'][] = $validator;
-                } elseif (in_array(strtolower($column->getDataType()), array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'))) {
+                } elseif (in_array(strtolower($column->getDataType()), array(
+                    'tinyint', 'smallint', 'mediumint', 'int', 'bigint'))) {
                     $item['length'] = $column->getNumericPrecision();
                     if (in_array('Primary key', array_values($item['constraints']))) {
                         unset($item['filters']);
