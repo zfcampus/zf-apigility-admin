@@ -148,13 +148,13 @@ resource](#authorization).
   Expects an [authorization resource](#authorization) with all details
   necessary for specifying authorization rules.
 
-- HTTP methods: `GET`, `PUT`
+- HTTP methods: `GET`, `PATCH`
 
   `GET` will always return an entity; if no configuration existed previously
   for the module, or if any given service at the given version was not listed
   in the configuration, it will provide the default values.
 
-  `PUT` will return a `200` response on success, along with the updated
+  `PATCH` will return a `200` response on success, along with the updated
   entity.
 
 - Errors: `application/problem+json`
