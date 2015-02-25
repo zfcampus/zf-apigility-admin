@@ -1130,14 +1130,6 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function getSourcePath($serviceName)
     {
-//        $sourcePath = sprintf(
-//            '%s/src/%s/V%s/Rest/%s',
-//            $this->modulePath,
-//            str_replace('\\', '/', $this->module),
-//            $this->moduleEntity->getLatestVersion(),
-//            $serviceName
-//        );
-
         $sourcePath = $this->modules->getRestPath(
             $this->module,
             $this->moduleEntity->getLatestVersion(),
