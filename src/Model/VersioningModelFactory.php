@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ZF\Apigility\Model\ModulePathSpec;
 use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
@@ -31,7 +32,7 @@ class VersioningModelFactory
     /**
      * @param  ConfigResourceFactory $configFactory
      */
-    public function __construct(ConfigResourceFactory $configFactory, ModuleUtils $moduleUtils)
+    public function __construct(ConfigResourceFactory $configFactory, ModulePathSpec $moduleUtils)
     {
         $this->configFactory = $configFactory;
         $this->moduleUtils   = $moduleUtils;

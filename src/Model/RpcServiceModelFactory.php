@@ -46,9 +46,9 @@ class RpcServiceModelFactory
      * @param  ModuleModel $moduleModel
      */
     public function __construct(
-        ModuleUtils $modules,
-        ConfigResourceFactory $configFactory,
-        SharedEventManagerInterface $sharedEvents,
+        ModulePathSpec $modules, 
+        ConfigResourceFactory $configFactory, 
+        SharedEventManagerInterface $sharedEvents, 
         ModuleModel $moduleModel
     ) {
         $this->modules            = $modules;

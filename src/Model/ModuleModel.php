@@ -51,14 +51,18 @@ class ModuleModel
      */
     protected static $valueGenerator;
 
+    protected $modulePathSpec;
+
     /**
      * @param  ModuleManager $moduleManager
      * @param  array $restConfig
      * @param  array $rpcConfig
      */
-    public function __construct(ModuleManager $moduleManager, array $restConfig, array $rpcConfig)
+    public function __construct(ModuleManager $moduleManager, ModulePathSpec $modulePathSpec, array $restConfig, array $rpcConfig)
     {
         $this->moduleManager = $moduleManager;
+        $this->modulePathSpec = $modulePathSpec;
+
         $this->restConfig    = array_keys($restConfig);
         $this->rpcConfig     = array_keys($rpcConfig);
     }
@@ -126,20 +130,24 @@ class ModuleModel
             return false;
         }
 
-        $modulePath = sprintf('%s/module/%s', $path, $module);
-        if (file_exists($modulePath)) {
-            throw new \Exception(sprintf(
-                'Cannot create new API module; module by the name "%s" already exists',
-                $module
-            ), 409);
-        }
+//        $modulePath = sprintf('%s/module/%s', $path, $module);
+//        if (file_exists($modulePath)) {
+//            throw new \Exception(sprintf(
+//                'Cannot create new API module; module by the name "%s" already exists',
+//                $module
+//            ), 409);
+//        }
+        $modulePath               = $this->modulePathSpec->getModulePath($module);
+        $moduleSourcePath         = $this->modulePathSpec->getModuleSourcePath($module);
+        $moduleSourceRelativePath = $this->modulePathSpec->getModuleSourcePath($module, false);
+        $moduleConfigPath         = $this->modulePathSpec->getModuleConfigPath();
 
-        mkdir("$modulePath/config", 0775, true);
-        mkdir("$modulePath/view", 0775, true);
-        mkdir("$modulePath/src/$module/V1/Rest", 0775, true);
-        mkdir("$modulePath/src/$module/V1/Rpc", 0775, true);
+        mkdir($moduleConfigPath, 0775, true);
+        mkdir($this->modulePathSpec->getModuleViewPath(), 0775, true);
+        mkdir($this->modulePathSpec->getRestPath($module), 0775, true);
+        mkdir($this->modulePathSpec->getRpcPath($module), 0775, true);
 
-        if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
+        if (!file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
         }
 
@@ -155,10 +163,10 @@ class ModuleModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) {
+        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleSourceRelativePath/Module.php';")) {
             return false;
         }
-        if (!file_put_contents("$modulePath/src/$module/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+        if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
             return false;
         }
 

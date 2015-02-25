@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ZF\Apigility\Model\ModulePathSpec;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 
@@ -41,7 +42,7 @@ class AuthorizationModel
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct(ModuleEntity $moduleEntity, ModuleUtils $modules, ConfigResource $config)
+    public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
         $this->module         = $moduleEntity->getName();
         $this->moduleEntity   = $moduleEntity;

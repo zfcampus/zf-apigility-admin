@@ -93,7 +93,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct(ModuleEntity $moduleEntity, ModuleUtils $modules, ConfigResource $config)
+    public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
         $this->module         = $moduleEntity->getName();
         $this->moduleEntity   = $moduleEntity;
@@ -952,7 +952,7 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Delete content-negotiation configuration associated with a service
      *
-     * @param  RestServiceEntity $entity
+     * @param  RestServiceEntity $entitysource
      */
     public function deleteContentNegotiationConfig(RestServiceEntity $entity)
     {
@@ -1130,10 +1130,16 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function getSourcePath($serviceName)
     {
-        $sourcePath = sprintf(
-            '%s/src/%s/V%s/Rest/%s',
-            $this->modulePath,
-            str_replace('\\', '/', $this->module),
+//        $sourcePath = sprintf(
+//            '%s/src/%s/V%s/Rest/%s',
+//            $this->modulePath,
+//            str_replace('\\', '/', $this->module),
+//            $this->moduleEntity->getLatestVersion(),
+//            $serviceName
+//        );
+
+        $sourcePath = $this->modules->getRestPath(
+            $this->module,
             $this->moduleEntity->getLatestVersion(),
             $serviceName
         );

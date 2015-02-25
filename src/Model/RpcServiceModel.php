@@ -50,7 +50,7 @@ class RpcServiceModel
      * @param  ModuleUtils $modules
      * @param  ConfigResource $config
      */
-    public function __construct(ModuleEntity $moduleEntity, ModuleUtils $modules, ConfigResource $config)
+    public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
         $this->module         = $moduleEntity->getName();
         $this->moduleEntity   = $moduleEntity;
@@ -241,21 +241,13 @@ class RpcServiceModel
     public function createFactoryController($serviceName)
     {
         $module     = $this->module;
-        $modulePath = $this->modules->getModulePath($module);
         $version    = $this->moduleEntity->getLatestVersion();
 
-        $srcPath = sprintf(
-            '%s/src/%s/V%s/Rpc/%s',
-            $modulePath,
-            str_replace('\\', '/', $module),
-            $version,
-            $serviceName
-        );
+        $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
         $className         = sprintf('%sController', $serviceName);
         $classFactory      = sprintf('%sControllerFactory', $serviceName);
         $classPath         = sprintf('%s/%s.php', $srcPath, $classFactory);
-        $controllerService = sprintf('%s\\V%s\\Rpc\\%s\\Controller', $module, $version, $serviceName);
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -301,14 +293,8 @@ class RpcServiceModel
         $module     = $this->module;
         $modulePath = $this->modules->getModulePath($module);
         $version    = $this->moduleEntity->getLatestVersion();
-
-        $srcPath = sprintf(
-            '%s/src/%s/V%s/Rpc/%s',
-            $modulePath,
-            str_replace('\\', '/', $module),
-            $version,
-            $serviceName
-        );
+        
+        $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
         if (!file_exists($srcPath)) {
             mkdir($srcPath, 0775, true);
