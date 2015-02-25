@@ -130,20 +130,20 @@ class ModuleModel
             return false;
         }
 
-//        $modulePath = sprintf('%s/module/%s', $path, $module);
-//        if (file_exists($modulePath)) {
-//            throw new \Exception(sprintf(
-//                'Cannot create new API module; module by the name "%s" already exists',
-//                $module
-//            ), 409);
-//        }
-        $modulePath               = $this->modulePathSpec->getModulePath($module);
+        $modulePath = $this->modulePathSpec->getModulePath($module);
+        if (file_exists($modulePath)) {
+            throw new \Exception(sprintf(
+                'Cannot create new API module; module by the name "%s" already exists',
+                $module
+            ), 409);
+        }
+
         $moduleSourcePath         = $this->modulePathSpec->getModuleSourcePath($module);
         $moduleSourceRelativePath = $this->modulePathSpec->getModuleSourcePath($module, false);
         $moduleConfigPath         = $this->modulePathSpec->getModuleConfigPath();
 
         mkdir($moduleConfigPath, 0775, true);
-        mkdir($this->modulePathSpec->getModuleViewPath(), 0775, true);
+        mkdir($this->modulePathSpec->getModuleViewPath($module), 0775, true);
         mkdir($this->modulePathSpec->getRestPath($module), 0775, true);
         mkdir($this->modulePathSpec->getRpcPath($module), 0775, true);
 

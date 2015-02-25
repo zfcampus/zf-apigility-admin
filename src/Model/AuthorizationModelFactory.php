@@ -6,7 +6,6 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Apigility\Model\ModulePathSpec;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
