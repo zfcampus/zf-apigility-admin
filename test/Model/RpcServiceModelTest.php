@@ -204,7 +204,7 @@ class RpcServiceModelTest extends TestCase
         );
 
         $serviceName = 'Bar';
-        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__,  $this->module);
+        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
         if (!is_dir($moduleSrcPath)) {
             mkdir($moduleSrcPath, 0775, true);
         }
@@ -638,7 +638,7 @@ class RpcServiceModelTest extends TestCase
         $filepath = $servicePath . "/". $serviceName . "Controller.php";
 
         /** deleteService calls class_exists.  ensure that it's loaded in case the autoloader doesn't pick it up */
-        if(file_exists($filepath)) {
+        if (file_exists($filepath)) {
             require_once $filepath;
         }
 

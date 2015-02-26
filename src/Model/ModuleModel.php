@@ -163,7 +163,7 @@ class ModuleModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if($pathSpec->getPathSpec() === 'psr-0') {
+        if ($pathSpec->getPathSpec() === 'psr-0') {
             $view->setTemplate('module/skeleton');
             $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
 
