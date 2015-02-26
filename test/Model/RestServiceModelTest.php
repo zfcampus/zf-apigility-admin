@@ -7,6 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use BarConf;
+use BazConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
@@ -40,16 +41,32 @@ class RestServiceModelTest extends TestCase
         }
         return rmdir($dir);
     }
-
     protected function cleanUpAssets()
     {
+        $pathSpec = (empty($this->modules)) ? 'psr-0' : $this->modules->getPathSpec();
+
+        $modulePath = array(
+            'psr-0' => '%s/src/%s/V*',
+            'psr-4' => '%s/src/V*'
+        );
+
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
-        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
+        foreach (glob(sprintf($modulePath[$pathSpec], $basePath, $this->module)) as $dir) {
             $this->removeDir($dir);
         }
         copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
     }
+
+//    protected function cleanUpAssets()
+//    {
+//        $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
+//        $configPath = $basePath . '/config';
+//        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
+//            $this->removeDir($dir);
+//        }
+//        copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
+//    }
 
     public function setUp()
     {
@@ -57,7 +74,8 @@ class RestServiceModelTest extends TestCase
         $this->cleanUpAssets();
 
         $modules = array(
-            'BarConf' => new BarConf\Module()
+            'BarConf' => new BarConf\Module(),
+            'BazConf' => new BazConf\Module()
         );
 
         $this->moduleEntity  = new ModuleEntity($this->module, array(), array(), false);
@@ -155,6 +173,35 @@ class RestServiceModelTest extends TestCase
 
         $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $resourceClass);
         $path      = realpath(__DIR__) . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo/' . $className . '.php';
+        $this->assertTrue(file_exists($path));
+
+        require_once $path;
+
+        $r = new ReflectionClass($resourceClass);
+        $this->assertInstanceOf('ReflectionClass', $r);
+        $parent = $r->getParentClass();
+        $this->assertEquals('ZF\Rest\AbstractResourceListener', $parent->getName());
+    }
+
+    /**
+     * @group feature/psr4
+     */
+    public function testCreateResourceClassCreatesClassFileWithNamedResourceClassPSR4()
+    {
+        $this->module = 'BazConf';
+        $this->moduleEntity  = new ModuleEntity($this->module);
+        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $this->modules  = new ModulePathSpec($moduleUtils, 'psr-4', __DIR__ . '/TestAsset');
+        $this->codeRest = new RestServiceModel(
+            $this->moduleEntity,
+            $this->modules,
+            $this->resource->factory('BazConf')
+        );
+
+        $resourceClass = $this->codeRest->createResourceClass('Foo');
+
+        $className = str_replace($this->module . '\\V1\\Rest\\Foo\\', '', $resourceClass);
+        $path      = realpath(__DIR__) . '/TestAsset/module/BazConf/src/V1/Rest/Foo/' . $className . '.php';
         $this->assertTrue(file_exists($path));
 
         require_once $path;
@@ -680,6 +727,33 @@ class RestServiceModelTest extends TestCase
         $this->codeRest->fetch($service->controllerServiceName);
     }
 
+    /**
+     * @group feature/psr4
+     */
+    public function testCanDeleteAServicePSR4()
+    {
+        $this->module = 'BazConf';
+        $this->moduleEntity  = new ModuleEntity($this->module);
+        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $this->modules  = new ModulePathSpec($moduleUtils, 'psr-4', __DIR__ . '/TestAsset');
+        $this->codeRest = new RestServiceModel(
+            $this->moduleEntity,
+            $this->modules,
+            $this->resource->factory('BazConf')
+        );
+
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName));
+
+        $fooPath = __DIR__ . '/TestAsset/module/BazConf/src/V1/Rest/Foo';
+        $this->assertTrue(file_exists($fooPath));
+
+        $this->setExpectedException('ZF\Apigility\Admin\Exception\RuntimeException', 'find', 404);
+        $this->codeRest->fetch($service->controllerServiceName);
+    }
+
     public function testCanDeleteAServiceRecursive()
     {
         $details = $this->getCreationPayload();
@@ -688,6 +762,30 @@ class RestServiceModelTest extends TestCase
         $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName, true));
 
         $fooPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo';
+        $this->assertFalse(file_exists($fooPath));
+    }
+
+    /**
+     * @group feature/psr4
+     */
+    public function testCanDeleteAServiceRecursivePSR4()
+    {
+        $this->module = 'BazConf';
+        $this->moduleEntity  = new ModuleEntity($this->module);
+        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $this->modules  = new ModulePathSpec($moduleUtils, 'psr-4', __DIR__ . '/TestAsset');
+        $this->codeRest = new RestServiceModel(
+            $this->moduleEntity,
+            $this->modules,
+            $this->resource->factory('BazConf')
+        );
+
+        $details = $this->getCreationPayload();
+        $service = $this->codeRest->createService($details);
+
+        $this->assertTrue($this->codeRest->deleteService($service->controllerServiceName, true));
+
+        $fooPath = __DIR__ . '/TestAsset/module/BazConf/src/V1/Rest/Foo';
         $this->assertFalse(file_exists($fooPath));
     }
 

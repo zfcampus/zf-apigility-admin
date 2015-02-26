@@ -156,20 +156,28 @@ class ModuleModel
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(
-            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml'
+            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml',
+            'module/skeleton-psr4' => __DIR__ . '/../../view/module/skeleton-psr4.phtml',
         ));
 
-        $view->setTemplate('module/skeleton');
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
+        if($pathSpec->getPathSpec() === 'psr-0') {
+            $view->setTemplate('module/skeleton');
+            $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
 
-        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
-            return false;
-        }
-        if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
-            return false;
+            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
+                return false;
+            }
+            if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+                return false;
+            }
+        } else {
+            $view->setTemplate('module/skeleton-psr4');
+            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+                return false;
+            }
         }
 
         // Add the module in application.config.php

@@ -16,6 +16,8 @@ class ModulePathSpec
         'psr-4' => '%modulePath%/src'
     );
 
+    protected $currentSpec = 'psr-0';
+
     /**
      * @var string  PSR-0
      */
@@ -41,6 +43,12 @@ class ModulePathSpec
         $this->modules              = $modules;
         $this->moduleSourcePathSpec = $this->psrSpecs[$sourcePathSpec];
         $this->applicationPath      = $applicationPath;
+        $this->currentSpec          = $sourcePathSpec;
+    }
+
+    public function getPathSpec()
+    {
+        return $this->currentSpec;
     }
 
     /**

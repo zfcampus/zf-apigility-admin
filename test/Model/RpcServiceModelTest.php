@@ -7,6 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use FooConf;
+use BazConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
@@ -41,9 +42,16 @@ class RpcServiceModelTest extends TestCase
 
     protected function cleanUpAssets()
     {
+        $pathSpec = (empty($this->modulePathSpec)) ? 'psr-0' : $this->modulePathSpec->getPathSpec();
+
+        $modulePath = array(
+            'psr-0' => '%s/src/%s/V*',
+            'psr-4' => '%s/src/V*'
+        );
+
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
-        foreach (glob(sprintf('%s/src/%s/V*', $basePath, $this->module)) as $dir) {
+        foreach (glob(sprintf($modulePath[$pathSpec], $basePath, $this->module)) as $dir) {
             $this->removeDir($dir);
         }
         copy($configPath . '/module.config.php.dist', $configPath . '/module.config.php');
@@ -55,7 +63,8 @@ class RpcServiceModelTest extends TestCase
         $this->cleanUpAssets();
 
         $modules = array(
-            'FooConf' => new FooConf\Module()
+            'FooConf' => new FooConf\Module(),
+            'BazConf' => new BazConf\Module()
         );
 
         $this->moduleEntity  = new ModuleEntity($this->module);
@@ -75,6 +84,11 @@ class RpcServiceModelTest extends TestCase
             $this->modulePathSpec,
             $this->resource->factory($this->module)
         );
+    }
+
+    protected function setCurrentModule()
+    {
+
     }
 
     public function tearDown()
@@ -144,6 +158,67 @@ class RpcServiceModelTest extends TestCase
             "%s/TestAsset/module/%s/src/%s/V1/Rpc/%s/%sController.php",
             __DIR__,
             $this->module,
+            $this->module,
+            $serviceName,
+            $serviceName
+        );
+        $controllerService = sprintf("%s\\V1\\Rpc\\%s\\Controller", $this->module, $serviceName);
+
+        $this->assertEquals($className, $result->class);
+        $this->assertEquals(realpath($fileName), realpath($result->file));
+        $this->assertEquals($controllerService, $result->service);
+
+        require_once $fileName;
+        $controllerClass = new ReflectionClass($className);
+        $this->assertTrue($controllerClass->isSubclassOf('Zend\Mvc\Controller\AbstractActionController'));
+
+        $actionMethodName = lcfirst($serviceName) . 'Action';
+        $this->assertTrue(
+            $controllerClass->hasMethod($actionMethodName),
+            'Expected ' . $actionMethodName . "; class:\n" . file_get_contents($fileName)
+        );
+
+        $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
+        $config     = include $configFile;
+        $expected = array(
+            'controllers' => array('factories' => array(
+                $controllerService => $className . 'Factory',
+            )),
+        );
+        $this->assertEquals($expected, $config);
+    }
+
+    /**
+     * @group feature/psr4
+     */
+    public function testCreateControllerRpcPSR4()
+    {
+        $this->module = 'BazConf';
+        $this->moduleEntity  = new ModuleEntity($this->module);
+        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $this->modulePathSpec  = new ModulePathSpec($moduleUtils, 'psr-4', __DIR__ . '/TestAsset');
+        $this->codeRpc  = new RpcServiceModel(
+            $this->moduleEntity,
+            $this->modulePathSpec,
+            $this->resource->factory($this->module)
+        );
+
+        $serviceName = 'Bar';
+        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__,  $this->module);
+        if (!is_dir($moduleSrcPath)) {
+            mkdir($moduleSrcPath, 0775, true);
+        }
+
+        $result = $this->codeRpc->createController($serviceName);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertObjectHasAttribute('class', $result);
+        $this->assertObjectHasAttribute('file', $result);
+        $this->assertObjectHasAttribute('service', $result);
+
+        $className         = sprintf("%s\\V1\\Rpc\\%s\\%sController", $this->module, $serviceName, $serviceName);
+        $fileName          = sprintf(
+            "%s/TestAsset/module/%s/src/V1/Rpc/%s/%sController.php",
+            __DIR__,
             $this->module,
             $serviceName,
             $serviceName
@@ -531,6 +606,41 @@ class RpcServiceModelTest extends TestCase
 
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
         $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
+
+        $this->codeRpc->deleteService($result, true);
+        $this->assertFalse(file_exists($servicePath));
+    }
+
+    /**
+     * @group feature/psr4
+     */
+    public function testDeleteServiceRecursivePSR4()
+    {
+        $this->module = 'BazConf';
+        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $this->moduleEntity  = new ModuleEntity($this->module);
+        $this->modulePathSpec  = new ModulePathSpec($moduleUtils, 'psr-4', __DIR__ . '/TestAsset');
+        $this->codeRpc  = new RpcServiceModel(
+            $this->moduleEntity,
+            $this->modulePathSpec,
+            $this->resource->factory($this->module)
+        );
+
+        $serviceName = 'HelloWorld';
+        $route       = '/foo_conf/hello/world';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
+        $servicePath = $moduleSrcPath . '/V1/Rpc/' . $serviceName;
+        $filepath = $servicePath . "/". $serviceName . "Controller.php";
+
+        /** deleteService calls class_exists.  ensure that it's loaded in case the autoloader doesn't pick it up */
+        if(file_exists($filepath)) {
+            require_once $filepath;
+        }
 
         $this->codeRpc->deleteService($result, true);
         $this->assertFalse(file_exists($servicePath));

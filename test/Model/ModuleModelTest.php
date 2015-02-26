@@ -245,11 +245,38 @@ class ModuleModelTest extends TestCase
         return true;
     }
 
-    protected function getPathSpec($modulePath)
+
+    /**
+     * @group feature/psr4
+     */
+    public function testCreateModulePSR4()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
+
+        $pathSpec = $this->getPathSpec($modulePath, 'psr-4');
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
+        $this->assertTrue(file_exists("$modulePath/module/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/V1/Rpc"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/V1/Rest"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/view"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
+
+        $this->removeDir($modulePath);
+        return true;
+    }
+
+    protected function getPathSpec($modulePath, $spec = 'psr-0')
     {
         return new ModulePathSpec(
             new ModuleUtils($this->moduleManager),
-            'psr-0',
+            $spec,
             $modulePath
         );
     }
