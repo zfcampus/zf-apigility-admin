@@ -15,6 +15,7 @@ use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\AuthorizationEntity;
 use ZF\Apigility\Admin\Model\AuthorizationModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
+use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
 
@@ -72,8 +73,9 @@ class AuthorizationModelTest extends TestCase
                             ->will($this->returnValue($modules));
 
         $this->writer   = new PhpArray();
-        $this->modules  = new ModuleUtils($this->moduleManager);
-        $this->resource = new ResourceFactory($this->modules, $this->writer);
+        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $this->modules  = new ModulePathSpec($moduleUtils);
+        $this->resource = new ResourceFactory($moduleUtils, $this->writer);
         $this->model    = new AuthorizationModel(
             $this->moduleEntity,
             $this->modules,

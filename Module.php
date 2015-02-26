@@ -207,19 +207,34 @@ class Module
                 return new Model\DoctrineAdapterResource($model);
 =======
             'ZF\Apigility\Admin\Model\ModulePathSpec' => function($services) {
+                if (!$services->has('ZF\Configuration\ModuleUtils')) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\ModulePathSpec service because ZF\Configuration\ModuleUtils service is not present'
+                    );
+                }
 
                 $pathSpec   = 'psr-0';
-
+                $path       = '.';
                 if ($services->has('Config')) {
                     $config = $services->get('Config');
                     if (!empty($config['zf-apigility-admin'])) {
                         if (!empty($config['zf-apigility-admin']['path_spec'])) {
                             $pathSpec = $config['zf-apigility-admin']['path_spec'];
                         }
+
+                        if (isset($config['zf-apigility-admin']['module_path'])) {
+                            $path = $config['zf-apigility-admin']['module_path'];
+                            if (!is_dir($path)) {
+                                throw new InvalidArgumentException(sprintf(
+                                    'Invalid module path "%s"; does not exist',
+                                    $path
+                                ));
+                            }
+                        }
                     }
                 }
 
-                $modulePathSpec = new Model\ModulePathSpec($services->get('ZF\Configuration\ModuleUtils'), $pathSpec);
+                $modulePathSpec = new Model\ModulePathSpec($services->get('ZF\Configuration\ModuleUtils'), $pathSpec, $path);
 
                 return $modulePathSpec;
 >>>>>>> adding proof of concept psr-4 support
@@ -231,7 +246,6 @@ class Module
                     );
                 }
                 $modules    = $services->get('ModuleManager');
-                $modulesPathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
 
                 $restConfig = array();
                 $rpcConfig  = array();
@@ -244,20 +258,14 @@ class Module
                         $rpcConfig = $config['zf-rpc'];
                     }
                 }
-                return new Model\ModuleModel($modules, $modulesPathSpec, $restConfig, $rpcConfig);
+                return new Model\ModuleModel($modules, $restConfig, $rpcConfig);
             },
             'ZF\Apigility\Admin\Model\ModuleResource' => function ($services) {
-                $moduleModel = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                $listener    = new Model\ModuleResource($moduleModel);
+                $moduleModel     = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
+                $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
 
-                if ($services->has('Config')) {
-                    $config = $services->get('Config');
-                    if (isset($config['zf-apigility-admin'])) {
-                        if (isset($config['zf-apigility-admin']['module_path'])) {
-                            $listener->setModulePath($config['zf-apigility-admin']['module_path']);
-                        }
-                    }
-                }
+                $listener        = new Model\ModuleResource($moduleModel, $modulePathSpec);
+
                 return $listener;
             },
             'ZF\Apigility\Admin\Model\RestServiceModelFactory' => function ($services) {

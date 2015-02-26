@@ -58,10 +58,9 @@ class ModuleModel
      * @param  array $restConfig
      * @param  array $rpcConfig
      */
-    public function __construct(ModuleManager $moduleManager, ModulePathSpec $modulePathSpec, array $restConfig, array $rpcConfig)
+    public function __construct(ModuleManager $moduleManager, array $restConfig, array $rpcConfig)
     {
         $this->moduleManager = $moduleManager;
-        $this->modulePathSpec = $modulePathSpec;
 
         $this->restConfig    = array_keys($restConfig);
         $this->rpcConfig     = array_keys($rpcConfig);
@@ -119,8 +118,9 @@ class ModuleModel
      * @param  integer $ver
      * @return boolean
      */
-    public function createModule($module, $path = '.')
+    public function createModule($module, ModulePathSpec $pathSpec)
     {
+        $path = $pathSpec->getApplicationPath();
         $application = require "$path/config/application.config.php";
         if (is_array($application)
             && isset($application['modules'])
@@ -130,7 +130,7 @@ class ModuleModel
             return false;
         }
 
-        $modulePath = $this->modulePathSpec->getModulePath($module);
+        $modulePath = $pathSpec->getModulePath($module, $path);
         if (file_exists($modulePath)) {
             throw new \Exception(sprintf(
                 'Cannot create new API module; module by the name "%s" already exists',
@@ -138,14 +138,14 @@ class ModuleModel
             ), 409);
         }
 
-        $moduleSourcePath         = $this->modulePathSpec->getModuleSourcePath($module);
-        $moduleSourceRelativePath = $this->modulePathSpec->getModuleSourcePath($module, false);
-        $moduleConfigPath         = $this->modulePathSpec->getModuleConfigPath();
+        $moduleSourcePath         = $pathSpec->getModuleSourcePath($module);
+        $moduleSourceRelativePath = $pathSpec->getModuleSourcePath($module, false);
+        $moduleConfigPath         = $pathSpec->getModuleConfigPath($module);
 
         mkdir($moduleConfigPath, 0775, true);
-        mkdir($this->modulePathSpec->getModuleViewPath($module), 0775, true);
-        mkdir($this->modulePathSpec->getRestPath($module), 0775, true);
-        mkdir($this->modulePathSpec->getRpcPath($module), 0775, true);
+        mkdir($pathSpec->getModuleViewPath($module), 0775, true);
+        mkdir($pathSpec->getRestPath($module,1), 0775, true);
+        mkdir($pathSpec->getRpcPath($module,1), 0775, true);
 
         if (!file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;

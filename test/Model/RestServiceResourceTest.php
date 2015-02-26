@@ -14,6 +14,7 @@ use Zend\EventManager\SharedEventManager;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModuleModel;
+use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
@@ -72,8 +73,9 @@ class RestServiceResourceTest extends TestCase
                             ->will($this->returnValue($modules));
 
         $this->writer        = new PhpArray();
-        $this->modules       = new ModuleUtils($this->moduleManager);
-        $this->configFactory = new ResourceFactory($this->modules, $this->writer);
+        $moduleUtils         = new ModuleUtils($this->moduleManager);
+        $this->modules       = new ModulePathSpec($moduleUtils);
+        $this->configFactory = new ResourceFactory($moduleUtils, $this->writer);
         $config = $this->configFactory->factory('BarConf');
 
         $this->restServiceModel = new RestServiceModel($this->moduleEntity, $this->modules, $config);
@@ -126,13 +128,13 @@ class RestServiceResourceTest extends TestCase
     public function testPatchOfADbConnectedServiceUpdatesDbConnectedConfiguration()
     {
         $moduleManager           = $this->moduleManager;
-        $moduleUtils             = $this->modules;
+        $modulePathSpec          = $this->modules;
         $writer                  = $this->writer;
         $configResourceFactory   = $this->configFactory;
         $moduleModel             = new ModuleModel($moduleManager, array(), array());
         $sharedEvents            = new SharedEventManager();
         $restServiceModelFactory = new RestServiceModelFactory(
-            $moduleUtils,
+            $modulePathSpec,
             $configResourceFactory,
             $sharedEvents,
             $moduleModel

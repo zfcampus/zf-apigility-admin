@@ -293,7 +293,8 @@ class RpcServiceModel
         $module     = $this->module;
         $modulePath = $this->modules->getModulePath($module);
         $version    = $this->moduleEntity->getLatestVersion();
-        
+        $serviceName = str_replace("\\", "/", $serviceName);
+
         $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
         if (!file_exists($srcPath)) {

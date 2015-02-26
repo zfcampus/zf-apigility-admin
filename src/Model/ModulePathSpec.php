@@ -9,6 +9,8 @@ class ModulePathSpec
 {
     protected $modules;
 
+    protected $modulePathSpec = "%s/module/%s";
+
     protected $psrSpecs = array(
         'psr-0' => '%modulePath%/src/%moduleName%',
         'psr-4' => '%modulePath%/src'
@@ -23,20 +25,50 @@ class ModulePathSpec
 
     protected $rpcPathSpec = "/V%version%/Rpc";
 
+    protected $applicationPath = '.';
 
-    public function __construct(ModuleUtils $modules, $sourcePathSpec = 'psr-0')
+    /**
+     * @param ModuleUtils $modules
+     * @param string $sourcePathSpec
+     * @param string $modulePath
+     */
+    public function __construct(ModuleUtils $modules, $sourcePathSpec = 'psr-0',  $applicationPath = ".")
     {
         if(!array_key_exists($sourcePathSpec, $this->psrSpecs)) {
             throw new InvalidArgumentException("Invalid sourcePathSpec valid values are psr-0, psr-4");
         }
 
-        $this->modules = $modules;
+        $this->modules              = $modules;
         $this->moduleSourcePathSpec = $this->psrSpecs[$sourcePathSpec];
+        $this->applicationPath      = $applicationPath;
+    }
+
+    /**
+     * @param string $path
+     * @return $this
+     */
+    public function setApplicationPath($path)
+    {
+        $this->applicationPath = $path;
+
+        return $this;
+    }
+
+    public function getApplicationPath()
+    {
+        return $this->applicationPath;
     }
 
     public function getModulePath($moduleName)
     {
-        return $this->modules->getModulePath($moduleName);
+        // see if we can get the path from ModuleUtils, if module isn't set will throw exception
+        try {
+            $modulePath = $this->modules->getModulePath($moduleName);
+        } catch(\Exception $e) {
+            $modulePath = sprintf($this->modulePathSpec, $this->applicationPath, $moduleName);
+        }
+
+        return $modulePath;
     }
 
     /**
@@ -86,8 +118,8 @@ class ModulePathSpec
      */
     public function getRestPath($moduleName, $version = 1, $serviceName = null)
     {
-        $find    = array("%serviceName%", "%version%");
-        $replace = array($serviceName, $version);
+        $find    = array("\\", "%serviceName%", "%version%");
+        $replace = array("/", $serviceName, $version);
 
         $path = $this->getModuleSourcePath($moduleName);
         $path .= str_replace($find, $replace, $this->restPathSpec);
@@ -96,15 +128,15 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        $path .= (!empty($serviceName)) ? $serviceName : '';
+        $path .= (!empty($serviceName)) ? str_replace("\\", "/", $serviceName) : '';
 
         return $path;
     }
 
     public function getRpcPath($moduleName, $version = 1, $serviceName = null)
     {
-        $find    = array("%version%");
-        $replace = array($version);
+        $find    = array("\\", "%version%");
+        $replace = array("/", $version);
 
         $path = $this->getModuleSourcePath($moduleName);
         $path .= str_replace($find, $replace, $this->rpcPathSpec);
@@ -113,18 +145,23 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        $path .= (!empty($serviceName)) ? $serviceName : '';
+        $path .= (!empty($serviceName)) ? str_replace("\\", "/", $serviceName) : '';
 
         return $path;
     }
 
     public function getModuleConfigPath($moduleName)
     {
-        return $this->modules->getModulePath($moduleName) . "/config";
+        return $this->getModulePath($moduleName) . "/config";
+    }
+
+    public function getModuleConfigFilePath($moduleName)
+    {
+        return $this->getModuleConfigPath($moduleName) . "/module.config.php";
     }
 
     public function getModuleViewPath($moduleName)
     {
-        return $this->modules->getModulePath($moduleName) . "/view";
+        return $this->getModulePath($moduleName) . "/view";
     }
 }
