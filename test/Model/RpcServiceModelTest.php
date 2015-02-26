@@ -114,7 +114,7 @@ class RpcServiceModelTest extends TestCase
      */
     public function testCanCreateControllerServiceNameFromResourceNameSpace()
     {
-//        $this->markTestSkipped('Invalid use case');
+        $this->markTestSkipped('Invalid use case');
 
         /**
          * @todo is this the expected behavior?
