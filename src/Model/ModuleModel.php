@@ -144,8 +144,8 @@ class ModuleModel
 
         mkdir($moduleConfigPath, 0775, true);
         mkdir($pathSpec->getModuleViewPath($module), 0775, true);
-        mkdir($pathSpec->getRestPath($module,1), 0775, true);
-        mkdir($pathSpec->getRpcPath($module,1), 0775, true);
+        mkdir($pathSpec->getRestPath($module, 1), 0775, true);
+        mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
 
         if (!file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
@@ -163,7 +163,9 @@ class ModuleModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleSourceRelativePath/Module.php';")) {
+        $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
+
+        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
             return false;
         }
         if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {

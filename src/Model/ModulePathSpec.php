@@ -32,9 +32,9 @@ class ModulePathSpec
      * @param string $sourcePathSpec
      * @param string $modulePath
      */
-    public function __construct(ModuleUtils $modules, $sourcePathSpec = 'psr-0',  $applicationPath = ".")
+    public function __construct(ModuleUtils $modules, $sourcePathSpec = 'psr-0', $applicationPath = ".")
     {
-        if(!array_key_exists($sourcePathSpec, $this->psrSpecs)) {
+        if (!array_key_exists($sourcePathSpec, $this->psrSpecs)) {
             throw new InvalidArgumentException("Invalid sourcePathSpec valid values are psr-0, psr-4");
         }
 
@@ -64,7 +64,7 @@ class ModulePathSpec
         // see if we can get the path from ModuleUtils, if module isn't set will throw exception
         try {
             $modulePath = $this->modules->getModulePath($moduleName);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $modulePath = sprintf($this->modulePathSpec, $this->applicationPath, $moduleName);
         }
 
@@ -99,7 +99,9 @@ class ModulePathSpec
     {
         $find    = array("%modulePath%", "%moduleName%");
 
-        if(true === $fullPath) {
+        $moduleName = str_replace('\\', '/', $moduleName);
+
+        if (true === $fullPath) {
             $replace = array($this->getModulePath($moduleName), $moduleName);
         } else {
             $replace = array('', $moduleName);
@@ -124,7 +126,7 @@ class ModulePathSpec
         $path = $this->getModuleSourcePath($moduleName);
         $path .= str_replace($find, $replace, $this->restPathSpec);
 
-        if(substr($path, -1) != "/") {
+        if (substr($path, -1) != "/") {
             $path .= "/";
         }
 
@@ -141,7 +143,7 @@ class ModulePathSpec
         $path = $this->getModuleSourcePath($moduleName);
         $path .= str_replace($find, $replace, $this->rpcPathSpec);
 
-        if(substr($path, -1) != "/") {
+        if (substr($path, -1) != "/") {
             $path .= "/";
         }
 
