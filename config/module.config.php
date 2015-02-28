@@ -792,7 +792,7 @@ return array(
             'route_name'   => 'zf-apigility/api/authentication',
         ),
         'ZF\Apigility\Admin\Controller\Authorization' => array(
-            'http_methods' => array('GET', 'PUT'),
+            'http_methods' => array('GET', 'PATCH', 'PUT'),
             'route_name'   => 'zf-apigility/api/module/authorization',
         ),
         'ZF\Apigility\Admin\Controller\CacheEnabled' => array(
