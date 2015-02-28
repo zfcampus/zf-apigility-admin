@@ -42,7 +42,7 @@ class Module
      */
     public function init(ModuleManagerInterface $modules)
     {
-        $loaded = $modules->getLoadedModules();
+        $loaded = $modules->getLoadedModules(false);
         if (isset($loaded['ZF\Apigility\Admin\Ui'])) {
             return;
         }
@@ -255,15 +255,6 @@ class Module
 
                 // Wire DB-Connected fetch listener
                 $sharedEvents->attach(__NAMESPACE__ . '\Model\RestServiceModel', 'fetch', 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch');
-                
-                // Wire Doctrine-Connected fetch listener
-                if ($services->has('ZF\Apigility\Doctrine\Admin\Model\DoctrineRestServiceModel')) {
-                    $sharedEvents->attach(
-                        __NAMESPACE__ . '\Model\RestServiceModel',
-                        'fetch',
-                        'ZF\Apigility\Doctrine\Admin\Model\DoctrineRestServiceModel::onFetch'
-                    );
-                }
 
                 return new Model\RestServiceModelFactory($moduleUtils, $configFactory, $sharedEvents, $moduleModel);
             },
