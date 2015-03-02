@@ -225,7 +225,7 @@ class Module
                         if (isset($config['zf-apigility-admin']['module_path'])) {
                             $path = $config['zf-apigility-admin']['module_path'];
                             if (!is_dir($path)) {
-                                throw new InvalidArgumentException(sprintf(
+                                throw new ServiceNotCreatedException(sprintf(
                                     'Invalid module path "%s"; does not exist',
                                     $path
                                 ));
