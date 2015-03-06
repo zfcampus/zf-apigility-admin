@@ -253,8 +253,22 @@ class Module
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
                 $sharedEvents  = $services->get('SharedEventManager');
 
+                //$mm = $services->get('ModuleManager');
+
+
                 // Wire DB-Connected fetch listener
                 $sharedEvents->attach(__NAMESPACE__ . '\Model\RestServiceModel', 'fetch', 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch');
+
+                $modules = $services->get('ModuleManager');
+                $loaded = $modules->getLoadedModules(false);
+                if (isset($loaded['ZF\Apigility\Doctrine\Admin'])) {
+                    // Wire Doctrine-Connected fetch listener
+                    $sharedEvents->attach(
+                        __NAMESPACE__ . '\Model\RestServiceModel',
+                        'fetch',
+                        'ZF\Apigility\Doctrine\Admin\Model\DoctrineRestServiceModel::onFetch'
+                    );
+                }
 
                 return new Model\RestServiceModelFactory($moduleUtils, $configFactory, $sharedEvents, $moduleModel);
             },
