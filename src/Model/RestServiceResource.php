@@ -212,8 +212,9 @@ class RestServiceResource extends AbstractResourceListener
     /**
      * Delete a service
      *
-     * @param  string $id
-     * @return true
+     * @param mixed $id
+     * @return bool
+     * @throws \Exception
      */
     public function delete($id)
     {
@@ -291,6 +292,9 @@ class RestServiceResource extends AbstractResourceListener
         ));
     }
 
+    /**
+     * @param RestServiceEntity $service
+     */
     protected function injectDocumentation(RestServiceEntity $service)
     {
         $documentation = $this->documentationModel->fetchDocumentation(

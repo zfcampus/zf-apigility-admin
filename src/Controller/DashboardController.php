@@ -11,6 +11,7 @@ use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Apigility\Admin\Model\DbAdapterModel;
+use ZF\Apigility\Admin\Model\DoctrineAdapterModel;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
 use ZF\Apigility\Admin\Model\RpcServiceModelFactory;
@@ -27,6 +28,8 @@ class DashboardController extends AbstractActionController
 
     protected $dbAdapters;
 
+    protected $doctrineAdapters;
+
     protected $modules;
 
     protected $restServicesFactory;
@@ -37,6 +40,7 @@ class DashboardController extends AbstractActionController
         AuthenticationModel $authentication,
         ContentNegotiationModel $contentNegotiation,
         DbAdapterModel $dbAdapters,
+        DoctrineAdapterModel $doctrineAdapters,
         ModuleModel $modules,
         RestServiceModelFactory $restServicesFactory,
         RpcServiceModelFactory $rpcServicesFactory
@@ -44,6 +48,7 @@ class DashboardController extends AbstractActionController
         $this->authentication      = $authentication;
         $this->contentNegotiation  = $contentNegotiation;
         $this->dbAdapters          = $dbAdapters;
+        $this->doctrineAdapters    = $doctrineAdapters;
         $this->modules             = $modules;
         $this->restServicesFactory = $restServicesFactory;
         $this->rpcServicesFactory  = $rpcServicesFactory;
@@ -63,6 +68,9 @@ class DashboardController extends AbstractActionController
 
         $dbAdapters = new Collection($this->dbAdapters->fetchAll());
         $dbAdapters->setCollectionRoute('zf-apigility/api/db-adapter');
+
+        $doctrineAdapters = new Collection($this->doctrineAdapters->fetchAll());
+        $doctrineAdapters->setCollectionRoute('zf-apigility/api/doctrine-adapter');
 
         $modules = $this->modules->getModules();
         $map     = function ($value) {
@@ -88,9 +96,10 @@ class DashboardController extends AbstractActionController
         $modulesCollection->setCollectionRoute('zf-apigility/api/module');
 
         $dashboard = array(
-            'authentication' => $authentication,
-            'db_adapter'     => $dbAdapters,
-            'module'         => $modulesCollection,
+            'authentication'   => $authentication,
+            'db_adapter'       => $dbAdapters,
+            'doctrine_adapter' => $doctrineAdapters,
+            'module'           => $modulesCollection,
         );
 
         $entity = new Entity($dashboard, 'dashboard');

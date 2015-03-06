@@ -399,7 +399,7 @@ class RpcServiceModel
                 )
             ),
             'zf-versioning' => array(
-                'uri' => array (
+                'uri' => array(
                     $routeName
                 )
             )
