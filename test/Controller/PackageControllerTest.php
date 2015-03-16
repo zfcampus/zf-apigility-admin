@@ -83,7 +83,7 @@ class PackageControllerTest extends TestCase
     /**
      * @depends testProcessPostRequestReturnsToken
      */
-    public function testProcessGetRequestReturnsFile($data)
+    public function testProcessGetRequestReturnsFile(array $data)
     {
         $request = new Request();
         $request->setMethod('get');
