@@ -84,8 +84,9 @@ class PackageController extends AbstractActionController
                 if (!is_null($this->bodyParam('composer'))) {
                     $cmd .= $this->bodyParam('composer') ? ' --composer=on' : ' --composer=off';
                 }
-                if (!empty($this->bodyParam('config'))) {
-                    $cmd .= ' --configs=' . escapeshellarg($this->bodyParam('config'));
+                $config = $this->bodyParam('config');
+                if (!empty($config)) {
+                    $cmd .= ' --configs=' . escapeshellarg($config);
                 }
                 if ($format === 'zpk') {
                     if (!is_null($this->bodyParam('zpk_xml'))) {
