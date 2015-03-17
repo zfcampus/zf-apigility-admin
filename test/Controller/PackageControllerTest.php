@@ -12,6 +12,7 @@ use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
 use Zend\Stdlib\Parameters;
 use ZF\Apigility\Admin\Controller\PackageController;
 use ZF\ContentNegotiation\ControllerPlugin\BodyParam;
+use ZF\ContentNegotiation\ControllerPlugin\BodyParams;
 use Zend\Mvc\MvcEvent;
 use ZF\ContentNegotiation\ParameterDataContainer;
 use Zend\Mvc\Router\RouteMatch;
@@ -23,6 +24,7 @@ class PackageControllerTest extends TestCase
         $this->controller = new PackageController();
         $this->plugins = new ControllerPluginManager();
         $this->plugins->setService('bodyParam', new BodyParam());
+        $this->plugins->setService('bodyParams', new BodyParams());
         $this->controller->setPluginManager($this->plugins);
     }
 
@@ -98,9 +100,12 @@ class PackageControllerTest extends TestCase
         $response = $this->controller->indexAction();
 
         $this->assertTrue($response->isSuccess());
-        $this->assertEquals($content, (string) $response->getContent());
+        $this->assertEquals($content, $response->getRawBody());
         $this->assertEquals('application/octet-stream', $response->getHeaders()->get('Content-Type')->getFieldValue());
         $this->assertEquals(strlen($content), $response->getHeaders()->get('Content-Length')->getFieldValue());
-        $this->assertTrue(!file_exists($package));
+
+        // Removal of file only happens during destruct
+        $this->controller->__destruct();
+        $this->assertFalse(file_exists($package));
     }
 }
