@@ -56,7 +56,8 @@
         "phpunit/PHPUnit": "3.7.*",
         "squizlabs/php_codesniffer": "~2.0",
         "zendframework/zend-config": "~2.3",
-        "zendframework/zend-loader": "~2.3"
+        "zendframework/zend-loader": "~2.3",
+        "zfcampus/zf-deploy": "~1.0"
     },
     "autoload": {
         "psr-4": {

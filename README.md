@@ -15,7 +15,7 @@ manage APIs in Apigility.
 
 Requirements
 ------------
-  
+
 Please see the [composer.json](composer.json) file.
 
 Installation
@@ -398,6 +398,64 @@ The minimum structure for creating a new REST service will appear as follows:
     "resource_name": "Status"
 }
 ```
+
+### api/package
+
+This endpoint is for building a deploy package for APIs.
+
+- `Accept`: `application/json`
+
+  Returns a JSON structure on success, an API-Problem payload on error.
+
+- `Content-Type`: `application/json`
+
+  Expects an object with the property "format", for the file format
+  ZIP, TAR, TGZ, and ZPK; an "apis" property with a list of the API to
+  include in the package; a "composer" property that specify if execute
+  composer or not and an optional "config" property containing the path
+  to an application config folder to be used in the package.
+
+
+- Methods: `GET`, `POST`
+
+- Errors: `application/problem+json`
+
+The request payload for `POST` should have the following structure:
+
+```JSON
+{
+    "format": "the file format to be used for the package",
+    "apis" : {
+        "Test": true
+    },
+    "composer": true,
+    "config": "the config path to be used in the package"
+}
+```
+
+On success, the service returns the followings structure:
+
+```JSON
+{
+    "token": "a random token string",
+    "format": "the file format used for the package"
+}
+```
+
+The fields of this response can be used in the `GET` method to download
+the package file. Basically, the token is a temporary file name stored in
+the system temporary folder (`/tmp` in GNU/Linux).
+
+The request payload for `GET` should have the following structure:
+
+```
+GET /api/package?token=xxx&format=yyy
+```
+
+On success, the service returns the file as `application/octet-stream`
+content type.
+
+
 
 API Models
 ----------

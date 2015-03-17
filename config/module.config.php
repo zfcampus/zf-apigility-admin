@@ -30,6 +30,7 @@ return array(
             'ZF\Apigility\Admin\Controller\CacheEnabled' => 'ZF\Apigility\Admin\Controller\CacheEnabledController',
             'ZF\Apigility\Admin\Controller\FsPermissions' => 'ZF\Apigility\Admin\Controller\FsPermissionsController',
             'ZF\Apigility\Admin\Controller\Strategy' => 'ZF\Apigility\Admin\Controller\StrategyController',
+            'ZF\Apigility\Admin\Controller\Package' => 'ZF\Apigility\Admin\Controller\PackageController'
         ),
         'factories' => array(
             'ZF\Apigility\Admin\Controller\DbAutodiscovery' => 'ZF\Apigility\Admin\Controller\DbAutodiscoveryControllerFactory',
@@ -375,6 +376,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'package' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/package',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Package',
+                                        'action'     => 'index',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -409,6 +420,7 @@ return array(
             'ZF\Apigility\Admin\Controller\Strategy'                 => 'Json',
             'ZF\Apigility\Admin\Controller\Validators'               => 'Json',
             'ZF\Apigility\Admin\Controller\Versioning'               => 'Json',
+            'ZF\Apigility\Admin\Controller\Package'                  => 'Json'
         ),
         'accept_whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
@@ -870,6 +882,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Strategy' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/strategy'
+        ),
+        'ZF\Apigility\Admin\Controller\Package' => array(
+            'http_methods' => array('GET', 'POST'),
+            'route_name'   => 'zf-apigility/api/package',
         ),
     ),
 
