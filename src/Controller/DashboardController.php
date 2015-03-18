@@ -40,7 +40,6 @@ class DashboardController extends AbstractActionController
         AuthenticationModel $authentication,
         ContentNegotiationModel $contentNegotiation,
         DbAdapterModel $dbAdapters,
-        DoctrineAdapterModel $doctrineAdapters,
         ModuleModel $modules,
         RestServiceModelFactory $restServicesFactory,
         RpcServiceModelFactory $rpcServicesFactory
@@ -48,7 +47,6 @@ class DashboardController extends AbstractActionController
         $this->authentication      = $authentication;
         $this->contentNegotiation  = $contentNegotiation;
         $this->dbAdapters          = $dbAdapters;
-        $this->doctrineAdapters    = $doctrineAdapters;
         $this->modules             = $modules;
         $this->restServicesFactory = $restServicesFactory;
         $this->rpcServicesFactory  = $rpcServicesFactory;
@@ -68,9 +66,6 @@ class DashboardController extends AbstractActionController
 
         $dbAdapters = new Collection($this->dbAdapters->fetchAll());
         $dbAdapters->setCollectionRoute('zf-apigility/api/db-adapter');
-
-        $doctrineAdapters = new Collection($this->doctrineAdapters->fetchAll());
-        $doctrineAdapters->setCollectionRoute('zf-apigility/api/doctrine-adapter');
 
         $modules = $this->modules->getModules();
         $map     = function ($value) {
@@ -98,7 +93,6 @@ class DashboardController extends AbstractActionController
         $dashboard = array(
             'authentication'   => $authentication,
             'db_adapter'       => $dbAdapters,
-            'doctrine_adapter' => $doctrineAdapters,
             'module'           => $modulesCollection,
         );
 

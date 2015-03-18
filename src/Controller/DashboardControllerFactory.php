@@ -15,7 +15,6 @@ class DashboardControllerFactory
             $services->get('ZF\Apigility\Admin\Model\AuthenticationModel'),
             $services->get('ZF\Apigility\Admin\Model\ContentNegotiationModel'),
             $services->get('ZF\Apigility\Admin\Model\DbAdapterModel'),
-            $services->get('ZF\Apigility\Admin\Model\DoctrineAdapterModel'),
             $services->get('ZF\Apigility\Admin\Model\ModuleModel'),
             $services->get('ZF\Apigility\Admin\Model\RestServiceModelFactory'),
             $services->get('ZF\Apigility\Admin\Model\RpcServiceModelFactory')

@@ -188,11 +188,21 @@ class Module
                         'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service because Config service is not present'
                     );
                 }
+
+                $modules = $services->get('ModuleManager');
+                $loaded = $modules->getLoadedModules(false);
+                if (!isset($loaded['ZF\Apigility\Doctrine\Admin']) || !isset($loaded['ZF\Apigility\Doctrine\Server'])) {
+                    throw new ServiceNotCreatedException(
+                        'Cannot create ZF\Apigility\Admin\Model\DoctrineAdapterModel service because ZF\Apigility\Doctrine modules are not loaded'
+                    );
+                }
+
                 $config = $services->get('Config');
                 $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                 $global = new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer);
                 $local  = new ConfigResource($config, 'config/autoload/doctrine.local.php', $writer);
+
                 return new Model\DoctrineAdapterModel($global, $local);
             },
             'ZF\Apigility\Admin\Model\DoctrineAdapterResource' => function ($services) {
