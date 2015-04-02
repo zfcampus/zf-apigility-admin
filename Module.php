@@ -183,7 +183,6 @@ class Module
                 $model = $services->get('ZF\Apigility\Admin\Model\DbAdapterModel');
                 return new Model\DbAdapterResource($model);
             },
-<<<<<<< HEAD
             'ZF\Apigility\Admin\Model\DoctrineAdapterModel' => function ($services) {
                 if (!$services->has('Config')) {
                     throw new ServiceNotCreatedException(
@@ -205,7 +204,7 @@ class Module
                 }
                 $model = $services->get('ZF\Apigility\Admin\Model\DoctrineAdapterModel');
                 return new Model\DoctrineAdapterResource($model);
-=======
+            },
             'ZF\Apigility\Admin\Model\ModulePathSpec' => function($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')) {
                     throw new ServiceNotCreatedException(
@@ -237,7 +236,6 @@ class Module
                 $modulePathSpec = new Model\ModulePathSpec($services->get('ZF\Configuration\ModuleUtils'), $pathSpec, $path);
 
                 return $modulePathSpec;
->>>>>>> adding proof of concept psr-4 support
             },
             'ZF\Apigility\Admin\Model\ModuleModel' => function ($services) {
                 if (!$services->has('ModuleManager')) {
