@@ -310,9 +310,9 @@ return array(
                                 ),
                             ),
                             'authentication' => array(
-                                'type' => 'literal',
+                                'type' => 'Zend\Mvc\Router\Http\Segment',
                                 'options' => array(
-                                    'route' => '/authentication',
+                                    'route' => '/authentication[/:authentication_adapter]',
                                     'defaults' => array(
                                         'action'     => 'authentication',
                                         'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
@@ -800,7 +800,7 @@ return array(
 
     'zf-rpc' => array(
         'ZF\Apigility\Admin\Controller\Authentication' => array(
-            'http_methods' => array('GET'),
+            'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility/api/authentication',
         ),
         'ZF\Apigility\Admin\Controller\Authorization' => array(
@@ -1404,7 +1404,6 @@ return array(
         'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2'
         ),
-
         'ZF\Apigility\Admin\Controller\DbAdapter' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
         ),

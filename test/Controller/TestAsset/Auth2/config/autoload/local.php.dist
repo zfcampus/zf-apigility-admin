@@ -1,0 +1,31 @@
+<?php
+return array(
+    'zf-mvc-auth' => array(
+        'authentication' => array(
+            'adapters' => array(
+                'testbasic' => array(
+                    'adapter' => 'ZF\\MvcAuth\\Authentication\\HttpAdapter',
+                    'options' => array(
+                        'accept_schemes' => array(
+                            0 => 'basic',
+                        ),
+                        'realm' => 'api',
+                        'htpasswd' => __DIR__ . '/htpasswd',
+                    ),
+                ),
+                'testdigest' => array(
+                    'adapter' => 'ZF\\MvcAuth\\Authentication\\HttpAdapter',
+                    'options' => array(
+                        'accept_schemes' => array(
+                            0 => 'digest',
+                        ),
+                        'realm' => 'api',
+                        'digest_domains' => '/',
+                        'nonce_timeout' => '3600',
+                        'htdigest' => __DIR__ . '/htdigest',
+                    ),
+                ),
+            ),
+        ),
+    ),
+);
