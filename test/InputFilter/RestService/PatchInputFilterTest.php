@@ -171,6 +171,7 @@ class PatchInputFilterTest extends TestCase
                 'entity_class',
                 'entity_identifier_name',
                 // 'resource_class', // Resource class is allowed to be empty
+                'page_size',
                 'route_identifier_name',
                 'route_match',
             )),
