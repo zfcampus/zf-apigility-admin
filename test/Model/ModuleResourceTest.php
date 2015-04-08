@@ -10,6 +10,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModuleResource;
+use ZF\Apigility\Admin\Model\ModulePathSpec;
+use ZF\Configuration\ModuleUtils;
 
 class ModuleResourceTest extends TestCase
 {
@@ -23,18 +25,31 @@ class ModuleResourceTest extends TestCase
                             ->method('getLoadedModules')
                             ->will($this->returnValue($modules));
 
-        $this->model = new ModuleModel($this->moduleManager, array(), array());
-        $this->resource = new ModuleResource($this->model);
-
         $this->modulePath = sprintf(
             '%s/%s',
             sys_get_temp_dir(),
             uniqid(str_replace('\\', '_', __NAMESPACE__) . '_')
         );
         mkdir($this->modulePath . '/config', 0775, true);
+
+        $this->model = new ModuleModel(
+            $this->moduleManager,
+            array(),
+            array()
+        );
+
+        $this->resource = new ModuleResource(
+            $this->model,
+            new ModulePathSpec(
+                new ModuleUtils($this->moduleManager),
+                'psr-0',
+                $this->modulePath
+            )
+        );
+
         $this->seedApplicationConfig();
         $this->setupModuleAutoloader();
-        $this->resource->setModulePath($this->modulePath);
+//        $this->resource->setModulePath($this->modulePath);
     }
 
     public function tearDown()
@@ -127,8 +142,12 @@ class ModuleResourceTest extends TestCase
             ->method('getLoadedModules')
             ->will($this->returnValue($modules));
 
-        $model    = new ModuleModel($moduleManager, array(), array());
-        $resource = new ModuleResource($model);
+        $model    = new ModuleModel(
+            $moduleManager,
+            array(),
+            array()
+        );
+        $resource = new ModuleResource($model, new ModulePathSpec(new ModuleUtils($moduleManager)));
         $module   = $resource->fetch($moduleName);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $module);
         $this->assertEquals(array(1), $module->getVersions());
@@ -157,8 +176,12 @@ class ModuleResourceTest extends TestCase
             ->method('getLoadedModules')
             ->will($this->returnValue($modules));
 
-        $model    = new ModuleModel($moduleManager, array(), array());
-        $resource = new ModuleResource($model);
+        $model    = new ModuleModel(
+            $moduleManager,
+            array(),
+            array()
+        );
+        $resource = new ModuleResource($model, new ModulePathSpec(new ModuleUtils($moduleManager)));
         $module   = $resource->fetch($moduleName);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $module);
         $this->assertEquals(array(1, 2, 3), $module->getVersions());

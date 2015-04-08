@@ -78,6 +78,7 @@
             "AuthConfWithConfig\\": "test/Model/TestAsset/module/AuthConfWithConfig/",
             "BarConf\\": "test/Model/TestAsset/module/BarConf/src/BarConf/",
             "FooConf\\": "test/Model/TestAsset/module/FooConf/src/FooConf/",
+            "BazConf\\": "test/Model/TestAsset/module/BazConf",
             "InputFilter\\": "test/Model/TestAsset/module/InputFilter/",
             "Version\\": "test/Model/TestAsset/module/Version/src/Version/"
         }
