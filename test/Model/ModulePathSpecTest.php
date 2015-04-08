@@ -40,8 +40,10 @@ class ModulePathSpecTest extends TestCase
 
         $this->assertEquals('/app/ModuleName', $pathSpec->getModulePath('ModuleName'));
         $this->assertEquals('/app/ModuleName/config', $pathSpec->getModuleConfigPath('ModuleName'));
-        $this->assertEquals('/app/ModuleName/config/module.config.php',
-            $pathSpec->getModuleConfigFilePath('ModuleName'));
+        $this->assertEquals(
+            '/app/ModuleName/config/module.config.php',
+            $pathSpec->getModuleConfigFilePath('ModuleName')
+        );
         $this->assertEquals('.', $pathSpec->getApplicationPath());
         $this->assertEquals('/app/ModuleName/src/ModuleName', $pathSpec->getModuleSourcePath('ModuleName'));
         $this->assertEquals('/app/ModuleName/src/ModuleName', $pathSpec->getModuleSourcePath('ModuleName'));
