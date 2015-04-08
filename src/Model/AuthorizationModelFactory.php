@@ -38,7 +38,7 @@ class AuthorizationModelFactory
      * @param  ConfigResourceFactory $configFactory
      * @param  ModuleModel $moduleModel
      */
-    public function __construct(ModuleUtils $modules, ConfigResourceFactory $configFactory, ModuleModel $moduleModel)
+    public function __construct(ModulePathSpec $modules, ConfigResourceFactory $configFactory, ModuleModel $moduleModel)
     {
         $this->modules            = $modules;
         $this->configFactory      = $configFactory;
