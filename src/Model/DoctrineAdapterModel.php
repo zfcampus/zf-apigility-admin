@@ -75,17 +75,26 @@ class DoctrineAdapterModel
     /**
      * Retrieve all named adapters
      *
-     * @return array
+     * @return array|bool
      */
     public function fetchAll()
     {
-        $config = array();
         $fromConfigFile = $this->localConfig->fetch(true);
         if (isset($fromConfigFile['doctrine'])
             && isset($fromConfigFile['doctrine']['connection'])
             && is_array($fromConfigFile['doctrine']['connection'])
         ) {
+            foreach ($fromConfigFile['doctrine']['connection'] as $connection) {
+                if (!is_array($connection)) {
+                    return false;
+                }
+                if (!isset($connection['driverClass'])) {
+                    return false;
+                }
+            }
             $config = $fromConfigFile['doctrine']['connection'];
+        } else {
+            return false;
         }
 
         $adapters = array();
