@@ -382,4 +382,320 @@ class AuthenticationModelTest extends TestCase
         $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
         $entity = $model->update($newConfig);
     }
+
+
+    public function getAuthAdapters()
+    {
+        return array(
+          array(
+              array( // global
+                  'zf-mvc-auth' => array(
+                      'authentication' => array(
+                          'map' => array(
+                              'Status\V1' => 'test1',
+                              'Status\V2' => 'test2',
+                              'Foo'       => 'test3',
+                              'Bar'       => 'test4'
+                          )
+                      )
+                  ),
+                  'router' => array(
+                      'routes' => array(
+                          'oauth' => array(
+                              'type' => 'regex',
+                              'options' => array(
+                                  'regex' => '(?P<oauth>(/oauth_mongo|/oauth_pdo))',
+                                  'spec' => '%oauth%'
+                              )
+                          )
+                      )
+                  )
+              ),
+              array( // local
+                  'zf-mvc-auth' => array(
+                      'authentication' => array(
+                          'adapters' => array(
+                              'test1' => array(
+                                  'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
+                                  'options' => array(
+                                      'accept_schemes' => array('basic'),
+                                      'realm' => 'api',
+                                      'htpasswd' => 'data/htpasswd'
+                                  )
+                              ),
+                              'test2' => array(
+                                  'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
+                                  'options' => array(
+                                      'accept_schemes' => array('digest'),
+                                      'realm' => 'api',
+                                      'digest_domains' => 'domain.com',
+                                      'nonce_timeout' => 3600,
+                                      'htdigest' => 'data/htpasswd',
+
+                                  )
+                              ),
+                              'test3' => array(
+                                  'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
+                                  'storage' => array(
+                                      'adapter' => 'pdo',
+                                      'route' => '/oauth_pdo',
+                                      'dsn' => 'mysql:host=localhost;dbname=oauth2',
+                                      'username' => 'test',
+                                      'password' => 'test',
+                                      'options' => array(
+                                          1002 => 'SET NAMES utf8'
+                                      )
+                                  )
+                              ),
+                              'test4' => array(
+                                  'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
+                                  'storage' => array(
+                                      'adapter' => 'mongo',
+                                      'route' => '/oauth_mongo',
+                                      'locator_name' => 'SomeServiceName',
+                                      'dsn' => 'mongodb://localhost',
+                                      'database' => 'oauth2',
+                                      'options' => array(
+                                          'username' => 'username',
+                                          'password' => 'password',
+                                          'connectTimeoutMS' => 500,
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+        );
+    }
+    /**
+     * Test fetch all authentication adapters
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testFetchAllAuthenticationAdapter($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $result = $model->fetchAllAuthenticationAdapter();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(4, count($result));
+        $this->assertEquals('test1', $result[0]['name']);
+        $this->assertEquals('test2', $result[1]['name']);
+        $this->assertEquals('test3', $result[2]['name']);
+        $this->assertEquals('test4', $result[3]['name']);
+    }
+
+    /**
+     * Test fetch a specific authentication adapter
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testFetchAuthenticationAdapter($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $result = $model->fetchAuthenticationAdapter('test3');
+        $this->assertTrue(is_array($result));
+        $this->assertEquals('test3', $result['name']);
+        $this->assertEquals('oauth2', $result['type']);
+        $this->assertEquals(
+            $local['zf-mvc-auth']['authentication']['adapters']['test3']['storage']['adapter'],
+            $result['oauth2_type']
+        );
+        $this->assertEquals(
+            $local['zf-mvc-auth']['authentication']['adapters']['test3']['storage']['dsn'],
+            $result['oauth2_dsn']
+        );
+        $this->assertEquals(
+            $local['zf-mvc-auth']['authentication']['adapters']['test3']['storage']['route'],
+            $result['oauth2_route']
+        );
+        $this->assertEquals(
+            $local['zf-mvc-auth']['authentication']['adapters']['test3']['storage']['options'],
+            $result['oauth2_options']
+        );
+    }
+
+    public function getDataForAuthAdapters()
+    {
+        return array(
+            array(
+                'name' => 'test10',
+                'type' => 'basic',
+                'realm' => 'api',
+                'htpasswd' => __DIR__ . '/TestAsset/htpasswd'
+            ),
+            array(
+                'name'           => 'test11',
+                'type'           => 'digest',
+                'realm'          => 'api',
+                'digest_domains' => 'domain.com',
+                'nonce_timeout'  => 3600,
+                'htdigest'       => __DIR__ . '/TestAsset/htdigest'
+            ),
+            array(
+                'name'         => 'test12',
+                'type'         => 'oauth2',
+                'oauth2_type'  => 'pdo',
+                'oauth2_dsn'   => 'sqlite:' . __DIR__ . '/TestAsset/db.sqlite',
+                'oauth2_route' => '/oauth12'
+            ),
+            array(
+                'name'            => 'test13',
+                'type'            => 'oauth2',
+                'oauth2_type'     => 'mongo',
+                'oauth2_dsn'      => 'mongodb://localhost',
+                'oauth2_database' => 'zf-apigility-admin-test',
+                'oauth2_route'    => '/oauth13'
+            ),
+        );
+    }
+
+    /**
+     * Test create an authentication adapter
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testCreateAuthenticationAdapter($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $data = $this->getDataForAuthAdapters();
+        foreach ($data as $adapter) {
+            $result = $model->createAuthenticationAdapter($adapter);
+            $this->assertTrue(is_array($result));
+            $this->assertEquals($adapter, $result);
+            if ('oauth2' === $result['type']) {
+                $config = include $this->globalConfigPath;
+                $this->assertTrue(in_array($adapter['oauth2_route'], $model->fromOAuth2RegexToArray($config)));
+            }
+        }
+    }
+
+    /**
+     * Test update an authentication adapter
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testUpdateAuthenticationAdapter($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $data = $this->getDataForAuthAdapters();
+        $data[3]['name'] = 'test1';
+        $result = $model->updateAuthenticationAdapter('test1', $data[3]);
+        $this->assertTrue(is_array($result));
+        $this->assertEquals($data[3], $result);
+        $config = include $this->globalConfigPath;
+        $this->assertTrue(in_array($data[3]['oauth2_route'], $model->fromOAuth2RegexToArray($config)));
+    }
+
+    /**
+     * Test remove an authentication adapter
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testRemoveAuthenticationAdapter($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $this->assertTrue($model->removeAuthenticationAdapter('test4'));
+        $config = include $this->localConfigPath;
+        $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['adapters']['test4']));
+        $config = include $this->globalConfigPath;
+        $this->assertTrue(!in_array(
+            $local['zf-mvc-auth']['authentication']['adapters']['test4']['storage']['route'],
+            $model->fromOAuth2RegexToArray($config)
+        ));
+    }
+
+    /**
+     * Test get authentication map
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testGetAuthenticationMap($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, array());
+
+        $result = $model->getAuthenticationMap('Status', 1);
+        $this->assertEquals($global['zf-mvc-auth']['authentication']['map']['Status\V1'], $result);
+        $result = $model->getAuthenticationMap('Foo');
+        $this->assertEquals($global['zf-mvc-auth']['authentication']['map']['Foo'], $result);
+        $result = $model->getAuthenticationMap('User', 1);
+        $this->assertFalse($result);
+        $result = $model->getAuthenticationMap('Test');
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Test add authentication map
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testAddAuthenticationMap($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $this->assertTrue($model->saveAuthenticationMap('test1', 'User', 1));
+        $this->assertEquals('test1', $model->getAuthenticationMap('User', 1));
+    }
+
+    /**
+     * Test add invalid authentication map
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     * @expectedException ZF\Apigility\Admin\Exception\InvalidArgumentException
+     */
+    public function testAddInvalidAuthenticationMap($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+        $model->saveAuthenticationMap('test', 'Foo', 1);
+    }
+
+    /**
+     * Test update authentication map
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testUpdateAuthenticationMap($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $this->assertTrue($model->saveAuthenticationMap('test4', 'Status', 1));
+        $this->assertEquals('test4', $model->getAuthenticationMap('Status', 1));
+        $this->assertTrue($model->saveAuthenticationMap('test1', 'Foo'));
+        $this->assertEquals('test1', $model->getAuthenticationMap('Foo'));
+    }
+
+    /**
+     * Test remove authentication map
+     * Since Apigility 1.1
+     *
+     * @dataProvider getAuthAdapters
+     */
+    public function testRemoveAuthenticationMap($global, $local)
+    {
+        $model = $this->createModelFromConfigArrays($global, $local);
+
+        $this->assertTrue($model->removeAuthenticationMap('Status', 1));
+        $this->assertFalse($model->getAuthenticationMap('Status', 1));
+        $config = include $this->globalConfigPath;
+        $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['map']['Status\V1']));
+        $this->assertTrue($model->removeAuthenticationMap('Foo'));
+        $this->assertFalse($model->getAuthenticationMap('Foo'));
+        $config = include $this->globalConfigPath;
+        $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['map']['Foo']));
+    }
 }

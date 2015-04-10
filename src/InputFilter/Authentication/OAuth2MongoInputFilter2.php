@@ -35,5 +35,17 @@ class OAuth2MongoInputFilter2 extends BaseInputFilter
             'name' => 'oauth2_database',
             'error_message' => 'Please provide a valid database name for OAuth2 Mongo adapter'
         ));
+        $this->add(array(
+            'name' => 'oauth2_route',
+            'validators' => array(
+                array(
+                    'name' => 'Uri',
+                    'options' => array(
+                        'allowRelative' => true
+                    ),
+                ),
+            ),
+            'error_message' => 'Please provide a valid URL route for OAuth2 Mongo adapter'
+        ));
     }
 }

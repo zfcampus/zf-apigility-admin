@@ -79,16 +79,17 @@ class AuthenticationModel
     }
 
     /**
-     * Create authentication configuration for version 2
+     * Create authentication adapter for version 2
+     * Since Apigility 1.1
      *
      * @param  array $authenticationConfig
      * @return array
      */
-    public function createVersion2(array $adapter)
+    public function createAuthenticationAdapter(array $adapter)
     {
         $config = $this->localConfig->fetch(true);
 
-        $result = $this->checkInputDataVersion2($adapter);
+        $result = $this->checkAuthenticationAdapterData($adapter);
 
         if (isset($config['zf-mvc-auth']['authentication']['adapters'][$result['name']])) {
             throw new CreationException('Authentication already exists', 409);
@@ -99,7 +100,7 @@ class AuthenticationModel
             }
         }
 
-        if (!$this->saveAuthentication2($result)) {
+        if (!$this->saveAuthenticationAdapter($result)) {
             throw new Exception\RuntimeException(
                 'Error saving the authentication data in config file',
                 500
@@ -109,12 +110,13 @@ class AuthenticationModel
     }
 
     /**
-     * Update authentication configuration for version 2
+     * Update authentication adapter data
+     * Since Apigility 1.1
      *
      * @param  array $authenticationConfig
      * @return array
      */
-    public function updateVersion2($name, array $adapter)
+    public function updateAuthenticationAdapter($name, array $adapter)
     {
         $config = $this->localConfig->fetch(true);
         if (isset($adapter['name'])) {
@@ -129,9 +131,9 @@ class AuthenticationModel
                 );
             }
         }
-        $result = $this->checkInputDataVersion2($adapter);
+        $result = $this->checkAuthenticationAdapterData($adapter);
 
-        if (!$this->saveAuthentication2($result)) {
+        if (!$this->saveAuthenticationAdapter($result)) {
             throw new Exception\RuntimeException(
                 'Error saving the authentication data in config file',
                 500
@@ -147,7 +149,7 @@ class AuthenticationModel
      * @return array
      * @throws Exception\InvalidArgumentException
      */
-    protected function checkInputDataVersion2(array $adapter)
+    protected function checkAuthenticationAdapterData(array $adapter)
     {
         switch (strtolower($adapter['type'])) {
             case AuthenticationEntity::TYPE_BASIC:
@@ -206,11 +208,12 @@ class AuthenticationModel
 
     /**
      * Remove the authentication adapter specified
+     * Since Apigility 1.1
      *
      * @param  string $name
      * @return boolen
      */
-    public function removeVersion2($name)
+    public function removeAuthenticationAdapter($name)
     {
         $config = $this->localConfig->fetch(true);
         $key    = 'zf-mvc-auth.authentication.adapters.' . $name;
@@ -226,6 +229,10 @@ class AuthenticationModel
             $this->globalConfig->deleteKey($key);
         } else {
             $this->localConfig->deleteKey($key);
+        }
+        $adapter = $config['zf-mvc-auth']['authentication']['adapters'][$name];
+        if (self::ADAPTER_OAUTH2 === $adapter['adapter']) {
+            return $this->removeOAuth2Route($adapter['storage']['route']);
         }
         return true;
     }
@@ -317,7 +324,7 @@ class AuthenticationModel
      * @param  string $name
      * @return array
      */
-    public function fetchByName($name)
+    public function fetchAuthenticationAdapter($name)
     {
         $config = $this->localConfig->fetch(true);
         if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
@@ -326,7 +333,7 @@ class AuthenticationModel
                 return false;
             }
         }
-        return $this->loadAuthVer2FromConfig($name, $config);
+        return $this->loadAuthenticationAdapterFromConfig($name, $config);
     }
 
     /**
@@ -335,7 +342,7 @@ class AuthenticationModel
      *
      * @return array
      */
-    public function fetchAll()
+    public function fetchAllAuthenticationAdapter()
     {
         $result = array();
         $config = $this->localConfig->fetch(true);
@@ -346,9 +353,82 @@ class AuthenticationModel
             }
         }
         foreach ($config['zf-mvc-auth']['authentication']['adapters'] as $name => $adapter) {
-          $result[] = $this->loadAuthVer2FromConfig($name, $config);
+            $result[] = $this->loadAuthenticationAdapterFromConfig($name, $config);
         }
         return $result;
+    }
+
+    /**
+     * Get the authentication map specified by $module and $version
+     * Used since Apigility 1.1
+     *
+     * @param  string $module
+     * @param  integer $version
+     * @return string|boolean
+     */
+    public function getAuthenticationMap($module, $version = false)
+    {
+        $name = $module;
+        if (false !== $version) {
+            $name .= '\V'. (int) $version;
+        }
+        $config = $this->globalConfig->fetch(true);
+        if (!isset($config['zf-mvc-auth']['authentication']['map'][$name])) {
+            $config = $this->localConfig->fetch(true);
+            if (!isset($config['zf-mvc-auth']['authentication']['map'][$name])) {
+                return false;
+            }
+        }
+        return $config['zf-mvc-auth']['authentication']['map'][$name];
+    }
+
+    /**
+     * Save the authentication Map for a specific $module and $version
+     * Used since Apigility 1.1
+     *
+     * @param  string $auth
+     * @param  string $module
+     * @param  integer $version
+     * @return boolean
+     * @throws Exception\InvalidArgumentException
+     */
+    public function saveAuthenticationMap($auth, $module, $version = null)
+    {
+        $name = $module;
+        if (null !== $version) {
+            $name .= '\V' . (int) $version;
+        }
+        $key = 'zf-mvc-auth.authentication.map.' . $name;
+        $config = $this->localConfig->fetch(true);
+        if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$auth])) {
+            throw new Exception\InvalidArgumentException(
+                'The authentication adapter specified doesn\'t exist',
+                422
+            );
+        }
+        $this->globalConfig->patchKey($key, $auth);
+        $this->localConfig->deleteKey($key);
+        return true;
+    }
+
+    /**
+     * Remove the authentication Map for a specific $module and $version
+     * Used since Apigility 1.1
+     *
+     * @param  string $module
+     * @param  integer $version
+     * @return boolean
+     */
+    public function removeAuthenticationMap($module, $version = null)
+    {
+        $name = $module;
+        if (null !== $version) {
+            $name .= '\V' . (int) $version;
+        }
+        $key = 'zf-mvc-auth.authentication.map.' . $name;
+        $this->globalConfig->deleteKey($key);
+        $this->localConfig->deleteKey($key);
+        return true;
     }
 
     /**
@@ -568,7 +648,7 @@ class AuthenticationModel
     /**
      * Add a new authentication adapter in local config
      */
-    protected function saveAuthentication2(array $adapter)
+    protected function saveAuthenticationAdapter(array $adapter)
     {
         $key = 'zf-mvc-auth.authentication.adapters.' . $adapter['name'];
         switch ($adapter['type']) {
@@ -600,15 +680,16 @@ class AuthenticationModel
                         $config = array(
                             'adapter' => self::ADAPTER_OAUTH2,
                             'storage' => array(
-                                'adapter'  => strtolower(AuthenticationEntity::DSN_PDO),
-                                'dsn'      => $adapter['oauth2_dsn']
+                                'adapter' => strtolower(AuthenticationEntity::DSN_PDO),
+                                'dsn'     => $adapter['oauth2_dsn'],
+                                'route'   => $adapter['oauth2_route']
                             )
                         );
                         if (isset($adapter['oauth2_username'])) {
-                          $config['storage']['oauth2_username'] = $adapter['oauth2_username'];
+                            $config['storage']['username'] = $adapter['oauth2_username'];
                         }
                         if (isset($adapter['oauth2_password'])) {
-                          $config['storage']['oauth2_password'] = $adapter['oauth2_password'];
+                            $config['storage']['password'] = $adapter['oauth2_password'];
                         }
                         break;
                     case strtolower(AuthenticationEntity::DSN_MONGO):
@@ -628,6 +709,7 @@ class AuthenticationModel
                 if (isset($adapter['oauth2_options'])) {
                     $config['storage']['options'] = $adapter['oauth2_options'];
                 }
+                $this->updateOAuth2Route($adapter['oauth2_route']);
                 break;
         }
 
@@ -635,12 +717,91 @@ class AuthenticationModel
         if (isset($oldConfig['zf-mvc-auth']['authentication']['adapters'][$adapter['name']])) {
             $this->localConfig->patchKey($key, $config);
         } else {
-          $oldConfig = $this->globalConfig->fetch(true);
-          if (isset($oldConfig['zf-mvc-auth']['authentication']['adapters'][$adapter['name']])) {
-              $this->globalConfig->patchKey($key, $config);
-          } else {
-              $this->localConfig->patchKey($key, $config);
-          }
+            $oldConfig = $this->globalConfig->fetch(true);
+            if (isset($oldConfig['zf-mvc-auth']['authentication']['adapters'][$adapter['name']])) {
+                $this->globalConfig->patchKey($key, $config);
+            } else {
+                $this->localConfig->patchKey($key, $config);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Return the OAuth2 urls as array from the regex string
+     * Since Apigility 1.1
+     *
+     * @param  array $config
+     * @return array
+     */
+    public function fromOAuth2RegexToArray($config)
+    {
+        if (!isset($config['router']['routes']['oauth']['options']['regex'])) {
+            return array();
+        }
+        $regex = $config['router']['routes']['oauth']['options']['regex'];
+        return explode('|', substr($regex, 11, strlen($regex) - 13));
+    }
+
+    /**
+     * Update the OAuth2 route
+     * Since Apigility 1.1
+     *
+     * @param  string $url
+     * @return void
+     */
+    protected function updateOAuth2Route($url)
+    {
+        $config = $this->globalConfig->fetch(true);
+
+        $routes = $this->fromOAuth2RegexToArray($config);
+        if (!in_array($url, $routes)) {
+            $routes[] = $url;
+        }
+        usort($routes, function ($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+        $options = array(
+            'spec'  => '%oauth%',
+            'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
+        );
+        $this->globalConfig->patchKey('router.routes.oauth.options', $options);
+        $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
+    }
+
+    /**
+     * Remove a url from OAuth2 route
+     * Since Apigility 1.1
+     *
+     * @param  string $url
+     * @return boolean
+     */
+    protected function removeOAuth2Route($url)
+    {
+        $config = $this->globalConfig->fetch(true);
+
+        if (!isset($config['router']['routes']['oauth']['options']['regex'])) {
+            return false;
+        }
+        $routes = $this->fromOAuth2RegexToArray($config);
+
+        $index = array_search($url, $routes);
+        if (false === $index) {
+            return false;
+        }
+        unset($routes[$index]);
+        if (count($routes)>0) {
+            usort($routes, function ($a, $b) {
+                return strlen($b) - strlen($a);
+            });
+            $options = array(
+                'spec'  => '%oauth%',
+                'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
+            );
+            $this->globalConfig->patchKey('router.routes.oauth.options', $options);
+            $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
+        } else {
+            $this->globalConfig->deleteKey('router.routes.oauth');
         }
         return true;
     }
@@ -653,7 +814,7 @@ class AuthenticationModel
      * @param  array $config
      * @return array
      */
-    protected function loadAuthVer2FromConfig($name, array $config)
+    protected function loadAuthenticationAdapterFromConfig($name, array $config)
     {
         $result = array();
         if (isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
@@ -664,21 +825,22 @@ class AuthenticationModel
                     $result['type'] = array_shift($adapter['options']['accept_schemes']);
                     switch ($result['type']) {
                         case AuthenticationEntity::TYPE_BASIC:
-                            $result['realm'] = $adapter['options']['realm'];
+                            $result['realm']    = $adapter['options']['realm'];
                             $result['htpasswd'] = $adapter['options']['htpasswd'];
                             break;
                         case AuthenticationEntity::TYPE_DIGEST:
-                            $result['realm'] = $adapter['options']['realm'];
+                            $result['realm']          = $adapter['options']['realm'];
                             $result['digest_domains'] = $adapter['options']['digest_domains'];
-                            $result['nonce_timeout'] = $adapter['options']['nonce_timeout'];
-                            $result['htdigest'] = $adapter['options']['htdigest'];
+                            $result['nonce_timeout']  = $adapter['options']['nonce_timeout'];
+                            $result['htdigest']       = $adapter['options']['htdigest'];
                             break;
                     }
                     break;
                 case self::ADAPTER_OAUTH2:
                     $result['type'] = 'oauth2';
-                    $result['oauth2_type'] = $adapter['storage']['adapter'];
-                    $result['oauth2_dsn'] = $adapter['storage']['dsn'];
+                    $result['oauth2_type']  = $adapter['storage']['adapter'];
+                    $result['oauth2_dsn']   = $adapter['storage']['dsn'];
+                    $result['oauth2_route'] = $adapter['storage']['route'];
                     if (isset($adapter['storage']['options'])) {
                         $result['oauth2_options'] = $adapter['storage']['options'];
                     }

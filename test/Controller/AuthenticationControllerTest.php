@@ -124,10 +124,10 @@ class AuthenticationControllerTest extends TestCase
         $payload = $result->getVariable('payload');
         $this->assertInstanceOf('ZF\Hal\Collection', $payload);
         $collection = $payload->getCollection();
-        foreach($collection as $entity) {
+        foreach ($collection as $entity) {
             $this->assertInstanceOf('ZF\Hal\Entity', $entity);
         }
-        $this->assertEquals(2, count($collection));
+        $this->assertEquals(4, count($collection));
     }
 
     /**
@@ -158,20 +158,22 @@ class AuthenticationControllerTest extends TestCase
         if (extension_loaded('pdo_sqlite')) {
             $data[] = array(
                 array(
-                    'name' => 'test3',
-                    'type' => 'oauth2',
-                    'oauth2_type' => 'pdo',
-                    'oauth2_dsn'  => 'sqlite:' . __DIR__ . '/TestAsset/Auth2/config/autoload/db.sqlite'
+                    'name'         => 'test3',
+                    'type'         => 'oauth2',
+                    'oauth2_type'  => 'pdo',
+                    'oauth2_route' => '/oauth-pdo',
+                    'oauth2_dsn'   => 'sqlite:' . __DIR__ . '/TestAsset/Auth2/config/autoload/db.sqlite'
                 )
             );
         }
         if (extension_loaded('mongo')) {
             $data[] = array(
                 array(
-                    'name' => 'test4',
-                    'type' => 'oauth2',
-                    'oauth2_type' => 'mongo',
-                    'oauth2_dsn'  => 'mongodb://localhost',
+                    'name'            => 'test4',
+                    'type'            => 'oauth2',
+                    'oauth2_type'     => 'mongo',
+                    'oauth2_route'    => '/oauth-mongo',
+                    'oauth2_dsn'      => 'mongodb://localhost',
                     'oauth2_database' => 'zf-apigility-admin-test'
                 )
             );
@@ -256,8 +258,125 @@ class AuthenticationControllerTest extends TestCase
         $result = $this->controller->authenticationAction();
         $this->assertInstanceOf('Zend\Http\PhpEnvironment\Response', $result);
         $this->assertEquals(204, $result->getStatusCode());
+    }
 
-        $config = require $this->localFile;
-        $this->assertFalse(isset($config['zf-mvc-auth']['authentication']['adapters']['testbasic']));
+    public function testGetAuthenticationMapRequest()
+    {
+        $request = new Request();
+        $request->setMethod('get');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        $request->getQuery()->set('version', 1);
+        $this->controller->setRequest($request);
+
+        $params = array(
+            'name' => 'Status'
+        );
+        $this->routeMatch = new RouteMatch($params);
+        $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
+        $this->event->setRouteMatch($this->routeMatch);
+
+        $result = $this->controller->mappingAction();
+        $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
+        $config = require $this->globalFile;
+        $this->assertEquals(
+            $config['zf-mvc-auth']['authentication']['map']['Status\V1'],
+            $result->getVariable('authentication')
+        );
+    }
+
+    public function testGetWrongAuthenticationMapRequest()
+    {
+        $request = new Request();
+        $request->setMethod('get');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        $request->getQuery()->set('version', 1);
+        $this->controller->setRequest($request);
+
+        $params = array(
+            'name' => 'Status2'
+        );
+        $this->routeMatch = new RouteMatch($params);
+        $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
+        $this->event->setRouteMatch($this->routeMatch);
+
+        $result = $this->controller->mappingAction();
+        $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
+        $this->assertFalse($result->getVariable('authentication'));
+    }
+
+    public function testAddAuthenticationMapRequest()
+    {
+        $request = new Request();
+        $request->setMethod('put');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        $this->controller->setRequest($request);
+
+        $parameters = new ParameterDataContainer();
+        $parameters->setBodyParams(array(
+            'authentication' => 'testoauth2pdo'
+        ));
+        $this->event->setParam('ZFContentNegotiationParameterData', $parameters);
+
+        $params = array(
+            'name' => 'Foo'
+        );
+        $this->routeMatch = new RouteMatch($params);
+        $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
+        $this->event->setRouteMatch($this->routeMatch);
+
+        $result = $this->controller->mappingAction();
+        $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
+        $this->assertEquals('testoauth2pdo', $result->getVariable('authentication'));
+    }
+
+    public function testUpdateAuthenticationMapRequest()
+    {
+        $request = new Request();
+        $request->setMethod('put');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        $request->getQuery()->set('version', 2);
+        $this->controller->setRequest($request);
+
+        $parameters = new ParameterDataContainer();
+        $parameters->setBodyParams(array(
+            'authentication' => 'testoauth2mongo'
+        ));
+        $this->event->setParam('ZFContentNegotiationParameterData', $parameters);
+
+        $params = array(
+            'name' => 'Status'
+        );
+        $this->routeMatch = new RouteMatch($params);
+        $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
+        $this->event->setRouteMatch($this->routeMatch);
+
+        $result = $this->controller->mappingAction();
+        $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
+        $this->assertEquals('testoauth2mongo', $result->getVariable('authentication'));
+    }
+
+    public function testRemoveAuthenticationMapRequest()
+    {
+        $request = new Request();
+        $request->setMethod('delete');
+        $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        $request->getQuery()->set('version', 1);
+        $this->controller->setRequest($request);
+
+        $params = array(
+            'name' => 'Status'
+        );
+        $this->routeMatch = new RouteMatch($params);
+        $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
+        $this->event->setRouteMatch($this->routeMatch);
+
+        $result = $this->controller->mappingAction();
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Response', $result);
+        $this->assertEquals(204, $result->getStatusCode());
     }
 }

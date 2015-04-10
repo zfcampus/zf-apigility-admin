@@ -133,6 +133,66 @@ resource](#authentication).
 
 - Errors: `application/problem+json`
 
+### api/authentication[/:authentication_adapter] (API V2)
+
+This REST endpoint is for fetching and updating the authentication
+adapters to be used in Apigility. It uses the [authentication
+resource ver. 2](#authentication2).
+
+This endpoint is only available for API **version 2**. You need to pass the
+following mediatype in the Appect header:
+
+```
+Accept: application/vnd.apigility.v2+json
+```
+
+- `Accept`: `application/json`
+
+  Returns an [authentication resource ver. 2](#authentication2) on success.
+
+- Content-Type: `application/json`
+
+  Expects an [authentication resource ver. 2](#authentication2) with all details
+  necessary for creating new, or updating existing, HTTP authentication.
+
+- HTTP methods: `GET`, `POST`, `PUT`, `DELETE`
+
+  `GET` returns a `404` response if no authentication adapter has previously
+  been setup. `POST` will return a `201` response on success. `PUT` will return
+  a `200` response on success. `DELETE` will return a `204` response on success.
+
+
+### api/module/:name/authentication?version=:version (API V2)
+
+This REST endpoint is for fetching and updating the authentication
+mapping for a specific API (module) and version, if specified.
+
+This endpoint is only available for API **version 2**. You need to pass the
+following mediatype in the Appect header:
+
+```
+Accept: application/vnd.apigility.v2+json
+```
+
+- `Accept`: `application/json`
+
+  Returns an { "authentication" : value } on success.
+
+- Content-Type: `application/json`
+
+  Expects a JSON with **authentication** value containing the authentication
+  adapter name.
+
+- HTTP methods: `GET`, `PUT`, `DELETE`
+
+  `GET` will return an { "authentication" : value } response. If no
+  authentication adapter exists the value will be false.
+
+  `PATCH` will return a `200` response on success, along with the updated
+  authentication value.
+
+  `DELETE` will return a `204` response on success.
+
 ### api/module/:name/authorization?version=:version
 
 This REST endpoint is for fetching and updating the authorization
@@ -495,6 +555,62 @@ expected for the request bodies.
     "username": "Username associated with DSN",
     "password": "Password associated with DSN",
     "route_match": "Literal route to match indicating where OAuth2 login/authorization exists"
+}
+```
+
+### authentication2
+
+#### HTTP Basic authentication:
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "basic",
+    "realm": "The HTTP authentication realm to use",
+    "htpasswd": "Path on filesystem to htpasswd file"
+}
+```
+
+#### HTTP Digest authentication:
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "digest",
+    "realm": "The HTTP authentication realm to use",
+    "digest_domains": "Space-separated list of URIs under authentication",
+    "nonce_timeout": "integer; seconds",
+    "htdigest": "Path on filesystem to htdigest file"
+}
+```
+
+#### OAuth2 authentication (with PDO):
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "oauth2",
+    "oauth2_type" : "pdo",
+    "oauth2_route" : "Literal route to match indicating where OAuth2 login/authorization exists",
+    "oauth2_dsn": "PDO DSN of database containing OAuth2 schema",
+    "oauth2_username": "Username associated with DSN (optional)",
+    "oauth2_password": "Password associated with DSN (optional)",
+    "oauth2_options": "(optional)"
+}
+```
+
+#### OAuth2 authentication (with MongoDB):
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "oauth2",
+    "oauth2_type" : "mongo",
+    "oauth2_route" : "Literal route to match indicating where OAuth2 login/authorization exists",
+    "oauth2_dsn": "MongoDB DSN of database containing OAuth2 documents",
+    "oauth2_database": "Database name",
+    "oauth2_locator_name": "SomeServiceName class (optional)",
+    "oauth2_options": "(optional)"
 }
 ```
 

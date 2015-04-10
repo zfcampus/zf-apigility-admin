@@ -6,9 +6,8 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
+use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
@@ -16,8 +15,9 @@ use ZF\Hal\Entity;
 use ZF\Hal\Collection;
 use ZF\Hal\Link\Link;
 use Zend\Http\Request;
+use ZF\Apigility\Admin\Exception;
 
-class AuthenticationController extends AbstractActionController
+class AuthenticationController extends AbstractAuthenticationController
 {
     protected $model;
 
@@ -103,14 +103,14 @@ class AuthenticationController extends AbstractActionController
     {
         $adapter = $this->params('authentication_adapter', false);
         if ($adapter) {
-          $adapter = strtolower($adapter);
+            $adapter = strtolower($adapter);
         }
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
                 if (!$adapter) {
-                    $collection = $this->model->fetchAll();
+                    $collection = $this->model->fetchAllAuthenticationAdapter();
                 } else {
-                    $entity = $this->model->fetchByName($adapter);
+                    $entity = $this->model->fetchAuthenticationAdapter($adapter);
                     if (!$entity) {
                         return new ApiProblemResponse(
                             new ApiProblem(404, 'No authentication adapter found')
@@ -125,7 +125,7 @@ class AuthenticationController extends AbstractActionController
                     );
                 }
                 try {
-                    $entity = $this->model->createVersion2($this->bodyParams());
+                    $entity = $this->model->createAuthenticationAdapter($this->bodyParams());
                 } catch (\Exception $e) {
                     return new ApiProblemResponse(
                         new ApiProblem($e->getCode(), $e->getMessage())
@@ -142,7 +142,7 @@ class AuthenticationController extends AbstractActionController
                 );
                 break;
             case $request::METHOD_PUT:
-                $entity = $this->model->updateVersion2($adapter, $this->bodyParams());
+                $entity = $this->model->updateAuthenticationAdapter($adapter, $this->bodyParams());
                 if (!$entity) {
                     return new ApiProblemResponse(
                         new ApiProblem(404, 'No authentication adapter found')
@@ -150,7 +150,7 @@ class AuthenticationController extends AbstractActionController
                 }
                 break;
             case $request::METHOD_DELETE:
-                if ($this->model->removeVersion2($adapter)) {
+                if ($this->model->removeAuthenticationAdapter($adapter)) {
                     return $this->getResponse()->setStatusCode(204);
                 }
                 return new ApiProblemResponse(
@@ -164,7 +164,7 @@ class AuthenticationController extends AbstractActionController
 
         if (isset($collection)) {
             $halCollection = array();
-            foreach($collection as $entity) {
+            foreach ($collection as $entity) {
                 $halEntity = new Entity($entity, 'name');
                 $halEntity->getLinks()->add(Link::factory(array(
                     'rel' => 'self',
@@ -189,18 +189,87 @@ class AuthenticationController extends AbstractActionController
         }
     }
 
+
+
     /**
-     * Set the request object manually
-     *
-     * Provided for testing.
+     * Mapping action for v2
+     * Since Apigility 1.1
+     */
+    public function mappingAction()
+    {
+        $request = $this->getRequest();
+        $version = $this->getVersion($request);
+
+        switch ($version) {
+            case 1:
+                return new ApiProblemResponse(
+                    new ApiProblem(406, 'This API is supported starting from version 2')
+                );
+            case 2:
+                return $this->mappingAuthentication($request);
+            default:
+                return new ApiProblemResponse(
+                    new ApiProblem(406, 'The API version specified is not supported')
+                );
+        }
+    }
+
+    /**
+     * Map the authentication adapter to a module
+     * Since Apigility 1.1
      *
      * @param  Request $request
-     * @return self
+     * @return ViewModel
      */
-    public function setRequest(Request $request)
+    protected function mappingAuthentication(Request $request)
     {
-        $this->request = $request;
-        return $this;
+        $module  = $this->params('name', false);
+        $version = $this->params()->fromQuery('version', false);
+
+        switch ($request->getMethod()) {
+            case $request::METHOD_GET:
+                $adapter = $this->model->getAuthenticationMap($module, $version);
+                break;
+            case $request::METHOD_PUT:
+                $bodyParams = $this->bodyParams();
+                if (!isset($bodyParams['authentication'])) {
+                    return new ApiProblemResponse(
+                        new ApiProblem(404, 'No authentication adapter found')
+                    );
+                }
+                try {
+                    $this->model->saveAuthenticationMap($bodyParams['authentication'], $module, $version);
+                } catch (Exception\InvalidArgumentException $e) {
+                    return new ApiProblemResponse(
+                        new ApiProblem($e->getCode(), $e->getMessage())
+                    );
+                }
+                $adapter = $bodyParams['authentication'];
+                break;
+            case $request::METHOD_DELETE:
+                try {
+                    $this->model->removeAuthenticationMap($module, $version);
+                } catch (Exception\InvalidArgumentException $e) {
+                    return new ApiProblemResponse(
+                        new ApiProblem($e->getCode(), $e->getMessage())
+                    );
+                }
+                $response = $this->getResponse();
+                $response->setStatusCode(204);
+                return $response;
+                break;
+            default:
+                return new ApiProblemResponse(
+                    new ApiProblem(405, 'Only the methods GET, PUT, DELETE are allowed for this URI')
+                );
+        }
+
+        $metadata = array(
+            'authentication' => $adapter
+        );
+        $model = new ViewModel($metadata);
+        $model->setTerminal(true);
+        return $model;
     }
 
     /**
@@ -226,22 +295,5 @@ class AuthenticationController extends AbstractActionController
         }
 
         return $baseRoute;
-    }
-
-    /**
-     * Get the API version from the Accept header
-     *
-     * @param  Request $request
-     * @return integer
-     */
-    protected function getVersion(Request $request)
-    {
-        $accept = $request->getHeader('Accept', false);
-        if ($accept) {
-          if (preg_match('/application\/vnd\.apigility\.v(\d+)\+json/', $accept->getFieldValue(), $matches)) {
-            return (int) $matches[1];
-          }
-        }
-        return 1;
     }
 }

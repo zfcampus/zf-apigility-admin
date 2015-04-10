@@ -31,5 +31,17 @@ class OAuth2PdoInputFilter2 extends BaseInputFilter
             'name' => 'oauth2_dsn',
             'error_message' => 'Please provide a valid DSN for OAuth2 PDO adapter',
         ));
+        $this->add(array(
+            'name' => 'oauth2_route',
+            'validators' => array(
+                array(
+                    'name' => 'Uri',
+                    'options' => array(
+                        'allowRelative' => true
+                    ),
+                ),
+            ),
+            'error_message' => 'Please provide a valid URL route for OAuth2 PDO adapter'
+        ));
     }
 }
