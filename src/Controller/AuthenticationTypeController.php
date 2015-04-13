@@ -39,32 +39,57 @@ class AuthenticationTypeController extends AbstractAuthenticationController
                 );
             case 2:
                 if ($request->getMethod() !== $request::METHOD_GET) {
-                    return new ApiProblemResponse(
+                    $response = new ApiProblemResponse(
                         new ApiProblem(405, 'Only the method GET is allowed for this URI')
                     );
+                    $response->getHeaders()->addHeaderLine('Allow', 'GET');
+                    return $response;
                 }
-                if (!$this->model->fetchAllAuthenticationAdapter()) {
-                    // Check for old authentication configuration
-                    if ($this->model->fetch()) {
-                        // Create a new authentication adapter for each API/version
-                        $adapters = array ( $this->model->transformAuthPerApis() );
-                    }
-                } else {
-                    $adapters = $this->authListener->getAuthenticationTypes();
-                    if ($adapters && isset($adapters['adapters'])) {
-                        $adapters = array_keys($adapters['adapters']);
-                    }
-                }
-                $metadata = array(
-                    'auth-types' => $adapters
-                );
-                $model = new ViewModel($metadata);
-                $model->setTerminal(true);
-                return $model;
+
+                return $this->createAdapterCollection();
             default:
                 return new ApiProblemResponse(
                     new ApiProblem(406, 'The API version specified is not supported')
                 );
         }
+    }
+
+    /**
+     * Create a collection of adapters.
+     *
+     * @return ViewModel
+     */
+    private function createAdapterCollection()
+    {
+        if (! $this->model->fetchAllAuthenticationAdapter()) {
+            // Check for old authentication configuration
+            $adapters = array();
+            if ($this->model->fetch()) {
+                // Create a new authentication adapter for each API/version
+                $adapters = array ( $this->model->transformAuthPerApis() );
+            }
+            return $this->createViewModel($adapters);
+        }
+
+        $adapters = $this->authListener->getAuthenticationTypes();
+        if ($adapters && isset($adapters['adapters'])) {
+            $adapters = array_keys($adapters['adapters']);
+        }
+        return $this->createViewModel($adapters);
+    }
+
+    /**
+     * Create a view model with the given adapters to indicate authentication types available.
+     *
+     * @param array $adapters
+     * @return ViewModel
+     */
+    private function createViewModel($adapters)
+    {
+        $model = new ViewModel(array(
+            'auth-types' => $adapters
+        ));
+        $model->setTerminal(true);
+        return $model;
     }
 }
