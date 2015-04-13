@@ -18,12 +18,12 @@ class DigestInputFilter extends InputFilter
                 array(
                     'name' => 'Callback',
                     'options' => array('callback' => function ($value) {
-                        if (!is_array($value)) {
+                        if (! is_array($value)) {
                             return false;
                         }
                         $allowed = array('digest', 'basic');
                         foreach ($value as $v) {
-                            if (!in_array($v, $allowed)) {
+                            if (! in_array($v, $allowed)) {
                                 return false;
                             }
                         }
