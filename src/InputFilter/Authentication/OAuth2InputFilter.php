@@ -22,7 +22,7 @@ class OAuth2InputFilter extends InputFilter
                 array(
                     'name' => 'Callback',
                     'options' => array('callback' => function ($value, $context) {
-                        if (!isset($context['dsn_type']) || empty($context['dsn_type'])) {
+                        if (! isset($context['dsn_type']) || empty($context['dsn_type'])) {
                             // PDO is default DSN type; mark as invalid if none provided
                             return false;
                         }
@@ -34,7 +34,7 @@ class OAuth2InputFilter extends InputFilter
                             return true;
                         }
 
-                        if (!is_string($value)) {
+                        if (! is_string($value)) {
                             return false;
                         }
 
@@ -59,12 +59,12 @@ class OAuth2InputFilter extends InputFilter
                 array(
                     'name' => 'Callback',
                     'options' => array('callback' => function ($value, $context) {
-                        if (!isset($context['dsn_type']) || $context['dsn_type'] !== 'Mongo') {
+                        if (! isset($context['dsn_type']) || $context['dsn_type'] !== 'Mongo') {
                             // Database is only relevant to Mongo
                             return true;
                         }
 
-                        if (!is_string($value)) {
+                        if (! is_string($value)) {
                             return false;
                         }
 
