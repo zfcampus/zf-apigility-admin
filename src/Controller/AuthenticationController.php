@@ -107,97 +107,31 @@ class AuthenticationController extends AbstractAuthenticationController
         }
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
-                if (!$adapter) {
-                    $collection = $this->model->fetchAllAuthenticationAdapter();
-                    if (!$collection) {
-                        // Check for old authentication configuration
-                        if ($this->model->fetch()) {
-                            // Create a new authentication adapter for each API/version
-                            $this->model->transformAuthPerApis();
-                            $collection = $this->model->fetchAllAuthenticationAdapter();
-                        }
-                    }
-                } else {
-                    $entity = $this->model->fetchAuthenticationAdapter($adapter);
-                    if (!$entity) {
-                        return new ApiProblemResponse(
-                            new ApiProblem(404, 'No authentication adapter found')
-                        );
-                    }
+                if (! $adapter) {
+                    return $this->fetchAuthenticationCollection();
                 }
-                break;
+
+                return $this->fetchAuthenticationEntity($adapter);
             case $request::METHOD_POST:
                 if ($adapter) {
-                    return new ApiProblemResponse(
+                    $response = new ApiProblemResponse(
                         new ApiProblem(405, 'Only the methods GET, PUT, and DELETE are allowed for this URI')
                     );
+                    $response->getHeaders()->addHeaderLine('Allow', 'GET, PUT, DELETE');
+                    return $response;
                 }
-                try {
-                    $entity = $this->model->createAuthenticationAdapter($this->bodyParams());
-                } catch (\Exception $e) {
-                    return new ApiProblemResponse(
-                        new ApiProblem($e->getCode(), $e->getMessage())
-                    );
-                }
-                $response = $this->getResponse();
-                $response->setStatusCode(201);
-                $response->getHeaders()->addHeaderLine(
-                    'Location',
-                    $this->url()->fromRoute(
-                        'zf-apigility/api/authentication',
-                        array( 'authentication_adapter' => $entity['name'] )
-                    )
-                );
-                break;
+
+                return $this->createAuthenticationAdapter($this->bodyParams());
             case $request::METHOD_PUT:
-                $entity = $this->model->updateAuthenticationAdapter($adapter, $this->bodyParams());
-                if (!$entity) {
-                    return new ApiProblemResponse(
-                        new ApiProblem(404, 'No authentication adapter found')
-                    );
-                }
-                break;
+                return $this->updateAuthenticationAdapter($adapter, $this->bodyParams());
             case $request::METHOD_DELETE:
-                if ($this->model->removeAuthenticationAdapter($adapter)) {
-                    return $this->getResponse()->setStatusCode(204);
-                }
-                return new ApiProblemResponse(
-                    new ApiProblem(404, 'No authentication adapter found')
-                );
+                return $this->removeAuthenticationAdapter($adapter);
             default:
                 return new ApiProblemResponse(
                     new ApiProblem(405, 'Only the methods GET, POST, PUT, and DELETE are allowed for this URI')
                 );
         }
-
-        if (isset($collection)) {
-            $halCollection = array();
-            foreach ($collection as $entity) {
-                $halEntity = new Entity($entity, 'name');
-                $halEntity->getLinks()->add(Link::factory(array(
-                    'rel' => 'self',
-                    'route' => array(
-                        'name'   => 'zf-apigility/api/authentication',
-                        'params' => array('authentication_adapter' => $entity['name'])
-                    )
-                )));
-                $halCollection[] = $halEntity;
-            }
-            return new ViewModel(array('payload' => new Collection($halCollection)));
-        } else {
-            $halEntity = new Entity($entity, 'name');
-            $halEntity->getLinks()->add(Link::factory(array(
-                'rel' => 'self',
-                'route' => array(
-                    'name'   => 'zf-apigility/api/authentication',
-                    'params' => array('authentication_adapter' => $entity['name'])
-                )
-            )));
-            return new ViewModel(array('payload' => $halEntity));
-        }
     }
-
-
 
     /**
      * Mapping action for v2
@@ -236,48 +170,20 @@ class AuthenticationController extends AbstractAuthenticationController
 
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
-                $adapter = $this->model->getAuthenticationMap($module, $version);
-                break;
+                return $this->createAuthenticationMapResult(
+                    $this->model->getAuthenticationMap($module, $version)
+                );
             case $request::METHOD_PUT:
-                $bodyParams = $this->bodyParams();
-                if (!isset($bodyParams['authentication'])) {
-                    return new ApiProblemResponse(
-                        new ApiProblem(404, 'No authentication adapter found')
-                    );
-                }
-                try {
-                    $this->model->saveAuthenticationMap($bodyParams['authentication'], $module, $version);
-                } catch (Exception\InvalidArgumentException $e) {
-                    return new ApiProblemResponse(
-                        new ApiProblem($e->getCode(), $e->getMessage())
-                    );
-                }
-                $adapter = $bodyParams['authentication'];
-                break;
+                return $this->updateAuthenticationMap($this->bodyParams(), $module, $version);
             case $request::METHOD_DELETE:
-                try {
-                    $this->model->removeAuthenticationMap($module, $version);
-                } catch (Exception\InvalidArgumentException $e) {
-                    return new ApiProblemResponse(
-                        new ApiProblem($e->getCode(), $e->getMessage())
-                    );
-                }
-                $response = $this->getResponse();
-                $response->setStatusCode(204);
-                return $response;
-                break;
+                return $this->removeAuthenticationMap($module, $version);
             default:
-                return new ApiProblemResponse(
+                $response = new ApiProblemResponse(
                     new ApiProblem(405, 'Only the methods GET, PUT, DELETE are allowed for this URI')
                 );
+                $response->getHeaders()->addHeaderLine('Allow', 'GET, PUT, DELETE');
+                return $response;
         }
-
-        $metadata = array(
-            'authentication' => $adapter
-        );
-        $model = new ViewModel($metadata);
-        $model->setTerminal(true);
-        return $model;
     }
 
     /**
@@ -303,5 +209,213 @@ class AuthenticationController extends AbstractAuthenticationController
         }
 
         return $baseRoute;
+    }
+
+    /**
+     * Fetch a collection of authentication adapters
+     *
+     * @return ViewModel
+     */
+    private function fetchAuthenticationCollection()
+    {
+        $collection = $this->model->fetchAllAuthenticationAdapter();
+        if (! $collection) {
+            // Check for old authentication configuration
+            if ($this->model->fetch()) {
+                // Create a new authentication adapter for each API/version
+                $this->model->transformAuthPerApis();
+                $collection = $this->model->fetchAllAuthenticationAdapter();
+            }
+        }
+
+        return $this->createCollection($collection);
+    }
+
+    /**
+     * Fetch an authentication entity
+     *
+     * @param string $adapter
+     * @return ApiProblemResponse|ViewModel
+     */
+    private function fetchAuthenticationEntity($adapter)
+    {
+        $entity = $this->model->fetchAuthenticationAdapter($adapter);
+        if (! $entity) {
+            return new ApiProblemResponse(
+                new ApiProblem(404, 'No authentication adapter found')
+            );
+        }
+
+        return $this->createEntity($entity);
+    }
+
+    /**
+     * Create a new authentication adapter
+     *
+     * @param array $params
+     * @return ApiProblemResponse|\Zend\Http\Response
+     */
+    private function createAuthenticationAdapter($params)
+    {
+        try {
+            $entity = $this->model->createAuthenticationAdapter($params);
+        } catch (\Exception $e) {
+            return new ApiProblemResponse(
+                new ApiProblem($e->getCode(), $e->getMessage())
+            );
+        }
+
+        $response = $this->getResponse();
+        $response->setStatusCode(201);
+        $response->getHeaders()->addHeaderLine(
+            'Location',
+            $this->url()->fromRoute(
+                'zf-apigility/api/authentication',
+                array( 'authentication_adapter' => $entity['name'] )
+            )
+        );
+
+        return $this->createEntity($entity);
+    }
+
+    /**
+     * Update an existing authentication adapter
+     *
+     * @return ApiProblemResponse|ViewModel
+     */
+    private function updateAuthenticationAdapter($adapter, $params)
+    {
+        $entity = $this->model->updateAuthenticationAdapter($adapter, $params);
+        if (! $entity) {
+            return new ApiProblemResponse(
+                new ApiProblem(404, 'No authentication adapter found')
+            );
+        }
+
+        return $this->createEntity($entity);
+    }
+
+    /**
+     * Remove an existing authentication adapter
+     *
+     * @return ApiProblemResponse|\Zend\Http\Response
+     */
+    private function removeAuthenticationAdapter($adapter)
+    {
+        if (! $this->model->removeAuthenticationAdapter($adapter)) {
+            return new ApiProblemResponse(
+                new ApiProblem(404, 'No authentication adapter found')
+            );
+        }
+
+        return $this->getResponse()->setStatusCode(204);
+    }
+
+    /**
+     * Attempt to save an authentication map.
+     *
+     * The authentication map maps between the given authentication adapter and
+     * the selected module/version pair.
+     *
+     * @param array $params
+     * @param string $module
+     * @param string|int $version
+     * @return ViewModel|ApiProblemResponse
+     */
+    private function updateAuthenticationMap($params, $module, $version)
+    {
+        if (! isset($params['authentication'])) {
+            return new ApiProblemResponse(
+                new ApiProblem(404, 'No authentication adapter found')
+            );
+        }
+
+        try {
+            $this->model->saveAuthenticationMap($params['authentication'], $module, $version);
+        } catch (Exception\InvalidArgumentException $e) {
+            return new ApiProblemResponse(
+                new ApiProblem($e->getCode(), $e->getMessage())
+            );
+        }
+
+        return $this->createAuthenticationMapResult($params['authentication']);
+    }
+
+    /**
+     * Remove the authentication map for a given module/version pair.
+     *
+     * @param string $module
+     * @param string|int $version
+     * @return ApiProblemResponse|\Zend\Http\Response
+     */
+    private function removeAuthenticationMap($module, $version)
+    {
+        try {
+            $this->model->removeAuthenticationMap($module, $version);
+        } catch (Exception\InvalidArgumentException $e) {
+            return new ApiProblemResponse(
+                new ApiProblem($e->getCode(), $e->getMessage())
+            );
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(204);
+        return $response;
+    }
+
+    /**
+     * Create a collection response
+     *
+     * @param mixed $collection
+     * @return ViewModel
+     */
+    private function createCollection($collection)
+    {
+        $halCollection = array();
+        foreach ($collection as $entity) {
+            $halEntity = new Entity($entity, 'name');
+            $halEntity->getLinks()->add(Link::factory(array(
+                'rel' => 'self',
+                'route' => array(
+                    'name'   => 'zf-apigility/api/authentication',
+                    'params' => array('authentication_adapter' => $entity['name'])
+                )
+            )));
+            $halCollection[] = $halEntity;
+        }
+        return new ViewModel(array('payload' => new Collection($halCollection)));
+    }
+
+    /**
+     * Create and return an entity view model
+     *
+     * @param mixed $entity
+     * @return ViewModel
+     */
+    private function createEntity($entity)
+    {
+        $halEntity = new Entity($entity, 'name');
+        $halEntity->getLinks()->add(Link::factory(array(
+            'rel' => 'self',
+            'route' => array(
+                'name'   => 'zf-apigility/api/authentication',
+                'params' => array('authentication_adapter' => $entity['name'])
+            )
+        )));
+        return new ViewModel(array('payload' => $halEntity));
+    }
+
+    /**
+     * Create a view model detailing the authentication adapter mapped
+     *
+     * @param string $adapter
+     * @return ViewModel
+     */
+    private function createAuthenticationMapResult($adapter)
+    {
+        $model = new ViewModel(array(
+            'authentication' => $adapter
+        ));
+        $model->setTerminal(true);
+        return $model;
     }
 }
