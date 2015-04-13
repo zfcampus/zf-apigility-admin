@@ -221,6 +221,16 @@ return array(
                                 ),
                                 'may_terminate' => true,
                                 'child_routes' => array(
+                                    'authentication' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/authentication',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
+                                                'action'     => 'mapping',
+                                            ),
+                                        ),
+                                    ),
                                     'authorization' => array(
                                         'type' => 'literal',
                                         'options' => array(
@@ -310,9 +320,9 @@ return array(
                                 ),
                             ),
                             'authentication' => array(
-                                'type' => 'literal',
+                                'type' => 'Zend\Mvc\Router\Http\Segment',
                                 'options' => array(
-                                    'route' => '/authentication',
+                                    'route' => '/authentication[/:authentication_adapter]',
                                     'defaults' => array(
                                         'action'     => 'authentication',
                                         'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
@@ -386,6 +396,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'authentication-type' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/auth-type',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\AuthenticationType',
+                                        'action'     => 'authType',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -396,6 +416,7 @@ return array(
     'zf-content-negotiation' => array(
         'controllers' => array(
             'ZF\Apigility\Admin\Controller\Authentication'           => 'HalJson',
+            'ZF\Apigility\Admin\Controller\AuthenticationType'       => 'Json',
             'ZF\Apigility\Admin\Controller\Authorization'            => 'HalJson',
             'ZF\Apigility\Admin\Controller\CacheEnabled'             => 'Json',
             'ZF\Apigility\Admin\Controller\ContentNegotiation'       => 'HalJson',
@@ -800,8 +821,12 @@ return array(
 
     'zf-rpc' => array(
         'ZF\Apigility\Admin\Controller\Authentication' => array(
-            'http_methods' => array('GET'),
+            'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility/api/authentication',
+        ),
+        'ZF\Apigility\Admin\Controller\AuthenticationType' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/authentication-type',
         ),
         'ZF\Apigility\Admin\Controller\Authorization' => array(
             'http_methods' => array('GET', 'PATCH', 'PUT'),
@@ -1404,7 +1429,6 @@ return array(
         'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2'
         ),
-
         'ZF\Apigility\Admin\Controller\DbAdapter' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
         ),
