@@ -11,7 +11,6 @@ use Zend\Http\Request;
 
 abstract class AbstractAuthenticationController extends AbstractActionController
 {
-
     /**
      * Set the request object manually
      *
@@ -35,11 +34,15 @@ abstract class AbstractAuthenticationController extends AbstractActionController
     protected function getVersion(Request $request)
     {
         $accept = $request->getHeader('Accept', false);
-        if ($accept) {
-            if (preg_match('/application\/vnd\.apigility\.v(\d+)\+json/', $accept->getFieldValue(), $matches)) {
-                return (int) $matches[1];
-            }
+
+        if (! $accept) {
+            return 1;
         }
+
+        if (preg_match('/application\/vnd\.apigility\.v(\d+)\+json/', $accept->getFieldValue(), $matches)) {
+            return (int) $matches[1];
+        }
+
         return 1;
     }
 }
