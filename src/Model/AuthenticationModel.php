@@ -86,6 +86,7 @@ class AuthenticationModel
 
     /**
      * Create authentication adapter for version 2
+     *
      * Since Apigility 1.1
      *
      * @param  array $authenticationConfig
@@ -106,7 +107,7 @@ class AuthenticationModel
             }
         }
 
-        if (!$this->saveAuthenticationAdapter($result)) {
+        if (! $this->saveAuthenticationAdapter($result)) {
             throw new Exception\RuntimeException(
                 'Error saving the authentication data in config file',
                 500
@@ -117,6 +118,7 @@ class AuthenticationModel
 
     /**
      * Update authentication adapter data
+     *
      * Since Apigility 1.1
      *
      * @param  array $authenticationConfig
@@ -128,18 +130,20 @@ class AuthenticationModel
         if (isset($adapter['name'])) {
             $adapter['name'] = $name;
         }
-        if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
+
+        if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
             $config = $this->globalConfig->fetch(true);
-            if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
+            if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
                 throw new Exception\RuntimeException(
                     'The authentication adapter specified doesn\'t exist',
                     404
                 );
             }
         }
+
         $result = $this->checkAuthenticationAdapterData($adapter);
 
-        if (!$this->saveAuthenticationAdapter($result)) {
+        if (! $this->saveAuthenticationAdapter($result)) {
             throw new Exception\RuntimeException(
                 'Error saving the authentication data in config file',
                 500
@@ -165,7 +169,7 @@ class AuthenticationModel
                 $filter = new Authentication\DigestInputFilter2();
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
-                if (!isset($adapter['oauth2_type'])) {
+                if (! isset($adapter['oauth2_type'])) {
                     throw new Exception\InvalidArgumentException(
                         'OAuth2 type missing',
                         422
@@ -194,7 +198,7 @@ class AuthenticationModel
         $filter->init();
         $filter->setData($adapter);
 
-        if (!$filter->isValid()) {
+        if (! $filter->isValid()) {
             $msg = $filter->getMessages();
             $field = key($msg);
             throw new Exception\InvalidArgumentException(
@@ -214,6 +218,7 @@ class AuthenticationModel
 
     /**
      * Remove the authentication adapter specified
+     *
      * Since Apigility 1.1
      *
      * @param  string $name
@@ -224,9 +229,9 @@ class AuthenticationModel
         $config = $this->localConfig->fetch(true);
         $key    = 'zf-mvc-auth.authentication.adapters.' . $name;
 
-        if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
+        if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
             $config = $this->globalConfig->fetch(true);
-            if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
+            if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
                 throw new Exception\RuntimeException(
                     'The authentication adapter specified doesn\'t exist',
                     404
@@ -236,6 +241,7 @@ class AuthenticationModel
         } else {
             $this->localConfig->deleteKey($key);
         }
+
         $adapter = $config['zf-mvc-auth']['authentication']['adapters'][$name];
         if (self::ADAPTER_OAUTH2 === $adapter['adapter']) {
             return $this->removeOAuth2Route($adapter['storage']['route']);
@@ -266,6 +272,7 @@ class AuthenticationModel
 
         $allData = $current->getArrayCopy();
         unset($allData['type']);
+
         $global  = $this->removeSensitiveConfig($allData);
         $local   = array_udiff_assoc($allData, $global, sprintf('%s::arrayDiffRecursive', __CLASS__));
         switch (true) {
@@ -316,7 +323,7 @@ class AuthenticationModel
             $config = $this->fetchOAuth2Configuration($config);
         }
 
-        if (!$config) {
+        if (! $config) {
             return false;
         }
 
@@ -325,6 +332,7 @@ class AuthenticationModel
 
     /**
      * Fetch configuration details for specific auth adapter name
+     *
      * Used since Apigility 1.1
      *
      * @param  string $name
@@ -333,9 +341,9 @@ class AuthenticationModel
     public function fetchAuthenticationAdapter($name)
     {
         $config = $this->localConfig->fetch(true);
-        if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
+        if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
             $config = $this->globalConfig->fetch(true);
-            if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
+            if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
                 return false;
             }
         }
@@ -344,6 +352,7 @@ class AuthenticationModel
 
     /**
      * Fetch configuration details for auth adapters
+     *
      * Used since Apigility 1.1
      *
      * @return array
@@ -352,12 +361,14 @@ class AuthenticationModel
     {
         $result = array();
         $config = $this->localConfig->fetch(true);
-        if (!isset($config['zf-mvc-auth']['authentication']['adapters'])) {
+
+        if (! isset($config['zf-mvc-auth']['authentication']['adapters'])) {
             $config = $this->globalConfig->fetch(true);
-            if (!isset($config['zf-mvc-auth']['authentication']['adapters'])) {
+            if (! isset($config['zf-mvc-auth']['authentication']['adapters'])) {
                 return $result;
             }
         }
+
         foreach ($config['zf-mvc-auth']['authentication']['adapters'] as $name => $adapter) {
             $result[] = $this->loadAuthenticationAdapterFromConfig($name, $config);
         }
@@ -366,6 +377,7 @@ class AuthenticationModel
 
     /**
      * Get the authentication map specified by $module and $version
+     *
      * Used since Apigility 1.1
      *
      * @param  string $module
@@ -378,18 +390,21 @@ class AuthenticationModel
         if (false !== $version) {
             $name .= '\V'. (int) $version;
         }
+
         $config = $this->globalConfig->fetch(true);
-        if (!isset($config['zf-mvc-auth']['authentication']['map'][$name])) {
+        if (! isset($config['zf-mvc-auth']['authentication']['map'][$name])) {
             $config = $this->localConfig->fetch(true);
-            if (!isset($config['zf-mvc-auth']['authentication']['map'][$name])) {
+            if (! isset($config['zf-mvc-auth']['authentication']['map'][$name])) {
                 return false;
             }
         }
+
         return $config['zf-mvc-auth']['authentication']['map'][$name];
     }
 
     /**
      * Save the authentication Map for a specific $module and $version
+     *
      * Used since Apigility 1.1
      *
      * @param  string $auth
@@ -406,7 +421,7 @@ class AuthenticationModel
         }
         $key = 'zf-mvc-auth.authentication.map.' . $name;
         $config = $this->localConfig->fetch(true);
-        if (!isset($config['zf-mvc-auth']['authentication']['adapters'][$auth])) {
+        if (! isset($config['zf-mvc-auth']['authentication']['adapters'][$auth])) {
             throw new Exception\InvalidArgumentException(
                 'The authentication adapter specified doesn\'t exist',
                 422
@@ -419,6 +434,7 @@ class AuthenticationModel
 
     /**
      * Remove the authentication Map for a specific $module and $version
+     *
      * Used since Apigility 1.1
      *
      * @param  string $module
@@ -509,8 +525,8 @@ class AuthenticationModel
      */
     protected function fetchHttpAuthConfiguration(array $config)
     {
-        if (!isset($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
-            || !is_array($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
+        if (! isset($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
+            || ! is_array($config['zf-mvc-auth']['authentication']['http']['accept_schemes'])
         ) {
             return false;
         }
@@ -538,6 +554,7 @@ class AuthenticationModel
         $oauth2Config = array(
             'route_match' => '/oauth',
         );
+
         if (isset($config['router']['routes']['oauth']['options']['route'])) {
             $oauth2Config['route_match'] = $config['router']['routes']['oauth']['options']['route'];
         }
@@ -618,8 +635,10 @@ class AuthenticationModel
      */
     protected function validateDsn($dsn, $username = null, $password = null, $dsnType = AuthenticationEntity::DSN_PDO)
     {
+        $method = sprintf('create%sDSN', strtolower($dsnType));
+
         try {
-            $this->{'create' . ucfirst(strtolower($dsnType)) . 'DSN'}($dsn, $username, $password);
+            $this->$method($dsn, $username, $password);
             return true;
         } catch (MongoConnectionException $mongoException) {
         } catch (PDOException $pdoException) {
@@ -719,26 +738,15 @@ class AuthenticationModel
                 $this->updateOAuth2Route($adapter['oauth2_route']);
                 break;
         }
+
         $this->localConfig->patchKey($key, $config);
         $this->globalConfig->deleteKey($key);
-        return true;
-
-        $oldConfig = $this->localConfig->fetch(true);
-        if (isset($oldConfig['zf-mvc-auth']['authentication']['adapters'][$adapter['name']])) {
-            $this->localConfig->patchKey($key, $config);
-        } else {
-            $oldConfig = $this->globalConfig->fetch(true);
-            if (isset($oldConfig['zf-mvc-auth']['authentication']['adapters'][$adapter['name']])) {
-                $this->globalConfig->patchKey($key, $config);
-            } else {
-                $this->localConfig->patchKey($key, $config);
-            }
-        }
         return true;
     }
 
     /**
      * Return the OAuth2 urls as array from the regex string
+     *
      * Since Apigility 1.1
      *
      * @param  array $config
@@ -746,7 +754,7 @@ class AuthenticationModel
      */
     public function fromOAuth2RegexToArray($config)
     {
-        if (!isset($config['router']['routes']['oauth']['options']['regex'])) {
+        if (! isset($config['router']['routes']['oauth']['options']['regex'])) {
             return array();
         }
         $regex = $config['router']['routes']['oauth']['options']['regex'];
@@ -755,6 +763,7 @@ class AuthenticationModel
 
     /**
      * Update the OAuth2 route
+     *
      * Since Apigility 1.1
      *
      * @param  string $url
@@ -765,12 +774,14 @@ class AuthenticationModel
         $config = $this->globalConfig->fetch(true);
 
         $routes = $this->fromOAuth2RegexToArray($config);
-        if (!in_array($url, $routes)) {
+        if (! in_array($url, $routes)) {
             $routes[] = $url;
         }
+
         usort($routes, function ($a, $b) {
             return strlen($b) - strlen($a);
         });
+
         $options = array(
             'spec'  => '%oauth%',
             'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
@@ -781,6 +792,7 @@ class AuthenticationModel
 
     /**
      * Remove a url from OAuth2 route
+     *
      * Since Apigility 1.1
      *
      * @param  string $url
@@ -790,16 +802,18 @@ class AuthenticationModel
     {
         $config = $this->globalConfig->fetch(true);
 
-        if (!isset($config['router']['routes']['oauth']['options']['regex'])) {
+        if (! isset($config['router']['routes']['oauth']['options']['regex'])) {
             return false;
         }
-        $routes = $this->fromOAuth2RegexToArray($config);
 
+        $routes = $this->fromOAuth2RegexToArray($config);
         $index = array_search($url, $routes);
         if (false === $index) {
             return false;
         }
+
         unset($routes[$index]);
+
         if (count($routes)>0) {
             usort($routes, function ($a, $b) {
                 return strlen($b) - strlen($a);
@@ -810,9 +824,10 @@ class AuthenticationModel
             );
             $this->globalConfig->patchKey('router.routes.oauth.options', $options);
             $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
-        } else {
-            $this->globalConfig->deleteKey('router.routes.oauth');
+            return true;
         }
+
+        $this->globalConfig->deleteKey('router.routes.oauth');
         return true;
     }
 
@@ -872,6 +887,7 @@ class AuthenticationModel
         }
         return $result;
     }
+
     /**
      * Remove authentication
      *
@@ -891,19 +907,23 @@ class AuthenticationModel
         }
         return true;
     }
+
     /**
      * This function transform the old authentication system to the new one
-     * based on APIs. It reads the old configuration and generate an auth
-     * mapping for each API and version.
+     * based on APIs defined. It reads the old configuration and generates an
+     * authentication mapping for each API and version.
      *
-     * @return boolean
+     * @return boolean|string Boolean false if nothing was performed; string
+     *     adapter name otherwise.
      */
     public function transformAuthPerApis()
     {
         $oldAuth = $this->fetch();
-        if (!$oldAuth) {
+
+        if (! $oldAuth) {
             return false;
         }
+
         $oldAuth = $oldAuth->getArrayCopy();
         switch ($oldAuth['type']) {
             case 'http_basic':
@@ -944,6 +964,7 @@ class AuthenticationModel
                 }
                 break;
         }
+
         // Save the authentication adapter
         $this->saveAuthenticationAdapter($adapter);
 

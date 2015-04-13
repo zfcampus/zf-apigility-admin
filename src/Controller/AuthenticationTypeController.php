@@ -66,7 +66,7 @@ class AuthenticationTypeController extends AbstractAuthenticationController
             $adapters = array();
             if ($this->model->fetch()) {
                 // Create a new authentication adapter for each API/version
-                $adapters = array ( $this->model->transformAuthPerApis() );
+                $adapters = array($this->model->transformAuthPerApis());
             }
             return $this->createViewModel($adapters);
         }
