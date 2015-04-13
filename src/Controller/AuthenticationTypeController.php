@@ -10,14 +10,16 @@ use ZF\ContentNegotiation\ViewModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
+use ZF\Apigility\Admin\Model\AuthenticationModel as AuthModel;
 
 class AuthenticationTypeController extends AbstractAuthenticationController
 {
     protected $model;
 
-    public function __construct(AuthListener $model)
+    public function __construct(AuthModel $model, AuthListener $authListener)
     {
-        $this->model = $model;
+        $this->model        = $model;
+        $this->authListener = $authListener;
     }
 
     /**
@@ -41,9 +43,17 @@ class AuthenticationTypeController extends AbstractAuthenticationController
                         new ApiProblem(405, 'Only the method GET is allowed for this URI')
                     );
                 }
-                $adapters = $this->model->getAuthenticationTypes();
-                if ($adapters) {
-                    $adapters = array_keys($adapters['adapters']);
+                if (!$this->model->fetchAllAuthenticationAdapter()) {
+                    // Check for old authentication configuration
+                    if ($this->model->fetch()) {
+                        // Create a new authentication adapter for each API/version
+                        $adapters = array ( $this->model->transformAuthPerApis() );
+                    }
+                } else {
+                    $adapters = $this->authListener->getAuthenticationTypes();
+                    if ($adapters && isset($adapters['adapters'])) {
+                        $adapters = array_keys($adapters['adapters']);
+                    }
                 }
                 $metadata = array(
                     'auth-types' => $adapters

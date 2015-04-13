@@ -34,7 +34,11 @@ class AuthenticationControllerTest extends TestCase
         $global = new ConfigResource(require $this->globalFile, $this->globalFile, $writer);
         $local  = new ConfigResource(require $this->localFile, $this->localFile, $writer);
 
-        $model = new AuthenticationModel($global, $local);
+        $moduleModel = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleModel')
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $model = new AuthenticationModel($global, $local, $moduleModel);
         $this->controller = new AuthenticationController($model);
 
         $this->plugins = new ControllerPluginManager();

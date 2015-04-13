@@ -31,13 +31,19 @@ class AuthenticationModel
     protected $localConfig;
 
     /**
+     * @var ModuleModel
+     */
+    protected $modules;
+
+    /**
      * @param ConfigResource $globalConfig
      * @param ConfigResource $localConfig
      */
-    public function __construct(ConfigResource $globalConfig, ConfigResource $localConfig)
+    public function __construct(ConfigResource $globalConfig, ConfigResource $localConfig, ModuleModel $modules)
     {
         $this->globalConfig = $globalConfig;
-        $this->localConfig = $localConfig;
+        $this->localConfig  = $localConfig;
+        $this->modules      = $modules;
     }
 
     /**
@@ -675,7 +681,7 @@ class AuthenticationModel
                 );
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
-                switch($adapter['oauth2_type']) {
+                switch(strtolower($adapter['oauth2_type'])) {
                     case strtolower(AuthenticationEntity::DSN_PDO):
                         $config = array(
                             'adapter' => self::ADAPTER_OAUTH2,
@@ -698,7 +704,8 @@ class AuthenticationModel
                             'storage' => array(
                                 'adapter'  => strtolower(AuthenticationEntity::DSN_MONGO),
                                 'dsn'      => $adapter['oauth2_dsn'],
-                                'database' => $adapter['oauth2_database']
+                                'database' => $adapter['oauth2_database'],
+                                'route'   => $adapter['oauth2_route']
                             )
                         );
                         if (isset($adapter['oauth2_locator_name'])) {
@@ -712,6 +719,9 @@ class AuthenticationModel
                 $this->updateOAuth2Route($adapter['oauth2_route']);
                 break;
         }
+        $this->localConfig->patchKey($key, $config);
+        $this->globalConfig->deleteKey($key);
+        return true;
 
         $oldConfig = $this->localConfig->fetch(true);
         if (isset($oldConfig['zf-mvc-auth']['authentication']['adapters'][$adapter['name']])) {
@@ -861,5 +871,93 @@ class AuthenticationModel
 
         }
         return $result;
+    }
+    /**
+     * Remove authentication
+     *
+     * @return true
+     */
+    public function removeOldAuthentication()
+    {
+        $configKeys = array(
+            'zf-mvc-auth.authentication.http',
+            'zf-oauth2.db',
+            'zf-oauth2.mongo',
+            'zf-oauth2.storage'
+        );
+        foreach ($configKeys as $key) {
+            $this->globalConfig->deleteKey($key);
+            $this->localConfig->deleteKey($key);
+        }
+        return true;
+    }
+    /**
+     * This function transform the old authentication system to the new one
+     * based on APIs. It reads the old configuration and generate an auth
+     * mapping for each API and version.
+     *
+     * @return boolean
+     */
+    public function transformAuthPerApis()
+    {
+        $oldAuth = $this->fetch();
+        if (!$oldAuth) {
+            return false;
+        }
+        $oldAuth = $oldAuth->getArrayCopy();
+        switch ($oldAuth['type']) {
+            case 'http_basic':
+                $adapter = array(
+                    'name'     => 'http_basic',
+                    'type'     => AuthenticationEntity::TYPE_BASIC,
+                    'realm'    => $oldAuth['realm'],
+                    'htpasswd' => $oldAuth['htpasswd']
+                );
+                break;
+            case 'http_digest':
+                $adapter = array(
+                    'name'           => 'http_digest',
+                    'type'           => AuthenticationEntity::TYPE_DIGEST,
+                    'realm'          => $oldAuth['realm'],
+                    'htdigest'       => $oldAuth['htdigest'],
+                    'digest_domains' => $oldAuth['digest_domains'],
+                    'nonce_timeout'  => $oldAuth['nonce_timeout']
+                );
+                break;
+            case AuthenticationEntity::TYPE_OAUTH2:
+                $adapter = array(
+                    'type'         => AuthenticationEntity::TYPE_OAUTH2,
+                    'oauth2_type'  => $oldAuth['dsn_type'],
+                    'oauth2_dsn'   => $oldAuth['dsn'],
+                    'oauth2_route' => $oldAuth['route_match']
+                );
+                switch ($oldAuth['dsn_type']) {
+                    case AuthenticationEntity::DSN_PDO:
+                        $adapter['name']            = 'oauth2_pdo';
+                        $adapter['oauth2_username'] = $oldAuth['username'];
+                        $adapter['oauth2_password'] = $oldAuth['password'];
+                        break;
+                    case AuthenticationEntity::DSN_MONGO:
+                        $adapter['name']            = 'oauth2_mongo';
+                        $adapter['oauth2_database'] = $oldAuth['database'];
+                        break;
+                }
+                break;
+        }
+        // Save the authentication adapter
+        $this->saveAuthenticationAdapter($adapter);
+
+        // Create the authentication map for each API
+        $modules = $this->modules->getModules();
+        foreach ($modules as $module) {
+            foreach ($module->getVersions() as $version) {
+                $this->saveAuthenticationMap($adapter['name'], $module->getName(), $version);
+            }
+        }
+
+        // Remove the old configuration
+        $this->removeOldAuthentication();
+
+        return $adapter['name'];
     }
 }

@@ -110,9 +110,11 @@ class Module
                 $config = $services->get('Config');
                 $writer = $services->get('ZF\Configuration\ConfigWriter');
 
-                $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
-                $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
-                return new Model\AuthenticationModel($global, $local);
+                $global  = new ConfigResource($config, 'config/autoload/global.php', $writer);
+                $local   = new ConfigResource($config, 'config/autoload/local.php', $writer);
+                $modules = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
+
+                return new Model\AuthenticationModel($global, $local, $modules);
             },
             'ZF\Apigility\Admin\Model\AuthorizationModelFactory' => function ($services) {
                 if (!$services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
@@ -376,8 +378,9 @@ class Module
             },
             'ZF\Apigility\Admin\Controller\AuthenticationType' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
-                $model    = $services->get('ZF\MvcAuth\Authentication\DefaultAuthenticationListener');
-                return new Controller\AuthenticationTypeController($model);
+                $model    = $services->get('ZF\Apigility\Admin\Model\AuthenticationModel');
+                $listener = $services->get('ZF\MvcAuth\Authentication\DefaultAuthenticationListener');
+                return new Controller\AuthenticationTypeController($model, $listener);
             },
             'ZF\Apigility\Admin\Controller\Authorization' => function ($controllers) {
                 $services = $controllers->getServiceLocator();

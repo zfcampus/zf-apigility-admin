@@ -10,6 +10,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Stdlib\ArrayUtils;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
+use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Configuration\ConfigResource;
 
 class AuthenticationModelTest extends TestCase
@@ -63,7 +64,29 @@ class AuthenticationModelTest extends TestCase
         $mergedConfig = ArrayUtils::merge($global, $local);
         $globalConfig = new ConfigResource($mergedConfig, $this->globalConfigPath, $this->configWriter);
         $localConfig  = new ConfigResource($mergedConfig, $this->localConfigPath, $this->configWriter);
-        return new AuthenticationModel($globalConfig, $localConfig);
+
+
+        $moduleEntity = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleEntity')
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $moduleEntity->expects($this->any())
+                     ->method('getName')
+                     ->will($this->returnValue('Foo'));
+
+        $moduleEntity->expects($this->any())
+                     ->method('getVersions')
+                     ->will($this->returnValue(array(1,2)));
+
+        $moduleModel = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleModel')
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $moduleModel->expects($this->any())
+                    ->method('getModules')
+                    ->will($this->returnValue(array('Foo' => $moduleEntity)));
+
+        return new AuthenticationModel($globalConfig, $localConfig, $moduleModel);
     }
 
     public function assertAuthenticationConfigExists($key, array $config)
@@ -697,5 +720,93 @@ class AuthenticationModelTest extends TestCase
         $this->assertFalse($model->getAuthenticationMap('Foo'));
         $config = include $this->globalConfigPath;
         $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['map']['Foo']));
+    }
+
+    public function getOldAuthenticationConfig()
+    {
+        return array(
+            'http_basic' => array(
+                'zf-mvc-auth' => array(
+                    'authentication' => array(
+                        'http' => array(
+                            'accept_schemes' => array('basic'),
+                            'realm' => 'My Web Site',
+                            'htpasswd' => __DIR__ . '/TestAsset/htpasswd'
+                        )
+                    )
+                )
+            ),
+            'http_digest' => array(
+                'zf-mvc-auth' => array(
+                    'authentication' => array(
+                        'http' => array(
+                            'accept_schemes' => array('digest'),
+                            'realm' => 'My Web Site',
+                            'digest_domains' => 'domain.com',
+                            'nonce_timeout' => 3600,
+                            'htdigest' => __DIR__ . '/TestAsset/htdigest'
+                        )
+                    )
+                )
+            ),
+            'oauth2_pdo' => array(
+                'zf-oauth2' => array(
+                    'storage' => 'ZF\\OAuth2\\Adapter\\PdoAdapter',
+                    'db' => array(
+                        'dsn_type'  => 'PDO',
+                        'dsn'       => 'sqlite:/' . __DIR__ . '/TestAsset/db.sqlite',
+                        'username'  => null,
+                        'password'  => null
+                    )
+                )
+            ),
+            'oauth2_mongo' => array(
+                'zf-oauth2' => array(
+                    'storage' => 'ZF\\OAuth2\\Adapter\\MongoAdapter',
+                    'mongo' => array(
+                        'dsn_type'     => 'Mongo',
+                        'dsn'          => 'mongodb://localhost',
+                        'database'     => 'zf-apigility-admin-test',
+                        'locator_name' => 'MongoDB'
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Test transform old authentication configuration in authentication per APIs
+     * Since Apigility 1.1
+     */
+    public function testTransformAuthPerApis()
+    {
+        $global = array(
+            'router' => array(
+                'routes' => array(
+                    'oauth' => array(
+                        'options' => array(
+                            'route' => '/oauth'
+                        )
+                    )
+                )
+            )
+        );
+
+        foreach ($this->getOldAuthenticationConfig() as $name => $local) {
+            $model = $this->createModelFromConfigArrays($global, $local);
+
+            $this->assertEquals($name, $model->transformAuthPerApis());
+
+            // Old authentication is empty
+            $this->assertFalse($model->fetch());
+
+            // New authentication adapter exists
+            $result = $model->fetchAuthenticationAdapter($name);
+            $this->assertEquals($name, $result['name']);
+
+            // Authentication map exists
+            $this->assertEquals($result['name'], $model->getAuthenticationMap('Foo', 1));
+            $this->assertEquals($result['name'], $model->getAuthenticationMap('Foo', 2));
+        }
     }
 }

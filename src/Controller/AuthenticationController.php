@@ -109,6 +109,14 @@ class AuthenticationController extends AbstractAuthenticationController
             case $request::METHOD_GET:
                 if (!$adapter) {
                     $collection = $this->model->fetchAllAuthenticationAdapter();
+                    if (!$collection) {
+                        // Check for old authentication configuration
+                        if ($this->model->fetch()) {
+                            // Create a new authentication adapter for each API/version
+                            $this->model->transformAuthPerApis();
+                            $collection = $this->model->fetchAllAuthenticationAdapter();
+                        }
+                    }
                 } else {
                     $entity = $this->model->fetchAuthenticationAdapter($adapter);
                     if (!$entity) {
