@@ -54,12 +54,12 @@ class DashboardController extends AbstractActionController
 
     public function dashboardAction()
     {
-        $authentication = $this->authentication->fetch();
+        $authentication = $this->authentication->fetchAllAuthenticationAdapter();
         if ($authentication) {
             $authenticationEntity = $authentication;
             $authentication = new Entity($authentication, null);
             $authentication->getLinks()->add(Link::factory(array(
-                'rel' => 'self',
+                'rel'   => 'self',
                 'route' => $this->getRouteForEntity($authenticationEntity),
             )));
         }
