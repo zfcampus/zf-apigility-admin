@@ -50,6 +50,11 @@ class Module
         $modules->loadModule('ZF\Apigility\Admin\Ui');
     }
 
+    /**
+     * Listen to the bootstrap event
+     *
+     * @param MvcEvent $e
+     */
     public function onBootstrap(MvcEvent $e)
     {
         $app      = $e->getApplication();
@@ -65,6 +70,11 @@ class Module
         );
     }
 
+    /**
+     * Return an array for passing to Zend\Loader\AutoloaderFactory.
+     *
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         $this->disableOpCache();
@@ -78,6 +88,11 @@ class Module
         );
     }
 
+    /**
+     * Run diagnostics
+     *
+     * @return array|bool
+     */
     public function getDiagnostics()
     {
         return array(
@@ -93,11 +108,22 @@ class Module
         );
     }
 
+    /**
+     * Returns configuration to merge with application configuration
+     *
+     * @return array|\Traversable
+     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
     public function getServiceConfig()
     {
         return array('factories' => array(
@@ -191,11 +217,13 @@ class Module
                         'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service because Config service is not present'
                     );
                 }
+
                 $config = $services->get('Config');
                 $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                 $global = new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer);
                 $local  = new ConfigResource($config, 'config/autoload/doctrine.local.php', $writer);
+
                 return new Model\DoctrineAdapterModel($global, $local);
             },
             'ZF\Apigility\Admin\Model\DoctrineAdapterResource' => function ($services) {
@@ -368,6 +396,12 @@ class Module
         ));
     }
 
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to seed
+     * such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
     public function getControllerConfig()
     {
         return array('factories' => array(
@@ -494,6 +528,8 @@ class Module
             }
         );
 
+        //if content is empty, then send the response with a 204 and an emtpy body
+
         if ($result->isEntity()) {
             $this->injectServiceLinks($result->getPayload(), $result, $e);
             $halPlugin->getEventManager()->attach('renderEntity', array($this, 'onRenderEntity'), 10);
@@ -548,25 +584,30 @@ class Module
     /**
      * Inject links for the service services of a module
      *
-     * @param  Entity $entity
-     * @param  HalJsonModel $model
-     * @param  \Zend\Mvc\MvcEvent $model
+     * @param Entity $halEntity
+     * @param HalJsonModel $model
+     * @param $e
      */
     protected function injectServiceLinks(Entity $halEntity, HalJsonModel $model, $e)
     {
         $entity = $halEntity->entity;
         $links  = $halEntity->getLinks();
         if ($entity instanceof Model\ModuleEntity) {
-            return $this->injectModuleResourceRelationalLinks($entity, $links, $model);
+            $this->injectModuleResourceRelationalLinks($entity, $links, $model);
         }
         if ($entity instanceof Model\RestServiceEntity || $entity instanceof Model\RpcServiceEntity) {
-            return $this->normalizeEntityControllerServiceName($entity, $links, $model);
+            $this->normalizeEntityControllerServiceName($entity, $links, $model);
         }
         if ($entity instanceof Model\InputFilterEntity) {
-            return $this->normalizeEntityInputFilterName($entity, $links, $model);
+            $this->normalizeEntityInputFilterName($entity, $links, $model);
         }
     }
 
+    /**
+     * @param Model\ModuleEntity $module
+     * @param $links
+     * @param HalJsonModel $model
+     */
     protected function injectModuleResourceRelationalLinks(Model\ModuleEntity $module, $links, HalJsonModel $model)
     {
         $moduleData = $module->getArrayCopy();
@@ -587,6 +628,11 @@ class Module
         $model->setPayload($replacement);
     }
 
+    /**
+     * @param $entity
+     * @param $links
+     * @param HalJsonModel $model
+     */
     protected function normalizeEntityControllerServiceName($entity, $links, HalJsonModel $model)
     {
         $entity->exchangeArray(array(
@@ -602,6 +648,11 @@ class Module
         $model->setPayload($halEntity);
     }
 
+    /**
+     * @param Model\InputFilterEntity $entity
+     * @param $links
+     * @param HalJsonModel $model
+     */
     protected function normalizeEntityInputFilterName(Model\InputFilterEntity $entity, $links, HalJsonModel $model)
     {
         $entity['input_filter_name'] = str_replace('\\', '-', $entity['input_filter_name']);
@@ -615,6 +666,9 @@ class Module
         $model->setPayload($halEntity);
     }
 
+    /**
+     * @param $e
+     */
     public function onRenderEntity($e)
     {
         $halEntity = $e->getParam('entity');
@@ -733,6 +787,10 @@ class Module
         $e->setParam('entity', $halEntity);
     }
 
+    /**
+     * @param $entity
+     * @param $e
+     */
     public function injectServiceCollectionRelationalLinks($entity, $e)
     {
         $entity->exchangeArray(array(
@@ -786,6 +844,10 @@ class Module
         $e->setParam('entity', $halEntity);
     }
 
+    /**
+     * @param $entity
+     * @param $e
+     */
     protected function normalizeInputFilterEntityName($entity, $e)
     {
         $entity['input_filter_name'] = str_replace('\\', '-', $entity['input_filter_name']);
@@ -829,6 +891,10 @@ class Module
         $links->add($link);
     }
 
+    /**
+     * @param $service
+     * @return string
+     */
     protected function getServiceType($service)
     {
         if (strstr($service, '\\Rest\\')

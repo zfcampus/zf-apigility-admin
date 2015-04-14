@@ -6,12 +6,20 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\Http\Response;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\AbstractResourceListener;
 
-class DoctrineAdapterResource extends AbstractResourceListener
+class DoctrineAdapterResource extends AbstractResourceListener implements ServiceLocatorAwareInterface
 {
+    /**
+     * @var ServiceLocatorInterface
+     */
+    protected $serviceLocator;
+
     /**
      * @var DbAdapterModel
      */
@@ -26,6 +34,29 @@ class DoctrineAdapterResource extends AbstractResourceListener
     {
         $this->model = $model;
     }
+
+    /**
+     * Set service locator
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return DoctrineAdapterResource
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+        return $this;
+    }
+
+    /**
+     * Get service locator
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
 
     /**
      * @param $id
@@ -46,7 +77,20 @@ class DoctrineAdapterResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
-        return $this->model->fetchAll($params);
+        $modules = $this->getServiceLocator()->get('ModuleManager');
+        $loaded = $modules->getLoadedModules(false);
+
+        if (!isset($loaded['ZF\Apigility\Doctrine\Admin']) || !isset($loaded['ZF\Apigility\Doctrine\Server'])) {
+            $response = new Response();
+            $response->setStatusCode(204);
+            return $response;
+        }
+
+        if (false === ($adapters = $this->model->fetchAll($params))) {
+            return array();
+        }
+
+        return $adapters;
     }
 
     /**
@@ -61,8 +105,8 @@ class DoctrineAdapterResource extends AbstractResourceListener
                 throw new CreationException('Missing doctrine_adapter_name', 422);
             }
 
-            $name = $data['odctrine_adapter_name'];
-            unset($data['odctrine_adapter_name']);
+            $name = $data['doctrine_adapter_name'];
+            unset($data['doctrine_adapter_name']);
 
             return $this->model->create($name, $data);
         }
