@@ -151,7 +151,7 @@ class RestServiceResource extends AbstractResourceListener
     public function fetchAll($params = array())
     {
         $version  = $this->getEvent()->getQueryParam('version', null);
-        $services = $this->getModel()->fetchAll($version);
+        $services = $this->getModel()->fetchAll($version ?: null);
 
         foreach ($services as $service) {
             $this->injectInputFilters($service);
