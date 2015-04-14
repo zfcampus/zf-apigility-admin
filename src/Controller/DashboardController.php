@@ -54,16 +54,6 @@ class DashboardController extends AbstractActionController
 
     public function dashboardAction()
     {
-        $authentication = $this->authentication->fetchAllAuthenticationAdapter();
-        if ($authentication) {
-            $authenticationEntity = $authentication;
-            $authentication = new Entity($authentication, null);
-            $authentication->getLinks()->add(Link::factory(array(
-                'rel'   => 'self',
-                'route' => $this->getRouteForEntity($authenticationEntity),
-            )));
-        }
-
         $dbAdapters = new Collection($this->dbAdapters->fetchAll());
         $dbAdapters->setCollectionRoute('zf-apigility/api/db-adapter');
 
@@ -91,7 +81,6 @@ class DashboardController extends AbstractActionController
         $modulesCollection->setCollectionRoute('zf-apigility/api/module');
 
         $dashboard = array(
-            'authentication'   => $authentication,
             'db_adapter'       => $dbAdapters,
             'module'           => $modulesCollection,
         );
