@@ -561,19 +561,28 @@ class AuthenticationModelTest extends TestCase
                 'htdigest'       => __DIR__ . '/TestAsset/htdigest'
             ),
             array(
-                'name'         => 'test12',
-                'type'         => 'oauth2',
-                'oauth2_type'  => 'pdo',
-                'oauth2_dsn'   => 'sqlite:' . __DIR__ . '/TestAsset/db.sqlite',
-                'oauth2_route' => '/oauth12'
+                'name'            => 'test12',
+                'type'            => 'oauth2',
+                'oauth2_type'     => 'pdo',
+                'oauth2_dsn'      => 'sqlite:' . __DIR__ . '/TestAsset/db.sqlite',
+                'oauth2_route'    => '/oauth12',
+                'oauth2_username' => null,
+                'oauth2_password' => null,
+                'oauth2_options'  => array(
+                    'foo' => 'bar'
+                )
             ),
             array(
-                'name'            => 'test13',
-                'type'            => 'oauth2',
-                'oauth2_type'     => 'mongo',
-                'oauth2_dsn'      => 'mongodb://localhost',
-                'oauth2_database' => 'zf-apigility-admin-test',
-                'oauth2_route'    => '/oauth13'
+                'name'                => 'test13',
+                'type'                => 'oauth2',
+                'oauth2_type'         => 'mongo',
+                'oauth2_dsn'          => 'mongodb://localhost',
+                'oauth2_database'     => 'zf-apigility-admin-test',
+                'oauth2_route'        => '/oauth13',
+                'oauth2_locator_name' => null,
+                'oauth2_options'  => array(
+                    'foo' => 'bar'
+                )
             ),
         );
     }

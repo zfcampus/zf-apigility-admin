@@ -154,7 +154,7 @@ class AuthenticationControllerTest extends TestCase
                     'type'           => 'digest',
                     'realm'          => 'api',
                     'nonce_timeout'  => '3600',
-                    'digest_domains' => '/',
+                    'digest_domains' => null,
                     'htdigest'       => __DIR__ . '/TestAsset/Auth2/config/autoload/htdigest'
                 ),
             )
@@ -162,23 +162,28 @@ class AuthenticationControllerTest extends TestCase
         if (extension_loaded('pdo_sqlite')) {
             $data[] = array(
                 array(
-                    'name'         => 'test3',
-                    'type'         => 'oauth2',
-                    'oauth2_type'  => 'pdo',
-                    'oauth2_route' => '/oauth-pdo',
-                    'oauth2_dsn'   => 'sqlite:' . __DIR__ . '/TestAsset/Auth2/config/autoload/db.sqlite'
+                    'name'            => 'test3',
+                    'type'            => 'oauth2',
+                    'oauth2_type'     => 'pdo',
+                    'oauth2_route'    => '/oauth-pdo',
+                    'oauth2_dsn'      => 'sqlite:' . __DIR__ . '/TestAsset/Auth2/config/autoload/db.sqlite',
+                    'oauth2_username' => null,
+                    'oauth2_password' => null,
+                    'oauth2_options'  => null
                 )
             );
         }
         if (extension_loaded('mongo')) {
             $data[] = array(
                 array(
-                    'name'            => 'test4',
-                    'type'            => 'oauth2',
-                    'oauth2_type'     => 'mongo',
-                    'oauth2_route'    => '/oauth-mongo',
-                    'oauth2_dsn'      => 'mongodb://localhost',
-                    'oauth2_database' => 'zf-apigility-admin-test'
+                    'name'                => 'test4',
+                    'type'                => 'oauth2',
+                    'oauth2_type'         => 'mongo',
+                    'oauth2_route'        => '/oauth-mongo',
+                    'oauth2_dsn'          => 'mongodb://localhost',
+                    'oauth2_database'     => 'zf-apigility-admin-test',
+                    'oauth2_locator_name' => null,
+                    'oauth2_options'      => null
                 )
             );
         }
