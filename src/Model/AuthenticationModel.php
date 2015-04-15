@@ -162,10 +162,10 @@ class AuthenticationModel
     protected function checkAuthenticationAdapterData(array $adapter)
     {
         if (!isset($adapter['type'])) {
-          throw new Exception\InvalidArgumentException(
-              'Authentication type is missing',
-              422
-          );
+            throw new Exception\InvalidArgumentException(
+                'Authentication type is missing',
+                422
+            );
         }
         switch (strtolower($adapter['type'])) {
             case AuthenticationEntity::TYPE_BASIC:
