@@ -30,6 +30,7 @@ class OAuth2MongoInputFilter2 extends BaseInputFilter
         $this->add(array(
             'name' => 'oauth2_dsn',
             'error_message' => 'Please provide a valid DSN for OAuth2 database',
+            'required' => false
         ));
         $this->add(array(
             'name' => 'oauth2_database',
@@ -46,6 +47,24 @@ class OAuth2MongoInputFilter2 extends BaseInputFilter
                 ),
             ),
             'error_message' => 'Please provide a valid URL route for OAuth2 Mongo adapter'
+        ));
+        $this->add(array(
+            'name' => 'oauth2_locator_name',
+            'error_message' => 'Please provide a valid locator name for OAuth2 Mongo adapter',
+            'required' => false
+        ));
+        $this->add(array(
+            'name' => 'oauth2_options',
+            'validators' => array(
+                array(
+                    'name' => 'Callback',
+                    'options' => array('callback' => function ($value) {
+                        return is_array($value);
+                    }),
+                ),
+            ),
+            'error_message' => 'Please provide a valid options for OAuth2 Mongo adapter',
+            'required' => false
         ));
     }
 }

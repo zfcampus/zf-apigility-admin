@@ -19,13 +19,19 @@ class DigestInputFilter2 extends BaseInputFilter
         $this->add(array(
             'name' => 'digest_domains',
             'error_message' => 'Please provide a digest domains for HTTP digest authentication',
+            'required' => false
         ));
         $this->add(array(
             'name' => 'nonce_timeout',
             'validators' => array(
-                array( 'name' => 'Digits' )
+                array(
+                    'name' => 'Callback',
+                    'options' => array('callback' => function ($value) {
+                        return is_numeric($value);
+                    }),
+                ),
             ),
-            'error_message' => 'Please provide a valid nonce timeout for HTTP digest authentication',
+            'error_message' => 'Please provide a valid nonce timeout for HTTP digest authentication'
         ));
         $this->add(array(
             'name' => 'htdigest',
