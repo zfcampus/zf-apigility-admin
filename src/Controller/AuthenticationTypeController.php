@@ -10,15 +10,13 @@ use ZF\ContentNegotiation\ViewModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
-use ZF\Apigility\Admin\Model\AuthenticationModel as AuthModel;
 
 class AuthenticationTypeController extends AbstractAuthenticationController
 {
     protected $model;
 
-    public function __construct(AuthModel $model, AuthListener $authListener)
+    public function __construct(AuthListener $authListener)
     {
-        $this->model        = $model;
         $this->authListener = $authListener;
     }
 
@@ -61,20 +59,7 @@ class AuthenticationTypeController extends AbstractAuthenticationController
      */
     private function createAdapterCollection()
     {
-        if (! $this->model->fetchAllAuthenticationAdapter()) {
-            // Check for old authentication configuration
-            $adapters = array();
-            if ($this->model->fetch()) {
-                // Create a new authentication adapter for each API/version
-                $adapters = array($this->model->transformAuthPerApis());
-            }
-            return $this->createViewModel($adapters);
-        }
-
         $adapters = $this->authListener->getAuthenticationTypes();
-        if ($adapters && isset($adapters['adapters'])) {
-            $adapters = array_keys($adapters['adapters']);
-        }
         return $this->createViewModel($adapters);
     }
 

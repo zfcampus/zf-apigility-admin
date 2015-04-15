@@ -8,19 +8,10 @@ namespace ZFTest\Apigility\Admin\Controller;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
-use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
-use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Router\SimpleRouteStack;
-use ZF\ContentNegotiation\ControllerPlugin\BodyParams;
-use ZF\ContentNegotiation\ControllerPlugin\BodyParam;
 use ZF\Apigility\Admin\Controller\AuthenticationTypeController;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
-use ZF\Apigility\Admin\Model\AuthenticationModel;
-use ZF\Configuration\ConfigResource;
-use Zend\Config\Writer\PhpArray as ConfigWriter;
-use ZF\ContentNegotiation\ParameterDataContainer;
 
 class AuthenticationTypeControllerTest extends TestCase
 {
@@ -31,13 +22,7 @@ class AuthenticationTypeControllerTest extends TestCase
         copy($this->globalFile . '.dist', $this->globalFile);
         copy($this->localFile . '.dist', $this->localFile);
 
-        $moduleModel = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleModel')
-                            ->disableOriginalConstructor()
-                            ->getMock();
-
-        $model = $this->getAuthModel($this->globalFile, $this->localFile, $moduleModel);
-
-        $this->controller = $this->getController($model, $this->localFile, $this->globalFile);
+        $this->controller = $this->getController($this->localFile, $this->globalFile);
 
         $this->routeMatch = new RouteMatch(array());
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/authentication-type');
@@ -47,30 +32,45 @@ class AuthenticationTypeControllerTest extends TestCase
         $this->controller->setEvent($this->event);
     }
 
-    protected function getAuthModel($globalFile, $localFile, $moduleModel)
-    {
-        $writer = new ConfigWriter();
-        $global = new ConfigResource(require $globalFile, $globalFile, $writer);
-        $local  = new ConfigResource(require $localFile, $localFile, $writer);
-
-        return new AuthenticationModel($global, $local, $moduleModel);
-    }
-
-    protected function getController($model, $localFile, $globalFile)
+    protected function getController($localFile, $globalFile)
     {
         $authListener = new AuthListener();
-        $config = require $localFile;
-        if (isset($config['zf-oauth2']['db'])) {
-            $authListener->addAuthenticationTypes($config['zf-oauth2']['db']);
-        } elseif (isset($config['zf-oauth2']['mongo'])) {
-            $authListener->addAuthenticationTypes($config['zf-oauth2']['mongo']);
-        } else {
-            if (!isset($config['zf-mvc-auth']['authentication'])) {
-                $config = require $globalFile;
+        $config = array_merge(require $globalFile, require $localFile);
+
+        /* Register old authentication adapter types */
+        if (isset($config['zf-oauth2'])) {
+            $authListener->addAuthenticationTypes(array('oauth2'));
+        } elseif (isset($config['zf-mvc-auth']['authentication']['http'])) {
+            $types = array();
+            if (isset($config['zf-mvc-auth']['authentication']['http']['htpasswd'])) {
+                $types[] = 'basic';
             }
-            $authListener->addAuthenticationTypes($config['zf-mvc-auth']['authentication']);
+            if (isset($config['zf-mvc-auth']['authentication']['http']['htdigest'])) {
+                $types[] = 'digest';
+            }
+            $authListener->addAuthenticationTypes($types);
         }
-        return new AuthenticationTypeController($model, $authListener);
+
+        /* Register v1.1+ adapter types */
+        if (isset($config['zf-mvc-auth']['authentication']['adapters'])) {
+            foreach ($config['zf-mvc-auth']['authentication']['adapters'] as $adapter => $adapterConfig) {
+                if (! isset ($adapterConfig['adapter'])) {
+                    continue;
+                }
+                if (false !== stristr($adapterConfig['adapter'], 'http')) {
+                    if (isset($adapterConfig['options']['htpasswd'])) {
+                        $authListener->addAuthenticationTypes(array($adapter . '-' . 'basic'));
+                    }
+                    if (isset($adapterConfig['options']['htdigest'])) {
+                        $authListener->addAuthenticationTypes(array($adapter . '-' . 'digest'));
+                    }
+                    continue;
+                }
+                $authListener->addAuthenticationTypes(array($adapter));
+            }
+        }
+
+        return new AuthenticationTypeController($authListener);
     }
 
     public function tearDown()
@@ -115,34 +115,50 @@ class AuthenticationTypeControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $config = require $this->localFile;
         $adapters = array_keys($config['zf-mvc-auth']['authentication']['adapters']);
+
+        foreach ($config['zf-mvc-auth']['authentication']['adapters'] as $adapter => $adapterConfig) {
+            if (false === stristr($adapterConfig['adapter'], 'http')) {
+                continue;
+            }
+            if (isset($adapterConfig['options']['htpasswd'])) {
+                $index = array_search($adapter, $adapters);
+                $adapters[$index] = $adapter . '-basic';
+            }
+            if (isset($adapterConfig['options']['htdigest'])) {
+                $index = array_search($adapter, $adapters);
+                $adapters[$index] = $adapter . '-digest';
+            }
+        }
+
         $this->assertEquals($adapters, $result->getVariable('auth-types'));
     }
 
     public function getOldAuthConfig()
     {
         return array(
-            array(
+            'basic' => array(
                 array(
                     'zf-mvc-auth' => array(
                         'authentication' => array(
                             'http' => array(
                                 'accept_schemes' => array('basic'),
-                                'realm' => 'My Web Site'
-                            )
-                        )
-                    )
+                                'realm' => 'My Web Site',
+                            ),
+                        ),
+                    ),
                 ),
                 array(
                     'zf-mvc-auth' => array(
                         'authentication' => array(
                             'http' => array(
-                                'htpasswd' => __DIR__ . '/TestAsset/Auth2/config/autoload/htpasswd'
-                            )
-                        )
-                    )
-                )
+                                'htpasswd' => __DIR__ . '/TestAsset/Auth2/config/autoload/htpasswd',
+                            ),
+                        ),
+                    ),
+                ),
+                array('basic'),
             ),
-            array(
+            'digest' => array(
                 array(
                     'zf-mvc-auth' => array(
                         'authentication' => array(
@@ -150,32 +166,33 @@ class AuthenticationTypeControllerTest extends TestCase
                                 'accept_schemes' => array('digest'),
                                 'realm' => 'My Web Site',
                                 'domain_digest' => 'domain.com',
-                                'nonce_timeout' => 3600
-                            )
-                        )
-                    )
+                                'nonce_timeout' => 3600,
+                            ),
+                        ),
+                    ),
                 ),
                 array(
                     'zf-mvc-auth' => array(
                         'authentication' => array(
                             'http' => array(
-                                'htpdigest' => __DIR__ . '/TestAsset/Auth2/config/autoload/htdigest'
-                            )
-                        )
-                    )
-                )
+                                'htdigest' => __DIR__ . '/TestAsset/Auth2/config/autoload/htdigest',
+                            ),
+                        ),
+                    ),
+                ),
+                array('digest'),
             ),
-            array(
+            'oauth2-pdo' => array(
                 array(
                     'router' => array(
                         'routes' => array(
                             'oauth' => array(
                                 'options' => array(
-                                    'route' => '/oauth'
-                                )
-                            )
-                        )
-                    )
+                                    'route' => '/oauth',
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
                 array(
                     'zf-oauth2' => array(
@@ -184,22 +201,23 @@ class AuthenticationTypeControllerTest extends TestCase
                             'dsn_type'  => 'PDO',
                             'dsn'       => 'sqlite:/' . __DIR__ . '/TestAsset/Auth2/config/autoload/db.sqlite',
                             'username'  => null,
-                            'password'  => null
-                        )
-                    )
-                )
+                            'password'  => null,
+                        ),
+                    ),
+                ),
+                array('oauth2'),
             ),
-            array(
+            'oauth2-mongo' => array(
                 array(
                     'router' => array(
                         'routes' => array(
                             'oauth' => array(
                                 'options' => array(
-                                    'route' => '/oauth'
-                                )
-                            )
-                        )
-                    )
+                                    'route' => '/oauth',
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
                 array(
                     'zf-oauth2' => array(
@@ -208,10 +226,11 @@ class AuthenticationTypeControllerTest extends TestCase
                             'dsn_type'     => 'Mongo',
                             'dsn'          => 'mongodb://localhost',
                             'database'     => 'zf-apigility-admin-test',
-                            'locator_name' => 'MongoDB'
-                        )
-                    )
-                )
+                            'locator_name' => 'MongoDB',
+                        ),
+                    ),
+                ),
+                array('oauth2'),
             ),
         );
     }
@@ -219,34 +238,12 @@ class AuthenticationTypeControllerTest extends TestCase
     /**
      * @dataProvider getOldAuthConfig
      */
-    public function testGetAuthenticationWithOldConfiguration($global, $local)
+    public function testGetAuthenticationWithOldConfiguration($global, $local, $expected)
     {
-        file_put_contents($this->globalFile, '<?php return '. var_export($global, true) . ';');
-        file_put_contents($this->localFile, '<?php return '. var_export($local, true) . ';');
+        file_put_contents($this->globalFile, '<' . '?php return '. var_export($global, true) . ';');
+        file_put_contents($this->localFile, '<' . '?php return '. var_export($local, true) . ';');
 
-        $moduleEntity = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleEntity')
-                             ->disableOriginalConstructor()
-                             ->getMock();
-
-        $moduleEntity->expects($this->any())
-                     ->method('getName')
-                     ->will($this->returnValue('Foo'));
-
-        $moduleEntity->expects($this->any())
-                     ->method('getVersions')
-                     ->will($this->returnValue(array(1,2)));
-
-        $moduleModel = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleModel')
-                            ->disableOriginalConstructor()
-                            ->getMock();
-
-        $moduleModel->expects($this->any())
-                    ->method('getModules')
-                    ->will($this->returnValue(array('Foo' => $moduleEntity)));
-
-        $model = $this->getAuthModel($this->globalFile, $this->localFile, $moduleModel);
-
-        $controller = $this->getController($model, $this->localFile, $this->globalFile);
+        $controller = $this->getController($this->localFile, $this->globalFile);
 
         $request = new Request();
         $request->setMethod('get');
@@ -262,8 +259,8 @@ class AuthenticationTypeControllerTest extends TestCase
         $result = $controller->authTypeAction();
 
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
-        $config = require $this->localFile;
-        $adapters = array_keys($config['zf-mvc-auth']['authentication']['adapters']);
-        $this->assertEquals($adapters, $result->getVariable('auth-types'));
+
+        $types = $result->getVariable('auth-types');
+        $this->assertEquals($expected, $types);
     }
 }
