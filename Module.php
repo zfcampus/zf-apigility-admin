@@ -410,12 +410,6 @@ class Module
                 $model    = $services->get('ZF\Apigility\Admin\Model\AuthenticationModel');
                 return new Controller\AuthenticationController($model);
             },
-            'ZF\Apigility\Admin\Controller\AuthenticationType' => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                $model    = $services->get('ZF\Apigility\Admin\Model\AuthenticationModel');
-                $listener = $services->get('ZF\MvcAuth\Authentication\DefaultAuthenticationListener');
-                return new Controller\AuthenticationTypeController($model, $listener);
-            },
             'ZF\Apigility\Admin\Controller\Authorization' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 $factory  = $services->get('ZF\Apigility\Admin\Model\AuthorizationModelFactory');
