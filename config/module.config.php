@@ -1068,6 +1068,10 @@ return array(
             'allowAttribs' => 'string',
             'allowTags' => 'string',
         ),
+        'Zend\Filter\ToInt' => array(),
+        'Zend\Filter\ToNull' => array(
+            'type' => 'int|string',
+        ),
         'Zend\Filter\UriNormalize' => array(
             'defaultscheme' => 'string',
             'enforcedscheme' => 'string',
@@ -1383,6 +1387,12 @@ return array(
             'locale' => 'string',
         ),
         'Zend\I18n\Validator\Int' => array(
+            'locale' => 'string',
+        ),
+        'Zend\I18n\Validator\IsFloat' => array(
+            'locale' => 'string',
+        ),
+        'Zend\I18n\Validator\IsInt' => array(
             'locale' => 'string',
         ),
         'Zend\I18n\Validator\PhoneNumber' => array(
