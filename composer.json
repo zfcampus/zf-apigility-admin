@@ -21,8 +21,8 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev",
-            "dev-develop": "1.1-dev"
+            "dev-master": "1.1-dev",
+            "dev-develop": "1.2-dev"
         }
     },
     "require": {
@@ -39,16 +39,16 @@
         "zendframework/zend-validator": "~2.3",
         "zendframework/zend-view": "~2.3",
         "zfcampus/zf-apigility": "~1.0",
-        "zfcampus/zf-apigility-admin-ui": "~1.1-dev@dev",
+        "zfcampus/zf-apigility-admin-ui": "~1.1",
         "zfcampus/zf-apigility-provider": "~1.0",
         "zfcampus/zf-api-problem": "~1.0",
         "zfcampus/zf-configuration": "~1.0",
         "zfcampus/zf-content-negotiation": "~1.0",
-        "zfcampus/zf-content-validation": "~1.1-dev@dev",
-        "zfcampus/zf-hal": "~1.1-dev@dev",
-        "zfcampus/zf-oauth2": "~1.1-dev@dev",
-        "zfcampus/zf-mvc-auth": "~1.1-dev@dev",
-        "zfcampus/zf-rest": "~1.1-dev@dev",
+        "zfcampus/zf-content-validation": "~1.1",
+        "zfcampus/zf-hal": "~1.1",
+        "zfcampus/zf-oauth2": "~1.1",
+        "zfcampus/zf-mvc-auth": "~1.1",
+        "zfcampus/zf-rest": "~1.1",
         "zfcampus/zf-rpc": "~1.0",
         "zfcampus/zf-versioning": "~1.0"
     },
