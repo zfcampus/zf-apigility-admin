@@ -43,7 +43,7 @@
         "zfcampus/zf-apigility-provider": "~1.0",
         "zfcampus/zf-api-problem": "~1.0",
         "zfcampus/zf-configuration": "~1.0",
-        "zfcampus/zf-content-negotiation": "~1.1-dev@dev",
+        "zfcampus/zf-content-negotiation": "~1.0",
         "zfcampus/zf-content-validation": "~1.1-dev@dev",
         "zfcampus/zf-hal": "~1.1-dev@dev",
         "zfcampus/zf-oauth2": "~1.1-dev@dev",
