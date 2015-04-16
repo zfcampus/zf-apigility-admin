@@ -51,6 +51,8 @@ class ModuleModel
      */
     protected static $valueGenerator;
 
+    protected $modulePathSpec;
+
     /**
      * @param  ModuleManager $moduleManager
      * @param  array $restConfig
@@ -59,6 +61,7 @@ class ModuleModel
     public function __construct(ModuleManager $moduleManager, array $restConfig, array $rpcConfig)
     {
         $this->moduleManager = $moduleManager;
+
         $this->restConfig    = array_keys($restConfig);
         $this->rpcConfig     = array_keys($rpcConfig);
     }
@@ -115,8 +118,9 @@ class ModuleModel
      * @param  integer $ver
      * @return boolean
      */
-    public function createModule($module, $path = '.')
+    public function createModule($module, ModulePathSpec $pathSpec)
     {
+        $path = $pathSpec->getApplicationPath();
         $application = require "$path/config/application.config.php";
         if (is_array($application)
             && isset($application['modules'])
@@ -126,7 +130,7 @@ class ModuleModel
             return false;
         }
 
-        $modulePath = sprintf('%s/module/%s', $path, $module);
+        $modulePath = $pathSpec->getModulePath($module, $path);
         if (file_exists($modulePath)) {
             throw new \Exception(sprintf(
                 'Cannot create new API module; module by the name "%s" already exists',
@@ -134,12 +138,16 @@ class ModuleModel
             ), 409);
         }
 
-        mkdir("$modulePath/config", 0775, true);
-        mkdir("$modulePath/view", 0775, true);
-        mkdir("$modulePath/src/$module/V1/Rest", 0775, true);
-        mkdir("$modulePath/src/$module/V1/Rpc", 0775, true);
+        $moduleSourcePath         = $pathSpec->getModuleSourcePath($module);
+        $moduleSourceRelativePath = $pathSpec->getModuleSourcePath($module, false);
+        $moduleConfigPath         = $pathSpec->getModuleConfigPath($module);
 
-        if (!file_put_contents("$modulePath/config/module.config.php", "<" . "?php\nreturn array(\n);")) {
+        mkdir($moduleConfigPath, 0775, true);
+        mkdir($pathSpec->getModuleViewPath($module), 0775, true);
+        mkdir($pathSpec->getRestPath($module, 1), 0775, true);
+        mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
+
+        if (!file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
         }
 
@@ -148,18 +156,28 @@ class ModuleModel
         ));
 
         $resolver = new Resolver\TemplateMapResolver(array(
-            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml'
+            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml',
+            'module/skeleton-psr4' => __DIR__ . '/../../view/module/skeleton-psr4.phtml',
         ));
 
-        $view->setTemplate('module/skeleton');
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '/src/$module/Module.php';")) {
-            return false;
-        }
-        if (!file_put_contents("$modulePath/src/$module/Module.php", "<" . "?php\n" . $renderer->render($view))) {
-            return false;
+        if ($pathSpec->getPathSpec() === 'psr-0') {
+            $view->setTemplate('module/skeleton');
+            $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
+
+            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
+                return false;
+            }
+            if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+                return false;
+            }
+        } else {
+            $view->setTemplate('module/skeleton-psr4');
+            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+                return false;
+            }
         }
 
         // Add the module in application.config.php

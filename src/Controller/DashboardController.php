@@ -11,6 +11,7 @@ use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Apigility\Admin\Model\DbAdapterModel;
+use ZF\Apigility\Admin\Model\DoctrineAdapterModel;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
 use ZF\Apigility\Admin\Model\RpcServiceModelFactory;
@@ -26,6 +27,8 @@ class DashboardController extends AbstractActionController
     protected $contentNegotiation;
 
     protected $dbAdapters;
+
+    protected $doctrineAdapters;
 
     protected $modules;
 
@@ -51,16 +54,6 @@ class DashboardController extends AbstractActionController
 
     public function dashboardAction()
     {
-        $authentication = $this->authentication->fetch();
-        if ($authentication) {
-            $authenticationEntity = $authentication;
-            $authentication = new Entity($authentication, null);
-            $authentication->getLinks()->add(Link::factory(array(
-                'rel' => 'self',
-                'route' => $this->getRouteForEntity($authenticationEntity),
-            )));
-        }
-
         $dbAdapters = new Collection($this->dbAdapters->fetchAll());
         $dbAdapters->setCollectionRoute('zf-apigility/api/db-adapter');
 
@@ -88,9 +81,8 @@ class DashboardController extends AbstractActionController
         $modulesCollection->setCollectionRoute('zf-apigility/api/module');
 
         $dashboard = array(
-            'authentication' => $authentication,
-            'db_adapter'     => $dbAdapters,
-            'module'         => $modulesCollection,
+            'db_adapter'       => $dbAdapters,
+            'module'           => $modulesCollection,
         );
 
         $entity = new Entity($dashboard, 'dashboard');

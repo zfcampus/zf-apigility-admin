@@ -31,7 +31,7 @@ class VersioningModelFactory
     /**
      * @param  ConfigResourceFactory $configFactory
      */
-    public function __construct(ConfigResourceFactory $configFactory, ModuleUtils $moduleUtils)
+    public function __construct(ConfigResourceFactory $configFactory, ModulePathSpec $moduleUtils)
     {
         $this->configFactory = $configFactory;
         $this->moduleUtils   = $moduleUtils;

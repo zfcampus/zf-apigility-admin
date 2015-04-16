@@ -41,6 +41,12 @@ class AuthorizationController extends AbstractActionController
                 $entity = $model->fetch($version);
                 break;
             case $request::METHOD_PUT:
+                $this->getResponse()->getHeaders()->addHeaderLine(
+                    'X-Deprecated',
+                    'This service has deprecated the PUT method; please use PATCH'
+                );
+                // intentionally fall through
+            case $request::METHOD_PATCH:
                 $entity = $model->update($this->bodyParams(), $version);
                 break;
             default:

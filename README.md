@@ -15,7 +15,7 @@ manage APIs in Apigility.
 
 Requirements
 ------------
-  
+
 Please see the [composer.json](composer.json) file.
 
 Installation
@@ -133,6 +133,66 @@ resource](#authentication).
 
 - Errors: `application/problem+json`
 
+### api/authentication[/:authentication_adapter] (API V2)
+
+This REST endpoint is for fetching and updating the authentication
+adapters to be used in Apigility. It uses the [authentication
+resource ver. 2](#authentication2).
+
+This endpoint is only available for API **version 2**. You need to pass the
+following mediatype in the Appect header:
+
+```
+Accept: application/vnd.apigility.v2+json
+```
+
+- `Accept`: `application/json`
+
+  Returns an [authentication resource ver. 2](#authentication2) on success.
+
+- Content-Type: `application/json`
+
+  Expects an [authentication resource ver. 2](#authentication2) with all details
+  necessary for creating new, or updating existing, HTTP authentication.
+
+- HTTP methods: `GET`, `POST`, `PUT`, `DELETE`
+
+  `GET` returns a `404` response if no authentication adapter has previously
+  been setup. `POST` will return a `201` response on success. `PUT` will return
+  a `200` response on success. `DELETE` will return a `204` response on success.
+
+
+### api/module/:name/authentication?version=:version (API V2)
+
+This REST endpoint is for fetching and updating the authentication
+mapping for a specific API (module) and version, if specified.
+
+This endpoint is only available for API **version 2**. You need to pass the
+following mediatype in the Appect header:
+
+```
+Accept: application/vnd.apigility.v2+json
+```
+
+- `Accept`: `application/json`
+
+  Returns an { "authentication" : value } on success.
+
+- Content-Type: `application/json`
+
+  Expects a JSON with **authentication** value containing the authentication
+  adapter name.
+
+- HTTP methods: `GET`, `PUT`, `DELETE`
+
+  `GET` will return an { "authentication" : value } response. If no
+  authentication adapter exists the value will be false.
+
+  `PATCH` will return a `200` response on success, along with the updated
+  authentication value.
+
+  `DELETE` will return a `204` response on success.
+
 ### api/module/:name/authorization?version=:version
 
 This REST endpoint is for fetching and updating the authorization
@@ -148,13 +208,13 @@ resource](#authorization).
   Expects an [authorization resource](#authorization) with all details
   necessary for specifying authorization rules.
 
-- HTTP methods: `GET`, `PUT`
+- HTTP methods: `GET`, `PATCH`
 
   `GET` will always return an entity; if no configuration existed previously
   for the module, or if any given service at the given version was not listed
   in the configuration, it will provide the default values.
 
-  `PUT` will return a `200` response on success, along with the updated
+  `PATCH` will return a `200` response on success, along with the updated
   entity.
 
 - Errors: `application/problem+json`
@@ -399,6 +459,64 @@ The minimum structure for creating a new REST service will appear as follows:
 }
 ```
 
+### api/package
+
+This endpoint is for building a deploy package for APIs.
+
+- `Accept`: `application/json`
+
+  Returns a JSON structure on success, an API-Problem payload on error.
+
+- `Content-Type`: `application/json`
+
+  Expects an object with the property "format", for the file format
+  ZIP, TAR, TGZ, and ZPK; an "apis" property with a list of the API to
+  include in the package; a "composer" property that specify if execute
+  composer or not and an optional "config" property containing the path
+  to an application config folder to be used in the package.
+
+
+- Methods: `GET`, `POST`
+
+- Errors: `application/problem+json`
+
+The request payload for `POST` should have the following structure:
+
+```JSON
+{
+    "format": "the file format to be used for the package",
+    "apis" : {
+        "Test": true
+    },
+    "composer": true,
+    "config": "the config path to be used in the package"
+}
+```
+
+On success, the service returns the followings structure:
+
+```JSON
+{
+    "token": "a random token string",
+    "format": "the file format used for the package"
+}
+```
+
+The fields of this response can be used in the `GET` method to download
+the package file. Basically, the token is a temporary file name stored in
+the system temporary folder (`/tmp` in GNU/Linux).
+
+The request payload for `GET` should have the following structure:
+
+```
+GET /api/package?token=xxx&format=yyy
+```
+
+On success, the service returns the file as `application/octet-stream`
+content type.
+
+
+
 API Models
 ----------
 
@@ -437,6 +555,62 @@ expected for the request bodies.
     "username": "Username associated with DSN",
     "password": "Password associated with DSN",
     "route_match": "Literal route to match indicating where OAuth2 login/authorization exists"
+}
+```
+
+### authentication2
+
+#### HTTP Basic authentication:
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "basic",
+    "realm": "The HTTP authentication realm to use",
+    "htpasswd": "Path on filesystem to htpasswd file"
+}
+```
+
+#### HTTP Digest authentication:
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "digest",
+    "realm": "The HTTP authentication realm to use",
+    "digest_domains": "Space-separated list of URIs under authentication",
+    "nonce_timeout": "integer; seconds",
+    "htdigest": "Path on filesystem to htdigest file"
+}
+```
+
+#### OAuth2 authentication (with PDO):
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "oauth2",
+    "oauth2_type" : "pdo",
+    "oauth2_route" : "Literal route to match indicating where OAuth2 login/authorization exists",
+    "oauth2_dsn": "PDO DSN of database containing OAuth2 schema",
+    "oauth2_username": "Username associated with DSN (optional)",
+    "oauth2_password": "Password associated with DSN (optional)",
+    "oauth2_options": "(optional)"
+}
+```
+
+#### OAuth2 authentication (with MongoDB):
+
+```JSON
+{
+    "name" : "Name of the authentication adapter",
+    "type": "oauth2",
+    "oauth2_type" : "mongo",
+    "oauth2_route" : "Literal route to match indicating where OAuth2 login/authorization exists",
+    "oauth2_dsn": "MongoDB DSN of database containing OAuth2 documents",
+    "oauth2_database": "Database name",
+    "oauth2_locator_name": "SomeServiceName class (optional)",
+    "oauth2_options": "(optional)"
 }
 ```
 

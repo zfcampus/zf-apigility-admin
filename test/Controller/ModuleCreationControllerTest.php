@@ -13,6 +13,8 @@ use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\ModuleCreationController;
 use ZF\Apigility\Admin\Model\ModuleModel;
+use ZF\Apigility\Admin\Model\ModulePathSpec;
+use ZF\Configuration\ModuleUtils;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
 class ModuleCreationControllerTest extends TestCase
@@ -20,7 +22,11 @@ class ModuleCreationControllerTest extends TestCase
     public function setUp()
     {
         $this->moduleManager  = new ModuleManager(array());
-        $this->moduleResource = new ModuleModel($this->moduleManager, array(), array());
+        $this->moduleResource = new ModuleModel(
+            $this->moduleManager,
+            array(),
+            array()
+        );
         $this->controller     = new ModuleCreationController($this->moduleResource);
     }
 
@@ -72,7 +78,11 @@ class ModuleCreationControllerTest extends TestCase
                       ->method('getLoadedModules')
                       ->will($this->returnValue(array('Foo' => new \Foo\Module)));
 
-        $moduleResource = new ModuleModel($moduleManager, array(), array());
+        $moduleResource = new ModuleModel(
+            $moduleManager,
+            array(),
+            array()
+        );
         $controller     = new ModuleCreationController($moduleResource);
 
         $request = new Request();

@@ -22,12 +22,15 @@ class ModuleResource extends AbstractResourceListener
      */
     protected $modulePath = '.';
 
+    protected $modulePathSpec;
+
     /**
      * @param ModuleModel $modules
      */
-    public function __construct(ModuleModel $modules)
+    public function __construct(ModuleModel $modules, ModulePathSpec $pathSpec)
     {
         $this->modules = $modules;
+        $this->modulePathSpec = $pathSpec;
     }
 
     /**
@@ -39,13 +42,12 @@ class ModuleResource extends AbstractResourceListener
      */
     public function setModulePath($path)
     {
-        if (!is_dir($path)) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid module path "%s"; does not exist',
-                $path
-            ));
-        }
-        $this->modulePath = $path;
+        /*
+         * maintain backwards compatibility
+         * NOTE: modulePath in this case, is really the application path
+         */
+        $this->modulePathSpec->setApplicationPath($path);
+
         return $this;
     }
 
@@ -73,7 +75,7 @@ class ModuleResource extends AbstractResourceListener
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }
 
-        if (false === $this->modules->createModule($name, $this->modulePath, $version)) {
+        if (false === $this->modules->createModule($name, $this->modulePathSpec)) {
             throw new CreationException('Unable to create module; check your paths and permissions');
         }
 
