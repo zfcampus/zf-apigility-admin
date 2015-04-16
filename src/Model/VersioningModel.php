@@ -141,7 +141,7 @@ class VersioningModel
             $previous,
             $nsSep
         );
-        while (false !== ( $file = readdir($dir))) {
+        while (false !== ($file = readdir($dir))) {
             if (($file == '.') || ($file == '..')) {
                 continue;
             }

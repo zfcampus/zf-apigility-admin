@@ -14,6 +14,7 @@ class AppController extends AbstractActionController
     public function appAction()
     {
         $viewModel = new ViewModel();
+        $viewModel->setTemplate('zf-apigility-ui');
         $viewModel->setTerminal(true);
         return $viewModel;
     }

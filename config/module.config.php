@@ -1,4 +1,4 @@
-<?php
+<?php // @codingStandardsIgnoreFile
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
  * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
@@ -29,8 +29,12 @@ return array(
             'ZF\Apigility\Admin\Controller\App' => 'ZF\Apigility\Admin\Controller\AppController',
             'ZF\Apigility\Admin\Controller\CacheEnabled' => 'ZF\Apigility\Admin\Controller\CacheEnabledController',
             'ZF\Apigility\Admin\Controller\FsPermissions' => 'ZF\Apigility\Admin\Controller\FsPermissionsController',
+            'ZF\Apigility\Admin\Controller\Strategy' => 'ZF\Apigility\Admin\Controller\StrategyController',
+            'ZF\Apigility\Admin\Controller\Package' => 'ZF\Apigility\Admin\Controller\PackageController'
         ),
         'factories' => array(
+            'ZF\Apigility\Admin\Controller\AuthenticationType' => 'ZF\Apigility\Admin\Controller\AuthenticationTypeControllerFactory',
+            'ZF\Apigility\Admin\Controller\DbAutodiscovery' => 'ZF\Apigility\Admin\Controller\DbAutodiscoveryControllerFactory',
             'ZF\Apigility\Admin\Controller\Dashboard' => 'ZF\Apigility\Admin\Controller\DashboardControllerFactory',
             'ZF\Apigility\Admin\Controller\Documentation' => 'ZF\Apigility\Admin\Controller\DocumentationControllerFactory',
             'ZF\Apigility\Admin\Controller\Filters' => 'ZF\Apigility\Admin\Controller\FiltersControllerFactory',
@@ -83,6 +87,16 @@ return array(
                                     'defaults' => array(
                                         'controller' => 'ZF\Apigility\Admin\Controller\SettingsDashboard',
                                         'action'     => 'settingsDashboard',
+                                    ),
+                                ),
+                            ),
+                            'strategy' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/strategy/:strategy_name',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Strategy',
+                                        'action'     => 'exists',
                                     ),
                                 ),
                             ),
@@ -208,6 +222,16 @@ return array(
                                 ),
                                 'may_terminate' => true,
                                 'child_routes' => array(
+                                    'authentication' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => '/authentication',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
+                                                'action'     => 'mapping',
+                                            ),
+                                        ),
+                                    ),
                                     'authorization' => array(
                                         'type' => 'literal',
                                         'options' => array(
@@ -284,12 +308,22 @@ return array(
                                             )
                                         )
                                     ),
+                                    'db-autodiscovery' => array(
+                                        'type' => 'segment',
+                                        'options' => array(
+                                            'route' => '/:version/autodiscovery/:adapter_name',
+                                            'defaults' => array(
+                                                'controller' => 'ZF\Apigility\Admin\Controller\DbAutodiscovery',
+                                                'action' => 'discover',
+                                            ),
+                                        ),
+                                    ),
                                 ),
                             ),
                             'authentication' => array(
-                                'type' => 'literal',
+                                'type' => 'Zend\Mvc\Router\Http\Segment',
                                 'options' => array(
-                                    'route' => '/authentication',
+                                    'route' => '/authentication[/:authentication_adapter]',
                                     'defaults' => array(
                                         'action'     => 'authentication',
                                         'controller' => 'ZF\Apigility\Admin\Controller\Authentication',
@@ -335,12 +369,41 @@ return array(
                                     ),
                                 ),
                             ),
+                            'doctrine-adapter' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/doctrine-adapter[/:adapter_name]',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\DoctrineAdapter',
+                                    ),
+                                ),
+                            ),
                             'content-negotiation' => array(
                                 'type' => 'segment',
                                 'options' => array(
                                     'route' => '/content-negotiation[/:content_name]',
                                     'defaults' => array(
                                         'controller' => 'ZF\Apigility\Admin\Controller\ContentNegotiation',
+                                    ),
+                                ),
+                            ),
+                            'package' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/package',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\Package',
+                                        'action'     => 'index',
+                                    ),
+                                ),
+                            ),
+                            'authentication-type' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/auth-type',
+                                    'defaults' => array(
+                                        'controller' => 'ZF\Apigility\Admin\Controller\AuthenticationType',
+                                        'action'     => 'authType',
                                     ),
                                 ),
                             ),
@@ -354,11 +417,14 @@ return array(
     'zf-content-negotiation' => array(
         'controllers' => array(
             'ZF\Apigility\Admin\Controller\Authentication'           => 'HalJson',
+            'ZF\Apigility\Admin\Controller\AuthenticationType'       => 'Json',
             'ZF\Apigility\Admin\Controller\Authorization'            => 'HalJson',
             'ZF\Apigility\Admin\Controller\CacheEnabled'             => 'Json',
             'ZF\Apigility\Admin\Controller\ContentNegotiation'       => 'HalJson',
             'ZF\Apigility\Admin\Controller\Dashboard'                => 'HalJson',
             'ZF\Apigility\Admin\Controller\DbAdapter'                => 'HalJson',
+            'ZF\Apigility\Admin\Controller\DbAutodiscovery'          => 'Json',
+            'ZF\Apigility\Admin\Controller\DoctrineAdapter'          => 'HalJson',
             'ZF\Apigility\Admin\Controller\Documentation'            => 'HalJson',
             'ZF\Apigility\Admin\Controller\Filters'                  => 'Json',
             'ZF\Apigility\Admin\Controller\FsPermissions'            => 'Json',
@@ -373,8 +439,10 @@ return array(
             'ZF\Apigility\Admin\Controller\RpcService'               => 'HalJson',
             'ZF\Apigility\Admin\Controller\SettingsDashboard'        => 'HalJson',
             'ZF\Apigility\Admin\Controller\Source'                   => 'Json',
+            'ZF\Apigility\Admin\Controller\Strategy'                 => 'Json',
             'ZF\Apigility\Admin\Controller\Validators'               => 'Json',
             'ZF\Apigility\Admin\Controller\Versioning'               => 'Json',
+            'ZF\Apigility\Admin\Controller\Package'                  => 'Json'
         ),
         'accept_whitelist' => array(
             'ZF\Apigility\Admin\Controller\Authentication' => array(
@@ -398,6 +466,14 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\DbAutodiscovery' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\DoctrineAdapter' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -449,6 +525,10 @@ return array(
                 'application/json',
                 'application/*+json',
             ),
+            'ZF\Apigility\Admin\Controller\Strategy' => array(
+                'application/json',
+                'application/*+json',
+            ),
             'ZF\Apigility\Admin\Controller\Validators' => array(
                 'application/json',
                 'application/*+json',
@@ -484,6 +564,14 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\DbAdapter' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\DbAutodiscovery' => array(
+                'application/json',
+                'application/*+json',
+            ),
+            'ZF\Apigility\Admin\Controller\DoctrineAdapter' => array(
                 'application/json',
                 'application/*+json',
             ),
@@ -525,6 +613,9 @@ return array(
                 'application/*+json',
             ),
             'ZF\Apigility\Admin\Controller\Source' => array(
+                'application/json',
+            ),
+            'ZF\Apigility\Admin\Controller\Strategy' => array(
                 'application/json',
             ),
             'ZF\Apigility\Admin\Controller\Validators' => array(
@@ -569,6 +660,12 @@ return array(
                 'route_identifier_name' => 'adapter_name',
                 'entity_identifier_name' => 'adapter_name',
                 'route_name'      => 'zf-apigility/api/db-adapter',
+            ),
+            'ZF\Apigility\Admin\Model\DoctrineAdapterEntity' => array(
+                'hydrator'        => 'ArraySerializable',
+                'route_identifier_name' => 'adapter_name',
+                'entity_identifier_name' => 'adapter_name',
+                'route_name'      => 'zf-apigility/api/doctrine-adapter',
             ),
             'ZF\Apigility\Admin\Model\InputFilterCollection' => array(
                 'route_name'      => 'zf-apigility/api/module/rest-service/input-filter',
@@ -683,6 +780,15 @@ return array(
             'collection_http_methods' => array('GET', 'POST'),
             'collection_name'         => 'db_adapter',
         ),
+        'ZF\Apigility\Admin\Controller\DoctrineAdapter' => array(
+            'listener'                => 'ZF\Apigility\Admin\Model\DoctrineAdapterResource',
+            'route_name'              => 'zf-apigility/api/doctrine-adapter',
+            'route_identifier_name'   => 'adapter_name',
+            'entity_class'            => 'ZF\Apigility\Admin\Model\DoctrineAdapterEntity',
+            'entity_http_methods'     => array('GET', 'PATCH', 'DELETE'),
+            'collection_http_methods' => array('GET'),
+            'collection_name'         => 'doctrine_adapter',
+        ),
         'ZF\Apigility\Admin\Controller\Module' => array(
             'listener'                => 'ZF\Apigility\Admin\Model\ModuleResource',
             'route_name'              => 'zf-apigility/api/module',
@@ -716,11 +822,15 @@ return array(
 
     'zf-rpc' => array(
         'ZF\Apigility\Admin\Controller\Authentication' => array(
-            'http_methods' => array('GET'),
+            'http_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
             'route_name'   => 'zf-apigility/api/authentication',
         ),
+        'ZF\Apigility\Admin\Controller\AuthenticationType' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/authentication-type',
+        ),
         'ZF\Apigility\Admin\Controller\Authorization' => array(
-            'http_methods' => array('GET', 'PUT'),
+            'http_methods' => array('GET', 'PATCH', 'PUT'),
             'route_name'   => 'zf-apigility/api/module/authorization',
         ),
         'ZF\Apigility\Admin\Controller\CacheEnabled' => array(
@@ -734,6 +844,10 @@ return array(
         'ZF\Apigility\Admin\Controller\Dashboard' => array(
             'http_methods' => array('GET'),
             'route_name'   => 'zf-apigility/api/dashboard',
+        ),
+        'ZF\Apigility\Admin\Controller\DbAutodiscovery' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/module/db-autodiscovery',
         ),
         'ZF\Apigility\Admin\Controller\Documentation' => array(
             'http_methods' => array('GET', 'PATCH', 'PUT', 'DELETE'),
@@ -790,6 +904,14 @@ return array(
         'ZF\Apigility\Admin\Controller\Versioning' => array(
             'http_methods' => array('PATCH'),
             'route_name'   => 'zf-apigility/api/versioning',
+        ),
+        'ZF\Apigility\Admin\Controller\Strategy' => array(
+            'http_methods' => array('GET'),
+            'route_name'   => 'zf-apigility/api/strategy'
+        ),
+        'ZF\Apigility\Admin\Controller\Package' => array(
+            'http_methods' => array('GET', 'POST'),
+            'route_name'   => 'zf-apigility/api/package',
         ),
     ),
 
@@ -945,6 +1067,10 @@ return array(
         'Zend\Filter\StripTags' => array(
             'allowAttribs' => 'string',
             'allowTags' => 'string',
+        ),
+        'Zend\Filter\ToInt' => array(),
+        'Zend\Filter\ToNull' => array(
+            'type' => 'int|string',
         ),
         'Zend\Filter\UriNormalize' => array(
             'defaultscheme' => 'string',
@@ -1263,6 +1389,12 @@ return array(
         'Zend\I18n\Validator\Int' => array(
             'locale' => 'string',
         ),
+        'Zend\I18n\Validator\IsFloat' => array(
+            'locale' => 'string',
+        ),
+        'Zend\I18n\Validator\IsInt' => array(
+            'locale' => 'string',
+        ),
         'Zend\I18n\Validator\PhoneNumber' => array(
             'country' => 'string',
             'allow_possible' => 'bool',
@@ -1308,7 +1440,6 @@ return array(
         'ZF\Apigility\Admin\Controller\OAuth2Authentication' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2'
         ),
-
         'ZF\Apigility\Admin\Controller\DbAdapter' => array(
             'input_filter' => 'ZF\Apigility\Admin\InputFilter\DbAdapter',
         ),

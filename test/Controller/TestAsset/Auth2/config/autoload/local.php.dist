@@ -1,0 +1,55 @@
+<?php
+return array(
+    'zf-mvc-auth' => array(
+        'authentication' => array(
+            'adapters' => array(
+                'testbasic' => array(
+                    'adapter' => 'ZF\\MvcAuth\\Authentication\\HttpAdapter',
+                    'options' => array(
+                        'accept_schemes' => array('basic'),
+                        'realm' => 'api',
+                        'htpasswd' => __DIR__ . '/htpasswd',
+                    ),
+                ),
+                'testdigest' => array(
+                    'adapter' => 'ZF\\MvcAuth\\Authentication\\HttpAdapter',
+                    'options' => array(
+                        'accept_schemes' => array('digest'),
+                        'realm' => 'api',
+                        'digest_domains' => '/',
+                        'nonce_timeout' => '3600',
+                        'htdigest' => __DIR__ . '/htdigest',
+                    ),
+                ),
+                'testoauth2pdo' => array(
+                    'adapter' => 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter',
+                    'storage' => array(
+                        'adapter' => 'pdo',
+                        'route' => '/oauth2pdo',
+                        'dsn' => 'mysql:host=localhost;dbname=oauth2',
+                        'username' => 'username',
+                        'password' => 'password',
+                        'options' => array(
+                            1002 => 'SET NAMES utf8',
+                        ),
+                    ),
+                ),
+                'testoauth2mongo' => array(
+                    'adapter' => 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter',
+                    'storage' => array(
+                        'adapter' => 'mongo',
+                        'route' => '/oauth2mongo',
+                        'locator_name' => 'SomeServiceName',
+                        'dsn' => 'mongodb://localhost',
+                        'database' => 'oauth2',
+                        'options' => array(
+                            'username' => 'username',
+                            'password' => 'password',
+                            'connectTimeoutMS' => 500,
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
+);

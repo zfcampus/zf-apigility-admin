@@ -11,6 +11,8 @@ use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Admin\Controller\SourceController;
 use ZF\Apigility\Admin\Model\ModuleModel;
+use ZF\Apigility\Admin\Model\ModulePathSpec;
+use ZF\Configuration\ModuleUtils;
 use ZFTest\Apigility\Admin\Model\TestAsset\Bar\Module as BarModule;
 
 class SourceControllerTest extends TestCase
@@ -18,7 +20,11 @@ class SourceControllerTest extends TestCase
     public function setUp()
     {
         $this->moduleManager  = new ModuleManager(array());
-        $this->moduleResource = new ModuleModel($this->moduleManager, array(), array());
+        $this->moduleResource = new ModuleModel(
+            $this->moduleManager,
+            array(),
+            array()
+        );
         $this->controller     = new SourceController($this->moduleResource);
     }
 

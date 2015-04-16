@@ -9,6 +9,8 @@ namespace ZFTest\Apigility\Admin\Model;
 use PHPUnit_Framework_TestCase as TestCase;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use Test;
+use ZF\Apigility\Admin\Model\ModulePathSpec;
+use ZF\Configuration\ModuleUtils;
 
 class ModuleModelTest extends TestCase
 {
@@ -52,7 +54,11 @@ class ModuleModelTest extends TestCase
             'ZFTest\Apigility\Admin\Model\TestAsset\Bob\Controller\Do'  => null,
         );
 
-        $this->model         = new ModuleModel($this->moduleManager, $restConfig, $rpcConfig);
+        $this->model         = new ModuleModel(
+            $this->moduleManager,
+            $restConfig,
+            $rpcConfig
+        );
     }
 
     public function tearDown()
@@ -128,8 +134,16 @@ class ModuleModelTest extends TestCase
         $this->assertEquals($expected['rpc'], $module->getRpcServices());
     }
 
+    /**
+     * @group listofservices
+     */
     public function testCanRetrieveListOfAllApigilityModulesAndTheirServices()
     {
+        /* If this is running from a vendor directory, markTestSkipped() */
+        if (preg_match('#[/\\\\]vendor[/\\\\]#', __FILE__)) {
+            $this->markTestSkipped('Running from a vendor directory.');
+        }
+
         $expected = array(
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar' => array(
                 'vendor' => false,
@@ -216,7 +230,9 @@ class ModuleModelTest extends TestCase
         mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
 
-        $this->assertTrue($this->model->createModule($module, $modulePath));
+        $pathSpec = $this->getPathSpec($modulePath);
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rpc"));
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rest"));
@@ -227,6 +243,42 @@ class ModuleModelTest extends TestCase
 
         $this->removeDir($modulePath);
         return true;
+    }
+
+
+    /**
+     * @group feature/psr4
+     */
+    public function testCreateModulePSR4()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
+        file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
+
+        $pathSpec = $this->getPathSpec($modulePath, 'psr-4');
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
+        $this->assertTrue(file_exists("$modulePath/module/$module"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/V1/Rpc"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/V1/Rest"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/view"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
+
+        $this->removeDir($modulePath);
+        return true;
+    }
+
+    protected function getPathSpec($modulePath, $spec = 'psr-0')
+    {
+        return new ModulePathSpec(
+            new ModuleUtils($this->moduleManager),
+            $spec,
+            $modulePath
+        );
     }
 
     /**
@@ -243,7 +295,10 @@ class ModuleModelTest extends TestCase
             "$modulePath/config/application.config.php",
             '<' . '?php return array("modules" => array());'
         );
-        $this->assertTrue($this->model->createModule($module, $modulePath));
+
+        $pathSpec = $this->getPathSpec($modulePath);
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
         $config = include $modulePath . '/config/application.config.php';
         $this->assertArrayHasKey('modules', $config, var_export($config, 1));
 
@@ -273,7 +328,9 @@ class ModuleModelTest extends TestCase
             "$modulePath/config/application.config.php",
             '<' . '?php return array("modules" => array());'
         );
-        $this->assertTrue($this->model->createModule($module, $modulePath));
+        $pathSpec = $this->getPathSpec($modulePath);
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
 
         // Now try and delete
         $this->assertTrue($this->model->deleteModule($module, $modulePath, true));
@@ -297,8 +354,9 @@ class ModuleModelTest extends TestCase
             "$modulePath/config/application.config.php",
             '<' . "?php return array(\n    'modules' => array(\n        'Foo',\n    )\n);"
         );
+        $pathSpec = $this->getPathSpec($modulePath);
 
-        $this->assertFalse($this->model->createModule($module, $modulePath));
+        $this->assertFalse($this->model->createModule($module, $pathSpec));
     }
 
     public function testUpdateExistingApiModule()
@@ -364,7 +422,11 @@ class ModuleModelTest extends TestCase
                       ->method('getLoadedModules')
                       ->will($this->returnValue($modules));
 
-        $model = new ModuleModel($moduleManager, array(), array());
+        $model = new ModuleModel(
+            $moduleManager,
+            array(),
+            array()
+        );
 
         $modules = $model->getModules();
         foreach ($modules as $module) {
@@ -385,7 +447,11 @@ class ModuleModelTest extends TestCase
                       ->method('getLoadedModules')
                       ->will($this->returnValue($modules));
 
-        $model = new ModuleModel($moduleManager, array(), array());
+        $model = new ModuleModel(
+            $moduleManager,
+            array(),
+            array()
+        );
 
         $modules = $model->getModules();
 
@@ -415,9 +481,12 @@ class ModuleModelTest extends TestCase
         mkdir("$modulePath/config", 0775, true);
         file_put_contents("$modulePath/config/application.config.php", '<' . '?php return array();');
 
-        $this->assertTrue($this->model->createModule($module, $modulePath));
+        $pathSpec = $this->getPathSpec($modulePath);
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
 
         $this->setExpectedException('Exception', 'exists', 409);
-        $this->model->createModule($module, $modulePath);
+
+        $this->model->createModule($module, $pathSpec);
     }
 }
