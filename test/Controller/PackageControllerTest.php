@@ -21,7 +21,8 @@ class PackageControllerTest extends TestCase
 {
     public function setUp()
     {
-        $this->controller = new PackageController();
+        // Seed with symlink path for zfdeploy.php
+        $this->controller = new PackageController('vendor/bin/zfdeploy.php');
         $this->plugins = new ControllerPluginManager();
         $this->plugins->setService('bodyParam', new BodyParam());
         $this->plugins->setService('bodyParams', new BodyParams());
