@@ -123,7 +123,10 @@ class PackageController extends AbstractActionController
         $format   = strtolower($format);
         $fileId   = uniqid();
         $package  = $this->getPackageFile($fileId, $format);
-        $cmd      = sprintf('php vendor/bin/zfdeploy.php build %s', $package);
+
+        // Use the resolved path within the vendor directory; otherwise,
+        // warnings about inability to locate the config/routes.php file occur
+        $cmd      = sprintf('php vendor/zfcampus/zf-deploy/bin/zfdeploy.php build %s', $package);
 
         $apis = array_key_exists('apis', $params) ? $params['apis'] : null;
         $cmd .= $this->createModulesOption($apis);
