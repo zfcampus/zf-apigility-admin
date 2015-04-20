@@ -85,10 +85,14 @@ class DoctrineAdapterModel
             && is_array($fromConfigFile['doctrine']['connection'])
         ) {
             foreach ($fromConfigFile['doctrine']['connection'] as $connection) {
-                if (!is_array($connection)) {
+                if (! is_array($connection)) {
                     return false;
                 }
-                if (!isset($connection['driverClass'])) {
+
+                // 'driverClass' is part of ORM configuration, and MUST be provided by the user;
+                // 'connectionString' is part of ODM configuration, and MUST be provided by the user.
+                // As such, absence of either of these means we do not have a valid connection.
+                if (! isset($connection['driverClass']) && ! isset($connection['connectionString'])) {
                     return false;
                 }
             }
