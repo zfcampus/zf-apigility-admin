@@ -22,6 +22,21 @@ class PackageController extends AbstractActionController
     private $sentPackage;
 
     /**
+     * @var string
+     */
+    private $zfdeployPath = 'vendor/zfcampus/zf-deploy/bin/zfdeploy.php';
+
+    /**
+     * @param null|string $zfdeployPath Path to use to zfdeploy.php.
+     */
+    public function __construct($zfdeployPath = null)
+    {
+        if (! empty($zfdeployPath) && is_string($zfdeployPath)) {
+            $this->zfdeployPath = $zfdeployPath;
+        }
+    }
+
+    /**
      * Handle incoming requests
      *
      * @return array|\Zend\Http\Response|ApiProblemResponse
@@ -123,10 +138,7 @@ class PackageController extends AbstractActionController
         $format   = strtolower($format);
         $fileId   = uniqid();
         $package  = $this->getPackageFile($fileId, $format);
-
-        // Use the resolved path within the vendor directory; otherwise,
-        // warnings about inability to locate the config/routes.php file occur
-        $cmd      = sprintf('php vendor/zfcampus/zf-deploy/bin/zfdeploy.php build %s', $package);
+        $cmd      = sprintf('php %s build %s', $this->zfdeployPath, $package);
 
         $apis = array_key_exists('apis', $params) ? $params['apis'] : null;
         $cmd .= $this->createModulesOption($apis);
