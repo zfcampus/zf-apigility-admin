@@ -62,7 +62,7 @@ class DoctrineAdapterEntity implements ArraySerializableInterface
     {
         $baseKey = (isset($this->config['driverClass']))
             ? 'doctrine.entitymanager.'
-            : 'doctrine.documentmanager';
+            : 'doctrine.documentmanager.';
 
         return array_merge(array(
             'adapter_name' => $baseKey . $this->name,
