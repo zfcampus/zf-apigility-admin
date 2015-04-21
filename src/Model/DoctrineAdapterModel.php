@@ -89,10 +89,7 @@ class DoctrineAdapterModel
                     return false;
                 }
 
-                // 'driverClass' is part of ORM configuration, and MUST be provided by the user;
-                // 'connectionString' is part of ODM configuration, and MUST be provided by the user.
-                // As such, absence of either of these means we do not have a valid connection.
-                if (! isset($connection['driverClass']) && ! isset($connection['connectionString'])) {
+                if (! $this->isOrmAdapter($connection) && ! $this->isOdmAdapter($connection)) {
                     return false;
                 }
             }
@@ -127,5 +124,36 @@ class DoctrineAdapterModel
             return false;
         }
         return new DoctrineAdapterEntity($name, $config['doctrine']['connection'][$name]);
+    }
+
+    /**
+     * Does the connection represent an ORM adapter?
+     *
+     * To be an ORM adapter, "driverClass" MUST be specified in the
+     * configuration.
+     *
+     * @param array $connection
+     * @return bool
+     */
+    private function isOrmAdapter(array $connection)
+    {
+        return isset($connection['driverClass']);
+    }
+
+    /**
+     * Does the connection represent an ODM adapter?
+     *
+     * To be an ODM adapter, one of "connectionString" OR "dbname" MUST be
+     * specified in the configuration.
+     *
+     * @param array $connection
+     * @return bool
+     */
+    private function isOdmAdapter(array $connection)
+    {
+        return (
+            isset($connection['connectionString'])
+            || isset($connection['dbname'])
+        );
     }
 }

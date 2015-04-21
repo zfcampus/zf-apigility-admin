@@ -46,6 +46,10 @@ class DoctrineAdapterModelTest extends TestCase
                         'connectionString' => 'mongodb://localhost:27017',
                         'options' => array(),
                     ),
+                    'odm_dbname' => array(
+                        'dbname' => 'test',
+                        'options' => array(),
+                    ),
                 ),
             ),
         ), 'php://temp', $this->getMockWriter());
@@ -61,7 +65,7 @@ class DoctrineAdapterModelTest extends TestCase
             $this->assertInstanceOf('ZF\Apigility\Admin\Model\DoctrineAdapterEntity', $adapter);
             $data = $adapter->getArrayCopy();
             $this->assertArrayHasKey('adapter_name', $data);
-            if (strrpos($data['adapter_name'], 'odm_default')) {
+            if (strrpos($data['adapter_name'], 'odm_')) {
                 $this->assertContains('documentmanager', $data['adapter_name']);
             } elseif (strrpos($data['adapter_name'], 'orm_default')) {
                 $this->assertContains('entitymanager', $data['adapter_name']);
