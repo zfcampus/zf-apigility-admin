@@ -60,8 +60,12 @@ class DoctrineAdapterEntity implements ArraySerializableInterface
      */
     public function getArrayCopy()
     {
+        $baseKey = (isset($this->config['driverClass']))
+            ? 'doctrine.entitymanager.'
+            : 'doctrine.documentmanager.';
+
         return array_merge(array(
-            'adapter_name' => 'doctrine.entitymanager.' . $this->name,
+            'adapter_name' => $baseKey . $this->name,
         ), $this->config);
     }
 }
