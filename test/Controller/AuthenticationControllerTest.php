@@ -154,7 +154,7 @@ class AuthenticationControllerTest extends TestCase
                     'type'           => 'digest',
                     'realm'          => 'api',
                     'nonce_timeout'  => '3600',
-                    'digest_domains' => null,
+                    'digest_domains' => '/',
                     'htdigest'       => __DIR__ . '/TestAsset/Auth2/config/autoload/htdigest'
                 ),
             )
