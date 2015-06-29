@@ -181,7 +181,7 @@ class AuthenticationModel
                         422
                     );
                 }
-                switch(strtolower($adapter['oauth2_type'])) {
+                switch (strtolower($adapter['oauth2_type'])) {
                     case strtolower(AuthenticationEntity::DSN_PDO):
                         $filter = new Authentication\OAuth2PdoInputFilter2();
                         break;
@@ -706,7 +706,7 @@ class AuthenticationModel
                 );
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
-                switch(strtolower($adapter['oauth2_type'])) {
+                switch (strtolower($adapter['oauth2_type'])) {
                     case strtolower(AuthenticationEntity::DSN_PDO):
                         $config = array(
                             'adapter' => self::ADAPTER_OAUTH2,
