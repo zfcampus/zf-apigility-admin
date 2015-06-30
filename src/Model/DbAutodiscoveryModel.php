@@ -76,11 +76,12 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                                 );
 
                                 $validator = $this->validators['foreign_key'];
+                                $referencedColumns = $constraintObj->getReferencedColumns();
                                 $validator['options'] = array(
                                     'adapter' => $adapter_name,
                                     'table' => $constraintObj->getReferencedTableName(),
                                     //TODO: handle composite key constraint
-                                    'field' => $constraintObj->getReferencedColumns()[0]
+                                    'field' => $referencedColumns[0]
                                 );
                                 $item['validators'][] = $validator;
                                 break;
