@@ -285,12 +285,12 @@ class RestServiceModel implements EventManagerAwareInterface
         $controllerService = ($details->controllerServiceName)
             ? $details->controllerServiceName
             : $this->createControllerServiceName($serviceName);
-        $routeName         = ($details->routeName)
-            ? $details->routeName
-            : $this->createRoute($serviceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
         $resourceClass     = ($details->resourceClass)
             ? $details->resourceClass
             : $this->createResourceClass($serviceName);
+        $routeName         = ($details->routeName)
+            ? $details->routeName
+            : $this->createRoute($serviceName, $details->routeMatch, $details->routeIdentifierName, $controllerService);
         $collectionClass   = ($details->collectionClass)
             ? $details->collectionClass
             : $this->createCollectionClass($serviceName);

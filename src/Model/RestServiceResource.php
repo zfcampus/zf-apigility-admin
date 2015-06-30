@@ -118,7 +118,10 @@ class RestServiceResource extends AbstractResourceListener
         try {
             $service = $model->createService($creationData);
         } catch (\Exception $e) {
-            throw new CreationException('Unable to create REST service', $e->getCode(), $e);
+            return new ApiProblem(
+                409,
+                sprintf("Unable to create REST service: %s", $e->getMessage())
+            );
         }
 
         return $service;
