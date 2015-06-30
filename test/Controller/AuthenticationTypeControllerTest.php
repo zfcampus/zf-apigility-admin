@@ -54,7 +54,7 @@ class AuthenticationTypeControllerTest extends TestCase
         /* Register v1.1+ adapter types */
         if (isset($config['zf-mvc-auth']['authentication']['adapters'])) {
             foreach ($config['zf-mvc-auth']['authentication']['adapters'] as $adapter => $adapterConfig) {
-                if (! isset ($adapterConfig['adapter'])) {
+                if (! isset($adapterConfig['adapter'])) {
                     continue;
                 }
                 if (false !== stristr($adapterConfig['adapter'], 'http')) {

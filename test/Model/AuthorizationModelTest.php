@@ -117,7 +117,7 @@ class AuthorizationModelTest extends TestCase
                 $newKey = sprintf('%s::__collection__', $key);
                 $config[$newKey] = $value['collection'];
             }
-            unset ($config[$key]);
+            unset($config[$key]);
         }
         return $config;
     }

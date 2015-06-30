@@ -984,4 +984,26 @@ class RestServiceModelTest extends TestCase
             $this->assertEquals($value, $test[$key]);
         }
     }
+
+    /**
+     * @see https://github.com/zfcampus/zf-apigility-admin-ui/issues/23
+     * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
+     */
+    public function testServiceExistsThrowExceptionAndLeaveConfigAsIs()
+    {
+        $details = $this->getCreationPayload();
+        $result  = $this->codeRest->createService($details);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
+        $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+
+        // create a second service with the same name and data
+        try {
+            $result = $this->codeRest->createService($details);
+        } catch (\ZF\Apigility\Admin\Exception\RuntimeException $e) {
+            $config2 = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';
+            // check the configuration is unchanged
+            $this->assertEquals($config, $config2);
+            throw new \ZF\Apigility\Admin\Exception\RuntimeException();
+        }
+    }
 }

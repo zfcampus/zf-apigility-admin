@@ -30,7 +30,6 @@ class ModuleCreationController extends AbstractActionController
         $request = $this->getRequest();
 
         switch ($request->getMethod()) {
-
             case $request::METHOD_PUT:
                 $module = $this->bodyParam('module', false);
                 if (!$module) {
