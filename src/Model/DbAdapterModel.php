@@ -47,6 +47,10 @@ class DbAdapterModel
             unset($adapterConfig['charset']);
         }
 
+        if (empty($adapterConfig['dsn'])) {
+            unset($adapterConfig['dsn']);
+        }
+
         $this->globalConfig->patchKey($key, array());
         $this->localConfig->patchKey($key, $adapterConfig);
 
