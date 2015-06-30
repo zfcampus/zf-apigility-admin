@@ -28,7 +28,6 @@ class SourceController extends AbstractActionController
         $request = $this->getRequest();
 
         switch ($request->getMethod()) {
-
             case $request::METHOD_GET:
                 $module = urldecode($this->params()->fromQuery('module', false));
                 if (!$module) {
