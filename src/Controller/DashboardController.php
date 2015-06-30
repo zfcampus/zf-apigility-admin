@@ -67,9 +67,11 @@ class DashboardController extends AbstractActionController
 
             $rest = $this->restServicesFactory->factory($name)->fetchAll($version);
             $rest = array_map($map, $rest);
+            sort($rest);
 
             $rpc = $this->rpcServicesFactory->factory($name)->fetchAll($version);
             $rpc = array_map($map, $rpc);
+            sort($rpc);
 
             $module->exchangeArray(array(
                 'rest' => $rest,
