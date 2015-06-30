@@ -46,7 +46,7 @@ class DbAdapterModel
         ) {
             unset($adapterConfig['charset']);
         }
-        
+
         if (empty($adapterConfig['dsn'])) {
             unset($adapterConfig['dsn']);
         }
