@@ -120,7 +120,7 @@ class RestServiceResource extends AbstractResourceListener
         } catch (\Exception $e) {
             return new ApiProblem(
                 409,
-                sprintf("Unable to create REST service: %s", $e->getMessage())
+                sprintf('Unable to create REST service: %s', $e->getMessage())
             );
         }
 
