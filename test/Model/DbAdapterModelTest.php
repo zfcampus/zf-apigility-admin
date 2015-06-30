@@ -91,7 +91,31 @@ class DbAdapterModelTest extends TestCase
         }
     }
 
+    /**
+     * @group 279
+     */
     public function testCreatesBothGlobalAndLocalDbConfigWhenNoneExistedPreviously()
+    {
+        $toCreate = array(
+            'driver'   => 'Pdo_Sqlite',
+            'database' => __FILE__,
+            'dsn'      => '',
+        );
+
+        $model = $this->createModelFromConfigArrays(array(), array());
+        $model->create('Db\New', $toCreate);
+
+        $global = include $this->globalConfigPath;
+        $this->assertDbConfigEquals(array(), 'Db\New', $global);
+
+        $local  = include $this->localConfigPath;
+        $this->assertDbConfigEquals(array(
+            'driver'   => 'Pdo_Sqlite',
+            'database' => __FILE__,
+        ), 'Db\New', $local);
+    }
+
+    public function testCreateDoesNotCreateEmptyDsnEntry()
     {
         $toCreate = array('driver' => 'Pdo_Sqlite', 'database' => __FILE__);
         $model    = $this->createModelFromConfigArrays(array(), array());
