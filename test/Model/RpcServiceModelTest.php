@@ -14,6 +14,7 @@ use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\RpcServiceModel;
+use ZF\Apigility\Admin\Model\RpcServiceEntity;
 use ZF\Apigility\Admin\Model\VersioningModel;
 use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
@@ -688,5 +689,46 @@ class RpcServiceModelTest extends TestCase
         $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
         $config = include $configData->config_file;
         $this->assertEquals($methods, $config['zf-rpc'][$configData->controller_service]['http_methods']);
+    }
+
+    /**
+     * @see https://github.com/zfcampus/zf-apigility-admin/issues/49
+     * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
+     */
+    public function testCreateServiceWithUrlAlreadyExist()
+    {
+        $serviceName = 'Foo';
+        $route       = '/foo';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        // Create a new RPC entity with same URL match
+        $serviceName = 'Bar';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+    }
+
+    /**
+     * @see https://github.com/zfcampus/zf-apigility-admin/issues/49
+     * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
+     */
+    public function testUpdateServiceWithUrlAlreadyExist()
+    {
+        $serviceName = 'Foo';
+        $route       = '/foo';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        $serviceName = 'Bar';
+        $route       = '/bar';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        $service    = $result->getArrayCopy();
+        // and now do the actual work for the test
+        $this->codeRpc->updateRoute($service['controller_service_name'], '/foo');
     }
 }
