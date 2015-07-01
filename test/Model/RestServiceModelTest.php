@@ -1006,4 +1006,51 @@ class RestServiceModelTest extends TestCase
             throw new \ZF\Apigility\Admin\Exception\RuntimeException();
         }
     }
+
+    /**
+     * @see https://github.com/zfcampus/zf-apigility-admin/issues/49
+     * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
+     */
+    public function testCreateServiceWithUrlAlreadyExist()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        // Create a new REST entity with same URL match
+        $payload = $details->getArrayCopy();
+        $payload['service_name'] = 'bar';
+        $restService = new NewRestServiceEntity();
+        $restService->exchangeArray($payload);
+
+        $this->codeRest->createService($restService);
+    }
+
+    /**
+     * @see https://github.com/zfcampus/zf-apigility-admin/issues/49
+     * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
+     */
+    public function testUpdateServiceWithUrlAlreadyExist()
+    {
+        $details  = $this->getCreationPayload();
+        $original = $this->codeRest->createService($details);
+
+        // Create a new REST entity
+        $payload = $details->getArrayCopy();
+        $payload['service_name'] = 'bar';
+        $payload['route_match'] = '/api/bar';
+        $payload['route_identifier_name'] = 'bar_id';
+        $payload['collection_name'] = 'bar';
+        $restService = new NewRestServiceEntity();
+        $restService->exchangeArray($payload);
+
+        $second = $this->codeRest->createService($restService);
+
+        $payload = $second->getArrayCopy();
+        // Update the second REST service with same URL of the first one
+        $payload['route_match'] = '/api/foo';
+        $patch = new NewRestServiceEntity();
+        $patch->exchangeArray($payload);
+
+        $this->codeRest->updateService($patch);
+    }
 }

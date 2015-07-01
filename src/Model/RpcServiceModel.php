@@ -354,6 +354,30 @@ class RpcServiceModel
     }
 
     /**
+     * Check if a route already exist in the configuration
+     *
+     * @param  string $route
+     * @param  string $excludeRouteName
+     * @return boolean
+     */
+    protected function routeAlreadyExist($route, $excludeRouteName = null)
+    {
+        // Remove optional parameter in the route
+        $route = preg_replace('/(\[[^\]]+\])/', '', $route);
+        $config = $this->configResource->fetch(true);
+        if (isset($config['router']['routes'])) {
+            foreach ($config['router']['routes'] as $routeName => $routeConfig) {
+                // Remove optional parameters in the route
+                $routeWithoutParam = preg_replace('/(\[[^\]]+\])/', '', $routeConfig['options']['route']);
+                if ($routeWithoutParam === $route && $excludeRouteName !== $routeName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Create the route configuration
      *
      * @param  string $route
@@ -369,6 +393,13 @@ class RpcServiceModel
 
         $routeName = sprintf('%s.rpc.%s', $this->normalize($this->module), $this->normalize($serviceName));
         $action    = lcfirst($serviceName);
+
+        if ($this->routeAlreadyExist($route, $routeName)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The route match "%s" already exists',
+                $route
+            ), 409);
+        }
 
         $config = array(
             'router' => array(
@@ -477,7 +508,12 @@ class RpcServiceModel
         }
         $services  = $services->getArrayCopy();
         $routeName = $services['route_name'];
-
+        if ($this->routeAlreadyExist($routeMatch, $routeName)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The route match "%s" already exists',
+                $routeMatch
+            ), 409);
+        }
         $config = $this->configResource->fetch(true);
         $config['router']['routes'][$routeName]['options']['route'] = $routeMatch;
         $this->configResource->overwrite($config);

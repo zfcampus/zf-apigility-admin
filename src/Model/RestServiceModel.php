@@ -592,6 +592,30 @@ class RestServiceModel implements EventManagerAwareInterface
     }
 
     /**
+     * Check if a route already exist in the configuration
+     *
+     * @param  string $route
+     * @param  string $excludeRouteName
+     * @return boolean
+     */
+    protected function routeAlreadyExist($route, $excludeRouteName = null)
+    {
+        // Remove optional parameters in the route
+        $route = preg_replace('/(\[[^\]]+\])/', '', $route);
+        $config = $this->configResource->fetch(true);
+        if (isset($config['router']['routes'])) {
+            foreach ($config['router']['routes'] as $routeName => $routeConfig) {
+                // Remove optional parameters in the route
+                $routeWithoutParam = preg_replace('/(\[[^\]]+\])/', '', $routeConfig['options']['route']);
+                if ($routeWithoutParam === $route && $excludeRouteName !== $routeName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Create the route configuration
      *
      * @param  string $serviceName
@@ -608,6 +632,13 @@ class RestServiceModel implements EventManagerAwareInterface
             $filter->filter($this->module),
             $filter->filter($serviceName)
         );
+
+        if ($this->routeAlreadyExist($route, $routeName)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The route match "%s" already exists',
+                $route
+            ), 409);
+        }
 
         $config = array(
             'router' => array(
@@ -748,6 +779,12 @@ class RestServiceModel implements EventManagerAwareInterface
             return;
         }
         $routeName = $original->routeName;
+        if ($this->routeAlreadyExist($route, $routeName)) {
+            throw new Exception\RuntimeException(sprintf(
+                'The route match "%s" already exists',
+                $route
+            ), 409);
+        }
         $config    = array('router' => array('routes' => array(
             $routeName => array('options' => array(
                 'route' => $route,
