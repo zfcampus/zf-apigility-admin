@@ -159,7 +159,10 @@ class RpcServiceResource extends AbstractResourceListener
                 $creationData['selector']
             );
         } catch (\Exception $e) {
-            throw new CreationException('Unable to create RPC service', $e->getCode(), $e);
+            if ($e->getCode() !== 500) {
+                return new ApiProblem($e->getCode(), $e->getMessage());
+            }
+            return new ApiProblem(500, 'Unable to create RPC service');
         }
 
         return $service;
@@ -250,7 +253,10 @@ class RpcServiceResource extends AbstractResourceListener
                         break;
                 }
             } catch (\Exception $e) {
-                throw new PatchException('Error updating RPC service', 500, $e);
+                if ($e->getCode() !== 500) {
+                    return new ApiProblem($e->getCode(), $e->getMessage());
+                }
+                return new ApiProblem(500, 'Unable to update RPC service');
             }
         }
 
