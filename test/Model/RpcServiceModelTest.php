@@ -692,6 +692,22 @@ class RpcServiceModelTest extends TestCase
     }
 
     /**
+     * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
+     */
+    public function testServiceExistsThrowExceptionAndLeaveConfigAsIs()
+    {
+        $serviceName = 'Foo';
+        $route       = '/foo';
+        $httpMethods = array('GET', 'PATCH');
+        $selector    = 'HalJson';
+        $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
+
+        $route       = '/foo2';
+        $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
+    }
+
+    /**
      * @see https://github.com/zfcampus/zf-apigility-admin/issues/49
      * @expectedException ZF\Apigility\Admin\Exception\RuntimeException
      */
