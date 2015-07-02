@@ -309,7 +309,7 @@ class RpcServiceModel
             throw new Exception\RuntimeException(sprintf(
                 'The controller "%s" already exists',
                 $className
-            ));
+            ), 409);
         }
 
         $view = new ViewModel(array(
