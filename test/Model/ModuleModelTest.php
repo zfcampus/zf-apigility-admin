@@ -489,4 +489,31 @@ class ModuleModelTest extends TestCase
 
         $this->model->createModule($module, $pathSpec);
     }
+
+    /**
+     * @group 289
+     */
+    public function testWritesToModuleConfigFileOnModuleCreationWhenModuleConfigFileExists()
+    {
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
+        file_put_contents(
+            "$modulePath/config/application.config.php",
+            '<' . '?php return array(\'modules\' => include __DIR__ . \'/modules.config.php\');'
+        );
+        file_put_contents("$modulePath/config/modules.config.php", '<' . '?php return array();');
+
+        $pathSpec = $this->getPathSpec($modulePath);
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
+        $modules = include "$modulePath/config/modules.config.php";
+        $this->assertInternalType('array', $modules);
+        $this->assertContains('Foo', $modules);
+
+        $this->removeDir($modulePath);
+        return true;
+    }
 }
