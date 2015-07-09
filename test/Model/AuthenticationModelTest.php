@@ -410,88 +410,89 @@ class AuthenticationModelTest extends TestCase
     public function getAuthAdapters()
     {
         return array(
-          array(
-              array( // global
-                  'zf-mvc-auth' => array(
-                      'authentication' => array(
-                          'map' => array(
-                              'Status\V1' => 'test1',
-                              'Status\V2' => 'test2',
-                              'Foo'       => 'test3',
-                              'Bar'       => 'test4'
-                          )
-                      )
-                  ),
-                  'router' => array(
-                      'routes' => array(
-                          'oauth' => array(
-                              'type' => 'regex',
-                              'options' => array(
-                                  'regex' => '(?P<oauth>(/oauth_mongo|/oauth_pdo))',
-                                  'spec' => '%oauth%'
-                              )
-                          )
-                      )
-                  )
-              ),
-              array( // local
-                  'zf-mvc-auth' => array(
-                      'authentication' => array(
-                          'adapters' => array(
-                              'test1' => array(
-                                  'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
-                                  'options' => array(
-                                      'accept_schemes' => array('basic'),
-                                      'realm' => 'api',
-                                      'htpasswd' => 'data/htpasswd'
-                                  )
-                              ),
-                              'test2' => array(
-                                  'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
-                                  'options' => array(
-                                      'accept_schemes' => array('digest'),
-                                      'realm' => 'api',
-                                      'digest_domains' => 'domain.com',
-                                      'nonce_timeout' => 3600,
-                                      'htdigest' => 'data/htpasswd',
+            array(
+                array( // global
+                    'zf-mvc-auth' => array(
+                        'authentication' => array(
+                            'map' => array(
+                                'Status\V1' => 'test1',
+                                'Status\V2' => 'test2',
+                                'Foo'       => 'test3',
+                                'Bar'       => 'test4'
+                            )
+                        )
+                    ),
+                    'router' => array(
+                        'routes' => array(
+                            'oauth' => array(
+                                'type' => 'regex',
+                                'options' => array(
+                                    'regex' => '(?P<oauth>(/oauth_mongo|/oauth_pdo))',
+                                    'spec' => '%oauth%'
+                                )
+                            )
+                        )
+                    )
+                ),
+                array( // local
+                    'zf-mvc-auth' => array(
+                        'authentication' => array(
+                            'adapters' => array(
+                                'test1' => array(
+                                    'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
+                                    'options' => array(
+                                        'accept_schemes' => array('basic'),
+                                        'realm' => 'api',
+                                        'htpasswd' => 'data/htpasswd'
+                                    )
+                                ),
+                                'test2' => array(
+                                    'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
+                                    'options' => array(
+                                        'accept_schemes' => array('digest'),
+                                        'realm' => 'api',
+                                        'digest_domains' => 'domain.com',
+                                        'nonce_timeout' => 3600,
+                                        'htdigest' => 'data/htpasswd',
 
-                                  )
-                              ),
-                              'test3' => array(
-                                  'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
-                                  'storage' => array(
-                                      'adapter' => 'pdo',
-                                      'route' => '/oauth_pdo',
-                                      'dsn' => 'mysql:host=localhost;dbname=oauth2',
-                                      'username' => 'test',
-                                      'password' => 'test',
-                                      'options' => array(
-                                          1002 => 'SET NAMES utf8'
-                                      )
-                                  )
-                              ),
-                              'test4' => array(
-                                  'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
-                                  'storage' => array(
-                                      'adapter' => 'mongo',
-                                      'route' => '/oauth_mongo',
-                                      'locator_name' => 'SomeServiceName',
-                                      'dsn' => 'mongodb://localhost',
-                                      'database' => 'oauth2',
-                                      'options' => array(
-                                          'username' => 'username',
-                                          'password' => 'password',
-                                          'connectTimeoutMS' => 500,
-                                      )
-                                  )
-                              )
-                          )
-                      )
-                  )
-              )
-          )
+                                    )
+                                ),
+                                'test3' => array(
+                                    'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
+                                    'storage' => array(
+                                        'adapter' => 'pdo',
+                                        'route' => '/oauth_pdo',
+                                        'dsn' => 'mysql:host=localhost;dbname=oauth2',
+                                        'username' => 'test',
+                                        'password' => 'test',
+                                        'options' => array(
+                                            1002 => 'SET NAMES utf8'
+                                        )
+                                    )
+                                ),
+                                'test4' => array(
+                                    'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
+                                    'storage' => array(
+                                        'adapter' => 'mongo',
+                                        'route' => '/oauth_mongo',
+                                        'locator_name' => 'SomeServiceName',
+                                        'dsn' => 'mongodb://localhost',
+                                        'database' => 'oauth2',
+                                        'options' => array(
+                                            'username' => 'username',
+                                            'password' => 'password',
+                                            'connectTimeoutMS' => 500,
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
         );
     }
+
     /**
      * Test fetch all authentication adapters
      * Since Apigility 1.1
@@ -599,6 +600,13 @@ class AuthenticationModelTest extends TestCase
 
         $data = $this->getDataForAuthAdapters();
         foreach ($data as $adapter) {
+            if (isset($adapter['oauth2_type'])
+                && 'mongo' === $adapter['oauth2_type']
+                && ! extension_loaded('mongo')
+            ) {
+                // Cannot create a Mongo adapter on systems without the Mongo extension
+                continue;
+            }
             $result = $model->createAuthenticationAdapter($adapter);
             $this->assertTrue(is_array($result));
             $this->assertEquals($adapter, $result);
@@ -620,12 +628,12 @@ class AuthenticationModelTest extends TestCase
         $model = $this->createModelFromConfigArrays($global, $local);
 
         $data = $this->getDataForAuthAdapters();
-        $data[3]['name'] = 'test1';
-        $result = $model->updateAuthenticationAdapter('test1', $data[3]);
+        $data[2]['name'] = 'test1';
+        $result = $model->updateAuthenticationAdapter('test1', $data[2]);
         $this->assertTrue(is_array($result));
-        $this->assertEquals($data[3], $result);
+        $this->assertEquals($data[2], $result);
         $config = include $this->globalConfigPath;
-        $this->assertTrue(in_array($data[3]['oauth2_route'], $model->fromOAuth2RegexToArray($config)));
+        $this->assertTrue(in_array($data[2]['oauth2_route'], $model->fromOAuth2RegexToArray($config)));
     }
 
     /**
