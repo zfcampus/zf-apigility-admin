@@ -22,7 +22,7 @@ class RpcServiceModelFactory
      *
      * @var array
      */
-    protected $models = array();
+    protected $models = [];
 
     /**
      * @var ModuleModel

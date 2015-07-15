@@ -63,13 +63,13 @@ class ContentNegotiationResourceTest extends TestCase
 
     public function testCreateShouldAcceptContentNameAndReturnNewEntity()
     {
-        $data = array('content_name' => 'Test');
-        $resource = $this->createResourceFromConfigArray(array());
+        $data = ['content_name' => 'Test'];
+        $resource = $this->createResourceFromConfigArray([]);
         $createFilter = new CreateContentNegotiationInputFilter();
         $createFilter->setData($data);
         $resource->setInputFilter($createFilter);
 
-        $entity = $resource->create(array());
+        $entity = $resource->create([]);
 
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $entity);
         $this->assertEquals('Test', $entity->name);
@@ -77,25 +77,25 @@ class ContentNegotiationResourceTest extends TestCase
 
     public function testUpdateShouldAcceptContentNameAndSelectorsAndReturnUpdatedEntity()
     {
-        $data = array('content_name' => 'Test');
-        $resource = $this->createResourceFromConfigArray(array());
+        $data = ['content_name' => 'Test'];
+        $resource = $this->createResourceFromConfigArray([]);
         $createFilter = new CreateContentNegotiationInputFilter();
         $createFilter->setData($data);
         $resource->setInputFilter($createFilter);
 
-        $entity = $resource->create(array());
+        $entity = $resource->create([]);
 
-        $data = array('selectors' => array(
-            'Zend\View\Model\ViewModel' => array(
+        $data = ['selectors' => [
+            'Zend\View\Model\ViewModel' => [
                 'text/html',
                 'application/xhtml+xml',
-            ),
-        ));
+            ],
+        ]];
         $updateFilter = new ContentNegotiationInputFilter();
         $updateFilter->setData($data);
         $resource->setInputFilter($updateFilter);
 
-        $entity = $resource->patch('Test', array());
+        $entity = $resource->patch('Test', []);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ContentNegotiationEntity', $entity);
         $this->assertEquals('Test', $entity->name);
         $this->assertEquals($data['selectors'], $entity->config);

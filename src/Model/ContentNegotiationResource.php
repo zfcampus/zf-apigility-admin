@@ -45,7 +45,7 @@ class ContentNegotiationResource extends AbstractResourceListener
         return $entity;
     }
 
-    public function fetchAll($params = array())
+    public function fetchAll($params = [])
     {
         return $this->model->fetchAll();
     }
@@ -61,7 +61,7 @@ class ContentNegotiationResource extends AbstractResourceListener
         $name = $data['content_name'];
         unset($data['content_name']);
 
-        $selectors = array();
+        $selectors = [];
         if (isset($data['selectors'])) {
             $selectors = (array) $data['selectors'];
         }

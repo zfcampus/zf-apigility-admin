@@ -12,24 +12,24 @@ class VersionInputFilter extends InputFilter
 {
     public function init()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'module',
-            'validators' => array(
-                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator'),
-            ),
+            'validators' => [
+                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator'],
+            ],
             'error_message' => 'Please provide a valid API module name',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'version',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'Regex',
-                    'options' => array(
+                    'options' => [
                         'pattern' => '/^[a-z0-9_]+$/',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             'error_message' => 'Please provide a valid version string; may consist of a-Z, 0-9, and "_"',
-        ));
+        ]);
     }
 }

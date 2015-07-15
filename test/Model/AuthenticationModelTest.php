@@ -76,7 +76,7 @@ class AuthenticationModelTest extends TestCase
 
         $moduleEntity->expects($this->any())
                      ->method('getVersions')
-                     ->will($this->returnValue(array(1,2)));
+                     ->will($this->returnValue([1,2]));
 
         $moduleModel = $this->getMockBuilder('ZF\Apigility\Admin\Model\ModuleModel')
                             ->disableOriginalConstructor()
@@ -84,7 +84,7 @@ class AuthenticationModelTest extends TestCase
 
         $moduleModel->expects($this->any())
                     ->method('getModules')
-                    ->will($this->returnValue(array('Foo' => $moduleEntity)));
+                    ->will($this->returnValue(['Foo' => $moduleEntity]));
 
         return new AuthenticationModel($globalConfig, $localConfig, $moduleModel);
     }
@@ -115,53 +115,53 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatesBothGlobalAndLocalConfigWhenNoneExistedPreviously()
     {
-        $toCreate = array(
-            'accept_schemes' => array('basic'),
+        $toCreate = [
+            'accept_schemes' => ['basic'],
             'realm'          => 'zendcon',
             'htpasswd'       => __DIR__ . '/htpasswd',
-        );
+        ];
 
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
         $global = include $this->globalConfigPath;
-        $this->assertAuthenticationConfigEquals('http', array(
-            'accept_schemes' => array('basic'),
+        $this->assertAuthenticationConfigEquals('http', [
+            'accept_schemes' => ['basic'],
             'realm'          => 'zendcon',
-        ), $global);
+        ], $global);
 
         $local  = include $this->localConfigPath;
-        $this->assertAuthenticationConfigEquals('http', array(
+        $this->assertAuthenticationConfigEquals('http', [
             'htpasswd'       => __DIR__ . '/htpasswd',
-        ), $local);
+        ], $local);
     }
 
     public function testCanRetrieveAuthenticationConfig()
     {
-        $globalSeedConfig = array(
-            'zf-mvc-auth' => array(
-                'authentication' => array(
-                    'http' => array(
-                        'accept_schemes' => array('basic'),
+        $globalSeedConfig = [
+            'zf-mvc-auth' => [
+                'authentication' => [
+                    'http' => [
+                        'accept_schemes' => ['basic'],
                         'realm'          => 'zendcon',
-                    ),
-                ),
-            ),
-        );
-        $localSeedConfig = array(
-            'zf-mvc-auth' => array(
-                'authentication' => array(
-                    'http' => array(
+                    ],
+                ],
+            ],
+        ];
+        $localSeedConfig = [
+            'zf-mvc-auth' => [
+                'authentication' => [
+                    'http' => [
                         'htpasswd' => __DIR__ . '/htpasswd',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $model  = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
         $entity = $model->fetch();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
         $expected = array_merge(
-            array('type' => 'http_basic'),
+            ['type' => 'http_basic'],
             $globalSeedConfig['zf-mvc-auth']['authentication']['http'],
             $localSeedConfig['zf-mvc-auth']['authentication']['http']
         );
@@ -170,44 +170,44 @@ class AuthenticationModelTest extends TestCase
 
     public function testUpdatesGlobalAndLocalConfigWhenUpdating()
     {
-        $toCreate = array(
-            'accept_schemes' => array('basic'),
+        $toCreate = [
+            'accept_schemes' => ['basic'],
             'realm'          => 'zendcon',
             'htpasswd'       => __DIR__ . '/htpasswd',
-        );
-        $model = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
-        $newConfig = array(
+        $newConfig = [
             'realm'    => 'api',
             'htpasswd' => sys_get_temp_dir() . '/htpasswd',
-        );
+        ];
         $entity = $model->update($newConfig);
 
         // Ensure the entity returned from the update is what we expect
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthenticationEntity', $entity);
-        $expected = array_merge(array('type' => 'http_basic'), $toCreate, $newConfig);
+        $expected = array_merge(['type' => 'http_basic'], $toCreate, $newConfig);
         $this->assertEquals($expected, $entity->getArrayCopy());
 
         // Ensure fetching the entity after an update will return what we expect
         $config = include $this->globalConfigPath;
-        $this->assertAuthenticationConfigEquals('http', array(
-            'accept_schemes' => array('basic'),
+        $this->assertAuthenticationConfigEquals('http', [
+            'accept_schemes' => ['basic'],
             'realm'          => 'api',
-        ), $config);
+        ], $config);
 
         $config = include $this->localConfigPath;
-        $this->assertAuthenticationConfigEquals('http', array('htpasswd' => sys_get_temp_dir() . '/htpasswd'), $config);
+        $this->assertAuthenticationConfigEquals('http', ['htpasswd' => sys_get_temp_dir() . '/htpasswd'], $config);
     }
 
     public function testRemoveDeletesConfigurationFromBothLocalAndGlobalConfigFiles()
     {
-        $toCreate = array(
-            'accept_schemes' => array('basic'),
+        $toCreate = [
+            'accept_schemes' => ['basic'],
             'realm'          => 'zendcon',
             'htpasswd'       => __DIR__ . '/htpasswd',
-        );
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
         $model->remove();
@@ -219,14 +219,14 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFile()
     {
-        $toCreate = array(
+        $toCreate = [
             'dsn'         => 'sqlite::memory:',
             'username'    => 'me',
             'password'    => 'too',
             'route_match' => '/api/oauth',
-        );
+        ];
 
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
         $global = include $this->globalConfigPath;
@@ -242,15 +242,15 @@ class AuthenticationModelTest extends TestCase
         );
 
         $local  = include $this->localConfigPath;
-        $this->assertEquals(array(
+        $this->assertEquals([
             'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
-            'db' => array(
+            'db' => [
                 'dsn_type'    => 'PDO',
                 'dsn'         => 'sqlite::memory:',
                 'username'    => 'me',
                 'password'    => 'too',
-            ),
-        ), $local['zf-oauth2']);
+            ],
+        ], $local['zf-oauth2']);
     }
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
@@ -259,14 +259,14 @@ class AuthenticationModelTest extends TestCase
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
-        $toCreate = array(
+        $toCreate = [
             'dsn'         => 'mongodb://localhost:27017',
             'database'    => 'apigilityTest',
             'dsn_type'    => 'Mongo',
             'route_match' => '/api/oauth',
-        );
+        ];
 
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
         $global = include $this->globalConfigPath;
@@ -282,28 +282,28 @@ class AuthenticationModelTest extends TestCase
         );
 
         $local  = include $this->localConfigPath;
-        $this->assertEquals(array(
+        $this->assertEquals([
             'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
-            'mongo' => array(
+            'mongo' => [
                 'dsn_type'    => 'Mongo',
                 'dsn'         => 'mongodb://localhost:27017',
                 'username'    => null,
                 'password'    => null,
                 'database'    => 'apigilityTest',
-            ),
-        ), $local['zf-oauth2']);
+            ],
+        ], $local['zf-oauth2']);
     }
 
     public function testRemovingOAuth2ConfigurationRemovesConfigurationFromEachFile()
     {
-        $toCreate = array(
+        $toCreate = [
             'dsn'         => 'sqlite::memory:',
             'username'    => 'me',
             'password'    => 'too',
             'route_match' => '/api/oauth',
-        );
+        ];
 
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
         $model->remove();
@@ -326,13 +326,13 @@ class AuthenticationModelTest extends TestCase
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
-        $toCreate = array(
+        $toCreate = [
             'dsn_type'    => 'mongo',
             'dsn'         => 'mongodb://localhost:27017/apigility',
             'route_match' => '/api/oauth',
-        );
+        ];
 
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create($toCreate);
 
         $model->remove();
@@ -355,13 +355,13 @@ class AuthenticationModelTest extends TestCase
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
-        $toCreate = array(
+        $toCreate = [
             'dsn'         => 'mongodb:300.300.300.300',
             'database'    => 'wrong',
             'route_match' => '/api/oauth',
             'dsn_type'    => 'Mongo'
-        );
-        $model = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model = $this->createModelFromConfigArrays([], []);
 
         $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
         $model->create($toCreate);
@@ -372,13 +372,13 @@ class AuthenticationModelTest extends TestCase
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidDsnRaisesException()
     {
-        $toCreate = array(
+        $toCreate = [
             'dsn'         => 'sqlite:/tmp/' . uniqid() . '/.db',
             'username'    => 'me',
             'password'    => 'too',
             'route_match' => '/api/oauth',
-        );
-        $model = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model = $this->createModelFromConfigArrays([], []);
 
         $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
         $model->create($toCreate);
@@ -389,18 +389,18 @@ class AuthenticationModelTest extends TestCase
      */
     public function testAttemptingToUpdateOAuth2ConfigurationWithInvalidDsnRaisesException()
     {
-        $toCreate = array(
+        $toCreate = [
             'dsn'         => 'sqlite::memory:',
             'username'    => 'me',
             'password'    => 'too',
             'route_match' => '/api/oauth',
-        );
-        $model = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model = $this->createModelFromConfigArrays([], []);
 
         $model->create($toCreate);
-        $newConfig = array(
+        $newConfig = [
             'dsn' => 'sqlite:/tmp/' . uniqid() . '/.db',
-        );
+        ];
 
         $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
         $entity = $model->update($newConfig);
@@ -409,88 +409,88 @@ class AuthenticationModelTest extends TestCase
 
     public function getAuthAdapters()
     {
-        return array(
-            array(
-                array( // global
-                    'zf-mvc-auth' => array(
-                        'authentication' => array(
-                            'map' => array(
+        return [
+            [
+                [ // global
+                    'zf-mvc-auth' => [
+                        'authentication' => [
+                            'map' => [
                                 'Status\V1' => 'test1',
                                 'Status\V2' => 'test2',
                                 'Foo'       => 'test3',
                                 'Bar'       => 'test4'
-                            )
-                        )
-                    ),
-                    'router' => array(
-                        'routes' => array(
-                            'oauth' => array(
+                            ]
+                        ]
+                    ],
+                    'router' => [
+                        'routes' => [
+                            'oauth' => [
                                 'type' => 'regex',
-                                'options' => array(
+                                'options' => [
                                     'regex' => '(?P<oauth>(/oauth_mongo|/oauth_pdo))',
                                     'spec' => '%oauth%'
-                                )
-                            )
-                        )
-                    )
-                ),
-                array( // local
-                    'zf-mvc-auth' => array(
-                        'authentication' => array(
-                            'adapters' => array(
-                                'test1' => array(
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                [ // local
+                    'zf-mvc-auth' => [
+                        'authentication' => [
+                            'adapters' => [
+                                'test1' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
-                                    'options' => array(
-                                        'accept_schemes' => array('basic'),
+                                    'options' => [
+                                        'accept_schemes' => ['basic'],
                                         'realm' => 'api',
                                         'htpasswd' => 'data/htpasswd'
-                                    )
-                                ),
-                                'test2' => array(
+                                    ]
+                                ],
+                                'test2' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
-                                    'options' => array(
-                                        'accept_schemes' => array('digest'),
+                                    'options' => [
+                                        'accept_schemes' => ['digest'],
                                         'realm' => 'api',
                                         'digest_domains' => 'domain.com',
                                         'nonce_timeout' => 3600,
                                         'htdigest' => 'data/htpasswd',
 
-                                    )
-                                ),
-                                'test3' => array(
+                                    ]
+                                ],
+                                'test3' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
-                                    'storage' => array(
+                                    'storage' => [
                                         'adapter' => 'pdo',
                                         'route' => '/oauth_pdo',
                                         'dsn' => 'mysql:host=localhost;dbname=oauth2',
                                         'username' => 'test',
                                         'password' => 'test',
-                                        'options' => array(
+                                        'options' => [
                                             1002 => 'SET NAMES utf8'
-                                        )
-                                    )
-                                ),
-                                'test4' => array(
+                                        ]
+                                    ]
+                                ],
+                                'test4' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
-                                    'storage' => array(
+                                    'storage' => [
                                         'adapter' => 'mongo',
                                         'route' => '/oauth_mongo',
                                         'locator_name' => 'SomeServiceName',
                                         'dsn' => 'mongodb://localhost',
                                         'database' => 'oauth2',
-                                        'options' => array(
+                                        'options' => [
                                             'username' => 'username',
                                             'password' => 'password',
                                             'connectTimeoutMS' => 500,
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        );
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
@@ -546,22 +546,22 @@ class AuthenticationModelTest extends TestCase
 
     public function getDataForAuthAdapters()
     {
-        return array(
-            array(
+        return [
+            [
                 'name' => 'test10',
                 'type' => 'basic',
                 'realm' => 'api',
                 'htpasswd' => __DIR__ . '/TestAsset/htpasswd'
-            ),
-            array(
+            ],
+            [
                 'name'           => 'test11',
                 'type'           => 'digest',
                 'realm'          => 'api',
                 'digest_domains' => 'domain.com',
                 'nonce_timeout'  => 3600,
                 'htdigest'       => __DIR__ . '/TestAsset/htdigest'
-            ),
-            array(
+            ],
+            [
                 'name'            => 'test12',
                 'type'            => 'oauth2',
                 'oauth2_type'     => 'pdo',
@@ -569,11 +569,11 @@ class AuthenticationModelTest extends TestCase
                 'oauth2_route'    => '/oauth12',
                 'oauth2_username' => null,
                 'oauth2_password' => null,
-                'oauth2_options'  => array(
+                'oauth2_options'  => [
                     'foo' => 'bar'
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'name'                => 'test13',
                 'type'                => 'oauth2',
                 'oauth2_type'         => 'mongo',
@@ -581,11 +581,11 @@ class AuthenticationModelTest extends TestCase
                 'oauth2_database'     => 'zf-apigility-admin-test',
                 'oauth2_route'        => '/oauth13',
                 'oauth2_locator_name' => null,
-                'oauth2_options'  => array(
+                'oauth2_options'  => [
                     'foo' => 'bar'
-                )
-            ),
-        );
+                ]
+            ],
+        ];
     }
 
     /**
@@ -664,7 +664,7 @@ class AuthenticationModelTest extends TestCase
      */
     public function testGetAuthenticationMap($global, $local)
     {
-        $model = $this->createModelFromConfigArrays($global, array());
+        $model = $this->createModelFromConfigArrays($global, []);
 
         $result = $model->getAuthenticationMap('Status', 1);
         $this->assertEquals($global['zf-mvc-auth']['authentication']['map']['Status\V1'], $result);
@@ -741,54 +741,54 @@ class AuthenticationModelTest extends TestCase
 
     public function getOldAuthenticationConfig()
     {
-        return array(
-            'http_basic' => array(
-                'zf-mvc-auth' => array(
-                    'authentication' => array(
-                        'http' => array(
-                            'accept_schemes' => array('basic'),
+        return [
+            'http_basic' => [
+                'zf-mvc-auth' => [
+                    'authentication' => [
+                        'http' => [
+                            'accept_schemes' => ['basic'],
                             'realm' => 'My Web Site',
                             'htpasswd' => __DIR__ . '/TestAsset/htpasswd'
-                        )
-                    )
-                )
-            ),
-            'http_digest' => array(
-                'zf-mvc-auth' => array(
-                    'authentication' => array(
-                        'http' => array(
-                            'accept_schemes' => array('digest'),
+                        ]
+                    ]
+                ]
+            ],
+            'http_digest' => [
+                'zf-mvc-auth' => [
+                    'authentication' => [
+                        'http' => [
+                            'accept_schemes' => ['digest'],
                             'realm' => 'My Web Site',
                             'digest_domains' => 'domain.com',
                             'nonce_timeout' => 3600,
                             'htdigest' => __DIR__ . '/TestAsset/htdigest'
-                        )
-                    )
-                )
-            ),
-            'oauth2_pdo' => array(
-                'zf-oauth2' => array(
+                        ]
+                    ]
+                ]
+            ],
+            'oauth2_pdo' => [
+                'zf-oauth2' => [
                     'storage' => 'ZF\\OAuth2\\Adapter\\PdoAdapter',
-                    'db' => array(
+                    'db' => [
                         'dsn_type'  => 'PDO',
                         'dsn'       => 'sqlite:/' . __DIR__ . '/TestAsset/db.sqlite',
                         'username'  => null,
                         'password'  => null
-                    )
-                )
-            ),
-            'oauth2_mongo' => array(
-                'zf-oauth2' => array(
+                    ]
+                ]
+            ],
+            'oauth2_mongo' => [
+                'zf-oauth2' => [
                     'storage' => 'ZF\\OAuth2\\Adapter\\MongoAdapter',
-                    'mongo' => array(
+                    'mongo' => [
                         'dsn_type'     => 'Mongo',
                         'dsn'          => 'mongodb://localhost',
                         'database'     => 'zf-apigility-admin-test',
                         'locator_name' => 'MongoDB'
-                    )
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
@@ -797,17 +797,17 @@ class AuthenticationModelTest extends TestCase
      */
     public function testTransformAuthPerApis()
     {
-        $global = array(
-            'router' => array(
-                'routes' => array(
-                    'oauth' => array(
-                        'options' => array(
+        $global = [
+            'router' => [
+                'routes' => [
+                    'oauth' => [
+                        'options' => [
                             'route' => '/oauth'
-                        )
-                    )
-                )
-            )
-        );
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
         foreach ($this->getOldAuthenticationConfig() as $name => $local) {
             $model = $this->createModelFromConfigArrays($global, $local);

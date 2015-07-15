@@ -25,49 +25,49 @@ class BasicInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory;
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\Authentication\BasicInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'basic-only' => array(
-                array('accept_schemes' => array('basic'), 'realm' => 'My Realm')
-            ),
-            'basic-and-digest' => array(
-                array('accept_schemes' => array('digest', 'basic'), 'realm' => 'My Realm')
-            ),
-        );
+        return [
+            'basic-only' => [
+                ['accept_schemes' => ['basic'], 'realm' => 'My Realm']
+            ],
+            'basic-and-digest' => [
+                ['accept_schemes' => ['digest', 'basic'], 'realm' => 'My Realm']
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'empty' => array(
-                array(),
-                array(
+        return [
+            'empty' => [
+                [],
+                [
                     'accept_schemes',
                     'realm',
                     'htpasswd',
-                ),
-            ),
-            'empty-data' => array(
-                array('accept_schemes' => '', 'realm' => '', 'htpasswd' => ''),
-                array(
+                ],
+            ],
+            'empty-data' => [
+                ['accept_schemes' => '', 'realm' => '', 'htpasswd' => ''],
+                [
                     'accept_schemes',
                     'realm',
                     'htpasswd',
-                ),
-            ),
-            'invalid-htpasswd' => array(
-                array('accept_schemes' => array('basic'), 'realm' => 'api', 'htpasswd' => '/foo/bar/baz/bat.htpasswd'),
-                array(
+                ],
+            ],
+            'invalid-htpasswd' => [
+                ['accept_schemes' => ['basic'], 'realm' => 'api', 'htpasswd' => '/foo/bar/baz/bat.htpasswd'],
+                [
                     'htpasswd',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**

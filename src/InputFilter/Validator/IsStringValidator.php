@@ -12,9 +12,9 @@ class IsStringValidator extends ZfAbstractValidator
 {
     const INVALID_TYPE = 'invalidType';
 
-    protected $messageTemplates = array(
+    protected $messageTemplates = [
         self::INVALID_TYPE => 'Value must be a string; received %value%',
-    );
+    ];
 
     /**
      * Test if a value is a string

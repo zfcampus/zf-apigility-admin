@@ -56,21 +56,21 @@ class AuthorizationController extends AbstractActionController
         }
 
         $entity = new Entity($entity, null);
-        $entity->getLinks()->add(Link::factory(array(
+        $entity->getLinks()->add(Link::factory([
             'rel'   => 'self',
-            'route' => array(
+            'route' => [
                 'name'    => 'zf-apigility/api/module/authorization',
-                'params'  => array(
+                'params'  => [
                     'name' => $this->moduleName,
-                ),
-                'options' => array(
-                    'query' => array(
+                ],
+                'options' => [
+                    'query' => [
                         'version' => $version,
-                    ),
-                ),
-            )
-        )));
-        return new ViewModel(array('payload' => $entity));
+                    ],
+                ],
+            ]
+        ]));
+        return new ViewModel(['payload' => $entity]);
     }
 
     /**

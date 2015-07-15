@@ -25,64 +25,64 @@ class DigestInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\Authentication\DigestInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'valid' => array(
-                array(
-                    'accept_schemes' => array('digest'),
+        return [
+            'valid' => [
+                [
+                    'accept_schemes' => ['digest'],
                     'digest_domains' => 'foo.local',
                     'realm' => 'My Realm',
                     'htdigest' => 'tmp/file.htpasswd',
                     'nonce_timeout' => 3600
-                )
-            ),
-        );
+                ]
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'no-data' => array(
-                array(),
-                array(
+        return [
+            'no-data' => [
+                [],
+                [
                     'accept_schemes',
                     'digest_domains',
                     'realm',
                     'htdigest',
                     'nonce_timeout',
-                ),
-            ),
-            'nonce-is-not-a-digit' => array(
-                array(
-                    'accept_schemes' => array('digest'),
+                ],
+            ],
+            'nonce-is-not-a-digit' => [
+                [
+                    'accept_schemes' => ['digest'],
                     'digest_domains' => 'foo.local',
                     'realm' => 'My Realm',
                     'htdigest' => '%HTDIGEST%',
                     'nonce_timeout' => 'foo',
-                ),
-                array(
+                ],
+                [
                     'nonce_timeout',
-                ),
-            ),
-            'invalid-htdigest' => array(
-                array(
-                    'accept_schemes' => array('digest'),
+                ],
+            ],
+            'invalid-htdigest' => [
+                [
+                    'accept_schemes' => ['digest'],
                     'digest_domains' => 'foo.local',
                     'realm' => 'My Realm',
                     'htdigest' => '/foo/bar/baz/bat.htpasswd',
                     'nonce_timeout' => 3600,
-                ),
-                array(
+                ],
+                [
                     'htdigest',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**

@@ -10,7 +10,7 @@ use Zend\Validator\AbstractValidator as BaseAbstractValidator;
 
 abstract class AbstractValidator extends BaseAbstractValidator
 {
-    protected $reservedWords = array(
+    protected $reservedWords = [
         '__halt_compiler',
         'abstract',
         'and',
@@ -76,7 +76,7 @@ abstract class AbstractValidator extends BaseAbstractValidator
         'var',
         'while',
         'xor',
-    );
+    ];
 
     /**
      * Is the given string a valid "name" in PHP?

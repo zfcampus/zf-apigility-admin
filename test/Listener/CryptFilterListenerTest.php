@@ -83,7 +83,7 @@ class CryptFilterListenerTest extends TestCase
     {
         $this->initRequestMethod();
         $this->initRouteMatch();
-        $this->event->setParam('ZFContentNegotiationParameterData', array('foo' => 'bar'));
+        $this->event->setParam('ZFContentNegotiationParameterData', ['foo' => 'bar']);
         $this->assertNull($this->listener->onRoute($this->event));
     }
 
@@ -91,24 +91,24 @@ class CryptFilterListenerTest extends TestCase
     {
         $this->initRequestMethod();
         $this->initRouteMatch();
-        $this->event->setParam('ZFContentNegotiationParameterData', array('filters' => array()));
+        $this->event->setParam('ZFContentNegotiationParameterData', ['filters' => []]);
         $this->assertTrue($this->listener->onRoute($this->event));
     }
 
     public function testUpdatesParameterDataIfAnyCompressionOrEncryptionFiltersDetected()
     {
-        $filters = array(
-            array(
+        $filters = [
+            [
                 'name' => 'Zend\Filter\Encrypt\BlockCipher',
-            ),
-            array(
+            ],
+            [
                 'name' => 'Zend\Filter\Compress\Gz',
-            ),
-        );
+            ],
+        ];
 
         $this->initRequestMethod();
         $this->initRouteMatch();
-        $this->event->setParam('ZFContentNegotiationParameterData', array('filters' => $filters));
+        $this->event->setParam('ZFContentNegotiationParameterData', ['filters' => $filters]);
         $this->assertTrue($this->listener->onRoute($this->event));
         $data = $this->event->getParam('ZFContentNegotiationParameterData');
         $filters = $data['filters'];

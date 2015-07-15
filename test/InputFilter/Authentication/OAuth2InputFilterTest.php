@@ -15,75 +15,75 @@ class OAuth2InputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory;
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\Authentication\OAuth2InputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'minimal' => array(
-                array(
+        return [
+            'minimal' => [
+                [
                     'dsn' => 'sqlite://:memory:',
                     'dsn_type' => 'PDO',
                     'route_match' => '/foo',
-                ),
-            ),
-            'full' => array(
-                array(
+                ],
+            ],
+            'full' => [
+                [
                     'dsn' => 'sqlite://:memory:',
                     'dsn_type' => 'PDO',
                     'password' => 'foobar',
                     'route_match' => '/foo',
                     'username' => 'barfoo',
-                ),
-            ),
-            'mongo-without-dsn' => array(
-                array(
+                ],
+            ],
+            'mongo-without-dsn' => [
+                [
                     'dsn_type' => 'Mongo',
                     'database' => 'oauth2',
                     'route_match' => '/oauth2',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'empty' => array(
-                array(),
-                array(
+        return [
+            'empty' => [
+                [],
+                [
                     'dsn',
                     'dsn_type',
                     'route_match',
-                ),
-            ),
-            'empty-values' => array(
-                array(
+                ],
+            ],
+            'empty-values' => [
+                [
                     'dsn' => '',
                     'dsn_type' => '',
                     'password' => '',
                     'route_match' => '',
                     'username' => '',
-                ),
-                array(
+                ],
+                [
                     'dsn',
                     'dsn_type',
                     'route_match',
-                ),
-            ),
-            'mongo-without-database' => array(
-                array(
+                ],
+            ],
+            'mongo-without-database' => [
+                [
                     'dsn_type' => 'Mongo',
                     'route_match' => '/oauth2',
-                ),
-                array(
+                ],
+                [
                     'database',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**

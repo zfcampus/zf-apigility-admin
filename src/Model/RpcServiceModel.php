@@ -67,7 +67,7 @@ class RpcServiceModel
      */
     public function fetch($controllerServiceName)
     {
-        $data   = array('controller_service_name' => $controllerServiceName);
+        $data   = ['controller_service_name' => $controllerServiceName];
         $config = $this->configResource->fetch(true);
 
         if (!isset($config['zf-rpc'][$controllerServiceName])) {
@@ -136,10 +136,10 @@ class RpcServiceModel
     {
         $config = $this->configResource->fetch(true);
         if (!isset($config['zf-rpc'])) {
-            return array();
+            return [];
         }
 
-        $services = array();
+        $services = [];
         $pattern  = false;
 
         // Initialize pattern if a version was passed and it's valid
@@ -256,17 +256,17 @@ class RpcServiceModel
             ), 409);
         }
 
-        $view = new ViewModel(array(
+        $view = new ViewModel([
                 'module'       => $module,
                 'classname'    => $className,
                 'classfactory' => $classFactory,
                 'servicename'  => $serviceName,
                 'version'      => $version,
-        ));
+        ]);
 
-        $resolver = new Resolver\TemplateMapResolver(array(
+        $resolver = new Resolver\TemplateMapResolver([
                 'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-factory.phtml'
-        ));
+        ]);
 
         $view->setTemplate('code-connected/rpc-controller');
         $renderer = new PhpRenderer();
@@ -312,16 +312,16 @@ class RpcServiceModel
             ), 409);
         }
 
-        $view = new ViewModel(array(
+        $view = new ViewModel([
             'module'      => $module,
             'classname'   => $className,
             'servicename' => $serviceName,
             'version'     => $version,
-        ));
+        ]);
 
-        $resolver = new Resolver\TemplateMapResolver(array(
+        $resolver = new Resolver\TemplateMapResolver([
             'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-controller.phtml'
-        ));
+        ]);
 
         $view->setTemplate('code-connected/rpc-controller');
         $renderer = new PhpRenderer();
@@ -336,21 +336,21 @@ class RpcServiceModel
 
         $fullClassFactory = $this->createFactoryController($serviceName);
 
-        $this->configResource->patch(array(
-            'controllers' => array(
-                'factories' => array(
+        $this->configResource->patch([
+            'controllers' => [
+                'factories' => [
                     $controllerService => $fullClassFactory,
-                ),
-            ),
-        ), true);
+                ],
+            ],
+        ], true);
 
         $fullClassName = sprintf('%s\\V%s\\Rpc\\%s\\%s', $module, $version, $serviceName, $className);
 
-        return (object) array(
+        return (object) [
             'class'   => $fullClassName,
             'file'    => $classPath,
             'service' => $controllerService,
-        );
+        ];
     }
 
     /**
@@ -401,27 +401,27 @@ class RpcServiceModel
             ), 409);
         }
 
-        $config = array(
-            'router' => array(
-                'routes' => array(
-                    $routeName => array(
+        $config = [
+            'router' => [
+                'routes' => [
+                    $routeName => [
                         'type' => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route' => $route,
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => $controllerService,
                                 'action'     => $action,
-                            ),
-                        ),
-                    ),
-                )
-            ),
-            'zf-versioning' => array(
-                'uri' => array(
+                            ],
+                        ],
+                    ],
+                ]
+            ],
+            'zf-versioning' => [
+                'uri' => [
                     $routeName
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $this->configResource->patch($config, true);
         return $routeName;
@@ -441,16 +441,16 @@ class RpcServiceModel
         $serviceName,
         $controllerService,
         $routeName,
-        array $httpMethods = array('GET'),
+        array $httpMethods = ['GET'],
         $callable = null
     ) {
-        $config = array('zf-rpc' => array(
-            $controllerService => array(
+        $config = ['zf-rpc' => [
+            $controllerService => [
                 'service_name' => $serviceName,
                 'http_methods' => $httpMethods,
                 'route_name'   => $routeName,
-            ),
-        ));
+            ],
+        ]];
         if (null !== $callable) {
             $config[$controllerService]['callable'] = $callable;
         }
@@ -472,24 +472,24 @@ class RpcServiceModel
 
         $mediaType = $this->createMediaType();
 
-        $config = array('zf-content-negotiation' => array(
-            'controllers' => array(
+        $config = ['zf-content-negotiation' => [
+            'controllers' => [
                 $controllerService => $selector,
-            ),
-            'accept_whitelist' => array(
-                $controllerService => array(
+            ],
+            'accept_whitelist' => [
+                $controllerService => [
                     $mediaType,
                     'application/json',
                     'application/*+json',
-                ),
-            ),
-            'content_type_whitelist' => array(
-                $controllerService => array(
+                ],
+            ],
+            'content_type_whitelist' => [
+                $controllerService => [
                     $mediaType,
                     'application/json',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]];
         return $this->configResource->patch($config, true);
     }
 
@@ -560,7 +560,7 @@ class RpcServiceModel
      */
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
     {
-        if (!in_array($headerType, array('accept', 'content_type'))) {
+        if (!in_array($headerType, ['accept', 'content_type'])) {
             /** @todo define exception in Rpc namespace */
             throw new PatchException('Invalid content negotiation whitelist type provided', 422);
         }
@@ -584,7 +584,7 @@ class RpcServiceModel
             return;
         }
 
-        $key = array('router', 'routes', $routeName);
+        $key = ['router', 'routes', $routeName];
         $this->configResource->deleteKey($key);
     }
 
@@ -619,7 +619,7 @@ class RpcServiceModel
             return true;
         });
 
-        $key = array('zf-versioning', 'uri');
+        $key = ['zf-versioning', 'uri'];
         $this->configResource->patchKey($key, $versioning);
     }
 
@@ -630,8 +630,8 @@ class RpcServiceModel
      */
     public function deleteControllersConfig($serviceName)
     {
-        foreach (array('invokables', 'factories') as $serviceType) {
-            $key = array('controllers', $serviceType, $serviceName);
+        foreach (['invokables', 'factories'] as $serviceType) {
+            $key = ['controllers', $serviceType, $serviceName];
             $this->configResource->deleteKey($key);
         }
     }
@@ -643,7 +643,7 @@ class RpcServiceModel
      */
     public function deleteRpcConfig($serviceName)
     {
-        $key = array('zf-rpc', $serviceName);
+        $key = ['zf-rpc', $serviceName];
         $this->configResource->deleteKey($key);
     }
 
@@ -655,13 +655,13 @@ class RpcServiceModel
      */
     public function deleteContentNegotiationConfig($serviceName)
     {
-        $key = array('zf-content-negotiation', 'controllers', $serviceName);
+        $key = ['zf-content-negotiation', 'controllers', $serviceName];
         $this->configResource->deleteKey($key);
 
-        $key = array('zf-content-negotiation', 'accept_whitelist', $serviceName);
+        $key = ['zf-content-negotiation', 'accept_whitelist', $serviceName];
         $this->configResource->deleteKey($key);
 
-        $key = array('zf-content-negotiation', 'content_type_whitelist', $serviceName);
+        $key = ['zf-content-negotiation', 'content_type_whitelist', $serviceName];
         $this->configResource->deleteKey($key);
     }
 
@@ -672,7 +672,7 @@ class RpcServiceModel
      */
     public function deleteContentValidationConfig($serviceName)
     {
-        $key = array('zf-content-validation', $serviceName);
+        $key = ['zf-content-validation', $serviceName];
         $this->configResource->deleteKey($key);
     }
 
@@ -683,7 +683,7 @@ class RpcServiceModel
      */
     public function deleteAuthorizationConfig($serviceName)
     {
-        $key = array('zf-mvc-auth', 'authorization', $serviceName);
+        $key = ['zf-mvc-auth', 'authorization', $serviceName];
         $this->configResource->deleteKey($key);
     }
 

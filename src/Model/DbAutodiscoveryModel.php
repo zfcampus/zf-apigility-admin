@@ -24,7 +24,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
      */
     public function fetchColumns($module, $version, $adapter_name)
     {
-        $tables = array();
+        $tables = [];
         if (!isset($this->config['db']['adapters'])) {
             // error
         }
@@ -41,25 +41,25 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                 continue;
             }
 
-            $tableData = array(
+            $tableData = [
                 'table_name' => $tableName,
-            );
+            ];
             $table = $metadata->getTable($tableName);
 
-            $tableData['columns'] = array();
+            $tableData['columns'] = [];
 
             $constraints = $this->getConstraints($metadata, $tableName);
 
             /** @var \Zend\Db\Metadata\Object\ColumnObject $column */
             foreach ($table->getColumns() as $column) {
-                $item = array(
+                $item = [
                     'name' => $column->getName(),
                     'type' => $column->getDataType(),
                     'required' => !$column->isNullable(),
-                    'filters' => array(),
-                    'validators' => array(),
-                    'constraints' => array(),
-                );
+                    'filters' => [],
+                    'validators' => [],
+                    'constraints' => [],
+                ];
 
                 foreach ($constraints as $constraint) {
                     if ($column->getName() == $constraint['column']) {
@@ -77,28 +77,28 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
 
                                 $validator = $this->validators['foreign_key'];
                                 $referencedColumns = $constraintObj->getReferencedColumns();
-                                $validator['options'] = array(
+                                $validator['options'] = [
                                     'adapter' => $adapter_name,
                                     'table' => $constraintObj->getReferencedTableName(),
                                     //TODO: handle composite key constraint
                                     'field' => $referencedColumns[0]
-                                );
+                                ];
                                 $item['validators'][] = $validator;
                                 break;
                             case 'UNIQUE':
                                 $validator = $this->validators['unique'];
-                                $validator['options'] = array(
+                                $validator['options'] = [
                                     'adapter' => $adapter_name,
                                     'table' => $tableName,
                                     'field' => $column->getName(),
-                                );
+                                ];
                                 $item['validators'][] = $validator;
                                 break;
                         }
                     }
                 }
 
-                if (in_array(strtolower($column->getDataType()), array('varchar', 'text'))) {
+                if (in_array(strtolower($column->getDataType()), ['varchar', 'text'])) {
                     $item['length'] = $column->getCharacterMaximumLength();
                     if (in_array('Primary key', array_values($item['constraints']))) {
                         unset($item['filters']);
@@ -110,8 +110,8 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                     $validator = $this->validators['text'];
                     $validator['options']['max'] = $column->getCharacterMaximumLength();
                     $item['validators'][] = $validator;
-                } elseif (in_array(strtolower($column->getDataType()), array(
-                    'tinyint', 'smallint', 'mediumint', 'int', 'bigint'))) {
+                } elseif (in_array(strtolower($column->getDataType()), [
+                    'tinyint', 'smallint', 'mediumint', 'int', 'bigint'])) {
                     $item['length'] = $column->getNumericPrecision();
                     if (in_array('Primary key', array_values($item['constraints']))) {
                         unset($item['filters']);
@@ -137,14 +137,14 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
      */
     protected function getConstraints(Metadata $metadata, $tableName)
     {
-        $constraints = array();
+        $constraints = [];
         /** @var \Zend\Db\Metadata\Object\ConstraintObject $constraint */
         foreach ($metadata->getConstraints($tableName) as $constraint) {
             foreach ($constraint->getColumns() as $column) {
-                $constraints[] = array(
+                $constraints[] = [
                     'column' => $column,
                     'type' => $constraint->getType(),
-                );
+                ];
             }
         }
 

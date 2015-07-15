@@ -40,7 +40,7 @@ class DoctrineAdapterEntity implements ArraySerializableInterface
      */
     public function exchangeArray(array $array)
     {
-        $this->config = array();
+        $this->config = [];
         foreach ($array as $key => $value) {
             switch (strtolower($key)) {
                 case 'adapter_name':
@@ -64,8 +64,8 @@ class DoctrineAdapterEntity implements ArraySerializableInterface
             ? 'doctrine.entitymanager.'
             : 'doctrine.documentmanager.';
 
-        return array_merge(array(
+        return array_merge([
             'adapter_name' => $baseKey . $this->name,
-        ), $this->config);
+        ], $this->config);
     }
 }

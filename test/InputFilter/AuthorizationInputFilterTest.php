@@ -13,52 +13,52 @@ class AuthorizationInputFilterTest extends TestCase
 {
     public function dataProviderIsValid()
     {
-        return array(
-            'empty' => array(
-                array(),
-            ),
-            'valid' => array(
-                array(
-                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('POST' => true, 'GET' => false),
-                    'Foo\V1\Rpc\Boom\Controller::boom' => array('GET' => true, 'DELETE' => false, 'PATCH' => true),
-                ),
-            ),
-        );
+        return [
+            'empty' => [
+                [],
+            ],
+            'valid' => [
+                [
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => ['POST' => true, 'GET' => false],
+                    'Foo\V1\Rpc\Boom\Controller::boom' => ['GET' => true, 'DELETE' => false, 'PATCH' => true],
+                ],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'invalid-controller-name' => array(
-                array(
-                    'Foo\V1\Rest\Bar\Controller' => array(),
-                ),
-                array(
-                    'Foo\V1\Rest\Bar\Controller' => array(
+        return [
+            'invalid-controller-name' => [
+                [
+                    'Foo\V1\Rest\Bar\Controller' => [],
+                ],
+                [
+                    'Foo\V1\Rest\Bar\Controller' => [
                         'Class service name is invalid, must be serviceName::method,'
                         . ' serviceName::__collection__, or serviceName::__entity__',
-                    ),
-                ),
-            ),
-            'values-not-array' => array(
-                array(
+                    ],
+                ],
+            ],
+            'values-not-array' => [
+                [
                     'Foo\V1\Rest\Bar\Controller::__entity__' => 'GET=true',
-                ),
-                array(
-                    'Foo\V1\Rest\Bar\Controller::__entity__' => array(
+                ],
+                [
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => [
                         'Values for each controller must be an http method keyed array of true/false values',
-                    ),
-                ),
-            ),
-            'invalid-http-method' => array(
-                array(
-                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('MYMETHOD' => true),
-                ),
-                array(
-                    'Foo\V1\Rest\Bar\Controller::__entity__' => array('Invalid HTTP method (MYMETHOD) provided.'),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+            'invalid-http-method' => [
+                [
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => ['MYMETHOD' => true],
+                ],
+                [
+                    'Foo\V1\Rest\Bar\Controller::__entity__' => ['Invalid HTTP method (MYMETHOD) provided.'],
+                ],
+            ],
+        ];
     }
 
     /**

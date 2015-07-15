@@ -19,40 +19,40 @@ class DoctrineAdapterModelTest extends TestCase
 
     public function getGlobalConfig()
     {
-        return new ConfigResource(array(
-            'doctrine' => array(
-                'entitymanager' => array(
-                    'orm_default' => array(
-                    ),
-                ),
-                'documentationmanager' => array(
-                    'odm_default' => array(
-                    ),
-                ),
-            ),
-        ), 'php://temp', $this->getMockWriter());
+        return new ConfigResource([
+            'doctrine' => [
+                'entitymanager' => [
+                    'orm_default' => [
+                    ],
+                ],
+                'documentationmanager' => [
+                    'odm_default' => [
+                    ],
+                ],
+            ],
+        ], 'php://temp', $this->getMockWriter());
     }
 
     public function getLocalConfig()
     {
-        return new ConfigResource(array(
-            'doctrine' => array(
-                'connection' => array(
-                    'orm_default' => array(
+        return new ConfigResource([
+            'doctrine' => [
+                'connection' => [
+                    'orm_default' => [
                         'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
-                        'params' => array(),
-                    ),
-                    'odm_default' => array(
+                        'params' => [],
+                    ],
+                    'odm_default' => [
                         'connectionString' => 'mongodb://localhost:27017',
-                        'options' => array(),
-                    ),
-                    'odm_dbname' => array(
+                        'options' => [],
+                    ],
+                    'odm_dbname' => [
                         'dbname' => 'test',
-                        'options' => array(),
-                    ),
-                ),
-            ),
-        ), 'php://temp', $this->getMockWriter());
+                        'options' => [],
+                    ],
+                ],
+            ],
+        ], 'php://temp', $this->getMockWriter());
     }
 
     public function testFetchAllReturnsMixOfOrmAndOdmAdapters()

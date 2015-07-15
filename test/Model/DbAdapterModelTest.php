@@ -96,33 +96,33 @@ class DbAdapterModelTest extends TestCase
      */
     public function testCreatesBothGlobalAndLocalDbConfigWhenNoneExistedPreviously()
     {
-        $toCreate = array(
+        $toCreate = [
             'driver'   => 'Pdo_Sqlite',
             'database' => __FILE__,
             'dsn'      => '',
-        );
+        ];
 
-        $model = $this->createModelFromConfigArrays(array(), array());
+        $model = $this->createModelFromConfigArrays([], []);
         $model->create('Db\New', $toCreate);
 
         $global = include $this->globalConfigPath;
-        $this->assertDbConfigEquals(array(), 'Db\New', $global);
+        $this->assertDbConfigEquals([], 'Db\New', $global);
 
         $local  = include $this->localConfigPath;
-        $this->assertDbConfigEquals(array(
+        $this->assertDbConfigEquals([
             'driver'   => 'Pdo_Sqlite',
             'database' => __FILE__,
-        ), 'Db\New', $local);
+        ], 'Db\New', $local);
     }
 
     public function testCreateDoesNotCreateEmptyDsnEntry()
     {
-        $toCreate = array('driver' => 'Pdo_Sqlite', 'database' => __FILE__);
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $toCreate = ['driver' => 'Pdo_Sqlite', 'database' => __FILE__];
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create('Db\New', $toCreate);
 
         $global = include $this->globalConfigPath;
-        $this->assertDbConfigEquals(array(), 'Db\New', $global);
+        $this->assertDbConfigEquals([], 'Db\New', $global);
 
         $local  = include $this->localConfigPath;
         $this->assertDbConfigEquals($toCreate, 'Db\New', $local);
@@ -130,29 +130,29 @@ class DbAdapterModelTest extends TestCase
 
     public function testCreatesNewEntriesInBothGlobalAndLocalDbConfigWhenConfigExistedPreviously()
     {
-        $globalSeedConfig = array(
-            'db' => array(
-                'adapters' => array(
-                    'Db\Old' => array(),
-                ),
-            ),
-        );
-        $localSeedConfig = array(
-            'db' => array(
-                'adapters' => array(
-                    'Db\Old' => array(
+        $globalSeedConfig = [
+            'db' => [
+                'adapters' => [
+                    'Db\Old' => [],
+                ],
+            ],
+        ];
+        $localSeedConfig = [
+            'db' => [
+                'adapters' => [
+                    'Db\Old' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $model = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
-        $model->create('Db\New', array('driver' => 'Pdo_Sqlite', 'database' => __FILE__));
+        $model->create('Db\New', ['driver' => 'Pdo_Sqlite', 'database' => __FILE__]);
 
         $global = include $this->globalConfigPath;
-        $this->assertDbConfigEquals(array(), 'Db\Old', $global);
-        $this->assertDbConfigEquals(array(), 'Db\New', $global);
+        $this->assertDbConfigEquals([], 'Db\Old', $global);
+        $this->assertDbConfigEquals([], 'Db\New', $global);
 
         $local  = include $this->localConfigPath;
         $this->assertDbConfigEquals($localSeedConfig['db']['adapters']['Db\Old'], 'Db\Old', $local);
@@ -161,77 +161,77 @@ class DbAdapterModelTest extends TestCase
 
     public function testCanRetrieveListOfAllConfiguredAdapters()
     {
-        $globalSeedConfig = array(
-            'db' => array(
-                'adapters' => array(
-                    'Db\Old'   => array(),
-                    'Db\New'   => array(),
-                    'Db\Newer' => array(),
-                ),
-            ),
-        );
-        $localSeedConfig = array(
-            'db' => array(
-                'adapters' => array(
-                    'Db\Old' => array(
+        $globalSeedConfig = [
+            'db' => [
+                'adapters' => [
+                    'Db\Old'   => [],
+                    'Db\New'   => [],
+                    'Db\Newer' => [],
+                ],
+            ],
+        ];
+        $localSeedConfig = [
+            'db' => [
+                'adapters' => [
+                    'Db\Old' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                    'Db\New' => array(
+                    ],
+                    'Db\New' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                    'Db\Newer' => array(
+                    ],
+                    'Db\Newer' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $model        = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
         $adapters     = $model->fetchAll();
-        $adapterNames = array();
+        $adapterNames = [];
         foreach ($adapters as $adapter) {
             $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbAdapterEntity', $adapter);
             $adapter = $adapter->getArrayCopy();
             $adapterNames[] = $adapter['adapter_name'];
         }
-        $this->assertEquals(array(
+        $this->assertEquals([
             'Db\Old',
             'Db\New',
             'Db\Newer',
-        ), $adapterNames);
+        ], $adapterNames);
     }
 
     public function testCanRetrieveIndividualAdapterDetails()
     {
-        $globalSeedConfig = array(
-            'db' => array(
-                'adapters' => array(
-                    'Db\Old'   => array(),
-                    'Db\New'   => array(),
-                    'Db\Newer' => array(),
-                ),
-            ),
-        );
-        $localSeedConfig = array(
-            'db' => array(
-                'adapters' => array(
-                    'Db\Old' => array(
+        $globalSeedConfig = [
+            'db' => [
+                'adapters' => [
+                    'Db\Old'   => [],
+                    'Db\New'   => [],
+                    'Db\Newer' => [],
+                ],
+            ],
+        ];
+        $localSeedConfig = [
+            'db' => [
+                'adapters' => [
+                    'Db\Old' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                    'Db\New' => array(
+                    ],
+                    'Db\New' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                    'Db\Newer' => array(
+                    ],
+                    'Db\Newer' => [
                         'driver'   => 'Pdo_Sqlite',
                         'database' => __FILE__,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $model       = $this->createModelFromConfigArrays($globalSeedConfig, $localSeedConfig);
         $adapter     = $model->fetch('Db\New');
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbAdapterEntity', $adapter);
@@ -243,22 +243,22 @@ class DbAdapterModelTest extends TestCase
 
     public function testUpdatesLocalDbConfigWhenUpdating()
     {
-        $toCreate = array('driver' => 'Pdo_Sqlite', 'database' => __FILE__);
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $toCreate = ['driver' => 'Pdo_Sqlite', 'database' => __FILE__];
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create('Db\New', $toCreate);
 
-        $newConfig = array(
+        $newConfig = [
             'driver'   => 'Pdo_Mysql',
             'database' => 'zf_apigility',
             'username' => 'username',
             'password' => 'password',
-        );
+        ];
         $entity = $model->update('Db\New', $newConfig);
 
         // Ensure the entity returned from the update is what we expect
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbAdapterEntity', $entity);
         $entity = $entity->getArrayCopy();
-        $expected = array_merge(array('adapter_name' => 'Db\New'), $newConfig);
+        $expected = array_merge(['adapter_name' => 'Db\New'], $newConfig);
         $this->assertEquals($expected, $entity);
 
         // Ensure fetching the entity after an update will return what we expect
@@ -268,8 +268,8 @@ class DbAdapterModelTest extends TestCase
 
     public function testRemoveDeletesConfigurationFromBothLocalAndGlobalConfigFiles()
     {
-        $toCreate = array('driver' => 'Pdo_Sqlite', 'database' => __FILE__);
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        $toCreate = ['driver' => 'Pdo_Sqlite', 'database' => __FILE__];
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create('Db\New', $toCreate);
 
         $model->remove('Db\New');
@@ -281,10 +281,10 @@ class DbAdapterModelTest extends TestCase
 
     public function postgresDbTypes()
     {
-        return array(
-            'pdo'    => array('Pdo_Pgsql'),
-            'native' => array('Pgsql'),
-        );
+        return [
+            'pdo'    => ['Pdo_Pgsql'],
+            'native' => ['Pgsql'],
+        ];
     }
 
     /**
@@ -293,14 +293,14 @@ class DbAdapterModelTest extends TestCase
      */
     public function testCreatingPostgresConfigDoesNotIncludeCharset($driver)
     {
-        $toCreate = array(
+        $toCreate = [
             'driver' => $driver,
             'database' => 'test',
             'username' => 'test',
             'password' => 'test',
             'charset' => 'UTF-8',
-        );
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create('Db\New', $toCreate);
 
         $local  = include $this->localConfigPath;
@@ -317,29 +317,29 @@ class DbAdapterModelTest extends TestCase
      */
     public function testUpdatingPostgresConfigDoesNotAllowCharset($driver)
     {
-        $toCreate = array(
+        $toCreate = [
             'driver' => $driver,
             'database' => 'test',
             'username' => 'test',
             'password' => 'test',
             'charset' => 'UTF-8',
-        );
-        $model    = $this->createModelFromConfigArrays(array(), array());
+        ];
+        $model    = $this->createModelFromConfigArrays([], []);
         $model->create('Db\New', $toCreate);
 
-        $newConfig = array(
+        $newConfig = [
             'driver'   => $driver,
             'database' => 'zf_apigility',
             'username' => 'test',
             'password' => 'test',
             'charset'  => 'latin-1',
-        );
+        ];
         $entity = $model->update('Db\New', $newConfig);
 
         // Ensure the entity returned from the update is what we expect
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbAdapterEntity', $entity);
         $entity = $entity->getArrayCopy();
-        $expected = array_merge(array('adapter_name' => 'Db\New'), $newConfig);
+        $expected = array_merge(['adapter_name' => 'Db\New'], $newConfig);
         unset($expected['charset']);
 
         $this->assertEquals($expected, $entity);

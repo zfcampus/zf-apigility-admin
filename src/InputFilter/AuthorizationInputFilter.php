@@ -10,7 +10,7 @@ use Zend\InputFilter\InputFilter;
 
 class AuthorizationInputFilter extends InputFilter
 {
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * Is the data set valid?
@@ -19,7 +19,7 @@ class AuthorizationInputFilter extends InputFilter
      */
     public function isValid()
     {
-        $this->messages = array();
+        $this->messages = [];
         $isValid = true;
         foreach ($this->data as $className => $httpMethods) {
             // validate the structure of the controller service name / method
@@ -37,7 +37,7 @@ class AuthorizationInputFilter extends InputFilter
             }
 
             foreach ($httpMethods as $httpMethod => $isRequired) {
-                if (!in_array($httpMethod, array('GET', 'POST', 'PUT', 'PATCH', 'DELETE'))) {
+                if (!in_array($httpMethod, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])) {
                     $this->messages[$className][] = 'Invalid HTTP method (' . $httpMethod . ') provided.';
                     $isValid = false;
                 }

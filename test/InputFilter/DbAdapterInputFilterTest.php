@@ -14,49 +14,49 @@ class DbAdapterInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\DbAdapterInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'valid' => array(
-                array(
+        return [
+            'valid' => [
+                [
                     'adapter_name' => 'Db\Status',
                     'database' => '/path/to/foobar',
                     'driver' => 'pdo_sqlite',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'missing-adapter-name' => array(
-                array(
+        return [
+            'missing-adapter-name' => [
+                [
                     'database' => '/path/to/foobar',
                     'driver' => 'pdo_sqlite',
-                ),
-                array('adapter_name'),
-            ),
-            'missing-database' => array(
-                array(
+                ],
+                ['adapter_name'],
+            ],
+            'missing-database' => [
+                [
                     'adapter_name' => 'Db\Status',
                     'driver' => 'pdo_sqlite',
-                ),
-                array('database'),
-            ),
-            'missing-driver' => array(
-                array(
+                ],
+                ['database'],
+            ],
+            'missing-driver' => [
+                [
                     'adapter_name' => 'Db\Status',
                     'database' => '/path/to/foobar',
-                ),
-                array('driver'),
-            ),
-        );
+                ],
+                ['driver'],
+            ],
+        ];
     }
 
     /**

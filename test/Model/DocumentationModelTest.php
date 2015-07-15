@@ -23,8 +23,8 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
 
         $mockModuleUtils = $this->getMock(
             'ZF\Configuration\ModuleUtils',
-            array('getModuleConfigPath'),
-            array(),
+            ['getModuleConfigPath'],
+            [],
             '',
             false
         );

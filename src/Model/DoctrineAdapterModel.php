@@ -40,7 +40,7 @@ class DoctrineAdapterModel
     public function create($name, array $adapterConfig)
     {
         $key = "doctrine.connection.{$name}";
-        $this->globalConfig->patchKey($key, array());
+        $this->globalConfig->patchKey($key, []);
         $this->localConfig->patchKey($key, $adapterConfig);
 
         return new DoctrineAdapterEntity($name, $adapterConfig);
@@ -98,7 +98,7 @@ class DoctrineAdapterModel
             return false;
         }
 
-        $adapters = array();
+        $adapters = [];
         foreach ($config as $name => $adapterConfig) {
             $adapters[] = new DoctrineAdapterEntity($name, $adapterConfig);
         }

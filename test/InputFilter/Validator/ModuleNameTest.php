@@ -13,20 +13,20 @@ class ModuleNameTest extends TestCase
 {
     public function validModuleNames()
     {
-        return array(
-            'string' => array('test'),
-            'string-with-underscores' => array('test_test'),
-            'string-with-digits' => array('test0'),
-        );
+        return [
+            'string' => ['test'],
+            'string-with-underscores' => ['test_test'],
+            'string-with-digits' => ['test0'],
+        ];
     }
 
     public function invalidModuleNames()
     {
-        return array(
-            'eval' => array('eval'),
-            'Eval' => array('Eval'),
-            'digit-leading' => array('0test'),
-        );
+        return [
+            'eval' => ['eval'],
+            'Eval' => ['Eval'],
+            'digit-leading' => ['0test'],
+        ];
     }
 
     /**

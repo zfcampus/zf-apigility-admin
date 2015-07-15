@@ -84,13 +84,13 @@ class ContentNegotiationTest extends TestCase
 
     public function testCreateContentNegotiation()
     {
-        $toCreate = array(
-            'ZF\ContentNegotiation\JsonModel' => array(
+        $toCreate = [
+            'ZF\ContentNegotiation\JsonModel' => [
                 'application/json',
                 'application/*+json',
-            ),
-        );
-        $model = $this->createModelFromConfigArray(array());
+            ],
+        ];
+        $model = $this->createModelFromConfigArray([]);
         $model->create('Json', $toCreate);
 
         $global = include $this->globalConfigPath;
@@ -99,20 +99,20 @@ class ContentNegotiationTest extends TestCase
 
     public function testUpdateContentNegotiation()
     {
-        $toCreate = array(
-           'ZF\ContentNegotiation\JsonModel' => array(
+        $toCreate = [
+           'ZF\ContentNegotiation\JsonModel' => [
                 'application/json',
                 'application/*+json',
-            ),
-        );
-        $model = $this->createModelFromConfigArray(array());
+            ],
+        ];
+        $model = $this->createModelFromConfigArray([]);
         $model->create('Json', $toCreate);
 
-        $toUpdate = array(
-            'ZF\ContentNegotiation\JsonModel' => array(
+        $toUpdate = [
+            'ZF\ContentNegotiation\JsonModel' => [
                 'application/json',
-            ),
-        );
+            ],
+        ];
         $model->update('Json', $toUpdate);
         $global = include $this->globalConfigPath;
         $this->assertContentConfigEquals($toUpdate, 'Json', $global);
@@ -120,13 +120,13 @@ class ContentNegotiationTest extends TestCase
 
     public function testRemoveContentNegotiation()
     {
-        $toCreate = array(
-           'ZF\ContentNegotiation\JsonModel' => array(
+        $toCreate = [
+           'ZF\ContentNegotiation\JsonModel' => [
                 'application/json',
                 'application/*+json',
-            ),
-        );
-        $model = $this->createModelFromConfigArray(array());
+            ],
+        ];
+        $model = $this->createModelFromConfigArray([]);
         $model->create('Json', $toCreate);
 
         $model->remove('Json');
@@ -136,20 +136,20 @@ class ContentNegotiationTest extends TestCase
 
     public function testFetchAllContentNegotiation()
     {
-        $toCreate = array(
-            'ZF\ContentNegotiation\JsonModel' => array(
+        $toCreate = [
+            'ZF\ContentNegotiation\JsonModel' => [
                 'application/json',
                 'application/*+json',
-            ),
-        );
-        $model = $this->createModelFromConfigArray(array());
+            ],
+        ];
+        $model = $this->createModelFromConfigArray([]);
         $model->create('Json', $toCreate);
 
-        $toCreate2 = array(
-            'ZF\ContentNegotiation\FooModel' => array(
+        $toCreate2 = [
+            'ZF\ContentNegotiation\FooModel' => [
                 'application/foo',
-            ),
-        );
+            ],
+        ];
         $model->create('Foo', $toCreate2);
 
         $global = include $this->globalConfigPath;
@@ -165,13 +165,13 @@ class ContentNegotiationTest extends TestCase
 
     public function testFetchContentNegotiation()
     {
-        $toCreate = array(
-            'ZF\ContentNegotiation\JsonModel' => array(
+        $toCreate = [
+            'ZF\ContentNegotiation\JsonModel' => [
                 'application/json',
                 'application/*+json',
-            ),
-        );
-        $model = $this->createModelFromConfigArray(array());
+            ],
+        ];
+        $model = $this->createModelFromConfigArray([]);
         $model->create('Json', $toCreate);
 
         $content = $model->fetch('Json');

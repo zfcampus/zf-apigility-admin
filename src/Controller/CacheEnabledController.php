@@ -44,7 +44,7 @@ class CacheEnabledController extends AbstractActionController
                 break;
         }
 
-        $viewModel = new ViewModel(array('cache_enabled' => $cacheEnabled));
+        $viewModel = new ViewModel(['cache_enabled' => $cacheEnabled]);
         $viewModel->setTerminal(true);
         return $viewModel;
     }

@@ -111,10 +111,10 @@ class RpcServiceResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        $creationData = array(
-            'http_methods' => array('GET'),
+        $creationData = [
+            'http_methods' => ['GET'],
             'selector'     => null,
-        );
+        ];
 
         if (!isset($data['service_name'])
             || !is_string($data['service_name'])
@@ -192,7 +192,7 @@ class RpcServiceResource extends AbstractResourceListener
      * @param  array $params
      * @return RpcServiceEntity[]
      */
-    public function fetchAll($params = array())
+    public function fetchAll($params = [])
     {
         $version  = $this->getEvent()->getQueryParam('version', null);
         $services = $this->getModel()->fetchAll($version ?: null);
@@ -295,37 +295,37 @@ class RpcServiceResource extends AbstractResourceListener
             return;
         }
 
-        $collection = array();
+        $collection = [];
         $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
             $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
             $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
             $links    = $entity->getLinks();
-            $links->add(Link::factory(array(
+            $links->add(Link::factory([
                 'rel' => 'self',
-                'route' => array(
+                'route' => [
                     'name' => 'zf-apigility/api/module/rpc-service/input-filter',
-                    'params' => array(
+                    'params' => [
                         'name' => $this->moduleName,
                         'controller_service_name' => $parentName,
                         'input_filter_name' => $inputFilter['input_filter_name'],
-                    ),
-                ),
-            )));
+                    ],
+                ],
+            ]));
             $collection[] = $entity;
         }
 
         $collection = new HalCollection($collection);
         $collection->setCollectionName('input_filter');
         $collection->setCollectionRoute('zf-apigility/module/rpc-service/input-filter');
-        $collection->setCollectionRouteParams(array(
+        $collection->setCollectionRouteParams([
             'name' => $this->moduleName,
             'controller_service_name' => $service->controllerServiceName,
-        ));
+        ]);
 
-        $service->exchangeArray(array(
+        $service->exchangeArray([
             'input_filters' => $collection,
-        ));
+        ]);
     }
 
     protected function injectDocumentation(RpcServiceEntity $service)
@@ -339,7 +339,7 @@ class RpcServiceResource extends AbstractResourceListener
         }
         $entity = new HalEntity($documentation, 'documentation');
 
-        $service->exchangeArray(array('documentation' => $entity));
+        $service->exchangeArray(['documentation' => $entity]);
     }
 
     /**
@@ -355,8 +355,8 @@ class RpcServiceResource extends AbstractResourceListener
         }
 
         $controller = $this->controllerManager->get($controllerServiceName);
-        $service->exchangeArray(array(
+        $service->exchangeArray([
             'controller_class' => get_class($controller),
-        ));
+        ]);
     }
 }

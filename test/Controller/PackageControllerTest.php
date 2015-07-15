@@ -31,11 +31,11 @@ class PackageControllerTest extends TestCase
 
     public function invalidRequestMethods()
     {
-        return array(
-            array('patch'),
-            array('put'),
-            array('delete'),
-        );
+        return [
+            ['patch'],
+            ['put'],
+            ['delete'],
+        ];
     }
 
     /**

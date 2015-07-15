@@ -12,18 +12,18 @@ class PostInputFilter extends InputFilter
 {
     public function init()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'service_name',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator',
-                ),
-            ),
+                ],
+            ],
             'error_message' => 'Service Name is required, and must be a valid PHP class name',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'route_match',
             'error_message' => 'Route Match is required, and must be a valid URI path',
-        ));
+        ]);
     }
 }

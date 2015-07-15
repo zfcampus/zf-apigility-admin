@@ -86,11 +86,11 @@ class AuthenticationController extends AbstractAuthenticationController
         }
 
         $halEntity = new Entity($entity, null);
-        $halEntity->getLinks()->add(Link::factory(array(
+        $halEntity->getLinks()->add(Link::factory([
             'rel' => 'self',
             'route' => $this->getRouteForEntity($entity),
-        )));
-        return new ViewModel(array('payload' => $halEntity));
+        ]));
+        return new ViewModel(['payload' => $halEntity]);
     }
 
     /**
@@ -271,7 +271,7 @@ class AuthenticationController extends AbstractAuthenticationController
             'Location',
             $this->url()->fromRoute(
                 'zf-apigility/api/authentication',
-                array( 'authentication_adapter' => $entity['name'] )
+                [ 'authentication_adapter' => $entity['name'] ]
             )
         );
 
@@ -370,19 +370,19 @@ class AuthenticationController extends AbstractAuthenticationController
      */
     private function createCollection($collection)
     {
-        $halCollection = array();
+        $halCollection = [];
         foreach ($collection as $entity) {
             $halEntity = new Entity($entity, 'name');
-            $halEntity->getLinks()->add(Link::factory(array(
+            $halEntity->getLinks()->add(Link::factory([
                 'rel' => 'self',
-                'route' => array(
+                'route' => [
                     'name'   => 'zf-apigility/api/authentication',
-                    'params' => array('authentication_adapter' => $entity['name'])
-                )
-            )));
+                    'params' => ['authentication_adapter' => $entity['name']]
+                ]
+            ]));
             $halCollection[] = $halEntity;
         }
-        return new ViewModel(array('payload' => new Collection($halCollection)));
+        return new ViewModel(['payload' => new Collection($halCollection)]);
     }
 
     /**
@@ -394,14 +394,14 @@ class AuthenticationController extends AbstractAuthenticationController
     private function createEntity($entity)
     {
         $halEntity = new Entity($entity, 'name');
-        $halEntity->getLinks()->add(Link::factory(array(
+        $halEntity->getLinks()->add(Link::factory([
             'rel' => 'self',
-            'route' => array(
+            'route' => [
                 'name'   => 'zf-apigility/api/authentication',
-                'params' => array('authentication_adapter' => $entity['name'])
-            )
-        )));
-        return new ViewModel(array('payload' => $halEntity));
+                'params' => ['authentication_adapter' => $entity['name']]
+            ]
+        ]));
+        return new ViewModel(['payload' => $halEntity]);
     }
 
     /**
@@ -412,9 +412,9 @@ class AuthenticationController extends AbstractAuthenticationController
      */
     private function createAuthenticationMapResult($adapter)
     {
-        $model = new ViewModel(array(
+        $model = new ViewModel([
             'authentication' => $adapter
-        ));
+        ]);
         $model->setTerminal(true);
         return $model;
     }

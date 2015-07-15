@@ -10,44 +10,44 @@ class PostInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\RpcService\PostInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'singular-service-name' => array(
-                array('service_name' => 'Foo', 'route_match' => '/bar'),
-            ),
-            'compound-service-name' => array(
-                array('service_name' => 'Foo_Bar', 'route_match' => '/bar'),
-            ),
-        );
+        return [
+            'singular-service-name' => [
+                ['service_name' => 'Foo', 'route_match' => '/bar'],
+            ],
+            'compound-service-name' => [
+                ['service_name' => 'Foo_Bar', 'route_match' => '/bar'],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'empty' => array(
-                array(),
-                array('service_name', 'route_match'),
-            ),
-            'missing-service-name' => array(
-                array('route_match' => '/bar'),
-                array('service_name'),
-            ),
-            'missing-route-match' => array(
-                array('service_name' => 'Foo_Bar'),
-                array('route_match'),
-            ),
-            'namespaced-service-name' => array(
-                array('service_name' => 'Foo\Bar', 'route_match' => '/bar'),
-                array('service_name'),
-            ),
+        return [
+            'empty' => [
+                [],
+                ['service_name', 'route_match'],
+            ],
+            'missing-service-name' => [
+                ['route_match' => '/bar'],
+                ['service_name'],
+            ],
+            'missing-route-match' => [
+                ['service_name' => 'Foo_Bar'],
+                ['route_match'],
+            ],
+            'namespaced-service-name' => [
+                ['service_name' => 'Foo\Bar', 'route_match' => '/bar'],
+                ['service_name'],
+            ],
 
-        );
+        ];
     }
 
     /**

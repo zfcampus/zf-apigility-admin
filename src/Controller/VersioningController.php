@@ -51,7 +51,7 @@ class VersioningController extends AbstractActionController
         $model = $this->modelFactory->factory($module);
 
         if ($model->setDefaultVersion($version)) {
-            return array('success' => true, 'version' => $version);
+            return ['success' => true, 'version' => $version];
         } else {
             return new ApiProblemModel(
                 new ApiProblem(500, 'An unexpected error occurred while attempting to set the default version')
@@ -106,9 +106,9 @@ class VersioningController extends AbstractActionController
             );
         }
 
-        return array(
+        return [
             'success' => true,
             'version' => $version,
-        );
+        ];
     }
 }

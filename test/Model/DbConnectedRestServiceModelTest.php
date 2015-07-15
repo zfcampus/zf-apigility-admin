@@ -30,7 +30,7 @@ class DbConnectedRestServiceModelTest extends TestCase
      */
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -58,11 +58,11 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->module = 'BarConf';
         $this->cleanUpAssets();
 
-        $modules = array(
+        $modules = [
             'BarConf' => new BarConf\Module()
-        );
+        ];
 
-        $this->moduleEntity  = new ModuleEntity($this->module, array(), array(), false);
+        $this->moduleEntity  = new ModuleEntity($this->module, [], [], false);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -80,7 +80,7 @@ class DbConnectedRestServiceModelTest extends TestCase
             $this->resource->factory('BarConf')
         );
         $this->model    = new DbConnectedRestServiceModel($this->codeRest);
-        $this->codeRest->getEventManager()->attach('fetch', array($this->model, 'onFetch'));
+        $this->codeRest->getEventManager()->attach('fetch', [$this->model, 'onFetch']);
     }
 
     public function tearDown()
@@ -91,20 +91,20 @@ class DbConnectedRestServiceModelTest extends TestCase
     public function getCreationPayload()
     {
         $payload = new DbConnectedRestServiceEntity();
-        $payload->exchangeArray(array(
+        $payload->exchangeArray([
             'adapter_name'               => 'DB\Barbaz',
             'table_name'                 => 'barbaz',
             'hydrator_name'              => 'ObjectProperty',
             'entity_identifier_name'     => 'barbaz_id',
-            'resource_http_methods'      => array('GET', 'PATCH'),
-            'collection_http_methods'    => array('GET', 'POST'),
-            'collection_query_whitelist' => array('sort', 'filter'),
+            'resource_http_methods'      => ['GET', 'PATCH'],
+            'collection_http_methods'    => ['GET', 'POST'],
+            'collection_query_whitelist' => ['sort', 'filter'],
             'page_size'                  => 10,
             'page_size_param'            => 'p',
             'selector'                   => 'HalJson',
-            'accept_whitelist'           => array('application/json', 'application/*+json'),
-            'content_type_whitelist'     => array('application/json'),
-        ));
+            'accept_whitelist'           => ['application/json', 'application/*+json'],
+            'content_type_whitelist'     => ['application/json'],
+        ]);
         return $payload;
     }
 
@@ -198,22 +198,22 @@ class DbConnectedRestServiceModelTest extends TestCase
 
     public function testOnFetchWillRecastEntityToDbConnectedIfDbConnectedConfigurationExists()
     {
-        $originalData = array(
+        $originalData = [
             'controller_service_name' => 'BarConf\Rest\Barbaz\Controller',
             'resource_class'          => 'BarConf\Rest\Barbaz\BarbazResource',
             'route_name'              => 'bar-conf.rest.barbaz',
             'route_match'             => '/api/barbaz',
             'entity_class'            => 'BarConf\Rest\Barbaz\BarbazEntity',
-        );
+        ];
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
-        $config = array( 'zf-apigility' => array('db-connected' => array(
-            'BarConf\Rest\Barbaz\BarbazResource' => array(
+        $config = [ 'zf-apigility' => ['db-connected' => [
+            'BarConf\Rest\Barbaz\BarbazResource' => [
                 'adapter_name'  => 'Db\Barbaz',
                 'table_name'    => 'barbaz',
                 'hydrator_name' => 'ObjectProperty',
-            ),
-        )));
+            ],
+        ]]];
 
         $event = new Event();
         $event->setParam('entity', $entity);
@@ -249,22 +249,22 @@ class DbConnectedRestServiceModelTest extends TestCase
      */
     public function testOnFetchWillRetainResourceClassIfEventFetchFlagIsFalse()
     {
-        $originalData = array(
+        $originalData = [
             'controller_service_name' => 'BarConf\Rest\Barbaz\Controller',
             'resource_class'          => 'BarConf\Rest\Barbaz\BarbazResource',
             'route_name'              => 'bar-conf.rest.barbaz',
             'route_match'             => '/api/barbaz',
             'entity_class'            => 'BarConf\Rest\Barbaz\BarbazEntity',
-        );
+        ];
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
-        $config = array( 'zf-apigility' => array('db-connected' => array(
-            'BarConf\Rest\Barbaz\BarbazResource' => array(
+        $config = [ 'zf-apigility' => ['db-connected' => [
+            'BarConf\Rest\Barbaz\BarbazResource' => [
                 'adapter_name'  => 'Db\Barbaz',
                 'table_name'    => 'barbaz',
                 'hydrator_name' => 'ObjectProperty',
-            ),
-        )));
+            ],
+        ]]];
 
         $event = new Event();
         $event->setParam('entity', $entity);
@@ -284,11 +284,11 @@ class DbConnectedRestServiceModelTest extends TestCase
         $originalEntity = $this->getCreationPayload();
         $this->model->createService($originalEntity);
 
-        $newProps = array(
+        $newProps = [
             'table_service' => 'My\Custom\Table',
             'adapter_name'  => 'My\Db',
             'hydrator_name' => 'ClassMethods',
-        );
+        ];
         $originalEntity->exchangeArray($newProps);
         $result = $this->model->updateService($originalEntity);
 
@@ -304,11 +304,11 @@ class DbConnectedRestServiceModelTest extends TestCase
         $originalEntity = $this->getCreationPayload();
         $this->model->createService($originalEntity);
 
-        $newProps = array(
+        $newProps = [
             'table_service' => 'My\Custom\Table',
             'adapter_name'  => 'My\Db',
             'hydrator_name' => 'ClassMethods',
-        );
+        ];
         $originalEntity->exchangeArray($newProps);
         $result = $this->model->updateService($originalEntity);
 
@@ -339,10 +339,10 @@ class DbConnectedRestServiceModelTest extends TestCase
         $originalEntity = $this->getCreationPayload();
         $this->model->createService($originalEntity);
 
-        $newProps = array(
+        $newProps = [
             'entity_identifier_name' => 'id',
             'hydrator_name'          => 'Zend\\Stdlib\\Hydrator\\ClassMethods',
-        );
+        ];
         $originalEntity->exchangeArray($newProps);
         $result = $this->model->updateService($originalEntity);
 
@@ -384,7 +384,7 @@ class DbConnectedRestServiceModelTest extends TestCase
     public function testCreateServiceWithUnderscoreInNameNormalizesClassNamesToCamelCase()
     {
         $originalEntity = $this->getCreationPayload();
-        $originalEntity->exchangeArray(array('table_name' => 'bar_baz'));
+        $originalEntity->exchangeArray(['table_name' => 'bar_baz']);
 
         $result = $this->model->createService($originalEntity);
         $this->assertSame($originalEntity, $result);

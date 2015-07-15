@@ -45,7 +45,7 @@ class ModuleEntity
     /**
      * @var array
      */
-    protected $versions = array();
+    protected $versions = [];
 
     /**
      * @param  string $name
@@ -56,8 +56,8 @@ class ModuleEntity
      */
     public function __construct(
         $namespace,
-        array $restServices = array(),
-        array $rpcServices = array(),
+        array $restServices = [],
+        array $rpcServices = [],
         $isVendor = null
     ) {
         if (!class_exists($namespace . '\\Module')) {
@@ -207,7 +207,7 @@ class ModuleEntity
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'name'            => $this->name,
             'namespace'       => $this->namespace,
             'is_vendor'       => $this->isVendor(),
@@ -215,7 +215,7 @@ class ModuleEntity
             'rpc'             => $this->getRpcServices(),
             'versions'        => $this->versions,
             'default_version' => $this->defaultVersion,
-        );
+        ];
     }
 
     /**

@@ -13,10 +13,10 @@ class DoctrineAdapterEntityTest extends TestCase
 {
     public function testCanRepresentAnOrmEntity()
     {
-        $config = array(
+        $config = [
             'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
-            'params' => array(),
-        );
+            'params' => [],
+        ];
         $entity = new DoctrineAdapterEntity('test', $config);
         $serialized = $entity->getArrayCopy();
 
@@ -26,9 +26,9 @@ class DoctrineAdapterEntityTest extends TestCase
 
     public function testCanRepresentAnOdmEntity()
     {
-        $config = array(
+        $config = [
             'connectionString' => 'mongodb://localhost:27017',
-        );
+        ];
         $entity = new DoctrineAdapterEntity('test', $config);
         $serialized = $entity->getArrayCopy();
 
