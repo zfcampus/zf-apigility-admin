@@ -90,7 +90,7 @@ class VersioningModel
             $path = $this->getModuleSourcePath($module);
         }
 
-        $versions  = array();
+        $versions  = [];
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
                 $versions[] = (int) $matches['version'];
@@ -110,11 +110,11 @@ class VersioningModel
     {
         $defaultVersion = (int) $defaultVersion;
 
-        $this->configResource->patch(array(
-            'zf-versioning' => array(
+        $this->configResource->patch([
+            'zf-versioning' => [
                 'default_version' => $defaultVersion
-            )
-        ), true);
+            ]
+        ], true);
 
         $config = $this->configResource->fetch(true);
 
@@ -185,30 +185,30 @@ class VersioningModel
         // update zf-hal.metadata_map
         if (isset($config['zf-hal']['metadata_map'])) {
             $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $previous, $version);
-            $this->configResource->patch(array(
-                'zf-hal' => array('metadata_map' => $newValues)
-            ), true);
+            $this->configResource->patch([
+                'zf-hal' => ['metadata_map' => $newValues]
+            ], true);
         }
 
         // update zf-rpc
         if (isset($config['zf-rpc'])) {
             $newValues = $this->changeVersionArray($config['zf-rpc'], $previous, $version);
-            $this->configResource->patch(array(
+            $this->configResource->patch([
                 'zf-rpc' => $newValues
-            ), true);
+            ], true);
         }
 
         // update zf-rest
         if (isset($config['zf-rest'])) {
             $newValues = $this->changeVersionArray($config['zf-rest'], $previous, $version);
-            $this->configResource->patch(array(
+            $this->configResource->patch([
                 'zf-rest' => $newValues
-            ), true);
+            ], true);
         }
 
         // update zf-content-negotiation
         if (isset($config['zf-content-negotiation'])) {
-            foreach (array('controllers', 'accept_whitelist', 'content_type_whitelist') as $key) {
+            foreach (['controllers', 'accept_whitelist', 'content_type_whitelist'] as $key) {
                 if (isset($config['zf-content-negotiation'][$key])) {
                     $newValues = $this->changeVersionArray(
                         $config['zf-content-negotiation'][$key],
@@ -217,7 +217,7 @@ class VersioningModel
                     );
 
                     // change version in mediatype
-                    if (in_array($key, array('accept_whitelist', 'content_type_whitelist'))) {
+                    if (in_array($key, ['accept_whitelist', 'content_type_whitelist'])) {
                         foreach ($newValues as $k => $v) {
                             foreach ($v as $index => $mediatype) {
                                 if (strstr($mediatype, '.v' . $previous . '+')) {
@@ -231,9 +231,9 @@ class VersioningModel
                         }
                     }
 
-                    $this->configResource->patch(array(
-                        'zf-content-negotiation' => array($key => $newValues)
-                    ), true);
+                    $this->configResource->patch([
+                        'zf-content-negotiation' => [$key => $newValues]
+                    ], true);
                 }
             }
         }
@@ -241,48 +241,48 @@ class VersioningModel
         // update zf-mvc-auth
         if (isset($config['zf-mvc-auth']['authorization'])) {
             $newValues = $this->changeVersionArray($config['zf-mvc-auth']['authorization'], $previous, $version);
-            $this->configResource->patch(array(
-                'zf-mvc-auth' => array('authorization' => $newValues)
-            ), true);
+            $this->configResource->patch([
+                'zf-mvc-auth' => ['authorization' => $newValues]
+            ], true);
         }
 
         // update zf-content-validation and input_filter_specs
         if (isset($config['zf-content-validation'])) {
             $newValues = $this->changeVersionArray($config['zf-content-validation'], $previous, $version);
-            $this->configResource->patch(array(
+            $this->configResource->patch([
                 'zf-content-validation' => $newValues
-            ), true);
+            ], true);
         }
 
         if (isset($config['input_filter_specs'])) {
             $newValues = $this->changeVersionArray($config['input_filter_specs'], $previous, $version);
-            $this->configResource->patch(array(
+            $this->configResource->patch([
                 'input_filter_specs' => $newValues
-            ), true);
+            ], true);
         }
 
         // update zf-apigility
         if (isset($config['zf-apigility']['db-connected'])) {
             $newValues = $this->changeVersionArray($config['zf-apigility']['db-connected'], $previous, $version);
-            $this->configResource->patch(array(
-                'zf-apigility' => array('db-connected' => $newValues)
-            ), true);
+            $this->configResource->patch([
+                'zf-apigility' => ['db-connected' => $newValues]
+            ], true);
         }
 
         // update service_manager
         if (isset($config['service_manager'])) {
             $newValues = $this->changeVersionArray($config['service_manager'], $previous, $version);
-            $this->configResource->patch(array(
+            $this->configResource->patch([
                 'service_manager' => $newValues
-            ), true);
+            ], true);
         }
 
         // update controllers
         if (isset($config['controllers'])) {
             $newValues = $this->changeVersionArray($config['controllers'], $previous, $version);
-            $this->configResource->patch(array(
+            $this->configResource->patch([
                 'controllers' => $newValues
-            ), true);
+            ], true);
         }
 
         return true;
@@ -311,7 +311,7 @@ class VersioningModel
      */
     protected function changeVersionArray($data, $previous, $version)
     {
-        $result = array();
+        $result = [];
         foreach ($data as $key => $value) {
             $newKey = $this->changeVersionNamespace($key, $previous, $version);
             if (is_array($value)) {

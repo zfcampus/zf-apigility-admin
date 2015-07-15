@@ -40,6 +40,6 @@ class DbAutodiscoveryController extends AbstractActionController
 
         $data = $this->model->fetchColumns($module, $version, $adapter_name);
 
-        return new ViewModel(array('payload' => $data));
+        return new ViewModel(['payload' => $data]);
     }
 }

@@ -90,11 +90,11 @@ class AuthorizationModel
      */
     public function update(array $privileges, $version = 1)
     {
-        $toStore = array(
-            'zf-mvc-auth' => array(
+        $toStore = [
+            'zf-mvc-auth' => [
                 'authorization' => $this->remapServiceNamesForStorage($privileges),
-            ),
-        );
+            ],
+        ];
 
         $this->configResource->patch($toStore, true);
         return $this->fetch($version);
@@ -298,7 +298,7 @@ class AuthorizationModel
         if (isset($config['zf-rest'])
             && is_array($config['zf-rest'])
         ) {
-            $missingServices = array();
+            $missingServices = [];
             foreach (array_keys($config['zf-rest']) as $serviceName) {
                 if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                     continue;
@@ -314,7 +314,7 @@ class AuthorizationModel
         if (isset($config['zf-rpc'])
             && is_array($config['zf-rpc'])
         ) {
-            $missingServices = array();
+            $missingServices = [];
             foreach ($config['zf-rpc'] as $serviceName => $serviceConfig) {
                 if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                     continue;

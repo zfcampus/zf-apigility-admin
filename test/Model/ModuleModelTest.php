@@ -23,14 +23,14 @@ class ModuleModelTest extends TestCase
             unset($this->modulePath);
         }
 
-        $modules = array(
+        $modules = [
             'ZFTest\Apigility\Admin\Model\TestAsset\Foa' => new TestAsset\Foa\Module(),
             'ZFTest\Apigility\Admin\Model\TestAsset\Foo' => new TestAsset\Foo\Module(),
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar' => new TestAsset\Bar\Module(),
             'ZFTest\Apigility\Admin\Model\TestAsset\Baz' => new TestAsset\Baz\Module(),
             'ZFTest\Apigility\Admin\Model\TestAsset\Bat' => new TestAsset\Bat\Module(),
             'ZFTest\Apigility\Admin\Model\TestAsset\Bob' => new TestAsset\Bob\Module(),
-        );
+        ];
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -38,21 +38,21 @@ class ModuleModelTest extends TestCase
                             ->method('getLoadedModules')
                             ->will($this->returnValue($modules));
 
-        $restConfig           = array(
+        $restConfig           = [
             'ZFTest\Apigility\Admin\Model\TestAsset\Foo\Controller\Foo' => null, // this should never be returned
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Bar' => null,
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Baz' => null,
             'ZFTest\Apigility\Admin\Model\TestAsset\Bat\Controller\Bat' => null, // this should never be returned
-        );
+        ];
 
-        $rpcConfig          = array(
+        $rpcConfig          = [
             // controller => empty pairs
             'ZFTest\Apigility\Admin\Model\TestAsset\Foo\Controller\Act' => null, // this should never be returned
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Act' => null,
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Do'  => null,
             'ZFTest\Apigility\Admin\Model\TestAsset\Bat\Controller\Act' => null, // this should never be returned
             'ZFTest\Apigility\Admin\Model\TestAsset\Bob\Controller\Do'  => null,
-        );
+        ];
 
         $this->model         = new ModuleModel(
             $this->moduleManager,
@@ -71,11 +71,11 @@ class ModuleModelTest extends TestCase
 
     public function testEnabledModulesOnlyReturnsThoseThatImplementApigilityProviderInterface()
     {
-        $expected = array(
+        $expected = [
             'ZFTest\Apigility\Admin\Model\TestAsset\Bar',
             'ZFTest\Apigility\Admin\Model\TestAsset\Baz',
             'ZFTest\Apigility\Admin\Model\TestAsset\Bob',
-        );
+        ];
 
         $modules = $this->model->getModules();
 
@@ -83,7 +83,7 @@ class ModuleModelTest extends TestCase
         $this->assertEquals(count($expected), count($modules));
 
         // Test that each module name exists in the expected list
-        $moduleNames = array();
+        $moduleNames = [];
         foreach ($modules as $module) {
             $this->assertContains($module->getNamespace(), $expected);
             $moduleNames[] = $module->getNamespace();
@@ -96,10 +96,10 @@ class ModuleModelTest extends TestCase
 
     public function invalidModules()
     {
-        return array(
-            array('ZFTest\Apigility\Admin\Model\TestAsset\Foo'),
-            array('ZFTest\Apigility\Admin\Model\TestAsset\Bat'),
-        );
+        return [
+            ['ZFTest\Apigility\Admin\Model\TestAsset\Foo'],
+            ['ZFTest\Apigility\Admin\Model\TestAsset\Bat'],
+        ];
     }
 
     /**
@@ -113,22 +113,22 @@ class ModuleModelTest extends TestCase
     public function testEmptyArraysAreReturnedWhenGettingServicesForApigilityModulesWithNoServices()
     {
         $module = $this->model->getModule('ZFTest\Apigility\Admin\Model\TestAsset\Baz');
-        $this->assertEquals(array(), $module->getRestServices());
-        $this->assertEquals(array(), $module->getRpcServices());
+        $this->assertEquals([], $module->getRestServices());
+        $this->assertEquals([], $module->getRpcServices());
     }
 
     public function testRestAndRpcControllersAreDiscoveredWhenGettingServicesForApigilityModules()
     {
-        $expected = array(
-            'rest' => array(
+        $expected = [
+            'rest' => [
                 'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Bar',
                 'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Baz',
-            ),
-            'rpc' => array(
+            ],
+            'rpc' => [
                 'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Act',
                 'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Do',
-            ),
-        );
+            ],
+        ];
         $module = $this->model->getModule('ZFTest\Apigility\Admin\Model\TestAsset\Bar');
         $this->assertEquals($expected['rest'], $module->getRestServices());
         $this->assertEquals($expected['rpc'], $module->getRpcServices());
@@ -144,36 +144,36 @@ class ModuleModelTest extends TestCase
             $this->markTestSkipped('Running from a vendor directory.');
         }
 
-        $expected = array(
-            'ZFTest\Apigility\Admin\Model\TestAsset\Bar' => array(
+        $expected = [
+            'ZFTest\Apigility\Admin\Model\TestAsset\Bar' => [
                 'vendor' => false,
-                'rest' => array(
+                'rest' => [
                     'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Bar',
                     'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Baz',
-                ),
-                'rpc' => array(
+                ],
+                'rpc' => [
                     'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Act',
                     'ZFTest\Apigility\Admin\Model\TestAsset\Bar\Controller\Do',
-                ),
-            ),
-            'ZFTest\Apigility\Admin\Model\TestAsset\Baz' => array(
+                ],
+            ],
+            'ZFTest\Apigility\Admin\Model\TestAsset\Baz' => [
                 'vendor' => false,
-                'rest' => array(),
-                'rpc'  => array(),
-            ),
-            'ZFTest\Apigility\Admin\Model\TestAsset\Bob' => array(
+                'rest' => [],
+                'rpc'  => [],
+            ],
+            'ZFTest\Apigility\Admin\Model\TestAsset\Bob' => [
                 'vendor' => false,
-                'rest' => array(
-                ),
-                'rpc' => array(
+                'rest' => [
+                ],
+                'rpc' => [
                     'ZFTest\Apigility\Admin\Model\TestAsset\Bob\Controller\Do',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $modules = $this->model->getModules();
 
-        $unique  = array();
+        $unique  = [];
         foreach ($modules as $module) {
             $name = $module->getNamespace();
             $this->assertArrayHasKey(
@@ -397,7 +397,7 @@ class ModuleModelTest extends TestCase
      */
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -411,10 +411,10 @@ class ModuleModelTest extends TestCase
 
     public function testVendorModulesAreMarkedAccordingly()
     {
-        $modules = array(
+        $modules = [
             'Test\Foo' => new Test\Foo\Module(),
             'Test\Bar' => new Test\Foo\Module(),
-        );
+        ];
         $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                               ->disableOriginalConstructor()
                               ->getMock();
@@ -424,8 +424,8 @@ class ModuleModelTest extends TestCase
 
         $model = new ModuleModel(
             $moduleManager,
-            array(),
-            array()
+            [],
+            []
         );
 
         $modules = $model->getModules();
@@ -436,10 +436,10 @@ class ModuleModelTest extends TestCase
 
     public function testDefaultApiVersionIsSetProperly()
     {
-        $modules = array(
+        $modules = [
             'Test\Bar' => new Test\Bar\Module(),
             'Test\Foo' => new Test\Foo\Module(),
-        );
+        ];
         $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                               ->disableOriginalConstructor()
                               ->getMock();
@@ -449,8 +449,8 @@ class ModuleModelTest extends TestCase
 
         $model = new ModuleModel(
             $moduleManager,
-            array(),
-            array()
+            [],
+            []
         );
 
         $modules = $model->getModules();

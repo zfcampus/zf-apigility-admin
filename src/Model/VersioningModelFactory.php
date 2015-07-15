@@ -21,7 +21,7 @@ class VersioningModelFactory
      *
      * @var array
      */
-    protected $models = array();
+    protected $models = [];
 
     /**
      * @var ModuleUtils

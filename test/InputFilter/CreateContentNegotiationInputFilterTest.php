@@ -13,105 +13,105 @@ class CreateContentNegotiationInputFilterTest extends TestCase
 {
     public function dataProviderIsValid()
     {
-        return array(
-            'content-name-only' => array(
-                array(
+        return [
+            'content-name-only' => [
+                [
                     'content_name' => 'test',
-                ),
-            ),
-            'content-name-and-selectors' => array(
-                array(
+                ],
+            ],
+            'content-name-and-selectors' => [
+                [
                     'content_name' => 'test',
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    ),
-                ),
-            ),
-        );
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'missing-content-name' => array(
-                array(
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    ),
-                ),
-                array(
-                    'content_name' => array(
+        return [
+            'missing-content-name' => [
+                [
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ],
+                ],
+                [
+                    'content_name' => [
                         'isEmpty' => 'Value is required and can\'t be empty'
-                    ),
-                ),
-            ),
-            'null-content-name' => array(
-                array(
+                    ],
+                ],
+            ],
+            'null-content-name' => [
+                [
                     'content_name' => null,
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    ),
-                ),
-                array('content_name' => array(
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ],
+                ],
+                ['content_name' => [
                     'isEmpty' => 'Value is required and can\'t be empty',
-                )),
-            ),
-            'bool-content-name' => array(
-                array(
+                ]],
+            ],
+            'bool-content-name' => [
+                [
                     'content_name' => true,
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    ),
-                ),
-                array('content_name' => array(
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ],
+                ],
+                ['content_name' => [
                     'invalidType' => 'Value must be a string; received boolean',
-                )),
-            ),
-            'int-content-name' => array(
-                array(
+                ]],
+            ],
+            'int-content-name' => [
+                [
                     'content_name' => 1,
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    )
-                ),
-                array('content_name' => array(
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ]
+                ],
+                ['content_name' => [
                     'invalidType' => 'Value must be a string; received integer',
-                )),
-            ),
-            'float-content-name' => array(
-                array(
+                ]],
+            ],
+            'float-content-name' => [
+                [
                     'content_name' => 1.1,
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    )
-                ),
-                array('content_name' => array(
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ]
+                ],
+                ['content_name' => [
                     'invalidType' => 'Value must be a string; received double',
-                )),
-            ),
-            'array-content-name' => array(
-                array(
-                    'content_name' => array('content_name'),
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    )
-                ),
-                array('content_name' => array(
+                ]],
+            ],
+            'array-content-name' => [
+                [
+                    'content_name' => ['content_name'],
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ]
+                ],
+                ['content_name' => [
                     'invalidType' => 'Value must be a string; received array',
-                )),
-            ),
-            'object-content-name' => array(
-                array(
-                    'content_name' => (object) array('content_name'),
-                    'selectors' => array(
-                        'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                    ),
-                ),
-                array('content_name' => array(
+                ]],
+            ],
+            'object-content-name' => [
+                [
+                    'content_name' => (object) ['content_name'],
+                    'selectors' => [
+                        'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                    ],
+                ],
+                ['content_name' => [
                     'invalidType' => 'Value must be a string; received stdClass',
-                )),
-            ),
-        );
+                ]],
+            ],
+        ];
     }
 
     /**

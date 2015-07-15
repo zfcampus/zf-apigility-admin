@@ -12,59 +12,59 @@ class OAuth2MongoInputFilter2 extends BaseInputFilter
     {
         parent::init();
 
-        $this->add(array(
+        $this->add([
             'name' => 'oauth2_type',
-            'filters' => array(
-                array('name' => 'StringToLower'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'StringToLower'],
+            ],
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array('callback' => function ($value) {
+                    'options' => ['callback' => function ($value) {
                         return ($value === 'mongo');
-                    }),
-                ),
-            ),
+                    }],
+                ],
+            ],
             'error_message' => 'Please provide a valid DSN type adapter (pdo, mongo)',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'oauth2_dsn',
             'error_message' => 'Please provide a valid DSN for OAuth2 database',
             'required' => false
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'oauth2_database',
             'error_message' => 'Please provide a valid database name for OAuth2 Mongo adapter'
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'oauth2_route',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'Uri',
-                    'options' => array(
+                    'options' => [
                         'allowRelative' => true
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             'error_message' => 'Please provide a valid URL route for OAuth2 Mongo adapter'
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'oauth2_locator_name',
             'error_message' => 'Please provide a valid locator name for OAuth2 Mongo adapter',
             'required' => false
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'oauth2_options',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array('callback' => function ($value) {
+                    'options' => ['callback' => function ($value) {
                         return is_array($value);
-                    }),
-                ),
-            ),
+                    }],
+                ],
+            ],
             'error_message' => 'Please provide a valid options for OAuth2 Mongo adapter',
             'required' => false
-        ));
+        ]);
     }
 }

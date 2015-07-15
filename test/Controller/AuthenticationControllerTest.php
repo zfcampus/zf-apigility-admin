@@ -47,7 +47,7 @@ class AuthenticationControllerTest extends TestCase
         $this->plugins->setService('params', new Params());
         $this->controller->setPluginManager($this->plugins);
 
-        $this->routeMatch = new RouteMatch(array());
+        $this->routeMatch = new RouteMatch([]);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/authentication');
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
@@ -70,9 +70,9 @@ class AuthenticationControllerTest extends TestCase
 
     public function invalidRequestMethods()
     {
-        return array(
-            array('patch')
-        );
+        return [
+            ['patch']
+        ];
     }
 
     /**
@@ -99,9 +99,9 @@ class AuthenticationControllerTest extends TestCase
         $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
         $this->controller->setRequest($request);
 
-        $params = array(
+        $params = [
             'authentication_adapter' => 'testbasic'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->event->setRouteMatch($this->routeMatch);
 
@@ -139,29 +139,29 @@ class AuthenticationControllerTest extends TestCase
      */
     public function postRequestData()
     {
-        $data = array(
-            array(
-                array(
+        $data = [
+            [
+                [
                     'name'     => 'test',
                     'type'     => 'basic',
                     'realm'    => 'api',
                     'htpasswd' => __DIR__ . '/TestAsset/Auth2/config/autoload/htpasswd'
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'name'           => 'test2',
                     'type'           => 'digest',
                     'realm'          => 'api',
                     'nonce_timeout'  => '3600',
                     'digest_domains' => '/',
                     'htdigest'       => __DIR__ . '/TestAsset/Auth2/config/autoload/htdigest'
-                ),
-            )
-        );
+                ],
+            ]
+        ];
         if (extension_loaded('pdo_sqlite')) {
-            $data[] = array(
-                array(
+            $data[] = [
+                [
                     'name'            => 'test3',
                     'type'            => 'oauth2',
                     'oauth2_type'     => 'pdo',
@@ -170,12 +170,12 @@ class AuthenticationControllerTest extends TestCase
                     'oauth2_username' => null,
                     'oauth2_password' => null,
                     'oauth2_options'  => null
-                )
-            );
+                ]
+            ];
         }
         if (extension_loaded('mongo')) {
-            $data[] = array(
-                array(
+            $data[] = [
+                [
                     'name'                => 'test4',
                     'type'                => 'oauth2',
                     'oauth2_type'         => 'mongo',
@@ -184,8 +184,8 @@ class AuthenticationControllerTest extends TestCase
                     'oauth2_database'     => 'zf-apigility-admin-test',
                     'oauth2_locator_name' => null,
                     'oauth2_options'      => null
-                )
-            );
+                ]
+            ];
         }
         return $data;
     }
@@ -231,9 +231,9 @@ class AuthenticationControllerTest extends TestCase
         $parameters->setBodyParams($postData);
         $this->event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $params = array(
+        $params = [
             'authentication_adapter' => 'testbasic'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->event->setRouteMatch($this->routeMatch);
 
@@ -258,9 +258,9 @@ class AuthenticationControllerTest extends TestCase
         $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
         $this->controller->setRequest($request);
 
-        $params = array(
+        $params = [
             'authentication_adapter' => 'testbasic'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->event->setRouteMatch($this->routeMatch);
 
@@ -278,9 +278,9 @@ class AuthenticationControllerTest extends TestCase
         $request->getQuery()->set('version', 1);
         $this->controller->setRequest($request);
 
-        $params = array(
+        $params = [
             'name' => 'Status'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
         $this->event->setRouteMatch($this->routeMatch);
@@ -303,9 +303,9 @@ class AuthenticationControllerTest extends TestCase
         $request->getQuery()->set('version', 1);
         $this->controller->setRequest($request);
 
-        $params = array(
+        $params = [
             'name' => 'Status2'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
         $this->event->setRouteMatch($this->routeMatch);
@@ -324,14 +324,14 @@ class AuthenticationControllerTest extends TestCase
         $this->controller->setRequest($request);
 
         $parameters = new ParameterDataContainer();
-        $parameters->setBodyParams(array(
+        $parameters->setBodyParams([
             'authentication' => 'testoauth2pdo'
-        ));
+        ]);
         $this->event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $params = array(
+        $params = [
             'name' => 'Foo'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
         $this->event->setRouteMatch($this->routeMatch);
@@ -351,14 +351,14 @@ class AuthenticationControllerTest extends TestCase
         $this->controller->setRequest($request);
 
         $parameters = new ParameterDataContainer();
-        $parameters->setBodyParams(array(
+        $parameters->setBodyParams([
             'authentication' => 'testoauth2mongo'
-        ));
+        ]);
         $this->event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $params = array(
+        $params = [
             'name' => 'Status'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
         $this->event->setRouteMatch($this->routeMatch);
@@ -377,9 +377,9 @@ class AuthenticationControllerTest extends TestCase
         $request->getQuery()->set('version', 1);
         $this->controller->setRequest($request);
 
-        $params = array(
+        $params = [
             'name' => 'Status'
-        );
+        ];
         $this->routeMatch = new RouteMatch($params);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/module/authentication');
         $this->event->setRouteMatch($this->routeMatch);

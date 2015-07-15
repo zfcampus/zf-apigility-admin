@@ -15,13 +15,13 @@ class OAuth2InputFilter extends InputFilter
 {
     public function init()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'dsn',
             'continue_if_empty' => true,
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array('callback' => function ($value, $context) {
+                    'options' => ['callback' => function ($value, $context) {
                         if (! isset($context['dsn_type']) || empty($context['dsn_type'])) {
                             // PDO is default DSN type; mark as invalid if none provided
                             return false;
@@ -46,19 +46,19 @@ class OAuth2InputFilter extends InputFilter
                          * @todo PDO DSN validation should move out of model to here
                          */
                         return true;
-                    }),
-                ),
-            ),
+                    }],
+                ],
+            ],
             'error_message' => 'Please provide a valid DSN (value will vary based on'
                 . ' whether you are selecting Mongo or PDO for the DSN type)',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'database',
             'continue_if_empty' => true,
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array('callback' => function ($value, $context) {
+                    'options' => ['callback' => function ($value, $context) {
                         if (! isset($context['dsn_type']) || $context['dsn_type'] !== 'Mongo') {
                             // Database is only relevant to Mongo
                             return true;
@@ -73,35 +73,35 @@ class OAuth2InputFilter extends InputFilter
                         }
 
                         return true;
-                    }),
-                ),
-            ),
+                    }],
+                ],
+            ],
             'error_message' => 'Please provide a valid Mongo database',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'dsn_type',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'InArray',
-                    'options' => array('haystack' => array(
+                    'options' => ['haystack' => [
                         'PDO',
                         'Mongo',
-                    )),
-                ),
-            ),
+                    ]],
+                ],
+            ],
             'error_message' => 'Indicate whether you are using Mongo or PDO',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'username',
             'required' => false,
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'password',
             'required' => false,
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'route_match',
             'error_message' => 'Please provide a valid URI path for where OAuth2 will respond',
-        ));
+        ]);
     }
 }

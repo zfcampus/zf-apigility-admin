@@ -38,7 +38,7 @@ abstract class AbstractPluginManagerController extends AbstractActionController
             );
         }
 
-        $model = new JsonModel(array($this->property => $this->model->fetchAll()));
+        $model = new JsonModel([$this->property => $this->model->fetchAll()]);
         $model->setTerminal(true);
         return $model;
     }

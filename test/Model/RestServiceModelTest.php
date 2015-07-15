@@ -30,7 +30,7 @@ class RestServiceModelTest extends TestCase
      */
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -45,10 +45,10 @@ class RestServiceModelTest extends TestCase
     {
         $pathSpec = (empty($this->modules)) ? 'psr-0' : $this->modules->getPathSpec();
 
-        $modulePath = array(
+        $modulePath = [
             'psr-0' => '%s/src/%s/V*',
             'psr-4' => '%s/src/V*'
-        );
+        ];
 
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
@@ -73,12 +73,12 @@ class RestServiceModelTest extends TestCase
         $this->module = 'BarConf';
         $this->cleanUpAssets();
 
-        $modules = array(
+        $modules = [
             'BarConf' => new BarConf\Module(),
             'BazConf' => new BazConf\Module()
-        );
+        ];
 
-        $this->moduleEntity  = new ModuleEntity($this->module, array(), array(), false);
+        $this->moduleEntity  = new ModuleEntity($this->module, [], [], false);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
                                     ->getMock();
@@ -105,21 +105,21 @@ class RestServiceModelTest extends TestCase
     public function getCreationPayload()
     {
         $payload = new NewRestServiceEntity();
-        $payload->exchangeArray(array(
+        $payload->exchangeArray([
             'service_name'               => 'foo',
             'route_match'                => '/api/foo',
             'route_identifier_name'      => 'foo_id',
             'collection_name'            => 'foo',
-            'entity_http_methods'        => array('GET', 'PATCH'),
-            'collection_http_methods'    => array('GET', 'POST'),
-            'collection_query_whitelist' => array('sort', 'filter'),
+            'entity_http_methods'        => ['GET', 'PATCH'],
+            'collection_http_methods'    => ['GET', 'POST'],
+            'collection_query_whitelist' => ['sort', 'filter'],
             'page_size'                  => 10,
             'page_size_param'            => 'p',
             'selector'                   => 'HalJson',
-            'accept_whitelist'           => array('application/json', 'application/*+json'),
-            'content_type_whitelist'     => array('application/json'),
+            'accept_whitelist'           => ['application/json', 'application/*+json'],
+            'content_type_whitelist'     => ['application/json'],
             'hydrator_name'              => 'Zend\Stdlib\Hydrator\ObjectProperty',
-        ));
+        ]);
 
         return $payload;
     }
@@ -128,7 +128,7 @@ class RestServiceModelTest extends TestCase
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
-        $restServiceEntity->exchangeArray(array('servicename' => 'Foo Bar'));
+        $restServiceEntity->exchangeArray(['servicename' => 'Foo Bar']);
         $this->codeRest->createService($restServiceEntity);
     }
 
@@ -136,7 +136,7 @@ class RestServiceModelTest extends TestCase
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
-        $restServiceEntity->exchangeArray(array('serivcename' => 'Foo:Bar'));
+        $restServiceEntity->exchangeArray(['serivcename' => 'Foo:Bar']);
         $this->codeRest->createService($restServiceEntity);
     }
 
@@ -144,7 +144,7 @@ class RestServiceModelTest extends TestCase
     {
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
-        $restServiceEntity->exchangeArray(array('servicename' => 'Foo/Bar'));
+        $restServiceEntity->exchangeArray(['servicename' => 'Foo/Bar']);
         $this->codeRest->createService($restServiceEntity);
     }
 
@@ -291,15 +291,15 @@ class RestServiceModelTest extends TestCase
         $routes = $config['router']['routes'];
 
         $this->assertArrayHasKey($routeName, $routes);
-        $expected = array(
+        $expected = [
             'type' => 'Segment',
-            'options' => array(
+            'options' => [
                 'route' => '/foo-bar[/:foo_bar_id]',
-                'defaults' => array(
+                'defaults' => [
                     'controller' => 'BarConf\Rest\FooBar\Controller',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($expected, $routes[$routeName]);
     }
 
@@ -318,10 +318,10 @@ class RestServiceModelTest extends TestCase
     public function testCreateRestConfigWritesRestConfiguration()
     {
         $details = $this->getCreationPayload();
-        $details->exchangeArray(array(
+        $details->exchangeArray([
             'entity_class'     => 'BarConf\Rest\Foo\FooEntity',
             'collection_class' => 'BarConf\Rest\Foo\FooCollection',
-        ));
+        ]);
         $this->codeRest->createRestConfig(
             $details,
             'BarConf\Rest\Foo\Controller',
@@ -334,7 +334,7 @@ class RestServiceModelTest extends TestCase
         $this->assertArrayHasKey('BarConf\Rest\Foo\Controller', $config['zf-rest']);
         $config = $config['zf-rest']['BarConf\Rest\Foo\Controller'];
 
-        $expected = array(
+        $expected = [
             'service_name'               => 'foo',
             'listener'                   => 'BarConf\Rest\Foo\FooResource',
             'route_name'                 => 'bar-conf.rest.foo',
@@ -347,7 +347,7 @@ class RestServiceModelTest extends TestCase
             'page_size_param'            => $details->pageSizeParam,
             'entity_class'               => $details->entityClass,
             'collection_class'           => $details->collectionClass,
-        );
+        ];
         $this->assertEquals($expected, $config);
     }
 
@@ -361,19 +361,19 @@ class RestServiceModelTest extends TestCase
         $config = $config['zf-content-negotiation'];
 
         $this->assertArrayHasKey('controllers', $config);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'BarConf\Rest\Foo\Controller' => $details->selector,
-        ), $config['controllers']);
+        ], $config['controllers']);
 
         $this->assertArrayHasKey('accept_whitelist', $config);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'BarConf\Rest\Foo\Controller' => $details->acceptWhitelist,
-        ), $config['accept_whitelist'], var_export($config, 1));
+        ], $config['accept_whitelist'], var_export($config, 1));
 
         $this->assertArrayHasKey('content_type_whitelist', $config);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'BarConf\Rest\Foo\Controller' => $details->contentTypeWhitelist,
-        ), $config['content_type_whitelist'], var_export($config, 1));
+        ], $config['content_type_whitelist'], var_export($config, 1));
     }
 
     public function testCreateHalConfigWritesHalConfiguration()
@@ -392,20 +392,20 @@ class RestServiceModelTest extends TestCase
         $config = $config['zf-hal']['metadata_map'];
 
         $this->assertArrayHasKey('BarConf\Rest\Foo\FooEntity', $config);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'route_identifier_name'  => $details->routeIdentifierName,
             'route_name'             => 'bar-conf.rest.foo',
             'hydrator'               => 'Zend\Stdlib\Hydrator\ObjectProperty',
             'entity_identifier_name' => 'id',
-        ), $config['BarConf\Rest\Foo\FooEntity']);
+        ], $config['BarConf\Rest\Foo\FooEntity']);
 
         $this->assertArrayHasKey('BarConf\Rest\Foo\FooCollection', $config);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'route_identifier_name'  => $details->routeIdentifierName,
             'route_name'             => 'bar-conf.rest.foo',
             'is_collection'          => true,
             'entity_identifier_name' => 'id',
-        ), $config['BarConf\Rest\Foo\FooCollection']);
+        ], $config['BarConf\Rest\Foo\FooCollection']);
     }
 
     public function testCreateServiceReturnsRestServiceEntityOnSuccess()
@@ -422,11 +422,11 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $result->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $result->routeName);
         $this->assertEquals(
-            array('application/vnd.bar-conf.v1+json', 'application/hal+json', 'application/json'),
+            ['application/vnd.bar-conf.v1+json', 'application/hal+json', 'application/json'],
             $result->acceptWhitelist
         );
         $this->assertEquals(
-            array('application/vnd.bar-conf.v1+json', 'application/json'),
+            ['application/vnd.bar-conf.v1+json', 'application/json'],
             $result->contentTypeWhitelist
         );
     }
@@ -434,17 +434,17 @@ class RestServiceModelTest extends TestCase
     public function testCreateServiceUsesDefaultContentNegotiation()
     {
         $payload = new NewRestServiceEntity();
-        $payload->exchangeArray(array(
+        $payload->exchangeArray([
             'service_name' => 'foo',
-        ));
+        ]);
         $result  = $this->codeRest->createService($payload);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $result);
         $this->assertEquals(
-            array('application/vnd.bar-conf.v1+json', 'application/hal+json', 'application/json'),
+            ['application/vnd.bar-conf.v1+json', 'application/hal+json', 'application/json'],
             $result->acceptWhitelist
         );
         $this->assertEquals(
-            array('application/vnd.bar-conf.v1+json', 'application/json'),
+            ['application/vnd.bar-conf.v1+json', 'application/json'],
             $result->contentTypeWhitelist
         );
     }
@@ -471,10 +471,10 @@ class RestServiceModelTest extends TestCase
     public function testFetchServiceUsesEntityAndCollectionClassesDiscoveredInRestConfiguration()
     {
         $details = $this->getCreationPayload();
-        $details->exchangeArray(array(
+        $details->exchangeArray([
             'entity_class'     => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
             'collection_class' => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
-        ));
+        ]);
         $result  = $this->codeRest->createService($details);
 
         $service = $this->codeRest->fetch('BarConf\V1\Rest\Foo\Controller');
@@ -490,10 +490,10 @@ class RestServiceModelTest extends TestCase
         $original = $this->codeRest->createService($details);
 
         $patch = new RestServiceEntity();
-        $patch->exchangeArray(array(
+        $patch->exchangeArray([
             'controller_service_name' => 'BarConf\Rest\Foo\Controller',
             'route_match'             => '/api/bar/foo',
-        ));
+        ]);
 
         $this->codeRest->updateRoute($original, $patch);
 
@@ -512,15 +512,15 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'page_size'                  => 30,
             'page_size_param'            => 'r',
-            'collection_query_whitelist' => array('f', 's'),
-            'collection_http_methods'    => array('GET'),
-            'entity_http_methods'        => array('GET'),
+            'collection_query_whitelist' => ['f', 's'],
+            'collection_http_methods'    => ['GET'],
+            'entity_http_methods'        => ['GET'],
             'entity_class'               => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
             'collection_class'           => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
-        );
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -541,11 +541,11 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'selector'               => 'Json',
-            'accept_whitelist'       => array('application/json'),
-            'content_type_whitelist' => array('application/json'),
-        );
+            'accept_whitelist'       => ['application/json'],
+            'content_type_whitelist' => ['application/json'],
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -579,11 +579,11 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
             'route_name'            => 'my/custom/route',
-        );
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -622,13 +622,13 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'entity_class'          => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
             'collection_class'      => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
             'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
             'route_name'            => 'my/custom/route',
-        );
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -668,21 +668,21 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $updates = array(
+        $updates = [
             'route_match'                => '/api/bar/foo',
             'page_size'                  => 30,
             'page_size_param'            => 'r',
-            'collection_query_whitelist' => array('f', 's'),
-            'collection_http_methods'    => array('GET'),
-            'entity_http_methods'        => array('GET'),
+            'collection_query_whitelist' => ['f', 's'],
+            'collection_http_methods'    => ['GET'],
+            'entity_http_methods'        => ['GET'],
             'selector'                   => 'Json',
-            'accept_whitelist'           => array('application/json'),
-            'content_type_whitelist'     => array('application/json'),
-        );
+            'accept_whitelist'           => ['application/json'],
+            'content_type_whitelist'     => ['application/json'],
+        ];
         $patch = new RestServiceEntity();
-        $patch->exchangeArray(array_merge(array(
+        $patch->exchangeArray(array_merge([
             'controller_service_name'    => 'BarConf\V1\Rest\Foo\Controller',
-        ), $updates));
+        ], $updates));
 
         $updated = $this->codeRest->updateService($patch);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $updated);
@@ -866,11 +866,11 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
             'route_name'            => 'my/custom/route',
-        );
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -897,10 +897,10 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'hydrator_name'          => 'Zend\Stdlib\Hydrator\Reflection',
             'entity_identifier_name' => 'custom_foo_id',
-        );
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -941,10 +941,10 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
-            'collection_http_methods'    => array(),
-            'entity_http_methods'        => array(),
-        );
+        $options = [
+            'collection_http_methods'    => [],
+            'entity_http_methods'        => [],
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 
@@ -955,8 +955,8 @@ class RestServiceModelTest extends TestCase
         $this->assertArrayHasKey($original->controllerServiceName, $config['zf-rest']);
         $test = $config['zf-rest'][$original->controllerServiceName];
 
-        $this->assertEquals(array(), $test['collection_http_methods']);
-        $this->assertEquals(array(), $test['entity_http_methods']);
+        $this->assertEquals([], $test['collection_http_methods']);
+        $this->assertEquals([], $test['entity_http_methods']);
     }
 
     /**
@@ -967,9 +967,9 @@ class RestServiceModelTest extends TestCase
         $details  = $this->getCreationPayload();
         $original = $this->codeRest->createService($details);
 
-        $options = array(
+        $options = [
             'collection_name' => 'foo_bars',
-        );
+        ];
         $patch = new RestServiceEntity();
         $patch->exchangeArray($options);
 

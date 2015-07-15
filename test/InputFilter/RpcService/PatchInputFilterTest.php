@@ -10,75 +10,75 @@ class PatchInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\RpcService\PatchInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'service_name' => 'Foo',
                     'route_match' => '/foo',
                     'controller_class' => 'FooBar\V1\Rpc\Foo\FooController',
-                    'accept_whitelist' => array(
+                    'accept_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/hal+json',
                         'application/json'
-                    ),
-                    'content_type_whitelist' => array(
+                    ],
+                    'content_type_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/json'
-                    ),
+                    ],
                     'selector' => 'HalJson',
-                    'http_methods' => array('GET', 'POST', 'PATCH'),
-                )
-            )
-        );
+                    'http_methods' => ['GET', 'POST', 'PATCH'],
+                ]
+            ]
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'missing-service-name' => array(
-                array(
+        return [
+            'missing-service-name' => [
+                [
                     'route_match' => '/foo',
                     'controller_class' => 'FooBar\V1\Rpc\Foo\FooController',
-                    'accept_whitelist' => array(
+                    'accept_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/hal+json',
                         'application/json'
-                    ),
-                    'content_type_whitelist' => array(
+                    ],
+                    'content_type_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/json'
-                    ),
+                    ],
                     'selector' => 'HalJson',
-                    'http_methods' => array('GET', 'POST', 'PATCH'),
-                ),
-                array('service_name'),
-            ),
-            'null-values' => array(
-                array(
+                    'http_methods' => ['GET', 'POST', 'PATCH'],
+                ],
+                ['service_name'],
+            ],
+            'null-values' => [
+                [
                     'service_name' => 'Foo',
                     'route_match' => null,
                     'controller_class' => null,
-                    'accept_whitelist' => array(
+                    'accept_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/hal+json', 'application/json'
-                    ),
-                    'content_type_whitelist' => array(
+                    ],
+                    'content_type_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/json'
-                    ),
+                    ],
                     'selector' => null,
-                    'http_methods' => array('GET', 'POST', 'PATCH')
-                ),
-                array('route_match', 'controller_class'),
-            ),
-        );
+                    'http_methods' => ['GET', 'POST', 'PATCH']
+                ],
+                ['route_match', 'controller_class'],
+            ],
+        ];
     }
 
     /**

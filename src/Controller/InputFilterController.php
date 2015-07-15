@@ -60,16 +60,16 @@ class InputFilterController extends AbstractActionController
                 if ($result instanceof InputFilterCollection) {
                     $result = new HalCollection($result);
                     $result->setCollectionName('input_filter');
-                    $result->getLinks()->add(Link::factory(array(
+                    $result->getLinks()->add(Link::factory([
                         'rel' => 'self',
-                        'route' => array(
+                        'route' => [
                             'name' => $route,
-                            'params' => array(
+                            'params' => [
                                 'name'                    => $module,
                                 'controller_service_name' => str_replace('\\', '-', $controller),
-                            ),
-                        ),
-                    )));
+                            ],
+                        ],
+                    ]));
                     $result->setEntityRoute($route);
                     break;
                 }
@@ -124,7 +124,7 @@ class InputFilterController extends AbstractActionController
         $e = $this->getEvent();
         $e->setParam('ZFContentNegotiationFallback', 'HalJson');
 
-        return new ViewModel(array('payload' => $result));
+        return new ViewModel(['payload' => $result]);
     }
 
     /**
@@ -135,7 +135,7 @@ class InputFilterController extends AbstractActionController
      */
     protected function removeKey($inputFilter)
     {
-        $result = array();
+        $result = [];
         foreach ($inputFilter as $key => $value) {
             $result[] = $value;
         }
@@ -158,23 +158,23 @@ class InputFilterController extends AbstractActionController
 
     protected function deriveRouteName($route)
     {
-        $matches = array();
+        $matches = [];
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
         return sprintf('zf-apigility/api/module/%s-service/input-filter', $matches['type']);
     }
 
     public function injectEntitySelfLink($links, $route, $module, $controller, $inputFilterName)
     {
-        $links->add(Link::factory(array(
+        $links->add(Link::factory([
             'rel' => 'self',
-            'route' => array(
+            'route' => [
                 'name' => $route,
-                'params' => array(
+                'params' => [
                     'name'                    => $module,
                     'controller_service_name' => $controller,
                     'input_filter_name'       => $inputFilterName,
-                ),
-            ),
-        )));
+                ],
+            ],
+        ]));
     }
 }

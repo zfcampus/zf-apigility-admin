@@ -18,22 +18,22 @@ class AuthorizationEntity implements
     const TYPE_ENTITY     = 'entity';
     const TYPE_COLLECTION = 'collection';
 
-    protected $allowedRestTypes = array(
+    protected $allowedRestTypes = [
         self::TYPE_ENTITY,
         self::TYPE_COLLECTION,
-    );
+    ];
 
-    protected $defaultPrivileges = array(
+    protected $defaultPrivileges = [
         'GET'    => false,
         'POST'   => false,
         'PATCH'  => false,
         'PUT'    => false,
         'DELETE' => false,
-    );
+    ];
 
-    protected $servicePrivileges = array();
+    protected $servicePrivileges = [];
 
-    public function __construct(array $services = array())
+    public function __construct(array $services = [])
     {
         foreach ($services as $serviceName => $privileges) {
             $this->servicePrivileges[$serviceName] = $this->filterPrivileges($privileges);

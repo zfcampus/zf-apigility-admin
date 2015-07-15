@@ -18,7 +18,7 @@ class StrategyController extends AbstractActionController
         $strategy_name = $this->params()->fromRoute('strategy_name', false);
         if ($this->getServiceLocator()->has($strategy_name)) {
             if ($this->getServiceLocator()->get($strategy_name) instanceof StrategyInterface) {
-                return array('exists' => true);
+                return ['exists' => true];
             } else {
                 return new ApiProblemModel(new ApiProblem(422, 'This service does not implement StrategyInterface'));
             }

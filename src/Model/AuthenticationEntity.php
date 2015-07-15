@@ -99,9 +99,9 @@ class AuthenticationEntity
      */
     protected $database;
 
-    public function __construct($type = self::TYPE_BASIC, $realmOrParams = 'api', array $params = array())
+    public function __construct($type = self::TYPE_BASIC, $realmOrParams = 'api', array $params = [])
     {
-        $this->type = in_array($type, array(self::TYPE_BASIC, self::TYPE_DIGEST, self::TYPE_OAUTH2))
+        $this->type = in_array($type, [self::TYPE_BASIC, self::TYPE_DIGEST, self::TYPE_OAUTH2])
             ? $type
             : self::TYPE_BASIC;
 
@@ -119,30 +119,30 @@ class AuthenticationEntity
     {
         switch ($this->type) {
             case self::TYPE_BASIC:
-                return array(
+                return [
                     'type'           => 'http_basic',
-                    'accept_schemes' => array(self::TYPE_BASIC),
+                    'accept_schemes' => [self::TYPE_BASIC],
                     'realm'          => $this->realm,
                     'htpasswd'       => $this->htpasswd,
-                );
+                ];
             case self::TYPE_DIGEST:
-                return array(
+                return [
                     'type'           => 'http_digest',
-                    'accept_schemes' => array(self::TYPE_DIGEST),
+                    'accept_schemes' => [self::TYPE_DIGEST],
                     'realm'          => $this->realm,
                     'htdigest'       => $this->htdigest,
                     'digest_domains' => $this->digestDomains,
                     'nonce_timeout'  => $this->nonceTimeout,
-                );
+                ];
             case self::TYPE_OAUTH2:
-                $array = array(
+                $array = [
                     'type'        => 'oauth2',
                     'dsn_type'    => $this->dsnType,
                     'dsn'         => $this->dsn,
                     'username'    => $this->username,
                     'password'    => $this->password,
                     'route_match' => $this->routeMatch,
-                );
+                ];
                 if ($this->getDsnType() === self::DSN_MONGO) {
                     $array['database'] = $this->database;
 
@@ -160,13 +160,13 @@ class AuthenticationEntity
     {
         switch ($this->type) {
             case self::TYPE_BASIC:
-                $allowedKeys = array('realm', 'htpasswd');
+                $allowedKeys = ['realm', 'htpasswd'];
                 break;
             case self::TYPE_DIGEST:
-                $allowedKeys = array('realm', 'htdigest', 'digestdomains', 'noncetimeout');
+                $allowedKeys = ['realm', 'htdigest', 'digestdomains', 'noncetimeout'];
                 break;
             case self::TYPE_OAUTH2:
-                $allowedKeys = array('dsntype', 'database', 'dsn', 'username', 'password', 'routematch');
+                $allowedKeys = ['dsntype', 'database', 'dsn', 'username', 'password', 'routematch'];
                 break;
         }
 

@@ -14,59 +14,59 @@ class VersionInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\VersionInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'valid' => array(
-                array(
+        return [
+            'valid' => [
+                [
                     'module' => 'foo',
                     'version' => 5,
-                ),
-            ),
-            'version-with-alphas' => array(
-                array(
+                ],
+            ],
+            'version-with-alphas' => [
+                [
                     'module' => 'foo',
                     'version' => 'alpha',
-                ),
-            ),
-            'version-with-mixed' => array(
-                array(
+                ],
+            ],
+            'version-with-mixed' => [
+                [
                     'module' => 'foo',
                     'version' => 'alpha_1',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'empty' => array(
-                array(),
-                array('module', 'version'),
-            ),
-            'missing-module' => array(
-                array('version' => 'foo'),
-                array('module'),
-            ),
-            'missing-version' => array(
-                array('module' => 'foo'),
-                array('version'),
-            ),
-            'version-with-spaces' => array(
-                array('module' => 'foo', 'version' => 'foo bar'),
-                array('version'),
-            ),
-            'version-with-dashes' => array(
-                array('module' => 'foo', 'version' => 'foo-bar'),
-                array('version'),
-            ),
-        );
+        return [
+            'empty' => [
+                [],
+                ['module', 'version'],
+            ],
+            'missing-module' => [
+                ['version' => 'foo'],
+                ['module'],
+            ],
+            'missing-version' => [
+                ['module' => 'foo'],
+                ['version'],
+            ],
+            'version-with-spaces' => [
+                ['module' => 'foo', 'version' => 'foo bar'],
+                ['version'],
+            ],
+            'version-with-dashes' => [
+                ['module' => 'foo', 'version' => 'foo-bar'],
+                ['version'],
+            ],
+        ];
     }
 
     /**

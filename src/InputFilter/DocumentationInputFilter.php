@@ -13,27 +13,27 @@ class DocumentationInputFilter extends InputFilter
     /**
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * @var array
      */
-    protected $validHttpMethodDocumentationKeys = array(
+    protected $validHttpMethodDocumentationKeys = [
         'description',
         'request',
         'response',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $validHttpMethods = array(
+    protected $validHttpMethods = [
         'GET',
         'POST',
         'PUT',
         'PATCH',
         'DELETE',
-    );
+    ];
 
     /**
      * Is the data set valid?
@@ -42,7 +42,7 @@ class DocumentationInputFilter extends InputFilter
      */
     public function isValid()
     {
-        $this->messages = array();
+        $this->messages = [];
         $isValid = true;
 
         if (!is_array($this->data)) {
@@ -68,7 +68,7 @@ class DocumentationInputFilter extends InputFilter
                 continue;
             }
 
-            if (in_array($key, array('collection', 'entity'))) {
+            if (in_array($key, ['collection', 'entity'])) {
                 // valid collection or entity
                 if (! is_array($data)) {
                     $this->messages[$key][] = 'Collections and entities methods must be an array of HTTP methods;'

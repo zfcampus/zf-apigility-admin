@@ -14,39 +14,39 @@ class PatchInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\RestService\PatchInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValidTrue()
     {
-        return array(
-            'all-inputs-present' => array(array(
-                'accept_whitelist' => array (
+        return [
+            'all-inputs-present' => [[
+                'accept_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
-                ),
+                ],
                 'collection_class' => 'Zend\Paginator\Paginator',
-                'collection_http_methods' => array (
+                'collection_http_methods' =>  [
                     0 => 'GET',
                     1 => 'POST',
-                ),
+                ],
                 'collection_name' => 'foo_bar',
-                'collection_query_whitelist' => array (
-                ),
-                'content_type_whitelist' => array (
+                'collection_query_whitelist' =>  [
+                ],
+                'content_type_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
-                ),
+                ],
                 'entity_class' => 'StdClass',
-                'entity_http_methods' => array (
+                'entity_http_methods' =>  [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
                     3 => 'DELETE',
-                ),
+                ],
                 'entity_identifier_name' => 'id',
                 'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
                 'page_size' => 25,
@@ -56,32 +56,32 @@ class PatchInputFilterTest extends TestCase
                 'route_match' => '/foo_bar[/:foo_bar_id]',
                 'selector' => 'HalJson',
                 'service_name' => 'Baz_Bat',
-            )),
-            'page_size-negative' => array(array(
-                'accept_whitelist' => array (
+            ]],
+            'page_size-negative' => [[
+                'accept_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
-                ),
+                ],
                 'collection_class' => 'Zend\Paginator\Paginator',
-                'collection_http_methods' => array (
+                'collection_http_methods' =>  [
                     0 => 'GET',
                     1 => 'POST',
-                ),
+                ],
                 'collection_name' => 'foo_bar',
-                'collection_query_whitelist' => array (
-                ),
-                'content_type_whitelist' => array (
+                'collection_query_whitelist' =>  [
+                ],
+                'content_type_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
-                ),
+                ],
                 'entity_class' => 'StdClass',
-                'entity_http_methods' => array (
+                'entity_http_methods' =>  [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
                     3 => 'DELETE',
-                ),
+                ],
                 'entity_identifier_name' => 'id',
                 'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
                 'page_size' => -1,
@@ -91,71 +91,71 @@ class PatchInputFilterTest extends TestCase
                 'route_match' => '/foo_bar[/:foo_bar_id]',
                 'selector' => 'HalJson',
                 'service_name' => 'Baz_Bat',
-            )),
-        );
+            ]],
+        ];
     }
 
     public function dataProviderIsValidFalse()
     {
-        return array(
-            'missing-service-name' => array(array(
-                'accept_whitelist' => array (
+        return [
+            'missing-service-name' => [[
+                'accept_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
-                ),
+                ],
                 'collection_class' => null,
-                'collection_http_methods' => array (
+                'collection_http_methods' =>  [
                     0 => 'GET',
                     1 => 'POST',
-                ),
-                'collection_query_whitelist' => array (
-                ),
-                'content_type_whitelist' => array (
+                ],
+                'collection_query_whitelist' =>  [
+                ],
+                'content_type_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
-                ),
+                ],
                 'entity_class' => null,
-                'entity_http_methods' => array (
+                'entity_http_methods' =>  [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
                     3 => 'DELETE',
-                ),
+                ],
                 'hydrator_name' => null,
                 'page_size' => null,
                 'page_size_param' => null,
                 'resource_class' => null,
                 'route_match' => null,
                 'selector' => null,
-            ), array(
+            ], [
                 'service_name',
-            )),
-            'empty-inputs' => array(array(
-                'accept_whitelist' => array (
+            ]],
+            'empty-inputs' => [[
+                'accept_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
-                ),
+                ],
                 'collection_class' => null,
-                'collection_http_methods' => array (
+                'collection_http_methods' =>  [
                     0 => 'GET',
                     1 => 'POST',
-                ),
+                ],
                 'collection_name' => null,
-                'collection_query_whitelist' => array (
-                ),
-                'content_type_whitelist' => array (
+                'collection_query_whitelist' =>  [
+                ],
+                'content_type_whitelist' =>  [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
-                ),
+                ],
                 'entity_class' => null,
-                'entity_http_methods' => array (
+                'entity_http_methods' =>  [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
                     3 => 'DELETE',
-                ),
+                ],
                 'entity_identifier_name' => null,
                 'hydrator_name' => null,
                 'page_size' => null,
@@ -165,7 +165,7 @@ class PatchInputFilterTest extends TestCase
                 'route_match' => null,
                 'selector' => null,
                 'service_name' => 'Foo_Bar',
-            ), array(
+            ], [
                 'collection_class',
                 'collection_name',
                 'entity_class',
@@ -174,8 +174,8 @@ class PatchInputFilterTest extends TestCase
                 // 'resource_class', // Resource class is allowed to be empty
                 'route_identifier_name',
                 'route_match',
-            )),
-        );
+            ]],
+        ];
     }
 
     /**

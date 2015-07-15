@@ -12,20 +12,20 @@ use ZF\Hal\Collection as HalCollection;
 
 class RpcServiceEntity
 {
-    protected $acceptWhitelist = array(
+    protected $acceptWhitelist = [
         'application/json',
         'application/*+json',
-    );
+    ];
 
-    protected $contentTypeWhitelist = array(
+    protected $contentTypeWhitelist = [
         'application/json',
-    );
+    ];
 
     protected $controllerClass;
 
     protected $controllerServiceName;
 
-    protected $httpMethods = array('GET');
+    protected $httpMethods = ['GET'];
 
     protected $inputFilters;
 
@@ -143,7 +143,7 @@ class RpcServiceEntity
      */
     public function getArrayCopy()
     {
-        $array = array(
+        $array = [
             'accept_whitelist'        => $this->acceptWhitelist,
             'content_type_whitelist'  => $this->contentTypeWhitelist,
             'controller_service_name' => $this->controllerServiceName,
@@ -152,7 +152,7 @@ class RpcServiceEntity
             'route_name'              => $this->routeName,
             'selector'                => $this->selector,
             'service_name'            => $this->serviceName,
-        );
+        ];
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
         }

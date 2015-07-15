@@ -80,9 +80,9 @@ class ModuleResource extends AbstractResourceListener
         }
 
         $metadata = new ModuleEntity($name);
-        $metadata->exchangeArray(array(
-            'versions' => array($version),
-        ));
+        $metadata->exchangeArray([
+            'versions' => [$version],
+        ]);
         return $metadata;
     }
 
@@ -107,7 +107,7 @@ class ModuleResource extends AbstractResourceListener
      * @param  array $params
      * @return array
      */
-    public function fetchAll($params = array())
+    public function fetchAll($params = [])
     {
         return $this->modules->getModules();
     }

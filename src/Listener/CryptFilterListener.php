@@ -17,7 +17,7 @@ class CryptFilterListener extends AbstractListenerAggregate
     public function attach(EventManagerInterface $events)
     {
         // Trigger between content negotiation (-625) and content validation (-650)
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -630);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -630);
     }
 
     /**

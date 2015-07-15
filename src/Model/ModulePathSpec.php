@@ -31,10 +31,10 @@ class ModulePathSpec
     /**
      * @var array
      */
-    protected $psrSpecs = array(
+    protected $psrSpecs = [
         'psr-0' => '%modulePath%/src/%moduleName%',
         'psr-4' => '%modulePath%/src'
-    );
+    ];
 
     /**
      * @var string
@@ -140,14 +140,14 @@ class ModulePathSpec
      */
     public function getModuleSourcePath($moduleName, $fullPath = true)
     {
-        $find    = array("%modulePath%", "%moduleName%");
+        $find    = ["%modulePath%", "%moduleName%"];
 
         $moduleName = str_replace('\\', '/', $moduleName);
 
         if (true === $fullPath) {
-            $replace = array($this->getModulePath($moduleName), $moduleName);
+            $replace = [$this->getModulePath($moduleName), $moduleName];
         } else {
-            $replace = array('', $moduleName);
+            $replace = ['', $moduleName];
         }
 
         return str_replace($find, $replace, $this->moduleSourcePathSpec);
@@ -163,8 +163,8 @@ class ModulePathSpec
      */
     public function getRestPath($moduleName, $version = 1, $serviceName = null)
     {
-        $find    = array("\\", "%serviceName%", "%version%");
-        $replace = array("/", $serviceName, $version);
+        $find    = ["\\", "%serviceName%", "%version%"];
+        $replace = ["/", $serviceName, $version];
 
         $path = $this->getModuleSourcePath($moduleName);
         $path .= str_replace($find, $replace, $this->restPathSpec);
@@ -186,8 +186,8 @@ class ModulePathSpec
      */
     public function getRpcPath($moduleName, $version = 1, $serviceName = null)
     {
-        $find    = array("\\", "%version%");
-        $replace = array("/", $version);
+        $find    = ["\\", "%version%"];
+        $replace = ["/", $version];
 
         $path = $this->getModuleSourcePath($moduleName);
         $path .= str_replace($find, $replace, $this->rpcPathSpec);

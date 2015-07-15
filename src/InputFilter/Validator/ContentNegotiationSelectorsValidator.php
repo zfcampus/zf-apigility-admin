@@ -16,14 +16,14 @@ class ContentNegotiationSelectorsValidator extends ZfAbstractValidator
     const INVALID_MEDIA_TYPES = 'invalidMediaTypes';
     const INVALID_MEDIA_TYPE  = 'invalidMediaType';
 
-    protected $messageTemplates = array(
+    protected $messageTemplates = [
         self::INVALID_VALUE       => 'Value must be an array; received %value%',
         self::CLASS_NOT_FOUND     => 'Class name (%value%) does not exist',
         self::INVALID_VIEW_MODEL  =>
             'Class name (%value%) is invalid; must be a valid Zend\View\Model\ModelInterface instance',
         self::INVALID_MEDIA_TYPES => 'Values for the media-types must be provided as an indexed array',
         self::INVALID_MEDIA_TYPE  => 'Invalid media type (%value%) provided',
-    );
+    ];
 
     /**
      * Test if a set of selectors is valid

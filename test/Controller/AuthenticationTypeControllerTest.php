@@ -24,7 +24,7 @@ class AuthenticationTypeControllerTest extends TestCase
 
         $this->controller = $this->getController($this->localFile, $this->globalFile);
 
-        $this->routeMatch = new RouteMatch(array());
+        $this->routeMatch = new RouteMatch([]);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/authentication-type');
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
@@ -39,9 +39,9 @@ class AuthenticationTypeControllerTest extends TestCase
 
         /* Register old authentication adapter types */
         if (isset($config['zf-oauth2'])) {
-            $authListener->addAuthenticationTypes(array('oauth2'));
+            $authListener->addAuthenticationTypes(['oauth2']);
         } elseif (isset($config['zf-mvc-auth']['authentication']['http'])) {
-            $types = array();
+            $types = [];
             if (isset($config['zf-mvc-auth']['authentication']['http']['htpasswd'])) {
                 $types[] = 'basic';
             }
@@ -59,14 +59,14 @@ class AuthenticationTypeControllerTest extends TestCase
                 }
                 if (false !== stristr($adapterConfig['adapter'], 'http')) {
                     if (isset($adapterConfig['options']['htpasswd'])) {
-                        $authListener->addAuthenticationTypes(array($adapter . '-' . 'basic'));
+                        $authListener->addAuthenticationTypes([$adapter . '-' . 'basic']);
                     }
                     if (isset($adapterConfig['options']['htdigest'])) {
-                        $authListener->addAuthenticationTypes(array($adapter . '-' . 'digest'));
+                        $authListener->addAuthenticationTypes([$adapter . '-' . 'digest']);
                     }
                     continue;
                 }
-                $authListener->addAuthenticationTypes(array($adapter));
+                $authListener->addAuthenticationTypes([$adapter]);
             }
         }
 
@@ -81,9 +81,9 @@ class AuthenticationTypeControllerTest extends TestCase
 
     public function invalidRequestMethods()
     {
-        return array(
-            array('post', 'put', 'patch', 'delete')
-        );
+        return [
+            ['post', 'put', 'patch', 'delete']
+        ];
     }
 
     /**
@@ -135,104 +135,104 @@ class AuthenticationTypeControllerTest extends TestCase
 
     public function getOldAuthConfig()
     {
-        return array(
-            'basic' => array(
-                array(
-                    'zf-mvc-auth' => array(
-                        'authentication' => array(
-                            'http' => array(
-                                'accept_schemes' => array('basic'),
+        return [
+            'basic' => [
+                [
+                    'zf-mvc-auth' => [
+                        'authentication' => [
+                            'http' => [
+                                'accept_schemes' => ['basic'],
                                 'realm' => 'My Web Site',
-                            ),
-                        ),
-                    ),
-                ),
-                array(
-                    'zf-mvc-auth' => array(
-                        'authentication' => array(
-                            'http' => array(
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'zf-mvc-auth' => [
+                        'authentication' => [
+                            'http' => [
                                 'htpasswd' => __DIR__ . '/TestAsset/Auth2/config/autoload/htpasswd',
-                            ),
-                        ),
-                    ),
-                ),
-                array('basic'),
-            ),
-            'digest' => array(
-                array(
-                    'zf-mvc-auth' => array(
-                        'authentication' => array(
-                            'http' => array(
-                                'accept_schemes' => array('digest'),
+                            ],
+                        ],
+                    ],
+                ],
+                ['basic'],
+            ],
+            'digest' => [
+                [
+                    'zf-mvc-auth' => [
+                        'authentication' => [
+                            'http' => [
+                                'accept_schemes' => ['digest'],
                                 'realm' => 'My Web Site',
                                 'domain_digest' => 'domain.com',
                                 'nonce_timeout' => 3600,
-                            ),
-                        ),
-                    ),
-                ),
-                array(
-                    'zf-mvc-auth' => array(
-                        'authentication' => array(
-                            'http' => array(
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'zf-mvc-auth' => [
+                        'authentication' => [
+                            'http' => [
                                 'htdigest' => __DIR__ . '/TestAsset/Auth2/config/autoload/htdigest',
-                            ),
-                        ),
-                    ),
-                ),
-                array('digest'),
-            ),
-            'oauth2-pdo' => array(
-                array(
-                    'router' => array(
-                        'routes' => array(
-                            'oauth' => array(
-                                'options' => array(
+                            ],
+                        ],
+                    ],
+                ],
+                ['digest'],
+            ],
+            'oauth2-pdo' => [
+                [
+                    'router' => [
+                        'routes' => [
+                            'oauth' => [
+                                'options' => [
                                     'route' => '/oauth',
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                array(
-                    'zf-oauth2' => array(
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'zf-oauth2' => [
                         'storage' => 'ZF\\OAuth2\\Adapter\\PdoAdapter',
-                        'db' => array(
+                        'db' => [
                             'dsn_type'  => 'PDO',
                             'dsn'       => 'sqlite:/' . __DIR__ . '/TestAsset/Auth2/config/autoload/db.sqlite',
                             'username'  => null,
                             'password'  => null,
-                        ),
-                    ),
-                ),
-                array('oauth2'),
-            ),
-            'oauth2-mongo' => array(
-                array(
-                    'router' => array(
-                        'routes' => array(
-                            'oauth' => array(
-                                'options' => array(
+                        ],
+                    ],
+                ],
+                ['oauth2'],
+            ],
+            'oauth2-mongo' => [
+                [
+                    'router' => [
+                        'routes' => [
+                            'oauth' => [
+                                'options' => [
                                     'route' => '/oauth',
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                array(
-                    'zf-oauth2' => array(
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'zf-oauth2' => [
                         'storage' => 'ZF\\OAuth2\\Adapter\\MongoAdapter',
-                        'mongo' => array(
+                        'mongo' => [
                             'dsn_type'     => 'Mongo',
                             'dsn'          => 'mongodb://localhost',
                             'database'     => 'zf-apigility-admin-test',
                             'locator_name' => 'MongoDB',
-                        ),
-                    ),
-                ),
-                array('oauth2'),
-            ),
-        );
+                        ],
+                    ],
+                ],
+                ['oauth2'],
+            ],
+        ];
     }
 
     /**
@@ -250,7 +250,7 @@ class AuthenticationTypeControllerTest extends TestCase
         $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
         $controller->setRequest($request);
 
-        $routeMatch = new RouteMatch(array());
+        $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName('zf-apigility/api/authentication-type');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);

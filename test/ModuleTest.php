@@ -41,7 +41,7 @@ class ModuleTest extends TestCase
 
     public function testRouteListenerDoesNothingIfRouteMatchesDoNotContainController()
     {
-        $matches = new RouteMatch(array());
+        $matches = new RouteMatch([]);
         $event = new MvcEvent();
         $event->setRouteMatch($matches);
         $this->assertNull($this->module->onRoute($event));
@@ -49,9 +49,9 @@ class ModuleTest extends TestCase
 
     public function testRouteListenerDoesNothingIfRouteMatchControllerIsNotRelevant()
     {
-        $matches = new RouteMatch(array(
+        $matches = new RouteMatch([
             'controller' => 'Foo\Bar',
-        ));
+        ]);
         $event = new MvcEvent();
         $event->setRouteMatch($matches);
         $this->assertNull($this->module->onRoute($event));
@@ -62,9 +62,9 @@ class ModuleTest extends TestCase
         $this->setupServiceChain();
         $this->hal->setRenderCollections(false);
 
-        $matches = new RouteMatch(array(
+        $matches = new RouteMatch([
             'controller' => 'ZF\Apigility\Admin\Foo\Controller',
-        ));
+        ]);
         $event = new MvcEvent();
         $event->setRouteMatch($matches);
         $event->setTarget($this->application);

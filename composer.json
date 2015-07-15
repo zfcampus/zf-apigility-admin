@@ -26,20 +26,20 @@
         }
     },
     "require": {
-        "php": ">=5.3.23",
-        "zendframework/zend-code": ">=2.3,<2.5",
-        "zendframework/zend-eventmanager": ">=2.3,<2.5",
-        "zendframework/zend-filter": ">=2.3,<2.5",
-        "zendframework/zend-http": ">=2.3,<2.5",
-        "zendframework/zend-inputfilter": ">=2.3,<2.5",
-        "zendframework/zend-modulemanager": ">=2.3,<2.5",
-        "zendframework/zend-mvc": ">=2.3,<2.5",
-        "zendframework/zend-servicemanager": ">=2.3,<2.5",
-        "zendframework/zend-stdlib": ">=2.3,<2.5",
-        "zendframework/zend-validator": ">=2.3,<2.5",
+        "php": ">=5.5",
+        "zendframework/zend-code": "~2.3",
+        "zendframework/zend-eventmanager": "~2.3",
+        "zendframework/zend-filter": "~2.3",
+        "zendframework/zend-http": "~2.3",
+        "zendframework/zend-inputfilter": "~2.3",
+        "zendframework/zend-modulemanager": "~2.3",
+        "zendframework/zend-mvc": "~2.3",
+        "zendframework/zend-servicemanager": "~2.3",
+        "zendframework/zend-stdlib": "~2.3",
+        "zendframework/zend-validator": "~2.3",
         "zendframework/zend-view": ">2.3",
         "zfcampus/zf-apigility": "~1.0",
-        "zfcampus/zf-apigility-admin-ui": ">=1.1.4,<2.0",
+        "zfcampus/zf-apigility-admin-ui": "^1.1.4",
         "zfcampus/zf-apigility-provider": "~1.0",
         "zfcampus/zf-api-problem": "~1.0",
         "zfcampus/zf-configuration": "~1.0",
@@ -53,16 +53,15 @@
         "zfcampus/zf-versioning": "~1.0"
     },
     "require-dev": {
-        "phpunit/PHPUnit": "3.7.*",
-        "squizlabs/php_codesniffer": "~2.0",
-        "zendframework/zend-config": ">=2.3,<2.5",
-        "zendframework/zend-loader": ">=2.3,<2.5",
+        "phpunit/phpunit": "~4.7",
+        "squizlabs/php_codesniffer": "^2.3.1",
+        "zendframework/zend-config": "~2.3",
+        "zendframework/zend-loader": "~2.3",
         "zfcampus/zf-deploy": "~1.0"
     },
     "autoload": {
         "psr-4": {
-            "ZF\\Apigility\\Admin\\": "src/",
-            "ZFTest\\Apigility\\Admin\\": "test/"
+            "ZF\\Apigility\\Admin\\": "src/"
         },
         "classmap": [
             "Module.php"
@@ -80,7 +79,9 @@
             "FooConf\\": "test/Model/TestAsset/module/FooConf/src/FooConf/",
             "BazConf\\": "test/Model/TestAsset/module/BazConf",
             "InputFilter\\": "test/Model/TestAsset/module/InputFilter/",
-            "Version\\": "test/Model/TestAsset/module/Version/src/Version/"
+            "Version\\": "test/Model/TestAsset/module/Version/src/Version/",
+            "ZFTest\\Apigility\\Admin\\": "test/",
+            "ZFTest\\Configuration\\": "vendor/zfcampus/zf-configuration/test/"
         }
     }
 }

@@ -8,6 +8,7 @@
 
     <!-- inherit rules from: -->
     <rule ref="PSR2"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
         <properties>
             <property name="ignoreBlankLines" value="false"/>
@@ -17,4 +18,5 @@
     <!-- Paths to check -->
     <file>src</file>
     <file>test</file>
+    <exclude-pattern>*/module.config.php</exclude-pattern>
 </ruleset>

@@ -73,30 +73,30 @@ class DashboardController extends AbstractActionController
             $rpc = array_map($map, $rpc);
             sort($rpc);
 
-            $module->exchangeArray(array(
+            $module->exchangeArray([
                 'rest' => $rest,
                 'rpc'  => $rpc,
-            ));
+            ]);
         }
 
         $modulesCollection = new Collection($modules);
         $modulesCollection->setCollectionRoute('zf-apigility/api/module');
 
-        $dashboard = array(
+        $dashboard = [
             'db_adapter'       => $dbAdapters,
             'module'           => $modulesCollection,
-        );
+        ];
 
         $entity = new Entity($dashboard, 'dashboard');
         $links  = $entity->getLinks();
-        $links->add(Link::factory(array(
+        $links->add(Link::factory([
             'rel' => 'self',
-            'route' => array(
+            'route' => [
                 'name' => 'zf-apigility/api/dashboard',
-            ),
-        )));
+            ],
+        ]));
 
-        return new ViewModel(array('payload' => $entity));
+        return new ViewModel(['payload' => $entity]);
     }
 
     public function settingsDashboardAction()
@@ -105,10 +105,10 @@ class DashboardController extends AbstractActionController
         if ($authentication) {
             $authenticationEntity = $authentication;
             $authentication = new Entity($authentication, null);
-            $authentication->getLinks()->add(Link::factory(array(
+            $authentication->getLinks()->add(Link::factory([
                 'rel' => 'self',
                 'route' => $this->getRouteForEntity($authenticationEntity),
-            )));
+            ]));
         }
 
         $dbAdapters = new Collection($this->dbAdapters->fetchAll());
@@ -117,22 +117,22 @@ class DashboardController extends AbstractActionController
         $contentNegotiation = new Collection($this->contentNegotiation->fetchAll());
         $contentNegotiation->setCollectionRoute('zf-apigility/api/content-negotiation');
 
-        $dashboard = array(
+        $dashboard = [
             'authentication'      => $authentication,
             'content_negotiation' => $contentNegotiation,
             'db_adapter'          => $dbAdapters,
-        );
+        ];
 
         $entity = new Entity($dashboard, 'settings-dashboard');
         $links  = $entity->getLinks();
-        $links->add(Link::factory(array(
+        $links->add(Link::factory([
             'rel' => 'self',
-            'route' => array(
+            'route' => [
                 'name' => 'zf-apigility/api/settings-dashboard',
-            ),
-        )));
+            ],
+        ]));
 
-        return new ViewModel(array('payload' => $entity));
+        return new ViewModel(['payload' => $entity]);
     }
 
     /**

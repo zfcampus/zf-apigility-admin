@@ -21,7 +21,7 @@ class AuthorizationModelFactory
      *
      * @var array
      */
-    protected $models = array();
+    protected $models = [];
 
     /**
      * @var ModuleModel

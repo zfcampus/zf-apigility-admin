@@ -19,23 +19,23 @@ class SourceControllerTest extends TestCase
 {
     public function setUp()
     {
-        $this->moduleManager  = new ModuleManager(array());
+        $this->moduleManager  = new ModuleManager([]);
         $this->moduleResource = new ModuleModel(
             $this->moduleManager,
-            array(),
-            array()
+            [],
+            []
         );
         $this->controller     = new SourceController($this->moduleResource);
     }
 
     public function invalidRequestMethods()
     {
-        return array(
-            array('put'),
-            array('patch'),
-            array('post'),
-            array('delete'),
-        );
+        return [
+            ['put'],
+            ['patch'],
+            ['post'],
+            ['delete'],
+        ];
     }
 
     /**
@@ -59,9 +59,9 @@ class SourceControllerTest extends TestCase
                                ->getMock();
         $moduleManager->expects($this->any())
                       ->method('getLoadedModules')
-                      ->will($this->returnValue(array('ZFTest\Apigility\Admin\Model\TestAsset\Bar' => new BarModule)));
+                      ->will($this->returnValue(['ZFTest\Apigility\Admin\Model\TestAsset\Bar' => new BarModule]));
 
-        $moduleResource = new ModuleModel($moduleManager, array(), array());
+        $moduleResource = new ModuleModel($moduleManager, [], []);
         $controller     = new SourceController($moduleResource);
 
         $request = new Request();

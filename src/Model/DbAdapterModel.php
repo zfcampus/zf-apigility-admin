@@ -51,7 +51,7 @@ class DbAdapterModel
             unset($adapterConfig['dsn']);
         }
 
-        $this->globalConfig->patchKey($key, array());
+        $this->globalConfig->patchKey($key, []);
         $this->localConfig->patchKey($key, $adapterConfig);
 
         return new DbAdapterEntity($name, $adapterConfig);
@@ -90,7 +90,7 @@ class DbAdapterModel
      */
     public function fetchAll()
     {
-        $config = array();
+        $config = [];
         $fromConfigFile = $this->localConfig->fetch(true);
         if (isset($fromConfigFile['db'])
             && isset($fromConfigFile['db']['adapters'])
@@ -99,7 +99,7 @@ class DbAdapterModel
             $config = $fromConfigFile['db']['adapters'];
         }
 
-        $adapters = array();
+        $adapters = [];
         foreach ($config as $name => $adapterConfig) {
             $adapters[] = new DbAdapterEntity($name, $adapterConfig);
         }
