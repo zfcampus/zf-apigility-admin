@@ -22,7 +22,7 @@ class ConfigControllerTest extends TestCase
         file_put_contents($this->file, '<' . "?php\nreturn array();");
 
         $this->writer         = new TestAsset\ConfigWriter();
-        $this->configResource = new ConfigResource(array(), $this->file, $this->writer);
+        $this->configResource = new ConfigResource([], $this->file, $this->writer);
         $this->controller     = new ConfigController($this->configResource);
 
         $this->plugins = new ControllerPluginManager();
@@ -37,11 +37,11 @@ class ConfigControllerTest extends TestCase
 
     public function invalidRequestMethods()
     {
-        return array(
-            array('post'),
-            array('put'),
-            array('delete'),
-        );
+        return [
+            ['post'],
+            ['put'],
+            ['delete'],
+        ];
     }
 
     /**
@@ -60,13 +60,13 @@ class ConfigControllerTest extends TestCase
 
     public function testProcessGetRequestWithZfCampusMediaTypeReturnsFullConfiguration()
     {
-        $config = array(
+        $config = [
             'foo' => 'FOO',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
-            ),
+            ],
             'baz' => 'BAZ',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
         $controller     = new ConfigController($configResource);
         $controller->setPluginManager($this->plugins);
@@ -84,13 +84,13 @@ class ConfigControllerTest extends TestCase
 
     public function testProcessGetRequestWithGenericJsonMediaTypeReturnsFlattenedConfiguration()
     {
-        $config = array(
+        $config = [
             'foo' => 'FOO',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
-            ),
+            ],
             'baz' => 'BAZ',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
         $controller     = new ConfigController($configResource);
         $controller->setPluginManager($this->plugins);
@@ -103,35 +103,35 @@ class ConfigControllerTest extends TestCase
         $result = $controller->processAction();
         $this->assertInternalType('array', $result);
 
-        $expected = array(
+        $expected = [
             'foo'     => 'FOO',
             'bar.baz' => 'bat',
             'baz'     => 'BAZ',
-        );
+        ];
         $this->assertEquals($expected, $result);
     }
 
     public function testProcessPatchRequestWithZfCampusMediaTypeReturnsUpdatedConfigurationKeys()
     {
-        $config = array(
+        $config = [
             'foo' => 'FOO',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
-            ),
+            ],
             'baz' => 'BAZ',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
         $controller     = new ConfigController($configResource);
         $controller->setPluginManager($this->plugins);
 
         $request = new Request();
         $request->setMethod('patch');
-        $request->setContent(json_encode(array(
-            'bar' => array(
+        $request->setContent(json_encode([
+            'bar' => [
                 'baz' => 'UPDATED',
-            ),
+            ],
             'baz' => 'UPDATED',
-        )));
+        ]));
         $request->getHeaders()->addHeaderLine('Content-Type', 'application/vnd.zfcampus.v1.config+json');
         $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.zfcampus.v1.config+json');
         $controller->setRequest($request);
@@ -139,44 +139,44 @@ class ConfigControllerTest extends TestCase
         $result = $controller->processAction();
         $this->assertInternalType('array', $result);
 
-        $expected = array(
-            'bar' => array(
+        $expected = [
+            'bar' => [
                 'baz' => 'UPDATED',
-            ),
+            ],
             'baz' => 'UPDATED',
-        );
+        ];
         $this->assertEquals($expected, $result);
     }
 
     public function testProcessPatchRequestWithGenericJsonMediaTypeReturnsUpdatedConfigurationKeys()
     {
-        $config = array(
+        $config = [
             'foo' => 'FOO',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
-            ),
+            ],
             'baz' => 'BAZ',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
         $controller     = new ConfigController($configResource);
         $controller->setPluginManager($this->plugins);
 
         $request = new Request();
         $request->setMethod('patch');
-        $request->setPost(new Parameters(array(
+        $request->setPost(new Parameters([
             'bar.baz' => 'UPDATED',
             'baz' => 'UPDATED',
-        )));
+        ]));
         $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
         $controller->setRequest($request);
 
         $result = $controller->processAction();
         $this->assertInternalType('array', $result);
 
-        $expected = array(
+        $expected = [
             'bar.baz' => 'UPDATED',
             'baz' => 'UPDATED',
-        );
+        ];
         $this->assertEquals($expected, $result);
     }
 }

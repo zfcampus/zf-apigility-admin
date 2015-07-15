@@ -14,43 +14,43 @@ class ModuleInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\ModuleInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'singular-namespace' => array(
-                array('name' => 'Foo'),
-            ),
-            'underscore_namespace' => array(
-                array('name' => 'My_Status'),
-            ),
-        );
+        return [
+            'singular-namespace' => [
+                ['name' => 'Foo'],
+            ],
+            'underscore_namespace' => [
+                ['name' => 'My_Status'],
+            ],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'missing-name' => array(
-                array(),
-                array('name'),
-            ),
-            'empty-name' => array(
-                array('name' => ''),
-                array('name'),
-            ),
-            'underscore-only' => array(
-                array('name' => '_'),
-                array('name'),
-            ),
-            'namespace-separator' => array(
-                array('name' => 'My\Status'),
-                array('name'),
-            ),
-        );
+        return [
+            'missing-name' => [
+                [],
+                ['name'],
+            ],
+            'empty-name' => [
+                ['name' => ''],
+                ['name'],
+            ],
+            'underscore-only' => [
+                ['name' => '_'],
+                ['name'],
+            ],
+            'namespace-separator' => [
+                ['name' => 'My\Status'],
+                ['name'],
+            ],
+        ];
     }
 
     /**

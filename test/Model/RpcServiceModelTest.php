@@ -29,7 +29,7 @@ class RpcServiceModelTest extends TestCase
      */
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -45,10 +45,10 @@ class RpcServiceModelTest extends TestCase
     {
         $pathSpec = (empty($this->modulePathSpec)) ? 'psr-0' : $this->modulePathSpec->getPathSpec();
 
-        $modulePath = array(
+        $modulePath = [
             'psr-0' => '%s/src/%s/V*',
             'psr-4' => '%s/src/V*'
-        );
+        ];
 
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
         $configPath = $basePath . '/config';
@@ -63,10 +63,10 @@ class RpcServiceModelTest extends TestCase
         $this->module = 'FooConf';
         $this->cleanUpAssets();
 
-        $modules = array(
+        $modules = [
             'FooConf' => new FooConf\Module(),
             'BazConf' => new BazConf\Module()
-        );
+        ];
 
         $this->moduleEntity  = new ModuleEntity($this->module);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
@@ -103,7 +103,7 @@ class RpcServiceModelTest extends TestCase
          * @todo define exception in Rpc namespace
          */
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
-        $this->codeRpc->createService('Foo Bar', 'route', array());
+        $this->codeRpc->createService('Foo Bar', 'route', []);
     }
 
     public function testRejectSpacesInRpcServiceName2()
@@ -112,7 +112,7 @@ class RpcServiceModelTest extends TestCase
          * @todo define exception in Rpc namespace
         */
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
-        $this->codeRpc->createService('Foo:Bar', 'route', array());
+        $this->codeRpc->createService('Foo:Bar', 'route', []);
     }
 
     public function testRejectSpacesInRpcServiceName3()
@@ -121,7 +121,7 @@ class RpcServiceModelTest extends TestCase
          * @todo define exception in Rpc namespace
         */
         $this->setExpectedException('ZF\Rest\Exception\CreationException');
-        $this->codeRpc->createService('Foo/Bar', 'route', array());
+        $this->codeRpc->createService('Foo/Bar', 'route', []);
     }
 
     /**
@@ -181,11 +181,11 @@ class RpcServiceModelTest extends TestCase
 
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
         $config     = include $configFile;
-        $expected = array(
-            'controllers' => array('factories' => array(
+        $expected = [
+            'controllers' => ['factories' => [
                 $controllerService => $className . 'Factory',
-            )),
-        );
+            ]],
+        ];
         $this->assertEquals($expected, $config);
     }
 
@@ -242,11 +242,11 @@ class RpcServiceModelTest extends TestCase
 
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
         $config     = include $configFile;
-        $expected = array(
-            'controllers' => array('factories' => array(
+        $expected = [
+            'controllers' => ['factories' => [
                 $controllerService => $className . 'Factory',
-            )),
-        );
+            ]],
+        ];
         $this->assertEquals($expected, $config);
     }
 
@@ -261,31 +261,31 @@ class RpcServiceModelTest extends TestCase
 
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
         $config     = include $configFile;
-        $expected   = array(
-            'router' => array('routes' => array(
-                'foo-conf.rpc.hello-world' => array(
+        $expected   = [
+            'router' => ['routes' => [
+                'foo-conf.rpc.hello-world' => [
                     'type' => 'Segment',
-                    'options' => array(
+                    'options' => [
                         'route' => '/foo_conf/hello_world',
-                        'defaults' => array(
+                        'defaults' => [
                             'controller' => 'FooConf\Rpc\HelloWorld\Controller',
                             'action' => 'helloWorld',
-                        ),
-                    ),
-                ),
-            )),
-            'zf-versioning' => array(
-                'uri' => array(
+                        ],
+                    ],
+                ],
+            ]],
+            'zf-versioning' => [
+                'uri' => [
                     'foo-conf.rpc.hello-world'
-                )
-            )
-        );
+                ]
+            ]
+        ];
         $this->assertEquals($expected, $config);
-        return (object) array(
+        return (object) [
             'config'             => $config,
             'config_file'        => $configFile,
             'controller_service' => 'FooConf\Rpc\HelloWorld\Controller',
-        );
+        ];
     }
 
     public function testCanCreateRpcConfiguration()
@@ -294,36 +294,36 @@ class RpcServiceModelTest extends TestCase
             'HelloWorld',
             'FooConf\Rpc\HelloWorld\Controller',
             'foo-conf.rpc.hello-world',
-            array('GET', 'PATCH')
+            ['GET', 'PATCH']
         );
-        $expected = array(
-            'zf-rpc' => array(
-                'FooConf\Rpc\HelloWorld\Controller' => array(
+        $expected = [
+            'zf-rpc' => [
+                'FooConf\Rpc\HelloWorld\Controller' => [
                     'service_name' => 'HelloWorld',
-                    'http_methods' => array('GET', 'PATCH'),
+                    'http_methods' => ['GET', 'PATCH'],
                     'route_name'   => 'foo-conf.rpc.hello-world',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($expected, $result);
 
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
         $config     = include $configFile;
         $this->assertEquals($expected, $config);
 
-        return (object) array(
+        return (object) [
             'controller_service' => 'FooConf\Rpc\HelloWorld\Controller',
             'config'             => $config,
             'config_file'        => $configFile,
-        );
+        ];
     }
 
     public function contentNegotiationSelectors()
     {
-        return array(
-            'defaults' => array(null, 'Json'),
-            'HalJson' => array('HalJson', 'HalJson'),
-        );
+        return [
+            'defaults' => [null, 'Json'],
+            'HalJson' => ['HalJson', 'HalJson'],
+        ];
     }
 
     /**
@@ -332,96 +332,96 @@ class RpcServiceModelTest extends TestCase
     public function testCanCreateContentNegotiationSelectorConfiguration($selector, $expected)
     {
         $result = $this->codeRpc->createContentNegotiationConfig('FooConf\Rpc\HelloWorld\Controller', $selector);
-        $expected = array(
-            'zf-content-negotiation' => array(
-                'controllers' => array(
+        $expected = [
+            'zf-content-negotiation' => [
+                'controllers' => [
                     'FooConf\Rpc\HelloWorld\Controller' => $expected,
-                ),
-                'accept_whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                ],
+                'accept_whitelist' => [
+                    'FooConf\Rpc\HelloWorld\Controller' => [
                         'application/vnd.foo-conf.v1+json',
                         'application/json',
                         'application/*+json',
-                    ),
-                ),
-                'content_type_whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                    ],
+                ],
+                'content_type_whitelist' => [
+                    'FooConf\Rpc\HelloWorld\Controller' => [
                         'application/vnd.foo-conf.v1+json',
                         'application/json',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $this->assertEquals($expected, $result);
 
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
         $config     = include $configFile;
         $this->assertEquals($expected, $config);
 
-        return (object) array(
+        return (object) [
             'config'             => $config,
             'config_file'        => $configFile,
             'controller_service' => 'FooConf\Rpc\HelloWorld\Controller',
-        );
+        ];
     }
 
     public function testCanGenerateAllArtifactsAtOnceViaCreateService()
     {
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
 
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
-        $expected   = array(
-            'controllers' => array('factories' => array(
+        $expected   = [
+            'controllers' => ['factories' => [
                 'FooConf\V1\Rpc\HelloWorld\Controller' => 'FooConf\V1\Rpc\HelloWorld\HelloWorldControllerFactory',
-            )),
-            'router' => array('routes' => array(
-                'foo-conf.rpc.hello-world' => array(
+            ]],
+            'router' => ['routes' => [
+                'foo-conf.rpc.hello-world' => [
                     'type' => 'Segment',
-                    'options' => array(
+                    'options' => [
                         'route' => '/foo_conf/hello/world',
-                        'defaults' => array(
+                        'defaults' => [
                             'controller' => 'FooConf\V1\Rpc\HelloWorld\Controller',
                             'action' => 'helloWorld',
-                        ),
-                    ),
-                ),
-            )),
-            'zf-rpc' => array(
-                'FooConf\V1\Rpc\HelloWorld\Controller' => array(
+                        ],
+                    ],
+                ],
+            ]],
+            'zf-rpc' => [
+                'FooConf\V1\Rpc\HelloWorld\Controller' => [
                     'service_name' => 'HelloWorld',
-                    'http_methods' => array('GET', 'PATCH'),
+                    'http_methods' => ['GET', 'PATCH'],
                     'route_name'   => 'foo-conf.rpc.hello-world',
-                ),
-            ),
-            'zf-content-negotiation' => array(
-                'controllers' => array(
+                ],
+            ],
+            'zf-content-negotiation' => [
+                'controllers' => [
                     'FooConf\V1\Rpc\HelloWorld\Controller' => $selector,
-                ),
-                'accept_whitelist' => array(
-                    'FooConf\V1\Rpc\HelloWorld\Controller' => array(
+                ],
+                'accept_whitelist' => [
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => [
                         'application/vnd.foo-conf.v1+json',
                         'application/json',
                         'application/*+json',
-                    ),
-                ),
-                'content_type_whitelist' => array(
-                    'FooConf\V1\Rpc\HelloWorld\Controller' => array(
+                    ],
+                ],
+                'content_type_whitelist' => [
+                    'FooConf\V1\Rpc\HelloWorld\Controller' => [
                         'application/vnd.foo-conf.v1+json',
                         'application/json',
-                    ),
-                ),
-            ),
-            'zf-versioning' => array(
-                'uri' => array(
+                    ],
+                ],
+            ],
+            'zf-versioning' => [
+                'uri' => [
                     'foo-conf.rpc.hello-world'
-                )
-            )
-        );
+                ]
+            ]
+        ];
         $config = include $configFile;
         $this->assertEquals($expected, $config);
 
@@ -448,11 +448,11 @@ class RpcServiceModelTest extends TestCase
             'Expected ' . $actionMethodName . "; class:\n" . file_get_contents($classFile)
         );
 
-        return (object) array(
+        return (object) [
             'rpc_service' => $result->getArrayCopy(),
             'config_file'  => $configFile,
             'config'       => $config,
-        );
+        ];
     }
 
     /**
@@ -463,7 +463,7 @@ class RpcServiceModelTest extends TestCase
         // State is lost in between tests; re-seed the service
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $service    = $result->getArrayCopy();
@@ -483,7 +483,7 @@ class RpcServiceModelTest extends TestCase
      */
     public function testCanUpdateHttpMethods($configData)
     {
-        $methods = array('GET', 'PUT', 'DELETE');
+        $methods = ['GET', 'PUT', 'DELETE'];
         $this->writer->toFile($configData->config_file, $configData->config);
         $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
         $config = include $configData->config_file;
@@ -493,13 +493,13 @@ class RpcServiceModelTest extends TestCase
     public function testCanUpdateContentNegotiationSelector()
     {
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
-        $this->writer->toFile($configFile, array(
-            'zf-content-negotiation' => array(
-                'controllers' => array(
+        $this->writer->toFile($configFile, [
+            'zf-content-negotiation' => [
+                'controllers' => [
                     'FooConf\Rpc\HelloWorld\Controller' => 'Json',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
         $this->assertTrue($this->codeRpc->updateSelector('FooConf\Rpc\HelloWorld\Controller', 'MyCustomSelector'));
         $config = include $configFile;
         $this->assertEquals(
@@ -511,43 +511,43 @@ class RpcServiceModelTest extends TestCase
     public function testCanUpdateContentNegotiationWhitelists()
     {
         $configFile = $this->modulePathSpec->getModuleConfigFilePath($this->module);
-        $this->writer->toFile($configFile, array(
-            'zf-content-negotiation' => array(
-                'accept_whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+        $this->writer->toFile($configFile, [
+            'zf-content-negotiation' => [
+                'accept_whitelist' => [
+                    'FooConf\Rpc\HelloWorld\Controller' => [
                         'application/json',
                         'application/*+json',
-                    ),
-                ),
-                'content_type_whitelist' => array(
-                    'FooConf\Rpc\HelloWorld\Controller' => array(
+                    ],
+                ],
+                'content_type_whitelist' => [
+                    'FooConf\Rpc\HelloWorld\Controller' => [
                         'application/json',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
         $this->assertTrue(
             $this->codeRpc->updateContentNegotiationWhitelist(
                 'FooConf\Rpc\HelloWorld\Controller',
                 'accept',
-                array('application/xml', 'application/*+xml')
+                ['application/xml', 'application/*+xml']
             )
         );
         $this->assertTrue(
             $this->codeRpc->updateContentNegotiationWhitelist(
                 'FooConf\Rpc\HelloWorld\Controller',
                 'content_type',
-                array('application/xml')
+                ['application/xml']
             )
         );
         $config = include $configFile;
-        $this->assertEquals(array(
+        $this->assertEquals([
             'application/xml',
             'application/*+xml',
-        ), $config['zf-content-negotiation']['accept_whitelist']['FooConf\Rpc\HelloWorld\Controller']);
-        $this->assertEquals(array(
+        ], $config['zf-content-negotiation']['accept_whitelist']['FooConf\Rpc\HelloWorld\Controller']);
+        $this->assertEquals([
             'application/xml',
-        ), $config['zf-content-negotiation']['content_type_whitelist']['FooConf\Rpc\HelloWorld\Controller']);
+        ], $config['zf-content-negotiation']['content_type_whitelist']['FooConf\Rpc\HelloWorld\Controller']);
     }
 
     public function testDeleteServiceRemovesExpectedConfigurationElements()
@@ -555,7 +555,7 @@ class RpcServiceModelTest extends TestCase
         // State is lost in between tests; re-seed the service
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
@@ -600,7 +600,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
@@ -629,7 +629,7 @@ class RpcServiceModelTest extends TestCase
 
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
@@ -654,7 +654,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'HelloWorld';
         $route       = '/foo_conf/hello/world';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
@@ -684,7 +684,7 @@ class RpcServiceModelTest extends TestCase
      */
     public function testCanRemoveAllHttpVerbsWhenUpdating($configData)
     {
-        $methods = array();
+        $methods = [];
         $this->writer->toFile($configData->config_file, $configData->config);
         $this->assertTrue($this->codeRpc->updateHttpMethods($configData->controller_service, $methods));
         $config = include $configData->config_file;
@@ -698,7 +698,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'Foo';
         $route       = '/foo';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
@@ -715,7 +715,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'Foo';
         $route       = '/foo';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);
@@ -733,7 +733,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'Foo';
         $route       = '/foo';
-        $httpMethods = array('GET', 'PATCH');
+        $httpMethods = ['GET', 'PATCH'];
         $selector    = 'HalJson';
         $result      = $this->codeRpc->createService($serviceName, $route, $httpMethods, $selector);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RpcServiceEntity', $result);

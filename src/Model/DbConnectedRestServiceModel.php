@@ -39,7 +39,7 @@ class DbConnectedRestServiceModel
             return;
         }
 
-        $config = $e->getParam('config', array());
+        $config = $e->getParam('config', []);
         if (!isset($config['zf-apigility'])
             || !isset($config['zf-apigility']['db-connected'])
             || !isset($config['zf-apigility']['db-connected'][$entity->resourceClass])
@@ -58,7 +58,7 @@ class DbConnectedRestServiceModel
 
         // If no override resource class is present, remove it from the returned entity
         if ($e->getParam('fetch', true) && ! isset($config['resource_class'])) {
-            $dbConnectedEntity->exchangeArray(array('resource_class' => null));
+            $dbConnectedEntity->exchangeArray(['resource_class' => null]);
         }
 
         return $dbConnectedEntity;
@@ -92,23 +92,23 @@ class DbConnectedRestServiceModel
         );
         $mediaType         = $restModel->createMediaType();
 
-        $entity->exchangeArray(array(
+        $entity->exchangeArray([
             'collection_class'        => $collectionClass,
             'controller_service_name' => $controllerService,
             'entity_class'            => $entityClass,
             'module'                  => $restModel->module,
             'resource_class'          => $resourceClass,
             'route_name'              => $routeName,
-            'accept_whitelist'        => array(
+            'accept_whitelist'        => [
                 $mediaType,
                 'application/hal+json',
                 'application/json',
-            ),
-            'content_type_whitelist'  => array(
+            ],
+            'content_type_whitelist'  => [
                 $mediaType,
                 'application/json',
-            ),
-        ));
+            ],
+        ]);
 
         $restModel->createRestConfig($entity, $controllerService, $resourceClass, $routeName);
         $restModel->createContentNegotiationConfig($entity, $controllerService);
@@ -131,9 +131,9 @@ class DbConnectedRestServiceModel
 
         // We need the resource class in order to update db-connected config!
         if (! $entity->resourceClass && $updatedEntity->resourceClass) {
-            $entity->exchangeArray(array(
+            $entity->exchangeArray([
                 'resource_class' => $updatedEntity->resourceClass,
-            ));
+            ]);
         }
 
         $updatedProps   = $this->updateDbConnectedConfig($entity);
@@ -144,7 +144,7 @@ class DbConnectedRestServiceModel
         $config = $this->restModel->configResource->fetch(true);
         $config = $config['zf-apigility']['db-connected'][$entity->resourceClass];
         if (! isset($config['resource_class'])) {
-            $entity->exchangeArray(array('resource_class' => null));
+            $entity->exchangeArray(['resource_class' => null]);
         }
 
         return $updatedEntity;
@@ -176,19 +176,19 @@ class DbConnectedRestServiceModel
      */
     public function createDbConnectedConfig(DbConnectedRestServiceEntity $entity)
     {
-        $entity->exchangeArray(array(
+        $entity->exchangeArray([
             'table_service' => sprintf('%s\\Table', $entity->resourceClass),
-        ));
+        ]);
 
-        $config = array('zf-apigility' => array('db-connected' => array(
-            $entity->resourceClass => array(
+        $config = ['zf-apigility' => ['db-connected' => [
+            $entity->resourceClass => [
                 'adapter_name'            => $entity->adapterName,
                 'table_name'              => $entity->tableName,
                 'hydrator_name'           => $entity->hydratorName,
                 'controller_service_name' => $entity->controllerServiceName,
                 'entity_identifier_name'  => $entity->entityIdentifierName,
-            ),
-        )));
+            ],
+        ]]];
         $this->restModel->configResource->patch($config, true);
     }
 
@@ -199,15 +199,15 @@ class DbConnectedRestServiceModel
      */
     public function updateDbConnectedConfig(DbConnectedRestServiceEntity $entity)
     {
-        $properties = array('zf-apigility' => array('db-connected' => array(
-            $entity->resourceClass => array(
+        $properties = ['zf-apigility' => ['db-connected' => [
+            $entity->resourceClass => [
                 'adapter_name'           => $entity->adapterName,
                 'table_name'             => $entity->tableName,
                 'table_service'          => $entity->tableService,
                 'hydrator_name'          => $entity->hydratorName,
                 'entity_identifier_name' => $entity->entityIdentifierName,
-            ),
-        )));
+            ],
+        ]]];
         $this->restModel->configResource->patch($properties, true);
         return $properties['zf-apigility']['db-connected'][$entity->resourceClass];
     }
@@ -235,7 +235,7 @@ class DbConnectedRestServiceModel
      */
     public function deleteDbConnectedConfig(DbConnectedRestServiceEntity $entity)
     {
-        $key = array('zf-apigility', 'db-connected', $entity->resourceClass);
+        $key = ['zf-apigility', 'db-connected', $entity->resourceClass];
         $this->restModel->configResource->deleteKey($key);
     }
 }

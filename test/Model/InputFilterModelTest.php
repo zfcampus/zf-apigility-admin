@@ -16,9 +16,9 @@ class InputFilterModelTest extends TestCase
 {
     public function setUp()
     {
-        $modules = array(
+        $modules = [
             'InputFilter' => new \InputFilter\Module()
-        );
+        ];
 
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
@@ -61,18 +61,18 @@ class InputFilterModelTest extends TestCase
 
     public function testAddInputFilterExistingController()
     {
-        $inputFilter = array(
-            'bar' => array(
+        $inputFilter = [
+            'bar' => [
                 'name' => 'bar',
                 'required' => true,
                 'allow_empty' => true,
-                'validators' => array(
-                    array(
+                'validators' => [
+                    [
                         'name' => 'NotEmpty',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $result = $this->model->update('InputFilter', 'InputFilter\V1\Rest\Foo\Controller', $inputFilter);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $result);
         $this->assertEquals(
@@ -84,18 +84,18 @@ class InputFilterModelTest extends TestCase
 
     public function testAddInputFilterNewController()
     {
-        $inputfilter = array(
-            'bar' => array(
+        $inputfilter = [
+            'bar' => [
                 'name' => 'bar',
                 'required' => true,
                 'allow_empty' => true,
-                'validators' => array(
-                    array(
+                'validators' => [
+                    [
                         'name' => 'NotEmpty',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         // new controller
         $controller = 'InputFilter\V1\Rest\Bar\Controller';

@@ -36,7 +36,7 @@ class VersioningModelTest extends TestCase
 
     public function removeModuleConfig()
     {
-        foreach (array($this->moduleConfigFile, $this->moduleDocsConfigFile) as $file) {
+        foreach ([$this->moduleConfigFile, $this->moduleDocsConfigFile] as $file) {
             if (file_exists($file)) {
                 unlink($file);
             }
@@ -46,7 +46,7 @@ class VersioningModelTest extends TestCase
     public function setUpModuleConfig()
     {
         $this->removeModuleConfig();
-        foreach (array($this->moduleConfigFile, $this->moduleDocsConfigFile) as $file) {
+        foreach ([$this->moduleConfigFile, $this->moduleDocsConfigFile] as $file) {
             copy($file . '.dist', $file);
         }
     }
@@ -62,7 +62,7 @@ class VersioningModelTest extends TestCase
         if (!file_exists($dir)) {
             return false;
         }
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -77,7 +77,7 @@ class VersioningModelTest extends TestCase
     public function testGetModuleVersions()
     {
         $versions = $this->model->getModuleVersions('Version', __DIR__ . '/TestAsset/module/Version/src/Version');
-        $this->assertEquals(array(1), $versions);
+        $this->assertEquals([1], $versions);
     }
 
     public function testCreateVersion()

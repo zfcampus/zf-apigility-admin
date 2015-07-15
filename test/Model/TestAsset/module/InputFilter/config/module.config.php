@@ -1,28 +1,28 @@
 <?php
-return array(
-    'input_filter_specs' => array(
-        'InputFilter\V1\Rest\Foo\Validator' => array(
-            'foo' => array(
+return [
+    'input_filter_specs' => [
+        'InputFilter\V1\Rest\Foo\Validator' => [
+            'foo' => [
                 'name' => 'foo',
-                'validators' => array(
-                    array(
+                'validators' => [
+                    [
                         'name' => 'NotEmpty',
-                        'options' => array(
+                        'options' => [
                             'type' => 127,
-                        ),
-                    ),
-                    array('name' => 'Digits'),
-                ),
-            ),
-        ),
-    ),
-    'zf-content-validation' => array(
-        'InputFilter\V1\Rest\Foo\Controller' => array(
+                        ],
+                    ],
+                    ['name' => 'Digits'],
+                ],
+            ],
+        ],
+    ],
+    'zf-content-validation' => [
+        'InputFilter\V1\Rest\Foo\Controller' => [
             'input_filter' => 'InputFilter\V1\Rest\Foo\Validator',
-        ),
-    ),
-    'zf-rest' => array(
-        'InputFilter\V1\Rest\Foo\Controller' => array(),
-        'InputFilter\V1\Rest\Bar\Controller' => array(),
-    ),
-);
+        ],
+    ],
+    'zf-rest' => [
+        'InputFilter\V1\Rest\Foo\Controller' => [],
+        'InputFilter\V1\Rest\Bar\Controller' => [],
+    ],
+];

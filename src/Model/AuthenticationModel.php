@@ -301,13 +301,13 @@ class AuthenticationModel
      */
     public function remove()
     {
-        $configKeys = array(
+        $configKeys = [
             'zf-mvc-auth.authentication.http',
             'zf-oauth2.db',
             'zf-oauth2.mongo',
             'zf-oauth2.storage',
             'router.routes.oauth',
-        );
+        ];
         foreach ($configKeys as $key) {
             $this->globalConfig->deleteKey($key);
             $this->localConfig->deleteKey($key);
@@ -365,7 +365,7 @@ class AuthenticationModel
      */
     public function fetchAllAuthenticationAdapter()
     {
-        $result = array();
+        $result = [];
         $config = $this->localConfig->fetch(true);
 
         if (! isset($config['zf-mvc-auth']['authentication']['adapters'])) {
@@ -557,9 +557,9 @@ class AuthenticationModel
      */
     protected function fetchOAuth2Configuration(array $config)
     {
-        $oauth2Config = array(
+        $oauth2Config = [
             'route_match' => '/oauth',
-        );
+        ];
 
         if (isset($config['router']['routes']['oauth']['options']['route'])) {
             $oauth2Config['route_match'] = $config['router']['routes']['oauth']['options']['route'];
@@ -611,17 +611,17 @@ class AuthenticationModel
 
         switch ($entity->getDsnType()) {
             case AuthenticationEntity::DSN_MONGO:
-                $toSet = array(
+                $toSet = [
                     'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
                     'mongo'   => $local,
-                );
+                ];
                 break;
             case AuthenticationEntity::DSN_PDO:
             default:
-                $toSet = array(
+                $toSet = [
                     'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
                     'db'      => $local,
-                );
+                ];
                 break;
         }
 
@@ -684,38 +684,38 @@ class AuthenticationModel
         $key = 'zf-mvc-auth.authentication.adapters.' . $adapter['name'];
         switch ($adapter['type']) {
             case AuthenticationEntity::TYPE_BASIC:
-                $config = array(
+                $config = [
                     'adapter' => self::ADAPTER_HTTP,
-                    'options' => array(
-                        'accept_schemes' => array(AuthenticationEntity::TYPE_BASIC),
+                    'options' => [
+                        'accept_schemes' => [AuthenticationEntity::TYPE_BASIC],
                         'realm'          => $adapter['realm'],
                         'htpasswd'       => $adapter['htpasswd']
-                    )
-                );
+                    ]
+                ];
                 break;
             case AuthenticationEntity::TYPE_DIGEST:
-                $config = array(
+                $config = [
                     'adapter' => self::ADAPTER_HTTP,
-                    'options' => array(
-                        'accept_schemes' => array(AuthenticationEntity::TYPE_DIGEST),
+                    'options' => [
+                        'accept_schemes' => [AuthenticationEntity::TYPE_DIGEST],
                         'realm'          => $adapter['realm'],
                         'digest_domains' => $adapter['digest_domains'],
                         'nonce_timeout'  => $adapter['nonce_timeout'],
                         'htdigest'       => $adapter['htdigest']
-                    )
-                );
+                    ]
+                ];
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
                 switch (strtolower($adapter['oauth2_type'])) {
                     case strtolower(AuthenticationEntity::DSN_PDO):
-                        $config = array(
+                        $config = [
                             'adapter' => self::ADAPTER_OAUTH2,
-                            'storage' => array(
+                            'storage' => [
                                 'adapter' => strtolower(AuthenticationEntity::DSN_PDO),
                                 'dsn'     => $adapter['oauth2_dsn'],
                                 'route'   => $adapter['oauth2_route']
-                            )
-                        );
+                            ]
+                        ];
                         if (isset($adapter['oauth2_username'])) {
                             $config['storage']['username'] = $adapter['oauth2_username'];
                         }
@@ -724,15 +724,15 @@ class AuthenticationModel
                         }
                         break;
                     case strtolower(AuthenticationEntity::DSN_MONGO):
-                        $config = array(
+                        $config = [
                             'adapter' => self::ADAPTER_OAUTH2,
-                            'storage' => array(
+                            'storage' => [
                                 'adapter'  => strtolower(AuthenticationEntity::DSN_MONGO),
                                 'dsn'      => $adapter['oauth2_dsn'],
                                 'database' => $adapter['oauth2_database'],
                                 'route'   => $adapter['oauth2_route']
-                            )
-                        );
+                            ]
+                        ];
                         if (isset($adapter['oauth2_locator_name'])) {
                             $config['storage']['locator_name'] = $adapter['oauth2_locator_name'];
                         }
@@ -761,7 +761,7 @@ class AuthenticationModel
     public function fromOAuth2RegexToArray($config)
     {
         if (! isset($config['router']['routes']['oauth']['options']['regex'])) {
-            return array();
+            return [];
         }
         $regex = $config['router']['routes']['oauth']['options']['regex'];
         return explode('|', substr($regex, 11, strlen($regex) - 13));
@@ -788,10 +788,10 @@ class AuthenticationModel
             return strlen($b) - strlen($a);
         });
 
-        $options = array(
+        $options = [
             'spec'  => '%oauth%',
             'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
-        );
+        ];
         $this->globalConfig->patchKey('router.routes.oauth.options', $options);
         $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
     }
@@ -824,10 +824,10 @@ class AuthenticationModel
             usort($routes, function ($a, $b) {
                 return strlen($b) - strlen($a);
             });
-            $options = array(
+            $options = [
                 'spec'  => '%oauth%',
                 'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
-            );
+            ];
             $this->globalConfig->patchKey('router.routes.oauth.options', $options);
             $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
             return true;
@@ -847,7 +847,7 @@ class AuthenticationModel
      */
     protected function loadAuthenticationAdapterFromConfig($name, array $config)
     {
-        $result = array();
+        $result = [];
         if (isset($config['zf-mvc-auth']['authentication']['adapters'][$name])) {
             $adapter = $config['zf-mvc-auth']['authentication']['adapters'][$name];
             $result['name'] = $name;
@@ -901,12 +901,12 @@ class AuthenticationModel
      */
     public function removeOldAuthentication()
     {
-        $configKeys = array(
+        $configKeys = [
             'zf-mvc-auth.authentication.http',
             'zf-oauth2.db',
             'zf-oauth2.mongo',
             'zf-oauth2.storage'
-        );
+        ];
         foreach ($configKeys as $key) {
             $this->globalConfig->deleteKey($key);
             $this->localConfig->deleteKey($key);
@@ -933,30 +933,30 @@ class AuthenticationModel
         $oldAuth = $oldAuth->getArrayCopy();
         switch ($oldAuth['type']) {
             case 'http_basic':
-                $adapter = array(
+                $adapter = [
                     'name'     => 'http_basic',
                     'type'     => AuthenticationEntity::TYPE_BASIC,
                     'realm'    => $oldAuth['realm'],
                     'htpasswd' => $oldAuth['htpasswd']
-                );
+                ];
                 break;
             case 'http_digest':
-                $adapter = array(
+                $adapter = [
                     'name'           => 'http_digest',
                     'type'           => AuthenticationEntity::TYPE_DIGEST,
                     'realm'          => $oldAuth['realm'],
                     'htdigest'       => $oldAuth['htdigest'],
                     'digest_domains' => $oldAuth['digest_domains'],
                     'nonce_timeout'  => $oldAuth['nonce_timeout']
-                );
+                ];
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
-                $adapter = array(
+                $adapter = [
                     'type'         => AuthenticationEntity::TYPE_OAUTH2,
                     'oauth2_type'  => $oldAuth['dsn_type'],
                     'oauth2_dsn'   => $oldAuth['dsn'],
                     'oauth2_route' => $oldAuth['route_match']
-                );
+                ];
                 switch ($oldAuth['dsn_type']) {
                     case AuthenticationEntity::DSN_PDO:
                         $adapter['name']            = 'oauth2_pdo';

@@ -12,27 +12,27 @@ class BaseInputFilter extends InputFilter
 {
     public function init()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'name',
             'error_message' => 'Please provide a name for HTTP authentication',
-            'filters' => array(
-                array('name' => 'StringToLower'),
-            )
-        ));
-        $this->add(array(
+            'filters' => [
+                ['name' => 'StringToLower'],
+            ]
+        ]);
+        $this->add([
             'name' => 'type',
             'error_message' => 'Please provide the HTTP authentication type',
-            'filters' => array(
-                array('name' => 'StringToLower'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'StringToLower'],
+            ],
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array('callback' => function ($value) {
-                        return in_array($value, array('basic', 'digest', 'oauth2'));
-                    }),
-                )
-            )
-        ));
+                    'options' => ['callback' => function ($value) {
+                        return in_array($value, ['basic', 'digest', 'oauth2']);
+                    }],
+                ]
+            ]
+        ]);
     }
 }

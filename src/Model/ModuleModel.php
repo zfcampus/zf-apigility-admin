@@ -24,7 +24,7 @@ class ModuleModel
      * Services for each module
      * @var array
      */
-    protected $services = array();
+    protected $services = [];
 
     /**
      * @var ModuleManager
@@ -151,14 +151,14 @@ class ModuleModel
             return false;
         }
 
-        $view = new ViewModel(array(
+        $view = new ViewModel([
             'module'  => $module
-        ));
+        ]);
 
-        $resolver = new Resolver\TemplateMapResolver(array(
+        $resolver = new Resolver\TemplateMapResolver([
             'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml',
             'module/skeleton-psr4' => __DIR__ . '/../../view/module/skeleton-psr4.phtml',
-        ));
+        ]);
 
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
@@ -296,7 +296,7 @@ class ModuleModel
             return $this->modules;
         }
 
-        $this->modules = array();
+        $this->modules = [];
         foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
             if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
                 continue;
@@ -313,10 +313,10 @@ class ModuleModel
             $services = $this->getServicesByModule($moduleName);
             $versions = $this->getVersionsByModule($moduleName, $module);
             $entity   = new ModuleEntity($moduleName, $services['rest'], $services['rpc']);
-            $entity->exchangeArray(array(
+            $entity->exchangeArray([
                 'versions'        => $versions,
                 'default_version' => $this->getModuleDefaultVersion($module),
-            ));
+            ]);
 
             $this->modules[$entity->getName()] = $entity;
         }
@@ -359,10 +359,10 @@ class ModuleModel
      */
     protected function getServicesByModule($module)
     {
-        $services = array(
+        $services = [
             'rest' => $this->discoverServicesByModule($module, $this->restConfig),
             'rpc'  => $this->discoverServicesByModule($module, $this->rpcConfig),
-        );
+        ];
         return $services;
     }
 
@@ -400,10 +400,10 @@ class ModuleModel
             $path = sprintf('%s/src/%s', $path, str_replace('\\', '/', $moduleName));
         }
         if (!file_exists($path)) {
-            return array(1);
+            return [1];
         }
 
-        $versions  = array();
+        $versions  = [];
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
                 $versions[] = (int) $matches['version'];
@@ -411,7 +411,7 @@ class ModuleModel
         }
 
         if (empty($versions)) {
-            return array(1);
+            return [1];
         }
 
         sort($versions);
@@ -427,7 +427,7 @@ class ModuleModel
      */
     protected function discoverServicesByModule($module, array $config)
     {
-        $services = array();
+        $services = [];
         foreach ($config as $controller) {
             if (strpos($controller, $module) === 0) {
                 $services[] = $controller;

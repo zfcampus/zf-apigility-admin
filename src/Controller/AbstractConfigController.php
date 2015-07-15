@@ -48,7 +48,7 @@ abstract class AbstractConfigController extends AbstractActionController
                 }
 
                 // If tree was not submitted, but is Accepted, create nested values
-                $return = array();
+                $return = [];
                 foreach ($params as $key => $value) {
                     $config->createNestedKeyValuePair($return, $key, $value);
                 }

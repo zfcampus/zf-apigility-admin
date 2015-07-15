@@ -32,7 +32,7 @@ class RestServiceResourceTest extends TestCase
      */
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -59,11 +59,11 @@ class RestServiceResourceTest extends TestCase
         $this->module = 'BarConf';
         $this->cleanUpAssets();
 
-        $modules = array(
+        $modules = [
             'BarConf' => new BarConf\Module()
-        );
+        ];
 
-        $this->moduleEntity = new ModuleEntity($this->module, array(), array(), false);
+        $this->moduleEntity = new ModuleEntity($this->module, [], [], false);
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
@@ -115,7 +115,7 @@ class RestServiceResourceTest extends TestCase
      */
     public function testCreateReturnsRestServiceEntityWithControllerServiceNamePopulated()
     {
-        $entity = $this->resource->create(array('service_name' => 'test'));
+        $entity = $this->resource->create(['service_name' => 'test']);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\RestServiceEntity', $entity);
         $controllerServiceName = $entity->controllerServiceName;
         $this->assertNotEmpty($controllerServiceName);
@@ -131,7 +131,7 @@ class RestServiceResourceTest extends TestCase
         $modulePathSpec          = $this->modules;
         $writer                  = $this->writer;
         $configResourceFactory   = $this->configFactory;
-        $moduleModel             = new ModuleModel($moduleManager, array(), array());
+        $moduleModel             = new ModuleModel($moduleManager, [], []);
         $sharedEvents            = new SharedEventManager();
         $restServiceModelFactory = new RestServiceModelFactory(
             $modulePathSpec,
@@ -152,17 +152,17 @@ class RestServiceResourceTest extends TestCase
         $prop->setAccessible(true);
         $prop->setValue($resource, 'BarConf');
 
-        $entity = $resource->create(array(
+        $entity = $resource->create([
             'adapter_name' => 'Db\Test',
             'table_name'   => 'test',
-        ));
+        ]);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity', $entity);
 
         $id = $entity->controllerServiceName;
-        $updateData = array(
+        $updateData = [
             'entity_identifier_name' => 'test_id',
             'hydrator_name' => 'Zend\Stdlib\Hydrator\ObjectProperty',
-        );
+        ];
         $resource->patch($id, $updateData);
 
         $config = include __DIR__ . '/TestAsset/module/BarConf/config/module.config.php';

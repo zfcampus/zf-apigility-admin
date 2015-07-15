@@ -13,52 +13,52 @@ class ContentNegotiationInputFilterTest extends TestCase
 {
     public function dataProviderIsValid()
     {
-        return array(
-            'valid' => array(array('selectors' =>
-                array(
-                    'Zend\View\Model\ViewModel' => array('text/html', 'application/xhtml+xml'),
-                ),
-            )),
-        );
+        return [
+            'valid' => [['selectors' =>
+                [
+                    'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
+                ],
+            ]],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
-            'class-does-not-exist' => array(
-                array('selectors' => array(
-                    'Zend\View\Model\ViewMode' => array('text/html', 'application/xhtml+xml'),
-                )),
-                array('selectors' => array(
+        return [
+            'class-does-not-exist' => [
+                ['selectors' => [
+                    'Zend\View\Model\ViewMode' => ['text/html', 'application/xhtml+xml'],
+                ]],
+                ['selectors' => [
                     'classNotFound' => 'Class name (Zend\View\Model\ViewMode) does not exist',
-                )),
-            ),
-            'class-is-not-view-model' => array(
-                array('selectors' => array(
-                    __CLASS__ => array('text/html', 'application/xhtml+xml'),
-                )),
-                array('selectors' => array(
+                ]],
+            ],
+            'class-is-not-view-model' => [
+                ['selectors' => [
+                    __CLASS__ => ['text/html', 'application/xhtml+xml'],
+                ]],
+                ['selectors' => [
                     'invalidViewModel' => 'Class name (' . __CLASS__ . ') is invalid;'
                     . ' must be a valid Zend\View\Model\ModelInterface instance',
-                )),
-            ),
-            'media-types-not-array' => array(
-                array('selectors' => array(
+                ]],
+            ],
+            'media-types-not-array' => [
+                ['selectors' => [
                     'Zend\View\Model\ViewModel' => 'foo',
-                )),
-                array('selectors' => array(
+                ]],
+                ['selectors' => [
                     'invalidMediaTypes' => 'Values for the media-types must be provided as an indexed array',
-                )),
-            ),
-            'invalid-media-type' => array(
-                array('selectors' => array(
-                    'Zend\View\Model\ViewModel' => array('texthtml', 'application/xhtml+xml'),
-                )),
-                array('selectors' => array(
+                ]],
+            ],
+            'invalid-media-type' => [
+                ['selectors' => [
+                    'Zend\View\Model\ViewModel' => ['texthtml', 'application/xhtml+xml'],
+                ]],
+                ['selectors' => [
                     'invalidMediaType' => 'Invalid media type (texthtml) provided',
-                )),
-            ),
-        );
+                ]],
+            ],
+        ];
     }
 
     /**

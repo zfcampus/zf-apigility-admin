@@ -12,21 +12,21 @@ class BasicInputFilter2 extends BaseInputFilter
     {
         parent::init();
 
-        $this->add(array(
+        $this->add([
             'name' => 'realm',
             'error_message' => 'Please provide a realm for HTTP basic authentication',
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'htpasswd',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array('callback' => function ($value) {
+                    'options' => ['callback' => function ($value) {
                         return file_exists($value);
-                    }),
-                ),
-            ),
+                    }],
+                ],
+            ],
             'error_message' => 'Path provided for htpasswd file must exist',
-        ));
+        ]);
     }
 }

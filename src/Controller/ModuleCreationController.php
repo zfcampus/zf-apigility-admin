@@ -53,14 +53,14 @@ class ModuleCreationController extends AbstractActionController
 
                 $metadata = new ModuleEntity($module);
                 $entity   = new Entity($metadata, $module);
-                $entity->getLinks()->add(Link::factory(array(
+                $entity->getLinks()->add(Link::factory([
                     'rel'   => 'self',
-                    'route' => array(
+                    'route' => [
                         'name'   => 'zf-apigility/api/module',
-                        'params' => array('module' => $module),
-                    ),
-                )));
-                return new ViewModel(array('payload' => $entity));
+                        'params' => ['module' => $module],
+                    ],
+                ]));
+                return new ViewModel(['payload' => $entity]);
 
             default:
                 return new ApiProblemResponse(

@@ -24,7 +24,7 @@ class FiltersModel extends AbstractPluginManagerModel
      * @param ServiceManager $pluginManager
      * @param array $metadata
      */
-    public function __construct(ServiceManager $pluginManager, array $metadata = array())
+    public function __construct(ServiceManager $pluginManager, array $metadata = [])
     {
         if (! $pluginManager instanceof FilterPluginManager) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -57,7 +57,7 @@ class FiltersModel extends AbstractPluginManagerModel
 
         array_walk($plugins, function (& $value, $key) use ($metadata) {
             if (! array_key_exists($key, $metadata)) {
-                $value = array();
+                $value = [];
                 return;
             }
             $value = $metadata[$key];

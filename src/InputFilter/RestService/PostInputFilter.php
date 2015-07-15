@@ -25,21 +25,21 @@ class PostInputFilter extends InputFilter
      */
     public function init()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'service_name',
             'required' => false,
-            'validators' => array(
-                array('name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator'),
-            ),
-        ));
-        $this->add(array(
+            'validators' => [
+                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator'],
+            ],
+        ]);
+        $this->add([
             'name' => 'adapter_name',
             'required' => false,
-        ));
-        $this->add(array(
+        ]);
+        $this->add([
             'name' => 'table_name',
             'required' => false,
-        ));
+        ]);
     }
 
     /**
@@ -85,10 +85,10 @@ class PostInputFilter extends InputFilter
             && (!isset($context['adapter_name']) || $context['adapter_name'] === null)
             && (!isset($context['table_name']) || $context['table_name'] === null)
         ) {
-            $this->localMessages = array(
+            $this->localMessages = [
                 'service_name' => 'You must provide either a Code-Connected service name'
                     . ' OR a DB-Connected database adapter and table name',
-            );
+            ];
             return false;
         }
 
@@ -101,10 +101,10 @@ class PostInputFilter extends InputFilter
             if ((isset($context['adapter_name']) && $context['adapter_name'] !== null)
                 || (isset($context['table_name']) && $context['table_name'] !== null)
             ) {
-                $this->localMessages = array(
+                $this->localMessages = [
                     'service_name' => 'You must provide either a Code-Connected service name'
                         . ' OR a DB-Connected database adapter and table name',
-                );
+                ];
                 return false;
             }
             return true;
@@ -113,18 +113,18 @@ class PostInputFilter extends InputFilter
         if ((isset($context['adapter_name']) && !empty($context['adapter_name']))
             && (!isset($context['table_name']) || $context['table_name'] === null)
         ) {
-            $this->localMessages = array(
+            $this->localMessages = [
                 'table_name' => 'DB-Connected services require both a database adapter and table name',
-            );
+            ];
             return false;
         }
 
         if ((!isset($context['adapter_name']) || $context['adapter_name'] === null)
             && (isset($context['table_name']) && !empty($context['table_name']))
         ) {
-            $this->localMessages = array(
+            $this->localMessages = [
                 'adapter_name' => 'DB-Connected services require both a database adapter and table name',
-            );
+            ];
             return false;
         }
 

@@ -15,48 +15,48 @@ class PostInputFilterTest extends TestCase
     public function getInputFilter()
     {
         $factory = new Factory();
-        return $factory->createInputFilter(array(
+        return $factory->createInputFilter([
             'type' => 'ZF\Apigility\Admin\InputFilter\RestService\PostInputFilter',
-        ));
+        ]);
     }
 
     public function dataProviderIsValid()
     {
-        return array(
-            'code-connected' => array(array('service_name' => 'Foo')),
-            'db-connected'   => array(array('adapter_name' => 'Status', 'table_name' => 'foo')),
-        );
+        return [
+            'code-connected' => [['service_name' => 'Foo']],
+            'db-connected'   => [['adapter_name' => 'Status', 'table_name' => 'foo']],
+        ];
     }
 
     public function dataProviderIsInvalid()
     {
-        return array(
+        return [
             // no values
-            'empty' => array(
-                array(),
-                array('service_name'),
-            ),
+            'empty' => [
+                [],
+                ['service_name'],
+            ],
             // invalid service_name
-            'invalid-service-name' => array(
-                array('service_name' => '_'),
-                array('service_name'),
-            ),
+            'invalid-service-name' => [
+                ['service_name' => '_'],
+                ['service_name'],
+            ],
             // adapter without table
-            'valid-adapter-missing-table' => array(
-                array('adapter_name' => 'Foo'),
-                array('table_name'),
-            ),
+            'valid-adapter-missing-table' => [
+                ['adapter_name' => 'Foo'],
+                ['table_name'],
+            ],
             // table without adapter
-            'missing-adapter-valid-table' => array(
-                array('table_name' => 'Foo'),
-                array('adapter_name'),
-            ),
+            'missing-adapter-valid-table' => [
+                ['table_name' => 'Foo'],
+                ['adapter_name'],
+            ],
             // both present
-            'conflict' => array(
-                array('service_name' => 'Foo', 'adapter_name' => 'bar'),
-                array('service_name'),
-            )
-        );
+            'conflict' => [
+                ['service_name' => 'Foo', 'adapter_name' => 'bar'],
+                ['service_name'],
+            ]
+        ];
     }
 
     /**

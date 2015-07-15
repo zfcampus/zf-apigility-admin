@@ -77,12 +77,12 @@ class SourceController extends AbstractActionController
                 $reflector = new ReflectionClass($class);
                 $fileName = $reflector->getFileName();
 
-                $metadata = array(
+                $metadata = [
                     'module' => $module,
                     'class'  => $class,
                     'file'   => $fileName,
                     'source' => $this->highlightFileWithNum($fileName)
-                );
+                ];
 
                 $model = new ViewModel($metadata);
                 $model->setTerminal(true);

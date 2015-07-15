@@ -22,8 +22,8 @@ class ContentNegotiationEntity
     public function getArrayCopy()
     {
         return array_merge(
-            array('content_name' => $this->name),
-            array('selectors' => $this->config)
+            ['content_name' => $this->name],
+            ['selectors' => $this->config]
         );
     }
 
@@ -34,7 +34,7 @@ class ContentNegotiationEntity
      */
     public function exchangeArray(array $array)
     {
-        $this->config = array();
+        $this->config = [];
         foreach ($array as $key => $value) {
             switch (strtolower($key)) {
                 case 'content_name':

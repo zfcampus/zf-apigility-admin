@@ -123,7 +123,7 @@ class PackageController extends AbstractActionController
     {
         if (! $format
             || ! is_string($format)
-            || ! in_array(strtolower($format), array('zip', 'tar', 'tgz', 'zpk'))
+            || ! in_array(strtolower($format), ['zip', 'tar', 'tgz', 'zpk'])
         ) {
             return new ApiProblemResponse(
                 new ApiProblem(
@@ -165,7 +165,7 @@ class PackageController extends AbstractActionController
             );
         }
 
-        return array('token' => $fileId, 'format' => $format);
+        return ['token' => $fileId, 'format' => $format];
     }
 
     /**
@@ -199,7 +199,7 @@ class PackageController extends AbstractActionController
             glob('module/*', GLOB_ONLYDIR)
         );
 
-        $toInclude = array();
+        $toInclude = [];
 
         foreach ($modules as $mod) {
             if (! isset($apis[$mod]) || $apis[$mod]) {

@@ -133,7 +133,7 @@ class InputFilterModel
         if (!isset($config['zf-content-validation'][$controller])) {
             $validatorName = $validatorName ?: $this->generateValidatorName($controller);
             $config = $configModule->patchKey(
-                array('zf-content-validation', $controller, 'input_filter'),
+                ['zf-content-validation', $controller, 'input_filter'],
                 $validatorName
             );
         }
@@ -141,16 +141,16 @@ class InputFilterModel
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
 
         if (!isset($config['input_filter_specs'])) {
-            $config['input_filter_specs'] = array();
+            $config['input_filter_specs'] = [];
         }
 
         if (!isset($config['input_filter_specs'][$validator])) {
-            $config['input_filter_specs'][$validator] = array();
+            $config['input_filter_specs'][$validator] = [];
         }
 
         $config['input_filter_specs'][$validator] = $inputFilter;
 
-        $updated = $configModule->patchKey(array('input_filter_specs', $validator), $inputFilter);
+        $updated = $configModule->patchKey(['input_filter_specs', $validator], $inputFilter);
         if (!is_array($updated)) {
             return false;
         }

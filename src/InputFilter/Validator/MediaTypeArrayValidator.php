@@ -15,9 +15,9 @@ class MediaTypeArrayValidator extends AbstractValidator
     /**
      * @var array
      */
-    protected $messageTemplates = array(
+    protected $messageTemplates = [
         self::MEDIA_TYPE_ARRAY => "'%value%' is not a correctly formatted media type"
-    );
+    ];
 
     /**
      * @param  mixed $value

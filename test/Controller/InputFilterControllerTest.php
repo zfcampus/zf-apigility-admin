@@ -23,9 +23,9 @@ class InputFilterControllerTest extends TestCase
     public function setUp()
     {
         require_once __DIR__ . '/../Model/TestAsset/module/InputFilter/Module.php';
-        $modules = array(
+        $modules = [
             'InputFilter' => new \InputFilter\Module()
-        );
+        ];
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
                                     ->disableOriginalConstructor()
@@ -61,10 +61,10 @@ class InputFilterControllerTest extends TestCase
 
         $module     = 'InputFilter';
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
-        $params = array(
+        $params = [
             'name' => $module,
             'controller_service_name' => $controller
-        );
+        ];
         $routeMatch = new RouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
@@ -98,11 +98,11 @@ class InputFilterControllerTest extends TestCase
         $module     = 'InputFilter';
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $validator  = 'InputFilter\V1\Rest\Foo\Validator';
-        $params = array(
+        $params = [
             'name' => $module,
             'controller_service_name' => $controller,
             'input_filter_name' => $validator,
-        );
+        ];
         $routeMatch = new RouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
@@ -125,22 +125,22 @@ class InputFilterControllerTest extends TestCase
 
     public function testAddInputFilter()
     {
-        $inputFilter = array(
-            array(
+        $inputFilter = [
+            [
                 'name' => 'bar',
-                'validators' => array(
-                    array(
+                'validators' => [
+                    [
                         'name' => 'NotEmpty',
-                        'options' => array(
+                        'options' => [
                             'type' => 127,
-                        ),
-                    ),
-                    array(
+                        ],
+                    ],
+                    [
                         'name' => 'Digits',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         $request = new Request();
         $request->setMethod('put');
@@ -150,10 +150,10 @@ class InputFilterControllerTest extends TestCase
 
         $module     = 'InputFilter';
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
-        $params = array(
+        $params = [
             'name' => $module,
             'controller_service_name' => $controller
-        );
+        ];
         $routeMatch = new RouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
@@ -194,11 +194,11 @@ class InputFilterControllerTest extends TestCase
         $module     = 'InputFilter';
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $validator  = 'InputFilter\V1\Rest\Foo\Validator';
-        $params = array(
+        $params = [
             'name' => $module,
             'controller_service_name' => $controller,
             'input_filter_name' => $validator,
-        );
+        ];
         $routeMatch = new RouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();

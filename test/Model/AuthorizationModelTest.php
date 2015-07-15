@@ -29,7 +29,7 @@ class AuthorizationModelTest extends TestCase
      */
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = "$dir/$file";
             if (is_dir($path)) {
@@ -57,12 +57,12 @@ class AuthorizationModelTest extends TestCase
         $this->module = $module;
         $this->cleanUpAssets();
 
-        $modules = array(
+        $modules = [
             'FooConf'            => new FooConf\Module(),
             'AuthConf'           => new AuthConf\Module(),
             'AuthConfDefaults'   => new AuthConfDefaults\Module(),
             'AuthConfWithConfig' => new AuthConfWithConfig\Module(),
-        );
+        ];
 
         $this->moduleEntity  = new ModuleEntity($this->module);
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
@@ -90,13 +90,13 @@ class AuthorizationModelTest extends TestCase
 
     public function assertDefaultPrivileges(array $privileges)
     {
-        $this->assertEquals(array(
+        $this->assertEquals([
             'GET' => false,
             'POST' => false,
             'PUT' => false,
             'PATCH' => false,
             'DELETE' => false,
-        ), $privileges);
+        ], $privileges);
     }
 
     protected function mapConfigToPayload(array $config)
@@ -124,7 +124,7 @@ class AuthorizationModelTest extends TestCase
 
     protected function mapEntityToConfig(AuthorizationEntity $entity)
     {
-        $normalized = array();
+        $normalized = [];
         foreach ($entity->getArrayCopy() as $spec => $privileges) {
             preg_match('/^(?P<service>[^:]+)(::(?P<action>.*))?$/', $spec, $matches);
             if (!isset($matches['action'])) {
@@ -153,15 +153,15 @@ class AuthorizationModelTest extends TestCase
         $entity = $this->model->fetch();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthorizationEntity', $entity);
         $this->assertEquals(6, count($entity));
-        $expected = array(
+        $expected = [
             'AuthConf\V1\Rest\Foo\Controller::__entity__',
             'AuthConf\V1\Rest\Foo\Controller::__collection__',
             'AuthConf\V1\Rest\Bar\Controller::__entity__',
             'AuthConf\V1\Rest\Bar\Controller::__collection__',
             'AuthConf\V1\Rpc\Baz\Controller::baz',
             'AuthConf\V1\Rpc\Bat\Controller::bat',
-        );
-        $actual = array();
+        ];
+        $actual = [];
         foreach ($entity as $serviceName => $privileges) {
             $actual[] = $serviceName;
             $this->assertDefaultPrivileges($privileges);
@@ -184,7 +184,7 @@ class AuthorizationModelTest extends TestCase
         $entity = $this->model->fetch(2); // <- VERSION!
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\AuthorizationEntity', $entity);
         $this->assertEquals(9, count($entity));
-        $expected = array(
+        $expected = [
             'AuthConf\V2\Rest\Foo\Controller::__entity__',
             'AuthConf\V2\Rest\Foo\Controller::__collection__',
             'AuthConf\V2\Rest\Bar\Controller::__entity__',
@@ -194,8 +194,8 @@ class AuthorizationModelTest extends TestCase
             'AuthConf\V2\Rpc\Baz\Controller::baz',
             'AuthConf\V2\Rpc\Bat\Controller::bat',
             'AuthConf\V2\Rpc\New\Controller::new',
-        );
-        $actual = array();
+        ];
+        $actual = [];
         foreach ($entity as $serviceName => $privileges) {
             $actual[] = $serviceName;
             $this->assertDefaultPrivileges($privileges);

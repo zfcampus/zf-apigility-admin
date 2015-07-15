@@ -12,14 +12,14 @@ class ModuleInputFilter extends InputFilter
 {
     public function init()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'name',
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => 'ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator',
-                ),
-            ),
+                ],
+            ],
             'error_message' => 'The API name must be a valid PHP namespace',
-        ));
+        ]);
     }
 }

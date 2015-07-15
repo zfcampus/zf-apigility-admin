@@ -69,7 +69,7 @@ class ContentNegotiationModel
      */
     public function fetchAll()
     {
-        $config = array();
+        $config = [];
         $fromConfigFile = $this->globalConfig->fetch(true);
         if (isset($fromConfigFile['zf-content-negotiation']['selectors'])
             && is_array($fromConfigFile['zf-content-negotiation']['selectors'])
@@ -77,7 +77,7 @@ class ContentNegotiationModel
             $config = $fromConfigFile['zf-content-negotiation']['selectors'];
         }
 
-        $negotiations = array();
+        $negotiations = [];
         foreach ($config as $name => $contentConfig) {
             $negotiations[] = new ContentNegotiationEntity($name, $contentConfig);
         }

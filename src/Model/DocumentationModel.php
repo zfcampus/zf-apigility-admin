@@ -32,34 +32,34 @@ class DocumentationModel
     {
         switch ($type) {
             case self::TYPE_REST:
-                return array(
-                    'collection' => array(
+                return [
+                    'collection' => [
                         'description' => null,
-                        'GET'    => array('description' => null, 'request' => null, 'response' => null),
-                        'POST'   => array('description' => null, 'request' => null, 'response' => null),
-                        'PUT'    => array('description' => null, 'request' => null, 'response' => null),
-                        'PATCH'  => array('description' => null, 'request' => null, 'response' => null),
-                        'DELETE' => array('description' => null, 'request' => null, 'response' => null),
-                    ),
-                    'entity' => array(
+                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                    ],
+                    'entity' => [
                         'description' => null,
-                        'GET'    => array('description' => null, 'request' => null, 'response' => null),
-                        'POST'   => array('description' => null, 'request' => null, 'response' => null),
-                        'PUT'    => array('description' => null, 'request' => null, 'response' => null),
-                        'PATCH'  => array('description' => null, 'request' => null, 'response' => null),
-                        'DELETE' => array('description' => null, 'request' => null, 'response' => null),
-                    ),
+                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                    ],
                     'description' => null
-                );
+                ];
             case self::TYPE_RPC:
-                return array(
+                return [
                     'description' => null,
-                    'GET'    => array('description' => null, 'request' => null, 'response' => null),
-                    'POST'   => array('description' => null, 'request' => null, 'response' => null),
-                    'PUT'    => array('description' => null, 'request' => null, 'response' => null),
-                    'PATCH'  => array('description' => null, 'request' => null, 'response' => null),
-                    'DELETE' => array('description' => null, 'request' => null, 'response' => null),
-                );
+                    'GET'    => ['description' => null, 'request' => null, 'response' => null],
+                    'POST'   => ['description' => null, 'request' => null, 'response' => null],
+                    'PUT'    => ['description' => null, 'request' => null, 'response' => null],
+                    'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
+                    'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                ];
         }
     }
 
@@ -70,7 +70,7 @@ class DocumentationModel
         if (isset($value[$controllerServiceName])) {
             return $value[$controllerServiceName];
         }
-        return array();
+        return [];
     }
 
     public function storeDocumentation(
@@ -81,9 +81,9 @@ class DocumentationModel
         $replace = false
     ) {
         $configResource = $this->getDocumentationConfigResource($module);
-        $template = array($controllerServiceName => $this->getSchemaTemplate($controllerType));
+        $template = [$controllerServiceName => $this->getSchemaTemplate($controllerType)];
         $templateFlat = $configResource->traverseArray($template);
-        $documentationFlat = $configResource->traverseArray(array($controllerServiceName => $documentation));
+        $documentationFlat = $configResource->traverseArray([$controllerServiceName => $documentation]);
 
         $validDocumentationFlat = array_intersect_key($documentationFlat, $templateFlat);
 
@@ -153,7 +153,7 @@ class DocumentationModel
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
-        $docArray = (file_exists($docConfigPath)) ? include $docConfigPath : array();
+        $docArray = (file_exists($docConfigPath)) ? include $docConfigPath : [];
         return $this->configFactory->createConfigResource($docArray, $docConfigPath);
     }
 }

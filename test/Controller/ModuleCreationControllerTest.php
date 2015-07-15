@@ -21,23 +21,23 @@ class ModuleCreationControllerTest extends TestCase
 {
     public function setUp()
     {
-        $this->moduleManager  = new ModuleManager(array());
+        $this->moduleManager  = new ModuleManager([]);
         $this->moduleResource = new ModuleModel(
             $this->moduleManager,
-            array(),
-            array()
+            [],
+            []
         );
         $this->controller     = new ModuleCreationController($this->moduleResource);
     }
 
     public function invalidRequestMethods()
     {
-        return array(
-            array('get'),
-            array('patch'),
-            array('post'),
-            array('delete'),
-        );
+        return [
+            ['get'],
+            ['patch'],
+            ['post'],
+            ['delete'],
+        ];
     }
 
     /**
@@ -76,12 +76,12 @@ class ModuleCreationControllerTest extends TestCase
                                ->getMock();
         $moduleManager->expects($this->any())
                       ->method('getLoadedModules')
-                      ->will($this->returnValue(array('Foo' => new \Foo\Module)));
+                      ->will($this->returnValue(['Foo' => new \Foo\Module]));
 
         $moduleResource = new ModuleModel(
             $moduleManager,
-            array(),
-            array()
+            [],
+            []
         );
         $controller     = new ModuleCreationController($moduleResource);
 
@@ -118,7 +118,7 @@ class ModuleCreationControllerTest extends TestCase
 
     protected function removeDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.','..'));
+        $files = array_diff(scandir($dir), ['.','..']);
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
         }

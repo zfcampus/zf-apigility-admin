@@ -87,12 +87,12 @@ class DocumentationController extends AbstractActionController
         $e = $this->getEvent();
         $e->setParam('ZFContentNegotiationFallback', 'HalJson');
 
-        return new ViewModel(array('payload' => $result));
+        return new ViewModel(['payload' => $result]);
     }
 
     protected function deriveRouteName($route)
     {
-        $matches = array();
+        $matches = [];
         preg_match('/(?P<type>rpc|rest)/', $route, $matches);
         return sprintf('zf-apigility/api/module/%s-service/doc', $matches['type']);
     }

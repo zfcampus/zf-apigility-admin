@@ -11,22 +11,22 @@ use ZF\Hal\Collection as HalCollection;
 
 class RestServiceEntity
 {
-    protected $acceptWhitelist = array(
+    protected $acceptWhitelist = [
         'application/json',
         'application/*+json',
-    );
+    ];
 
     protected $collectionClass;
 
-    protected $collectionHttpMethods = array('GET', 'POST');
+    protected $collectionHttpMethods = ['GET', 'POST'];
 
     protected $collectionName;
 
-    protected $collectionQueryWhitelist = array();
+    protected $collectionQueryWhitelist = [];
 
-    protected $contentTypeWhitelist = array(
+    protected $contentTypeWhitelist = [
         'application/json',
-    );
+    ];
 
     protected $controllerServiceName;
 
@@ -34,11 +34,11 @@ class RestServiceEntity
 
     protected $entityClass;
 
-    protected $entityHttpMethods = array('GET', 'PATCH', 'PUT', 'DELETE');
+    protected $entityHttpMethods = ['GET', 'PATCH', 'PUT', 'DELETE'];
 
     protected $entityIdentifierName = 'id';
 
-    protected $filters = array();
+    protected $filters = [];
 
     protected $hydratorName = 'Zend\Stdlib\Hydrator\ArraySerializable';
 
@@ -202,7 +202,7 @@ class RestServiceEntity
 
     public function getArrayCopy()
     {
-        $array = array(
+        $array = [
             'accept_whitelist'           => $this->acceptWhitelist,
             'collection_class'           => $this->collectionClass,
             'collection_http_methods'    => $this->collectionHttpMethods,
@@ -223,7 +223,7 @@ class RestServiceEntity
             'route_name'                 => $this->routeName,
             'selector'                   => $this->selector,
             'service_name'               => $this->serviceName,
-        );
+        ];
         if (null !== $this->inputFilters) {
             $array['input_filters'] = $this->inputFilters;
         }

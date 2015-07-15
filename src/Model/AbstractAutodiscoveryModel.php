@@ -21,37 +21,37 @@ abstract class AbstractAutodiscoveryModel implements ServiceLocatorAwareInterfac
     /**
      * @var array
      */
-    protected $validators = array(
-        'text' => array(
+    protected $validators = [
+        'text' => [
             'name' => 'Zend\Validator\StringLength',
-            'options' => array(
+            'options' => [
                 'min' => 1,
                 'max' => 1,
-            ),
-        ),
-        'unique' => array(
+            ],
+        ],
+        'unique' => [
             'name' => 'ZF\ContentValidation\Validator\DbNoRecordExists',
-            'options' => array(),
-        ),
-        'foreign_key' => array(
+            'options' => [],
+        ],
+        'foreign_key' => [
             'name' => 'ZF\ContentValidation\Validator\DbRecordExists',
-            'options' => array(),
-        ),
-    );
+            'options' => [],
+        ],
+    ];
 
     /**
      * @var array
      */
-    protected $filters = array(
-        'text' => array(
-            array('name' => 'Zend\Filter\StringTrim'),
-            array('name' => 'Zend\Filter\StripTags'),
-        ),
-        'integer' => array(
-            array('name' => 'Zend\Filter\StripTags'),
-            array('name' => 'Zend\Filter\Digits'),
-        ),
-    );
+    protected $filters = [
+        'text' => [
+            ['name' => 'Zend\Filter\StringTrim'],
+            ['name' => 'Zend\Filter\StripTags'],
+        ],
+        'integer' => [
+            ['name' => 'Zend\Filter\StripTags'],
+            ['name' => 'Zend\Filter\Digits'],
+        ],
+    ];
 
     /**
      * Get service locator

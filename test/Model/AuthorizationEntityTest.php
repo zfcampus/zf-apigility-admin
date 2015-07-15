@@ -13,36 +13,36 @@ class AuthorizationEntityTest extends TestCase
 {
     protected function getSeedValuesForEntity()
     {
-        return array(
-            'Foo\V1\Rest\Session\Controller::__entity__' => array(
+        return [
+            'Foo\V1\Rest\Session\Controller::__entity__' => [
                 'GET' => true,
                 'POST' => true,
                 'PATCH' => true,
                 'PUT' => false,
                 'DELETE' => false,
-            ),
-            'Foo\V1\Rest\Session\Controller::__collection__' => array(
+            ],
+            'Foo\V1\Rest\Session\Controller::__collection__' => [
                 'GET' => true,
                 'POST' => false,
                 'PATCH' => false,
                 'PUT' => false,
                 'DELETE' => false,
-            ),
-            'Foo\V1\Rpc\Message\Controller::message' => array(
+            ],
+            'Foo\V1\Rpc\Message\Controller::message' => [
                 'GET' => true,
                 'POST' => true,
                 'PATCH' => false,
                 'PUT' => false,
                 'DELETE' => false,
-            ),
-            'Foo\V1\Rpc\Message\Controller::translate' => array(
+            ],
+            'Foo\V1\Rpc\Message\Controller::translate' => [
                 'GET' => true,
                 'POST' => true,
                 'PATCH' => false,
                 'PUT' => false,
                 'DELETE' => false,
-            ),
-        );
+            ],
+        ];
     }
 
     public function testEntityIsIterable()
@@ -57,7 +57,7 @@ class AuthorizationEntityTest extends TestCase
         $values = $this->getSeedValuesForEntity();
         $entity = new AuthorizationEntity($values);
 
-        $keys = array();
+        $keys = [];
         foreach ($entity as $key => $value) {
             $keys[] = $key;
         }
@@ -70,7 +70,7 @@ class AuthorizationEntityTest extends TestCase
         $values = $this->getSeedValuesForEntity();
         $entity = new AuthorizationEntity($values);
 
-        $keys = array();
+        $keys = [];
         foreach ($entity as $key => $value) {
             $keys[] = $key;
         }
@@ -81,22 +81,22 @@ class AuthorizationEntityTest extends TestCase
     public function testCanAddARestServiceAtATime()
     {
         $entity = new AuthorizationEntity();
-        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_ENTITY, array(
+        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_ENTITY, [
             'GET' => true,
             'POST' => true,
             'PATCH' => true,
             'PUT' => false,
             'DELETE' => false,
-        ));
-        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_COLLECTION, array(
+        ]);
+        $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_COLLECTION, [
             'GET' => true,
             'POST' => false,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ));
+        ]);
 
-        $keys = array();
+        $keys = [];
         foreach ($entity as $key => $value) {
             $keys[] = $key;
         }
@@ -107,22 +107,22 @@ class AuthorizationEntityTest extends TestCase
     public function testCanAddAnRpcServiceAtATime()
     {
         $entity = new AuthorizationEntity();
-        $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'message', array(
+        $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'message', [
             'GET' => true,
             'POST' => true,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ));
-        $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'translate', array(
+        ]);
+        $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'translate', [
             'GET' => true,
             'POST' => true,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ));
+        ]);
 
-        $keys = array();
+        $keys = [];
         foreach ($entity as $key => $value) {
             $keys[] = $key;
         }
@@ -133,22 +133,22 @@ class AuthorizationEntityTest extends TestCase
     public function testCanRetrieveNamedServices()
     {
         $entity = new AuthorizationEntity();
-        $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'message', array(
+        $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'message', [
             'GET' => true,
             'POST' => true,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ));
+        ]);
         $this->assertTrue($entity->has('Foo\V1\Rpc\Message\Controller::message'));
         $privileges = $entity->get('Foo\V1\Rpc\Message\Controller::message');
-        $this->assertEquals(array(
+        $this->assertEquals([
             'GET' => true,
             'POST' => true,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ), $privileges);
+        ], $privileges);
     }
 
     public function testAddingARestServiceWithoutHttpMethodsProvidesDefaults()
@@ -157,13 +157,13 @@ class AuthorizationEntityTest extends TestCase
         $entity->addRestService('Foo\V1\Rest\Session\Controller', AuthorizationEntity::TYPE_ENTITY);
         $this->assertTrue($entity->has('Foo\V1\Rest\Session\Controller::__entity__'));
         $privileges = $entity->get('Foo\V1\Rest\Session\Controller::__entity__');
-        $this->assertEquals(array(
+        $this->assertEquals([
             'GET' => false,
             'POST' => false,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ), $privileges);
+        ], $privileges);
     }
 
     public function testAddingAnRpcServiceWithoutHttpMethodsProvidesDefaults()
@@ -172,12 +172,12 @@ class AuthorizationEntityTest extends TestCase
         $entity->addRpcService('Foo\V1\Rpc\Message\Controller', 'message');
         $this->assertTrue($entity->has('Foo\V1\Rpc\Message\Controller::message'));
         $privileges = $entity->get('Foo\V1\Rpc\Message\Controller::message');
-        $this->assertEquals(array(
+        $this->assertEquals([
             'GET' => false,
             'POST' => false,
             'PATCH' => false,
             'PUT' => false,
             'DELETE' => false,
-        ), $privileges);
+        ], $privileges);
     }
 }

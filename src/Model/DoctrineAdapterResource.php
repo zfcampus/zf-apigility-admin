@@ -75,7 +75,7 @@ class DoctrineAdapterResource extends AbstractResourceListener implements Servic
      * @param array $params
      * @return array
      */
-    public function fetchAll($params = array())
+    public function fetchAll($params = [])
     {
         $modules = $this->getServiceLocator()->get('ModuleManager');
         $loaded = $modules->getLoadedModules(false);
@@ -87,7 +87,7 @@ class DoctrineAdapterResource extends AbstractResourceListener implements Servic
         }
 
         if (false === ($adapters = $this->model->fetchAll($params))) {
-            return array();
+            return [];
         }
 
         return $adapters;

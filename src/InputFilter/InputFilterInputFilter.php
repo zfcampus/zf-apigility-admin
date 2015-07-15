@@ -14,7 +14,7 @@ class InputFilterInputFilter extends InputFilter
     /**
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * @var InputFilterFactory
@@ -36,7 +36,7 @@ class InputFilterInputFilter extends InputFilter
      */
     public function isValid()
     {
-        $this->messages = array();
+        $this->messages = [];
         try {
             $this->validationFactory->createInputFilter($this->data);
             return true;
