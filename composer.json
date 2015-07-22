@@ -39,7 +39,7 @@
         "zendframework/zend-validator": ">=2.3,<2.5",
         "zendframework/zend-view": ">2.3",
         "zfcampus/zf-apigility": "~1.0",
-        "zfcampus/zf-apigility-admin-ui": ">=1.1.4,<2.0",
+        "zfcampus/zf-apigility-admin-ui": "^1.1.6",
         "zfcampus/zf-apigility-provider": "~1.0",
         "zfcampus/zf-api-problem": "~1.0",
         "zfcampus/zf-configuration": "~1.0",
