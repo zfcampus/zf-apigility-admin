@@ -32,7 +32,11 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
 
         $adapter = new Adapter($config[$adapter_name]);
 
-        $metadata = new Metadata($adapter);
+        try {
+            $metadata = new Metadata($adapter);
+        } catch (\Exception $e) {
+            return [];
+        }
 
         $tableNames = $metadata->getTableNames();
 
