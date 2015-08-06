@@ -869,25 +869,35 @@ class AuthenticationModel
                     break;
                 case self::ADAPTER_OAUTH2:
                     $result['type'] = 'oauth2';
-                    $result['oauth2_type']  = $adapter['storage']['adapter'];
-                    $result['oauth2_dsn']   = $adapter['storage']['dsn'];
-                    $result['oauth2_route'] = $adapter['storage']['route'];
+                    $result['oauth2_type']  = isset($adapter['storage']['adapter']) ?
+                                              $adapter['storage']['adapter'] : null;
+                    $result['oauth2_dsn']   = isset($adapter['storage']['dsn']) ?
+                                              $adapter['storage']['dsn'] : null;
+                    $result['oauth2_route'] = isset($adapter['storage']['route']) ?
+                                              $adapter['storage']['route'] : null;
                     if (isset($adapter['storage']['options'])) {
                         $result['oauth2_options'] = $adapter['storage']['options'];
                     }
-                    switch ($result['oauth2_type']) {
-                        case AuthenticationEntity::DSN_PDO:
-                            $result['oauth2_username'] = $adapter['storage']['username'];
-                            $result['oauth2_password'] = $adapter['storage']['password'];
+                    switch (strtolower($result['oauth2_type'])) {
+                        case strtolower(AuthenticationEntity::DSN_PDO):
+                            $result['oauth2_username'] = isset($adapter['storage']['username']) ?
+                                                         $adapter['storage']['username'] : null;
+                            $result['oauth2_password'] = isset($adapter['storage']['password']) ?
+                                                         $adapter['storage']['password'] : null;
                             break;
-                        case AuthenticationEntity::DSN_MONGO:
+                        case strtolower(AuthenticationEntity::DSN_MONGO):
                             $result['oauth2_database'] = $adapter['storage']['database'];
                             if (isset($adapter['storage']['locator_name'])) {
                                 $result['oauth2_locator_name'] = $adapter['storage']['locator_name'];
                             }
                             break;
+                        default:
+                            $result['oauth2_type'] = 'custom';
                     }
                     break;
+                default:
+                    $result['type'] = 'custom';
+                    $result['route'] = isset($adapter['storage']['route']) ? $adapter['storage']['route'] : null;
             }
 
         }
@@ -957,13 +967,13 @@ class AuthenticationModel
                     'oauth2_dsn'   => $oldAuth['dsn'],
                     'oauth2_route' => $oldAuth['route_match']
                 ];
-                switch ($oldAuth['dsn_type']) {
-                    case AuthenticationEntity::DSN_PDO:
+                switch (strtolower($oldAuth['dsn_type'])) {
+                    case strtolower(AuthenticationEntity::DSN_PDO):
                         $adapter['name']            = 'oauth2_pdo';
                         $adapter['oauth2_username'] = $oldAuth['username'];
                         $adapter['oauth2_password'] = $oldAuth['password'];
                         break;
-                    case AuthenticationEntity::DSN_MONGO:
+                    case strtolower(AuthenticationEntity::DSN_MONGO):
                         $adapter['name']            = 'oauth2_mongo';
                         $adapter['oauth2_database'] = $oldAuth['database'];
                         break;
