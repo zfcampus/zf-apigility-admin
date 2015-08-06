@@ -17,6 +17,8 @@ class OAuth2InputFilter extends InputFilter
     {
         $this->add([
             'name' => 'dsn',
+            'required' => false,
+            'allow_empty' => true,
             'continue_if_empty' => true,
             'validators' => [
                 [
@@ -54,6 +56,8 @@ class OAuth2InputFilter extends InputFilter
         ]);
         $this->add([
             'name' => 'database',
+            'required' => false,
+            'allow_empty' => true,
             'continue_if_empty' => true,
             'validators' => [
                 [

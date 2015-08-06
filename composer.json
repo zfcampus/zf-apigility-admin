@@ -31,7 +31,7 @@
         "zendframework/zend-eventmanager": "~2.3",
         "zendframework/zend-filter": "~2.3",
         "zendframework/zend-http": "~2.3",
-        "zendframework/zend-inputfilter": "~2.3",
+        "zendframework/zend-inputfilter": "^2.4.6",
         "zendframework/zend-modulemanager": "~2.3",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-servicemanager": "~2.3",
