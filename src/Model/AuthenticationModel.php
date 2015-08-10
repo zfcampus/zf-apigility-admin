@@ -869,21 +869,26 @@ class AuthenticationModel
                     break;
                 case self::ADAPTER_OAUTH2:
                     $result['type'] = 'oauth2';
-                    $result['oauth2_type']  = isset($adapter['storage']['adapter']) ?
-                                              $adapter['storage']['adapter'] : null;
-                    $result['oauth2_dsn']   = isset($adapter['storage']['dsn']) ?
-                                              $adapter['storage']['dsn'] : null;
-                    $result['oauth2_route'] = isset($adapter['storage']['route']) ?
-                                              $adapter['storage']['route'] : null;
+                    $result['oauth2_type'] = isset($adapter['storage']['adapter'])
+                        ? $adapter['storage']['adapter']
+                        : null;
+                    $result['oauth2_dsn'] = isset($adapter['storage']['dsn'])
+                        ? $adapter['storage']['dsn']
+                        : null;
+                    $result['oauth2_route'] = isset($adapter['storage']['route'])
+                        ? $adapter['storage']['route']
+                        : null;
                     if (isset($adapter['storage']['options'])) {
                         $result['oauth2_options'] = $adapter['storage']['options'];
                     }
                     switch (strtolower($result['oauth2_type'])) {
                         case strtolower(AuthenticationEntity::DSN_PDO):
-                            $result['oauth2_username'] = isset($adapter['storage']['username']) ?
-                                                         $adapter['storage']['username'] : null;
-                            $result['oauth2_password'] = isset($adapter['storage']['password']) ?
-                                                         $adapter['storage']['password'] : null;
+                            $result['oauth2_username'] = isset($adapter['storage']['username'])
+                                ? $adapter['storage']['username']
+                                : null;
+                            $result['oauth2_password'] = isset($adapter['storage']['password'])
+                                ? $adapter['storage']['password']
+                                : null;
                             break;
                         case strtolower(AuthenticationEntity::DSN_MONGO):
                             $result['oauth2_database'] = $adapter['storage']['database'];
