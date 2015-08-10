@@ -826,4 +826,36 @@ class AuthenticationModelTest extends TestCase
             $this->assertEquals($result['name'], $model->getAuthenticationMap('Foo', 2));
         }
     }
+
+    public function testCustomAuthAdapters()
+    {
+        $local = [
+            'zf-mvc-auth' => [
+                'authentication' => [
+                    'adapters' => [
+                        'custom1' => [
+                            'adapter' => 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter',
+                            'storage' => [
+                                'storage' => 'MyAuth\OAuth2Adapter',
+                                'route' => '/oauth',
+                            ],
+                        ],
+                        'custom2' => [
+                            'adapter' => 'MyAuth\\CustomAuthAdapter',
+                            'storage' => [
+                                'storage' => 'MyAuth\OAuth2Adapter',
+                                'route' => '/oauth',
+                            ],
+                        ],
+                    ],
+                ]
+            ]
+        ];
+        $model = $this->createModelFromConfigArrays([], $local);
+
+        $result = $model->fetchAllAuthenticationAdapter();
+        $this->assertEquals('custom', $result[0]['oauth2_type']);
+        $this->assertEquals('custom', $result[1]['type']);
+        $this->assertEquals('/oauth', $result[1]['route']);
+    }
 }
