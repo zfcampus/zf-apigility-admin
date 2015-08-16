@@ -38,7 +38,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
             return [];
         }
 
-        $tableNames = $metadata->getTableNames();
+        $tableNames = $metadata->getTableNames(null, true);
 
         foreach ($tableNames as $tableName) {
             if ($this->moduleHasService($module, $version, $tableName)) {
