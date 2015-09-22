@@ -35,7 +35,7 @@
         "zendframework/zend-modulemanager": "~2.3",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-servicemanager": "~2.3",
-        "zendframework/zend-stdlib": "~2.3",
+        "zendframework/zend-stdlib": ">=2.3.0,<2.7.0",
         "zendframework/zend-validator": "~2.3",
         "zendframework/zend-view": ">2.3",
         "zfcampus/zf-apigility": "~1.0",
