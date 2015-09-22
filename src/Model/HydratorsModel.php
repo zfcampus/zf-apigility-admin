@@ -7,14 +7,14 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Zend\Hydrator\HydratorPluginManager;
 use ZF\Apigility\Admin\Exception;
 
 class HydratorsModel extends AbstractPluginManagerModel
 {
     /**
      * $pluginManager should be an instance of
-     * Zend\Stdlib\Hydrator\HydratorPluginManager.
+     * Zend\Hydrator\HydratorPluginManager.
      *
      * @param ServiceManager $pluginManager
      */
@@ -22,7 +22,7 @@ class HydratorsModel extends AbstractPluginManagerModel
     {
         if (! $pluginManager instanceof HydratorPluginManager) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an instance of Zend\Stdlib\Hydrator\HydratorPluginManager; received "%s"',
+                '%s expects an instance of Zend\Hydrator\HydratorPluginManager; received "%s"',
                 __CLASS__,
                 get_class($pluginManager)
             ));

@@ -341,7 +341,7 @@ class DbConnectedRestServiceModelTest extends TestCase
 
         $newProps = [
             'entity_identifier_name' => 'id',
-            'hydrator_name'          => 'Zend\\Stdlib\\Hydrator\\ClassMethods',
+            'hydrator_name'          => 'Zend\\Hydrator\\ClassMethods',
         ];
         $originalEntity->exchangeArray($newProps);
         $result = $this->model->updateService($originalEntity);

@@ -118,7 +118,7 @@ class RestServiceModelTest extends TestCase
             'selector'                   => 'HalJson',
             'accept_whitelist'           => ['application/json', 'application/*+json'],
             'content_type_whitelist'     => ['application/json'],
-            'hydrator_name'              => 'Zend\Stdlib\Hydrator\ObjectProperty',
+            'hydrator_name'              => 'Zend\Hydrator\ObjectProperty',
         ]);
 
         return $payload;
@@ -395,7 +395,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals([
             'route_identifier_name'  => $details->routeIdentifierName,
             'route_name'             => 'bar-conf.rest.foo',
-            'hydrator'               => 'Zend\Stdlib\Hydrator\ObjectProperty',
+            'hydrator'               => 'Zend\Hydrator\ObjectProperty',
             'entity_identifier_name' => 'id',
         ], $config['BarConf\Rest\Foo\FooEntity']);
 
@@ -465,7 +465,7 @@ class RestServiceModelTest extends TestCase
         $this->assertEquals('BarConf\V1\Rest\Foo\FooCollection', $service->collectionClass);
         $this->assertEquals('bar-conf.rest.foo', $service->routeName);
         $this->assertEquals('/api/foo[/:foo_id]', $service->routeMatch);
-        $this->assertEquals('Zend\Stdlib\Hydrator\ObjectProperty', $service->hydratorName);
+        $this->assertEquals('Zend\Hydrator\ObjectProperty', $service->hydratorName);
     }
 
     public function testFetchServiceUsesEntityAndCollectionClassesDiscoveredInRestConfiguration()
@@ -580,7 +580,7 @@ class RestServiceModelTest extends TestCase
         $original = $this->codeRest->createService($details);
 
         $options = [
-            'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
+            'hydrator_name'         => 'Zend\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
             'route_name'            => 'my/custom/route',
         ];
@@ -625,7 +625,7 @@ class RestServiceModelTest extends TestCase
         $options = [
             'entity_class'          => 'ZFTest\Apigility\Admin\Model\TestAsset\Entity',
             'collection_class'      => 'ZFTest\Apigility\Admin\Model\TestAsset\Collection',
-            'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
+            'hydrator_name'         => 'Zend\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
             'route_name'            => 'my/custom/route',
         ];
@@ -867,7 +867,7 @@ class RestServiceModelTest extends TestCase
         $original = $this->codeRest->createService($details);
 
         $options = [
-            'hydrator_name'         => 'Zend\Stdlib\Hydrator\Reflection',
+            'hydrator_name'         => 'Zend\Hydrator\Reflection',
             'route_identifier_name' => 'custom_foo_id',
             'route_name'            => 'my/custom/route',
         ];
@@ -898,7 +898,7 @@ class RestServiceModelTest extends TestCase
         $original = $this->codeRest->createService($details);
 
         $options = [
-            'hydrator_name'          => 'Zend\Stdlib\Hydrator\Reflection',
+            'hydrator_name'          => 'Zend\Hydrator\Reflection',
             'entity_identifier_name' => 'custom_foo_id',
         ];
         $patch = new RestServiceEntity();
