@@ -161,7 +161,7 @@ class RestServiceResourceTest extends TestCase
         $id = $entity->controllerServiceName;
         $updateData = [
             'entity_identifier_name' => 'test_id',
-            'hydrator_name' => 'Zend\Stdlib\Hydrator\ObjectProperty',
+            'hydrator_name' => 'Zend\Hydrator\ObjectProperty',
         ];
         $resource->patch($id, $updateData);
 
@@ -174,7 +174,7 @@ class RestServiceResourceTest extends TestCase
 
         $this->assertEquals('test_id', $halConfig['entity_identifier_name']);
         $this->assertEquals('test_id', $agConfig['entity_identifier_name']);
-        $this->assertEquals('Zend\\Stdlib\\Hydrator\\ObjectProperty', $halConfig['hydrator']);
-        $this->assertEquals('Zend\\Stdlib\\Hydrator\\ObjectProperty', $agConfig['hydrator_name']);
+        $this->assertEquals('Zend\\Hydrator\\ObjectProperty', $halConfig['hydrator']);
+        $this->assertEquals('Zend\\Hydrator\\ObjectProperty', $agConfig['hydrator_name']);
     }
 }

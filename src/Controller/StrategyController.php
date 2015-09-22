@@ -7,7 +7,7 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Stdlib\Hydrator\Strategy\StrategyInterface;
+use Zend\Hydrator\Strategy\StrategyInterface;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 

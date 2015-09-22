@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Zend\Hydrator\HydratorPluginManager;
 use ZF\Apigility\Admin\Model\HydratorsModel;
 
 class HydratorsModelTest extends AbstractPluginManagerModelTest
