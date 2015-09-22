@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter\Authentication;
 
 use Zend\InputFilter\InputFilter;
+use Traversable;
 
 /**
  * @todo DSN validation
@@ -107,5 +108,33 @@ class OAuth2InputFilter extends InputFilter
             'name' => 'route_match',
             'error_message' => 'Please provide a valid URI path for where OAuth2 will respond',
         ]);
+    }
+
+    public function isValid($context = null)
+    {
+        $data = $this->data;
+        if (null === $data) {
+            return parent::isValid($context);
+        }
+
+        if ($data instanceof Traversable) {
+            $data = iterator_to_array($data);
+        }
+        if (is_object($data)) {
+            $data = (array) $data;
+        }
+
+        if (! isset($data['dsn'])) {
+            $data['dsn'] = null;
+        }
+
+        if (isset($data['dsn_type']) && 'Mongo' === $data['dsn_type']) {
+            if (! isset($data['database'])) {
+                $data['database'] = null;
+            }
+        }
+        $this->setData($data);
+
+        return parent::isValid($context);
     }
 }

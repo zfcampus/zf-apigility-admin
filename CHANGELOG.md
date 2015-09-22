@@ -22,4 +22,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#316](https://github.com/zfcampus/zf-apigility-admin/pull/316) updates the
+  zend-stdlib dependency to reference `>=2.5.0,<2.7.0` to ensure hydrators
+  will work as expected following extraction of hydrators to the zend-hydrator
+  repository.
+- [#316](https://github.com/zfcampus/zf-apigility-admin/pull/316) fixes the
+  OAuth2 input filter to ensure it works correctly with the latest versions of
+  zend-inputfilter.

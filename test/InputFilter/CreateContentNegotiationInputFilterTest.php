@@ -41,7 +41,7 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                 ],
                 [
                     'content_name' => [
-                        'Value is required'
+                        'isEmpty' => 'Value is required and can\'t be empty',
                     ],
                 ],
             ],
