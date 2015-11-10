@@ -93,7 +93,7 @@ class RpcServiceModel
             $data['service_name'] = $controllerServiceName;
             $pattern = vsprintf(
                 '#%sV[^%s]+%sRpc%s(?<service>[^%s]+)%sController#',
-                array_fil(0, 6, preg_quote('\\'))
+                array_fill(0, 6, preg_quote('\\'))
             );
             if (preg_match($pattern, $controllerServiceName, $matches)) {
                 $data['service_name'] = $matches['service'];
