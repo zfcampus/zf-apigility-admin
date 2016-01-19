@@ -70,6 +70,6 @@ class AuthorizationModelFactory
      */
     protected function normalizeModuleName($name)
     {
-        return str_replace('.', '\\', $name);
+        return str_replace(['.', '/'], '\\', $name);
     }
 }

@@ -101,7 +101,6 @@ class ModuleModel
      */
     public function getModule($moduleName)
     {
-        $moduleName = $this->normalizeModuleName($moduleName);
         $modules = $this->getEnabledModules();
         if (!array_key_exists($moduleName, $modules)) {
             return null;
@@ -434,15 +433,6 @@ class ModuleModel
             }
         }
         return $services;
-    }
-
-    /**
-     * @param  string $name
-     * @return string
-     */
-    protected function normalizeModuleName($name)
-    {
-        return str_replace('\\', '.', $name);
     }
 
     /**
