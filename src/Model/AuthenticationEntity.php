@@ -125,7 +125,7 @@ class AuthenticationEntity
                     'realm'          => $this->realm,
                     'htpasswd'       => $this->htpasswd,
                 ];
-            case self::TYPE_DIGEST:
+                    case self::TYPE_DIGEST:
                 return [
                     'type'           => 'http_digest',
                     'accept_schemes' => [self::TYPE_DIGEST],
@@ -134,23 +134,23 @@ class AuthenticationEntity
                     'digest_domains' => $this->digestDomains,
                     'nonce_timeout'  => $this->nonceTimeout,
                 ];
-            case self::TYPE_OAUTH2:
-                $array = [
-                    'type'        => 'oauth2',
-                    'dsn_type'    => $this->dsnType,
-                    'dsn'         => $this->dsn,
-                    'username'    => $this->username,
-                    'password'    => $this->password,
-                    'route_match' => $this->routeMatch,
-                ];
-                if ($this->getDsnType() === self::DSN_MONGO) {
-                    $array['database'] = $this->database;
+                    case self::TYPE_OAUTH2:
+                        $array = [
+                            'type'        => 'oauth2',
+                            'dsn_type'    => $this->dsnType,
+                            'dsn'         => $this->dsn,
+                            'username'    => $this->username,
+                            'password'    => $this->password,
+                            'route_match' => $this->routeMatch,
+                        ];
+                        if ($this->getDsnType() === self::DSN_MONGO) {
+                            $array['database'] = $this->database;
 
-                    // Allow server strings that do not include "mongodb://" prefix
-                    if (!empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
-                        $array['dsn'] = 'mongodb://' . $this->dsn;
-                    }
-                }
+                            // Allow server strings that do not include "mongodb://" prefix
+                            if (!empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
+                                $array['dsn'] = 'mongodb://' . $this->dsn;
+                            }
+                        }
 
                 return $array;
         }
