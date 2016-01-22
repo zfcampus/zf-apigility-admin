@@ -55,7 +55,7 @@ class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
             return $this->models[$module];
         }
 
-        $moduleName = $this->normalizeModuleName($module);
+        $moduleName = $this->moduleUtils->normalizeModuleName($module);
         $config     = $this->configFactory->factory($moduleName);
         $docsConfig = $this->getDocsConfig($module);
 
@@ -75,7 +75,7 @@ class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
      */
     protected function normalizeModuleName($name)
     {
-        return str_replace(['.', '/'], '\\', $name);
+        return $this->moduleUtils->normalizeModuleName($name);
     }
 
     /**

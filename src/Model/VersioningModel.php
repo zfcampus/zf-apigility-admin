@@ -61,7 +61,7 @@ class VersioningModel
             }
             $configDirPath = $this->pathSpec->getModuleConfigPath($name);
         } else {
-            $pathSpecType = ModuleVersioningModel::PATH_SPEC_PSR_0;
+            $pathSpecType = ModulePathSpec::PSR_0;
             // second parameter is false because PSR-0 path will be appended inside ModuleVersioningModel
             $srcPath = $this->getModuleSourcePath($name, false);
             $configDirPath = $this->locateConfigPath($srcPath);
@@ -82,8 +82,8 @@ class VersioningModel
      *
      * @param  string $module
      * @param  integer $version
-     * @param  string $path
-     * @return boolean
+     * @param  bool|string $path
+     * @return bool
      * @deprecated
      */
     public function createVersion($module, $version, $path = false)
@@ -96,8 +96,8 @@ class VersioningModel
      * Get the versions of a module
      *
      * @param  string $module
-     * @param  string $path
-     * @return array|boolean
+     * @param  bool|string $path
+     * @return array|bool
      * @deprecated
      */
     public function getModuleVersions($module, $path = false)
@@ -132,7 +132,11 @@ class VersioningModel
      */
     protected function normalizeModule($module)
     {
-        return str_replace(['.', '/'], '\\', $module);
+        if ($this->pathSpec) {
+            return $this->pathSpec->normalizeModuleName($module);
+        } else {
+            return str_replace(['.', '/'], '\\', $module);
+        }
     }
 
     /**

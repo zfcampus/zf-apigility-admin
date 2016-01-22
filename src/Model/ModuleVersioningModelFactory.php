@@ -42,32 +42,21 @@ final class ModuleVersioningModelFactory implements ModuleVersioningModelFactory
      */
     public function factory($module)
     {
-        $moduleName = $this->normalizeModuleName($module);
+        $moduleName = $this->moduleUtils->normalizeModuleName($module);
 
         if (!isset($this->models[$moduleName])) {
             $config     = $this->configFactory->factory($moduleName);
             $docsConfig = $this->getDocsConfig($moduleName);
 
-            $this->models[$moduleName] = new ModuleVersioningModel(
+            $this->models[$moduleName] = ModuleVersioningModel::createWithPathSpec(
                 $moduleName,
-                $this->moduleUtils->getModuleConfigPath($moduleName),
-                $this->moduleUtils->getModuleSourcePath($moduleName),
+                $this->moduleUtils,
                 $config,
-                $docsConfig,
-                $this->moduleUtils->getPathSpec()
+                $docsConfig
             );
         }
 
         return $this->models[$moduleName];
-    }
-
-    /**
-     * @param  string $name
-     * @return string
-     */
-    protected function normalizeModuleName($name)
-    {
-        return str_replace(['.', '/'], '\\', $name);
     }
 
     /**

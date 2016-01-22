@@ -22,9 +22,6 @@ final class ModuleVersioningModel
     /** Regex to extract module versions from a module's source path */
     const REGEX_VERSION_DIR = '#V(?P<version>\d+)$#';
 
-    const PATH_SPEC_PSR_0 = 'psr-0';
-    const PATH_SPEC_PSR_4 = 'psr-4';
-
     /** @var string */
     private $moduleName;
 
@@ -47,13 +44,13 @@ final class ModuleVersioningModel
     protected $moduleNameFilter;
 
     /**
-     * @param string $moduleName Name of the module.
+     * @param string $moduleName Name of the module. MUST be normalized.
      * @param string $configDirPath Path the the configuration folder, with one or more *.config.php files.
      * @param string $srcPath Path to the module's source folder for versions, resources & collections.
      * @param ConfigResource $config
      * @param null|ConfigResource $docsConfig
      * @param null|string $pathSpecType Whether the module uses a PSR-0 directory structure or not.
-     *                                  Defaults to VersioningModel::PATH_SPEC_PSR_0.
+     *                                  Defaults to ModulePathSpec::PSR_0.
      */
     public function __construct(
         $moduleName,
@@ -63,12 +60,12 @@ final class ModuleVersioningModel
         ConfigResource $docsConfig = null,
         $pathSpecType = null
     ) {
-        $this->moduleName = $this->normalizeModule((string) $moduleName);
+        $this->moduleName = (string) $moduleName;
         $this->configResource = $config;
         $this->docsConfigResource = $docsConfig;
 
         if (null === $pathSpecType) {
-            $pathSpecType = self::PATH_SPEC_PSR_0;
+            $pathSpecType = ModulePathSpec::PSR_0;
         }
         $this->setPathSpecType($pathSpecType);
         $this->setConfigDirPath($configDirPath);
@@ -76,6 +73,33 @@ final class ModuleVersioningModel
     }
 
     /**
+     * createWithPathSpec
+     *
+     * @param string $moduleName
+     * @param ModulePathSpec $pathSpec
+     * @param ConfigResource $config
+     * @param ConfigResource|null $docsConfig
+     *
+     * @return static
+     */
+    public static function createWithPathSpec(
+        $moduleName,
+        ModulePathSpec $pathSpec,
+        ConfigResource $config,
+        ConfigResource $docsConfig = null
+    ) {
+        $moduleName = $pathSpec->normalizeModuleName((string) $moduleName);
+        return new static(
+            $moduleName,
+            $pathSpec->getModuleConfigPath($moduleName),
+            $pathSpec->getModuleSourcePath($moduleName),
+            $config,
+            $docsConfig,
+            $pathSpec->getPathSpec()
+        );
+    }
+
+        /**
      * Create a new version for a module
      *
      * @param  integer $version
@@ -356,19 +380,6 @@ final class ModuleVersioningModel
     }
 
     /**
-     * Normalize a module name
-     *
-     * Module names come over the wire dot-separated; make them namespaced.
-     *
-     * @param  string $module
-     * @return string
-     */
-    protected function normalizeModule($module)
-    {
-        return str_replace(['.', '/'], '\\', $module);
-    }
-
-    /**
      * Filter for module names
      *
      * @return FilterChain
@@ -413,10 +424,10 @@ final class ModuleVersioningModel
     private function setPathSpecType($pathSpecType)
     {
         $pathSpecType = (string) $pathSpecType;
-        if (!in_array($pathSpecType, [self::PATH_SPEC_PSR_0, self::PATH_SPEC_PSR_4])) {
+        if (!in_array($pathSpecType, [ModulePathSpec::PSR_0, ModulePathSpec::PSR_4])) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Invalid $setPathSpecType parameter supplied. Please use the PATH_SPEC_PSR_0 or PATH_SPEC_PSR_4 ' .
-                'constants located in the %s class.',
+                'Invalid $setPathSpecType parameter supplied. Please use the ModulePathSpec::PSR_0 or ' .
+                'ModulePathSpec::PSR_4 constants.',
                 __CLASS__
             ));
         }
@@ -433,7 +444,7 @@ final class ModuleVersioningModel
     private function setVersionsPath($srcPath)
     {
         $srcPath = (string) $srcPath;
-        if ($this->pathSpecType == self::PATH_SPEC_PSR_0) {
+        if ($this->pathSpecType == ModulePathSpec::PSR_0) {
             $srcPath .= DIRECTORY_SEPARATOR . $this->moduleName;
         }
 
