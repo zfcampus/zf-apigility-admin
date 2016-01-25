@@ -51,7 +51,7 @@ class DocumentationModel
                     ],
                     'description' => null
                 ];
-            case self::TYPE_RPC:
+                    case self::TYPE_RPC:
                 return [
                     'description' => null,
                     'GET'    => ['description' => null, 'request' => null, 'response' => null],
