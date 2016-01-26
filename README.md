@@ -24,18 +24,10 @@ Installation
 Run the following `composer` command:
 
 ```console
-$ composer require --dev "zfcampus/zf-apigility-admin:~1.0-dev"
+$ composer require --dev "zfcampus/zf-apigility-admin"
 ```
 
-Alternately, manually add the following to your `composer.json`, in the `require` section:
-
-```javascript
-"require-dev": {
-    "zfcampus/zf-apigility-admin": "~1.0-dev"
-}
-```
-
-And then run `composer update` to ensure the module is installed.
+And then run `composer install` to ensure the module is installed.
 
 Finally, add the module name to your project's `config/application.config.php` under the `modules`
 key:
