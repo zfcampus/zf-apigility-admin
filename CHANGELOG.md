@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.0 - TBD
+## 1.4.1 - 2016-01-26
 
 ### Added
 
-- Nothing.
+- [#329](https://github.com/zfcampus/zf-apigility-admin/pull/329) improved install instructions
 
 ### Deprecated
 
@@ -18,25 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
-
-## 1.4.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
+- [#320](https://github.com/zfcampus/zf-apigility-admin/pull/320) typo fixes on array_fill() usage
 
 ## 1.4.0 - 2015-09-22
 
