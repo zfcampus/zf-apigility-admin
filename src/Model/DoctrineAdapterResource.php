@@ -19,13 +19,19 @@ class DoctrineAdapterResource extends AbstractResourceListener
     protected $model;
 
     /**
+     * @var array
+     */
+    protected $loadedModules;
+
+    /**
      * Constructor
      *
      * @param DoctrineAdapterModel $model
      */
-    public function __construct(DoctrineAdapterModel $model)
+    public function __construct(DoctrineAdapterModel $model, array $loadedModules)
     {
         $this->model = $model;
+        $this->loadedModules = $loadedModules;
     }
 
     /**
@@ -47,10 +53,11 @@ class DoctrineAdapterResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
-        if (! class_exists('ZF\Apigility\Doctrine\Admin\Module')
-            || ! class_exists('ZF\Apigility\Doctrine\Server\Module')) {
+        if (! isset($this->loadedModules['ZF\Apigility\Doctrine\Admin'])
+            || ! isset($this->loadedModules['ZF\Apigility\Doctrine\Server'])) {
             $response = new Response();
             $response->setStatusCode(204);
+
             return $response;
         }
 
