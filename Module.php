@@ -169,7 +169,10 @@ class Module
                 }
                 $config = $services->get('Config');
 
-                return new Model\DbAutodiscoveryModel($config);
+                $instance = new Model\DbAutodiscoveryModel($config);
+                $instance->setServiceLocator($services);
+
+                return $instance;
             },
             'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
                 if (!$services->has('Config')) {

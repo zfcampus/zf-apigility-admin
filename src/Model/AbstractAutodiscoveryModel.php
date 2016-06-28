@@ -3,10 +3,15 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\Filter\StaticFilter;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Exception;
 
-abstract class AbstractAutodiscoveryModel implements ServiceLocatorAwareInterface
+/**
+ * This class is instantiated with a $config in some implementations (DbAutodiscoveryModel)
+ * but this is dependent on the root service locator for the moduleHasService call below
+ * and that must be injected into any class extending this abstract.
+ */
+abstract class AbstractAutodiscoveryModel
 {
     /**
      * @var ServiceLocatorInterface
@@ -60,6 +65,10 @@ abstract class AbstractAutodiscoveryModel implements ServiceLocatorAwareInterfac
      */
     public function getServiceLocator()
     {
+        if (! $this->serviceLocator) {
+            throw new Exception('The AbstractAutodiscoveryModel must be composed with a service locator');
+        }
+
         return $this->serviceLocator;
     }
 
@@ -72,6 +81,7 @@ abstract class AbstractAutodiscoveryModel implements ServiceLocatorAwareInterfac
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
         return $this;
     }
 
