@@ -904,7 +904,6 @@ class AuthenticationModel
                     $result['type'] = 'custom';
                     $result['route'] = isset($adapter['storage']['route']) ? $adapter['storage']['route'] : null;
             }
-
         }
         return $result;
     }
