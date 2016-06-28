@@ -58,6 +58,7 @@ class AbstractPluginManagerModel
         $invokables = array_flip($reflProp->getValue($this->pluginManager));
         $plugins    = array_merge($invokables, $this->pluginManager->getCanonicalNames());
 
+        $this->plugins = array();
         foreach ($plugins as $name => $canonical) {
             $this->plugins[] = $name;
         }

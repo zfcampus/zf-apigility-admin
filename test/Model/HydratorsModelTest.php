@@ -17,4 +17,13 @@ class HydratorsModelTest extends AbstractPluginManagerModelTest
         $this->plugins = new HydratorPluginManager();
         $this->model = new HydratorsModel($this->plugins);
     }
+
+    public function testFetchAllReturnsListOfAvailablePlugins()
+    {
+        $services = $this->model->fetchAll();
+        $this->assertGreaterThan(-1, count($services));
+        foreach ($services as $service) {
+            $this->assertContains($this->namespace, $service);
+        }
+    }
 }

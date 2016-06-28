@@ -169,7 +169,10 @@ class Module
                 }
                 $config = $services->get('Config');
 
-                return new Model\DbAutodiscoveryModel($config);
+                $instance = new Model\DbAutodiscoveryModel($config);
+                $instance->setServiceLocator($services);
+
+                return $instance;
             },
             'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
                 if (!$services->has('Config')) {
@@ -241,8 +244,13 @@ class Module
                         . 'because ZF\Apigility\Admin\Model\DoctrineAdapterModel service is not present'
                     );
                 }
+
                 $model = $services->get('ZF\Apigility\Admin\Model\DoctrineAdapterModel');
-                return new Model\DoctrineAdapterResource($model);
+
+                $modules = $services->get('ModuleManager');
+                $loadedModules = $modules->getLoadedModules(false);
+
+                return new Model\DoctrineAdapterResource($model, $loadedModules);
             },
             'ZF\Apigility\Admin\Model\ModulePathSpec' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')) {
