@@ -9,3 +9,4 @@ vendor/*
 .buildpath
 .settings
 .idea
+phpunit.xml
