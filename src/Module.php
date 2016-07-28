@@ -15,6 +15,8 @@ use Zend\Router\RouteMatch;
 use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ConfigResourceFactory;
+use ZF\Configuration\ConfigWriter;
+use ZF\Configuration\ModuleUtils;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Entity;
@@ -115,321 +117,351 @@ class Module
      */
     public function getServiceConfig()
     {
-        return [
-            'factories' => [
-                'ZF\Apigility\Admin\Model\AuthenticationModel' => function ($services) {
-                    if (! $services->has('config')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\AuthenticationModel service '
-                            . 'because Config service is not present'
-                        );
-                    }
-                    $config = $services->get('config');
-                    $writer = $services->get('ZF\Configuration\ConfigWriter');
+        return [ 'factories' => [
+            Model\AuthenticationModel::class => function ($services) {
+                if (! $services->has('config')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because config service is not present',
+                        Model\AuthenticationModel::class
+                    ));
+                }
 
-                    $global  = new ConfigResource($config, 'config/autoload/global.php', $writer);
-                    $local   = new ConfigResource($config, 'config/autoload/local.php', $writer);
-                    $modules = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
+                $config = $services->get('config');
+                $writer = $services->get(ConfigWriter::class);
 
-                    return new Model\AuthenticationModel($global, $local, $modules);
-                },
-                'ZF\Apigility\Admin\Model\AuthorizationModelFactory' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
-                        || ! $services->has('ZF\Configuration\ConfigResourceFactory')
-                        || ! $services->has('ZF\Apigility\Admin\Model\ModuleModel')
-                    ) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\AuthorizationModelFactory is missing '
-                            . 'one or more dependencies from ZF\Configuration'
-                        );
-                    }
-                    $moduleModel   = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                    //$moduleUtils   = $services->get('ZF\Configuration\ModuleUtils');
-                    $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
-                    $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
+                return new Model\AuthenticationModel(
+                    new ConfigResource($config, 'config/autoload/global.php', $writer),
+                    new ConfigResource($config, 'config/autoload/local.php', $writer),
+                    $services->get(Model\ModuleModel::class)
+                );
+            },
+            Model\AuthorizationModelFactory::class => function ($services) {
+                if (! $services->has(Model\ModulePathSpec::class)
+                    || ! $services->has(ConfigResourceFactory::class)
+                    || ! $services->has(Model\ModuleModel::class)
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        Model\AuthorizationModelFactory::class
+                    ));
+                }
 
-                    return new Model\AuthorizationModelFactory($modulePathSpec, $configFactory, $moduleModel);
-                },
-                'ZF\Apigility\Admin\Model\DbAutodiscoveryModel' => function ($services) {
-                    if (! $services->has('config')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\DbAutodiscoveryModel service '
-                            . 'because Config service is not present'
-                        );
-                    }
-                    $config = $services->get('config');
+                return new Model\AuthorizationModelFactory(
+                    $services->get(Model\ModulePathSpec::class),
+                    $services->get(ConfigResourceFactory::class),
+                    $services->get(Model\ModuleModel::class)
+                );
+            },
+            Model\DbAutodiscoveryModel::class => function ($services) {
+                if (! $services->has('config')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because config service is not present',
+                        Model\DbAutodiscoveryModel::class
+                    ));
+                }
 
-                    $instance = new Model\DbAutodiscoveryModel($config);
-                    $instance->setServiceLocator($services);
+                $instance = new Model\DbAutodiscoveryModel($services->get('config'));
+                $instance->setServiceLocator($services);
 
-                    return $instance;
-                },
-                'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
-                    if (! $services->has('config')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\ContentNegotiationModel service '
-                            . 'because Config service is not present'
-                        );
-                    }
-                    $config = $services->get('config');
-                    $writer = $services->get('ZF\Configuration\ConfigWriter');
+                return $instance;
+            },
+            Model\ContentNegotiationModel::class => function ($services) {
+                if (! $services->has('config')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because config service is not present',
+                        Model\ContentNegotiationModel::class
+                    ));
+                }
 
-                    $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
-                    return new Model\ContentNegotiationModel($global);
-                },
-                'ZF\Apigility\Admin\Model\ContentNegotiationResource' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\ContentNegotiationModel')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\ContentNegotiationResource service '
-                            . 'because ZF\Apigility\Admin\Model\ContentNegotiationModel service is not present'
-                        );
-                    }
-                    $model = $services->get('ZF\Apigility\Admin\Model\ContentNegotiationModel');
-                    return new Model\ContentNegotiationResource($model);
-                },
-                'ZF\Apigility\Admin\Model\DbAdapterModel' => function ($services) {
-                    if (! $services->has('config')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service '
-                            . 'because Config service is not present'
-                        );
-                    }
-                    $config = $services->get('config');
-                    $writer = $services->get('ZF\Configuration\ConfigWriter');
+                $config = $services->get('config');
+                $writer = $services->get(ConfigWriter::class);
 
-                    $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
-                    $local  = new ConfigResource($config, 'config/autoload/local.php', $writer);
-                    return new Model\DbAdapterModel($global, $local);
-                },
-                'ZF\Apigility\Admin\Model\DbAdapterResource' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\DbAdapterModel')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\DbAdapterResource service '
-                            . 'because ZF\Apigility\Admin\Model\DbAdapterModel service is not present'
-                        );
-                    }
-                    $model = $services->get('ZF\Apigility\Admin\Model\DbAdapterModel');
-                    return new Model\DbAdapterResource($model);
-                },
-                'ZF\Apigility\Admin\Model\DoctrineAdapterModel' => function ($services) {
-                    if (! $services->has('config')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service '
-                            . 'because Config service is not present'
-                        );
-                    }
+                return new Model\ContentNegotiationModel(
+                    new ConfigResource($config, 'config/autoload/global.php', $writer)
+                );
+            },
+            Model\ContentNegotiationResource::class => function ($services) {
+                if (! $services->has(Model\ContentNegotiationModel::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because %s service is not present',
+                        Model\ContentNegotiationResource::class,
+                        Model\ContentNegotiationModel::class
+                    ));
+                }
 
-                    $config = $services->get('config');
-                    $writer = $services->get('ZF\Configuration\ConfigWriter');
+                return new Model\ContentNegotiationResource(
+                    $services->get(Model\ContentNegotiationModel::class)
+                );
+            },
+            Model\DbAdapterModel::class => function ($services) {
+                if (! $services->has('config')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because config service is not present',
+                        Model\DbAdapterModel::class
+                    ));
+                }
 
-                    $global = new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer);
-                    $local  = new ConfigResource($config, 'config/autoload/doctrine.local.php', $writer);
+                $config = $services->get('config');
+                $writer = $services->get(ConfigWriter::class);
 
-                    return new Model\DoctrineAdapterModel($global, $local);
-                },
-                'ZF\Apigility\Admin\Model\DoctrineAdapterResource' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\DoctrineAdapterModel')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\DoctrineAdapterResource service '
-                            . 'because ZF\Apigility\Admin\Model\DoctrineAdapterModel service is not present'
-                        );
-                    }
+                return new Model\DbAdapterModel(
+                    new ConfigResource($config, 'config/autoload/global.php', $writer),
+                    new ConfigResource($config, 'config/autoload/local.php', $writer)
+                );
+            },
+            Model\DbAdapterResource::class => function ($services) {
+                if (! $services->has(Model\DbAdapterModel::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because %s service is not present',
+                        Model\DbAdapterResource::class,
+                        Model\DbAdapterModel::class
+                    ));
+                }
+                return new Model\DbAdapterResource($services->get(Model\DbAdapterModel::class));
+            },
+            Model\DoctrineAdapterModel::class => function ($services) {
+                if (! $services->has('config')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because config service is not present',
+                        Model\DbAdapterModel::class
+                    ));
+                }
 
-                    $model = $services->get('ZF\Apigility\Admin\Model\DoctrineAdapterModel');
+                $config = $services->get('config');
+                $writer = $services->get(ConfigWriter::class);
+
+                return new Model\DoctrineAdapterModel(
+                    new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer),
+                    new ConfigResource($config, 'config/autoload/doctrine.local.php', $writer)
+                );
+            },
+            Model\DoctrineAdapterResource::class => function ($services) {
+                if (! $services->has(Model\DoctrineAdapterModel::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because %s service is not present',
+                        Mdoel\DoctrineAdapterResource::class,
+                        Mdoel\DoctrineAdapterModel::class
+                    ));
+                }
+
+                $model = $services->get(Model\DoctrineAdapterModel::class);
 
                     $modules = $services->get('ModuleManager');
                     $loadedModules = $modules->getLoadedModules(false);
 
-                    return new Model\DoctrineAdapterResource($model, $loadedModules);
-                },
-                'ZF\Apigility\Admin\Model\ModulePathSpec' => function ($services) {
-                    if (! $services->has('ZF\Configuration\ModuleUtils')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\ModulePathSpec service '
-                            . 'because ZF\Configuration\ModuleUtils service is not present'
-                        );
-                    }
+                return new Model\DoctrineAdapterResource($model, $loadedModules);
+            },
+            Model\ModulePathSpec::class => function ($services) {
+                if (! $services->has(ModuleUtils::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because %s service is not present',
+                        Model\ModulePathSpec::class,
+                        ModuleUtils::class
+                    ));
+                }
 
-                    $pathSpec   = 'psr-0';
-                    $path       = '.';
-                    if ($services->has('config')) {
-                        $config = $services->get('config');
-                        if (! empty($config['zf-apigility-admin'])) {
-                            if (! empty($config['zf-apigility-admin']['path_spec'])) {
-                                $pathSpec = $config['zf-apigility-admin']['path_spec'];
+                $pathSpec   = 'psr-0';
+                $path       = '.';
+                if ($services->has('config')) {
+                    $config = $services->get('config');
+                    if (! empty($config['zf-apigility-admin'])) {
+                        if (! empty($config['zf-apigility-admin']['path_spec'])) {
+                            $pathSpec = $config['zf-apigility-admin']['path_spec'];
+                        }
+
+                        if (isset($config['zf-apigility-admin']['module_path'])) {
+                            $path = $config['zf-apigility-admin']['module_path'];
+                            if (! is_dir($path)) {
+                                throw new ServiceNotCreatedException(sprintf(
+                                    'Invalid module path "%s"; does not exist',
+                                    $path
+                                ));
                             }
-
-                            if (isset($config['zf-apigility-admin']['module_path'])) {
-                                $path = $config['zf-apigility-admin']['module_path'];
-                                if (! is_dir($path)) {
-                                    throw new ServiceNotCreatedException(sprintf(
-                                        'Invalid module path "%s"; does not exist',
-                                        $path
-                                    ));
-                                }
-                            }
                         }
                     }
+                }
 
-                    $modulePathSpec = new Model\ModulePathSpec(
-                        $services->get('ZF\Configuration\ModuleUtils'),
-                        $pathSpec,
-                        $path
-                    );
+                $modulePathSpec = new Model\ModulePathSpec(
+                    $services->get(ModuleUtils::class),
+                    $pathSpec,
+                    $path
+                );
 
-                    return $modulePathSpec;
-                },
-                'ZF\Apigility\Admin\Model\ModuleModel' => function ($services) {
-                    if (! $services->has('ModuleManager')) {
-                        throw new ServiceNotCreatedException(
-                            'Cannot create ZF\Apigility\Admin\Model\ModuleModel service '
-                            . 'because ModuleManager service is not present'
-                        );
+                return $modulePathSpec;
+            },
+            Model\ModuleModel::class => function ($services) {
+                if (! $services->has('ModuleManager')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        'Cannot create %s service because ModuleManager service is not present',
+                        Model\ModuleModel::class
+                    ));
+                }
+                $modules    = $services->get('ModuleManager');
+
+                $restConfig = [];
+                $rpcConfig  = [];
+                if ($services->has('config')) {
+                    $config = $services->get('config');
+                    if (isset($config['zf-rest'])) {
+                        $restConfig = $config['zf-rest'];
                     }
-                    $modules    = $services->get('ModuleManager');
-
-                    $restConfig = [];
-                    $rpcConfig  = [];
-                    if ($services->has('config')) {
-                        $config = $services->get('config');
-                        if (isset($config['zf-rest'])) {
-                            $restConfig = $config['zf-rest'];
-                        }
-                        if (isset($config['zf-rpc'])) {
-                            $rpcConfig = $config['zf-rpc'];
-                        }
+                    if (isset($config['zf-rpc'])) {
+                        $rpcConfig = $config['zf-rpc'];
                     }
-                    return new Model\ModuleModel($modules, $restConfig, $rpcConfig);
-                },
-                'ZF\Apigility\Admin\Model\ModuleResource' => function ($services) {
-                    $moduleModel    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                    $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
+                }
+                return new Model\ModuleModel($modules, $restConfig, $rpcConfig);
+            },
+            Model\ModuleResource::class => function ($services) {
+                $moduleModel    = $services->get(Model\ModuleModel::class);
+                $modulePathSpec = $services->get(Model\ModulePathSpec::class);
 
-                    return new Model\ModuleResource($moduleModel, $modulePathSpec);
-                },
-                'ZF\Apigility\Admin\Model\RestServiceModelFactory' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
-                        || ! $services->has('ZF\Configuration\ConfigResourceFactory')
-                        || ! $services->has('ZF\Apigility\Admin\Model\ModuleModel')
-                        || ! $services->has('SharedEventManager')
-                    ) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RestServiceModelFactory is missing '
-                            . 'one or more dependencies from ZF\Configuration'
-                        );
-                    }
-                    $moduleModel   = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                    $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
-                    $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                    $sharedEvents  = $services->get('SharedEventManager');
+                return new Model\ModuleResource($moduleModel, $modulePathSpec);
+            },
+            'ZF\Apigility\Admin\Model\RestServiceModelFactory' => function ($services) {
+                if (! $services->has(Model\ModulePathSpec::class)
+                    || ! $services->has(ConfigResourceFactory::class)
+                    || ! $services->has(Model\ModuleModel::class)
+                    || ! $services->has('SharedEventManager')
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        Model\RestServiceModelFactory::class
+                    ));
+                }
+                $moduleModel   = $services->get(Model\ModuleModel::class);
+                $modulePathSpec = $services->get(Model\ModulePathSpec::class);
+                $configFactory = $services->get(ConfigResourceFactory::class);
+                $sharedEvents  = $services->get('SharedEventManager');
 
+                // Wire DB-Connected fetch listener
+                $sharedEvents->attach(
+                    Model\RestServiceModel::class,
+                    'fetch',
+                    Model\DbConnectedRestServiceModel::class . '::onFetch'
+                );
 
-                    // Wire DB-Connected fetch listener
+                $modules = $services->get('ModuleManager');
+                $loaded = $modules->getLoadedModules(false);
+                if (isset($loaded['ZF\Apigility\Doctrine\Admin'])) {
+                    // Wire Doctrine-Connected fetch listener
                     $sharedEvents->attach(
-                        __NAMESPACE__ . '\Model\RestServiceModel',
+                        Model\RestServiceModel::class,
                         'fetch',
                         'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch'
                     );
+                }
 
-                    $modules = $services->get('ModuleManager');
-                    $loaded = $modules->getLoadedModules(false);
-                    if (isset($loaded['ZF\Apigility\Doctrine\Admin'])) {
-                        // Wire Doctrine-Connected fetch listener
-                        $sharedEvents->attach(
-                            __NAMESPACE__ . '\Model\RestServiceModel',
-                            'fetch',
-                            'ZF\Apigility\Doctrine\Admin\Model\DoctrineRestServiceModel::onFetch'
-                        );
-                    }
+                return new Model\RestServiceModelFactory(
+                    $modulePathSpec,
+                    $configFactory,
+                    $sharedEvents,
+                    $moduleModel
+                );
+            },
+            Model\RpcServiceModelFactory::class => function ($services) {
+                if (! $services->has(Model\ModulePathSpec::class)
+                    || ! $services->has(ConfigResourceFactory::class)
+                    || ! $services->has(Model\ModuleModel::class)
+                    || ! $services->has('SharedEventManager')
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        Model\RpcServiceModelFactory::class
+                    ));
+                }
 
-                    return new Model\RestServiceModelFactory(
-                        $modulePathSpec,
-                        $configFactory,
-                        $sharedEvents,
-                        $moduleModel
-                    );
-                },
-                'ZF\Apigility\Admin\Model\RpcServiceModelFactory' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
-                        || ! $services->has('ZF\Configuration\ConfigResourceFactory')
-                        || ! $services->has('ZF\Apigility\Admin\Model\ModuleModel')
-                        || ! $services->has('SharedEventManager')
-                    ) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RpcServiceModelFactory is missing '
-                            . 'one or more dependencies from ZF\Configuration'
-                        );
-                    }
-                    $moduleModel   = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                    $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
-                    $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                    $sharedEvents  = $services->get('SharedEventManager');
+                return new Model\RpcServiceModelFactory(
+                    $services->get(Model\ModulePathSpec::class),
+                    $services->get(ConfigResourceFactory::class),
+                    $services->get('SharedEventManager'),
+                    $services->get(Model\ModuleModel::class)
+                );
+            },
+            Model\RestServiceResource::class => function ($services) {
+                if (! $services->has(Model\RestServiceModelFactory::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing its %s dependency and cannot be created',
+                        Model\RestServiceResource::class,
+                        Model\RestServiceModelFactory::class
+                    ));
+                }
+                if (! $services->has(Model\InputFilterModel::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing its %s dependency and cannot be created',
+                        Model\RestServiceResource::class,
+                        Model\InputFilterModel::class
+                    ));
+                }
 
-                    return new Model\RpcServiceModelFactory(
-                        $modulePathSpec,
-                        $configFactory,
-                        $sharedEvents,
-                        $moduleModel
-                    );
-                },
-                'ZF\Apigility\Admin\Model\RestServiceResource' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\RestServiceModelFactory')) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RestServiceResource is missing one or more dependencies'
-                        );
-                    }
-                    if (! $services->has('ZF\Apigility\Admin\Model\InputFilterModel')) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RestServiceResource is missing one or more dependencies'
-                        );
-                    }
-                    $factory = $services->get('ZF\Apigility\Admin\Model\RestServiceModelFactory');
-                    $inputFilterModel = $services->get('ZF\Apigility\Admin\Model\InputFilterModel');
-                    $documentationModel = $services->get('ZF\Apigility\Admin\Model\DocumentationModel');
-                    return new Model\RestServiceResource($factory, $inputFilterModel, $documentationModel);
-                },
-                'ZF\Apigility\Admin\Model\RpcServiceResource' => function ($services) {
-                    if (! $services->has('ZF\Apigility\Admin\Model\RpcServiceModelFactory')) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RpcServiceResource is missing RpcServiceModelFactory dependency'
-                        );
-                    }
-                    if (! $services->has('ZF\Apigility\Admin\Model\InputFilterModel')) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RpcServiceResource is missing InputFilterModel dependency'
-                        );
-                    }
-                    if (! $services->has('ControllerManager')) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\RpcServiceResource is missing ControllerManager dependency'
-                        );
-                    }
-                    $factory = $services->get('ZF\Apigility\Admin\Model\RpcServiceModelFactory');
-                    $inputFilterModel = $services->get('ZF\Apigility\Admin\Model\InputFilterModel');
-                    $controllerManager = $services->get('ControllerManager');
-                    $documentationModel = $services->get('ZF\Apigility\Admin\Model\DocumentationModel');
-                    return new Model\RpcServiceResource(
-                        $factory,
-                        $inputFilterModel,
-                        $controllerManager,
-                        $documentationModel
-                    );
-                },
-                'ZF\Apigility\Admin\Model\VersioningModelFactory' => function ($services) {
-                    if (! $services->has('ZF\Configuration\ConfigResourceFactory')
-                        || ! $services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
-                    ) {
-                        throw new ServiceNotCreatedException(
-                            'ZF\Apigility\Admin\Model\VersioningModelFactory is missing '
-                            . 'one or more dependencies from ZF\Configuration'
-                        );
-                    }
-                    $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
-                    $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
-                    return new Model\VersioningModelFactory($configFactory, $modulePathSpec);
-                },
-            ],
-        ];
+                return new Model\RestServiceResource(
+                    $services->get(Model\RestServiceModelFactory::class),
+                    $services->get(Model\InputFilterModel::class),
+                    $services->get(Model\DocumentationModel::class)
+                );
+            },
+            Model\RpcServiceResource::class => function ($services) {
+                if (! $services->has(Model\RpcServiceModelFactory::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing %s dependency',
+                        Model\RpcServiceResource::class,
+                        Model\RpcServiceModelFactory::class
+                    ));
+                }
+                if (! $services->has(Model\InputFilterModel::class)) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing %s dependency',
+                        Model\RpcServiceResource::class,
+                        Model\InputFilterModel::class
+                    ));
+                }
+                if (! $services->has('ControllerManager')) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing ControllerManager dependency',
+                        Model\RpcServiceResource::class
+                    ));
+                }
+
+                return new Model\RpcServiceResource(
+                    $services->get(Model\RpcServiceModelFactory::class),
+                    $services->get(Model\InputFilterModel::class),
+                    $services->get('ControllerManager'),
+                    $services->get(Model\DocumentationModel::class)
+                );
+            },
+            /**
+             * @DEPRECATED use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
+             */
+            Model\VersioningModelFactory::class => function ($services) {
+                if (! $services->has(ConfigResourceFactory::class)
+                    || ! $services->has(Model\ModulePathSpec::class)
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        Model\VersioningModelFactory::class
+                    ));
+                }
+
+                return new Model\VersioningModelFactory(
+                    $services->get(ConfigResourceFactory::class),
+                    $services->get(Model\ModulePathSpec::class)
+                );
+            },
+            ModuleVersioningModelFactory::class => function ($services) {
+                if (! $services->has(ConfigResourceFactory::class)
+                    || ! $services->has(Model\ModulePathSpec::class)
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        ModuleVersioningModelFactory::class
+                    ));
+                }
+
+                return new ModuleVersioningModelFactory(
+                    $services->get(ConfigResourceFactory::class),
+                    $services->get(Model\ModulePathSpec::class)
+                );
+            },
+        ]];
     }
 
     /**
@@ -608,9 +640,22 @@ class Module
         $viewHelpers     = $this->sm->get('ViewHelperManager');
         $urlHelper       = $viewHelpers->get('Url');
         $serverUrlHelper = $viewHelpers->get('ServerUrl');
+
         // @codingStandardsIgnoreStart
-        $this->urlHelper = function ($routeName, $routeParams, $routeOptions, $reUseMatchedParams) use ($urlHelper, $serverUrlHelper) {
-            $url = call_user_func($urlHelper, $routeName, $routeParams, $routeOptions, $reUseMatchedParams);
+        $this->urlHelper = function (
+            $routeName,
+            $routeParams,
+            $routeOptions,
+            $reUseMatchedParams
+        ) use ($urlHelper, $serverUrlHelper) {
+            $url = call_user_func(
+                $urlHelper,
+                $routeName,
+                $routeParams,
+                $routeOptions,
+                $reUseMatchedParams
+            );
+
             if (substr($url, 0, 4) == 'http') {
                 return $url;
             }
@@ -755,10 +800,10 @@ class Module
                     $type = 'rpc-service';
                     break;
             }
-            $links       = $halEntity->getLinks();
+            $links = $halEntity->getLinks();
 
             if (! $links->has('self')) {
-                $route  = sprintf('zf-apigility/api/module/%s/input-filter', $type);
+                $route = sprintf('zf-apigility/api/module/%s/input-filter', $type);
                 $hal->injectSelfLink($halEntity, $route, 'input_filter_name');
             }
             return;
@@ -769,7 +814,9 @@ class Module
      * Inject links into collections
      *
      * Currently:
-     * - Inject RPC/REST service links inside module resources that are composed in collections
+     *
+     * - Inject RPC/REST service links inside module resources that are
+     *   composed in collections
      *
      * @param  \Zend\EventManager\Event $e
      */
@@ -799,16 +846,16 @@ class Module
      */
     public function injectModuleCollectionRelationalLinks(Model\ModuleEntity $resource, $e)
     {
-        $asArray  = $resource->getArrayCopy();
-        $module   = $asArray['name'];
-        $rest     = $asArray['rest'];
-        $rpc      = $asArray['rpc'];
+        $asArray = $resource->getArrayCopy();
+        $module  = $asArray['name'];
+        $rest    = $asArray['rest'];
+        $rpc     = $asArray['rpc'];
 
         unset($asArray['rest']);
         unset($asArray['rpc']);
 
-        $halEntity   = new Entity($asArray, $module);
-        $links       = $halEntity->getLinks();
+        $halEntity = new Entity($asArray, $module);
+        $links     = $halEntity->getLinks();
         $links->add(Link::factory([
             'rel' => 'self',
             'route' => [
@@ -979,7 +1026,6 @@ class Module
     protected function disableHttpCache($headers)
     {
         $headers->addHeader(new GenericHeader('Expires', '0'));
-        // $headers->addHeaderLine('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
         $headers->addHeader(new GenericMultiHeader('Cache-Control', 'no-store, no-cache, must-revalidate'));
         $headers->addHeader(new GenericMultiHeader('Cache-Control', 'post-check=0, pre-check=0'));
         $headers->addHeaderLine('Pragma', 'no-cache');
