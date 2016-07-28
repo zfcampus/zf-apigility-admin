@@ -119,16 +119,15 @@ class AuthenticationEntity
     {
         switch ($this->type) {
             case self::TYPE_BASIC:
-                $array = [
+                return [
                     'type' => 'http_basic',
                     'accept_schemes' => [self::TYPE_BASIC],
                     'realm' => $this->realm,
                     'htpasswd' => $this->htpasswd,
                 ];
-                break;
 
             case self::TYPE_DIGEST:
-                $array = [
+                return [
                     'type' => 'http_digest',
                     'accept_schemes' => [self::TYPE_DIGEST],
                     'realm' => $this->realm,
@@ -136,7 +135,6 @@ class AuthenticationEntity
                     'digest_domains' => $this->digestDomains,
                     'nonce_timeout' => $this->nonceTimeout,
                 ];
-                break;
 
             case self::TYPE_OAUTH2:
                 $array = [
@@ -147,6 +145,7 @@ class AuthenticationEntity
                     'password' => $this->password,
                     'route_match' => $this->routeMatch,
                 ];
+
                 if ($this->getDsnType() === self::DSN_MONGO) {
                     $array['database'] = $this->database;
 
@@ -155,13 +154,9 @@ class AuthenticationEntity
                         $array['dsn'] = 'mongodb://' . $this->dsn;
                     }
                 }
-                break;
 
-            default:
-                $array = null;
+                return $array;
         }
-
-        return $array;
     }
 
     public function exchangeArray(array $array)
