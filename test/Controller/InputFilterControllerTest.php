@@ -115,7 +115,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
-        $entity = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
+        $entity = $payload->getEntity();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
         $expected = $this->config['input_filter_specs'][$validator];
@@ -174,7 +174,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
-        $entity = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
+        $entity = $payload->getEntity();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
         $config    = include $this->basePath . '/module.config.php';
