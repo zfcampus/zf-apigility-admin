@@ -56,7 +56,7 @@ class VersioningModel
 
         if ($hasPathSpec) {
             $pathSpecType = $this->pathSpec->getPathSpec();
-            if (!$srcPath) {
+            if (! $srcPath) {
                 $srcPath = $this->pathSpec->getModuleSourcePath($name);
             }
             $configDirPath = $this->pathSpec->getModuleConfigPath($name);
@@ -180,7 +180,7 @@ class VersioningModel
             }
             $srcPath = implode(DIRECTORY_SEPARATOR, $parts);
         } else {
-            if (!$appendNamespace && substr($srcPath, - strlen($module)) == $module) {
+            if (! $appendNamespace && substr($srcPath, - strlen($module)) == $module) {
                 $srcPath = substr($srcPath, 0, strlen($srcPath) - strlen($module) - 1);
             }
         }

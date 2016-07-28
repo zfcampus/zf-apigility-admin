@@ -25,4 +25,5 @@
     <file>config</file>
     <file>src</file>
     <file>test</file>
+    <exclude-pattern>*/test/*/module.config.php</exclude-pattern>
 </ruleset>

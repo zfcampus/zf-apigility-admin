@@ -117,7 +117,7 @@ final class ModuleVersioningModel
         }
 
         $previous = (int) $version - 1;
-        if (!in_array($previous, $versions)) {
+        if (! in_array($previous, $versions)) {
             throw new Exception\RuntimeException(sprintf(
                 'The previous API version %d doesn\'t exist, I cannot create version %d',
                 $previous,
@@ -405,7 +405,7 @@ final class ModuleVersioningModel
      */
     protected function updateDocumentationVersion($previous, $version)
     {
-        if (!$this->docsConfigResource) {
+        if (! $this->docsConfigResource) {
             // Nothing to do
             return true;
         }
@@ -424,7 +424,7 @@ final class ModuleVersioningModel
     private function setPathSpecType($pathSpecType)
     {
         $pathSpecType = (string) $pathSpecType;
-        if (!in_array($pathSpecType, [ModulePathSpec::PSR_0, ModulePathSpec::PSR_4])) {
+        if (! in_array($pathSpecType, [ModulePathSpec::PSR_0, ModulePathSpec::PSR_4])) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid $setPathSpecType parameter supplied. Please use the ModulePathSpec::PSR_0 or ' .
                 'ModulePathSpec::PSR_4 constants.',
@@ -448,7 +448,7 @@ final class ModuleVersioningModel
             $srcPath .= DIRECTORY_SEPARATOR . $this->moduleName;
         }
 
-        if (!file_exists($srcPath) || !is_dir($srcPath) || !is_writable($srcPath)) {
+        if (! file_exists($srcPath) || ! is_dir($srcPath) || ! is_writable($srcPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Could not find source directory at path "%s". Make sure the directory exists and is writable.',
                 $srcPath
@@ -466,7 +466,7 @@ final class ModuleVersioningModel
     private function setConfigDirPath($configDirPath)
     {
         $configDirPath = (string)$configDirPath;
-        if (!is_readable($configDirPath) || !is_dir($configDirPath)) {
+        if (! is_readable($configDirPath) || ! is_dir($configDirPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Could not find config directory at path "%s". Make sure the directory exists.',
                 $configDirPath

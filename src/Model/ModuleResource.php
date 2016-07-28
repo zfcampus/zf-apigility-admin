@@ -70,7 +70,7 @@ class ModuleResource extends AbstractResourceListener
 
         $version = isset($data['version']) ? $data['version'] : 1;
         $name    = str_replace(['.', '/'], '\\', $data['name']);
-        if ( !preg_match('#^[a-zA-Z][a-zA-Z0-9_]*(\\\\[a-zA-Z][a-zA-Z0-9_]*)*$#', $name)) {
+        if (! preg_match('#^[a-zA-Z][a-zA-Z0-9_]*(\\\\[a-zA-Z][a-zA-Z0-9_]*)*$#', $name)) {
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }
 

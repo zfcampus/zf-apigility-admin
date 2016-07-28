@@ -44,7 +44,7 @@ final class ModuleVersioningModelFactory implements ModuleVersioningModelFactory
     {
         $moduleName = $this->moduleUtils->normalizeModuleName($module);
 
-        if (!isset($this->models[$moduleName])) {
+        if (! isset($this->models[$moduleName])) {
             $config     = $this->configFactory->factory($moduleName);
             $docsConfig = $this->getDocsConfig($moduleName);
 
@@ -68,7 +68,7 @@ final class ModuleVersioningModelFactory implements ModuleVersioningModelFactory
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath    = dirname($moduleConfigPath) . '/documentation.config.php';
-        if (!file_exists($docConfigPath)) {
+        if (! file_exists($docConfigPath)) {
             return null;
         }
         $documentation = include $docConfigPath;
