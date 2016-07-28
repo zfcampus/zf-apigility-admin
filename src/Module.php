@@ -12,6 +12,7 @@ use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\Configuration\ConfigResource;
+use ZF\Configuration\ConfigResourceFactory;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Entity;
@@ -438,45 +439,43 @@ class Module
      */
     public function getControllerConfig()
     {
-        return [
-            'factories' => [
-                'ZF\Apigility\Admin\Controller\Authentication' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    $model    = $services->get('ZF\Apigility\Admin\Model\AuthenticationModel');
-                    return new Controller\AuthenticationController($model);
-                },
-                'ZF\Apigility\Admin\Controller\Authorization' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    $factory  = $services->get('ZF\Apigility\Admin\Model\AuthorizationModelFactory');
-                    return new Controller\AuthorizationController($factory);
-                },
-                'ZF\Apigility\Admin\Controller\Config' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    return new Controller\ConfigController($services->get('ZF\Configuration\ConfigResource'));
-                },
-                // @codingStandardsIgnoreStart
-                'ZF\Apigility\Admin\Controller\ModuleConfig' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    return new Controller\ModuleConfigController($services->get('ZF\Configuration\ConfigResourceFactory'));
-                },
-                // @codingStandardsIgnoreEnd
-                'ZF\Apigility\Admin\Controller\ModuleCreation' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                    return new Controller\ModuleCreationController($model);
-                },
-                'ZF\Apigility\Admin\Controller\Source' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    $model    = $services->get('ZF\Apigility\Admin\Model\ModuleModel');
-                    return new Controller\SourceController($model);
-                },
-                'ZF\Apigility\Admin\Controller\Versioning' => function ($controllers) {
-                    $services = $controllers->getServiceLocator();
-                    $factory  = $services->get('ZF\Apigility\Admin\Model\VersioningModelFactory');
-                    return new Controller\VersioningController($factory);
-                },
-            ],
-        ];
+        return [ 'factories' => [
+            Controller\Authentication::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $model    = $services->get(Model\AuthenticationModel::class);
+                return new Controller\AuthenticationController($model);
+            },
+            Controller\Authorization::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $factory  = $services->get(Model\AuthorizationModelFactory::class);
+                return new Controller\AuthorizationController($factory);
+            },
+            Controller\Config::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                return new Controller\ConfigController($services->get(ConfigResource::class));
+            },
+            // @codingStandardsIgnoreStart
+            Controller\ModuleConfig::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                return new Controller\ModuleConfigController($services->get(ConfigResourceFactory::class));
+            },
+            // @codingStandardsIgnoreEnd
+            Controller\ModuleCreation::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $model    = $services->get(Model\ModuleModel::class);
+                return new Controller\ModuleCreationController($model);
+            },
+            Controller\Source::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $model    = $services->get(Model\ModuleModel::class);
+                return new Controller\SourceController($model);
+            },
+            Controller\Versioning::class => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                $factory  = $services->get(Model\VersioningModelFactory::class);
+                return new Controller\VersioningController($factory);
+            },
+        ]];
     }
 
     public function normalizeMatchedControllerServiceName($e)

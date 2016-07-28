@@ -1,23 +1,23 @@
 <?php
-return array(
-    'zf-mvc-auth' => array(
-        'authentication' => array(
-            'map' => array(
+return [
+    'zf-mvc-auth' => [
+        'authentication' => [
+            'map' => [
                 'Status\V1' => 'testbasic',
                 'Status\V2' => 'testdigest',
                 'Ping'      => 'testbasic',
-            )
-        )
-    ),
-    'router' => array(
-        'routes' => array(
-            'oauth' => array(
+            ],
+        ],
+    ],
+    'router' => [
+        'routes' => [
+            'oauth' => [
                 'type' => 'regex',
-                'options' => array(
+                'options' => [
                     'regex' => '(?P<oauth>(/oauth2pdo|/oauth2mongo))',
-                    'spec' => '%oauth%'
-                )
-            )
-        )
-    )
-);
+                    'spec' => '%oauth%',
+                ],
+            ],
+        ],
+    ],
+];
