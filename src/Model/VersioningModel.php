@@ -134,9 +134,9 @@ class VersioningModel
     {
         if ($this->pathSpec) {
             return $this->pathSpec->normalizeModuleName($module);
-        } else {
-            return str_replace(['.', '/'], '\\', $module);
         }
+
+        return str_replace(['.', '/'], '\\', $module);
     }
 
     /**
