@@ -7,14 +7,20 @@
 namespace ZF\Apigility\Admin\Listener;
 
 use ReflectionClass;
-use Zend\EventManager\AbstractListenerAggregate;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
-class CryptFilterListener extends AbstractListenerAggregate
+class CryptFilterListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    use ListenerAggregateTrait;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         // Trigger between content negotiation (-625) and content validation (-650)
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -630);

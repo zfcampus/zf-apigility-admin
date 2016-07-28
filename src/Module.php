@@ -10,7 +10,9 @@ use Zend\Http\Header\GenericHeader;
 use Zend\Http\Header\GenericMultiHeader;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
+use Zend\Router\RouteMatch;
+use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
 use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ConfigResourceFactory;
 use ZF\Hal\Link\Link;
@@ -66,14 +68,13 @@ class Module
         $app      = $e->getApplication();
         $this->sm = $app->getServiceManager();
         $events   = $app->getEventManager();
+
         $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'normalizeMatchedControllerServiceName'], -20);
         $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'normalizeMatchedInputFilterName'], -20);
         $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -1000);
         $events->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender'], 100);
         $events->attach(MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 1000);
-        $events->attachAggregate(
-            $this->sm->get('ZF\Apigility\Admin\Listener\CryptFilterListener')
-        );
+        $this->sm->get(Listener\CryptFilterListener::class)->attach($events);
     }
 
     /**
@@ -527,12 +528,12 @@ class Module
     /**
      * Inject links into Module resources for the service services
      *
-     * @param  \Zend\Mvc\MvcEvent $e
+     * @param MvcEvent $e
      */
-    public function onRender($e)
+    public function onRender(MvcEvent $e)
     {
         $matches = $e->getRouteMatch();
-        if (! $matches instanceof RouteMatch) {
+        if (! ($matches instanceof RouteMatch || $matches instanceof V2RouteMatch)) {
             // In 404's, we do not have a route match... nor do we need to do
             // anything
             return;
@@ -559,7 +560,7 @@ class Module
             }
         );
 
-        //if content is empty, then send the response with a 204 and an emtpy body
+        // If content is empty, then send the response with a 204 and an emtpy body
 
         if ($result->isEntity()) {
             $this->injectServiceLinks($result->getPayload(), $result, $e);
