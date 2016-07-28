@@ -102,7 +102,7 @@ class ModuleModel
     public function getModule($moduleName)
     {
         $modules = $this->getEnabledModules();
-        if (!array_key_exists($moduleName, $modules)) {
+        if (! array_key_exists($moduleName, $modules)) {
             return null;
         }
 
@@ -146,7 +146,7 @@ class ModuleModel
         mkdir($pathSpec->getRestPath($module, 1), 0775, true);
         mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
 
-        if (!file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
+        if (! file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
             return false;
         }
 
@@ -166,15 +166,15 @@ class ModuleModel
             $view->setTemplate('module/skeleton');
             $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
 
-            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
+            if (! file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
                 return false;
             }
-            if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+            if (! file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
                 return false;
             }
         } else {
             $view->setTemplate('module/skeleton-psr4');
-            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+            if (! file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
                 return false;
             }
         }
@@ -203,7 +203,7 @@ class ModuleModel
     {
         $modules = $this->moduleManager->getLoadedModules();
 
-        if (!isset($modules[$module])) {
+        if (! isset($modules[$module])) {
             return false;
         }
 
@@ -234,7 +234,7 @@ class ModuleModel
         }
 
         copy($objModule->getFileName(), $objModule->getFileName() . '.old');
-        if (!file_put_contents($objModule->getFileName(), $replacement)) {
+        if (! file_put_contents($objModule->getFileName(), $replacement)) {
             return false;
         }
 
@@ -297,7 +297,7 @@ class ModuleModel
 
         $this->modules = [];
         foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
-            if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+            if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
                 continue;
             }
 
@@ -332,7 +332,7 @@ class ModuleModel
      */
     protected function getModuleDefaultVersion($module)
     {
-        if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+        if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
             throw new Exception\InvalidArgumentException(
                 'Expected ApigilityProviderInterface or ApigilityModuleInterface'
             );
@@ -380,7 +380,7 @@ class ModuleModel
      */
     protected function getVersionsByModule($moduleName, $module)
     {
-        if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+        if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
             throw new Exception\InvalidArgumentException(
                 'Expected ApigilityProviderInterface or ApigilityModuleInterface'
             );
@@ -395,10 +395,10 @@ class ModuleModel
             $dirSep,
             str_replace('\\', $dirSep, $moduleName)
         );
-        if (!preg_match($pattern, $path)) {
+        if (! preg_match($pattern, $path)) {
             $path = sprintf('%s/src/%s', $path, str_replace('\\', '/', $moduleName));
         }
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return [1];
         }
 

@@ -70,7 +70,7 @@ class RpcServiceModel
         $data   = ['controller_service_name' => $controllerServiceName];
         $config = $this->configResource->fetch(true);
 
-        if (!isset($config['zf-rpc'][$controllerServiceName])) {
+        if (! isset($config['zf-rpc'][$controllerServiceName])) {
             return false;
         }
 
@@ -86,7 +86,7 @@ class RpcServiceModel
         }
 
         if (isset($rpcConfig['service_name'])
-            && !empty($rpcConfig['service_name'])
+            && ! empty($rpcConfig['service_name'])
         ) {
             $data['service_name'] = $rpcConfig['service_name'];
         } else {
@@ -135,7 +135,7 @@ class RpcServiceModel
     public function fetchAll($version = null)
     {
         $config = $this->configResource->fetch(true);
-        if (!isset($config['zf-rpc'])) {
+        if (! isset($config['zf-rpc'])) {
             return [];
         }
 
@@ -144,7 +144,7 @@ class RpcServiceModel
 
         // Initialize pattern if a version was passed and it's valid
         if (null !== $version) {
-            if (!in_array($version, $this->moduleEntity->getVersions())) {
+            if (! in_array($version, $this->moduleEntity->getVersions())) {
                 throw new Exception\RuntimeException(sprintf(
                     'Invalid version "%s" provided',
                     $version
@@ -160,7 +160,7 @@ class RpcServiceModel
         }
 
         foreach (array_keys($config['zf-rpc']) as $controllerService) {
-            if (!$pattern) {
+            if (! $pattern) {
                 $services[] = $this->fetch($controllerService);
                 continue;
             }
@@ -190,7 +190,7 @@ class RpcServiceModel
     {
         $normalizedServiceName = ucfirst($serviceName);
 
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $normalizedServiceName)) {
+        if (! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $normalizedServiceName)) {
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
@@ -226,7 +226,7 @@ class RpcServiceModel
         if ($recursive) {
             $className = substr($entity->controllerServiceName, 0, strrpos($entity->controllerServiceName, '\\')) .
                 '\\' . $entity->serviceName . 'Controller';
-            if (!class_exists($className)) {
+            if (! class_exists($className)) {
                 throw new Exception\RuntimeException(sprintf(
                     'I cannot determine the class name, tried with "%s"',
                     $className
@@ -272,7 +272,7 @@ class RpcServiceModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents(
+        if (! file_put_contents(
             $classPath,
             "<" . "?php\n" . $renderer->render($view)
         )) {
@@ -297,7 +297,7 @@ class RpcServiceModel
 
         $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
-        if (!file_exists($srcPath)) {
+        if (! file_exists($srcPath)) {
             mkdir($srcPath, 0775, true);
         }
 
@@ -327,7 +327,7 @@ class RpcServiceModel
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents(
+        if (! file_put_contents(
             $classPath,
             "<" . "?php\n" . $renderer->render($view)
         )) {
@@ -503,7 +503,7 @@ class RpcServiceModel
     public function updateRoute($controllerService, $routeMatch)
     {
         $services  = $this->fetch($controllerService);
-        if (!$services) {
+        if (! $services) {
             return false;
         }
         $services  = $services->getArrayCopy();
@@ -560,7 +560,7 @@ class RpcServiceModel
      */
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
     {
-        if (!in_array($headerType, ['accept', 'content_type'])) {
+        if (! in_array($headerType, ['accept', 'content_type'])) {
             /** @todo define exception in Rpc namespace */
             throw new PatchException('Invalid content negotiation whitelist type provided', 422);
         }
@@ -725,23 +725,23 @@ class RpcServiceModel
      */
     protected function getRouteMatchStringFromModuleConfig($routeName, array $config)
     {
-        if (!isset($config['router'])
-            || !isset($config['router']['routes'])
+        if (! isset($config['router'])
+            || ! isset($config['router']['routes'])
         ) {
             return false;
         }
 
         $config = $config['router']['routes'];
-        if (!isset($config[$routeName])
-            || !is_array($config[$routeName])
+        if (! isset($config[$routeName])
+            || ! is_array($config[$routeName])
         ) {
             return false;
         }
 
         $config = $config[$routeName];
 
-        if (!isset($config['options'])
-            || !isset($config['options']['route'])
+        if (! isset($config['options'])
+            || ! isset($config['options']['route'])
         ) {
             return false;
         }

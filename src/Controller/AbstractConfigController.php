@@ -25,7 +25,7 @@ abstract class AbstractConfigController extends AbstractActionController
         $returnTrees = 'application/json' == $accept ? false : true;
 
         $config = $this->getConfig();
-        if (!$config instanceof ConfigResource) {
+        if (! $config instanceof ConfigResource) {
             return $config;
         }
 
@@ -43,7 +43,7 @@ abstract class AbstractConfigController extends AbstractActionController
                 }
 
                 // If tree was submitted, but not Accepted, create dot-separated values
-                if ($submitTrees && !$returnTrees) {
+                if ($submitTrees && ! $returnTrees) {
                     return $config->traverseArray($params);
                 }
 
@@ -85,7 +85,7 @@ abstract class AbstractConfigController extends AbstractActionController
      */
     protected function getBodyParams($useTrees)
     {
-        if (!$useTrees) {
+        if (! $useTrees) {
             return $this->bodyParams();
         }
 
@@ -101,7 +101,7 @@ abstract class AbstractConfigController extends AbstractActionController
      */
     protected function getHeaderType($headers, $header)
     {
-        if (!$headers->has($header)) {
+        if (! $headers->has($header)) {
             return 'application/json';
         }
 

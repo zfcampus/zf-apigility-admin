@@ -68,7 +68,7 @@ class RestServiceResource extends AbstractResourceListener
         }
 
         $moduleName = $this->getEvent()->getRouteParam('name', false);
-        if (!$moduleName) {
+        if (! $moduleName) {
             throw new RuntimeException(sprintf(
                 '%s cannot operate correctly without a "name" segment in the route matches',
                 __CLASS__
@@ -136,7 +136,7 @@ class RestServiceResource extends AbstractResourceListener
     public function fetch($id)
     {
         $service = $this->getModel()->fetch($id);
-        if (!$service instanceof RestServiceEntity) {
+        if (! $service instanceof RestServiceEntity) {
             return new ApiProblem(404, 'REST service not found');
         }
 
@@ -178,7 +178,7 @@ class RestServiceResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 
@@ -259,8 +259,8 @@ class RestServiceResource extends AbstractResourceListener
     protected function injectInputFilters(RestServiceEntity $service)
     {
         $inputFilters = $this->inputFilterModel->fetch($this->moduleName, $service->controllerServiceName);
-        if (!$inputFilters instanceof InputFilterCollection
-            || !count($inputFilters)
+        if (! $inputFilters instanceof InputFilterCollection
+            || ! count($inputFilters)
         ) {
             return;
         }
@@ -307,7 +307,7 @@ class RestServiceResource extends AbstractResourceListener
             $this->moduleName,
             $service->controllerServiceName
         );
-        if (!$documentation) {
+        if (! $documentation) {
             return;
         }
         $entity = new HalEntity($documentation, 'documentation');

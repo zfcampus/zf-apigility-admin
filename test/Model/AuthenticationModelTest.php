@@ -32,7 +32,7 @@ class AuthenticationModelTest extends TestCase
 
     public function createConfigMocks()
     {
-        if (!is_dir($this->configPath)) {
+        if (! is_dir($this->configPath)) {
             mkdir($this->configPath, 0775, true);
         }
 
@@ -255,7 +255,7 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
     {
-        if (!extension_loaded('mongo')) {
+        if (! extension_loaded('mongo')) {
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
@@ -322,7 +322,7 @@ class AuthenticationModelTest extends TestCase
      */
     public function testRemovingOAuth2MongoConfigurationRemovesConfigurationFromEachFile()
     {
-        if (!extension_loaded('mongo')) {
+        if (! extension_loaded('mongo')) {
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
@@ -351,7 +351,7 @@ class AuthenticationModelTest extends TestCase
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()
     {
-        if (!extension_loaded('mongo')) {
+        if (! extension_loaded('mongo')) {
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
@@ -648,9 +648,9 @@ class AuthenticationModelTest extends TestCase
 
         $this->assertTrue($model->removeAuthenticationAdapter('test4'));
         $config = include $this->localConfigPath;
-        $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['adapters']['test4']));
+        $this->assertTrue(! isset($config['zf-mvc-auth']['authentication']['adapters']['test4']));
         $config = include $this->globalConfigPath;
-        $this->assertTrue(!in_array(
+        $this->assertTrue(! in_array(
             $local['zf-mvc-auth']['authentication']['adapters']['test4']['storage']['route'],
             $model->fromOAuth2RegexToArray($config)
         ));
@@ -732,11 +732,11 @@ class AuthenticationModelTest extends TestCase
         $this->assertTrue($model->removeAuthenticationMap('Status', 1));
         $this->assertFalse($model->getAuthenticationMap('Status', 1));
         $config = include $this->globalConfigPath;
-        $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['map']['Status\V1']));
+        $this->assertTrue(! isset($config['zf-mvc-auth']['authentication']['map']['Status\V1']));
         $this->assertTrue($model->removeAuthenticationMap('Foo'));
         $this->assertFalse($model->getAuthenticationMap('Foo'));
         $config = include $this->globalConfigPath;
-        $this->assertTrue(!isset($config['zf-mvc-auth']['authentication']['map']['Foo']));
+        $this->assertTrue(! isset($config['zf-mvc-auth']['authentication']['map']['Foo']));
     }
 
     public function getOldAuthenticationConfig()

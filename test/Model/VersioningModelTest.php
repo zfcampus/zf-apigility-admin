@@ -59,7 +59,7 @@ class VersioningModelTest extends TestCase
      */
     public function removeDir($dir)
     {
-        if (!file_exists($dir)) {
+        if (! file_exists($dir)) {
             return false;
         }
         $files = array_diff(scandir($dir), ['.', '..']);

@@ -69,13 +69,13 @@ class ModuleResourceTest extends TestCase
     {
         $modulePath = $this->modulePath;
         spl_autoload_register(function ($class) use ($modulePath) {
-            if (!preg_match('/^(?P<namespace>.*?)' . preg_quote('\\') . 'Module$/', $class, $matches)) {
+            if (! preg_match('/^(?P<namespace>.*?)' . preg_quote('\\') . 'Module$/', $class, $matches)) {
                 return false;
             }
             $namespace = $matches['namespace'];
             $relPath   = str_replace('\\', '/', $namespace);
             $path      = sprintf('%s/module/%s/Module.php', $modulePath, $relPath);
-            if (!file_exists($path)) {
+            if (! file_exists($path)) {
                 return false;
             }
             require_once $path;

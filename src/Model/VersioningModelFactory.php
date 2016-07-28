@@ -88,7 +88,7 @@ class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath    = dirname($moduleConfigPath) . '/documentation.config.php';
-        if (!file_exists($docConfigPath)) {
+        if (! file_exists($docConfigPath)) {
             return null;
         }
         $documentation = include $docConfigPath;

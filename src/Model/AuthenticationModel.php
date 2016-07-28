@@ -161,7 +161,7 @@ class AuthenticationModel
      */
     protected function checkAuthenticationAdapterData(array $adapter)
     {
-        if (!isset($adapter['type'])) {
+        if (! isset($adapter['type'])) {
             throw new Exception\InvalidArgumentException(
                 'Authentication type is missing',
                 422
@@ -820,7 +820,7 @@ class AuthenticationModel
 
         unset($routes[$index]);
 
-        if (count($routes)>0) {
+        if (count($routes) > 0) {
             usort($routes, function ($a, $b) {
                 return strlen($b) - strlen($a);
             });

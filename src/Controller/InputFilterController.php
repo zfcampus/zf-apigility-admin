@@ -36,13 +36,13 @@ class InputFilterController extends AbstractActionController
         $controller      = $this->params()->fromRoute('controller_service_name', false);
         $inputFilterName = $this->params()->fromRoute('input_filter_name', false);
 
-        if (!$module || !$this->model->moduleExists($module)) {
+        if (! $module || ! $this->model->moduleExists($module)) {
             return new ApiProblemResponse(
                 new ApiProblem(404, 'The module specified does not exist')
             );
         }
 
-        if (!$controller || !$this->model->controllerExists($module, $controller)) {
+        if (! $controller || ! $this->model->controllerExists($module, $controller)) {
             return new ApiProblemResponse(
                 new ApiProblem(404, 'The controller specified does not exist')
             );
@@ -90,7 +90,7 @@ class InputFilterController extends AbstractActionController
             case $request::METHOD_PUT:
                 $inputFilter = $this->bodyParams();
                 $result = $this->model->update($module, $controller, $inputFilter);
-                if (!$result) {
+                if (! $result) {
                     return new ApiProblemResponse(
                         new ApiProblem(
                             500,
@@ -113,7 +113,7 @@ class InputFilterController extends AbstractActionController
                 }
 
                 $result = $this->model->remove($module, $controller, $inputFilterName);
-                if (!$result) {
+                if (! $result) {
                     return new ApiProblemResponse(
                         new ApiProblem(404, 'The input filter specified does not exist')
                     );

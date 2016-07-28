@@ -106,7 +106,7 @@ class AuthorizationController extends AbstractActionController
 
         $matches    = $event->getRouteMatch();
         $moduleName = $matches->getParam('name', false);
-        if (!$moduleName) {
+        if (! $moduleName) {
             throw new RuntimeException(sprintf(
                 '%s cannot operate correctly without a "name" segment in the route matches',
                 __CLASS__

@@ -164,7 +164,7 @@ class VersioningModel
         // .. or fall back to the old method, which only supports PSR-0
         $moduleClass = sprintf('%s\\Module', $module);
 
-        if (!class_exists($moduleClass)) {
+        if (! class_exists($moduleClass)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The module %s doesn\'t exist',
                 $module
@@ -185,7 +185,7 @@ class VersioningModel
             }
         }
 
-        if (!file_exists($srcPath) && !is_dir($srcPath)) {
+        if (! file_exists($srcPath) && ! is_dir($srcPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The module "%s" has a malformed directory structure; cannot determine source path',
                 $module

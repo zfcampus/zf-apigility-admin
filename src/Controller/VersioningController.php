@@ -24,7 +24,7 @@ class VersioningController extends AbstractActionController
     public function defaultVersionAction()
     {
         $module = $this->bodyParam('module', false);
-        if (!$module) {
+        if (! $module) {
             return new ApiProblemModel(
                 new ApiProblem(
                     422,
@@ -37,7 +37,7 @@ class VersioningController extends AbstractActionController
 
         $version = $this->bodyParam('version', false);
 
-        if (!$version || !is_numeric($version)) {
+        if (! $version || ! is_numeric($version)) {
             return new ApiProblemModel(
                 new ApiProblem(
                     422,
@@ -64,7 +64,7 @@ class VersioningController extends AbstractActionController
         $request = $this->getRequest();
 
         $module = $this->bodyParam('module', false);
-        if (!$module) {
+        if (! $module) {
             return new ApiProblemModel(
                 new ApiProblem(
                     422,
@@ -78,13 +78,13 @@ class VersioningController extends AbstractActionController
         $model = $this->modelFactory->factory($module);
 
         $version = $this->bodyParam('version', false);
-        if (!$version) {
+        if (! $version) {
             try {
                 $versions = $model->getModuleVersions();
             } catch (Exception\ExceptionInterface $ex) {
                 return new ApiProblemModel(new ApiProblem(404, 'Module not found'));
             }
-            if (!$versions) {
+            if (! $versions) {
                 return new ApiProblemModel(new ApiProblem(500, 'Module cannot be versioned'));
             }
             sort($versions);

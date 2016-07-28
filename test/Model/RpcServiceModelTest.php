@@ -143,7 +143,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'Bar';
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
-        if (!is_dir($moduleSrcPath)) {
+        if (! is_dir($moduleSrcPath)) {
             mkdir($moduleSrcPath, 0775, true);
         }
 
@@ -205,7 +205,7 @@ class RpcServiceModelTest extends TestCase
 
         $serviceName = 'Bar';
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
-        if (!is_dir($moduleSrcPath)) {
+        if (! is_dir($moduleSrcPath)) {
             mkdir($moduleSrcPath, 0775, true);
         }
 

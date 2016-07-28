@@ -25,7 +25,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
     public function fetchColumns($module, $version, $adapter_name)
     {
         $tables = [];
-        if (!isset($this->config['db']['adapters'])) {
+        if (! isset($this->config['db']['adapters'])) {
             // error
         }
         $config = $this->config['db']['adapters'];
@@ -59,7 +59,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                 $item = [
                     'name' => $column->getName(),
                     'type' => $column->getDataType(),
-                    'required' => !$column->isNullable(),
+                    'required' => ! $column->isNullable(),
                     'filters' => [],
                     'validators' => [],
                     'constraints' => [],

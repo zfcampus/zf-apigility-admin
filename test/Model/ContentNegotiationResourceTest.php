@@ -27,7 +27,7 @@ class ContentNegotiationResourceTest extends TestCase
 
     public function createConfigMocks()
     {
-        if (!is_dir($this->configPath)) {
+        if (! is_dir($this->configPath)) {
             mkdir($this->configPath, 0775, true);
         }
 

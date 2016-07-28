@@ -22,7 +22,7 @@ class ModuleConfigController extends AbstractConfigController
     public function getConfig()
     {
         $module = $this->params()->fromQuery('module', false);
-        if (!$module) {
+        if (! $module) {
             return new ApiProblemResponse(
                 new ApiProblem(400, 'Missing module parameter')
             );

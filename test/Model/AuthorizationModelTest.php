@@ -127,7 +127,7 @@ class AuthorizationModelTest extends TestCase
         $normalized = [];
         foreach ($entity->getArrayCopy() as $spec => $privileges) {
             preg_match('/^(?P<service>[^:]+)(::(?P<action>.*))?$/', $spec, $matches);
-            if (!isset($matches['action'])) {
+            if (! isset($matches['action'])) {
                 $normalized[$matches['service']]['actions']['index'] = $privileges;
             } elseif (preg_match('/^__(?P<type>collection|entity)__$/', $matches['action'], $actionMatches)) {
                 $type = $actionMatches['type'];

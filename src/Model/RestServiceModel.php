@@ -111,7 +111,7 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function __get($name)
     {
-        if (!isset($this->{$name})) {
+        if (! isset($this->{$name})) {
             throw new \OutOfRangeException(sprintf(
                 'Cannot locate property by name of "%s"',
                 $name
@@ -145,7 +145,7 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function getEventManager()
     {
-        if (!$this->events) {
+        if (! $this->events) {
             $this->setEventManager(new EventManager());
         }
         return $this->events;
@@ -161,8 +161,8 @@ class RestServiceModel implements EventManagerAwareInterface
     public function fetch($controllerService, $isAFetchOperation = true)
     {
         $config = $this->configResource->fetch(true);
-        if (!isset($config['zf-rest'])
-            || !isset($config['zf-rest'][$controllerService])
+        if (! isset($config['zf-rest'])
+            || ! isset($config['zf-rest'][$controllerService])
         ) {
             throw new Exception\RuntimeException(sprintf(
                 'Could not find REST resource by name of %s',
@@ -197,7 +197,7 @@ class RestServiceModel implements EventManagerAwareInterface
             $entity = $eventResults->last();
         }
 
-        if (!isset($entity->serviceName)
+        if (! isset($entity->serviceName)
             || empty($entity->serviceName)
         ) {
             $serviceName = $controllerService;
@@ -224,7 +224,7 @@ class RestServiceModel implements EventManagerAwareInterface
     public function fetchAll($version = null)
     {
         $config = $this->configResource->fetch(true);
-        if (!isset($config['zf-rest'])) {
+        if (! isset($config['zf-rest'])) {
             return [];
         }
 
@@ -234,7 +234,7 @@ class RestServiceModel implements EventManagerAwareInterface
         // Initialize pattern if a version was passed and it's valid
         if (null !== $version) {
             $version = (int) $version;
-            if (!in_array($version, $this->moduleEntity->getVersions(), true)) {
+            if (! in_array($version, $this->moduleEntity->getVersions(), true)) {
                 throw new Exception\RuntimeException(sprintf(
                     'Invalid version "%s" provided',
                     $version
@@ -250,7 +250,7 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         foreach (array_keys($config['zf-rest']) as $controllerService) {
-            if (!$pattern) {
+            if (! $pattern) {
                 $services[] = $this->fetch($controllerService);
                 continue;
             }
@@ -274,7 +274,7 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $serviceName = ucfirst($details->serviceName);
 
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
+        if (! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $serviceName)) {
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
@@ -428,7 +428,7 @@ class RestServiceModel implements EventManagerAwareInterface
                 'classresource' => $classResource,
                 'version'       => $this->moduleEntity->getLatestVersion(),
         ]);
-        if (!$this->createClassFile($view, 'factory', $classPath)) {
+        if (! $this->createClassFile($view, 'factory', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
                 'Unable to create resource factory "%s"; unable to write file',
                 $className
@@ -473,7 +473,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'classname' => $className,
             'version'   => $this->moduleEntity->getLatestVersion(),
         ]);
-        if (!$this->createClassFile($view, 'resource', $classPath)) {
+        if (! $this->createClassFile($view, 'resource', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
                 'Unable to create resource "%s"; unable to write file',
                 $className
@@ -530,7 +530,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'version'   => $this->moduleEntity->getLatestVersion(),
             'details'   => $details,
         ]);
-        if (!$this->createClassFile($view, $template, $classPath)) {
+        if (! $this->createClassFile($view, $template, $classPath)) {
             throw new Exception\RuntimeException(sprintf(
                 'Unable to create entity "%s"; unable to write file',
                 $className
@@ -574,7 +574,7 @@ class RestServiceModel implements EventManagerAwareInterface
             'classname' => $className,
             'version'   => $this->moduleEntity->getLatestVersion(),
         ]);
-        if (!$this->createClassFile($view, 'collection', $classPath)) {
+        if (! $this->createClassFile($view, 'collection', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
                 'Unable to create entity "%s"; unable to write file',
                 $className
@@ -726,11 +726,11 @@ class RestServiceModel implements EventManagerAwareInterface
             ],
         ];
         $whitelist = $details->acceptWhitelist;
-        if (!empty($whitelist)) {
+        if (! empty($whitelist)) {
             $config['accept_whitelist'] = [$controllerService => $whitelist];
         }
         $whitelist = $details->contentTypeWhitelist;
-        if (!empty($whitelist)) {
+        if (! empty($whitelist)) {
             $config['content_type_whitelist'] = [$controllerService => $whitelist];
         }
         $config = ['zf-content-negotiation' => $config];
@@ -775,7 +775,7 @@ class RestServiceModel implements EventManagerAwareInterface
     public function updateRoute(RestServiceEntity $original, RestServiceEntity $update)
     {
         $route = $update->routeMatch;
-        if (!$route) {
+        if (! $route) {
             return;
         }
         $routeName = $original->routeName;
@@ -803,7 +803,7 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $patch = [];
         foreach ($this->restScalarUpdateOptions as $property => $configKey) {
-            if (!$update->$property) {
+            if (! $update->$property) {
                 continue;
             }
             $patch[$configKey] = $update->$property;
@@ -845,7 +845,7 @@ class RestServiceModel implements EventManagerAwareInterface
         // Array dereferencing is a PITA
         $acceptWhitelist = $update->acceptWhitelist;
         if (is_array($acceptWhitelist)
-            && !empty($acceptWhitelist)
+            && ! empty($acceptWhitelist)
         ) {
             $key = $baseKey . 'accept_whitelist.' . $service;
             $this->configResource->patchKey($key, $acceptWhitelist);
@@ -853,7 +853,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         $contentTypeWhitelist = $update->contentTypeWhitelist;
         if (is_array($contentTypeWhitelist)
-            && !empty($contentTypeWhitelist)
+            && ! empty($contentTypeWhitelist)
         ) {
             $key = $baseKey . 'content_type_whitelist.' . $service;
             $this->configResource->patchKey($key, $contentTypeWhitelist);
@@ -879,7 +879,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $collectionUpdated = false;
 
         // Do we have a new entity class?
-        if (!isset($halConfig[$entityClass])) {
+        if (! isset($halConfig[$entityClass])) {
             $data = [$entityClass => [
                 'entity_identifier_name' => $update->entityIdentifierName ?: $original->entityIdentifierName,
                 'route_name'             => $update->routeName            ?: $original->routeName,
@@ -895,7 +895,7 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         // Do we have a new collection class?
-        if (!isset($halConfig[$collectionClass])) {
+        if (! isset($halConfig[$collectionClass])) {
             $data = [$collectionClass => [
                 'entity_identifier_name' => $update->entityIdentifierName ?: $original->entityIdentifierName,
                 'route_name'             => $update->routeName            ?: $original->routeName,
@@ -1173,7 +1173,7 @@ class RestServiceModel implements EventManagerAwareInterface
             $serviceName
         );
 
-        if (!file_exists($sourcePath)) {
+        if (! file_exists($sourcePath)) {
             mkdir($sourcePath, 0775, true);
         }
 
@@ -1206,12 +1206,12 @@ class RestServiceModel implements EventManagerAwareInterface
     protected function getRouteInfo(RestServiceEntity $metadata, array $config)
     {
         $routeName = $metadata->routeName;
-        if (!$routeName
-            || !isset($config['router'])
-            || !isset($config['router']['routes'])
-            || !isset($config['router']['routes'][$routeName])
-            || !isset($config['router']['routes'][$routeName]['options'])
-            || !isset($config['router']['routes'][$routeName]['options']['route'])
+        if (! $routeName
+            || ! isset($config['router'])
+            || ! isset($config['router']['routes'])
+            || ! isset($config['router']['routes'][$routeName])
+            || ! isset($config['router']['routes'][$routeName]['options'])
+            || ! isset($config['router']['routes'][$routeName]['options']['route'])
         ) {
             return;
         }
@@ -1230,7 +1230,7 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function mergeContentNegotiationConfig($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
-        if (!isset($config['zf-content-negotiation'])) {
+        if (! isset($config['zf-content-negotiation'])) {
             return;
         }
         $config = $config['zf-content-negotiation'];
@@ -1269,8 +1269,8 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function mergeHalConfig($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
-        if (!isset($config['zf-hal'])
-            || !isset($config['zf-hal']['metadata_map'])
+        if (! isset($config['zf-hal'])
+            || ! isset($config['zf-hal']['metadata_map'])
         ) {
             return;
         }
@@ -1297,7 +1297,7 @@ class RestServiceModel implements EventManagerAwareInterface
             $merge['collection_class'] = $collectionClass;
         }
 
-        if (!isset($merge['entity_identifier_name']) && isset($config[$collectionClass]['entity_identifier_name'])) {
+        if (! isset($merge['entity_identifier_name']) && isset($config[$collectionClass]['entity_identifier_name'])) {
             $merge['entity_identifier_name'] = $config[$collectionClass]['entity_identifier_name'];
         }
 
@@ -1410,7 +1410,7 @@ class RestServiceModel implements EventManagerAwareInterface
 
         do {
             $key = array_shift($keys);
-            if (!isset($config[$key])) {
+            if (! isset($config[$key])) {
                 return $default;
             }
             $config = $config[$key];

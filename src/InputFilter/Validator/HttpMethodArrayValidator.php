@@ -39,7 +39,7 @@ class HttpMethodArrayValidator extends AbstractValidator
     public function isValid($value)
     {
         foreach ($value as $httpMethod) {
-            if (!in_array($httpMethod, $this->validHttpMethods)) {
+            if (! in_array($httpMethod, $this->validHttpMethods)) {
                 $this->error(self::HTTP_METHOD_ARRAY, $httpMethod);
                 return false;
             }

@@ -80,7 +80,7 @@ class ModulePathSpec
     {
         $sourcePathSpec = strtolower($sourcePathSpec);
 
-        if (!array_key_exists($sourcePathSpec, $this->psrSpecs)) {
+        if (! array_key_exists($sourcePathSpec, $this->psrSpecs)) {
             throw new InvalidArgumentException(sprintf(
                 "Invalid sourcePathSpec. Valid values are %s and %s",
                 self::PSR_0,
@@ -187,7 +187,7 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        if (!empty($serviceName)) {
+        if (! empty($serviceName)) {
             $path .= $serviceName;
         }
 
@@ -212,7 +212,7 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        if (!empty($serviceName)) {
+        if (! empty($serviceName)) {
             $path .= $serviceName;
         }
 

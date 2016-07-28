@@ -23,7 +23,7 @@ class Utility
             if ($obj == '.' || $obj == '..') {
                 continue;
             }
-            if (!@unlink($dir . '/' . $obj)) {
+            if (! @unlink($dir . '/' . $obj)) {
                 self::recursiveDelete($dir . '/' . $obj);
             }
         }

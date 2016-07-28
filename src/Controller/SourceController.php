@@ -30,7 +30,7 @@ class SourceController extends AbstractActionController
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
                 $module = urldecode($this->params()->fromQuery('module', false));
-                if (!$module) {
+                if (! $module) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -41,7 +41,7 @@ class SourceController extends AbstractActionController
                     );
                 }
                 $result = $this->moduleModel->getModule($module);
-                if (!$result) {
+                if (! $result) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -53,7 +53,7 @@ class SourceController extends AbstractActionController
                 }
 
                 $class = urldecode($this->params()->fromQuery('class', false));
-                if (!$class) {
+                if (! $class) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -63,7 +63,7 @@ class SourceController extends AbstractActionController
                         )
                     );
                 }
-                if (!class_exists($class)) {
+                if (! class_exists($class)) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,

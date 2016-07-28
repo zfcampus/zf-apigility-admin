@@ -41,7 +41,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
     public function fetch($id)
     {
         $entity = $this->model->fetch($id);
-        if (!$entity) {
+        if (! $entity) {
             return new ApiProblem(404, 'Adapter not found');
         }
         return $entity;
@@ -76,7 +76,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
     {
         if (is_object($data)) {
             $data = (array)$data;
-            if (!isset($data['doctrine_adapter_name'])) {
+            if (! isset($data['doctrine_adapter_name'])) {
                 throw new CreationException('Missing doctrine_adapter_name', 422);
             }
 
@@ -99,7 +99,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 

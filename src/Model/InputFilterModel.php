@@ -81,7 +81,7 @@ class InputFilterModel
         $collectionType = $this->getCollectionType($controller);
         $entityType     = $this->getEntityType($controller);
 
-        if (!isset($config['zf-content-validation'][$controller]['input_filter'])) {
+        if (! isset($config['zf-content-validation'][$controller]['input_filter'])) {
             return new $collectionType();
         }
 
@@ -123,14 +123,14 @@ class InputFilterModel
      */
     protected function addInputFilter($module, $controller, $inputFilter, $validatorName = null)
     {
-        if (!$this->controllerExists($module, $controller)) {
+        if (! $this->controllerExists($module, $controller)) {
             return false;
         }
 
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
 
-        if (!isset($config['zf-content-validation'][$controller])) {
+        if (! isset($config['zf-content-validation'][$controller])) {
             $validatorName = $validatorName ?: $this->generateValidatorName($controller);
             $config = $configModule->patchKey(
                 ['zf-content-validation', $controller, 'input_filter'],
@@ -140,18 +140,18 @@ class InputFilterModel
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
 
-        if (!isset($config['input_filter_specs'])) {
+        if (! isset($config['input_filter_specs'])) {
             $config['input_filter_specs'] = [];
         }
 
-        if (!isset($config['input_filter_specs'][$validator])) {
+        if (! isset($config['input_filter_specs'][$validator])) {
             $config['input_filter_specs'][$validator] = [];
         }
 
         $config['input_filter_specs'][$validator] = $inputFilter;
 
         $updated = $configModule->patchKey(['input_filter_specs', $validator], $inputFilter);
-        if (!is_array($updated)) {
+        if (! is_array($updated)) {
             return false;
         }
 
@@ -171,7 +171,7 @@ class InputFilterModel
      */
     protected function removeInputFilter($module, $controller, $inputFilterName)
     {
-        if (!$this->controllerExists($module, $controller)) {
+        if (! $this->controllerExists($module, $controller)) {
             return false;
         }
 
@@ -179,7 +179,7 @@ class InputFilterModel
         $config       = $configModule->fetch(true);
         $validator    = $config['zf-content-validation'][$controller]['input_filter'];
 
-        if (!isset($config['input_filter_specs'][$validator])) {
+        if (! isset($config['input_filter_specs'][$validator])) {
             return false;
         }
 

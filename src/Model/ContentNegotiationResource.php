@@ -39,7 +39,7 @@ class ContentNegotiationResource extends AbstractResourceListener
     public function fetch($id)
     {
         $entity = $this->model->fetch($id);
-        if (!$entity) {
+        if (! $entity) {
             return new ApiProblem(404, 'Adapter not found');
         }
         return $entity;
@@ -54,7 +54,7 @@ class ContentNegotiationResource extends AbstractResourceListener
     {
         $data = $this->getInputFilter()->getValues();
 
-        if (!isset($data['content_name'])) {
+        if (! isset($data['content_name'])) {
             throw new CreationException('Missing content_name', 422);
         }
 

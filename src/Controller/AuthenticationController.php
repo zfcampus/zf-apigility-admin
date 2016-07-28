@@ -54,7 +54,7 @@ class AuthenticationController extends AbstractAuthenticationController
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
                 $entity = $this->model->fetch();
-                if (!$entity) {
+                if (! $entity) {
                     $response = $this->getResponse();
                     $response->setStatusCode(204);
                     return $response;

@@ -60,7 +60,7 @@ class ModuleEntity
         array $rpcServices = [],
         $isVendor = null
     ) {
-        if (!class_exists($namespace . '\\Module')) {
+        if (! class_exists($namespace . '\\Module')) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid module "%s"; no Module class exists for that module',
                 $namespace
@@ -165,7 +165,7 @@ class ModuleEntity
                     $this->isVendor = (bool) $value;
                     break;
                 case 'rest':
-                    if (!is_array($value) && ! $value instanceof Collection) {
+                    if (! is_array($value) && ! $value instanceof Collection) {
                         throw new InvalidArgumentException(sprintf(
                             'REST services must be an array or ZF\Hal\Collection; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))
@@ -174,7 +174,7 @@ class ModuleEntity
                     $this->restServices = $value;
                     break;
                 case 'rpc':
-                    if (!is_array($value) && ! $value instanceof Collection) {
+                    if (! is_array($value) && ! $value instanceof Collection) {
                         throw new InvalidArgumentException(sprintf(
                             'RPC services must be an array or ZF\Hal\Collection; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))
@@ -183,7 +183,7 @@ class ModuleEntity
                     $this->rpcServices = $value;
                     break;
                 case 'versions':
-                    if (!is_array($value)) {
+                    if (! is_array($value)) {
                         throw new InvalidArgumentException(
                             'Versions must be an array; received "%s"',
                             (is_object($value) ? get_class($value) : gettype($value))

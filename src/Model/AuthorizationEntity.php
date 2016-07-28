@@ -64,7 +64,7 @@ class AuthorizationEntity implements
 
     public function addRestService($serviceName, $entityOrCollection, array $privileges = null)
     {
-        if (!in_array($entityOrCollection, $this->allowedRestTypes)) {
+        if (! in_array($entityOrCollection, $this->allowedRestTypes)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid type "%s" provided for %s; must be one of "%s" or "%s"',
                 $entityOrCollection,
@@ -95,7 +95,7 @@ class AuthorizationEntity implements
 
     public function get($serviceName)
     {
-        if (!$this->has($serviceName)) {
+        if (! $this->has($serviceName)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'No service by the name of "%s" has been registered',
                 $serviceName
@@ -107,11 +107,11 @@ class AuthorizationEntity implements
     protected function filterPrivileges(array $privileges)
     {
         foreach ($privileges as $httpMethod => $flag) {
-            if (!array_key_exists($httpMethod, $this->defaultPrivileges)) {
+            if (! array_key_exists($httpMethod, $this->defaultPrivileges)) {
                 unset($privileges[$httpMethod]);
                 continue;
             }
-            if (!is_bool($flag)) {
+            if (! is_bool($flag)) {
                 $privileges[$httpMethod] = (bool) $flag;
                 continue;
             }

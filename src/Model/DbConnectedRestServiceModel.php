@@ -34,22 +34,22 @@ class DbConnectedRestServiceModel
     public static function onFetch($e)
     {
         $entity = $e->getParam('entity', false);
-        if (!$entity) {
+        if (! $entity) {
             // No entity; nothing to do
             return;
         }
 
         $config = $e->getParam('config', []);
-        if (!isset($config['zf-apigility'])
-            || !isset($config['zf-apigility']['db-connected'])
-            || !isset($config['zf-apigility']['db-connected'][$entity->resourceClass])
+        if (! isset($config['zf-apigility'])
+            || ! isset($config['zf-apigility']['db-connected'])
+            || ! isset($config['zf-apigility']['db-connected'][$entity->resourceClass])
         ) {
             // No DB-connected configuration for this service; nothing to do
             return;
         }
         $config = $config['zf-apigility']['db-connected'][$entity->resourceClass];
 
-        if (!isset($config['table_service'])) {
+        if (! isset($config['table_service'])) {
             $config['table_service'] = sprintf('%s\\Table', $entity->resourceClass);
         }
 

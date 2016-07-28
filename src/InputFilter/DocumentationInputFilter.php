@@ -45,7 +45,7 @@ class DocumentationInputFilter extends InputFilter
         $this->messages = [];
         $isValid = true;
 
-        if (!is_array($this->data)) {
+        if (! is_array($this->data)) {
             $this->messages['general']['invalidData'] = 'Documentation payload must be an array';
             return false;
         }
@@ -84,7 +84,7 @@ class DocumentationInputFilter extends InputFilter
                             continue;
                         }
                     } elseif ($subKey === 'description') {
-                        if (!is_string($subData)) {
+                        if (! is_string($subData)) {
                             $this->messages[$key][] = 'Description must be provided as a string;'
                                 . ' please verify description for "' . $subKey . '"';
                             $isValid = false;
@@ -103,7 +103,7 @@ class DocumentationInputFilter extends InputFilter
 
             if ($key === 'description') {
                 // documentation checking
-                if (!is_string($data)) {
+                if (! is_string($data)) {
                     $this->messages[$key][] = 'Description must be provided as a string;'
                         . ' please verify description for "' . $key . '"';
                     $isValid = false;
@@ -130,7 +130,7 @@ class DocumentationInputFilter extends InputFilter
     {
         foreach ($data as $key => $value) {
             if (in_array($key, $this->validHttpMethodDocumentationKeys)) {
-                if ($value !== null && !is_string($value)) {
+                if ($value !== null && ! is_string($value)) {
                     $this->messages[$key][] = 'Documentable elements must be strings; please verify "' . $key . '"';
                     return false;
                 }

@@ -32,7 +32,7 @@ class ModuleCreationController extends AbstractActionController
         switch ($request->getMethod()) {
             case $request::METHOD_PUT:
                 $module = $this->bodyParam('module', false);
-                if (!$module) {
+                if (! $module) {
                     return new ApiProblemResponse(
                         new ApiProblem(
                             422,
@@ -45,7 +45,7 @@ class ModuleCreationController extends AbstractActionController
 
                 $result = $this->moduleModel->updateModule($module);
 
-                if (!$result) {
+                if (! $result) {
                     return new ApiProblemResponse(
                         new ApiProblem(500, 'Unable to Apigilify the module')
                     );

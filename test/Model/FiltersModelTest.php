@@ -28,11 +28,11 @@ class FiltersModelTest extends TestCase
         }
 
         $configFile = __DIR__ . '/../../../../../config/module.config.php';
-        if (!file_exists($configFile)) {
+        if (! file_exists($configFile)) {
             $this->markTestSkipped('Cannot find module config file!');
         }
         $allConfig = include $configFile;
-        if (!array_key_exists('filter_metadata', $allConfig)) {
+        if (! array_key_exists('filter_metadata', $allConfig)) {
             $this->markTestSkipped('Module config file does not contain filter_metadata!');
         }
 
