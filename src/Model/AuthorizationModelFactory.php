@@ -55,7 +55,7 @@ class AuthorizationModelFactory
             return $this->models[$module];
         }
 
-        $moduleName   = $this->normalizeModuleName($module);
+        $moduleName   = $this->modules->normalizeModuleName($module);
         $moduleEntity = $this->moduleModel->getModule($moduleName);
         $config       = $this->configFactory->factory($module);
 
@@ -67,9 +67,10 @@ class AuthorizationModelFactory
     /**
      * @param  string $name
      * @return string
+     * @deprecated
      */
     protected function normalizeModuleName($name)
     {
-        return str_replace('.', '\\', $name);
+        return $this->modules->normalizeModuleName($name);
     }
 }

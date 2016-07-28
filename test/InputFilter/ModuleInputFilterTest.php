@@ -46,10 +46,6 @@ class ModuleInputFilterTest extends TestCase
                 ['name' => '_'],
                 ['name'],
             ],
-            'namespace-separator' => [
-                ['name' => 'My\Status'],
-                ['name'],
-            ],
         ];
     }
 

@@ -11,6 +11,8 @@ use Zend\Http\Header\GenericMultiHeader;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
 use ZF\Configuration\ConfigResource;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
@@ -407,6 +409,9 @@ class Module
                     $documentationModel
                 );
             },
+            /**
+             * @DEPRECATED use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
+             */
             'ZF\Apigility\Admin\Model\VersioningModelFactory' => function ($services) {
                 if (!$services->has('ZF\Configuration\ConfigResourceFactory')
                     || !$services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
@@ -419,6 +424,19 @@ class Module
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
                 $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
                 return new Model\VersioningModelFactory($configFactory, $modulePathSpec);
+            },
+            ModuleVersioningModelFactory::class => function ($services) {
+                if (!$services->has('ZF\Configuration\ConfigResourceFactory')
+                    || !$services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        ModuleVersioningModelFactory::class
+                    ));
+                }
+                $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
+                $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
+                return new ModuleVersioningModelFactory($configFactory, $modulePathSpec);
             },
         ));
     }
@@ -462,7 +480,7 @@ class Module
             },
             'ZF\Apigility\Admin\Controller\Versioning' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
-                $factory  = $services->get('ZF\Apigility\Admin\Model\VersioningModelFactory');
+                $factory  = $services->get(ModuleVersioningModelFactory::class);
                 return new Controller\VersioningController($factory);
             },
         ));
