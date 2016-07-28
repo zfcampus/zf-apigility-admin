@@ -28,8 +28,8 @@ class FiltersModelFactory implements FactoryInterface
         }
 
         $metadata = [];
-        if ($services->has('Config')) {
-            $config = $services->get('Config');
+        if ($services->has('config')) {
+            $config = $services->get('config');
             if (isset($config['filter_metadata'])
                 && is_array($config['filter_metadata'])
             ) {

@@ -116,13 +116,13 @@ class Module
         return [
             'factories' => [
                 'ZF\Apigility\Admin\Model\AuthenticationModel' => function ($services) {
-                    if (! $services->has('Config')) {
+                    if (! $services->has('config')) {
                         throw new ServiceNotCreatedException(
                             'Cannot create ZF\Apigility\Admin\Model\AuthenticationModel service '
                             . 'because Config service is not present'
                         );
                     }
-                    $config = $services->get('Config');
+                    $config = $services->get('config');
                     $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                     $global  = new ConfigResource($config, 'config/autoload/global.php', $writer);
@@ -149,13 +149,13 @@ class Module
                     return new Model\AuthorizationModelFactory($modulePathSpec, $configFactory, $moduleModel);
                 },
                 'ZF\Apigility\Admin\Model\DbAutodiscoveryModel' => function ($services) {
-                    if (! $services->has('Config')) {
+                    if (! $services->has('config')) {
                         throw new ServiceNotCreatedException(
                             'Cannot create ZF\Apigility\Admin\Model\DbAutodiscoveryModel service '
                             . 'because Config service is not present'
                         );
                     }
-                    $config = $services->get('Config');
+                    $config = $services->get('config');
 
                     $instance = new Model\DbAutodiscoveryModel($config);
                     $instance->setServiceLocator($services);
@@ -163,13 +163,13 @@ class Module
                     return $instance;
                 },
                 'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
-                    if (! $services->has('Config')) {
+                    if (! $services->has('config')) {
                         throw new ServiceNotCreatedException(
                             'Cannot create ZF\Apigility\Admin\Model\ContentNegotiationModel service '
                             . 'because Config service is not present'
                         );
                     }
-                    $config = $services->get('Config');
+                    $config = $services->get('config');
                     $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                     $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
@@ -186,13 +186,13 @@ class Module
                     return new Model\ContentNegotiationResource($model);
                 },
                 'ZF\Apigility\Admin\Model\DbAdapterModel' => function ($services) {
-                    if (! $services->has('Config')) {
+                    if (! $services->has('config')) {
                         throw new ServiceNotCreatedException(
                             'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service '
                             . 'because Config service is not present'
                         );
                     }
-                    $config = $services->get('Config');
+                    $config = $services->get('config');
                     $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                     $global = new ConfigResource($config, 'config/autoload/global.php', $writer);
@@ -210,14 +210,14 @@ class Module
                     return new Model\DbAdapterResource($model);
                 },
                 'ZF\Apigility\Admin\Model\DoctrineAdapterModel' => function ($services) {
-                    if (! $services->has('Config')) {
+                    if (! $services->has('config')) {
                         throw new ServiceNotCreatedException(
                             'Cannot create ZF\Apigility\Admin\Model\DbAdapterModel service '
                             . 'because Config service is not present'
                         );
                     }
 
-                    $config = $services->get('Config');
+                    $config = $services->get('config');
                     $writer = $services->get('ZF\Configuration\ConfigWriter');
 
                     $global = new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer);
@@ -250,8 +250,8 @@ class Module
 
                     $pathSpec   = 'psr-0';
                     $path       = '.';
-                    if ($services->has('Config')) {
-                        $config = $services->get('Config');
+                    if ($services->has('config')) {
+                        $config = $services->get('config');
                         if (! empty($config['zf-apigility-admin'])) {
                             if (! empty($config['zf-apigility-admin']['path_spec'])) {
                                 $pathSpec = $config['zf-apigility-admin']['path_spec'];
@@ -288,8 +288,8 @@ class Module
 
                     $restConfig = [];
                     $rpcConfig  = [];
-                    if ($services->has('Config')) {
-                        $config = $services->get('Config');
+                    if ($services->has('config')) {
+                        $config = $services->get('config');
                         if (isset($config['zf-rest'])) {
                             $restConfig = $config['zf-rest'];
                         }
