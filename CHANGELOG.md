@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.5.0 - TBD
+
+### Added
+
+- [#321](https://github.com/zfcampus/zf-apigility-admin/pull/321) adds a
+  `patchList()` stub to the REST resource class template, so that it's present
+  by default.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
+## 1.4.2 - 2016-06-28
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#344](https://github.com/zfcampus/zf-apigility-admin/pull/344) removes the
+  `ServiceLocatorAwareInterface` implementation from
+  `ZF\Apigility\Admin\Model\AbstractAutodiscoveryModel` (though it keeps the
+  `setServiceLocator()` method); this change prevents warnings when executing
+  the admin with zend-mvc v2.7 releases.
+
+### Fixed
+
+- Nothing.
+
 ## 1.4.1 - 2016-01-26
 
 ### Added
