@@ -426,6 +426,14 @@ class Module
                 return new Model\VersioningModelFactory($configFactory, $modulePathSpec);
             },
             ModuleVersioningModelFactory::class => function ($services) {
+                if (!$services->has('ZF\Configuration\ConfigResourceFactory')
+                    || !$services->has('ZF\Apigility\Admin\Model\ModulePathSpec')
+                ) {
+                    throw new ServiceNotCreatedException(sprintf(
+                        '%s is missing one or more dependencies from ZF\Configuration',
+                        ModuleVersioningModelFactory::class
+                    ));
+                }
                 $configFactory = $services->get('ZF\Configuration\ConfigResourceFactory');
                 $modulePathSpec = $services->get('ZF\Apigility\Admin\Model\ModulePathSpec');
                 return new ModuleVersioningModelFactory($configFactory, $modulePathSpec);
