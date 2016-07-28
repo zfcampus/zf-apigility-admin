@@ -1,16 +1,17 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014-2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Admin\Model;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class AbstractPluginManagerModelFactory implements FactoryInterface
+abstract class AbstractPluginManagerModelFactory implements FactoryInterface
 {
     /**
      * @var string
@@ -23,12 +24,14 @@ class AbstractPluginManagerModelFactory implements FactoryInterface
     protected $pluginManagerModel;
 
     /**
-     * Return one of the plugin manager model instances
+     * Return one of the plugin manager-backed model instance.
      *
-     * @param ServiceLocatorInterface $services
-     * @return object
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param null|array $options
+     * @return mixed A model instance that composes a plugin manager.
      */
-    public function createService(ServiceLocatorInterface $services)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         if (null === $this->pluginManagerService
             || null === $this->pluginManagerModel
@@ -40,7 +43,7 @@ class AbstractPluginManagerModelFactory implements FactoryInterface
             ));
         }
 
-        if (! $services->has($this->pluginManagerService)) {
+        if (! $container->has($this->pluginManagerService)) {
             throw new ServiceNotCreatedException(sprintf(
                 '%s requires that the %s service be present; service not found',
                 get_class($this),
@@ -49,6 +52,19 @@ class AbstractPluginManagerModelFactory implements FactoryInterface
         }
 
         $class = $this->pluginManagerModel;
-        return new $class($services->get($this->pluginManagerService));
+        return new $class($container->get($this->pluginManagerService));
+    }
+
+    /**
+     * Return one of the plugin manager-backed model instance (v2).
+     *
+     * Provided for backwards compatibility; proxies to __invoke().
+     *
+     * @param ServiceLocatorInterface $container
+     * @return mixed A model instance that composes a plugin manager.
+     */
+    public function createService(ServiceLocatorInterface $container)
+    {
+        return $this($container, $this->pluginManagerModel);
     }
 }
