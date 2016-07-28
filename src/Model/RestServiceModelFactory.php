@@ -14,7 +14,8 @@ class RestServiceModelFactory extends RpcServiceModelFactory
     const TYPE_DB_CONNECTED = 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel';
 
     /**
-     * @param  string $module
+     * @param string $module
+     * @param string $type
      * @return RestServiceModel
      */
     public function factory($module, $type = self::TYPE_DEFAULT)
@@ -25,7 +26,7 @@ class RestServiceModelFactory extends RpcServiceModelFactory
             return $this->models[$type][$module];
         }
 
-        $moduleName   = $this->normalizeModuleName($module);
+        $moduleName   = $this->modules->normalizeModuleName($module);
         $config       = $this->configFactory->factory($module);
         $moduleEntity = $this->moduleModel->getModule($moduleName);
 

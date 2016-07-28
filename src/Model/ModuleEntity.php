@@ -67,7 +67,7 @@ class ModuleEntity
             ));
         }
 
-        $this->name         = $this->normalizeName($namespace);
+        $this->name         = $namespace;
         $this->namespace    = $namespace;
         $this->restServices = $restServices;
         $this->rpcServices  = $rpcServices;
@@ -235,16 +235,5 @@ class ModuleEntity
             return;
         }
         $this->isVendor = false;
-    }
-
-    /**
-     * normalizeName
-     *
-     * @param mixed $namespace
-     * @return void
-     */
-    protected function normalizeName($namespace)
-    {
-        return str_replace('\\', '.', $namespace);
     }
 }

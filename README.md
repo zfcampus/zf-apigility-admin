@@ -869,4 +869,4 @@ modification of PHP code, or the generation and modification of PHP based config
 - `ZF\Apigility\Admin\Model\VersioningModel` - responsible for modeling the workflow and module
   code creation artifacts that are required to provide a new version of a particular Apigility-based
   REST or RPC service.
-- `ZF\Apigility\Admin\Model\VersioningModelFactory` - responsible for createing `VersioningModel`s.
+- `ZF\Apigility\Admin\Model\ModuleVersioningModelFactory` - responsible for creating `ModuleVersioningModel`s.

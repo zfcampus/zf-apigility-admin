@@ -8,7 +8,7 @@ namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Exception;
-use ZF\Apigility\Admin\Model\VersioningModelFactory;
+use ZF\Apigility\Admin\Model\ModuleVersioningModelFactoryInterface;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 
@@ -16,7 +16,7 @@ class VersioningController extends AbstractActionController
 {
     protected $modelFactory;
 
-    public function __construct(VersioningModelFactory $modelFactory)
+    public function __construct(ModuleVersioningModelFactoryInterface $modelFactory)
     {
         $this->modelFactory = $modelFactory;
     }
@@ -80,7 +80,7 @@ class VersioningController extends AbstractActionController
         $version = $this->bodyParam('version', false);
         if (!$version) {
             try {
-                $versions = $model->getModuleVersions($module);
+                $versions = $model->getModuleVersions();
             } catch (Exception\ExceptionInterface $ex) {
                 return new ApiProblemModel(new ApiProblem(404, 'Module not found'));
             }
@@ -94,7 +94,7 @@ class VersioningController extends AbstractActionController
 
 
         try {
-            $result = $model->createVersion($module, $version);
+            $result = $model->createVersion($version);
         } catch (Exception\InvalidArgumentException $ex) {
             return new ApiProblemModel(
                 new ApiProblem(
