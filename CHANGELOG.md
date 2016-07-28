@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#321](https://github.com/zfcampus/zf-apigility-admin/pull/321) adds a
   `patchList()` stub to the REST resource class template, so that it's present
   by default.
+- [#327](https://github.com/zfcampus/zf-apigility-admin/pull/327) adds support
+  for working with modules that are in PSR-4 directory format. While the admin
+  still does not create PSR-4 modules, it will now correctly interact with those
+  that you manually convert to PSR-4.
 
 ### Deprecated
 
