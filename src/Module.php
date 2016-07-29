@@ -118,23 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\AuthenticationModel::class => function ($services) {
-                if (! $services->has('config')) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because config service is not present',
-                        Model\AuthenticationModel::class
-                    ));
-                }
-
-                $config = $services->get('config');
-                $writer = $services->get(ConfigWriter::class);
-
-                return new Model\AuthenticationModel(
-                    new ConfigResource($config, 'config/autoload/global.php', $writer),
-                    new ConfigResource($config, 'config/autoload/local.php', $writer),
-                    $services->get(Model\ModuleModel::class)
-                );
-            },
             Model\AuthorizationModelFactory::class => function ($services) {
                 if (! $services->has(Model\ModulePathSpec::class)
                     || ! $services->has(ConfigResourceFactory::class)
