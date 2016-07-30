@@ -118,22 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\DoctrineAdapterResource::class => function ($services) {
-                if (! $services->has(Model\DoctrineAdapterModel::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because %s service is not present',
-                        Mdoel\DoctrineAdapterResource::class,
-                        Mdoel\DoctrineAdapterModel::class
-                    ));
-                }
-
-                $model = $services->get(Model\DoctrineAdapterModel::class);
-
-                    $modules = $services->get('ModuleManager');
-                    $loadedModules = $modules->getLoadedModules(false);
-
-                return new Model\DoctrineAdapterResource($model, $loadedModules);
-            },
             Model\ModulePathSpec::class => function ($services) {
                 if (! $services->has(ModuleUtils::class)) {
                     throw new ServiceNotCreatedException(sprintf(
