@@ -118,22 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\DbAdapterModel::class => function ($services) {
-                if (! $services->has('config')) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because config service is not present',
-                        Model\DbAdapterModel::class
-                    ));
-                }
-
-                $config = $services->get('config');
-                $writer = $services->get(ConfigWriter::class);
-
-                return new Model\DbAdapterModel(
-                    new ConfigResource($config, 'config/autoload/global.php', $writer),
-                    new ConfigResource($config, 'config/autoload/local.php', $writer)
-                );
-            },
             Model\DbAdapterResource::class => function ($services) {
                 if (! $services->has(Model\DbAdapterModel::class)) {
                     throw new ServiceNotCreatedException(sprintf(

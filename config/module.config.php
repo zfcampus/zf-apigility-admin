@@ -16,6 +16,7 @@ return [
             Model\AuthorizationModelFactory::class => Factory\AuthorizationModelFactoryFactory::class,
             Model\ContentNegotiationModel::class => Factory\ContentNegotiationModelFactory::class,
             Model\ContentNegotiationResource::class => Factory\ContentNegotiationResourceFactory::class,
+            Model\DbAdapterModel::class         => Factory\DbAdapterModelFactory::class,
             Model\DbAutodiscoveryModel::class   => Factory\DbAutodiscoveryModelFactory::class,
             Model\DocumentationModel::class     => Model\DocumentationModelFactory::class,
             Model\FiltersModel::class           => Model\FiltersModelFactory::class,
