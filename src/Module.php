@@ -118,19 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\DbAutodiscoveryModel::class => function ($services) {
-                if (! $services->has('config')) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because config service is not present',
-                        Model\DbAutodiscoveryModel::class
-                    ));
-                }
-
-                $instance = new Model\DbAutodiscoveryModel($services->get('config'));
-                $instance->setServiceLocator($services);
-
-                return $instance;
-            },
             Model\ContentNegotiationModel::class => function ($services) {
                 if (! $services->has('config')) {
                     throw new ServiceNotCreatedException(sprintf(
