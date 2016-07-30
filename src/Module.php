@@ -118,34 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\ModuleModel::class => function ($services) {
-                if (! $services->has('ModuleManager')) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because ModuleManager service is not present',
-                        Model\ModuleModel::class
-                    ));
-                }
-                $modules    = $services->get('ModuleManager');
-
-                $restConfig = [];
-                $rpcConfig  = [];
-                if ($services->has('config')) {
-                    $config = $services->get('config');
-                    if (isset($config['zf-rest'])) {
-                        $restConfig = $config['zf-rest'];
-                    }
-                    if (isset($config['zf-rpc'])) {
-                        $rpcConfig = $config['zf-rpc'];
-                    }
-                }
-                return new Model\ModuleModel($modules, $restConfig, $rpcConfig);
-            },
-            Model\ModuleResource::class => function ($services) {
-                $moduleModel    = $services->get(Model\ModuleModel::class);
-                $modulePathSpec = $services->get(Model\ModulePathSpec::class);
-
-                return new Model\ModuleResource($moduleModel, $modulePathSpec);
-            },
             'ZF\Apigility\Admin\Model\RestServiceModelFactory' => function ($services) {
                 if (! $services->has(Model\ModulePathSpec::class)
                     || ! $services->has(ConfigResourceFactory::class)
