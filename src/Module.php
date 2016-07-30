@@ -118,21 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\ContentNegotiationModel::class => function ($services) {
-                if (! $services->has('config')) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because config service is not present',
-                        Model\ContentNegotiationModel::class
-                    ));
-                }
-
-                $config = $services->get('config');
-                $writer = $services->get(ConfigWriter::class);
-
-                return new Model\ContentNegotiationModel(
-                    new ConfigResource($config, 'config/autoload/global.php', $writer)
-                );
-            },
             Model\ContentNegotiationResource::class => function ($services) {
                 if (! $services->has(Model\ContentNegotiationModel::class)) {
                     throw new ServiceNotCreatedException(sprintf(
