@@ -118,25 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\RpcServiceModelFactory::class => function ($services) {
-                if (! $services->has(Model\ModulePathSpec::class)
-                    || ! $services->has(ConfigResourceFactory::class)
-                    || ! $services->has(Model\ModuleModel::class)
-                    || ! $services->has('SharedEventManager')
-                ) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing one or more dependencies from ZF\Configuration',
-                        Model\RpcServiceModelFactory::class
-                    ));
-                }
-
-                return new Model\RpcServiceModelFactory(
-                    $services->get(Model\ModulePathSpec::class),
-                    $services->get(ConfigResourceFactory::class),
-                    $services->get('SharedEventManager'),
-                    $services->get(Model\ModuleModel::class)
-                );
-            },
             Model\RestServiceResource::class => function ($services) {
                 if (! $services->has(Model\RestServiceModelFactory::class)) {
                     throw new ServiceNotCreatedException(sprintf(

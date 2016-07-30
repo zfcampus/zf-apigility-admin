@@ -28,6 +28,7 @@ return [
             Model\ModulePathSpec::class         => Factory\ModulePathSpecFactory::class,
             Model\ModuleResource::class         => Factory\ModuleResourceFactory::class,
             Model\RestServiceModelFactory::class => Factory\RestServiceModelFactoryFactory::class,
+            Model\RpcServiceModelFactory::class => Factory\RpcServiceModelFactoryFactory::class,
             Model\ValidatorMetadataModel::class => Model\ValidatorMetadataModelFactory::class,
             Model\ValidatorsModel::class        => Model\ValidatorsModelFactory::class,
             Model\InputFilterModel::class       => Model\InputFilterModelFactory::class,
