@@ -110,33 +110,6 @@ class Module
     }
 
     /**
-     * Expected to return \Zend\ServiceManager\Config object or array to
-     * seed such an object.
-     *
-     * @return array|\Zend\ServiceManager\Config
-     */
-    public function getServiceConfig()
-    {
-        return [ 'factories' => [
-            ModuleVersioningModelFactory::class => function ($services) {
-                if (! $services->has(ConfigResourceFactory::class)
-                    || ! $services->has(Model\ModulePathSpec::class)
-                ) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing one or more dependencies from ZF\Configuration',
-                        ModuleVersioningModelFactory::class
-                    ));
-                }
-
-                return new ModuleVersioningModelFactory(
-                    $services->get(ConfigResourceFactory::class),
-                    $services->get(Model\ModulePathSpec::class)
-                );
-            },
-        ]];
-    }
-
-    /**
      * Expected to return \Zend\ServiceManager\Config object or array to seed
      * such an object.
      *

@@ -27,6 +27,7 @@ return [
             Model\ModuleModel::class            => Factory\ModuleModelFactory::class,
             Model\ModulePathSpec::class         => Factory\ModulePathSpecFactory::class,
             Model\ModuleResource::class         => Factory\ModuleResourceFactory::class,
+            Model\ModuleVersioningModelFactory::class => Factory\ModuleVersioningModelFactoryFactory::class,
             Model\RestServiceModelFactory::class => Factory\RestServiceModelFactoryFactory::class,
             Model\RestServiceResource::class    => Factory\RestServiceResourceFactory::class,
             Model\RpcServiceModelFactory::class => Factory\RpcServiceModelFactoryFactory::class,
