@@ -33,6 +33,7 @@ return [
             Model\RpcServiceResource::class     => Factory\RpcServiceResourceFactory::class,
             Model\ValidatorMetadataModel::class => Model\ValidatorMetadataModelFactory::class,
             Model\ValidatorsModel::class        => Model\ValidatorsModelFactory::class,
+            Model\VersioningModelFactory::class => Factory\VersioningModelFactoryFactory::class,
             Model\InputFilterModel::class       => Model\InputFilterModelFactory::class,
         ],
     ],

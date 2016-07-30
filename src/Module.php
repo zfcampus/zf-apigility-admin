@@ -118,24 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            /**
-             * @DEPRECATED use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
-             */
-            Model\VersioningModelFactory::class => function ($services) {
-                if (! $services->has(ConfigResourceFactory::class)
-                    || ! $services->has(Model\ModulePathSpec::class)
-                ) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing one or more dependencies from ZF\Configuration',
-                        Model\VersioningModelFactory::class
-                    ));
-                }
-
-                return new Model\VersioningModelFactory(
-                    $services->get(ConfigResourceFactory::class),
-                    $services->get(Model\ModulePathSpec::class)
-                );
-            },
             ModuleVersioningModelFactory::class => function ($services) {
                 if (! $services->has(ConfigResourceFactory::class)
                     || ! $services->has(Model\ModulePathSpec::class)
