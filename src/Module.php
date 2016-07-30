@@ -118,16 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\DbAdapterResource::class => function ($services) {
-                if (! $services->has(Model\DbAdapterModel::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because %s service is not present',
-                        Model\DbAdapterResource::class,
-                        Model\DbAdapterModel::class
-                    ));
-                }
-                return new Model\DbAdapterResource($services->get(Model\DbAdapterModel::class));
-            },
             Model\DoctrineAdapterModel::class => function ($services) {
                 if (! $services->has('config')) {
                     throw new ServiceNotCreatedException(sprintf(
