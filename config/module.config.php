@@ -19,6 +19,7 @@ return [
             Model\DbAdapterModel::class         => Factory\DbAdapterModelFactory::class,
             Model\DbAdapterResource::class      => Factory\DbAdapterResourceFactory::class,
             Model\DbAutodiscoveryModel::class   => Factory\DbAutodiscoveryModelFactory::class,
+            Model\DoctrineAdapterModel::class   => Factory\DoctrineAdapterModelFactory::class,
             Model\DocumentationModel::class     => Model\DocumentationModelFactory::class,
             Model\FiltersModel::class           => Model\FiltersModelFactory::class,
             Model\HydratorsModel::class         => Model\HydratorsModelFactory::class,
