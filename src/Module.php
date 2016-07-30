@@ -118,23 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\AuthorizationModelFactory::class => function ($services) {
-                if (! $services->has(Model\ModulePathSpec::class)
-                    || ! $services->has(ConfigResourceFactory::class)
-                    || ! $services->has(Model\ModuleModel::class)
-                ) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing one or more dependencies from ZF\Configuration',
-                        Model\AuthorizationModelFactory::class
-                    ));
-                }
-
-                return new Model\AuthorizationModelFactory(
-                    $services->get(Model\ModulePathSpec::class),
-                    $services->get(ConfigResourceFactory::class),
-                    $services->get(Model\ModuleModel::class)
-                );
-            },
             Model\DbAutodiscoveryModel::class => function ($services) {
                 if (! $services->has('config')) {
                     throw new ServiceNotCreatedException(sprintf(

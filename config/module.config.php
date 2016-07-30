@@ -13,6 +13,7 @@ return [
         'factories' => [
             Listener\CryptFilterListener::class => InvokableFactory::class,
             Model\AuthenticationModel::class    => Factory\AuthenticationModelFactory::class,
+            Model\AuthorizationModelFactory::class => Factory\AuthorizationModelFactoryFactory::class,
             Model\DocumentationModel::class     => Model\DocumentationModelFactory::class,
             Model\FiltersModel::class           => Model\FiltersModelFactory::class,
             Model\HydratorsModel::class         => Model\HydratorsModelFactory::class,
