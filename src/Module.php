@@ -118,57 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\RestServiceResource::class => function ($services) {
-                if (! $services->has(Model\RestServiceModelFactory::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing its %s dependency and cannot be created',
-                        Model\RestServiceResource::class,
-                        Model\RestServiceModelFactory::class
-                    ));
-                }
-                if (! $services->has(Model\InputFilterModel::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing its %s dependency and cannot be created',
-                        Model\RestServiceResource::class,
-                        Model\InputFilterModel::class
-                    ));
-                }
-
-                return new Model\RestServiceResource(
-                    $services->get(Model\RestServiceModelFactory::class),
-                    $services->get(Model\InputFilterModel::class),
-                    $services->get(Model\DocumentationModel::class)
-                );
-            },
-            Model\RpcServiceResource::class => function ($services) {
-                if (! $services->has(Model\RpcServiceModelFactory::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing %s dependency',
-                        Model\RpcServiceResource::class,
-                        Model\RpcServiceModelFactory::class
-                    ));
-                }
-                if (! $services->has(Model\InputFilterModel::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing %s dependency',
-                        Model\RpcServiceResource::class,
-                        Model\InputFilterModel::class
-                    ));
-                }
-                if (! $services->has('ControllerManager')) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing ControllerManager dependency',
-                        Model\RpcServiceResource::class
-                    ));
-                }
-
-                return new Model\RpcServiceResource(
-                    $services->get(Model\RpcServiceModelFactory::class),
-                    $services->get(Model\InputFilterModel::class),
-                    $services->get('ControllerManager'),
-                    $services->get(Model\DocumentationModel::class)
-                );
-            },
             /**
              * @DEPRECATED use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
              */
