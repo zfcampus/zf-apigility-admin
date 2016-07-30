@@ -118,19 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\ContentNegotiationResource::class => function ($services) {
-                if (! $services->has(Model\ContentNegotiationModel::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because %s service is not present',
-                        Model\ContentNegotiationResource::class,
-                        Model\ContentNegotiationModel::class
-                    ));
-                }
-
-                return new Model\ContentNegotiationResource(
-                    $services->get(Model\ContentNegotiationModel::class)
-                );
-            },
             Model\DbAdapterModel::class => function ($services) {
                 if (! $services->has('config')) {
                     throw new ServiceNotCreatedException(sprintf(
