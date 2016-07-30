@@ -118,47 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            'ZF\Apigility\Admin\Model\RestServiceModelFactory' => function ($services) {
-                if (! $services->has(Model\ModulePathSpec::class)
-                    || ! $services->has(ConfigResourceFactory::class)
-                    || ! $services->has(Model\ModuleModel::class)
-                    || ! $services->has('SharedEventManager')
-                ) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        '%s is missing one or more dependencies from ZF\Configuration',
-                        Model\RestServiceModelFactory::class
-                    ));
-                }
-                $moduleModel   = $services->get(Model\ModuleModel::class);
-                $modulePathSpec = $services->get(Model\ModulePathSpec::class);
-                $configFactory = $services->get(ConfigResourceFactory::class);
-                $sharedEvents  = $services->get('SharedEventManager');
-
-                // Wire DB-Connected fetch listener
-                $sharedEvents->attach(
-                    Model\RestServiceModel::class,
-                    'fetch',
-                    Model\DbConnectedRestServiceModel::class . '::onFetch'
-                );
-
-                $modules = $services->get('ModuleManager');
-                $loaded = $modules->getLoadedModules(false);
-                if (isset($loaded['ZF\Apigility\Doctrine\Admin'])) {
-                    // Wire Doctrine-Connected fetch listener
-                    $sharedEvents->attach(
-                        Model\RestServiceModel::class,
-                        'fetch',
-                        'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch'
-                    );
-                }
-
-                return new Model\RestServiceModelFactory(
-                    $modulePathSpec,
-                    $configFactory,
-                    $sharedEvents,
-                    $moduleModel
-                );
-            },
             Model\RpcServiceModelFactory::class => function ($services) {
                 if (! $services->has(Model\ModulePathSpec::class)
                     || ! $services->has(ConfigResourceFactory::class)
