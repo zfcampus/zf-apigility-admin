@@ -118,44 +118,6 @@ class Module
     public function getServiceConfig()
     {
         return [ 'factories' => [
-            Model\ModulePathSpec::class => function ($services) {
-                if (! $services->has(ModuleUtils::class)) {
-                    throw new ServiceNotCreatedException(sprintf(
-                        'Cannot create %s service because %s service is not present',
-                        Model\ModulePathSpec::class,
-                        ModuleUtils::class
-                    ));
-                }
-
-                $pathSpec   = 'psr-0';
-                $path       = '.';
-                if ($services->has('config')) {
-                    $config = $services->get('config');
-                    if (! empty($config['zf-apigility-admin'])) {
-                        if (! empty($config['zf-apigility-admin']['path_spec'])) {
-                            $pathSpec = $config['zf-apigility-admin']['path_spec'];
-                        }
-
-                        if (isset($config['zf-apigility-admin']['module_path'])) {
-                            $path = $config['zf-apigility-admin']['module_path'];
-                            if (! is_dir($path)) {
-                                throw new ServiceNotCreatedException(sprintf(
-                                    'Invalid module path "%s"; does not exist',
-                                    $path
-                                ));
-                            }
-                        }
-                    }
-                }
-
-                $modulePathSpec = new Model\ModulePathSpec(
-                    $services->get(ModuleUtils::class),
-                    $pathSpec,
-                    $path
-                );
-
-                return $modulePathSpec;
-            },
             Model\ModuleModel::class => function ($services) {
                 if (! $services->has('ModuleManager')) {
                     throw new ServiceNotCreatedException(sprintf(
