@@ -118,11 +118,6 @@ class Module
     public function getControllerConfig()
     {
         return [ 'factories' => [
-            Controller\Authorization::class => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                $factory  = $services->get(Model\AuthorizationModelFactory::class);
-                return new Controller\AuthorizationController($factory);
-            },
             Controller\Config::class => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 return new Controller\ConfigController($services->get(ConfigResource::class));
