@@ -19,6 +19,7 @@ use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Configuration\ConfigResource;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use ZF\ContentNegotiation\ParameterDataContainer;
+use ZFTest\Apigility\Admin\RouteAssetsTrait;
 
 class AuthenticationControllerTest extends TestCase
 {

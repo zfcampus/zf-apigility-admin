@@ -9,12 +9,14 @@ namespace ZFTest\Apigility\Admin\Controller;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use ZF\Apigility\Admin\Controller\AuthenticationTypeController;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
+use ZFTest\Apigility\Admin\RouteAssetsTrait;
 
 class AuthenticationTypeControllerTest extends TestCase
 {
+    use RouteAssetsTrait;
+
     public function setUp()
     {
         $this->globalFile = __DIR__ . '/TestAsset/Auth2/config/autoload/global.php';
@@ -24,7 +26,7 @@ class AuthenticationTypeControllerTest extends TestCase
 
         $this->controller = $this->getController($this->localFile, $this->globalFile);
 
-        $this->routeMatch = new RouteMatch([]);
+        $this->routeMatch = $this->createRouteMatch([]);
         $this->routeMatch->setMatchedRouteName('zf-apigility/api/authentication-type');
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
@@ -250,7 +252,7 @@ class AuthenticationTypeControllerTest extends TestCase
         $request->getHeaders()->addHeaderLine('Accept', 'application/vnd.apigility.v2+json');
         $controller->setRequest($request);
 
-        $routeMatch = new RouteMatch([]);
+        $routeMatch = $this->createRouteMatch([]);
         $routeMatch->setMatchedRouteName('zf-apigility/api/authentication-type');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);

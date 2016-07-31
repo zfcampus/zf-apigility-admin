@@ -8,7 +8,6 @@ namespace ZFTest\Apigility\Admin;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\HelperPluginManager;
 use ZF\Apigility\Admin\Module;
@@ -16,6 +15,8 @@ use ZF\Hal\Plugin\Hal;
 
 class ModuleTest extends TestCase
 {
+    use RouteAssetsTrait;
+
     public function setUp()
     {
         $this->services = new ServiceManager();
@@ -40,7 +41,7 @@ class ModuleTest extends TestCase
 
     public function testRouteListenerDoesNothingIfRouteMatchesDoNotContainController()
     {
-        $matches = new RouteMatch([]);
+        $matches = $this->createRouteMatch([]);
         $event = new MvcEvent();
         $event->setRouteMatch($matches);
         $this->assertNull($this->module->onRoute($event));
@@ -48,7 +49,7 @@ class ModuleTest extends TestCase
 
     public function testRouteListenerDoesNothingIfRouteMatchControllerIsNotRelevant()
     {
-        $matches = new RouteMatch([
+        $matches = $this->createRouteMatch([
             'controller' => 'Foo\Bar',
         ]);
         $event = new MvcEvent();
@@ -61,7 +62,7 @@ class ModuleTest extends TestCase
         $this->setupServiceChain();
         $this->hal->setRenderCollections(false);
 
-        $matches = new RouteMatch([
+        $matches = $this->createRouteMatch([
             'controller' => 'ZF\Apigility\Admin\Foo\Controller',
         ]);
         $event = new MvcEvent();

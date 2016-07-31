@@ -10,7 +10,6 @@ use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Controller\PluginManager;
 use ZF\Apigility\Admin\Controller\InputFilterController;
 use ZF\Apigility\Admin\Model\InputFilterModel;
@@ -18,9 +17,12 @@ use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
 use ZF\ContentNegotiation\ParameterDataContainer;
+use ZFTest\Apigility\Admin\RouteAssetsTrait;
 
 class InputFilterControllerTest extends TestCase
 {
+    use RouteAssetsTrait;
+
     public function setUp()
     {
         require_once __DIR__ . '/../Model/TestAsset/module/InputFilter/Module.php';
@@ -66,7 +68,7 @@ class InputFilterControllerTest extends TestCase
             'name' => $module,
             'controller_service_name' => $controller
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
@@ -104,7 +106,7 @@ class InputFilterControllerTest extends TestCase
             'controller_service_name' => $controller,
             'input_filter_name' => $validator,
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
@@ -155,7 +157,7 @@ class InputFilterControllerTest extends TestCase
             'name' => $module,
             'controller_service_name' => $controller
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
@@ -200,7 +202,7 @@ class InputFilterControllerTest extends TestCase
             'controller_service_name' => $controller,
             'input_filter_name' => $validator,
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
