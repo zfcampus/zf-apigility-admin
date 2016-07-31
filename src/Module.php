@@ -25,7 +25,7 @@ class Module
     protected $mvcEvent;
 
     /**
-     * @var \Closure
+     * @var callable
      */
     protected $urlHelper;
 
@@ -233,13 +233,15 @@ class Module
         $urlHelper       = $viewHelpers->get('Url');
         $serverUrlHelper = $viewHelpers->get('ServerUrl');
 
-        // @codingStandardsIgnoreStart
         $this->urlHelper = function (
             $routeName,
             $routeParams,
             $routeOptions,
             $reUseMatchedParams
-        ) use ($urlHelper, $serverUrlHelper) {
+        ) use (
+            $urlHelper,
+            $serverUrlHelper
+        ) {
             $url = call_user_func(
                 $urlHelper,
                 $routeName,
@@ -253,7 +255,6 @@ class Module
             }
             return call_user_func($serverUrlHelper, $url);
         };
-        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -541,18 +542,21 @@ class Module
      */
     protected function injectLinksForServicesByType($type, $services, LinkCollection $links, $module = null)
     {
-        $urlHelper    = $this->urlHelper;
+        $urlHelper = $this->urlHelper;
 
-        $linkType     = $type;
+        $linkType = $type;
         if (in_array($type, ['rpc', 'rest'])) {
             $linkType .= '-service';
         }
         $routeName    = sprintf('zf-apigility/api/module/%s', $linkType);
+
         $routeParams  = [];
-        $routeOptions = [];
         if (null !== $module) {
             $routeParams['name'] = $module;
         }
+
+        $routeOptions = [];
+
         $url  = call_user_func($urlHelper, $routeName, $routeParams, $routeOptions, false);
         $url .= '{?version}';
 
@@ -574,9 +578,7 @@ class Module
      */
     protected function getServiceType($service)
     {
-        if (strstr($service, '\\Rest\\')
-            || strstr($service, '-Rest-')
-        ) {
+        if (preg_match('#[\\-.]Rest[\\-.]#', $service)) {
             return 'rest';
         }
         return 'rpc';
@@ -599,12 +601,17 @@ class Module
         }
 
         // Disable opcode caches that allow runtime disabling
+
         if (function_exists('xcache_get')) {
             // XCache; just disable it
             ini_set('xcache.cacher', '0');
-        } elseif (function_exists('wincache_ocache_meminfo')) {
+            return;
+        }
+        
+        if (function_exists('wincache_ocache_meminfo')) {
             // WinCache; just disable it
             ini_set('wincache.ocenabled', '0');
+            return;
         }
     }
 
