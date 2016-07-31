@@ -109,23 +109,6 @@ class Module
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    /**
-     * Expected to return \Zend\ServiceManager\Config object or array to seed
-     * such an object.
-     *
-     * @return array|\Zend\ServiceManager\Config
-     */
-    public function getControllerConfig()
-    {
-        return [ 'factories' => [
-            Controller\Versioning::class => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                $factory  = $services->get(Model\VersioningModelFactory::class);
-                return new Controller\VersioningController($factory);
-            },
-        ]];
-    }
-
     public function normalizeMatchedControllerServiceName($e)
     {
         $matches = $e->getRouteMatch();

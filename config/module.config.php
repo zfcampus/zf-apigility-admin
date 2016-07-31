@@ -55,6 +55,7 @@ return [
             Controller\Package::class                  => Controller\PackageController::class,
             Controller\Source::class                   => Controller\SourceController::class,
             Controller\Strategy::class                 => Controller\StrategyController::class,
+            Controller\Versioning::class               => Controller\VersioningController::class,
         ],
         'factories' => [
             Controller\AppController::class           => InvokableFactory::class,
@@ -77,6 +78,7 @@ return [
             Controller\SourceController::class        => Factory\SourceControllerFactory::class,
             Controller\StrategyController::class      => InvokableFactory::class,
             Controller\Validators::class              => Controller\ValidatorsControllerFactory::class,
+            Controller\VersioningController::class    => Factory\VersioningControllerFactory::class,
         ],
     ],
 
