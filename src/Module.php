@@ -12,16 +12,10 @@ use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteMatch;
-use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
-use ZF\Configuration\ConfigResource;
-use ZF\Configuration\ConfigResourceFactory;
-use ZF\Configuration\ConfigWriter;
-use ZF\Configuration\ModuleUtils;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
 use ZF\Hal\Entity;
 use ZF\Hal\View\HalJsonModel;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 
 class Module
 {
@@ -216,7 +210,7 @@ class Module
     public function onFinish($e)
     {
         $matches = $e->getRouteMatch();
-        if (! $matches instanceof RouteMatch) {
+        if (! ($matches instanceof RouteMatch || $matches instanceof V2RouteMatch)) {
             // In 404's, we do not have a route match... nor do we need to do
             // anything
             return;
