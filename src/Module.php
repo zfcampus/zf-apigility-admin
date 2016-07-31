@@ -118,10 +118,6 @@ class Module
     public function getControllerConfig()
     {
         return [ 'factories' => [
-            Controller\Config::class => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                return new Controller\ConfigController($services->get(ConfigResource::class));
-            },
             // @codingStandardsIgnoreStart
             Controller\ModuleConfig::class => function ($controllers) {
                 $services = $controllers->getServiceLocator();
