@@ -144,7 +144,7 @@ class RestServiceResourceTest extends TestCase
         $sharedEvents->attach(
             RestServiceModel::class,
             'fetch',
-            DbConnectedRestServiceModel::class . '::onFetch'
+            [DbConnectedRestServiceModel::class, 'onFetch']
         );
 
         $r = new ReflectionObject($resource);

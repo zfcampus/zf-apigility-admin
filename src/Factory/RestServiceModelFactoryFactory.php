@@ -59,7 +59,7 @@ class RestServiceModelFactoryFactory
         $sharedEvents->attach(
             RestServiceModel::class,
             'fetch',
-            DoctrineRestServiceModel::class . '::onFetch'
+            [DoctrineRestServiceModel::class, 'onFetch']
         );
 
         $modules = $container->get('ModuleManager');
@@ -72,7 +72,7 @@ class RestServiceModelFactoryFactory
         $sharedEvents->attach(
             RestServiceModel::class,
             'fetch',
-            DoctrineRestServiceModel::class . '::onFetch'
+            [DoctrineRestServiceModel::class, 'onFetch']
         );
     }
 }
