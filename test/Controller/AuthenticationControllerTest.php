@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
@@ -41,7 +42,7 @@ class AuthenticationControllerTest extends TestCase
         $model = new AuthenticationModel($global, $local, $moduleModel);
         $this->controller = new AuthenticationController($model);
 
-        $this->plugins = new ControllerPluginManager();
+        $this->plugins = new ControllerPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->plugins->setService('bodyParams', new BodyParams());
         $this->plugins->setService('bodyParam', new BodyParam());
         $this->plugins->setService('params', new Params());

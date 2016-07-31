@@ -25,9 +25,8 @@ class ModuleTest extends TestCase
     public function setupServiceChain()
     {
         $this->hal = new Hal();
-        $this->helpers = new HelperPluginManager();
+        $this->helpers = new HelperPluginManager($this->services);
         $this->helpers->setService('Hal', $this->hal);
-        $this->helpers->setServiceLocator($this->services);
         $this->services->setService('ViewHelperManager', $this->helpers);
         $this->application = new TestAsset\Application();
         $this->application->setServiceManager($this->services);

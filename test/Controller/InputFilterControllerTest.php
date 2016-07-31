@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
@@ -163,7 +164,7 @@ class InputFilterControllerTest extends TestCase
         $parameters->setBodyParams($inputFilter);
         $event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $plugins = new PluginManager();
+        $plugins = new PluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $plugins->setInvokableClass('bodyParams', 'ZF\ContentNegotiation\ControllerPlugin\BodyParams');
 
         $this->controller->setRequest($request);

@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Filter\FilterPluginManager;
 use ZF\Apigility\Admin\Model\FiltersModel;
@@ -17,7 +18,7 @@ class FiltersModelTest extends TestCase
     public function setUp()
     {
         $this->config  = $this->getConfig();
-        $this->plugins = new FilterPluginManager();
+        $this->plugins = new FilterPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->model   = new FiltersModel($this->plugins, $this->config);
     }
 

@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
@@ -25,7 +26,7 @@ class ConfigControllerTest extends TestCase
         $this->configResource = new ConfigResource([], $this->file, $this->writer);
         $this->controller     = new ConfigController($this->configResource);
 
-        $this->plugins = new ControllerPluginManager();
+        $this->plugins = new ControllerPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->plugins->setService('BodyParams', new BodyParams());
         $this->controller->setPluginManager($this->plugins);
     }

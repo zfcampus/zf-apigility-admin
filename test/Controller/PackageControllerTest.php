@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
@@ -23,7 +24,7 @@ class PackageControllerTest extends TestCase
     {
         // Seed with symlink path for zfdeploy.php
         $this->controller = new PackageController('vendor/bin/zfdeploy.php');
-        $this->plugins = new ControllerPluginManager();
+        $this->plugins = new ControllerPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->plugins->setService('bodyParam', new BodyParam());
         $this->plugins->setService('bodyParams', new BodyParams());
         $this->controller->setPluginManager($this->plugins);

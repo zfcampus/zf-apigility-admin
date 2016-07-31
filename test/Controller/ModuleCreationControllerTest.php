@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
@@ -95,7 +96,7 @@ class ModuleCreationControllerTest extends TestCase
         $event = new MvcEvent();
         $event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $plugins = new PluginManager();
+        $plugins = new PluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $plugins->setInvokableClass('bodyParam', 'ZF\ContentNegotiation\ControllerPlugin\BodyParam');
 
         $controller->setRequest($request);

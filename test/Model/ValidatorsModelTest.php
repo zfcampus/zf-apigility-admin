@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Validator\ValidatorPluginManager;
 use ZF\Apigility\Admin\Model\ValidatorsModel;
@@ -19,7 +20,7 @@ class ValidatorsModelTest extends TestCase
     {
         $this->getConfig();
         $this->metadata = new ValidatorMetadataModel($this->config);
-        $this->plugins  = new ValidatorPluginManager();
+        $this->plugins  = new ValidatorPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->model    = new ValidatorsModel($this->plugins, $this->metadata);
     }
 
