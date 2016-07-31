@@ -607,7 +607,7 @@ class Module
             ini_set('xcache.cacher', '0');
             return;
         }
-        
+
         if (function_exists('wincache_ocache_meminfo')) {
             // WinCache; just disable it
             ini_set('wincache.ocenabled', '0');
