@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\EventManager\Event;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
@@ -186,13 +187,14 @@ class RestServiceModel implements EventManagerAwareInterface
 
         // Trigger an event, allowing a listener to alter the entity and/or
         // curry a new one.
-        $eventResults = $this->getEventManager()->trigger(__FUNCTION__, $this, [
+        $eventResults = $this->getEventManager()->triggerEventUntil(function ($r) {
+            return ($r instanceof RestServiceEntity);
+        }, new Event(__FUNCTION__, $this, [
             'entity' => $entity,
             'config' => $config,
             'fetch'  => $isAFetchOperation,
-        ], function ($r) {
-            return ($r instanceof RestServiceEntity);
-        });
+        ]));
+
         if ($eventResults->stopped()) {
             $entity = $eventResults->last();
         }

@@ -142,9 +142,9 @@ class RestServiceResourceTest extends TestCase
         $resource                = new RestServiceResource($restServiceModelFactory, $this->filter, $this->docs);
 
         $sharedEvents->attach(
-            'ZF\Apigility\Admin\Model\RestServiceModel',
+            RestServiceModel::class,
             'fetch',
-            'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel::onFetch'
+            DbConnectedRestServiceModel::class . '::onFetch'
         );
 
         $r = new ReflectionObject($resource);
@@ -161,7 +161,7 @@ class RestServiceResourceTest extends TestCase
         $id = $entity->controllerServiceName;
         $updateData = [
             'entity_identifier_name' => 'test_id',
-            'hydrator_name' => 'Zend\Hydrator\ObjectProperty',
+            'hydrator_name' => 'ObjectProperty',
         ];
         $resource->patch($id, $updateData);
 
@@ -174,7 +174,7 @@ class RestServiceResourceTest extends TestCase
 
         $this->assertEquals('test_id', $halConfig['entity_identifier_name']);
         $this->assertEquals('test_id', $agConfig['entity_identifier_name']);
-        $this->assertEquals('Zend\\Hydrator\\ObjectProperty', $halConfig['hydrator']);
-        $this->assertEquals('Zend\\Hydrator\\ObjectProperty', $agConfig['hydrator_name']);
+        $this->assertContains('ObjectProperty', $halConfig['hydrator']);
+        $this->assertContains('ObjectProperty', $agConfig['hydrator_name']);
     }
 }

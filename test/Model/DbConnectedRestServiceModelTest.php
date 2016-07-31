@@ -11,6 +11,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use Zend\EventManager\Event;
+use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity;
 use ZF\Apigility\Admin\Model\ModuleEntity;
@@ -63,15 +64,11 @@ class DbConnectedRestServiceModelTest extends TestCase
         ];
 
         $this->moduleEntity  = new ModuleEntity($this->module, [], [], false);
-        $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
-                                    ->disableOriginalConstructor()
-                                    ->getMock();
-        $this->moduleManager->expects($this->any())
-                            ->method('getLoadedModules')
-                            ->will($this->returnValue($modules));
+        $this->moduleManager = $this->prophesize(ModuleManager::class);
+        $this->moduleManager->getLoadedModules()->willReturn($modules);
 
         $this->writer   = new PhpArray();
-        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $moduleUtils    = new ModuleUtils($this->moduleManager->reveal());
         $this->modules  = new ModulePathSpec($moduleUtils);
         $this->resource = new ResourceFactory($moduleUtils, $this->writer);
         $this->codeRest = new RestServiceModel(
