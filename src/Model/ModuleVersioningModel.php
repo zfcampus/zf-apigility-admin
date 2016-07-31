@@ -391,7 +391,7 @@ final class ModuleVersioningModel
         }
 
         $this->moduleNameFilter = new FilterChain();
-        $this->moduleNameFilter->attachByName('Word\CamelCaseToDash')
+        $this->moduleNameFilter->attachByName('WordCamelCaseToDash')
             ->attachByName('StringToLower');
         return $this->moduleNameFilter;
     }

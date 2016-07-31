@@ -1192,7 +1192,7 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $this->routeNameFilter = new FilterChain();
-        $this->routeNameFilter->attachByName('Word\CamelCaseToDash')
+        $this->routeNameFilter->attachByName('WordCamelCaseToDash')
             ->attachByName('StringToLower');
         return $this->routeNameFilter;
     }
