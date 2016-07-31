@@ -27,7 +27,7 @@ class ConfigControllerTest extends TestCase
         $this->controller     = new ConfigController($this->configResource);
 
         $this->plugins = new ControllerPluginManager($this->prophesize(ContainerInterface::class)->reveal());
-        $this->plugins->setService('BodyParams', new BodyParams());
+        $this->plugins->setService('bodyParams', new BodyParams());
         $this->controller->setPluginManager($this->plugins);
     }
 
