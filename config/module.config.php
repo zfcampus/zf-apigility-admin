@@ -42,6 +42,7 @@ return [
     'controllers' => [
         'aliases' => [
             Controller\App::class                      => Controller\AppController::class,
+            Controller\Authentication::class           => Controller\AuthenticationController::class,
             Controller\CacheEnabled::class             => Controller\CacheEnabledController::class,
             Controller\FsPermissions::class            => Controller\FsPermissionsController::class,
             Controller\HttpBasicAuthentication::class  => Controller\Authentication::class,
@@ -52,6 +53,7 @@ return [
         ],
         'factories' => [
             Controller\AppController::class           => InvokableFactory::class,
+            Controller\AuthenticationController::class => Factory\AuthenticationControllerFactory::class,
             Controller\AuthenticationType::class      => Controller\AuthenticationTypeControllerFactory::class,
             Controller\CacheEnabledController::class  => InvokableFactory::class,
             Controller\Dashboard::class               => Controller\DashboardControllerFactory::class,
