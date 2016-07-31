@@ -118,11 +118,6 @@ class Module
     public function getControllerConfig()
     {
         return [ 'factories' => [
-            Controller\ModuleCreation::class => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                $model    = $services->get(Model\ModuleModel::class);
-                return new Controller\ModuleCreationController($model);
-            },
             Controller\Source::class => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 $model    = $services->get(Model\ModuleModel::class);
