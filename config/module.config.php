@@ -53,6 +53,7 @@ return [
             Controller\ModuleCreation::class           => Controller\ModuleCreationController::class,
             Controller\OAuth2Authentication::class     => Controller\Authentication::class,
             Controller\Package::class                  => Controller\PackageController::class,
+            Controller\Source::class                   => Controller\SourceController::class,
             Controller\Strategy::class                 => Controller\StrategyController::class,
         ],
         'factories' => [
@@ -73,6 +74,7 @@ return [
             Controller\ModuleCreationController::class => Factory\ModuleCreationControllerFactory::class,
             Controller\PackageController::class       => InvokableFactory::class,
             Controller\SettingsDashboard::class       => Controller\DashboardControllerFactory::class,
+            Controller\SourceController::class        => Factory\SourceControllerFactory::class,
             Controller\StrategyController::class      => InvokableFactory::class,
             Controller\Validators::class              => Controller\ValidatorsControllerFactory::class,
         ],

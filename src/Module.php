@@ -118,11 +118,6 @@ class Module
     public function getControllerConfig()
     {
         return [ 'factories' => [
-            Controller\Source::class => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                $model    = $services->get(Model\ModuleModel::class);
-                return new Controller\SourceController($model);
-            },
             Controller\Versioning::class => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 $factory  = $services->get(Model\VersioningModelFactory::class);
