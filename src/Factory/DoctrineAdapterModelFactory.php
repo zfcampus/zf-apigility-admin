@@ -20,15 +20,15 @@ class DoctrineAdapterModelFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        if (! $services->has('config')) {
+        if (! $container->has('config')) {
             throw new ServiceNotCreatedException(sprintf(
                 'Cannot create %s service because config service is not present',
                 DbAdapterModel::class
             ));
         }
 
-        $config = $services->get('config');
-        $writer = $services->get(ConfigWriter::class);
+        $config = $container->get('config');
+        $writer = $container->get(ConfigWriter::class);
 
         return new DoctrineAdapterModel(
             new ConfigResource($config, 'config/autoload/doctrine.global.php', $writer),

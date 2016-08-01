@@ -24,11 +24,10 @@ class DoctrineAdapterResource extends AbstractResourceListener
     protected $loadedModules;
 
     /**
-     * Constructor
-     *
      * @param DoctrineAdapterModel $model
+     * @param array $loadedModules List of loaded modules
      */
-    public function __construct(DoctrineAdapterModel $model, array $loadedModules)
+    public function __construct(DoctrineAdapterModel $model, array $loadedModules = [])
     {
         $this->model = $model;
         $this->loadedModules = $loadedModules;
