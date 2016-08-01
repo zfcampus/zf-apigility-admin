@@ -113,14 +113,13 @@ class ModuleModel
      * Create a module
      *
      * @param  string $module
-     * @param  string $path
-     * @param  integer $ver
+     * @param  ModulePathSpec $pathSpec
      * @return boolean
      */
     public function createModule($module, ModulePathSpec $pathSpec)
     {
         $path = $pathSpec->getApplicationPath();
-        $application = require "$path/config/application.config.php";
+        $application = require sprintf('%s/config/application.config.php', $path);
         if (is_array($application)
             && isset($application['modules'])
             && in_array($module, $application['modules'], true)
@@ -129,7 +128,7 @@ class ModuleModel
             return false;
         }
 
-        $modulePath = $pathSpec->getModulePath($module, $path);
+        $modulePath = $pathSpec->getModulePath($module);
         if (file_exists($modulePath)) {
             throw new \Exception(sprintf(
                 'Cannot create new API module; module by the name "%s" already exists',
@@ -146,7 +145,7 @@ class ModuleModel
         mkdir($pathSpec->getRestPath($module, 1), 0775, true);
         mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
 
-        if (! file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
+        if (! file_put_contents(sprintf('%s/module.config.php', $moduleConfigPath), "<" . "?php\nreturn array(\n);")) {
             return false;
         }
 
@@ -164,17 +163,23 @@ class ModuleModel
 
         if ($pathSpec->getPathSpec() === ModulePathSpec::PSR_0) {
             $view->setTemplate('module/skeleton');
-            $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
+            $moduleRelClassPath = sprintf('%s/Module.php', $moduleSourceRelativePath);
 
-            if (! file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
+            if (! file_put_contents(
+                sprintf('%s/Module.php', $modulePath),
+                "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';"
+            )) {
                 return false;
             }
-            if (! file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+            if (! file_put_contents(
+                sprintf('%s/Module.php', $moduleSourcePath),
+                "<" . "?php\n" . $renderer->render($view)
+            )) {
                 return false;
             }
         } else {
             $view->setTemplate('module/skeleton-psr4');
-            if (! file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+            if (! file_put_contents(sprintf('%s/Module.php', $modulePath), "<" . "?php\n" . $renderer->render($view))) {
                 return false;
             }
         }
@@ -251,7 +256,7 @@ class ModuleModel
      */
     public function deleteModule($module, $path = '.', $recursive = false)
     {
-        $application = require "$path/config/application.config.php";
+        $application = require sprintf('%s/config/application.config.php', $path);
         if (! is_array($application)
             || ! isset($application['modules'])
             || ! in_array($module, $application['modules'], true)
