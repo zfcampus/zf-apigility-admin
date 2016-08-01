@@ -35,23 +35,17 @@ class Module
     protected $sm;
 
     /**
-     * Disable OP-Cache
+     * Initialize module.
+     *
+     * If the admin UI module is not loaded yet, load it.
+     *
+     * Disable the opcache as well.
      *
      * @param ModuleManagerInterface $modules
      */
     public function init(ModuleManagerInterface $modules)
     {
         $this->disableOpCache();
-    }
-
-    /**
-     * Ensure the UI module is loaded
-     *
-     * @return array
-     */
-    public function getModuleDependencies()
-    {
-        return ['ZF\Apigility\Admin\Ui'];
     }
 
     /**
