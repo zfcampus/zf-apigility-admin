@@ -21,7 +21,7 @@ class ModuleModelFactory
         if (! $container->has('ModuleManager')) {
             throw new ServiceNotCreatedException(sprintf(
                 'Cannot create %s service because ModuleManager service is not present',
-                Model\ModuleModel::class
+                ModuleModel::class
             ));
         }
 
