@@ -62,6 +62,7 @@ abstract class AbstractAutodiscoveryModel
      * Get service locator
      *
      * @return ServiceLocatorInterface
+     * @throws Exception if no service locator is composed
      */
     public function getServiceLocator()
     {
