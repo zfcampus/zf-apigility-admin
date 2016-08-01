@@ -59,7 +59,7 @@ class RestServiceModelFactoryFactory
         $sharedEvents->attach(
             RestServiceModel::class,
             'fetch',
-            [DoctrineRestServiceModel::class, 'onFetch']
+            [DbConnectedRestServiceModel::class, 'onFetch']
         );
 
         $modules = $container->get('ModuleManager');
