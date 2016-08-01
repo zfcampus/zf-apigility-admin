@@ -28,15 +28,13 @@ class ConfigControllerFactory implements FactoryInterface
 
     /**
      * @param ServiceLocatorInterface $container
-     * @param null|string $cName
-     * @param null|string $requestedName
      * @return ConfigController
      */
-    public function createService(ServiceLocatorInterface $container, $cName = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $container)
     {
         if ($container instanceof AbstractPluginManager) {
             $container = $container->getServiceLocator() ?: $container;
         }
-        return $this($container, $requestedName ?: ConfigController::class);
+        return $this($container, ConfigController::class);
     }
 }

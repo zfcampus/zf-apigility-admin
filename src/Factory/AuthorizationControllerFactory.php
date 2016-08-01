@@ -28,15 +28,13 @@ class AuthorizationControllerFactory implements FactoryInterface
 
     /**
      * @param ServiceLocatorInterface $container
-     * @param null|string $cName
-     * @param null|string $requestedName
      * @return AuthorizationController
      */
-    public function createService(ServiceLocatorInterface $container, $cName = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $container)
     {
         if ($container instanceof AbstractPluginManager) {
             $container = $container->getServiceLocator() ?: $container;
         }
-        return $this($container, $requestedName ?: AuthorizationController::class);
+        return $this($container, AuthorizationController::class);
     }
 }
