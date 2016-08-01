@@ -106,6 +106,6 @@ class AbstractPluginManagerModel
      */
     private function filterPluginName($name)
     {
-        return ! (bool) preg_match('/^zend(hydrator|stdlib)/', $name);
+        return ! preg_match('/^zend(hydrator|stdlib)/', $name);
     }
 }
