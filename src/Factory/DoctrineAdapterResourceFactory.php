@@ -19,7 +19,7 @@ class DoctrineAdapterResourceFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        if (! $services->has(DoctrineAdapterModel::class)) {
+        if (! $container->has(DoctrineAdapterModel::class)) {
             throw new ServiceNotCreatedException(sprintf(
                 'Cannot create %s service because %s service is not present',
                 DoctrineAdapterResource::class,
@@ -27,9 +27,9 @@ class DoctrineAdapterResourceFactory
             ));
         }
 
-        $model = $services->get(DoctrineAdapterModel::class);
+        $model = $container->get(DoctrineAdapterModel::class);
 
-        $modules = $services->get('ModuleManager');
+        $modules = $container->get('ModuleManager');
         $loadedModules = $modules->getLoadedModules(false);
 
         return new DoctrineAdapterResource($model, $loadedModules);
