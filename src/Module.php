@@ -62,10 +62,14 @@ class Module
     public function onBootstrap(MvcEvent $e)
     {
         $app      = $e->getApplication();
-        $this->sm = $app->getServiceManager();
+        $this->sm = $services = $app->getServiceManager();
         $events   = $app->getEventManager();
 
-        $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'normalizeMatchedControllerServiceName'], -20);
+        $events->attach(
+            MvcEvent::EVENT_ROUTE,
+            $services->get(Listener\NormalizeMatchedControllerServiceNameListener::class),
+            -20
+        );
         $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'normalizeMatchedInputFilterName'], -20);
         $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -1000);
         $events->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender'], 100);
