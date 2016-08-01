@@ -382,7 +382,7 @@ return [
                                         'options' => [
                                             'route' => '/http-basic',
                                             'defaults' => [
-                                                'controller' => ontroller\HttpBasicAuthentication::class,
+                                                'controller' => Controller\HttpBasicAuthentication::class,
                                             ],
                                         ],
                                     ],
