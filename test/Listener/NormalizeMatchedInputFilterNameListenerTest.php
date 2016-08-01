@@ -9,10 +9,10 @@ namespace ZFTest\Apigility\Admin\Listener;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
 use Zend\Mvc\MvcEvent;
-use ZF\Apigility\Admin\Listener\NormalizeMatchedControllerServiceNameListener;
+use ZF\Apigility\Admin\Listener\NormalizeMatchedInputFilterNameListener;
 use ZFTest\Apigility\Admin\RouteAssetsTrait;
 
-class NormalizeMatchedControllerServiceNameListenerTest extends TestCase
+class NormalizeMatchedInputFilterNameListenerTest extends TestCase
 {
     use RouteAssetsTrait;
 
@@ -24,35 +24,35 @@ class NormalizeMatchedControllerServiceNameListenerTest extends TestCase
 
     public function testListenerDoesNothingIfEventHasNoRouteMatch()
     {
-        $listener = new NormalizeMatchedControllerServiceNameListener();
+        $listener = new NormalizeMatchedInputFilterNameListener();
         $this->event->getRouteMatch()->willReturn(null)->shouldBeCalled();
         $this->assertNull($listener($this->event->reveal()));
     }
 
-    public function testListenerDoesNothingIfRouteMatchHasNoControllerServiceName()
+    public function testListenerDoesNothingIfRouteMatchHasNoInputFilterName()
     {
-        $listener = new NormalizeMatchedControllerServiceNameListener();
+        $listener = new NormalizeMatchedInputFilterNameListener();
         $this->event->getRouteMatch()->will([$this->routeMatch, 'reveal'])->shouldBeCalled();
         $this->routeMatch
-            ->getParam('controller_service_name')
+            ->getParam('input_filter_name')
             ->willReturn(null)
             ->shouldBeCalled();
         $this->routeMatch
-            ->setParam('controller_service_name', Argument::type('string'))
+            ->setParam('input_filter_name', Argument::type('string'))
             ->shouldNotBeCalled();
         $this->assertNull($listener($this->event->reveal()));
     }
 
-    public function testListenerReplacesDashesWithBackslashesInMatchedControllerServiceName()
+    public function testListenerReplacesDashesWithBackslashesInMatchedInputFilterName()
     {
-        $listener = new NormalizeMatchedControllerServiceNameListener();
+        $listener = new NormalizeMatchedInputFilterNameListener();
         $this->event->getRouteMatch()->will([$this->routeMatch, 'reveal'])->shouldBeCalled();
         $this->routeMatch
-            ->getParam('controller_service_name')
-            ->willReturn('Foo-Bar-BazController')
+            ->getParam('input_filter_name')
+            ->willReturn('Foo-Bar-BazInputFilter')
             ->shouldBeCalled();
         $this->routeMatch
-            ->setParam('controller_service_name', 'Foo\\Bar\\BazController')
+            ->setParam('input_filter_name', 'Foo\\Bar\\BazInputFilter')
             ->shouldBeCalled();
         $this->assertNull($listener($this->event->reveal()));
     }

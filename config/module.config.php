@@ -13,6 +13,7 @@ return [
         'factories' => [
             Listener\CryptFilterListener::class       => InvokableFactory::class,
             Listener\NormalizeMatchedControllerServiceNameListener::class => InvokableFactory::class,
+            Listener\NormalizeMatchedInputFilterNameListener::class => InvokableFactory::class,
             Model\AuthenticationModel::class          => Factory\AuthenticationModelFactory::class,
             Model\AuthorizationModelFactory::class    => Factory\AuthorizationModelFactoryFactory::class,
             Model\ContentNegotiationModel::class      => Factory\ContentNegotiationModelFactory::class,

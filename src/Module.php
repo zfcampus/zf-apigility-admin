@@ -70,7 +70,11 @@ class Module
             $services->get(Listener\NormalizeMatchedControllerServiceNameListener::class),
             -20
         );
-        $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'normalizeMatchedInputFilterName'], -20);
+        $events->attach(
+            MvcEvent::EVENT_ROUTE,
+            $services->get(Listener\NormalizeMatchedInputFilterNameListener::class),
+            -20
+        );
         $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -1000);
         $events->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender'], 100);
         $events->attach(MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 1000);
@@ -117,18 +121,6 @@ class Module
         // Replace '-' with namespace separator
         $controller = $matches->getParam('controller_service_name');
         $matches->setParam('controller_service_name', str_replace('-', '\\', $controller));
-    }
-
-    public function normalizeMatchedInputFilterName($e)
-    {
-        $matches = $e->getRouteMatch();
-        if (! $matches || ! $matches->getParam('input_filter_name')) {
-            return;
-        }
-
-        // Replace '-' with namespace separator
-        $controller = $matches->getParam('input_filter_name');
-        $matches->setParam('input_filter_name', str_replace('-', '\\', $controller));
     }
 
     /**
