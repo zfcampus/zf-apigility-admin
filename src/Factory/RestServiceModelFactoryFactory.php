@@ -39,7 +39,7 @@ class RestServiceModelFactoryFactory
         $sharedEvents = $container->get('SharedEventManager');
         $this->attachSharedListeners($sharedEvents, $container);
 
-        return new Model\RestServiceModelFactory(
+        return new RestServiceModelFactory(
             $container->get(ModulePathSpec::class),
             $container->get(ConfigResourceFactory::class),
             $sharedEvents,
