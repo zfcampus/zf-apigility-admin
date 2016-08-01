@@ -25,7 +25,7 @@ class DocumentationModelFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (! $services->has(ConfigResourceFactory::class)) {
+        if (! $container->has(ConfigResourceFactory::class)) {
             throw new ServiceNotCreatedException(sprintf(
                 '%s requires that the %s service be present; service not found',
                 DocumentationModel::class,
@@ -33,8 +33,8 @@ class DocumentationModelFactory implements FactoryInterface
             ));
         }
         return new DocumentationModel(
-            $services->get(ConfigResourceFactory::class),
-            $services->get(ModuleUtils::class)
+            $container->get(ConfigResourceFactory::class),
+            $container->get(ModuleUtils::class)
         );
     }
 
