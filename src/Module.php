@@ -75,7 +75,11 @@ class Module
             $services->get(Listener\NormalizeMatchedInputFilterNameListener::class),
             -20
         );
-        $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -1000);
+        $events->attach(
+            MvcEvent::EVENT_ROUTE,
+            $services->get(Listener\EnableHalRenderCollectionsListener::class),
+            -1000
+        );
         $events->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender'], 100);
         $events->attach(MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 1000);
         $this->sm->get(Listener\CryptFilterListener::class)->attach($events);
@@ -109,40 +113,6 @@ class Module
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
-    }
-
-    public function normalizeMatchedControllerServiceName($e)
-    {
-        $matches = $e->getRouteMatch();
-        if (! $matches || ! $matches->getParam('controller_service_name')) {
-            return;
-        }
-
-        // Replace '-' with namespace separator
-        $controller = $matches->getParam('controller_service_name');
-        $matches->setParam('controller_service_name', str_replace('-', '\\', $controller));
-    }
-
-    /**
-     * Ensure the render_collections flag of the HAL view helper is enabled
-     * regardless of the configuration setting if we match an admin service.
-     *
-     * @param MvcEvent $e
-     */
-    public function onRoute(MvcEvent $e)
-    {
-        $matches = $e->getRouteMatch();
-        if (! $matches
-            || 0 !== strpos($matches->getParam('controller'), 'ZF\Apigility\Admin\\')
-        ) {
-            return;
-        }
-
-        $app      = $e->getTarget();
-        $services = $app->getServiceManager();
-        $helpers  = $services->get('ViewHelperManager');
-        $hal      = $helpers->get('Hal');
-        $hal->setRenderCollections(true);
     }
 
     /**

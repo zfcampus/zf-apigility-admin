@@ -12,6 +12,7 @@ return [
     'service_manager' => [
         'factories' => [
             Listener\CryptFilterListener::class       => InvokableFactory::class,
+            Listener\EnableHalRenderCollectionsListener::class => InvokableFactory::class,
             Listener\NormalizeMatchedControllerServiceNameListener::class => InvokableFactory::class,
             Listener\NormalizeMatchedInputFilterNameListener::class => InvokableFactory::class,
             Model\AuthenticationModel::class          => Factory\AuthenticationModelFactory::class,
