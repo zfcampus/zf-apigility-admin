@@ -22,10 +22,14 @@ class ModuleResource extends AbstractResourceListener
      */
     protected $modulePath = '.';
 
+    /**
+     * @var ModulePathSpec
+     */
     protected $modulePathSpec;
 
     /**
      * @param ModuleModel $modules
+     * @param ModulePathSpec $pathSpec
      */
     public function __construct(ModuleModel $modules, ModulePathSpec $pathSpec)
     {
