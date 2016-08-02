@@ -13,6 +13,7 @@ return [
         'factories' => [
             // @codingStandardsIgnoreStart
             Listener\CryptFilterListener::class                           => InvokableFactory::class,
+            Listener\DisableHttpCacheListener::class                      => InvokableFactory::class,
             Listener\EnableHalRenderCollectionsListener::class            => InvokableFactory::class,
             Listener\InjectModuleResourceLinksListener::class             => Factory\InjectModuleResourceLinksListenerFactory::class,
             Listener\NormalizeMatchedControllerServiceNameListener::class => InvokableFactory::class,

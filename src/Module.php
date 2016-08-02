@@ -1,7 +1,7 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014-2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Admin;
@@ -89,7 +89,11 @@ class Module
             $services->get(Listener\InjectModuleResourceLinksListener::class),
             100
         );
-        $events->attach(MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 1000);
+        $events->attach(
+            MvcEvent::EVENT_FINISH,
+            $services->get(Listener\DisableHttpCacheListener::class),
+            1000
+        );
         $this->sm->get(Listener\CryptFilterListener::class)->attach($events);
     }
 
@@ -112,32 +116,6 @@ class Module
             },
         ];
     }
-
-    /**
-     * Tell browsers not to cache responses from the admin API
-     *
-     * @param  \Zend\Mvc\MvcEvent $e
-     */
-    public function onFinish($e)
-    {
-        $matches = $e->getRouteMatch();
-        if (! ($matches instanceof RouteMatch || $matches instanceof V2RouteMatch)) {
-            // In 404's, we do not have a route match... nor do we need to do
-            // anything
-            return;
-        }
-
-        if (! $matches->getParam('is_apigility_admin_api', false)) {
-            // Not part of the Apigility Admin API; nothing to do
-            return;
-        }
-
-        $request = $e->getRequest();
-        if ($request->isGet() || $request->isHead()) {
-            $this->disableHttpCache($e->getResponse()->getHeaders());
-        }
-    }
-
 
     /**
      * Disable opcode caching
@@ -168,20 +146,5 @@ class Module
             ini_set('wincache.ocenabled', '0');
             return;
         }
-    }
-
-    /**
-     * Prepare cache-busting headers for GET requests
-     *
-     * Invoked from the onFinish() method for GET requests to disable client-side HTTP caching.
-     *
-     * @param \Zend\Http\Headers $headers
-     */
-    protected function disableHttpCache($headers)
-    {
-        $headers->addHeader(new GenericHeader('Expires', '0'));
-        $headers->addHeader(new GenericMultiHeader('Cache-Control', 'no-store, no-cache, must-revalidate'));
-        $headers->addHeader(new GenericMultiHeader('Cache-Control', 'post-check=0, pre-check=0'));
-        $headers->addHeaderLine('Pragma', 'no-cache');
     }
 }
