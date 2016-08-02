@@ -43,6 +43,18 @@ class InjectModuleResourceLinksListener
     }
 
     /**
+     * Listen and respond to a render event.
+     *
+     * Does the following:
+     * - Initializes a custom url helper for internal use
+     * - attaches its "onHalRenderEvents" listener to the HAL plugin's
+     *   renderCollection, renderEntity, and renderCollection.entity events.
+     * - If the MvcEvent result's HalJsonModel composes an entity, injects
+     *   service links into it, and attaches its "onRenderEntity" listener
+     *   to the HAL plugin's renderEntity event.
+     * - If the MvcEvent result's HalJsonModel composes a collection, memoizes
+     *   the MvcEvent route match, and attaches its "onRenderCollectionEntity"
+     *   listener to the HAL plugin's renderCollection.entity event.
      * @param MvcEvent $e
      * @return void
      */
@@ -64,7 +76,7 @@ class InjectModuleResourceLinksListener
         $this->initializeUrlHelper();
 
         $halPlugin->getEventManager()->attach(
-            ['renderCollection', 'renderEntity', 'renderCollection.Entity'],
+            ['renderCollection', 'renderEntity', 'renderCollection.entity'],
             [$this, 'onHalRenderEvents']
         );
 
@@ -183,9 +195,10 @@ class InjectModuleResourceLinksListener
      * - Inject RPC/REST service links inside module resources that are
      *   composed in collections
      *
-     * @param  \Zend\EventManager\Event $e
+     * @param EventInterface $e
+     * @return void
      */
-    public function onRenderCollectionEntity($e)
+    public function onRenderCollectionEntity(EventInterface $e)
     {
         $entity = $e->getParam('entity');
         if ($entity instanceof Model\ModuleEntity) {
@@ -207,9 +220,10 @@ class InjectModuleResourceLinksListener
      * Inject relational links into a Module resource
      *
      * @param Model\ModuleEntity $resource
-     * @param \Zend\Mvc\MvcEvent $e
+     * @param EventInterface $e
+     * @return void
      */
-    private function injectModuleCollectionRelationalLinks(Model\ModuleEntity $resource, $e)
+    private function injectModuleCollectionRelationalLinks(Model\ModuleEntity $resource, EventInterface $e)
     {
         $asArray = $resource->getArrayCopy();
         $module  = $asArray['name'];
@@ -238,10 +252,11 @@ class InjectModuleResourceLinksListener
     }
 
     /**
-     * @param $entity
-     * @param $e
+     * @param Model\RestServiceEntity|Model\RpcServiceEntity $entity
+     * @param EventInterface $e
+     * @return void
      */
-    private function injectServiceCollectionRelationalLinks($entity, $e)
+    private function injectServiceCollectionRelationalLinks($entity, EventInterface $e)
     {
         $entity->exchangeArray([
             'controller_service_name' => str_replace('\\', '-', $entity->controllerServiceName),
@@ -294,6 +309,14 @@ class InjectModuleResourceLinksListener
         $e->setParam('entity', $halEntity);
     }
 
+    /**
+     * Initializes the URL view helper to use when injecting links.
+     *
+     * Creates a helper that combines the functionality of the normal
+     * url and serverUrl helpers.
+     *
+     * @return void
+     */
     private function initializeUrlHelper()
     {
         $urlHelper       = $this->viewHelpers->get('Url');
@@ -328,9 +351,10 @@ class InjectModuleResourceLinksListener
      *
      * @param Entity $halEntity
      * @param HalJsonModel $model
-     * @param $e
+     * @param EventInterface $e
+     * @return void
      */
-    private function injectServiceLinks(Entity $halEntity, HalJsonModel $model, $e)
+    private function injectServiceLinks(Entity $halEntity, HalJsonModel $model, EventInterface $e)
     {
         $entity = $halEntity->getEntity();
         $links  = $halEntity->getLinks();
@@ -349,6 +373,7 @@ class InjectModuleResourceLinksListener
      * @param Model\ModuleEntity $module
      * @param $links
      * @param HalJsonModel $model
+     * @return void
      */
     private function injectModuleResourceRelationalLinks(Model\ModuleEntity $module, $links, HalJsonModel $model)
     {
@@ -374,6 +399,7 @@ class InjectModuleResourceLinksListener
      * @param $entity
      * @param $links
      * @param HalJsonModel $model
+     * @return void
      */
     private function normalizeEntityControllerServiceName($entity, $links, HalJsonModel $model)
     {
@@ -394,6 +420,7 @@ class InjectModuleResourceLinksListener
      * @param Model\InputFilterEntity $entity
      * @param $links
      * @param HalJsonModel $model
+     * @return void
      */
     private function normalizeEntityInputFilterName(Model\InputFilterEntity $entity, $links, HalJsonModel $model)
     {
@@ -409,10 +436,11 @@ class InjectModuleResourceLinksListener
     }
 
     /**
-     * @param $entity
-     * @param $e
+     * @param \ArrayObject $entity
+     * @param EventInterface $e
+     * @return void
      */
-    private function normalizeInputFilterEntityName($entity, $e)
+    private function normalizeInputFilterEntityName($entity, EventInterface $e)
     {
         $entity['input_filter_name'] = str_replace('\\', '-', $entity['input_filter_name']);
         $e->setParam('entity', $entity);
@@ -421,9 +449,10 @@ class InjectModuleResourceLinksListener
     /**
      * Inject service links
      *
-     * @param  string $type "rpc" | "rest" | "authorization"
-     * @param  LinkCollection $links
-     * @param  null|string $module
+     * @param string $type "rpc" | "rest" | "authorization"
+     * @param LinkCollection $links
+     * @param null|string $module
+     * @return void
      */
     private function injectLinksByType($type, LinkCollection $links, $module = null)
     {
@@ -458,7 +487,7 @@ class InjectModuleResourceLinksListener
     }
 
     /**
-     * @param $service
+     * @param string $service
      * @return string
      */
     private function getServiceType($service)

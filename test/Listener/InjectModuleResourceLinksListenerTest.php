@@ -16,6 +16,7 @@ use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListener;
+use ZF\Apigility\Admin\Model\DocumentationEntity;
 use ZF\Apigility\Admin\Model\InputFilterEntity;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\RestInputFilterEntity;
@@ -68,7 +69,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
                 [
                     'renderCollection',
                     'renderEntity',
-                    'renderCollection.Entity'
+                    'renderCollection.entity'
                 ],
                 [$listener, 'onHalRenderEvents']
             )
@@ -524,5 +525,183 @@ class InjectModuleResourceLinksListenerTest extends TestCase
             ->shouldBeCalled();
 
         $this->assertNull($this->listener->onRenderEntity($event->reveal()));
+    }
+
+    public function testOnRenderCollectionEntityDoesNothingForUnknownEntityType()
+    {
+        $entity = $this->prophesize(DocumentationEntity::class);
+
+        $event = $this->prophesize(EventInterface::class);
+        $event->getParam('entity')->will([$entity, 'reveal'])->shouldBeCalled();
+
+        $this->urlHelper->call()->shouldNotBeCalled();
+        $this->serverUrlHelper->call()->shouldNotBeCalled();
+
+        $this->assertNull($this->listener->onRenderCollectionEntity($event->reveal()));
+    }
+
+    public function testOnRenderCollectionEntityReplacesModuleEntityWithHalEntityContainingRelationalLinks()
+    {
+        $r = new ReflectionProperty($this->listener, 'urlHelper');
+        $r->setAccessible(true);
+        $r->setValue($this->listener, function (...$args) {
+            $helper = $this->urlHelper->reveal();
+            return $helper->call(...$args);
+        });
+
+        $moduleEntity = $this->prophesize(ModuleEntity::class);
+        $event        = $this->prophesize(EventInterface::class);
+
+        $event->getParam('entity')->will([$moduleEntity, 'reveal']);
+
+        $moduleEntity->getArrayCopy()->willReturn([
+            'name'            => 'FooConf',
+            'rest'            => ['ignored'],
+            'rpc'             => ['ignored'],
+            'default_version' => '10',
+        ]);
+
+        $event
+            ->setParam(
+                'entity',
+                Argument::that(function ($halEntity) {
+                    if (! $halEntity instanceof Entity) {
+                        return false;
+                    }
+
+                    $data = $halEntity->getEntity();
+                    if (! is_array($data)) {
+                        return false;
+                    }
+
+                    if (! isset($data['default_version'])
+                        || ! isset($data['name'])
+                        || isset($data['rest'])
+                        || isset($data['rpc'])
+                    ) {
+                        return false;
+                    }
+
+                    $links = $halEntity->getLinks();
+                    if (! $links->has('self')
+                        || ! $links->has('authorization')
+                        || ! $links->has('rest')
+                        || ! $links->has('rpc')
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                })
+            )
+            ->shouldBeCalled();
+
+        $this->urlHelper
+            ->call(
+                'zf-apigility/api/module',
+                Argument::any(),
+                [],
+                false
+            )
+            ->shouldNotBeCalled();
+        $this->urlHelper
+            ->call(
+                'zf-apigility/api/module/authorization',
+                ['name' => 'FooConf'],
+                [],
+                false
+            )
+            ->willReturn('/zf-apigility/api/module/authorization');
+        $this->urlHelper
+            ->call(
+                'zf-apigility/api/module/rest-service',
+                ['name' => 'FooConf'],
+                [],
+                false
+            )
+            ->willReturn('/zf-apigility/api/module/rest-service');
+        $this->urlHelper
+            ->call(
+                'zf-apigility/api/module/rpc-service',
+                ['name' => 'FooConf'],
+                [],
+                false
+            )
+            ->willReturn('/zf-apigility/api/module/rpc-service');
+
+        $this->assertNull($this->listener->onRenderCollectionEntity($event->reveal()));
+    }
+
+    /**
+     * @dataProvider serviceEntities
+     */
+    public function testOnRenderCollectionEntityInjectsServiceRelationalLinks($entityType)
+    {
+        $serviceEntity = new $entityType();
+        $serviceName   = sprintf(
+            'Version\V1\%s\FooBar\BazController',
+            $entityType instanceof RestServiceEntity ? 'Rest' : 'Rpc'
+        );
+        $serviceEntity->exchangeArray([
+            'controller_service_name' => $serviceName,
+        ]);
+        $event = $this->prophesize(EventInterface::class);
+
+        $r = new ReflectionProperty($this->listener, 'routeMatch');
+        $r->setAccessible(true);
+        $r->setValue($this->listener, $this->routeMatch->reveal());
+
+        $event->getParam('entity')->willReturn($serviceEntity);
+
+        $this->routeMatch
+            ->getParam('name')
+            ->willReturn('Version')
+            ->shouldBeCalled();
+
+        $event->setParam('entity', Argument::that(function ($halEntity) use ($serviceEntity) {
+            if (! $halEntity instanceof Entity) {
+                return false;
+            }
+
+            if ($serviceEntity !== $halEntity->getEntity()) {
+                return false;
+            }
+
+            $links = $halEntity->getLinks();
+            if (! $links->has('self')
+                || ! $links->has('input_filter')
+                || ! $links->has('documentation')
+            ) {
+                return false;
+            }
+
+            return true;
+        }))->shouldBeCalled();
+
+        $this->assertNull($this->listener->onRenderCollectionEntity($event->reveal()));
+    }
+
+    public function testOnRenderCollectionEntityNormalizesInputFilterEntityName()
+    {
+        $inputFilterEntity = new InputFilterEntity();
+        $inputFilterEntity->exchangeArray([
+            'input_filter_name' => 'FooBar\Baz\InputFilter',
+        ]);
+        $event = $this->prophesize(EventInterface::class);
+
+        $event->getParam('entity')->willReturn($inputFilterEntity);
+        $event->setParam('entity', Argument::that(function ($entity) use ($inputFilterEntity) {
+            if ($entity !== $inputFilterEntity) {
+                return false;
+            }
+
+            if ('FooBar-Baz-InputFilter' !== $entity['input_filter_name']) {
+                return false;
+            }
+
+            return true;
+        }))->shouldBeCalled();
+
+        $this->assertNull($this->listener->onRenderCollectionEntity($event->reveal()));
     }
 }
