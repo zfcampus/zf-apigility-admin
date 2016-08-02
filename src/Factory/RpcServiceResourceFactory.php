@@ -23,26 +23,26 @@ class RpcServiceResourceFactory
     {
         if (! $container->has(RpcServiceModelFactory::class)) {
             throw new ServiceNotCreatedException(sprintf(
-                '%s is missing %s dependency',
+                '%s is missing its %s dependency',
                 RpcServiceResource::class,
                 RpcServiceModelFactory::class
             ));
         }
         if (! $container->has(InputFilterModel::class)) {
             throw new ServiceNotCreatedException(sprintf(
-                '%s is missing %s dependency',
+                '%s is missing its %s dependency',
                 RpcServiceResource::class,
                 InputFilterModel::class
             ));
         }
         if (! $container->has('ControllerManager')) {
             throw new ServiceNotCreatedException(sprintf(
-                '%s is missing ControllerManager dependency',
+                '%s is missing its ControllerManager dependency',
                 RpcServiceResource::class
             ));
         }
 
-        return new Model\RpcServiceResource(
+        return new RpcServiceResource(
             $container->get(RpcServiceModelFactory::class),
             $container->get(InputFilterModel::class),
             $container->get('ControllerManager'),
