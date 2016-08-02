@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\Listener;
 
 use Interop\Container\ContainerInterface;
+use Zend\EventManager\EventInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteMatch;
@@ -64,14 +65,7 @@ class InjectModuleResourceLinksListener
 
         $halPlugin->getEventManager()->attach(
             ['renderCollection', 'renderEntity', 'renderCollection.Entity'],
-            function ($e) use ($matches) {
-                if ($matches->getParam('controller_service_name')) {
-                    $matches->setParam(
-                        'controller_service_name',
-                        str_replace('\\', '-', $matches->getParam('controller_service_name'))
-                    );
-                }
-            }
+            [$this, 'onHalRenderEvents']
         );
 
         // If content is empty, then send the response with a 204 and an emtpy body
@@ -90,6 +84,29 @@ class InjectModuleResourceLinksListener
                 10
             );
         }
+    }
+
+    /**
+     * Normalize the route match controller service name.
+     *
+     * On each HAL plugin render event, if we have a route match containing
+     * a controller service name, normalize it.
+     *
+     * @param EventInterface $e
+     * return void
+     */
+    public function onHalRenderEvents(EventInterface $e)
+    {
+        if (! $this->routeMatch
+            || ! $this->routeMatch->getParam('controller_service_name')
+        ) {
+            return;
+        }
+
+        $this->routeMatch->setParam(
+            'controller_service_name',
+            str_replace('\\', '-', $this->routeMatch->getParam('controller_service_name'))
+        );
     }
 
     /**

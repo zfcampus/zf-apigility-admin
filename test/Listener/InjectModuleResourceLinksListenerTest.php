@@ -10,7 +10,9 @@ use Closure;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
+use ReflectionProperty;
 use stdClass;
+use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListener;
@@ -44,7 +46,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
         $this->listener        = new InjectModuleResourceLinksListener($this->helpers->reveal());
     }
 
-    public function initRequiredConditions()
+    public function initRequiredConditions($listener)
     {
         $this->event->getRouteMatch()->will([$this->routeMatch, 'reveal'])->shouldBeCalled();
         $this->event->getResult()->will([$this->result, 'reveal']);
@@ -66,7 +68,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
                     'renderEntity',
                     'renderCollection.Entity'
                 ],
-                Argument::type(Closure::class)
+                [$listener, 'onHalRenderEvents']
             )
             ->shouldBeCalled();
         $this->hal->getEventManager()->will([$this->events, 'reveal']);
@@ -99,7 +101,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
     public function testRegistersAlternateUrlHelperAndAttachesHalPluginListenersIfHalJsonModelDetected()
     {
         $listener = $this->listener;
-        $this->initRequiredConditions();
+        $this->initRequiredConditions($listener);
 
         $this->result->isEntity()->willReturn(false)->shouldBeCalled();
         $this->result->isCollection()->willReturn(false)->shouldBeCalled();
@@ -121,7 +123,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
         $links      = $this->prophesize(LinkCollection::class);
         $payload    = new Entity($module->reveal(), 'FooConf');
         $payload->setLinks($links->reveal());
-        $this->initRequiredConditions();
+        $this->initRequiredConditions($listener);
 
         $this->result->isEntity()->willReturn(true)->shouldBeCalled();
         $this->result->getPayload()->willReturn($payload);
@@ -238,7 +240,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
 
         $payload  = new Entity($serviceEntity, 'Version\V1\Rest\Foo');
         $payload->setLinks($links->reveal());
-        $this->initRequiredConditions();
+        $this->initRequiredConditions($listener);
 
         $this->result->isEntity()->willReturn(true)->shouldBeCalled();
         $this->result->getPayload()->willReturn($payload);
@@ -300,7 +302,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
 
         $payload  = new Entity($serviceEntity, 'Version\V1\Rest\Foo\InputFilter');
         $payload->setLinks($links->reveal());
-        $this->initRequiredConditions();
+        $this->initRequiredConditions($listener);
 
         $this->result->isEntity()->willReturn(true)->shouldBeCalled();
         $this->result->getPayload()->willReturn($payload);
@@ -353,7 +355,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
     public function testMemoizesRouteMatchAndAttachesRenderCollectionEntityListener()
     {
         $listener = $this->listener;
-        $this->initRequiredConditions();
+        $this->initRequiredConditions($listener);
 
         $this->result->isEntity()->willReturn(false)->shouldBeCalled();
         $this->result->isCollection()->willReturn(true)->shouldBeCalled();
@@ -364,5 +366,49 @@ class InjectModuleResourceLinksListenerTest extends TestCase
 
         $this->assertNull($listener($this->event->reveal()));
         $this->assertAttributeSame($this->routeMatch->reveal(), 'routeMatch', $listener);
+    }
+
+    public function testOnHalRenderEventsExitsEarlyIfNoRouteMatchPresentInListener()
+    {
+        $event = $this->prophesize(EventInterface::class)->reveal();
+        $this->assertNull($this->listener->onHalRenderEvents($event));
+    }
+
+    public function testOnHalRenderEventsExitsEarlyIfRouteMatchDoesNotContainControllerServiceName()
+    {
+        $event = $this->prophesize(EventInterface::class)->reveal();
+
+        $r = new ReflectionProperty($this->listener, 'routeMatch');
+        $r->setAccessible(true);
+        $r->setValue($this->listener, $this->routeMatch->reveal());
+
+        $this->routeMatch
+            ->getParam('controller_service_name')
+            ->willReturn(null)
+            ->shouldBeCalled();
+        $this->routeMatch
+            ->setParam('controller_service_name', Argument::any())
+            ->shouldNotBeCalled();
+
+        $this->assertNull($this->listener->onHalRenderEvents($event));
+    }
+
+    public function testOnHalRenderEventsUpdatesControllerServiceNameInRouteMatch()
+    {
+        $event = $this->prophesize(EventInterface::class)->reveal();
+
+        $r = new ReflectionProperty($this->listener, 'routeMatch');
+        $r->setAccessible(true);
+        $r->setValue($this->listener, $this->routeMatch->reveal());
+
+        $this->routeMatch
+            ->getParam('controller_service_name')
+            ->willReturn('Foo\Bar\BazController')
+            ->shouldBeCalled();
+        $this->routeMatch
+            ->setParam('controller_service_name', 'Foo-Bar-BazController')
+            ->shouldBeCalled();
+
+        $this->assertNull($this->listener->onHalRenderEvents($event));
     }
 }
