@@ -29,14 +29,14 @@ class AuthorizationModelFactory
     protected $moduleModel;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
     /**
-     * @param  ModuleUtils $modules
-     * @param  ConfigResourceFactory $configFactory
-     * @param  ModuleModel $moduleModel
+     * @param ModulePathSpec $modules
+     * @param ConfigResourceFactory $configFactory
+     * @param ModuleModel $moduleModel
      */
     public function __construct(ModulePathSpec $modules, ConfigResourceFactory $configFactory, ModuleModel $moduleModel)
     {
