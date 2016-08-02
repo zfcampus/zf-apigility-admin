@@ -64,16 +64,9 @@ class InjectModuleResourceLinksListenerTest extends TestCase
             return $helper->call(...$args);
         });
 
-        $this->events
-            ->attach(
-                [
-                    'renderCollection',
-                    'renderEntity',
-                    'renderCollection.entity'
-                ],
-                [$listener, 'onHalRenderEvents']
-            )
-            ->shouldBeCalled();
+        foreach (['renderCollection', 'renderEntity', 'renderCollection.entity'] as $event) {
+            $this->events->attach($event, [$listener, 'onHalRenderEvents'])->shouldBeCalled();
+        }
         $this->hal->getEventManager()->will([$this->events, 'reveal']);
     }
 

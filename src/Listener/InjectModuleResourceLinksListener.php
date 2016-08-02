@@ -75,10 +75,9 @@ class InjectModuleResourceLinksListener
         $halPlugin = $this->viewHelpers->get('Hal');
         $this->initializeUrlHelper();
 
-        $halPlugin->getEventManager()->attach(
-            ['renderCollection', 'renderEntity', 'renderCollection.entity'],
-            [$this, 'onHalRenderEvents']
-        );
+        foreach (['renderCollection', 'renderEntity', 'renderCollection.entity'] as $event) {
+            $halPlugin->getEventManager()->attach($event, [$this, 'onHalRenderEvents']);
+        }
 
         // If content is empty, then send the response with a 204 and an emtpy body
 
