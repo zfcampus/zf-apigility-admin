@@ -72,7 +72,7 @@ class InjectModuleResourceLinksListener
             return;
         }
 
-        $halPlugin = $this->viewHelpers->get('hal');
+        $halPlugin = $this->viewHelpers->get('Hal');
         $this->initializeUrlHelper();
 
         $halPlugin->getEventManager()->attach(

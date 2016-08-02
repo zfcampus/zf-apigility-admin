@@ -54,7 +54,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
         $this->event->getRouteMatch()->will([$this->routeMatch, 'reveal'])->shouldBeCalled();
         $this->event->getResult()->will([$this->result, 'reveal']);
 
-        $this->helpers->get('hal')->will([$this->hal, 'reveal']);
+        $this->helpers->get('Hal')->will([$this->hal, 'reveal']);
         $this->helpers->get('Url')->willReturn(function (...$args) {
             $helper = $this->urlHelper->reveal();
             return $helper->call(...$args);
@@ -83,7 +83,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
 
         $this->event->getRouteMatch()->willReturn(null)->shouldBeCalled();
         $this->event->getResult()->shouldNotBeCalled();
-        $this->helpers->get('hal')->shouldNotBeCalled();
+        $this->helpers->get('Hal')->shouldNotBeCalled();
 
         $this->assertNull($listener($this->event->reveal()));
         $this->assertAttributeEmpty('urlHelper', $listener);
@@ -95,7 +95,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
 
         $this->event->getRouteMatch()->will([$this->routeMatch, 'reveal'])->shouldBeCalled();
         $this->event->getResult()->willReturn(new stdClass());
-        $this->helpers->get('hal')->shouldNotBeCalled();
+        $this->helpers->get('Hal')->shouldNotBeCalled();
 
         $this->assertNull($listener($this->event->reveal()));
         $this->assertAttributeEmpty('urlHelper', $listener);
