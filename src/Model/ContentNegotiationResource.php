@@ -14,7 +14,7 @@ use ZF\Rest\Exception\CreationException;
 class ContentNegotiationResource extends AbstractResourceListener
 {
     /**
-     * @var DbAdapterModel
+     * @var ContentNegotiationModel
      */
     protected $model;
 
