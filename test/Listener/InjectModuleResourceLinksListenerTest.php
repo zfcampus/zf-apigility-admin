@@ -18,7 +18,9 @@ use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListener;
 use ZF\Apigility\Admin\Model\InputFilterEntity;
 use ZF\Apigility\Admin\Model\ModuleEntity;
+use ZF\Apigility\Admin\Model\RestInputFilterEntity;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
+use ZF\Apigility\Admin\Model\RpcInputFilterEntity;
 use ZF\Apigility\Admin\Model\RpcServiceEntity;
 use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
@@ -410,5 +412,117 @@ class InjectModuleResourceLinksListenerTest extends TestCase
             ->shouldBeCalled();
 
         $this->assertNull($this->listener->onHalRenderEvents($event));
+    }
+
+    public function serviceEntitiesForOnRenderEntity()
+    {
+        $id   = 'Version\V1\Foo';
+        $data = ['controller_service_name' => $id];
+        yield 'array' => [$data, $id, 'rpc-service'];
+
+        $restService = new RestServiceEntity();
+        $restService->exchangeArray($data);
+        yield 'rest' => [$restService, $id, 'rest-service'];
+
+        $rpcService = new RpcServiceEntity();
+        $rpcService->exchangeArray($data);
+        yield 'rpc' => [$rpcService, $id, 'rpc-service'];
+    }
+
+    /**
+     * @dataProvider serviceEntitiesForOnRenderEntity
+     */
+    public function testOnRenderEntityInjectsLinksBasedOnServiceName($entity, $id, $serviceType)
+    {
+        $inputFilterLink = $this->prophesize(Link::class);
+        $documentationLink = $this->prophesize(Link::class);
+
+        $links = $this->prophesize(LinkCollection::class);
+
+        $halEntity = new Entity($entity, $id);
+        $halEntity->setLinks($links->reveal());
+
+        $event = $this->prophesize(EventInterface::class);
+        $event->getParam('entity')->willReturn($halEntity)->shouldBeCalled();
+        $event->getTarget()->will([$this->hal, 'reveal']);
+
+        $links->has('input_filter')->willReturn(true);
+        $links->get('input_filter')->will([$inputFilterLink, 'reveal']);
+
+        $inputFilterLink->getRouteParams()->willReturn(['foo' => 'bar']);
+        $inputFilterLink
+            ->setRouteParams([
+                'foo' => 'bar',
+                'controller_service_name' => $id,
+            ])
+            ->shouldBeCalled();
+
+        $links->has('documentation')->willReturn(true);
+        $links->get('documentation')->will([$documentationLink, 'reveal']);
+
+        $documentationLink->getRouteParams()->willReturn(['foo' => 'bar']);
+        $documentationLink
+            ->setRouteParams([
+                'foo' => 'bar',
+                'controller_service_name' => $id,
+            ])
+            ->shouldBeCalled();
+
+        $links->has('self')->willReturn(false);
+
+        $this->hal
+            ->injectSelfLink(
+                $halEntity,
+                'zf-apigility/api/module/' . $serviceType,
+                'controller_service_name'
+            )
+            ->shouldBeCalled();
+
+        $this->assertNull($this->listener->onRenderEntity($event->reveal()));
+    }
+
+    public function inputFilterEntitiesForOnRenderEntity()
+    {
+        $id   = 'Version\V1\Foo\InputFilter';
+        $data = ['input_filter_name' => $id];
+        yield 'array' => [$data, $id, 'rpc-service'];
+
+        $restInputFilter = new RestInputFilterEntity();
+        $restInputFilter->exchangeArray($data);
+        yield 'rest' => [$restInputFilter, $id, 'rest-service'];
+
+        $rpcInputFilter = new RpcInputFilterEntity();
+        $rpcInputFilter->exchangeArray($data);
+        yield 'rpc' => [$rpcInputFilter, $id, 'rpc-service'];
+    }
+
+    /**
+     * @dataProvider inputFilterEntitiesForOnRenderEntity
+     */
+    public function testOnRenderEntityInjectsLinksBasedOnInputFilterName($entity, $id, $serviceType)
+    {
+        $inputFilterLink = $this->prophesize(Link::class);
+        $documentationLink = $this->prophesize(Link::class);
+
+        $links = $this->prophesize(LinkCollection::class);
+
+        $halEntity = new Entity($entity, $id);
+        $halEntity->setLinks($links->reveal());
+
+        $event = $this->prophesize(EventInterface::class);
+        $event->getParam('entity')->willReturn($halEntity)->shouldBeCalled();
+        $event->getTarget()->will([$this->hal, 'reveal']);
+
+        $links->has('self')->willReturn(false);
+
+        $this->hal
+            ->injectSelfLink(
+                $halEntity,
+                sprintf('zf-apigility/api/module/%s/input-filter', $serviceType),
+                'input_filter_name'
+            )
+            ->shouldBeCalled();
+
+        $this->assertNull($this->listener->onRenderEntity($event->reveal()));
     }
 }

@@ -110,12 +110,15 @@ class InjectModuleResourceLinksListener
     }
 
     /**
-     * @param $e
+     * Inject service entities with expected relational links.
+     *
+     * @param EventInterface $e
+     * @return void
      */
-    public function onRenderEntity($e)
+    public function onRenderEntity(EventInterface $e)
     {
         $halEntity = $e->getParam('entity');
-        $entity    = $halEntity->entity;
+        $entity    = $halEntity->getEntity();
         $hal       = $e->getTarget();
 
         if ($entity instanceof Model\RestServiceEntity
@@ -157,6 +160,8 @@ class InjectModuleResourceLinksListener
                     $type = 'rest-service';
                     break;
                 case ($entity instanceof Model\RpcInputFilterEntity):
+                    // fall-through
+                default:
                     $type = 'rpc-service';
                     break;
             }
