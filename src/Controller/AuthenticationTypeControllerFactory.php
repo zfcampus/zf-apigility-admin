@@ -1,18 +1,42 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014-2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Admin\Controller;
 
-class AuthenticationTypeControllerFactory
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZF\MvcAuth\Authentication\DefaultAuthenticationListener;
+
+class AuthenticationTypeControllerFactory implements FactoryInterface
 {
-    public function __invoke($controllers)
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param null|array $options
+     * @return AuthenticationTypeController
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $services = $controllers->getServiceLocator();
         return new AuthenticationTypeController(
-            $services->get('ZF\MvcAuth\Authentication\DefaultAuthenticationListener')
+            $container->get(DefaultAuthenticationListener::class)
         );
+    }
+
+    /**
+     * @param ServiceLocatorInterface $container
+     * @return AuthenticationTypeController
+     */
+    public function createService(ServiceLocatorInterface $container)
+    {
+        if ($container instanceof AbstractPluginManager) {
+            $container = $container->getServiceLocator() ?: $container;
+        }
+
+        return $this($container, AuthenticationTypeController::class);
     }
 }

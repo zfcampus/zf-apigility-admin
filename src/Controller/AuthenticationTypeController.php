@@ -13,6 +13,14 @@ use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
 
 class AuthenticationTypeController extends AbstractAuthenticationController
 {
+    /**
+     * @var AuthListener
+     */
+    protected $authListener;
+
+    /**
+     * @param AuthListener $authListener
+     */
     public function __construct(AuthListener $authListener)
     {
         $this->authListener = $authListener;

@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Hydrator\Strategy\StrategyInterface;
 use ZF\ApiProblem\ApiProblem;
@@ -13,17 +14,40 @@ use ZF\ApiProblem\View\ApiProblemModel;
 
 class StrategyController extends AbstractActionController
 {
+    /**
+     * @param ContainerInterface
+     */
+    protected $serviceLocator;
+
+    /**
+     * @param ContainerInterface $serviceLocator
+     */
+    public function __construct(ContainerInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
     public function existsAction()
     {
-        $strategy_name = $this->params()->fromRoute('strategy_name', false);
-        if ($this->getServiceLocator()->has($strategy_name)) {
-            if ($this->getServiceLocator()->get($strategy_name) instanceof StrategyInterface) {
-                return ['exists' => true];
-            } else {
-                return new ApiProblemModel(new ApiProblem(422, 'This service does not implement StrategyInterface'));
-            }
-        } else {
+        $container = $this->getServiceLocator();
+        $strategyName = $this->params()->fromRoute('strategy_name', false);
+
+        if (! $container->has($strategyName)) {
             return new ApiProblemModel(new ApiProblem(422, 'This service was not found in the service manager'));
         }
+
+        if (! $container->get($strategyName) instanceof StrategyInterface) {
+            return new ApiProblemModel(new ApiProblem(422, 'This service does not implement StrategyInterface'));
+        }
+
+        return ['exists' => true];
     }
 }

@@ -61,7 +61,6 @@ return [
             Controller\OAuth2Authentication::class     => Controller\Authentication::class,
             Controller\Package::class                  => Controller\PackageController::class,
             Controller\Source::class                   => Controller\SourceController::class,
-            Controller\Strategy::class                 => Controller\StrategyController::class,
             Controller\Versioning::class               => Controller\VersioningController::class,
         ],
         'factories' => [
@@ -83,7 +82,7 @@ return [
             Controller\PackageController::class        => InvokableFactory::class,
             Controller\SettingsDashboard::class        => Controller\DashboardControllerFactory::class,
             Controller\SourceController::class         => Controller\SourceControllerFactory::class,
-            Controller\StrategyController::class       => InvokableFactory::class,
+            Controller\Strategy::class                 => Controller\StrategyControllerFactory::class,
             Controller\Validators::class               => Controller\ValidatorsControllerFactory::class,
             Controller\VersioningController::class     => Controller\VersioningControllerFactory::class,
         ],
