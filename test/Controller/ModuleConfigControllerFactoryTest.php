@@ -4,13 +4,13 @@
  * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZF\Apigility\Admin\Factory;
+namespace ZF\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
 use ZF\Apigility\Admin\Controller\ModuleConfigController;
-use ZF\Apigility\Admin\Factory\ModuleConfigControllerFactory;
+use ZF\Apigility\Admin\Controller\ModuleConfigControllerFactory;
 use ZF\Configuration\ConfigResourceFactory;
 use ZF\Configuration\ResourceFactory;
 

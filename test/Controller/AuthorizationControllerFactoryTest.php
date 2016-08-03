@@ -4,13 +4,13 @@
  * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZF\Apigility\Admin\Factory;
+namespace ZF\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
 use ZF\Apigility\Admin\Controller\AuthorizationController;
-use ZF\Apigility\Admin\Factory\AuthorizationControllerFactory;
+use ZF\Apigility\Admin\Controller\AuthorizationControllerFactory;
 use ZF\Apigility\Admin\Model\AuthorizationModelFactory;
 
 class AuthorizationControllerFactoryTest extends TestCase

@@ -4,37 +4,36 @@
  * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZF\Apigility\Admin\Factory;
+namespace ZF\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZF\Apigility\Admin\Controller\SourceController;
 use ZF\Apigility\Admin\Model\ModuleModel;
 
-class SourceControllerFactory implements FactoryInterface
+class ModuleCreationControllerFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
      * @param string $requestedName
      * @param null|array $options
-     * @return SourceController
+     * @return ModuleCreationController
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new SourceController($container->get(ModuleModel::class));
+        return new ModuleCreationController($container->get(ModuleModel::class));
     }
 
     /**
      * @param ServiceLocatorInterface $container
-     * @return SourceController
+     * @return ModuleCreationController
      */
     public function createService(ServiceLocatorInterface $container)
     {
         if ($container instanceof AbstractPluginManager) {
             $container = $container->getServiceLocator() ?: $container;
         }
-        return $this($container, SourceController::class);
+        return $this($container, ModuleCreationController::class);
     }
 }

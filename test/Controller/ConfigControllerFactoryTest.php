@@ -4,13 +4,13 @@
  * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZF\Apigility\Admin\Factory;
+namespace ZF\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
 use ZF\Apigility\Admin\Controller\ConfigController;
-use ZF\Apigility\Admin\Factory\ConfigControllerFactory;
+use ZF\Apigility\Admin\Controller\ConfigControllerFactory;
 use ZF\Configuration\ConfigResource;
 
 class ConfigControllerFactoryTest extends TestCase
