@@ -25,5 +25,15 @@
     <file>config</file>
     <file>src</file>
     <file>test</file>
+    <file>test/Controller/TestAsset/Auth2/config/autoload/global.php.dist</file>
+    <file>test/Controller/TestAsset/Auth2/config/autoload/local.php.dist</file>
+    <file>test/Model/TestAsset/module/AuthConf/config/module.config.php.dist</file>
+    <file>test/Model/TestAsset/module/AuthConfDefaults/config/module.config.php.dist</file>
+    <file>test/Model/TestAsset/module/AuthConfWithConfig/config/module.config.php.dist</file>
+    <file>test/Model/TestAsset/module/BarConf/config/module.config.php.dist</file>
+    <file>test/Model/TestAsset/module/BazConf/config/module.config.php.dist</file>
+    <file>test/Model/TestAsset/module/FooConf/config/module.config.php.dist</file>
+    <file>test/Model/TestAsset/module/Version/config/documentation.config.php.dist</file>
+    <file>test/Model/TestAsset/module/Version/config/module.config.php.dist</file>
     <exclude-pattern>*/test/*/module.config.php</exclude-pattern>
 </ruleset>
