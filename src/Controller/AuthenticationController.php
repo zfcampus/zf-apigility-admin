@@ -66,7 +66,7 @@ class AuthenticationController extends AbstractAuthenticationController
                 $response->setStatusCode(201);
                 $response->getHeaders()->addHeaderLine(
                     'Location',
-                    $this->plugin('hal')->createLink($this->getRouteForEntity($entity))
+                    $this->plugin('Hal')->createLink($this->getRouteForEntity($entity))
                 );
                 break;
             case $request::METHOD_PATCH:
