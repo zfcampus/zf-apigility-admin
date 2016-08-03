@@ -35,5 +35,4 @@
     <file>test/Model/TestAsset/module/FooConf/config/module.config.php.dist</file>
     <file>test/Model/TestAsset/module/Version/config/documentation.config.php.dist</file>
     <file>test/Model/TestAsset/module/Version/config/module.config.php.dist</file>
-    <exclude-pattern>*/test/*/module.config.php</exclude-pattern>
 </ruleset>
