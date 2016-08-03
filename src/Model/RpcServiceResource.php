@@ -49,8 +49,10 @@ class RpcServiceResource extends AbstractResourceListener
     protected $rpcFactory;
 
     /**
-     * @param  RpcServiceModelFactory $rpcFactory
-     * @param  InputFilterModel $inputFilterModel
+     * @param RpcServiceModelFactory $rpcFactory
+     * @param InputFilterModel $inputFilterModel
+     * @param ControllerManager $controllerManager
+     * @param DocumentationModel $documentationModel
      */
     public function __construct(
         RpcServiceModelFactory $rpcFactory,

@@ -79,6 +79,8 @@ class RestServiceResource extends AbstractResourceListener
     }
 
     /**
+     * @param string $type One of the RestServiceModelFactory::TYPE_* constants;
+     *     defaults to RestServiceModelFactory::TYPE_DEFAULT.
      * @return RestServiceModel
      */
     public function getModel($type = RestServiceModelFactory::TYPE_DEFAULT)
