@@ -10,6 +10,7 @@ use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ModuleManager\ModuleManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\Apigility\Admin\Model\DoctrineAdapterModel;
 use ZF\Apigility\Admin\Model\DoctrineAdapterResource;
 use ZF\Apigility\Admin\Model\DoctrineAdapterResourceFactory;
@@ -18,7 +19,8 @@ class DoctrineAdapterResourceFactoryTest extends TestCase
 {
     public function setUp()
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container = $this->prophesize(ServiceLocatorInterface::class);
+        $this->container->willImplement(ContainerInterface::class);
     }
 
     public function testFactoryRaisesExceptionIfDoctrineAdapterModelIsNotInContainer()
@@ -57,5 +59,6 @@ class DoctrineAdapterResourceFactoryTest extends TestCase
             'FooConf',
             'Version',
         ], 'loadedModules', $resource);
+        $this->assertAttributeSame($this->container->reveal(), 'serviceLocator', $resource);
     }
 }

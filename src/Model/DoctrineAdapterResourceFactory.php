@@ -30,6 +30,12 @@ class DoctrineAdapterResourceFactory
         $modules = $container->get('ModuleManager');
         $loadedModules = $modules->getLoadedModules(false);
 
-        return new DoctrineAdapterResource($model, $loadedModules);
+        $resource = new DoctrineAdapterResource($model, $loadedModules);
+
+        // @todo Remove once setServiceLocator and getServiceLocator are removed
+        //     from the DoctrineAdapterResource class.
+        $resource->setServiceLocator($container);
+
+        return $resource;
     }
 }

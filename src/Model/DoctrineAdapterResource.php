@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\Http\Response;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\AbstractResourceListener;
@@ -24,6 +25,11 @@ class DoctrineAdapterResource extends AbstractResourceListener
     protected $loadedModules;
 
     /**
+     * @var null|ServiceLocatorInterface
+     */
+    protected $serviceLocator;
+
+    /**
      * @param DoctrineAdapterModel $model
      * @param array $loadedModules List of loaded modules
      */
@@ -31,6 +37,28 @@ class DoctrineAdapterResource extends AbstractResourceListener
     {
         $this->model = $model;
         $this->loadedModules = $loadedModules;
+    }
+
+    /**
+     * Set service locator
+     *
+     * @deprecated since 1.5.0, and no longer used internally.
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return self
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+        return $this;
+    }
+
+    /**
+     * @deprecated since 1.5.0, and no longer used internally.
+     * @return null|ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator();
     }
 
     /**
