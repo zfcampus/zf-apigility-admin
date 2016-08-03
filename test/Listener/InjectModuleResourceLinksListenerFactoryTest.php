@@ -4,12 +4,12 @@
  * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZFTest\Apigility\Admin\Factory;
+namespace ZFTest\Apigility\Admin\Listener;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\Factory\InjectModuleResourceLinksListenerFactory;
 use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListener;
+use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListenerFactory;
 
 class InjectModuleResourceLinksListenerFactoryTest extends TestCase
 {

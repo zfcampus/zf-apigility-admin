@@ -4,10 +4,9 @@
  * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-namespace ZF\Apigility\Admin\Factory;
+namespace ZF\Apigility\Admin\Listener;
 
 use Interop\Container\ContainerInterface;
-use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListener;
 
 class InjectModuleResourceLinksListenerFactory
 {
