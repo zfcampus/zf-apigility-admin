@@ -93,12 +93,12 @@ class RpcServiceModelFactoryFactoryTest extends TestCase
         $this->container->get('SharedEventManager')->willReturn($sharedEvents);
         $this->container->get(ModuleModel::class)->willReturn($moduleModel);
 
-        $restFactory = $factory($this->container->reveal());
+        $rpcFactory = $factory($this->container->reveal());
 
-        $this->assertInstanceOf(RpcServiceModelFactory::class, $restFactory);
-        $this->assertAttributeSame($pathSpec, 'modules', $restFactory);
-        $this->assertAttributeSame($configResourceFactory, 'configFactory', $restFactory);
-        $this->assertAttributeSame($sharedEvents, 'sharedEventManager', $restFactory);
-        $this->assertAttributeSame($moduleModel, 'moduleModel', $restFactory);
+        $this->assertInstanceOf(RpcServiceModelFactory::class, $rpcFactory);
+        $this->assertAttributeSame($pathSpec, 'modules', $rpcFactory);
+        $this->assertAttributeSame($configResourceFactory, 'configFactory', $rpcFactory);
+        $this->assertAttributeSame($sharedEvents, 'sharedEventManager', $rpcFactory);
+        $this->assertAttributeSame($moduleModel, 'moduleModel', $rpcFactory);
     }
 }
