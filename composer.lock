@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5b04af27962d20e9b6455bf0675ce13d",
-    "content-hash": "e216cc0392ab5ed881734f6381f64aa4",
+    "hash": "dbf67663f7b1cf88bf139730d54b99aa",
+    "content-hash": "51d9ffd8c2fc4af8b828571f12e6c6b8",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1874,16 +1874,16 @@
         },
         {
             "name": "zfcampus/zf-content-validation",
-            "version": "1.3.3",
+            "version": "1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zfcampus/zf-content-validation.git",
-                "reference": "448a45692661e868ac8e298892d215369ceaced0"
+                "reference": "aa9b688d0995bab00a3c94fe629891d3581b0ca5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zfcampus/zf-content-validation/zipball/448a45692661e868ac8e298892d215369ceaced0",
-                "reference": "448a45692661e868ac8e298892d215369ceaced0",
+                "url": "https://api.github.com/repos/zfcampus/zf-content-validation/zipball/aa9b688d0995bab00a3c94fe629891d3581b0ca5",
+                "reference": "aa9b688d0995bab00a3c94fe629891d3581b0ca5",
                 "shasum": ""
             },
             "require": {
@@ -1931,7 +1931,7 @@
                 "zend",
                 "zf2"
             ],
-            "time": "2016-07-26 21:15:44"
+            "time": "2016-08-04 22:27:17"
         },
         {
             "name": "zfcampus/zf-hal",
