@@ -106,11 +106,11 @@ class ModuleCreationControllerTest extends TestCase
 
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->getVariable('payload');
+        $entity = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
-        $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $payload->entity);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $entity);
 
-        $metadata = $payload->entity;
-        $this->assertEquals('Foo', $metadata->getName());
+        $this->assertEquals('Foo', $entity->getName());
 
         $this->removeDir($tmpDir);
         chdir($currentDir);
