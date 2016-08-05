@@ -26,6 +26,28 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
+## 1.4.3 - 2016-08-05
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#350](https://github.com/zfcampus/zf-apigility-admin/pull/350) updates the
+  `Module` class to pull entities composed in `ZF\Hal\Entity` instances via the
+  `getEntity()` method of that class, if it exists (introduced in zf-hal 1.4).
+  This change prevents zf-hal 1.4+ versions from emitting deprecation notices,
+  and thus breaking usage of the admin API.
+
 ## 1.4.2 - 2016-06-28
 
 ### Added
@@ -38,15 +60,14 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#344](https://github.com/zfcampus/zf-apigility-admin/pull/344) removes the
-  `ServiceLocatorAwareInterface` implementation from
-  `ZF\Apigility\Admin\Model\AbstractAutodiscoveryModel` (though it keeps the
-  `setServiceLocator()` method); this change prevents warnings when executing
-  the admin with zend-mvc v2.7 releases.
+- Nothing.
 
 ### Fixed
 
-- Nothing.
+- [#344](https://github.com/zfcampus/zf-apigility-admin/pull/344) removes the
+  `ServiceLocatorAwareInterface`, and updates factories for autodiscovery
+  classes to inject their service locator instead. This change removes
+  deprecation notices when using Apigility with the zend-mvc 2.7+ series.
 
 ## 1.4.1 - 2016-01-26
 

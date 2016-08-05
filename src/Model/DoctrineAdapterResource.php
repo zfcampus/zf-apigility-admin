@@ -7,56 +7,32 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\AbstractResourceListener;
 
-class DoctrineAdapterResource extends AbstractResourceListener implements ServiceLocatorAwareInterface
+class DoctrineAdapterResource extends AbstractResourceListener
 {
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
-
     /**
      * @var DbAdapterModel
      */
     protected $model;
 
     /**
+     * @var array
+     */
+    protected $loadedModules;
+
+    /**
      * Constructor
      *
      * @param DoctrineAdapterModel $model
      */
-    public function __construct(DoctrineAdapterModel $model)
+    public function __construct(DoctrineAdapterModel $model, array $loadedModules)
     {
         $this->model = $model;
+        $this->loadedModules = $loadedModules;
     }
-
-    /**
-     * Set service locator
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return DoctrineAdapterResource
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-        return $this;
-    }
-
-    /**
-     * Get service locator
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
 
     /**
      * @param $id
@@ -77,12 +53,11 @@ class DoctrineAdapterResource extends AbstractResourceListener implements Servic
      */
     public function fetchAll($params = [])
     {
-        $modules = $this->getServiceLocator()->get('ModuleManager');
-        $loaded = $modules->getLoadedModules(false);
-
-        if (!isset($loaded['ZF\Apigility\Doctrine\Admin']) || !isset($loaded['ZF\Apigility\Doctrine\Server'])) {
+        if (! isset($this->loadedModules['ZF\Apigility\Doctrine\Admin'])
+            || ! isset($this->loadedModules['ZF\Apigility\Doctrine\Server'])) {
             $response = new Response();
             $response->setStatusCode(204);
+
             return $response;
         }
 

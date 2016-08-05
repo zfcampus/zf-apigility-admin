@@ -6,10 +6,10 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use Zend\Config\Writer\WriterInterface;
 use ZF\Apigility\Admin\Model\DocumentationModel;
 use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory;
-use ZFTest\Configuration\TestAsset\ConfigWriter;
 
 class DocumentationModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,9 +32,11 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
             ->method('getModuleConfigPath')
             ->will($this->returnValue(__DIR__ . '/TestAsset/module/Doc/config/module.config.php'));
 
+        $mockWriter = $this->getMockBuilder(WriterInterface::class)->getMock();
+
         $configResourceFactory = new ResourceFactory(
             $mockModuleUtils,
-            new ConfigWriter()
+            $mockWriter
         );
         $this->docModel = new DocumentationModel($configResourceFactory, $mockModuleUtils);
     }

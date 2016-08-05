@@ -111,7 +111,7 @@ class AuthenticationControllerTest extends TestCase
         $payload = $result->getVariable('payload');
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
 
-        $metadata = $payload->entity;
+        $metadata = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
         $this->assertEquals('testbasic', $metadata['name']);
     }
 
@@ -246,7 +246,7 @@ class AuthenticationControllerTest extends TestCase
         $params = $self->getRouteParams();
         $this->assertEquals('testbasic', $params['authentication_adapter']);
 
-        $metadata = $payload->entity;
+        $metadata = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
         $this->assertEmpty(array_diff_key($metadata, $postData));
     }
 

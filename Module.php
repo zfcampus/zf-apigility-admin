@@ -171,7 +171,10 @@ class Module
                 }
                 $config = $services->get('Config');
 
-                return new Model\DbAutodiscoveryModel($config);
+                $instance = new Model\DbAutodiscoveryModel($config);
+                $instance->setServiceLocator($services);
+
+                return $instance;
             },
             'ZF\Apigility\Admin\Model\ContentNegotiationModel' => function ($services) {
                 if (!$services->has('Config')) {
@@ -243,8 +246,13 @@ class Module
                         . 'because ZF\Apigility\Admin\Model\DoctrineAdapterModel service is not present'
                     );
                 }
+
                 $model = $services->get('ZF\Apigility\Admin\Model\DoctrineAdapterModel');
-                return new Model\DoctrineAdapterResource($model);
+
+                $modules = $services->get('ModuleManager');
+                $loadedModules = $modules->getLoadedModules(false);
+
+                return new Model\DoctrineAdapterResource($model, $loadedModules);
             },
             'ZF\Apigility\Admin\Model\ModulePathSpec' => function ($services) {
                 if (!$services->has('ZF\Configuration\ModuleUtils')) {
@@ -635,7 +643,7 @@ class Module
      */
     protected function injectServiceLinks(Entity $halEntity, HalJsonModel $model, $e)
     {
-        $entity = $halEntity->entity;
+        $entity = method_exists($halEntity, 'getEntity') ? $halEntity->getEntity() : $halEntity->entity;
         $links  = $halEntity->getLinks();
         if ($entity instanceof Model\ModuleEntity) {
             $this->injectModuleResourceRelationalLinks($entity, $links, $model);
@@ -717,7 +725,7 @@ class Module
     public function onRenderEntity($e)
     {
         $halEntity = $e->getParam('entity');
-        $entity    = $halEntity->entity;
+        $entity    = method_exists($halEntity, 'getEntity') ? $halEntity->getEntity() : $halEntity->entity;
         $hal       = $e->getTarget();
 
         if ($entity instanceof Model\RestServiceEntity
