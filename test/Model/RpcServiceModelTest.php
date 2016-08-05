@@ -89,7 +89,6 @@ class RpcServiceModelTest extends TestCase
 
     protected function setCurrentModule()
     {
-
     }
 
     public function tearDown()

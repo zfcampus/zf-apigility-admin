@@ -66,7 +66,6 @@ class ModulePathSpecTest extends TestCase
 
         $this->assertEquals($basePath . 'Rpc/', $pathSpec->getRpcPath('ModuleName', 2));
         $this->assertEquals($basePath . 'Rpc/ServiceName', $pathSpec->getRpcPath('ModuleName', 2, 'ServiceName'));
-
     }
 
     /**

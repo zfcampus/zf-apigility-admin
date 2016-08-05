@@ -625,7 +625,7 @@ class Module
      */
     protected function injectServiceLinks(Entity $halEntity, HalJsonModel $model, $e)
     {
-        $entity = $halEntity->entity;
+        $entity = method_exists($halEntity, 'getEntity') ? $halEntity->getEntity() : $halEntity->entity;
         $links  = $halEntity->getLinks();
         if ($entity instanceof Model\ModuleEntity) {
             $this->injectModuleResourceRelationalLinks($entity, $links, $model);
@@ -707,7 +707,7 @@ class Module
     public function onRenderEntity($e)
     {
         $halEntity = $e->getParam('entity');
-        $entity    = $halEntity->entity;
+        $entity    = method_exists($halEntity, 'getEntity') ? $halEntity->getEntity() : $halEntity->entity;
         $hal       = $e->getTarget();
 
         if ($entity instanceof Model\RestServiceEntity
