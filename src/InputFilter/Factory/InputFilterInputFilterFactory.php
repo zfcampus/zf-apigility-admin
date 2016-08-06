@@ -8,6 +8,7 @@ namespace ZF\Apigility\Admin\InputFilter\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\InputFilter\Factory as InputFilterFactory;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\Apigility\Admin\InputFilter\InputFilterInputFilter;
