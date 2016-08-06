@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dbf67663f7b1cf88bf139730d54b99aa",
-    "content-hash": "51d9ffd8c2fc4af8b828571f12e6c6b8",
+    "hash": "829de7324c979797aa1e5352a5a30d22",
+    "content-hash": "a35413d51718a5ad40fdca1d16fb8b1e",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1659,16 +1659,16 @@
         },
         {
             "name": "zfcampus/zf-apigility-admin-ui",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zfcampus/zf-apigility-admin-ui.git",
-                "reference": "7f650986be84a387d21f28a3944b9c46e64c3d35"
+                "reference": "034bb37dc841989b068503e776ee27b1d6c32bea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zfcampus/zf-apigility-admin-ui/zipball/7f650986be84a387d21f28a3944b9c46e64c3d35",
-                "reference": "7f650986be84a387d21f28a3944b9c46e64c3d35",
+                "url": "https://api.github.com/repos/zfcampus/zf-apigility-admin-ui/zipball/034bb37dc841989b068503e776ee27b1d6c32bea",
+                "reference": "034bb37dc841989b068503e776ee27b1d6c32bea",
                 "shasum": ""
             },
             "require": {
@@ -1706,7 +1706,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2016-07-27 20:33:13"
+            "time": "2016-08-06 15:18:24"
         },
         {
             "name": "zfcampus/zf-apigility-provider",
