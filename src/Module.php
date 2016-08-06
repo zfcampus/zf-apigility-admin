@@ -45,6 +45,11 @@ class Module
      */
     public function init(ModuleManagerInterface $modules)
     {
+        $loaded = $modules->getLoadedModules(false);
+        if (! isset($loaded['ZF\Apigility\Admin\Ui'])) {
+            $modules->loadModule('ZF\Apigility\Admin\Ui');
+        }
+
         $this->disableOpCache();
     }
 
