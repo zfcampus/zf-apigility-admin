@@ -244,6 +244,8 @@ function installDependencies($composer)
 function help($stream = STDOUT)
 {
     $usage =<<<'EOC'
+Update an Apigility component to use Zend Framework component v3 releases.
+
 Usage:
 
   vendor/bin/apigility-upgrade-to-1.5.php [options]
