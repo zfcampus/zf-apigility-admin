@@ -97,7 +97,7 @@ application to take advantage of Zend Framework v3 components. The easiest way
 to do that is to use the provided script:
 
 ```bash
-$ ./vendor/bin/apigility-upgrade-to-1.5.php
+$ ./vendor/bin/apigility-upgrade-to-1.5
 ```
 
 This script will update your Composer requirements and constraints, update your

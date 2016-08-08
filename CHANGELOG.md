@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
   Framework component v3 releases:
 
   ```bash
-  $ ./vendor/bin/apigility-upgrade-to-1.5.php -h
+  $ ./vendor/bin/apigility-upgrade-to-1.5 -h
   ```
 
   In most cases, you can call it without arguments. Running the script updates
