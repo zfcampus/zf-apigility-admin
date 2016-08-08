@@ -261,6 +261,7 @@ Options:
   -h|--help               Display this message
   -c|--composer <path>    Path to composer binary; defaults to "composer"
                           (assumes discoverable via user PATH)
+
 EOC;
 
     fwrite($stream, $usage);
