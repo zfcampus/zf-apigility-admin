@@ -115,10 +115,7 @@ class DoctrineAdapterModel
     public function fetch($name)
     {
         $config = $this->localConfig->fetch(true);
-        if (! isset($config['doctrine'])
-            || ! isset($config['doctrine']['connection'])
-            || ! is_array($config['doctrine']['connection'])
-            || ! isset($config['doctrine']['connection'][$name])
+        if (! isset($config['doctrine']['connection'][$name])
             || ! is_array($config['doctrine']['connection'][$name])
         ) {
             return false;

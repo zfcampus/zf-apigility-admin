@@ -1209,10 +1209,6 @@ class RestServiceModel implements EventManagerAwareInterface
     {
         $routeName = $metadata->routeName;
         if (! $routeName
-            || ! isset($config['router'])
-            || ! isset($config['router']['routes'])
-            || ! isset($config['router']['routes'][$routeName])
-            || ! isset($config['router']['routes'][$routeName]['options'])
             || ! isset($config['router']['routes'][$routeName]['options']['route'])
         ) {
             return;

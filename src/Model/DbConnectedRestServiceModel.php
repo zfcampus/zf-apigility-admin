@@ -40,10 +40,7 @@ class DbConnectedRestServiceModel
         }
 
         $config = $e->getParam('config', []);
-        if (! isset($config['zf-apigility'])
-            || ! isset($config['zf-apigility']['db-connected'])
-            || ! isset($config['zf-apigility']['db-connected'][$entity->resourceClass])
-        ) {
+        if (! isset($config['zf-apigility']['db-connected'][$entity->resourceClass])) {
             // No DB-connected configuration for this service; nothing to do
             return;
         }

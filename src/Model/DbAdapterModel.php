@@ -116,10 +116,7 @@ class DbAdapterModel
     public function fetch($name)
     {
         $config = $this->localConfig->fetch(true);
-        if (! isset($config['db'])
-            || ! isset($config['db']['adapters'])
-            || ! is_array($config['db']['adapters'])
-            || ! isset($config['db']['adapters'][$name])
+        if (! isset($config['db']['adapters'][$name])
             || ! is_array($config['db']['adapters'][$name])
         ) {
             return false;

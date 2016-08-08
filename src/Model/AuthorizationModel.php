@@ -189,13 +189,7 @@ class AuthorizationModel
 
         $route = $serviceConfig['route_name'];
 
-        if (! isset($config['router'])
-            || ! isset($config['router']['routes'])
-            || ! isset($config['router']['routes'][$route])
-            || ! isset($config['router']['routes'][$route]['options'])
-            || ! isset($config['router']['routes'][$route]['options']['defaults'])
-            || ! isset($config['router']['routes'][$route]['options']['defaults']['action'])
-        ) {
+        if (! isset($config['router']['routes'][$route]['options']['defaults']['action'])) {
             return 'index';
         }
 
