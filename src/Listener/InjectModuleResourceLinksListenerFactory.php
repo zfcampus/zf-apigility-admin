@@ -12,6 +12,7 @@ class InjectModuleResourceLinksListenerFactory
 {
     /**
      * @param ContainerInterface $container
+     * @return InjectModuleResourceLinksListener
      */
     public function __invoke(ContainerInterface $container)
     {
