@@ -82,7 +82,7 @@
         }
     },
     "bin": [
-        "bin/ag-upgrade-to-1.5.php"
+        "bin/apigility-upgrade-to-1.5.php"
     ],
     "scripts": {
         "check": [
