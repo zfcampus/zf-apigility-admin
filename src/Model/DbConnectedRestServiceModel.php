@@ -29,7 +29,7 @@ class DbConnectedRestServiceModel
      * Determine if the given entity is DB-connected, and, if so, recast to a DbConnectedRestServiceEntity
      *
      * @param  \Zend\EventManager\Event $e
-     * @return null|DbConnectedRestServiceEntity
+     * @return void|DbConnectedRestServiceEntity
      */
     public static function onFetch($e)
     {
@@ -212,8 +212,7 @@ class DbConnectedRestServiceModel
     /**
      * Update the HAL configuration for the service
      *
-     * @param  RestServiceEntity $original
-     * @param  RestServiceEntity $update
+     * @param DbConnectedRestServiceEntity $entity
      */
     public function updateHalConfig(DbConnectedRestServiceEntity $entity)
     {

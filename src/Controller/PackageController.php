@@ -313,7 +313,7 @@ class PackageController extends AbstractActionController
      * Provided for testing.
      *
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {

@@ -16,6 +16,7 @@ class AuthenticationModelFactory
     /**
      * @param ContainerInterface $container
      * @return AuthenticationModel
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

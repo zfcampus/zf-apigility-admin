@@ -13,7 +13,6 @@ use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\Admin\Utility;
 use ZF\Configuration\ConfigResource;
-use ZF\Configuration\ModuleUtils;
 use ZF\Rest\Exception\PatchException;
 use ZF\Rest\Exception\CreationException;
 use ReflectionClass;
@@ -41,14 +40,14 @@ class RpcServiceModel
     protected $moduleEntity;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
     /**
-     * @param  string $module
-     * @param  ModuleUtils $modules
-     * @param  ConfigResource $config
+     * @param ModuleEntity $moduleEntity
+     * @param ModulePathSpec $modules
+     * @param ConfigResource $config
      */
     public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
@@ -130,7 +129,9 @@ class RpcServiceModel
     /**
      * Fetch all services
      *
+     * @param int $version
      * @return RpcServiceEntity[]
+     * @throws Exception\RuntimeException
      */
     public function fetchAll($version = null)
     {
@@ -185,6 +186,7 @@ class RpcServiceModel
      * @param  array $httpMethods
      * @param  null|string $selector
      * @return RpcServiceEntity
+     * @throws CreationException
      */
     public function createService($serviceName, $routeMatch, $httpMethods, $selector = null)
     {
@@ -209,6 +211,7 @@ class RpcServiceModel
      * @param  RpcServiceEntity $entity
      * @param  bool $recursive
      * @return true
+     * @throws Exception\RuntimeException
      */
     public function deleteService(RpcServiceEntity $entity, $recursive = false)
     {
@@ -238,6 +241,11 @@ class RpcServiceModel
         return true;
     }
 
+    /**
+     * @param string $serviceName
+     * @return bool|string
+     * @throws Exception\RuntimeException
+     */
     public function createFactoryController($serviceName)
     {
         $module     = $this->module;
@@ -286,7 +294,8 @@ class RpcServiceModel
      * Create a controller in the current module named for the given service
      *
      * @param  string $serviceName
-     * @return stdClass
+     * @return object|false
+     * @throws Exception\RuntimeException
      */
     public function createController($serviceName)
     {
@@ -358,7 +367,7 @@ class RpcServiceModel
      *
      * @param  string $route
      * @param  string $excludeRouteName
-     * @return boolean
+     * @return bool
      */
     protected function routeAlreadyExist($route, $excludeRouteName = null)
     {
@@ -384,6 +393,7 @@ class RpcServiceModel
      * @param  string $serviceName
      * @param  string $controllerService
      * @return string The newly created route name
+     * @throws Exception\RuntimeException
      */
     public function createRoute($route, $serviceName, $controllerService = null)
     {
@@ -427,7 +437,7 @@ class RpcServiceModel
         return $routeName;
     }
 
-    /*
+    /**
      * Create the zf-rpc configuration for the controller service
      *
      * @param  string $serviceName
@@ -499,6 +509,7 @@ class RpcServiceModel
      * @param  string $controllerService
      * @param  string $routeMatch
      * @return true
+     * @throws Exception\RuntimeException
      */
     public function updateRoute($controllerService, $routeMatch)
     {
@@ -557,6 +568,7 @@ class RpcServiceModel
      * @param  string $headerType
      * @param  array $whitelist
      * @return true
+     * @throws PatchException
      */
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
     {

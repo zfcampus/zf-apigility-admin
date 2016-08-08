@@ -14,6 +14,7 @@ class DbAutodiscoveryModelFactory
     /**
      * @param ContainerInterface $container
      * @return DbAutodiscoveryModel
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

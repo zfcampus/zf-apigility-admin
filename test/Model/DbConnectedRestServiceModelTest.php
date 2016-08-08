@@ -27,7 +27,7 @@ class DbConnectedRestServiceModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {

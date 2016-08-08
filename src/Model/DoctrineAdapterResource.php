@@ -44,7 +44,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
      *
      * @deprecated since 1.5.0, and no longer used internally.
      * @param ServiceLocatorInterface $serviceLocator
-     * @return self
+     * @return $this
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
@@ -76,12 +76,13 @@ class DoctrineAdapterResource extends AbstractResourceListener
 
     /**
      * @param array $params
-     * @return array
+     * @return array|Response
      */
     public function fetchAll($params = [])
     {
         if (! isset($this->loadedModules['ZF\Apigility\Doctrine\Admin'])
-            || ! isset($this->loadedModules['ZF\Apigility\Doctrine\Server'])) {
+            || ! isset($this->loadedModules['ZF\Apigility\Doctrine\Server'])
+        ) {
             $response = new Response();
             $response->setStatusCode(204);
 
@@ -96,8 +97,9 @@ class DoctrineAdapterResource extends AbstractResourceListener
     }
 
     /**
-     * @param $data
-     * @return DbAdapterEntity
+     * @param object $data
+     * @return false|DbAdapterEntity
+     * @throws CreationException
      */
     public function create($data)
     {
@@ -117,7 +119,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
 
     /**
      * @param $id
-     * @param $data
+     * @param object|array $data
      * @return DbAdapterEntity|ApiProblem
      */
     public function patch($id, $data)
@@ -139,7 +141,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
 
     /**
      * @param $id
-     * @return bool
+     * @return true
      */
     public function delete($id)
     {

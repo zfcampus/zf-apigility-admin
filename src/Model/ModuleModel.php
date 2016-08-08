@@ -70,7 +70,7 @@ class ModuleModel
      * Export the $config array in a human readable format
      *
      * @param  array $config
-     * @param  integer $space the initial indentation value
+     * @param  int $indent the initial indentation value
      * @return string
      */
     public static function exportConfig($config, $indent = 0)
@@ -114,7 +114,8 @@ class ModuleModel
      *
      * @param  string $module
      * @param  ModulePathSpec $pathSpec
-     * @return boolean
+     * @return bool
+     * @throws \Exception
      */
     public function createModule($module, ModulePathSpec $pathSpec)
     {
@@ -202,7 +203,7 @@ class ModuleModel
      * Update a module (adding the ApigilityModule interface)
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function updateModule($module)
     {
@@ -252,7 +253,7 @@ class ModuleModel
      * @param  string $module
      * @param  string $path
      * @param  bool $recursive
-     * @return boolean
+     * @return bool
      */
     public function deleteModule($module, $path = '.', $recursive = false)
     {

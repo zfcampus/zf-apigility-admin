@@ -16,7 +16,6 @@ use ZF\Apigility\Admin\InputFilter\Authentication;
 
 class AuthenticationModel
 {
-
     const ADAPTER_HTTP   = 'ZF\\MvcAuth\\Authentication\\HttpAdapter';
     const ADAPTER_OAUTH2 = 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter';
 
@@ -38,6 +37,7 @@ class AuthenticationModel
     /**
      * @param ConfigResource $globalConfig
      * @param ConfigResource $localConfig
+     * @param ModuleModel $modules
      */
     public function __construct(ConfigResource $globalConfig, ConfigResource $localConfig, ModuleModel $modules)
     {
@@ -89,7 +89,7 @@ class AuthenticationModel
      *
      * Since Apigility 1.1
      *
-     * @param  array $authenticationConfig
+     * @param array $adapter
      * @return array
      */
     public function createAuthenticationAdapter(array $adapter)
@@ -121,7 +121,8 @@ class AuthenticationModel
      *
      * Since Apigility 1.1
      *
-     * @param  array $authenticationConfig
+     * @param string $name
+     * @param array $adapter
      * @return array
      */
     public function updateAuthenticationAdapter($name, array $adapter)
@@ -228,7 +229,7 @@ class AuthenticationModel
      * Since Apigility 1.1
      *
      * @param  string $name
-     * @return boolen
+     * @return bool
      */
     public function removeAuthenticationAdapter($name)
     {
@@ -318,7 +319,7 @@ class AuthenticationModel
     /**
      * Fetch configuration details for authentication
      *
-     * @return AuthenticationEntity
+     * @return AuthenticationEntity|false
      */
     public function fetch()
     {
@@ -342,7 +343,7 @@ class AuthenticationModel
      * Used since Apigility 1.1
      *
      * @param  string $name
-     * @return array
+     * @return array|false
      */
     public function fetchAuthenticationAdapter($name)
     {
@@ -386,9 +387,9 @@ class AuthenticationModel
      *
      * Used since Apigility 1.1
      *
-     * @param  string $module
-     * @param  integer $version
-     * @return string|boolean
+     * @param string $module
+     * @param int|false $version
+     * @return string|false
      */
     public function getAuthenticationMap($module, $version = false)
     {
@@ -415,8 +416,8 @@ class AuthenticationModel
      *
      * @param  string $auth
      * @param  string $module
-     * @param  integer $version
-     * @return boolean
+     * @param  int $version
+     * @return bool
      * @throws Exception\InvalidArgumentException
      */
     public function saveAuthenticationMap($auth, $module, $version = null)
@@ -444,8 +445,8 @@ class AuthenticationModel
      * Used since Apigility 1.1
      *
      * @param  string $module
-     * @param  integer $version
-     * @return boolean
+     * @param  int $version
+     * @return bool
      */
     public function removeAuthenticationMap($module, $version = null)
     {
@@ -637,7 +638,7 @@ class AuthenticationModel
      * @param  string $username
      * @param  string $password
      * @throws Exception\InvalidArgumentException on invalid DSN
-     * @return boolean
+     * @return bool
      */
     protected function validateDsn($dsn, $username = null, $password = null, $dsnType = AuthenticationEntity::DSN_PDO)
     {
@@ -678,6 +679,9 @@ class AuthenticationModel
 
     /**
      * Add a new authentication adapter in local config
+     *
+     * @param array $adapter
+     * @return true
      */
     protected function saveAuthenticationAdapter(array $adapter)
     {
@@ -802,7 +806,7 @@ class AuthenticationModel
      * Since Apigility 1.1
      *
      * @param  string $url
-     * @return boolean
+     * @return bool
      */
     protected function removeOAuth2Route($url)
     {
@@ -933,7 +937,7 @@ class AuthenticationModel
      * based on APIs defined. It reads the old configuration and generates an
      * authentication mapping for each API and version.
      *
-     * @return boolean|string Boolean false if nothing was performed; string
+     * @return bool|string Boolean false if nothing was performed; string
      *     adapter name otherwise.
      */
     public function transformAuthPerApis()

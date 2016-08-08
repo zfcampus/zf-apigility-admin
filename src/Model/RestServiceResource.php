@@ -97,7 +97,7 @@ class RestServiceResource extends AbstractResourceListener
      * Create a new REST service
      *
      * @param  array|object $data
-     * @return RestServiceEntity
+     * @return RestServiceEntity|ApiProblem
      * @throws CreationException
      */
     public function create($data)

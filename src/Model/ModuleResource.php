@@ -41,8 +41,7 @@ class ModuleResource extends AbstractResourceListener
      * Set path to use when creating new modules
      *
      * @param  string $path
-     * @return self
-     * @throws InvalidArgumentException for invalid paths
+     * @return $this
      */
     public function setModulePath($path)
     {
@@ -119,7 +118,7 @@ class ModuleResource extends AbstractResourceListener
      * Delete a module (and, optionally, all code within it)
      *
      * @param  string $id
-     * @return bool
+     * @return bool|ApiProblem
      */
     public function delete($id)
     {

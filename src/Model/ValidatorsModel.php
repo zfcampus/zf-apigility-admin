@@ -22,6 +22,7 @@ class ValidatorsModel extends AbstractPluginManagerModel
      * Zend\Validator\ValidatorPluginManager.
      *
      * @param ServiceManager $pluginManager
+     * @param ValidatorMetadataModel $metadata
      */
     public function __construct(ServiceManager $pluginManager, ValidatorMetadataModel $metadata = null)
     {

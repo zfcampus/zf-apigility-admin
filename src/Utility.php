@@ -11,7 +11,7 @@ class Utility
      * Recursive delete
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     public static function recursiveDelete($dir)
     {

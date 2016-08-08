@@ -111,7 +111,7 @@ class DbAdapterModel
      * Fetch configuration details for a named adapter
      *
      * @param  string $name
-     * @return DbAdapterEntity
+     * @return DbAdapterEntity|false
      */
     public function fetch($name)
     {

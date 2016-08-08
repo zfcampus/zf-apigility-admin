@@ -16,7 +16,7 @@ use Zend\Router\RouteMatch;
 class DisableHttpCacheListener
 {
     /**
-     * @param MvcEvent
+     * @param MvcEvent $e
      * @return void
      */
     public function __invoke(MvcEvent $e)

@@ -14,6 +14,7 @@ class DoctrineAdapterResourceFactory
     /**
      * @param ContainerInterface $container
      * @return DoctrineAdapterResource
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

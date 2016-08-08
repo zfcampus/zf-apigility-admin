@@ -104,7 +104,7 @@ class RpcServiceResource extends AbstractResourceListener
      * Create a new RPC service
      *
      * @param  array|object $data
-     * @return RpcServiceEntity
+     * @return RpcServiceEntity|ApiProblem
      * @throws CreationException
      */
     public function create($data)

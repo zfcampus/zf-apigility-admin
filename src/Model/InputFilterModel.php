@@ -20,7 +20,7 @@ class InputFilterModel
      * $validatorPlugins should typically be an instance of
      * Zend\Validator\ValidatorPluginManager.
      *
-     * @param ServiceManager $validatorPlugins
+     * @param ConfigResourceFactory $configFactory
      */
     public function __construct(ConfigResourceFactory $configFactory)
     {
@@ -45,7 +45,7 @@ class InputFilterModel
      *
      * @param  string $module
      * @param  string $controller
-     * @param  array $inputFilterName
+     * @param  array $inputFilter
      * @return false|InputFilterEntity
      */
     public function update($module, $controller, $inputFilter)
@@ -57,9 +57,9 @@ class InputFilterModel
      * Remove the named input
      *
      * @param  string $module
-     * @param  string $controlller
+     * @param  string $controller
      * @param  string $inputname
-     * @return boolean
+     * @return bool
      */
     public function remove($module, $controller, $inputname)
     {
@@ -119,7 +119,7 @@ class InputFilterModel
      * @param  string $controller
      * @param  array  $inputFilter
      * @param  string $validatorName
-     * @return array|boolean
+     * @return array|bool
      */
     protected function addInputFilter($module, $controller, $inputFilter, $validatorName = null)
     {
@@ -167,7 +167,7 @@ class InputFilterModel
      * @param  string $module
      * @param  string $controller
      * @param  string $inputFilterName
-     * @return boolean
+     * @return bool
      */
     protected function removeInputFilter($module, $controller, $inputFilterName)
     {
@@ -223,7 +223,7 @@ class InputFilterModel
      * Check if the module exists
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function moduleExists($module)
     {
@@ -240,7 +240,7 @@ class InputFilterModel
      *
      * @param  string $module
      * @param  string $controller
-     * @return boolean
+     * @return bool
      */
     public function controllerExists($module, $controller)
     {

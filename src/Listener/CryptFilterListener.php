@@ -30,6 +30,7 @@ class CryptFilterListener implements ListenerAggregateInterface
      * Adjust the filter options for Crypt filter adapters
      *
      * @param MvcEvent $e
+     * @return void|true
      */
     public function onRoute(MvcEvent $e)
     {

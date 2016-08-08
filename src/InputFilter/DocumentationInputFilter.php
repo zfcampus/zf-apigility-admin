@@ -146,7 +146,7 @@ class DocumentationInputFilter extends InputFilter
     }
 
     /**
-     * @return void
+     * @return array
      */
     public function getMessages()
     {

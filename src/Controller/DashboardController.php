@@ -11,7 +11,6 @@ use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Apigility\Admin\Model\DbAdapterModel;
-use ZF\Apigility\Admin\Model\DoctrineAdapterModel;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
 use ZF\Apigility\Admin\Model\RpcServiceModelFactory;

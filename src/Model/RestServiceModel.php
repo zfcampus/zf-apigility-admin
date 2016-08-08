@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -16,11 +17,9 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
-use ZF\Configuration\ConfigResource;
-use ZF\Configuration\ModuleUtils;
-use ZF\Rest\Exception\CreationException;
 use ZF\Apigility\Admin\Utility;
-use ReflectionClass;
+use ZF\Configuration\ConfigResource;
+use ZF\Rest\Exception\CreationException;
 
 class RestServiceModel implements EventManagerAwareInterface
 {
@@ -50,7 +49,7 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $modulePath;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
@@ -90,9 +89,9 @@ class RestServiceModel implements EventManagerAwareInterface
     protected $routeNameFilter;
 
     /**
-     * @param  ModuleEntity $moduleEntity
-     * @param  ModuleUtils $modules
-     * @param  ConfigResource $config
+     * @param ModuleEntity $moduleEntity
+     * @param ModulePathSpec $modules
+     * @param ConfigResource $config
      */
     public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
@@ -125,7 +124,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * Set the EventManager instance
      *
      * @param  EventManagerInterface $events
-     * @return self
+     * @return $this
      */
     public function setEventManager(EventManagerInterface $events)
     {
@@ -158,6 +157,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *     pass boolean false; allows listeners to include additional data
      *     necessary for clean updates.
      * @return RestServiceEntity|false
+     * @throws Exception\RuntimeException
      */
     public function fetch($controllerService, $isAFetchOperation = true)
     {
@@ -221,7 +221,9 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Fetch all services
      *
+     * @param int $version
      * @return RestServiceEntity[]
+     * @throws Exception\RuntimeException
      */
     public function fetchAll($version = null)
     {
@@ -271,6 +273,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  RestServiceEntity $details
      * @return RestServiceEntity
+     * @throws CreationException
      */
     public function createService(RestServiceEntity $details)
     {
@@ -333,6 +336,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  RestServiceEntity $update
      * @return RestServiceEntity
+     * @throws Exception\RuntimeException
      */
     public function updateService(RestServiceEntity $update)
     {
@@ -362,6 +366,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * @param  string $controllerService
      * @param  bool   $recursive
      * @return true
+     * @throws Exception\RuntimeException
      */
     public function deleteService($controllerService, $recursive = false)
     {
@@ -393,7 +398,6 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Generate the controller service name from the module and service name
      *
-     * @param  string $module
      * @param  string $serviceName
      * @return string
      */
@@ -453,6 +457,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $serviceName
      * @return string The name of the newly created class
+     * @throws Exception\RuntimeException
      */
     public function createResourceClass($serviceName)
     {
@@ -508,7 +513,9 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $serviceName
      * @param  string $template Which template to use; defaults to 'entity'
+     * @param  RestServiceEntity $details
      * @return string The name of the newly created entity class
+     * @throws Exception\RuntimeException
      */
     public function createEntityClass($serviceName, $template = 'entity', $details = null)
     {
@@ -554,6 +561,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $serviceName
      * @return string The name of the newly created collection class
+     * @throws Exception\RuntimeException
      */
     public function createCollectionClass($serviceName)
     {
@@ -598,7 +606,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  string $route
      * @param  string $excludeRouteName
-     * @return boolean
+     * @return bool
      */
     protected function routeAlreadyExist($route, $excludeRouteName = null)
     {
@@ -625,6 +633,7 @@ class RestServiceModel implements EventManagerAwareInterface
      * @param  string $routeIdentifier
      * @param  string $controllerService
      * @return string
+     * @throws Exception\RuntimeException
      */
     public function createRoute($serviceName, $route, $routeIdentifier, $controllerService)
     {
@@ -773,6 +782,7 @@ class RestServiceModel implements EventManagerAwareInterface
      *
      * @param  RestServiceEntity $original
      * @param  RestServiceEntity $update
+     * @throws Exception\RuntimeException
      */
     public function updateRoute(RestServiceEntity $original, RestServiceEntity $update)
     {
@@ -991,7 +1001,7 @@ class RestServiceModel implements EventManagerAwareInterface
     /**
      * Delete content-negotiation configuration associated with a service
      *
-     * @param  RestServiceEntity $entitysource
+     * @param  RestServiceEntity $entity
      */
     public function deleteContentNegotiationConfig(RestServiceEntity $entity)
     {

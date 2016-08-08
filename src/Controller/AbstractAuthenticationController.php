@@ -17,7 +17,7 @@ abstract class AbstractAuthenticationController extends AbstractActionController
      * Provided for testing.
      *
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {
@@ -29,7 +29,7 @@ abstract class AbstractAuthenticationController extends AbstractActionController
      * Get the API version from the Accept header
      *
      * @param  Request $request
-     * @return integer
+     * @return int
      */
     protected function getVersion(Request $request)
     {

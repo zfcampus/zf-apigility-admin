@@ -20,6 +20,9 @@ class DocumentationModel
      */
     protected $configFactory;
 
+    /**
+     * @var ModuleUtils
+     */
     protected $moduleUtils;
 
     public function __construct(ConfigResourceFactory $configFactory, ModuleUtils $moduleUtils)
@@ -100,7 +103,7 @@ class DocumentationModel
      * Check if the module exists
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function moduleExists($module)
     {
@@ -118,7 +121,7 @@ class DocumentationModel
      *
      * @param  string $module
      * @param  string $controller
-     * @return boolean
+     * @return bool
      */
     public function controllerExists($module, $controller)
     {

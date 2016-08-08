@@ -6,8 +6,6 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Validator;
 
-use Zend\Validator\Exception;
-
 class MediaTypeArrayValidator extends AbstractValidator
 {
     const MEDIA_TYPE_ARRAY = 'mediaTypeArray';
@@ -22,7 +20,6 @@ class MediaTypeArrayValidator extends AbstractValidator
     /**
      * @param  mixed $value
      * @return bool
-     * @throws Exception\RuntimeException If validation of $value is impossible
      */
     public function isValid($value)
     {

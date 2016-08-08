@@ -81,7 +81,7 @@ class VersioningModel
      * Create a new version for a module
      *
      * @param  string $module
-     * @param  integer $version
+     * @param  int $version
      * @param  bool|string $path
      * @return bool
      * @deprecated
@@ -110,8 +110,8 @@ class VersioningModel
      * Updates the default version of a module that will be used if no version is
      * specified by the API consumer.
      *
-     * @param  integer $defaultVersion
-     * @return boolean
+     * @param  int $defaultVersion
+     * @return bool
      * @deprecated
      */
     public function setDefaultVersion($defaultVersion)
@@ -145,7 +145,7 @@ class VersioningModel
      * Usually, this is the "src/{modulename}" subdirectory of the
      * module.
      *
-     * @param  string $module
+     * @param string $module
      * @param bool $appendNamespace If true, it will append the module's namespace to the path - for PSR0 compatibility
      * @return string
      * @deprecated

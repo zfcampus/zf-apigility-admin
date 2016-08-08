@@ -7,7 +7,6 @@
 namespace ZF\Apigility\Admin\Model;
 
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
-use ZF\Configuration\ModuleUtils;
 
 class AuthorizationModelFactory
 {

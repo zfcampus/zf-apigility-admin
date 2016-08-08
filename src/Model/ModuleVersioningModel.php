@@ -99,11 +99,12 @@ final class ModuleVersioningModel
         );
     }
 
-        /**
+    /**
      * Create a new version for a module
      *
-     * @param  integer $version
-     * @return bool
+     * @param  int $version
+     * @return true
+     * @throws Exception\InvalidArgumentException|Exception\RuntimeException
      */
     public function createVersion($version)
     {
@@ -159,8 +160,8 @@ final class ModuleVersioningModel
      * Updates the default version of a module that will be used if no version is
      * specified by the API consumer.
      *
-     * @param  integer $defaultVersion
-     * @return boolean
+     * @param  int $defaultVersion
+     * @return bool
      */
     public function setDefaultVersion($defaultVersion)
     {
@@ -221,10 +222,10 @@ final class ModuleVersioningModel
     /**
      * Update a PHP configuration file from $previous to $version version
      *
-     * @param  string  $file
-     * @param  integer $previous Previous version
-     * @param  integer $version New version
-     * @return boolean
+     * @param  string $file
+     * @param  int $previous Previous version
+     * @param  int $version New version
+     * @return bool
      */
     protected function updateConfigVersion($file, $previous, $version)
     {
@@ -348,8 +349,8 @@ final class ModuleVersioningModel
      * Change version in a namespace
      *
      * @param  string $string
-     * @param  integer $previous
-     * @param  integer $version
+     * @param  int $previous
+     * @param  int $version
      * @return string
      */
     protected function changeVersionNamespace($string, $previous, $version)
@@ -361,8 +362,8 @@ final class ModuleVersioningModel
      * Change version in an array
      *
      * @param  array $data
-     * @param  integer $previous
-     * @param  integer $version
+     * @param  int $previous
+     * @param  int $version
      * @return array
      */
     protected function changeVersionArray($data, $previous, $version)
@@ -399,8 +400,8 @@ final class ModuleVersioningModel
     /**
      * Update the documentation to add a new $version based on the $previous
      *
-     * @param  integer $previous Previous version
-     * @param  integer $version New version
+     * @param  int $previous Previous version
+     * @param  int $version New version
      * @return true
      */
     protected function updateDocumentationVersion($previous, $version)
@@ -417,8 +418,7 @@ final class ModuleVersioningModel
     }
 
     /**
-     * setPathSpecType
-     * @param $pathSpecType
+     * @param string $pathSpecType
      * @return void
      */
     private function setPathSpecType($pathSpecType)
@@ -459,8 +459,7 @@ final class ModuleVersioningModel
     }
 
     /**
-     * setConfigDirPath
-     * @param $configDirPath
+     * @param string $configDirPath
      * @return void
      */
     private function setConfigDirPath($configDirPath)

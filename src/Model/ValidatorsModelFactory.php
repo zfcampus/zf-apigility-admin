@@ -20,6 +20,7 @@ class ValidatorsModelFactory implements FactoryInterface
      * @param string $requestedName
      * @param null|array $options
      * @return ValidatorsModel
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

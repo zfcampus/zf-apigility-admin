@@ -15,6 +15,7 @@ class AuthorizationModelFactoryFactory
     /**
      * @param ContainerInterface $container
      * @return AuthorizationModelFactory
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

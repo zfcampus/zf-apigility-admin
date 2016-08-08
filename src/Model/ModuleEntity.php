@@ -48,7 +48,7 @@ class ModuleEntity
     protected $versions = [];
 
     /**
-     * @param  string $name
+     * @param  string $namespace
      * @param  array $restServices
      * @param  array $rpcServices
      * @param  bool $isVendor

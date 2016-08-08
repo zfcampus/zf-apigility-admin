@@ -19,6 +19,7 @@ class RestServiceModelFactory extends RpcServiceModelFactory
      * @param string $module
      * @param string $type
      * @return RestServiceModel
+     * @throws Exception\InvalidArgumentException
      */
     public function factory($module, $type = self::TYPE_DEFAULT)
     {

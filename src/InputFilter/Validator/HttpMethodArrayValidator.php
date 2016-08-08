@@ -6,8 +6,6 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Validator;
 
-use Zend\Validator\Exception;
-
 class HttpMethodArrayValidator extends AbstractValidator
 {
     const HTTP_METHOD_ARRAY = 'httpMethodArray';
@@ -34,7 +32,6 @@ class HttpMethodArrayValidator extends AbstractValidator
     /**
      * @param  mixed $value
      * @return bool
-     * @throws Exception\RuntimeException If validation of $value is impossible
      */
     public function isValid($value)
     {

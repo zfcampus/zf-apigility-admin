@@ -17,6 +17,7 @@ class RestServiceModelFactoryFactory
     /**
      * @param ContainerInterface $container
      * @return RestServiceModelFactory
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {
