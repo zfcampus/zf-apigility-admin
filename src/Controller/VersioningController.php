@@ -61,8 +61,6 @@ class VersioningController extends AbstractActionController
 
     public function versioningAction()
     {
-        $request = $this->getRequest();
-
         $module = $this->bodyParam('module', false);
         if (! $module) {
             return new ApiProblemModel(
@@ -94,7 +92,7 @@ class VersioningController extends AbstractActionController
 
 
         try {
-            $result = $model->createVersion($version);
+            $model->createVersion($version);
         } catch (Exception\InvalidArgumentException $ex) {
             return new ApiProblemModel(
                 new ApiProblem(

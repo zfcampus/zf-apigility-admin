@@ -108,7 +108,7 @@ class DocumentationModel
     public function moduleExists($module)
     {
         try {
-            $configModule = $this->configFactory->factory($module);
+            $this->configFactory->factory($module);
         } catch (InvalidArgumentConfiguration $e) {
             return false;
         }

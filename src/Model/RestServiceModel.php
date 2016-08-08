@@ -880,7 +880,6 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function updateHalConfig(RestServiceEntity $original, RestServiceEntity $update)
     {
-        $service = $original->controllerServiceName;
         $baseKey = 'zf-hal.metadata_map.';
 
         $entityClass      = $update->entityClass     ?: $original->entityClass;

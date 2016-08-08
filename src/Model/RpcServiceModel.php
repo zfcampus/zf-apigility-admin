@@ -300,7 +300,6 @@ class RpcServiceModel
     public function createController($serviceName)
     {
         $module      = $this->module;
-        $modulePath = $this->modules->getModulePath($module);
         $version     = $this->moduleEntity->getLatestVersion();
         $serviceName = str_replace("\\", "/", $serviceName);
 

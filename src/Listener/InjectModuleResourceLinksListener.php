@@ -226,8 +226,6 @@ class InjectModuleResourceLinksListener
     {
         $asArray = $resource->getArrayCopy();
         $module  = $asArray['name'];
-        $rest    = $asArray['rest'];
-        $rpc     = $asArray['rpc'];
 
         unset($asArray['rest']);
         unset($asArray['rpc']);
