@@ -82,7 +82,7 @@
         }
     },
     "bin": [
-        "bin/apigility-upgrade-to-1.5.php"
+        "bin/apigility-upgrade-to-1.5"
     ],
     "scripts": {
         "check": [
