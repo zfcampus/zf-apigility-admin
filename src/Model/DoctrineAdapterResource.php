@@ -58,7 +58,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
      */
     public function getServiceLocator()
     {
-        return $this->serviceLocator();
+        return $this->serviceLocator;
     }
 
     /**
