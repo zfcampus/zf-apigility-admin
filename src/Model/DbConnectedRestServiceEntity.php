@@ -33,7 +33,7 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
                 case 'tablename':
                     $this->tableName = $value;
                     if (! isset($this->serviceName)) {
-                        $this->serviceName  = $value;
+                        $this->serviceName = $value;
                     }
                     break;
                 case 'tableservice':
@@ -76,9 +76,9 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
     public function getArrayCopy()
     {
         $data = parent::getArrayCopy();
-        $data['adapter_name'] = $this->adapterName;
+        $data['adapter_name']  = $this->adapterName;
         $data['hydrator_name'] = $this->hydratorName;
-        $data['table_name'] = $this->tableName;
+        $data['table_name']    = $this->tableName;
         $data['table_service'] = $this->tableService;
 
         if (! isset($data['service_name']) || empty($data['service_name'])) {

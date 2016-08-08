@@ -82,8 +82,8 @@ class DashboardController extends AbstractActionController
         $modulesCollection->setCollectionRoute('zf-apigility/api/module');
 
         $dashboard = [
-            'db_adapter'       => $dbAdapters,
-            'module'           => $modulesCollection,
+            'db_adapter' => $dbAdapters,
+            'module'     => $modulesCollection,
         ];
 
         $entity = new Entity($dashboard, 'dashboard');

@@ -135,10 +135,10 @@ class PackageController extends AbstractActionController
             );
         }
 
-        $format   = strtolower($format);
-        $fileId   = uniqid();
-        $package  = $this->getPackageFile($fileId, $format);
-        $cmd      = sprintf('php %s build %s', $this->zfdeployPath, $package);
+        $format  = strtolower($format);
+        $fileId  = uniqid();
+        $package = $this->getPackageFile($fileId, $format);
+        $cmd     = sprintf('php %s build %s', $this->zfdeployPath, $package);
 
         $apis = array_key_exists('apis', $params) ? $params['apis'] : null;
         $cmd .= $this->createModulesOption($apis);

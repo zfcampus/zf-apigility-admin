@@ -283,7 +283,7 @@ class RestServiceModel implements EventManagerAwareInterface
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
-        $entity       = new RestServiceEntity();
+        $entity = new RestServiceEntity();
         $entity->exchangeArray($details->getArrayCopy());
 
         $mediaType         = $this->createMediaType();
@@ -417,7 +417,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $srcPath = $this->getSourcePath($serviceName);
 
         $classResource = sprintf('%sResource', $serviceName);
-        $className       = sprintf('%sResourceFactory', $serviceName);
+        $className     = sprintf('%sResourceFactory', $serviceName);
         $classPath     = sprintf('%s/%s.php', $srcPath, $className);
 
         if (file_exists($classPath)) {
@@ -428,11 +428,11 @@ class RestServiceModel implements EventManagerAwareInterface
         }
 
         $view = new ViewModel([
-                'module'        => $module,
-                'resource'      => $serviceName,
-                'classfactory'  => $className,
-                'classresource' => $classResource,
-                'version'       => $this->moduleEntity->getLatestVersion(),
+            'module'        => $module,
+            'resource'      => $serviceName,
+            'classfactory'  => $className,
+            'classresource' => $classResource,
+            'version'       => $this->moduleEntity->getLatestVersion(),
         ]);
         if (! $this->createClassFile($view, 'factory', $classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -498,11 +498,11 @@ class RestServiceModel implements EventManagerAwareInterface
         $factoryClassName = $this->createFactoryClass($serviceName);
 
         $this->configResource->patch([
-                'service_manager' => [
-                        'factories' => [
-                                $fullClassName => $factoryClassName,
-                        ],
+            'service_manager' => [
+                'factories' => [
+                    $fullClassName => $factoryClassName,
                 ],
+            ],
         ], true);
 
         return $fullClassName;
@@ -565,8 +565,8 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     public function createCollectionClass($serviceName)
     {
-        $module     = $this->module;
-        $srcPath    = $this->getSourcePath($serviceName);
+        $module    = $this->module;
+        $srcPath   = $this->getSourcePath($serviceName);
 
         $className = sprintf('%sCollection', $serviceName);
         $classPath = sprintf('%s/%s.php', $srcPath, $className);

@@ -236,7 +236,7 @@ class RestServiceResource extends AbstractResourceListener
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
-                    $model   = $this->restFactory->factory(
+                    $model = $this->restFactory->factory(
                         $this->getModuleName(),
                         RestServiceModelFactory::TYPE_DB_CONNECTED
                     );
@@ -271,8 +271,8 @@ class RestServiceResource extends AbstractResourceListener
         $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
             $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
-            $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
-            $links    = $entity->getLinks();
+            $entity = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
+            $links  = $entity->getLinks();
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [

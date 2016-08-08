@@ -151,11 +151,11 @@ class ModuleModel
         }
 
         $view = new ViewModel([
-            'module'  => $module
+            'module' => $module,
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml',
+            'module/skeleton'      => __DIR__ . '/../../view/module/skeleton.phtml',
             'module/skeleton-psr4' => __DIR__ . '/../../view/module/skeleton-psr4.phtml',
         ]);
 
@@ -392,9 +392,9 @@ class ModuleModel
             );
         }
 
-        $r        = new ReflectionObject($module);
-        $path     = dirname($r->getFileName());
-        $dirSep   = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
+        $r       = new ReflectionObject($module);
+        $path    = dirname($r->getFileName());
+        $dirSep  = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
         $pattern = sprintf(
             '#%ssrc%s%s#',
             $dirSep,
@@ -408,7 +408,7 @@ class ModuleModel
             return [1];
         }
 
-        $versions  = [];
+        $versions = [];
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
                 $versions[] = (int) $matches['version'];

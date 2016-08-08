@@ -20,7 +20,7 @@ class NewRestServiceEntity extends RestServiceEntity
             $key = str_replace('_', '', $key);
             switch ($key) {
                 case 'servicename':
-                    $this->serviceName  = $value;
+                    $this->serviceName = $value;
                     break;
             }
         }

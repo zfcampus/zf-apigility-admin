@@ -734,7 +734,7 @@ class AuthenticationModel
                                 'adapter'  => strtolower(AuthenticationEntity::DSN_MONGO),
                                 'dsn'      => $adapter['oauth2_dsn'],
                                 'database' => $adapter['oauth2_database'],
-                                'route'   => $adapter['oauth2_route']
+                                'route'    => $adapter['oauth2_route'],
                             ]
                         ];
                         if (isset($adapter['oauth2_locator_name'])) {

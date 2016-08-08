@@ -301,8 +301,8 @@ class RpcServiceResource extends AbstractResourceListener
         $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
             $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
-            $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
-            $links    = $entity->getLinks();
+            $entity = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
+            $links  = $entity->getLinks();
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [

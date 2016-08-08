@@ -248,14 +248,14 @@ class RpcServiceModel
      */
     public function createFactoryController($serviceName)
     {
-        $module     = $this->module;
-        $version    = $this->moduleEntity->getLatestVersion();
+        $module  = $this->module;
+        $version = $this->moduleEntity->getLatestVersion();
 
         $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
-        $className         = sprintf('%sController', $serviceName);
-        $classFactory      = sprintf('%sControllerFactory', $serviceName);
-        $classPath         = sprintf('%s/%s.php', $srcPath, $classFactory);
+        $className    = sprintf('%sController', $serviceName);
+        $classFactory = sprintf('%sControllerFactory', $serviceName);
+        $classPath    = sprintf('%s/%s.php', $srcPath, $classFactory);
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -265,15 +265,15 @@ class RpcServiceModel
         }
 
         $view = new ViewModel([
-                'module'       => $module,
-                'classname'    => $className,
-                'classfactory' => $classFactory,
-                'servicename'  => $serviceName,
-                'version'      => $version,
+            'module'       => $module,
+            'classname'    => $className,
+            'classfactory' => $classFactory,
+            'servicename'  => $serviceName,
+            'version'      => $version,
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-                'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-factory.phtml'
+            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-factory.phtml',
         ]);
 
         $view->setTemplate('code-connected/rpc-controller');
@@ -299,9 +299,9 @@ class RpcServiceModel
      */
     public function createController($serviceName)
     {
-        $module     = $this->module;
+        $module      = $this->module;
         $modulePath = $this->modules->getModulePath($module);
-        $version    = $this->moduleEntity->getLatestVersion();
+        $version     = $this->moduleEntity->getLatestVersion();
         $serviceName = str_replace("\\", "/", $serviceName);
 
         $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);

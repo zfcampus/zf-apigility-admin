@@ -105,7 +105,7 @@ abstract class AbstractAutodiscoveryModel
     protected function moduleHasService($module, $version, $tableName)
     {
         $resourceName = StaticFilter::execute($tableName, 'WordUnderscoreToCamelCase');
-        $resourceClass     = sprintf(
+        $resourceClass = sprintf(
             '%s\\V%s\\Rest\\%s\\%sResource',
             $module,
             $version,

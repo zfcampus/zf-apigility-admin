@@ -51,7 +51,7 @@ class VersioningModel
      */
     private function getModuleVersioningModel($name, $srcPath = null)
     {
-        $name  = $this->normalizeModule($name);
+        $name = $this->normalizeModule($name);
         $hasPathSpec = null !== $this->pathSpec;
 
         if ($hasPathSpec) {
