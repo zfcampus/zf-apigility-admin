@@ -47,7 +47,7 @@ class RestServiceModelTest extends TestCase
 
         $modulePath = [
             'psr-0' => '%s/src/%s/V*',
-            'psr-4' => '%s/src/V*'
+            'psr-4' => '%s/src/V*',
         ];
 
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
@@ -75,7 +75,7 @@ class RestServiceModelTest extends TestCase
 
         $modules = [
             'BarConf' => new BarConf\Module(),
-            'BazConf' => new BazConf\Module()
+            'BazConf' => new BazConf\Module(),
         ];
 
         $this->moduleEntity  = new ModuleEntity($this->module, [], [], false);

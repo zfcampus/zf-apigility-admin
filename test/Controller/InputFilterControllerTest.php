@@ -27,7 +27,7 @@ class InputFilterControllerTest extends TestCase
     {
         require_once __DIR__ . '/../Model/TestAsset/module/InputFilter/Module.php';
         $modules = [
-            'InputFilter' => new \InputFilter\Module()
+            'InputFilter' => new \InputFilter\Module(),
         ];
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
@@ -66,7 +66,7 @@ class InputFilterControllerTest extends TestCase
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = [
             'name' => $module,
-            'controller_service_name' => $controller
+            'controller_service_name' => $controller,
         ];
         $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
@@ -155,7 +155,7 @@ class InputFilterControllerTest extends TestCase
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = [
             'name' => $module,
-            'controller_service_name' => $controller
+            'controller_service_name' => $controller,
         ];
         $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');

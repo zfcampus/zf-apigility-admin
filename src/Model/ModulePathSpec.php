@@ -43,7 +43,7 @@ class ModulePathSpec
      */
     protected $psrSpecs = [
         self::PSR_0 => '%modulePath%/src/%moduleName%',
-        self::PSR_4 => '%modulePath%/src'
+        self::PSR_4 => '%modulePath%/src',
     ];
 
     /**

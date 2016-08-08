@@ -53,7 +53,7 @@ class DigestInputFilter extends InputFilter
         $this->add([
             'name' => 'nonce_timeout',
             'validators' => [
-                ['name' => 'Zend\Validator\Digits']
+                ['name' => 'Zend\Validator\Digits'],
             ],
             'error_message' => 'Nonce Timeout must be an integer',
         ]);

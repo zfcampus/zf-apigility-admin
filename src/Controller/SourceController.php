@@ -81,7 +81,7 @@ class SourceController extends AbstractActionController
                     'module' => $module,
                     'class'  => $class,
                     'file'   => $fileName,
-                    'source' => $this->highlightFileWithNum($fileName)
+                    'source' => $this->highlightFileWithNum($fileName),
                 ];
 
                 $model = new ViewModel($metadata);

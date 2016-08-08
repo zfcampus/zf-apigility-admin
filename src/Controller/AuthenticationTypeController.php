@@ -78,7 +78,7 @@ class AuthenticationTypeController extends AbstractAuthenticationController
     private function createViewModel($adapters)
     {
         $model = new ViewModel([
-            'auth-types' => $adapters
+            'auth-types' => $adapters,
         ]);
         $model->setTerminal(true);
         return $model;

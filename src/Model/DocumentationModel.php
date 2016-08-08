@@ -52,7 +52,7 @@ class DocumentationModel
                         'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
                         'DELETE' => ['description' => null, 'request' => null, 'response' => null],
                     ],
-                    'description' => null
+                    'description' => null,
                 ];
             case self::TYPE_RPC:
                 return [

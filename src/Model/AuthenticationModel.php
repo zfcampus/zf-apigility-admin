@@ -693,8 +693,8 @@ class AuthenticationModel
                     'options' => [
                         'accept_schemes' => [AuthenticationEntity::TYPE_BASIC],
                         'realm'          => $adapter['realm'],
-                        'htpasswd'       => $adapter['htpasswd']
-                    ]
+                        'htpasswd'       => $adapter['htpasswd'],
+                    ],
                 ];
                 break;
             case AuthenticationEntity::TYPE_DIGEST:
@@ -705,8 +705,8 @@ class AuthenticationModel
                         'realm'          => $adapter['realm'],
                         'digest_domains' => $adapter['digest_domains'],
                         'nonce_timeout'  => $adapter['nonce_timeout'],
-                        'htdigest'       => $adapter['htdigest']
-                    ]
+                        'htdigest'       => $adapter['htdigest'],
+                    ],
                 ];
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
@@ -717,8 +717,8 @@ class AuthenticationModel
                             'storage' => [
                                 'adapter' => strtolower(AuthenticationEntity::DSN_PDO),
                                 'dsn'     => $adapter['oauth2_dsn'],
-                                'route'   => $adapter['oauth2_route']
-                            ]
+                                'route'   => $adapter['oauth2_route'],
+                            ],
                         ];
                         if (isset($adapter['oauth2_username'])) {
                             $config['storage']['username'] = $adapter['oauth2_username'];
@@ -735,7 +735,7 @@ class AuthenticationModel
                                 'dsn'      => $adapter['oauth2_dsn'],
                                 'database' => $adapter['oauth2_database'],
                                 'route'    => $adapter['oauth2_route'],
-                            ]
+                            ],
                         ];
                         if (isset($adapter['oauth2_locator_name'])) {
                             $config['storage']['locator_name'] = $adapter['oauth2_locator_name'];
@@ -794,7 +794,7 @@ class AuthenticationModel
 
         $options = [
             'spec'  => '%oauth%',
-            'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
+            'regex' => '(?P<oauth>(' . implode('|', $routes) . '))',
         ];
         $this->globalConfig->patchKey('router.routes.oauth.options', $options);
         $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
@@ -830,7 +830,7 @@ class AuthenticationModel
             });
             $options = [
                 'spec'  => '%oauth%',
-                'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
+                'regex' => '(?P<oauth>(' . implode('|', $routes) . '))',
             ];
             $this->globalConfig->patchKey('router.routes.oauth.options', $options);
             $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
@@ -923,7 +923,7 @@ class AuthenticationModel
             'zf-mvc-auth.authentication.http',
             'zf-oauth2.db',
             'zf-oauth2.mongo',
-            'zf-oauth2.storage'
+            'zf-oauth2.storage',
         ];
         foreach ($configKeys as $key) {
             $this->globalConfig->deleteKey($key);
@@ -955,7 +955,7 @@ class AuthenticationModel
                     'name'     => 'http_basic',
                     'type'     => AuthenticationEntity::TYPE_BASIC,
                     'realm'    => $oldAuth['realm'],
-                    'htpasswd' => $oldAuth['htpasswd']
+                    'htpasswd' => $oldAuth['htpasswd'],
                 ];
                 break;
             case 'http_digest':
@@ -965,7 +965,7 @@ class AuthenticationModel
                     'realm'          => $oldAuth['realm'],
                     'htdigest'       => $oldAuth['htdigest'],
                     'digest_domains' => $oldAuth['digest_domains'],
-                    'nonce_timeout'  => $oldAuth['nonce_timeout']
+                    'nonce_timeout'  => $oldAuth['nonce_timeout'],
                 ];
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
@@ -973,7 +973,7 @@ class AuthenticationModel
                     'type'         => AuthenticationEntity::TYPE_OAUTH2,
                     'oauth2_type'  => $oldAuth['dsn_type'],
                     'oauth2_dsn'   => $oldAuth['dsn'],
-                    'oauth2_route' => $oldAuth['route_match']
+                    'oauth2_route' => $oldAuth['route_match'],
                 ];
                 switch (strtolower($oldAuth['dsn_type'])) {
                     case strtolower(AuthenticationEntity::DSN_PDO):

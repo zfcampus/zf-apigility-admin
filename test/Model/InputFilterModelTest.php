@@ -17,7 +17,7 @@ class InputFilterModelTest extends TestCase
     public function setUp()
     {
         $modules = [
-            'InputFilter' => new \InputFilter\Module()
+            'InputFilter' => new \InputFilter\Module(),
         ];
 
 

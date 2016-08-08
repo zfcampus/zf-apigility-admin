@@ -663,13 +663,13 @@ class RestServiceModel implements EventManagerAwareInterface
                             ],
                         ],
                     ],
-                ]
+                ],
             ],
             'zf-versioning' => [
                 'uri' => [
-                    $routeName
-                ]
-            ]
+                    $routeName,
+                ],
+            ],
         ];
         $this->configResource->patch($config, true);
 
@@ -800,7 +800,7 @@ class RestServiceModel implements EventManagerAwareInterface
         $config    = ['router' => ['routes' => [
             $routeName => ['options' => [
                 'route' => $route,
-            ]]
+            ]],
         ]]];
         $this->configResource->patch($config, true);
     }

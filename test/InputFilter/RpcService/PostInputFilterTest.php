@@ -46,7 +46,6 @@ class PostInputFilterTest extends TestCase
                 ['service_name' => 'Foo\Bar', 'route_match' => '/bar'],
                 ['service_name'],
             ],
-
         ];
     }
 

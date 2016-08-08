@@ -381,8 +381,8 @@ class AuthenticationController extends AbstractAuthenticationController
                 'rel' => 'self',
                 'route' => [
                     'name'   => 'zf-apigility/api/authentication',
-                    'params' => ['authentication_adapter' => $entity['name']]
-                ]
+                    'params' => ['authentication_adapter' => $entity['name']],
+                ],
             ]));
             $halCollection[] = $halEntity;
         }
@@ -402,8 +402,8 @@ class AuthenticationController extends AbstractAuthenticationController
             'rel' => 'self',
             'route' => [
                 'name'   => 'zf-apigility/api/authentication',
-                'params' => ['authentication_adapter' => $entity['name']]
-            ]
+                'params' => ['authentication_adapter' => $entity['name']],
+            ],
         ]));
         return new ViewModel(['payload' => $halEntity]);
     }
@@ -417,7 +417,7 @@ class AuthenticationController extends AbstractAuthenticationController
     private function createAuthenticationMapResult($adapter)
     {
         $model = new ViewModel([
-            'authentication' => $adapter
+            'authentication' => $adapter,
         ]);
         $model->setTerminal(true);
         return $model;

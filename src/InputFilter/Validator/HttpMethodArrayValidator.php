@@ -19,14 +19,14 @@ class HttpMethodArrayValidator extends AbstractValidator
         'POST',
         'PATCH',
         'PUT',
-        'DELETE'
+        'DELETE',
     ];
 
     /**
      * @var array
      */
     protected $messageTemplates = [
-        self::HTTP_METHOD_ARRAY => "'%value%' is not http method"
+        self::HTTP_METHOD_ARRAY => "'%value%' is not http method",
     ];
 
     /**

@@ -47,7 +47,7 @@ class RpcServiceModelTest extends TestCase
 
         $modulePath = [
             'psr-0' => '%s/src/%s/V*',
-            'psr-4' => '%s/src/V*'
+            'psr-4' => '%s/src/V*',
         ];
 
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
@@ -65,7 +65,7 @@ class RpcServiceModelTest extends TestCase
 
         $modules = [
             'FooConf' => new FooConf\Module(),
-            'BazConf' => new BazConf\Module()
+            'BazConf' => new BazConf\Module(),
         ];
 
         $this->moduleEntity  = new ModuleEntity($this->module);
@@ -275,9 +275,9 @@ class RpcServiceModelTest extends TestCase
             ]],
             'zf-versioning' => [
                 'uri' => [
-                    'foo-conf.rpc.hello-world'
-                ]
-            ]
+                    'foo-conf.rpc.hello-world',
+                ],
+            ],
         ];
         $this->assertEquals($expected, $config);
         return (object) [
@@ -417,9 +417,9 @@ class RpcServiceModelTest extends TestCase
             ],
             'zf-versioning' => [
                 'uri' => [
-                    'foo-conf.rpc.hello-world'
-                ]
-            ]
+                    'foo-conf.rpc.hello-world',
+                ],
+            ],
         ];
         $config = include $configFile;
         $this->assertEquals($expected, $config);

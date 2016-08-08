@@ -34,12 +34,12 @@ class OAuth2PdoInputFilter2 extends BaseInputFilter
         $this->add([
             'name' => 'oauth2_username',
             'error_message' => 'Please provide a username for OAuth2 PDO database',
-            'required' => false
+            'required' => false,
         ]);
         $this->add([
             'name' => 'oauth2_password',
             'error_message' => 'Please provide a password DSN for OAuth2 PDO database',
-            'required' => false
+            'required' => false,
         ]);
         $this->add([
             'name' => 'oauth2_route',
@@ -47,11 +47,11 @@ class OAuth2PdoInputFilter2 extends BaseInputFilter
                 [
                     'name' => 'Uri',
                     'options' => [
-                        'allowRelative' => true
+                        'allowRelative' => true,
                     ],
                 ],
             ],
-            'error_message' => 'Please provide a valid URL route for OAuth2 PDO adapter'
+            'error_message' => 'Please provide a valid URL route for OAuth2 PDO adapter',
         ]);
         $this->add([
             'name' => 'oauth2_options',
@@ -64,7 +64,7 @@ class OAuth2PdoInputFilter2 extends BaseInputFilter
                 ],
             ],
             'error_message' => 'Please provide a valid options for OAuth2 PDO adapter',
-            'required' => false
+            'required' => false,
         ]);
     }
 }

@@ -328,7 +328,7 @@ class RpcServiceModel
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-controller.phtml'
+            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-controller.phtml',
         ]);
 
         $view->setTemplate('code-connected/rpc-controller');
@@ -423,13 +423,13 @@ class RpcServiceModel
                             ],
                         ],
                     ],
-                ]
+                ],
             ],
             'zf-versioning' => [
                 'uri' => [
-                    $routeName
-                ]
-            ]
+                    $routeName,
+                ],
+            ],
         ];
 
         $this->configResource->patch($config, true);

@@ -169,8 +169,8 @@ final class ModuleVersioningModel
 
         $this->configResource->patch([
             'zf-versioning' => [
-                'default_version' => $defaultVersion
-            ]
+                'default_version' => $defaultVersion,
+            ],
         ], true);
 
         $config = $this->configResource->fetch(true);
@@ -243,7 +243,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-hal']['metadata_map'])) {
             $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $previous, $version);
             $this->configResource->patch([
-                'zf-hal' => ['metadata_map' => $newValues]
+                'zf-hal' => ['metadata_map' => $newValues],
             ], true);
         }
 
@@ -251,7 +251,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-rpc'])) {
             $newValues = $this->changeVersionArray($config['zf-rpc'], $previous, $version);
             $this->configResource->patch([
-                'zf-rpc' => $newValues
+                'zf-rpc' => $newValues,
             ], true);
         }
 
@@ -259,7 +259,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-rest'])) {
             $newValues = $this->changeVersionArray($config['zf-rest'], $previous, $version);
             $this->configResource->patch([
-                'zf-rest' => $newValues
+                'zf-rest' => $newValues,
             ], true);
         }
 
@@ -289,7 +289,7 @@ final class ModuleVersioningModel
                     }
 
                     $this->configResource->patch([
-                        'zf-content-negotiation' => [$key => $newValues]
+                        'zf-content-negotiation' => [$key => $newValues],
                     ], true);
                 }
             }
@@ -299,7 +299,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-mvc-auth']['authorization'])) {
             $newValues = $this->changeVersionArray($config['zf-mvc-auth']['authorization'], $previous, $version);
             $this->configResource->patch([
-                'zf-mvc-auth' => ['authorization' => $newValues]
+                'zf-mvc-auth' => ['authorization' => $newValues],
             ], true);
         }
 
@@ -307,14 +307,14 @@ final class ModuleVersioningModel
         if (isset($config['zf-content-validation'])) {
             $newValues = $this->changeVersionArray($config['zf-content-validation'], $previous, $version);
             $this->configResource->patch([
-                'zf-content-validation' => $newValues
+                'zf-content-validation' => $newValues,
             ], true);
         }
 
         if (isset($config['input_filter_specs'])) {
             $newValues = $this->changeVersionArray($config['input_filter_specs'], $previous, $version);
             $this->configResource->patch([
-                'input_filter_specs' => $newValues
+                'input_filter_specs' => $newValues,
             ], true);
         }
 
@@ -322,7 +322,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-apigility']['db-connected'])) {
             $newValues = $this->changeVersionArray($config['zf-apigility']['db-connected'], $previous, $version);
             $this->configResource->patch([
-                'zf-apigility' => ['db-connected' => $newValues]
+                'zf-apigility' => ['db-connected' => $newValues],
             ], true);
         }
 
@@ -330,7 +330,7 @@ final class ModuleVersioningModel
         if (isset($config['service_manager'])) {
             $newValues = $this->changeVersionArray($config['service_manager'], $previous, $version);
             $this->configResource->patch([
-                'service_manager' => $newValues
+                'service_manager' => $newValues,
             ], true);
         }
 
@@ -338,7 +338,7 @@ final class ModuleVersioningModel
         if (isset($config['controllers'])) {
             $newValues = $this->changeVersionArray($config['controllers'], $previous, $version);
             $this->configResource->patch([
-                'controllers' => $newValues
+                'controllers' => $newValues,
             ], true);
         }
 

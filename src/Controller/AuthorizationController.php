@@ -69,7 +69,7 @@ class AuthorizationController extends AbstractActionController
                         'version' => $version,
                     ],
                 ],
-            ]
+            ],
         ]));
         return new ViewModel(['payload' => $entity]);
     }

@@ -55,7 +55,7 @@ class PostInputFilterTest extends TestCase
             'conflict' => [
                 ['service_name' => 'Foo', 'adapter_name' => 'bar'],
                 ['service_name'],
-            ]
+            ],
         ];
     }
 

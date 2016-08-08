@@ -118,7 +118,7 @@ class ModuleResourceTest extends TestCase
         $moduleName = uniqid('Foo');
         $module = $this->resource->create([
             'name'    => $moduleName,
-            'version' => '2'
+            'version' => '2',
         ]);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $module);
         $this->assertEquals([2], $module->getVersions());

@@ -60,7 +60,7 @@ class RestServiceResourceTest extends TestCase
         $this->cleanUpAssets();
 
         $modules = [
-            'BarConf' => new BarConf\Module()
+            'BarConf' => new BarConf\Module(),
         ];
 
         $this->moduleEntity = new ModuleEntity($this->module, [], [], false);
