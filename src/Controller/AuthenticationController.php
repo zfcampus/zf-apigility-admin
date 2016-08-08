@@ -272,7 +272,7 @@ class AuthenticationController extends AbstractAuthenticationController
             'Location',
             $this->url()->fromRoute(
                 'zf-apigility/api/authentication',
-                [ 'authentication_adapter' => $entity['name'] ]
+                ['authentication_adapter' => $entity['name']]
             )
         );
 

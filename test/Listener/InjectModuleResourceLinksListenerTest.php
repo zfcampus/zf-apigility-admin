@@ -165,7 +165,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
         $this->urlHelper
             ->call(
                 'zf-apigility/api/module/authorization',
-                [ 'name' => 'FooConf' ],
+                ['name' => 'FooConf'],
                 [],
                 false
             )
@@ -177,7 +177,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
         $this->urlHelper
             ->call(
                 'zf-apigility/api/module/rest-service',
-                [ 'name' => 'FooConf' ],
+                ['name' => 'FooConf'],
                 [],
                 false
             )
@@ -189,7 +189,7 @@ class InjectModuleResourceLinksListenerTest extends TestCase
         $this->urlHelper
             ->call(
                 'zf-apigility/api/module/rpc-service',
-                [ 'name' => 'FooConf' ],
+                ['name' => 'FooConf'],
                 [],
                 false
             )

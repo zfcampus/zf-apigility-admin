@@ -204,7 +204,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         ];
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
-        $config = [ 'zf-apigility' => ['db-connected' => [
+        $config = ['zf-apigility' => ['db-connected' => [
             'BarConf\Rest\Barbaz\BarbazResource' => [
                 'adapter_name'  => 'Db\Barbaz',
                 'table_name'    => 'barbaz',
@@ -255,7 +255,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         ];
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
-        $config = [ 'zf-apigility' => ['db-connected' => [
+        $config = ['zf-apigility' => ['db-connected' => [
             'BarConf\Rest\Barbaz\BarbazResource' => [
                 'adapter_name'  => 'Db\Barbaz',
                 'table_name'    => 'barbaz',
