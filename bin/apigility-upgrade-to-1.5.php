@@ -1,5 +1,11 @@
 #!/usr/bin/env php
 <?php // @codingStandardsIgnoreFile
+/**
+ * Script for updating an Apigility application to use latest ZF component v3 releases.
+ *
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 // Configuration
 $path = realpath(getcwd());
