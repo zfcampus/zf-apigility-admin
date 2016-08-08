@@ -40,6 +40,6 @@ class DbAutodiscoveryControllerFactory implements FactoryInterface
         if ($container instanceof AbstractPluginManager) {
             $container = $container->getServiceLocator() ?: $container;
         }
-        return $this($container, DbAutodiscoverController::class);
+        return $this($container, DbAutodiscoveryController::class);
     }
 }
