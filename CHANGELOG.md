@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file, in reverse 
   it then updates your list of modules, and then installs dependencies for you.
 
   If you need to update manually for any reason, you will need to
-  [follow the steps in the README](README.md#upgrading-to-1.5).
+  [follow the steps in the README](README.md#upgrading-to-v3-zend-framework-components-from-1.5).
 
 - [#321](https://github.com/zfcampus/zf-apigility-admin/pull/321) adds a
   `patchList()` stub to the REST resource class template, so that it's present
