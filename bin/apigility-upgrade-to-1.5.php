@@ -3,6 +3,7 @@
 
 // Configuration
 $path = realpath(getcwd());
+$composer = 'composer';
 $modulesToRemove = [
     'AssetManager',
     'ZF\DevelopmentMode',
@@ -16,6 +17,28 @@ $modulesToAdd = [
     'Zend\Router',
     'Zend\Validator',
 ];
+
+// Check arguments
+if ($argc > 1) {
+    if (in_array($argv[1], ['-h', '--help'], true)) {
+        help();
+        exit(0);
+    }
+
+    if ($argc != 3 || ! in_array($argv[1], ['-c', '--composer'], true)) {
+        fwrite(STDERR, "Invalid arguments supplied\n\n");
+        help(STDERR);
+        exit(1);
+    }
+
+    if (! file_exists($argv[2])) {
+        fwrite(STDERR, "Provided composer binary does not exist\n\n");
+        help(STDERR);
+        exit(1);
+    }
+
+    $composer = $argv[2];
+}
 
 // Workflow
 echo "Upgrading your Apigility application to use Zend Framework v3 components.\n\n";
@@ -38,7 +61,7 @@ echo "Removing previously installed dependencies...\n";
 removeInstalledDependencies($path);
 
 echo "Installing new dependencies...\n";
-$result = installDependencies();
+$result = installDependencies($composer);
 if (! $result->status) {
     fwrite(STDERR, sprintf("%s\n", $result->message));
     exit(1);
@@ -51,17 +74,17 @@ exit(0);
 
 /**
  * @param string $path
- * @return stdClass
+ * @return Result
  */
 function updateComposerJson($path)
 {
     $composerJsonFile = sprintf('%s/composer.json', $path);
 
     if (! file_exists($composerJsonFile)) {
-        return (object) [
-            'status' => false,
-            'message' => 'Could not locate composer.json; are you running this from your project root?',
-        ];
+        return new Result(
+            false,
+            'Could not locate composer.json; are you running this from your project root?'
+        );
     }
 
     $composerJson = file_get_contents($path . '/composer.json');
@@ -90,33 +113,33 @@ function updateComposerJson($path)
     $composerJson = json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     file_put_contents($composerJsonFile, $composerJson);
 
-    return (object) ['status' => true];
+    return new Result(true);
 }
 
 /**
  * @param string $path
  * @param array $modulesToRemove
  * @param array $modulesToAdd
- * @return stdClass
+ * @return Result
  */
 function updateModulesList($path, array $modulesToRemove, array $modulesToAdd)
 {
     $moduleListFile = sprintf('%s/config/modules.config.php', $path);
 
     if (! file_exists($moduleListFile)) {
-        return (object) [
-            'status' => false,
-            'message' => 'Could not locate config/modules.config.php; are you running this from an Apigility project?',
-        ];
+        return new Result(
+            false,
+            'Could not locate config/modules.config.php; are you running this from an Apigility project?'
+        );
     }
 
     $moduleList = include $moduleListFile;
 
     if (! is_array($moduleList)) {
-        return (object) [
-            'status' => false,
-            'message' => 'config/modules.config.php did not return an array; please check the file.',
-        ];
+        return new Result(
+            false,
+            'config/modules.config.php did not return an array; please check the file.'
+        );
     }
 
     // Create a backup
@@ -149,7 +172,7 @@ EOC;
     $fileContents = sprintf($template, implode(",\n    ", $moduleList));
     file_put_contents($moduleListFile, $fileContents);
 
-    return (object) ['status' => true];
+    return new Result(true);
 }
 
 /**
@@ -192,17 +215,71 @@ function removePath($path)
     rmdir($path);
 }
 
-function installDependencies()
+/**
+ * @var string $composer Composer binary
+ * @return Result
+ */
+function installDependencies($composer)
 {
     $status = 0;
-    system('composer install', $status);
+    $command = sprintf('%s install', $composer);
+    system($command, $status);
 
     if ($status !== 0) {
-        return (object) [
-            'status' => false,
-            'message' => 'composer install did not complete successfully; run manually to debug',
-        ];
+        return new Result(
+            false,
+            'composer install did not complete successfully; run manually to debug'
+        );
     }
 
-    return (object) [ 'status' => true ];
+    return new Result(true);
+}
+
+/**
+ * Emit the help message on the specified stream.
+ *
+ * @var resource $stream
+ * @return void
+ */
+function help($stream = STDOUT)
+{
+    $usage =<<<'EOC'
+Usage:
+
+  vendor/bin/apigility-upgrade-to-1.5.php [options]
+
+Options:
+
+  -h|--help               Display this message
+  -c|--composer <path>    Path to composer binary; defaults to "composer"
+                          (assumes discoverable via user PATH)
+EOC;
+
+    fwrite($stream, $usage);
+}
+
+/**
+ * Value object describing an operation result.
+ */
+class Result
+{
+    /**
+     * @var string
+     */
+    public $message = '';
+
+    /**
+     * @var bool
+     */
+    public $status;
+
+    /**
+     * @param bool $status
+     * @param string $message
+     */
+    public function __construct($status, $message = '')
+    {
+        $this->status = $status;
+        $this->message = $message;
+    }
 }
