@@ -6,6 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ZF\Rest\Exception\CreationException;
+
 class DbConnectedRestServiceEntity extends RestServiceEntity
 {
     protected $adapterName;
