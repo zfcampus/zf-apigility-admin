@@ -6,16 +6,8 @@
 
 namespace ZF\Apigility\Admin;
 
-use Zend\Http\Header\GenericHeader;
-use Zend\Http\Header\GenericMultiHeader;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
-use Zend\Router\RouteMatch;
-use ZF\Hal\Link\Link;
-use ZF\Hal\Link\LinkCollection;
-use ZF\Hal\Entity;
-use ZF\Hal\View\HalJsonModel;
 
 class Module
 {
@@ -30,7 +22,7 @@ class Module
     protected $urlHelper;
 
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Interop\Container\ContainerInterface
      */
     protected $sm;
 
