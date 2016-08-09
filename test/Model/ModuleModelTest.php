@@ -336,7 +336,7 @@ class ModuleModelTest extends TestCase
         $this->assertTrue($this->model->deleteModule($module, $modulePath, true));
         $this->assertFalse(
             file_exists(sprintf('%s/module/%s', $modulePath, $module)),
-            shell_exec('tree ' . $modulePath)
+            'Module class found in tree when it not have been'
         );
     }
 
