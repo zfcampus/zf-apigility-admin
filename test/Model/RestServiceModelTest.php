@@ -43,7 +43,7 @@ class RestServiceModelTest extends TestCase
     }
     protected function cleanUpAssets()
     {
-        $pathSpec = (empty($this->modules)) ? 'psr-0' : $this->modules->getPathSpec();
+        $pathSpec = empty($this->modules) ? 'psr-0' : $this->modules->getPathSpec();
 
         $modulePath = [
             'psr-0' => '%s/src/%s/V*',

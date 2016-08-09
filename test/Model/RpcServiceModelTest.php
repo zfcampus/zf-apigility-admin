@@ -43,7 +43,7 @@ class RpcServiceModelTest extends TestCase
 
     protected function cleanUpAssets()
     {
-        $pathSpec = (empty($this->modulePathSpec)) ? 'psr-0' : $this->modulePathSpec->getPathSpec();
+        $pathSpec = empty($this->modulePathSpec) ? 'psr-0' : $this->modulePathSpec->getPathSpec();
 
         $modulePath = [
             'psr-0' => '%s/src/%s/V*',

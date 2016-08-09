@@ -168,7 +168,7 @@ class ModuleEntity
                     if (! is_array($value) && ! $value instanceof Collection) {
                         throw new InvalidArgumentException(sprintf(
                             'REST services must be an array or ZF\Hal\Collection; received "%s"',
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
                     $this->restServices = $value;
@@ -177,7 +177,7 @@ class ModuleEntity
                     if (! is_array($value) && ! $value instanceof Collection) {
                         throw new InvalidArgumentException(sprintf(
                             'RPC services must be an array or ZF\Hal\Collection; received "%s"',
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
                     $this->rpcServices = $value;
@@ -186,7 +186,7 @@ class ModuleEntity
                     if (! is_array($value)) {
                         throw new InvalidArgumentException(
                             'Versions must be an array; received "%s"',
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         );
                     }
                     $this->versions = $value;

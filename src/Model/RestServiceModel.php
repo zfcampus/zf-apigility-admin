@@ -1355,7 +1355,7 @@ class RestServiceModel implements EventManagerAwareInterface
             return $config['zf-rest'][$controllerServiceName]['collection_class'];
         }
 
-        $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        $module = $metadata->module == $this->module ? $this->module : $metadata->module;
         $q = preg_quote('\\');
         $pattern = sprintf(
             '#%s(?P<version>%sV[a-zA-Z0-9_]+)?%sRest%s(?P<service>[^%s]+)%sController#',

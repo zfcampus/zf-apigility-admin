@@ -156,7 +156,7 @@ class DocumentationModel
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
-        $docArray = (file_exists($docConfigPath)) ? include $docConfigPath : [];
+        $docArray = file_exists($docConfigPath) ? include $docConfigPath : [];
         return $this->configFactory->createConfigResource($docArray, $docConfigPath);
     }
 }
