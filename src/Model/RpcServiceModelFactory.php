@@ -8,7 +8,6 @@ namespace ZF\Apigility\Admin\Model;
 
 use Zend\EventManager\SharedEventManagerInterface;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
-use ZF\Configuration\ModuleUtils;
 
 class RpcServiceModelFactory
 {
@@ -30,7 +29,7 @@ class RpcServiceModelFactory
     protected $moduleModel;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
@@ -40,8 +39,8 @@ class RpcServiceModelFactory
     protected $sharedEventManager;
 
     /**
-     * @param  ModuleUtils $modules
-     * @param  ConfigResource $config
+     * @param  ModulePathSpec $modules
+     * @param  ConfigResourceFactory $configFactory
      * @param  SharedEventManagerInterface $sharedEvents
      * @param  ModuleModel $moduleModel
      */
@@ -67,7 +66,7 @@ class RpcServiceModelFactory
             return $this->models[$module];
         }
 
-        $moduleName   = $this->normalizeModuleName($module);
+        $moduleName   = $this->modules->normalizeModuleName($module);
         $moduleEntity = $this->moduleModel->getModule($moduleName);
         $config       = $this->configFactory->factory($module);
 
@@ -79,9 +78,10 @@ class RpcServiceModelFactory
     /**
      * @param  string $name
      * @return string
+     * @deprecated
      */
     protected function normalizeModuleName($name)
     {
-        return str_replace('.', '\\', $name);
+        return $this->modules->normalizeModuleName($name);
     }
 }

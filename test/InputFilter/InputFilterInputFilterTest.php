@@ -25,14 +25,14 @@ class InputFilterInputFilterTest extends TestCase
                             [
                                 'name' => 'Zend\Filter\Boolean',
                                 'options' => ['casting' => false],
-                            ]
+                            ],
                         ],
                         'validators' => [],
                         'allow_empty' => true,
                         'continue_if_empty' => false,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -55,16 +55,15 @@ class InputFilterInputFilterTest extends TestCase
                             [
                                 'name' => 'Zend\Filter\Bool',
                                 'options' => ['casting' => false],
-                            ]
+                            ],
                         ],
                         'validators' => [],
                         'allow_empty' => true,
                         'continue_if_empty' => false,
-                    ]
+                    ],
                 ],
                 [
-                    'inputFilter' => 'Zend\Filter\FilterPluginManager::get was unable'
-                    . ' to fetch or create an instance for Zend\Filter\Bool'
+                    'inputFilter' => 'Zend\Filter\Bool',
                 ],
             ],
         ];
@@ -86,6 +85,8 @@ class InputFilterInputFilterTest extends TestCase
     {
         $this->inputFilterInputFilter->setData($data);
         $this->assertFalse($this->inputFilterInputFilter->isValid());
-        $this->assertEquals($messages, $this->inputFilterInputFilter->getMessages());
+        $validationMessages = $this->inputFilterInputFilter->getMessages();
+        $this->assertArrayHasKey('inputFilter', $validationMessages);
+        $this->assertContains($messages['inputFilter'], $validationMessages['inputFilter']);
     }
 }

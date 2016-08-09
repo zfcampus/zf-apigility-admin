@@ -1,4 +1,4 @@
-namespace <?php echo $module ?>;
+namespace <?= $module ?>;
 
 use ZF\Apigility\Provider\ApigilityProviderInterface;
 
@@ -11,12 +11,12 @@ class Module implements ApigilityProviderInterface
 
     public function getAutoloaderConfig()
     {
-        return array(
-            'ZF\Apigility\Autoloader' => array(
-                'namespaces' => array(
+        return [
+            'ZF\Apigility\Autoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 }

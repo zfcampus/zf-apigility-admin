@@ -11,14 +11,15 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use Zend\EventManager\Event;
-use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
+use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity;
+use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class DbConnectedRestServiceModelTest extends TestCase
 {
@@ -26,7 +27,7 @@ class DbConnectedRestServiceModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {
@@ -59,19 +60,15 @@ class DbConnectedRestServiceModelTest extends TestCase
         $this->cleanUpAssets();
 
         $modules = [
-            'BarConf' => new BarConf\Module()
+            'BarConf' => new BarConf\Module(),
         ];
 
         $this->moduleEntity  = new ModuleEntity($this->module, [], [], false);
-        $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
-                                    ->disableOriginalConstructor()
-                                    ->getMock();
-        $this->moduleManager->expects($this->any())
-                            ->method('getLoadedModules')
-                            ->will($this->returnValue($modules));
+        $this->moduleManager = $this->prophesize(ModuleManager::class);
+        $this->moduleManager->getLoadedModules()->willReturn($modules);
 
         $this->writer   = new PhpArray();
-        $moduleUtils    = new ModuleUtils($this->moduleManager);
+        $moduleUtils    = new ModuleUtils($this->moduleManager->reveal());
         $this->modules  = new ModulePathSpec($moduleUtils);
         $this->resource = new ResourceFactory($moduleUtils, $this->writer);
         $this->codeRest = new RestServiceModel(
@@ -207,7 +204,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         ];
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
-        $config = [ 'zf-apigility' => ['db-connected' => [
+        $config = ['zf-apigility' => ['db-connected' => [
             'BarConf\Rest\Barbaz\BarbazResource' => [
                 'adapter_name'  => 'Db\Barbaz',
                 'table_name'    => 'barbaz',
@@ -258,7 +255,7 @@ class DbConnectedRestServiceModelTest extends TestCase
         ];
         $entity = new RestServiceEntity();
         $entity->exchangeArray($originalData);
-        $config = [ 'zf-apigility' => ['db-connected' => [
+        $config = ['zf-apigility' => ['db-connected' => [
             'BarConf\Rest\Barbaz\BarbazResource' => [
                 'adapter_name'  => 'Db\Barbaz',
                 'table_name'    => 'barbaz',

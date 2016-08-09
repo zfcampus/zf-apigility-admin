@@ -6,9 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Configuration\ConfigResource;
-use ZF\Configuration\ModuleUtils;
 
 class AuthorizationModel
 {
@@ -33,14 +31,14 @@ class AuthorizationModel
     protected $modulePath;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
     /**
-     * @param  ModuleEntity $moduleEntity
-     * @param  ModuleUtils $modules
-     * @param  ConfigResource $config
+     * @param ModuleEntity $moduleEntity
+     * @param ModulePathSpec $modules
+     * @param ConfigResource $config
      */
     public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
@@ -136,7 +134,7 @@ class AuthorizationModel
     protected function createDefaultPrivilegesForRestServices(array $services, AuthorizationEntity $entity, $version)
     {
         foreach ($services as $serviceName) {
-            if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
+            if (! preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                 continue;
             }
             $entity->addRestService($serviceName, $entity::TYPE_ENTITY);
@@ -159,7 +157,7 @@ class AuthorizationModel
         $version
     ) {
         foreach ($services as $serviceName => $serviceConfig) {
-            if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
+            if (! preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                 continue;
             }
             $action = $this->discoverActionForRpcService($serviceName, $serviceConfig, $config);
@@ -183,19 +181,13 @@ class AuthorizationModel
      */
     protected function discoverActionForRpcService($serviceName, array $serviceConfig, array $config)
     {
-        if (!isset($serviceConfig['route_name'])) {
+        if (! isset($serviceConfig['route_name'])) {
             return 'index';
         }
 
         $route = $serviceConfig['route_name'];
 
-        if (!isset($config['router'])
-            || !isset($config['router']['routes'])
-            || !isset($config['router']['routes'][$route])
-            || !isset($config['router']['routes'][$route]['options'])
-            || !isset($config['router']['routes'][$route]['options']['defaults'])
-            || !isset($config['router']['routes'][$route]['options']['defaults']['action'])
-        ) {
+        if (! isset($config['router']['routes'][$route]['options']['defaults']['action'])) {
             return 'index';
         }
 
@@ -212,7 +204,7 @@ class AuthorizationModel
     protected function filterServicesByVersion(array $config, $version)
     {
         foreach ($config as $serviceName => $privileges) {
-            if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
+            if (! preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                 unset($config[$serviceName]);
             }
         }
@@ -264,7 +256,7 @@ class AuthorizationModel
     {
         foreach ($config as $serviceSpec => $privileges) {
             // Replace keys to match what the API is going to send back and forth
-            if (!preg_match('/^(?P<service>[^:]+)::(?P<action>.*)$/', $serviceSpec, $matches)) {
+            if (! preg_match('/^(?P<service>[^:]+)::(?P<action>.*)$/', $serviceSpec, $matches)) {
                 // Invalid format; toss
                 unset($config[$serviceSpec]);
                 continue;
@@ -300,7 +292,7 @@ class AuthorizationModel
         ) {
             $missingServices = [];
             foreach (array_keys($config['zf-rest']) as $serviceName) {
-                if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
+                if (! preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                     continue;
                 }
                 if (in_array($serviceName, $services)) {
@@ -316,7 +308,7 @@ class AuthorizationModel
         ) {
             $missingServices = [];
             foreach ($config['zf-rpc'] as $serviceName => $serviceConfig) {
-                if (!preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
+                if (! preg_match('/' . preg_quote('\\') . 'V' . $version . preg_quote('\\') . '/', $serviceName)) {
                     continue;
                 }
                 if (in_array($serviceName, $services)) {

@@ -6,25 +6,28 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\Config\Writer\PhpArray;
 use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Controller\PluginManager;
+use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\InputFilterController;
 use ZF\Apigility\Admin\Model\InputFilterModel;
-use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
-use Zend\Config\Writer\PhpArray;
+use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\ContentNegotiation\ParameterDataContainer;
+use ZFTest\Apigility\Admin\RouteAssetsTrait;
 
 class InputFilterControllerTest extends TestCase
 {
+    use RouteAssetsTrait;
+
     public function setUp()
     {
         require_once __DIR__ . '/../Model/TestAsset/module/InputFilter/Module.php';
         $modules = [
-            'InputFilter' => new \InputFilter\Module()
+            'InputFilter' => new \InputFilter\Module(),
         ];
 
         $this->moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
@@ -63,9 +66,9 @@ class InputFilterControllerTest extends TestCase
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = [
             'name' => $module,
-            'controller_service_name' => $controller
+            'controller_service_name' => $controller,
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
@@ -103,7 +106,7 @@ class InputFilterControllerTest extends TestCase
             'controller_service_name' => $controller,
             'input_filter_name' => $validator,
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
@@ -115,7 +118,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
-        $entity = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
+        $entity = $payload->getEntity();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
         $expected = $this->config['input_filter_specs'][$validator];
@@ -152,9 +155,9 @@ class InputFilterControllerTest extends TestCase
         $controller = 'InputFilter\V1\Rest\Foo\Controller';
         $params = [
             'name' => $module,
-            'controller_service_name' => $controller
+            'controller_service_name' => $controller,
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
@@ -163,7 +166,7 @@ class InputFilterControllerTest extends TestCase
         $parameters->setBodyParams($inputFilter);
         $event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $plugins = new PluginManager();
+        $plugins = new PluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $plugins->setInvokableClass('bodyParams', 'ZF\ContentNegotiation\ControllerPlugin\BodyParams');
 
         $this->controller->setRequest($request);
@@ -174,7 +177,7 @@ class InputFilterControllerTest extends TestCase
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->payload;
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
-        $entity = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
+        $entity = $payload->getEntity();
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\InputFilterEntity', $entity);
 
         $config    = include $this->basePath . '/module.config.php';
@@ -199,7 +202,7 @@ class InputFilterControllerTest extends TestCase
             'controller_service_name' => $controller,
             'input_filter_name' => $validator,
         ];
-        $routeMatch = new RouteMatch($params);
+        $routeMatch = $this->createRouteMatch($params);
         $routeMatch->setMatchedRouteName('zf-apigility-admin/api/module/rest-service/rest_input_filter');
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);

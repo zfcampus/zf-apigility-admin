@@ -17,8 +17,8 @@ use ZF\Apigility\Admin\Model\NewRestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Apigility\Admin\Model\VersioningModel;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class RestServiceModelTest extends TestCase
 {
@@ -26,7 +26,7 @@ class RestServiceModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {
@@ -43,11 +43,11 @@ class RestServiceModelTest extends TestCase
     }
     protected function cleanUpAssets()
     {
-        $pathSpec = (empty($this->modules)) ? 'psr-0' : $this->modules->getPathSpec();
+        $pathSpec = empty($this->modules) ? 'psr-0' : $this->modules->getPathSpec();
 
         $modulePath = [
             'psr-0' => '%s/src/%s/V*',
-            'psr-4' => '%s/src/V*'
+            'psr-4' => '%s/src/V*',
         ];
 
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
@@ -75,7 +75,7 @@ class RestServiceModelTest extends TestCase
 
         $modules = [
             'BarConf' => new BarConf\Module(),
-            'BazConf' => new BazConf\Module()
+            'BazConf' => new BazConf\Module(),
         ];
 
         $this->moduleEntity  = new ModuleEntity($this->module, [], [], false);

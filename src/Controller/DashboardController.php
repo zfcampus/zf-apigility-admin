@@ -11,13 +11,12 @@ use ZF\Apigility\Admin\Model\AuthenticationEntity;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Apigility\Admin\Model\DbAdapterModel;
-use ZF\Apigility\Admin\Model\DoctrineAdapterModel;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
 use ZF\Apigility\Admin\Model\RpcServiceModelFactory;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Entity;
 use ZF\Hal\Collection;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
 
 class DashboardController extends AbstractActionController
@@ -83,8 +82,8 @@ class DashboardController extends AbstractActionController
         $modulesCollection->setCollectionRoute('zf-apigility/api/module');
 
         $dashboard = [
-            'db_adapter'       => $dbAdapters,
-            'module'           => $modulesCollection,
+            'db_adapter' => $dbAdapters,
+            'module'     => $modulesCollection,
         ];
 
         $entity = new Entity($dashboard, 'dashboard');

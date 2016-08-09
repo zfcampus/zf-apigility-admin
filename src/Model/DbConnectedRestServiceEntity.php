@@ -6,11 +6,14 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\Hydrator\ArraySerializable;
+use ZF\Rest\Exception\CreationException;
+
 class DbConnectedRestServiceEntity extends RestServiceEntity
 {
     protected $adapterName;
 
-    protected $hydratorName = 'Zend\Hydrator\ArraySerializable';
+    protected $hydratorName = ArraySerializable::class;
 
     protected $tableName;
 
@@ -32,8 +35,8 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
                     break;
                 case 'tablename':
                     $this->tableName = $value;
-                    if (!isset($this->serviceName)) {
-                        $this->serviceName  = $value;
+                    if (! isset($this->serviceName)) {
+                        $this->serviceName = $value;
                     }
                     break;
                 case 'tableservice':
@@ -76,12 +79,12 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
     public function getArrayCopy()
     {
         $data = parent::getArrayCopy();
-        $data['adapter_name'] = $this->adapterName;
+        $data['adapter_name']  = $this->adapterName;
         $data['hydrator_name'] = $this->hydratorName;
-        $data['table_name'] = $this->tableName;
+        $data['table_name']    = $this->tableName;
         $data['table_service'] = $this->tableService;
 
-        if (!isset($data['service_name']) || empty($data['service_name'])) {
+        if (empty($data['service_name'])) {
             $data['service_name'] = $this->tableName;
         }
 

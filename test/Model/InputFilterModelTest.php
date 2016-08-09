@@ -7,17 +7,17 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\Model\InputFilterModel;
-use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
-use ZF\Configuration\ModuleUtils;
 use Zend\Config\Writer\PhpArray;
+use ZF\Apigility\Admin\Model\InputFilterModel;
+use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
 class InputFilterModelTest extends TestCase
 {
     public function setUp()
     {
         $modules = [
-            'InputFilter' => new \InputFilter\Module()
+            'InputFilter' => new \InputFilter\Module(),
         ];
 
 

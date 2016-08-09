@@ -67,7 +67,7 @@ class FsPermissionsControllerTest extends TestCase
 
     public function testReturnsFalseIfNeitherConfigNorModuleDirectoriesExistAndRootIsNotWritable()
     {
-        if (!file_exists('/var/log') || !is_dir('/var/log') || is_writable('/var/log')) {
+        if (! file_exists('/var/log') || ! is_dir('/var/log') || is_writable('/var/log')) {
             $this->markTestSkipped('Cannot test, as either /var/log does not exist or is writable');
         }
 

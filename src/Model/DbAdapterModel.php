@@ -92,8 +92,7 @@ class DbAdapterModel
     {
         $config = [];
         $fromConfigFile = $this->localConfig->fetch(true);
-        if (isset($fromConfigFile['db'])
-            && isset($fromConfigFile['db']['adapters'])
+        if (isset($fromConfigFile['db']['adapters'])
             && is_array($fromConfigFile['db']['adapters'])
         ) {
             $config = $fromConfigFile['db']['adapters'];
@@ -111,16 +110,13 @@ class DbAdapterModel
      * Fetch configuration details for a named adapter
      *
      * @param  string $name
-     * @return DbAdapterEntity
+     * @return DbAdapterEntity|false
      */
     public function fetch($name)
     {
         $config = $this->localConfig->fetch(true);
-        if (!isset($config['db'])
-            || !isset($config['db']['adapters'])
-            || !is_array($config['db']['adapters'])
-            || !isset($config['db']['adapters'][$name])
-            || !is_array($config['db']['adapters'][$name])
+        if (! isset($config['db']['adapters'][$name])
+            || ! is_array($config['db']['adapters'][$name])
         ) {
             return false;
         }

@@ -9,6 +9,7 @@ namespace ZF\Apigility\Admin\Controller;
 use RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\RequestInterface as Request;
 use ZF\Apigility\Admin\Model\AuthorizationModel;
 use ZF\Apigility\Admin\Model\AuthorizationModelFactory;
 use ZF\ApiProblem\ApiProblem;
@@ -68,7 +69,7 @@ class AuthorizationController extends AbstractActionController
                         'version' => $version,
                     ],
                 ],
-            ]
+            ],
         ]));
         return new ViewModel(['payload' => $entity]);
     }
@@ -106,7 +107,7 @@ class AuthorizationController extends AbstractActionController
 
         $matches    = $event->getRouteMatch();
         $moduleName = $matches->getParam('name', false);
-        if (!$moduleName) {
+        if (! $moduleName) {
             throw new RuntimeException(sprintf(
                 '%s cannot operate correctly without a "name" segment in the route matches',
                 __CLASS__
@@ -121,8 +122,9 @@ class AuthorizationController extends AbstractActionController
      *
      * Provided for testing.
      *
+     * @deprecated since 1.5; unused, and will be deleted.
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {

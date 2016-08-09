@@ -8,8 +8,8 @@ namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
+use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
@@ -32,7 +32,7 @@ class ModuleCreationController extends AbstractActionController
         switch ($request->getMethod()) {
             case $request::METHOD_PUT:
                 $module = $this->bodyParam('module', false);
-                if (!$module) {
+                if (! $module) {
                     return new ApiProblemResponse(
                         new ApiProblem(
                             422,
@@ -45,7 +45,7 @@ class ModuleCreationController extends AbstractActionController
 
                 $result = $this->moduleModel->updateModule($module);
 
-                if (!$result) {
+                if (! $result) {
                     return new ApiProblemResponse(
                         new ApiProblem(500, 'Unable to Apigilify the module')
                     );
@@ -75,7 +75,7 @@ class ModuleCreationController extends AbstractActionController
      * Provided for testing.
      *
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {

@@ -1,86 +1,86 @@
 <?php
-return array(
-    'zf-mvc-auth' => array(
-        'authorization' => array(
-            'AuthConfWithConfig\V1\Rest\Foo\Controller' => array(
-                'entity' => array(
+return [
+    'zf-mvc-auth' => [
+        'authorization' => [
+            'AuthConfWithConfig\V1\Rest\Foo\Controller' => [
+                'entity' => [
                     'GET' => false,
                     'POST' => false,
                     'PUT' => true,
                     'PATCH' => true,
                     'DELETE' => true,
-                ),
-                'collection' => array(
+                ],
+                'collection' => [
                     'GET' => false,
                     'POST' => true,
                     'PUT' => false,
                     'PATCH' => false,
                     'DELETE' => false,
-                ),
-            ),
-            'AuthConfWithConfig\V1\Rest\Bar\Controller' => array(
-                'entity' => array(
+                ],
+            ],
+            'AuthConfWithConfig\V1\Rest\Bar\Controller' => [
+                'entity' => [
                     'GET' => false,
                     'POST' => false,
                     'PUT' => true,
                     'PATCH' => true,
                     'DELETE' => true,
-                ),
-                'collection' => array(
+                ],
+                'collection' => [
                     'GET' => false,
                     'POST' => true,
                     'PUT' => false,
                     'PATCH' => false,
                     'DELETE' => false,
-                ),
-            ),
-            'AuthConfWithConfig\V1\Rpc\Baz\Controller' => array(
-                'actions' => array(
-                    'baz' => array(
+                ],
+            ],
+            'AuthConfWithConfig\V1\Rpc\Baz\Controller' => [
+                'actions' => [
+                    'baz' => [
                         'GET' => true,
                         'POST' => true,
                         'PUT' => false,
                         'PATCH' => false,
                         'DELETE' => false,
-                    ),
-                ),
-            ),
-            'AuthConfWithConfig\V1\Rpc\Bat\Controller' => array(
-                'actions' => array(
-                    'index' => array(
+                    ],
+                ],
+            ],
+            'AuthConfWithConfig\V1\Rpc\Bat\Controller' => [
+                'actions' => [
+                    'index' => [
                         'GET' => true,
                         'POST' => false,
                         'PUT' => false,
                         'PATCH' => true,
                         'DELETE' => true,
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'zf-rest' => array(
-        'AuthConfWithConfig\V1\Rest\Foo\Controller' => array(),
-        'AuthConfWithConfig\V1\Rest\Bar\Controller' => array(),
-    ),
-    'zf-rpc' => array(
-        'AuthConfWithConfig\V1\Rpc\Baz\Controller' => array(
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'zf-rest' => [
+        'AuthConfWithConfig\V1\Rest\Foo\Controller' => [],
+        'AuthConfWithConfig\V1\Rest\Bar\Controller' => [],
+    ],
+    'zf-rpc' => [
+        'AuthConfWithConfig\V1\Rpc\Baz\Controller' => [
             'route_name' => 'auth-conf.rpc.baz',
-        ),
-        'AuthConfWithConfig\V1\Rpc\Bat\Controller' => array(
-        ),
-    ),
-    'router' => array(
-        'routes' => array(
-            'auth-conf.rpc.baz' => array(
+        ],
+        'AuthConfWithConfig\V1\Rpc\Bat\Controller' => [
+        ],
+    ],
+    'router' => [
+        'routes' => [
+            'auth-conf.rpc.baz' => [
                 'type' => 'Segment',
-                'options' => array(
+                'options' => [
                     'route' => '/api/baz',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'AuthConfWithConfig\V1\Rpc\Baz\Controller',
                         'action'     => 'baz',
-                    ),
-                ),
-            ),
-        ),
-    ),
-);
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

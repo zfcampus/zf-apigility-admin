@@ -6,10 +6,11 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Validator\ValidatorPluginManager;
-use ZF\Apigility\Admin\Model\ValidatorsModel;
 use ZF\Apigility\Admin\Model\ValidatorMetadataModel;
+use ZF\Apigility\Admin\Model\ValidatorsModel;
 
 class ValidatorsModelTest extends TestCase
 {
@@ -19,7 +20,7 @@ class ValidatorsModelTest extends TestCase
     {
         $this->getConfig();
         $this->metadata = new ValidatorMetadataModel($this->config);
-        $this->plugins  = new ValidatorPluginManager();
+        $this->plugins  = new ValidatorPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->model    = new ValidatorsModel($this->plugins, $this->metadata);
     }
 
@@ -30,11 +31,11 @@ class ValidatorsModelTest extends TestCase
         }
 
         $configFile = __DIR__ . '/../../../../../config/module.config.php';
-        if (!file_exists($configFile)) {
+        if (! file_exists($configFile)) {
             $this->markTestSkipped('Cannot find module config file!');
         }
         $allConfig = include $configFile;
-        if (!array_key_exists('validator_metadata', $allConfig)) {
+        if (! array_key_exists('validator_metadata', $allConfig)) {
             $this->markTestSkipped('Module config file does not contain validator_metadata!');
         }
 

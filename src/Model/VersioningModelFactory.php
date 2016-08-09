@@ -6,10 +6,14 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
-class VersioningModelFactory
+/**
+ * Class VersioningModelFactory
+ *
+ * @deprecated since 1.5; use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
+ */
+class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
 {
     /**
      * @var ConfigResourceFactory
@@ -24,12 +28,14 @@ class VersioningModelFactory
     protected $models = [];
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $moduleUtils;
 
     /**
-     * @param  ConfigResourceFactory $configFactory
+     * @param ConfigResourceFactory $configFactory
+     * @param ModulePathSpec $moduleUtils
+     * @deprecated
      */
     public function __construct(ConfigResourceFactory $configFactory, ModulePathSpec $moduleUtils)
     {
@@ -39,7 +45,8 @@ class VersioningModelFactory
 
     /**
      * @param  string $module
-     * @return RpcServiceModel
+     * @return VersioningModel
+     * @deprecated
      */
     public function factory($module)
     {
@@ -47,10 +54,15 @@ class VersioningModelFactory
             return $this->models[$module];
         }
 
-        $config     = $this->configFactory->factory($this->normalizeModuleName($module));
+        $moduleName = $this->moduleUtils->normalizeModuleName($module);
+        $config     = $this->configFactory->factory($moduleName);
         $docsConfig = $this->getDocsConfig($module);
 
-        $this->models[$module] = new VersioningModel($config, $docsConfig);
+        $this->models[$module] = new VersioningModel(
+            $config,
+            $docsConfig,
+            $this->moduleUtils
+        );
 
         return $this->models[$module];
     }
@@ -58,17 +70,24 @@ class VersioningModelFactory
     /**
      * @param  string $name
      * @return string
+     * @deprecated
      */
     protected function normalizeModuleName($name)
     {
-        return str_replace('.', '\\', $name);
+        return $this->moduleUtils->normalizeModuleName($name);
     }
 
+    /**
+     * getDocsConfig
+     * @param $module
+     * @return null|\ZF\Configuration\ConfigResource
+     * @deprecated
+     */
     protected function getDocsConfig($module)
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath    = dirname($moduleConfigPath) . '/documentation.config.php';
-        if (!file_exists($docConfigPath)) {
+        if (! file_exists($docConfigPath)) {
             return null;
         }
         $documentation = include $docConfigPath;

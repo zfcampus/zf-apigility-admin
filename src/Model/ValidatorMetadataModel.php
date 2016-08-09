@@ -57,7 +57,7 @@ class ValidatorMetadataModel
     public function fetch($plugin)
     {
         $this->processMetadata();
-        if (!array_key_exists($plugin, $this->processedMetadata)) {
+        if (! array_key_exists($plugin, $this->processedMetadata)) {
             return $this->defaults;
         }
         return $this->processedMetadata[$plugin];

@@ -6,13 +6,13 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
+use ReflectionClass;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
-use ReflectionClass;
 
 class SourceController extends AbstractActionController
 {
@@ -30,7 +30,7 @@ class SourceController extends AbstractActionController
         switch ($request->getMethod()) {
             case $request::METHOD_GET:
                 $module = urldecode($this->params()->fromQuery('module', false));
-                if (!$module) {
+                if (! $module) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -41,7 +41,7 @@ class SourceController extends AbstractActionController
                     );
                 }
                 $result = $this->moduleModel->getModule($module);
-                if (!$result) {
+                if (! $result) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -53,7 +53,7 @@ class SourceController extends AbstractActionController
                 }
 
                 $class = urldecode($this->params()->fromQuery('class', false));
-                if (!$class) {
+                if (! $class) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -63,7 +63,7 @@ class SourceController extends AbstractActionController
                         )
                     );
                 }
-                if (!class_exists($class)) {
+                if (! class_exists($class)) {
                     return new ApiProblemModel(
                         new ApiProblem(
                             422,
@@ -81,7 +81,7 @@ class SourceController extends AbstractActionController
                     'module' => $module,
                     'class'  => $class,
                     'file'   => $fileName,
-                    'source' => $this->highlightFileWithNum($fileName)
+                    'source' => $this->highlightFileWithNum($fileName),
                 ];
 
                 $model = new ViewModel($metadata);
@@ -122,7 +122,7 @@ class SourceController extends AbstractActionController
      * Provided for testing.
      *
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {

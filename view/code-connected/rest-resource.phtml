@@ -1,9 +1,9 @@
-namespace <?php echo $module ?>\V<?php echo $version ?>\Rest\<?php echo $resource ?>;
+namespace <?= $module ?>\V<?= $version ?>\Rest\<?= $resource ?>;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 
-class <?php echo $classname ?> extends AbstractResourceListener
+class <?= $classname ?> extends AbstractResourceListener
 {
     /**
      * Create a resource
@@ -55,7 +55,7 @@ class <?php echo $classname ?> extends AbstractResourceListener
      * @param  array $params
      * @return ApiProblem|mixed
      */
-    public function fetchAll($params = array())
+    public function fetchAll($params = [])
     {
         return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
@@ -70,6 +70,17 @@ class <?php echo $classname ?> extends AbstractResourceListener
     public function patch($id, $data)
     {
         return new ApiProblem(405, 'The PATCH method has not been defined for individual resources');
+    }
+
+    /**
+     * Patch (partial in-place update) a collection or members of a collection
+     *
+     * @param  mixed $data
+     * @return ApiProblem|mixed
+     */
+    public function patchList($data)
+    {
+        return new ApiProblem(405, 'The PATCH method has not been defined for collections');
     }
 
     /**

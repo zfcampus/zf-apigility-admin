@@ -34,10 +34,10 @@ class BasicInputFilterTest extends TestCase
     {
         return [
             'basic-only' => [
-                ['accept_schemes' => ['basic'], 'realm' => 'My Realm']
+                ['accept_schemes' => ['basic'], 'realm' => 'My Realm'],
             ],
             'basic-and-digest' => [
-                ['accept_schemes' => ['digest', 'basic'], 'realm' => 'My Realm']
+                ['accept_schemes' => ['digest', 'basic'], 'realm' => 'My Realm'],
             ],
         ];
     }

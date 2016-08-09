@@ -7,9 +7,10 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Zend\Http\Response;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\ApiProblem\ApiProblem;
-use ZF\Rest\Exception\CreationException;
 use ZF\Rest\AbstractResourceListener;
+use ZF\Rest\Exception\CreationException;
 
 class DoctrineAdapterResource extends AbstractResourceListener
 {
@@ -24,14 +25,40 @@ class DoctrineAdapterResource extends AbstractResourceListener
     protected $loadedModules;
 
     /**
-     * Constructor
-     *
-     * @param DoctrineAdapterModel $model
+     * @var null|ServiceLocatorInterface
      */
-    public function __construct(DoctrineAdapterModel $model, array $loadedModules)
+    protected $serviceLocator;
+
+    /**
+     * @param DoctrineAdapterModel $model
+     * @param array $loadedModules List of loaded modules
+     */
+    public function __construct(DoctrineAdapterModel $model, array $loadedModules = [])
     {
         $this->model = $model;
         $this->loadedModules = $loadedModules;
+    }
+
+    /**
+     * Set service locator
+     *
+     * @deprecated since 1.5.0, and no longer used internally.
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return $this
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+        return $this;
+    }
+
+    /**
+     * @deprecated since 1.5.0, and no longer used internally.
+     * @return null|ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
     }
 
     /**
@@ -41,7 +68,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
     public function fetch($id)
     {
         $entity = $this->model->fetch($id);
-        if (!$entity) {
+        if (! $entity) {
             return new ApiProblem(404, 'Adapter not found');
         }
         return $entity;
@@ -49,12 +76,13 @@ class DoctrineAdapterResource extends AbstractResourceListener
 
     /**
      * @param array $params
-     * @return array
+     * @return array|Response
      */
     public function fetchAll($params = [])
     {
         if (! isset($this->loadedModules['ZF\Apigility\Doctrine\Admin'])
-            || ! isset($this->loadedModules['ZF\Apigility\Doctrine\Server'])) {
+            || ! isset($this->loadedModules['ZF\Apigility\Doctrine\Server'])
+        ) {
             $response = new Response();
             $response->setStatusCode(204);
 
@@ -69,14 +97,15 @@ class DoctrineAdapterResource extends AbstractResourceListener
     }
 
     /**
-     * @param $data
-     * @return DbAdapterEntity
+     * @param object $data
+     * @return false|DbAdapterEntity
+     * @throws CreationException
      */
     public function create($data)
     {
         if (is_object($data)) {
             $data = (array)$data;
-            if (!isset($data['doctrine_adapter_name'])) {
+            if (! isset($data['doctrine_adapter_name'])) {
                 throw new CreationException('Missing doctrine_adapter_name', 422);
             }
 
@@ -90,7 +119,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
 
     /**
      * @param $id
-     * @param $data
+     * @param object|array $data
      * @return DbAdapterEntity|ApiProblem
      */
     public function patch($id, $data)
@@ -99,7 +128,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 
@@ -112,7 +141,7 @@ class DoctrineAdapterResource extends AbstractResourceListener
 
     /**
      * @param $id
-     * @return bool
+     * @return true
      */
     public function delete($id)
     {

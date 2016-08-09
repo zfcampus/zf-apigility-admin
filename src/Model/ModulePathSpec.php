@@ -19,6 +19,16 @@ use ZF\Configuration\ModuleUtils;
 class ModulePathSpec
 {
     /**
+     * PSR-4 path spec key
+     */
+    const PSR_4 = 'psr-4';
+
+    /**
+     * PSR-0 path spec key
+     */
+    const PSR_0 = 'psr-0';
+
+    /**
      * @var ModuleUtils
      */
     protected $modules;
@@ -32,14 +42,14 @@ class ModulePathSpec
      * @var array
      */
     protected $psrSpecs = [
-        'psr-0' => '%modulePath%/src/%moduleName%',
-        'psr-4' => '%modulePath%/src'
+        self::PSR_0 => '%modulePath%/src/%moduleName%',
+        self::PSR_4 => '%modulePath%/src',
     ];
 
     /**
      * @var string
      */
-    protected $currentSpec = 'psr-0';
+    protected $currentSpec = self::PSR_0;
 
     /**
      * @var string  PSR-0
@@ -64,19 +74,23 @@ class ModulePathSpec
     /**
      * @param ModuleUtils $modules
      * @param string $sourcePathSpec
-     * @param string $modulePath
+     * @param string $applicationPath
      */
-    public function __construct(ModuleUtils $modules, $sourcePathSpec = 'psr-0', $applicationPath = ".")
+    public function __construct(ModuleUtils $modules, $sourcePathSpec = self::PSR_0, $applicationPath = ".")
     {
         $sourcePathSpec = strtolower($sourcePathSpec);
 
-        if (!array_key_exists($sourcePathSpec, $this->psrSpecs)) {
-            throw new InvalidArgumentException("Invalid sourcePathSpec valid values are psr-0, psr-4");
+        if (! array_key_exists($sourcePathSpec, $this->psrSpecs)) {
+            throw new InvalidArgumentException(sprintf(
+                "Invalid sourcePathSpec. Valid values are %s and %s",
+                self::PSR_0,
+                self::PSR_4
+            ));
         }
 
         $this->modules              = $modules;
         $this->moduleSourcePathSpec = $this->psrSpecs[$sourcePathSpec];
-        $this->applicationPath      = $applicationPath;
+        $this->applicationPath      = $this->normalizePath($applicationPath);
         $this->currentSpec          = $sourcePathSpec;
     }
 
@@ -98,7 +112,7 @@ class ModulePathSpec
      */
     public function setApplicationPath($path)
     {
-        $this->applicationPath = $path;
+        $this->applicationPath = $this->normalizePath($path);
 
         return $this;
     }
@@ -116,7 +130,7 @@ class ModulePathSpec
     /**
      * Returns the path for the module name that is specified.
      *
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModulePath($moduleName)
@@ -128,21 +142,19 @@ class ModulePathSpec
             $modulePath = sprintf($this->modulePathSpec, $this->applicationPath, $moduleName);
         }
 
-        return $modulePath;
+        return $this->normalizePath($modulePath);
     }
 
     /**
      * Returns the source path for the module that is specified
      *
-     * @param $moduleName
+     * @param string $moduleName
      * @param bool $fullPath
-     * @return mixed
+     * @return string
      */
     public function getModuleSourcePath($moduleName, $fullPath = true)
     {
-        $find    = ["%modulePath%", "%moduleName%"];
-
-        $moduleName = str_replace('\\', '/', $moduleName);
+        $find = ["%modulePath%", "%moduleName%"];
 
         if (true === $fullPath) {
             $replace = [$this->getModulePath($moduleName), $moduleName];
@@ -150,7 +162,9 @@ class ModulePathSpec
             $replace = ['', $moduleName];
         }
 
-        return str_replace($find, $replace, $this->moduleSourcePathSpec);
+        $moduleSourcePath = str_replace($find, $replace, $this->moduleSourcePathSpec);
+
+        return $this->normalizePath($moduleSourcePath);
     }
 
     /**
@@ -173,16 +187,18 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        $path .= (!empty($serviceName)) ? str_replace("\\", "/", $serviceName) : '';
+        if (! empty($serviceName)) {
+            $path .= $serviceName;
+        }
 
-        return $path;
+        return $this->normalizePath($path);
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @param int $version
-     * @param null $serviceName
-     * @return mixed|string
+     * @param string $serviceName
+     * @return string
      */
     public function getRpcPath($moduleName, $version = 1, $serviceName = null)
     {
@@ -196,13 +212,15 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        $path .= (!empty($serviceName)) ? str_replace("\\", "/", $serviceName) : '';
+        if (! empty($serviceName)) {
+            $path .= $serviceName;
+        }
 
-        return $path;
+        return $this->normalizePath($path);
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModuleConfigPath($moduleName)
@@ -211,7 +229,7 @@ class ModulePathSpec
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModuleConfigFilePath($moduleName)
@@ -220,11 +238,34 @@ class ModulePathSpec
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModuleViewPath($moduleName)
     {
         return $this->getModulePath($moduleName) . "/view";
+    }
+
+    /**
+     * Normalizes a path by converting back-slashes into normal slashes. This function should always remain idempotent.
+     *
+     * @param string $path
+     * @return string
+     */
+    public function normalizePath($path)
+    {
+        return str_replace('\\', '/', $path);
+    }
+
+    /**
+     * Normalizes a module name by converting periods and forward slashes into backslashes (for namespaces). This
+     * function should always remain idempotent.
+     *
+     * @param string $moduleName
+     * @return string
+     */
+    public function normalizeModuleName($moduleName)
+    {
+        return str_replace(['.', '/'], '\\', $moduleName);
     }
 }

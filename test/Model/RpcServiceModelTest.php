@@ -6,18 +6,17 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use FooConf;
 use BazConf;
+use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\RpcServiceModel;
-use ZF\Apigility\Admin\Model\RpcServiceEntity;
 use ZF\Apigility\Admin\Model\VersioningModel;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class RpcServiceModelTest extends TestCase
 {
@@ -25,7 +24,7 @@ class RpcServiceModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {
@@ -43,11 +42,11 @@ class RpcServiceModelTest extends TestCase
 
     protected function cleanUpAssets()
     {
-        $pathSpec = (empty($this->modulePathSpec)) ? 'psr-0' : $this->modulePathSpec->getPathSpec();
+        $pathSpec = empty($this->modulePathSpec) ? 'psr-0' : $this->modulePathSpec->getPathSpec();
 
         $modulePath = [
             'psr-0' => '%s/src/%s/V*',
-            'psr-4' => '%s/src/V*'
+            'psr-4' => '%s/src/V*',
         ];
 
         $basePath   = sprintf('%s/TestAsset/module/%s', __DIR__, $this->module);
@@ -65,7 +64,7 @@ class RpcServiceModelTest extends TestCase
 
         $modules = [
             'FooConf' => new FooConf\Module(),
-            'BazConf' => new BazConf\Module()
+            'BazConf' => new BazConf\Module(),
         ];
 
         $this->moduleEntity  = new ModuleEntity($this->module);
@@ -143,7 +142,7 @@ class RpcServiceModelTest extends TestCase
     {
         $serviceName = 'Bar';
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src/%s', __DIR__, $this->module, $this->module);
-        if (!is_dir($moduleSrcPath)) {
+        if (! is_dir($moduleSrcPath)) {
             mkdir($moduleSrcPath, 0775, true);
         }
 
@@ -205,7 +204,7 @@ class RpcServiceModelTest extends TestCase
 
         $serviceName = 'Bar';
         $moduleSrcPath = sprintf('%s/TestAsset/module/%s/src', __DIR__, $this->module);
-        if (!is_dir($moduleSrcPath)) {
+        if (! is_dir($moduleSrcPath)) {
             mkdir($moduleSrcPath, 0775, true);
         }
 
@@ -275,9 +274,9 @@ class RpcServiceModelTest extends TestCase
             ]],
             'zf-versioning' => [
                 'uri' => [
-                    'foo-conf.rpc.hello-world'
-                ]
-            ]
+                    'foo-conf.rpc.hello-world',
+                ],
+            ],
         ];
         $this->assertEquals($expected, $config);
         return (object) [
@@ -417,9 +416,9 @@ class RpcServiceModelTest extends TestCase
             ],
             'zf-versioning' => [
                 'uri' => [
-                    'foo-conf.rpc.hello-world'
-                ]
-            ]
+                    'foo-conf.rpc.hello-world',
+                ],
+            ],
         ];
         $config = include $configFile;
         $this->assertEquals($expected, $config);

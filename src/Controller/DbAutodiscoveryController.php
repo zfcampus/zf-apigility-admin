@@ -7,8 +7,8 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\ContentNegotiation\ViewModel;
 use ZF\Apigility\Admin\Model\DbAutodiscoveryModel;
+use ZF\ContentNegotiation\ViewModel;
 
 /**
  * Class DbAutodiscoveryController

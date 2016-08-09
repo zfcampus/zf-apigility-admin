@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
 use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
@@ -13,10 +14,8 @@ use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\Admin\Utility;
 use ZF\Configuration\ConfigResource;
-use ZF\Configuration\ModuleUtils;
-use ZF\Rest\Exception\PatchException;
 use ZF\Rest\Exception\CreationException;
-use ReflectionClass;
+use ZF\Rest\Exception\PatchException;
 
 class RpcServiceModel
 {
@@ -41,14 +40,14 @@ class RpcServiceModel
     protected $moduleEntity;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
     /**
-     * @param  string $module
-     * @param  ModuleUtils $modules
-     * @param  ConfigResource $config
+     * @param ModuleEntity $moduleEntity
+     * @param ModulePathSpec $modules
+     * @param ConfigResource $config
      */
     public function __construct(ModuleEntity $moduleEntity, ModulePathSpec $modules, ConfigResource $config)
     {
@@ -70,7 +69,7 @@ class RpcServiceModel
         $data   = ['controller_service_name' => $controllerServiceName];
         $config = $this->configResource->fetch(true);
 
-        if (!isset($config['zf-rpc'][$controllerServiceName])) {
+        if (! isset($config['zf-rpc'][$controllerServiceName])) {
             return false;
         }
 
@@ -85,9 +84,7 @@ class RpcServiceModel
             $data['http_methods'] = $rpcConfig['http_methods'];
         }
 
-        if (isset($rpcConfig['service_name'])
-            && !empty($rpcConfig['service_name'])
-        ) {
+        if (! empty($rpcConfig['service_name'])) {
             $data['service_name'] = $rpcConfig['service_name'];
         } else {
             $data['service_name'] = $controllerServiceName;
@@ -102,21 +99,15 @@ class RpcServiceModel
 
         if (isset($config['zf-content-negotiation'])) {
             $contentNegotiationConfig = $config['zf-content-negotiation'];
-            if (isset($contentNegotiationConfig['controllers'])
-                && isset($contentNegotiationConfig['controllers'][$controllerServiceName])
-            ) {
+            if (isset($contentNegotiationConfig['controllers'][$controllerServiceName])) {
                 $data['selector'] = $contentNegotiationConfig['controllers'][$controllerServiceName];
             }
 
-            if (isset($contentNegotiationConfig['accept_whitelist'])
-                && isset($contentNegotiationConfig['accept_whitelist'][$controllerServiceName])
-            ) {
+            if (isset($contentNegotiationConfig['accept_whitelist'][$controllerServiceName])) {
                 $data['accept_whitelist'] = $contentNegotiationConfig['accept_whitelist'][$controllerServiceName];
             }
 
-            if (isset($contentNegotiationConfig['content_type_whitelist'])
-                && isset($contentNegotiationConfig['content_type_whitelist'][$controllerServiceName])
-            ) {
+            if (isset($contentNegotiationConfig['content_type_whitelist'][$controllerServiceName])) {
                 $data['content_type_whitelist'] =
                     $contentNegotiationConfig['content_type_whitelist'][$controllerServiceName];
             }
@@ -130,12 +121,14 @@ class RpcServiceModel
     /**
      * Fetch all services
      *
+     * @param int $version
      * @return RpcServiceEntity[]
+     * @throws Exception\RuntimeException
      */
     public function fetchAll($version = null)
     {
         $config = $this->configResource->fetch(true);
-        if (!isset($config['zf-rpc'])) {
+        if (! isset($config['zf-rpc'])) {
             return [];
         }
 
@@ -144,7 +137,7 @@ class RpcServiceModel
 
         // Initialize pattern if a version was passed and it's valid
         if (null !== $version) {
-            if (!in_array($version, $this->moduleEntity->getVersions())) {
+            if (! in_array($version, $this->moduleEntity->getVersions())) {
                 throw new Exception\RuntimeException(sprintf(
                     'Invalid version "%s" provided',
                     $version
@@ -160,7 +153,7 @@ class RpcServiceModel
         }
 
         foreach (array_keys($config['zf-rpc']) as $controllerService) {
-            if (!$pattern) {
+            if (! $pattern) {
                 $services[] = $this->fetch($controllerService);
                 continue;
             }
@@ -185,12 +178,13 @@ class RpcServiceModel
      * @param  array $httpMethods
      * @param  null|string $selector
      * @return RpcServiceEntity
+     * @throws CreationException
      */
     public function createService($serviceName, $routeMatch, $httpMethods, $selector = null)
     {
         $normalizedServiceName = ucfirst($serviceName);
 
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $normalizedServiceName)) {
+        if (! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $normalizedServiceName)) {
             throw new CreationException('Invalid service name; must be a valid PHP namespace name.');
         }
 
@@ -209,6 +203,7 @@ class RpcServiceModel
      * @param  RpcServiceEntity $entity
      * @param  bool $recursive
      * @return true
+     * @throws Exception\RuntimeException
      */
     public function deleteService(RpcServiceEntity $entity, $recursive = false)
     {
@@ -226,7 +221,7 @@ class RpcServiceModel
         if ($recursive) {
             $className = substr($entity->controllerServiceName, 0, strrpos($entity->controllerServiceName, '\\')) .
                 '\\' . $entity->serviceName . 'Controller';
-            if (!class_exists($className)) {
+            if (! class_exists($className)) {
                 throw new Exception\RuntimeException(sprintf(
                     'I cannot determine the class name, tried with "%s"',
                     $className
@@ -238,16 +233,21 @@ class RpcServiceModel
         return true;
     }
 
+    /**
+     * @param string $serviceName
+     * @return bool|string
+     * @throws Exception\RuntimeException
+     */
     public function createFactoryController($serviceName)
     {
-        $module     = $this->module;
-        $version    = $this->moduleEntity->getLatestVersion();
+        $module  = $this->module;
+        $version = $this->moduleEntity->getLatestVersion();
 
         $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
-        $className         = sprintf('%sController', $serviceName);
-        $classFactory      = sprintf('%sControllerFactory', $serviceName);
-        $classPath         = sprintf('%s/%s.php', $srcPath, $classFactory);
+        $className    = sprintf('%sController', $serviceName);
+        $classFactory = sprintf('%sControllerFactory', $serviceName);
+        $classPath    = sprintf('%s/%s.php', $srcPath, $classFactory);
 
         if (file_exists($classPath)) {
             throw new Exception\RuntimeException(sprintf(
@@ -257,22 +257,22 @@ class RpcServiceModel
         }
 
         $view = new ViewModel([
-                'module'       => $module,
-                'classname'    => $className,
-                'classfactory' => $classFactory,
-                'servicename'  => $serviceName,
-                'version'      => $version,
+            'module'       => $module,
+            'classname'    => $className,
+            'classfactory' => $classFactory,
+            'servicename'  => $serviceName,
+            'version'      => $version,
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-                'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-factory.phtml'
+            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-factory.phtml',
         ]);
 
         $view->setTemplate('code-connected/rpc-controller');
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents(
+        if (! file_put_contents(
             $classPath,
             "<" . "?php\n" . $renderer->render($view)
         )) {
@@ -286,18 +286,18 @@ class RpcServiceModel
      * Create a controller in the current module named for the given service
      *
      * @param  string $serviceName
-     * @return stdClass
+     * @return object|false
+     * @throws Exception\RuntimeException
      */
     public function createController($serviceName)
     {
-        $module     = $this->module;
-        $modulePath = $this->modules->getModulePath($module);
-        $version    = $this->moduleEntity->getLatestVersion();
+        $module      = $this->module;
+        $version     = $this->moduleEntity->getLatestVersion();
         $serviceName = str_replace("\\", "/", $serviceName);
 
         $srcPath = $this->modules->getRpcPath($module, $version, $serviceName);
 
-        if (!file_exists($srcPath)) {
+        if (! file_exists($srcPath)) {
             mkdir($srcPath, 0775, true);
         }
 
@@ -320,14 +320,14 @@ class RpcServiceModel
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-controller.phtml'
+            'code-connected/rpc-controller' => __DIR__ . '/../../view/code-connected/rpc-controller.phtml',
         ]);
 
         $view->setTemplate('code-connected/rpc-controller');
         $renderer = new PhpRenderer();
         $renderer->setResolver($resolver);
 
-        if (!file_put_contents(
+        if (! file_put_contents(
             $classPath,
             "<" . "?php\n" . $renderer->render($view)
         )) {
@@ -358,7 +358,7 @@ class RpcServiceModel
      *
      * @param  string $route
      * @param  string $excludeRouteName
-     * @return boolean
+     * @return bool
      */
     protected function routeAlreadyExist($route, $excludeRouteName = null)
     {
@@ -384,6 +384,7 @@ class RpcServiceModel
      * @param  string $serviceName
      * @param  string $controllerService
      * @return string The newly created route name
+     * @throws Exception\RuntimeException
      */
     public function createRoute($route, $serviceName, $controllerService = null)
     {
@@ -414,20 +415,20 @@ class RpcServiceModel
                             ],
                         ],
                     ],
-                ]
+                ],
             ],
             'zf-versioning' => [
                 'uri' => [
-                    $routeName
-                ]
-            ]
+                    $routeName,
+                ],
+            ],
         ];
 
         $this->configResource->patch($config, true);
         return $routeName;
     }
 
-    /*
+    /**
      * Create the zf-rpc configuration for the controller service
      *
      * @param  string $serviceName
@@ -499,11 +500,12 @@ class RpcServiceModel
      * @param  string $controllerService
      * @param  string $routeMatch
      * @return true
+     * @throws Exception\RuntimeException
      */
     public function updateRoute($controllerService, $routeMatch)
     {
         $services  = $this->fetch($controllerService);
-        if (!$services) {
+        if (! $services) {
             return false;
         }
         $services  = $services->getArrayCopy();
@@ -557,10 +559,11 @@ class RpcServiceModel
      * @param  string $headerType
      * @param  array $whitelist
      * @return true
+     * @throws PatchException
      */
     public function updateContentNegotiationWhitelist($controllerService, $headerType, array $whitelist)
     {
-        if (!in_array($headerType, ['accept', 'content_type'])) {
+        if (! in_array($headerType, ['accept', 'content_type'])) {
             /** @todo define exception in Rpc namespace */
             throw new PatchException('Invalid content negotiation whitelist type provided', 422);
         }
@@ -725,24 +728,20 @@ class RpcServiceModel
      */
     protected function getRouteMatchStringFromModuleConfig($routeName, array $config)
     {
-        if (!isset($config['router'])
-            || !isset($config['router']['routes'])
-        ) {
+        if (! isset($config['router']['routes'])) {
             return false;
         }
 
         $config = $config['router']['routes'];
-        if (!isset($config[$routeName])
-            || !is_array($config[$routeName])
+        if (! isset($config[$routeName])
+            || ! is_array($config[$routeName])
         ) {
             return false;
         }
 
         $config = $config[$routeName];
 
-        if (!isset($config['options'])
-            || !isset($config['options']['route'])
-        ) {
+        if (! isset($config['options']['route'])) {
             return false;
         }
 

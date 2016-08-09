@@ -26,16 +26,16 @@ class PatchInputFilterTest extends TestCase
                     'accept_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/hal+json',
-                        'application/json'
+                        'application/json',
                     ],
                     'content_type_whitelist' => [
                         'application/vnd.foo.v1+json',
-                        'application/json'
+                        'application/json',
                     ],
                     'selector' => 'HalJson',
                     'http_methods' => ['GET', 'POST', 'PATCH'],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -49,11 +49,11 @@ class PatchInputFilterTest extends TestCase
                     'accept_whitelist' => [
                         'application/vnd.foo.v1+json',
                         'application/hal+json',
-                        'application/json'
+                        'application/json',
                     ],
                     'content_type_whitelist' => [
                         'application/vnd.foo.v1+json',
-                        'application/json'
+                        'application/json',
                     ],
                     'selector' => 'HalJson',
                     'http_methods' => ['GET', 'POST', 'PATCH'],
@@ -67,14 +67,14 @@ class PatchInputFilterTest extends TestCase
                     'controller_class' => null,
                     'accept_whitelist' => [
                         'application/vnd.foo.v1+json',
-                        'application/hal+json', 'application/json'
+                        'application/hal+json', 'application/json',
                     ],
                     'content_type_whitelist' => [
                         'application/vnd.foo.v1+json',
-                        'application/json'
+                        'application/json',
                     ],
                     'selector' => null,
-                    'http_methods' => ['GET', 'POST', 'PATCH']
+                    'http_methods' => ['GET', 'POST', 'PATCH'],
                 ],
                 ['route_match', 'controller_class'],
             ],

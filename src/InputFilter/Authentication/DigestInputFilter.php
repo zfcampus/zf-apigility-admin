@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter\Authentication;
 
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\Digits;
 
 class DigestInputFilter extends InputFilter
 {
@@ -53,7 +54,7 @@ class DigestInputFilter extends InputFilter
         $this->add([
             'name' => 'nonce_timeout',
             'validators' => [
-                ['name' => 'Zend\Validator\Digits']
+                ['name' => Digits::class],
             ],
             'error_message' => 'Nonce Timeout must be an integer',
         ]);

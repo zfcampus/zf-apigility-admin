@@ -55,7 +55,7 @@ class DbAdapterInputFilter extends InputFilter
             'required' => false,
             'allow_empty' => true,
             'validators' => [
-                ['name' => 'Digits']
+                ['name' => 'Digits'],
             ],
             'error_message' => 'Please provide a valid port for accessing the database; must be an integer',
         ]);

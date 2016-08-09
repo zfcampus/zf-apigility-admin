@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
@@ -13,8 +14,6 @@ use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\ModuleCreationController;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Configuration\ModuleUtils;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
 class ModuleCreationControllerTest extends TestCase
@@ -95,7 +94,7 @@ class ModuleCreationControllerTest extends TestCase
         $event = new MvcEvent();
         $event->setParam('ZFContentNegotiationParameterData', $parameters);
 
-        $plugins = new PluginManager();
+        $plugins = new PluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $plugins->setInvokableClass('bodyParam', 'ZF\ContentNegotiation\ControllerPlugin\BodyParam');
 
         $controller->setRequest($request);
@@ -106,11 +105,11 @@ class ModuleCreationControllerTest extends TestCase
 
         $this->assertInstanceOf('ZF\ContentNegotiation\ViewModel', $result);
         $payload = $result->getVariable('payload');
-        $entity = method_exists($payload, 'getEntity') ? $payload->getEntity() : $payload->entity;
         $this->assertInstanceOf('ZF\Hal\Entity', $payload);
-        $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $entity);
+        $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $payload->getEntity());
 
-        $this->assertEquals('Foo', $entity->getName());
+        $metadata = $payload->getEntity();
+        $this->assertEquals('Foo', $metadata->getName());
 
         $this->removeDir($tmpDir);
         chdir($currentDir);
@@ -120,7 +119,7 @@ class ModuleCreationControllerTest extends TestCase
     {
         $files = array_diff(scandir($dir), ['.','..']);
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
+            is_dir("$dir/$file") ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
         }
         return @rmdir($dir);
     }

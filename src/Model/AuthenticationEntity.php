@@ -1,6 +1,6 @@
 <?php
 /**
- * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
  * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
@@ -8,11 +8,11 @@ namespace ZF\Apigility\Admin\Model;
 
 class AuthenticationEntity
 {
-    const TYPE_BASIC  = 'basic';
+    const TYPE_BASIC = 'basic';
     const TYPE_DIGEST = 'digest';
     const TYPE_OAUTH2 = 'oauth2';
 
-    const DSN_PDO   = 'PDO';
+    const DSN_PDO = 'PDO';
     const DSN_MONGO = 'Mongo';
 
     /**
@@ -120,34 +120,37 @@ class AuthenticationEntity
         switch ($this->type) {
             case self::TYPE_BASIC:
                 return [
-                    'type'           => 'http_basic',
+                    'type' => 'http_basic',
                     'accept_schemes' => [self::TYPE_BASIC],
-                    'realm'          => $this->realm,
-                    'htpasswd'       => $this->htpasswd,
+                    'realm' => $this->realm,
+                    'htpasswd' => $this->htpasswd,
                 ];
+
             case self::TYPE_DIGEST:
                 return [
-                    'type'           => 'http_digest',
+                    'type' => 'http_digest',
                     'accept_schemes' => [self::TYPE_DIGEST],
-                    'realm'          => $this->realm,
-                    'htdigest'       => $this->htdigest,
+                    'realm' => $this->realm,
+                    'htdigest' => $this->htdigest,
                     'digest_domains' => $this->digestDomains,
-                    'nonce_timeout'  => $this->nonceTimeout,
+                    'nonce_timeout' => $this->nonceTimeout,
                 ];
+
             case self::TYPE_OAUTH2:
                 $array = [
-                    'type'        => 'oauth2',
-                    'dsn_type'    => $this->dsnType,
-                    'dsn'         => $this->dsn,
-                    'username'    => $this->username,
-                    'password'    => $this->password,
+                    'type' => 'oauth2',
+                    'dsn_type' => $this->dsnType,
+                    'dsn' => $this->dsn,
+                    'username' => $this->username,
+                    'password' => $this->password,
                     'route_match' => $this->routeMatch,
                 ];
+
                 if ($this->getDsnType() === self::DSN_MONGO) {
                     $array['database'] = $this->database;
 
                     // Allow server strings that do not include "mongodb://" prefix
-                    if (!empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
+                    if (! empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
                         $array['dsn'] = 'mongodb://' . $this->dsn;
                     }
                 }
@@ -172,7 +175,7 @@ class AuthenticationEntity
 
         foreach ($array as $key => $value) {
             $key = strtolower(str_replace('_', '', $key));
-            if (!in_array($key, $allowedKeys)) {
+            if (! in_array($key, $allowedKeys)) {
                 continue;
             }
             switch ($key) {

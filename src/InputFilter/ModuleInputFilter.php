@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter;
 
 use Zend\InputFilter\InputFilter;
+use ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator;
 
 class ModuleInputFilter extends InputFilter
 {
@@ -16,7 +17,7 @@ class ModuleInputFilter extends InputFilter
             'name' => 'name',
             'validators' => [
                 [
-                    'name' => 'ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator',
+                    'name' => ModuleNameValidator::class,
                 ],
             ],
             'error_message' => 'The API name must be a valid PHP namespace',

@@ -67,10 +67,10 @@ class FsPermissionsController extends AbstractActionController
     protected function configIsWritable()
     {
         $dir = $this->root . '/config';
-        if (!file_exists($dir)) {
+        if (! file_exists($dir)) {
             return $this->rootIsWritable();
         }
-        if (!is_writable($dir)) {
+        if (! is_writable($dir)) {
             return false;
         }
 
@@ -86,7 +86,7 @@ class FsPermissionsController extends AbstractActionController
     protected function moduleIsWritable()
     {
         $dir = $this->root . '/module';
-        if (!file_exists($dir)) {
+        if (! file_exists($dir)) {
             return $this->rootIsWritable();
         }
 

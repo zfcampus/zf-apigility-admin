@@ -14,7 +14,7 @@ class ModuleNameValidator extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::API_NAME => "'%value%' is not a valid api name"
+        self::API_NAME => "'%value%' is not a valid api name",
     ];
 
     /**
@@ -25,9 +25,14 @@ class ModuleNameValidator extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (! $this->isValidWordInPhp($value)) {
-            $this->error(self::API_NAME);
-            return false;
+        // validate each namespace independently
+        $parts = explode('\\', $value);
+
+        foreach ($parts as $part) {
+            if (! $this->isValidWordInPhp($part)) {
+                $this->error(self::API_NAME);
+                return false;
+            }
         }
 
         return true;
