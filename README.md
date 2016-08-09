@@ -113,7 +113,7 @@ update your application using the following steps:
     - `require.rwoverdijk/assetmanager`
     - `require-dev.zendframework/zftool`
   - Update:
-    - `require.zfcampus/zf-development-mode` constraint becomes `^2.1 || ^3.0`
+    - `require.zfcampus/zf-development-mode` constraint becomes `^3.0`
     - `require-dev.zendframework/zend-developer-tools` becomes `^1.0`
   - Add:
     - `require-dev.zfcampus/zf-asset-manager`, with a constraint of `^1.0`
@@ -132,6 +132,32 @@ update your application using the following steps:
 - Remove `composer.lock`
 - Remove, recursively, the `vendor/` subdirectory
 - Execute `composer install`
+
+> ### Development Mode
+>
+> Prior to 1.5 and running the upgrade script or following the upgrade
+> instructions from above, Apigility used zf-development-mode v2 releases,
+> which relied on the Console &lt;-&gt; MVC integration present by default in
+> zend-mvc v2 releases.
+>
+> zf-development-mode v3 operates differently, however, and instead ships as
+> a Composer vendor binary, with no additional requirements. Invocation is now:
+>
+> ```bash
+> $ ./vendor/bin/zf-development-mode enable
+> ```
+>
+> and
+>
+> ```bash
+> $ ./vendor/bin/zf-development-mode disable
+> ```
+>
+> You can also query for status:
+>
+> ```bash
+> $ ./vendor/bin/zf-development-mode status
+> ```
 
 
 Configuration
