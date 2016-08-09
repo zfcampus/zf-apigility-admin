@@ -254,7 +254,7 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
     {
-        if (! extension_loaded('mongo')) {
+        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))) {
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
@@ -321,7 +321,7 @@ class AuthenticationModelTest extends TestCase
      */
     public function testRemovingOAuth2MongoConfigurationRemovesConfigurationFromEachFile()
     {
-        if (! extension_loaded('mongo')) {
+        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))) {
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
@@ -350,7 +350,7 @@ class AuthenticationModelTest extends TestCase
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()
     {
-        if (! extension_loaded('mongo')) {
+        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))) {
             $this->markTestSkipped('mongo extension must be loaded to run this test');
         }
 
