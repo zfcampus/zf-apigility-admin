@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use MongoClient;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Stdlib\ArrayUtils;
@@ -254,8 +255,11 @@ class AuthenticationModelTest extends TestCase
 
     public function testCreatingOAuth2ConfigurationWritesToEachConfigFileForMongo()
     {
-        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))) {
-            $this->markTestSkipped('mongo extension must be loaded to run this test');
+        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))
+            || ! class_exists(MongoClient::class)
+            || version_compare(MongoClient::VERSION, '1.4.1', '<')
+        ) {
+            $this->markTestSkipped('ext/mongo ^1.4.1 or ext/mongodb + alcaeus/mongo-php-adapter is not available');
         }
 
         $toCreate = [
@@ -321,8 +325,11 @@ class AuthenticationModelTest extends TestCase
      */
     public function testRemovingOAuth2MongoConfigurationRemovesConfigurationFromEachFile()
     {
-        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))) {
-            $this->markTestSkipped('mongo extension must be loaded to run this test');
+        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))
+            || ! class_exists(MongoClient::class)
+            || version_compare(MongoClient::VERSION, '1.4.1', '<')
+        ) {
+            $this->markTestSkipped('ext/mongo ^1.4.1 or ext/mongodb + alcaeus/mongo-php-adapter is not available');
         }
 
         $toCreate = [
@@ -350,8 +357,11 @@ class AuthenticationModelTest extends TestCase
      */
     public function testAttemptingToCreateOAuth2ConfigurationWithInvalidMongoDsnRaisesException()
     {
-        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))) {
-            $this->markTestSkipped('mongo extension must be loaded to run this test');
+        if (! (extension_loaded('mongo') || extension_loaded('mongodb'))
+            || ! class_exists(MongoClient::class)
+            || version_compare(MongoClient::VERSION, '1.4.1', '<')
+        ) {
+            $this->markTestSkipped('ext/mongo ^1.4.1 or ext/mongodb + alcaeus/mongo-php-adapter is not available');
         }
 
         $toCreate = [
