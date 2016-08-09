@@ -117,7 +117,7 @@ function updateComposerJson($path)
     $composer['require-dev']['zendframework/zend-developer-tools'] = '^1.1';
 
     $composerJson = json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    file_put_contents($composerJsonFile, $composerJson);
+    file_put_contents($composerJsonFile, $composerJson . "\n");
 
     return new Result(true);
 }
@@ -176,7 +176,7 @@ return [
 ];
 EOC;
     $fileContents = sprintf($template, implode(",\n    ", $moduleList));
-    file_put_contents($moduleListFile, $fileContents);
+    file_put_contents($moduleListFile, $fileContents . "\n");
 
     return new Result(true);
 }
