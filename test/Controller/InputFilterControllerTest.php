@@ -8,14 +8,14 @@ namespace ZFTest\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\Config\Writer\PhpArray;
 use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Controller\PluginManager;
+use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\InputFilterController;
 use ZF\Apigility\Admin\Model\InputFilterModel;
-use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils;
-use Zend\Config\Writer\PhpArray;
+use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\ContentNegotiation\ParameterDataContainer;
 use ZFTest\Apigility\Admin\RouteAssetsTrait;
 

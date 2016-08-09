@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Exception;
 use Zend\Filter\StaticFilter;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Exception;
 
 /**
  * This class is instantiated with a $config in some implementations (DbAutodiscoveryModel)

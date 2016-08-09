@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Authentication;
 
-use Zend\InputFilter\InputFilter;
 use Traversable;
+use Zend\InputFilter\InputFilter;
 
 /**
  * @todo DSN validation

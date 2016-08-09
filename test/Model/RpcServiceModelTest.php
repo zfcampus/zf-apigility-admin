@@ -6,18 +6,17 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use FooConf;
 use BazConf;
+use FooConf;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\RpcServiceModel;
-use ZF\Apigility\Admin\Model\RpcServiceEntity;
 use ZF\Apigility\Admin\Model\VersioningModel;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class RpcServiceModelTest extends TestCase
 {

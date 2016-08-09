@@ -8,7 +8,6 @@ namespace ZFTest\Apigility\Admin\InputFilter\RestService;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\InputFilter\Factory;
-use ZF\Apigility\Admin\InputFilter\RestService\PostInputFilter;
 
 class PostInputFilterTest extends TestCase
 {

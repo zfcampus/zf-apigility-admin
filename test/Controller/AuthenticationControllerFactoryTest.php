@@ -9,8 +9,6 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Controller\AuthenticationController;
-use ZF\Apigility\Admin\Controller\AuthenticationControllerFactory;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 
 class AuthenticationControllerFactoryTest extends TestCase

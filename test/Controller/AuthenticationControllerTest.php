@@ -8,16 +8,16 @@ namespace ZFTest\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Http\Request;
-use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
 use Zend\Mvc\Controller\Plugin\Params;
+use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
 use Zend\Mvc\MvcEvent;
-use ZF\ContentNegotiation\ControllerPlugin\BodyParams;
-use ZF\ContentNegotiation\ControllerPlugin\BodyParam;
 use ZF\Apigility\Admin\Controller\AuthenticationController;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Configuration\ConfigResource;
-use Zend\Config\Writer\PhpArray as ConfigWriter;
+use ZF\ContentNegotiation\ControllerPlugin\BodyParam;
+use ZF\ContentNegotiation\ControllerPlugin\BodyParams;
 use ZF\ContentNegotiation\ParameterDataContainer;
 use ZFTest\Apigility\Admin\RouteAssetsTrait;
 

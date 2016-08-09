@@ -17,8 +17,8 @@ use ZF\Apigility\Admin\Model\NewRestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Apigility\Admin\Model\VersioningModel;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class RestServiceModelTest extends TestCase
 {

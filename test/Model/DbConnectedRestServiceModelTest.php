@@ -12,14 +12,14 @@ use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use Zend\EventManager\Event;
 use Zend\ModuleManager\ModuleManager;
-use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\DbConnectedRestServiceEntity;
+use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class DbConnectedRestServiceModelTest extends TestCase
 {

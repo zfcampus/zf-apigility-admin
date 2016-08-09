@@ -6,17 +6,17 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
+use Zend\Http\Request;
 use Zend\Stdlib\ResponseInterface;
-use ZF\Apigility\Admin\Model\AuthenticationModel;
+use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\Admin\Model\AuthenticationEntity;
+use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Entity;
 use ZF\Hal\Collection;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
-use Zend\Http\Request;
-use ZF\Apigility\Admin\Exception;
 
 class AuthenticationController extends AbstractAuthenticationController
 {

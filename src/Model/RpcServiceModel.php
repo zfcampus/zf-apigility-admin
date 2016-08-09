@@ -6,6 +6,7 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
 use Zend\Filter\FilterChain;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
@@ -13,9 +14,8 @@ use Zend\View\Resolver;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\Admin\Utility;
 use ZF\Configuration\ConfigResource;
-use ZF\Rest\Exception\PatchException;
 use ZF\Rest\Exception\CreationException;
-use ReflectionClass;
+use ZF\Rest\Exception\PatchException;
 
 class RpcServiceModel
 {

@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Http\Request;
+use Zend\Mvc\Controller\AbstractActionController;
 
 abstract class AbstractAuthenticationController extends AbstractActionController
 {

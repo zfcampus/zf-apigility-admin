@@ -9,8 +9,6 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Controller\AuthenticationTypeController;
-use ZF\Apigility\Admin\Controller\AuthenticationTypeControllerFactory;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener;
 
 class AuthenticationTypeControllerFactoryTest extends TestCase

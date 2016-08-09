@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
+use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
 class InputFilterModel
 {

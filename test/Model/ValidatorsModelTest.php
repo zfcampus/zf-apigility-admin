@@ -9,8 +9,8 @@ namespace ZFTest\Apigility\Admin\Model;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Validator\ValidatorPluginManager;
-use ZF\Apigility\Admin\Model\ValidatorsModel;
 use ZF\Apigility\Admin\Model\ValidatorMetadataModel;
+use ZF\Apigility\Admin\Model\ValidatorsModel;
 
 class ValidatorsModelTest extends TestCase
 {

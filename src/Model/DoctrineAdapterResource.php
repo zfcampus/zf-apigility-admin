@@ -9,8 +9,8 @@ namespace ZF\Apigility\Admin\Model;
 use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\ApiProblem\ApiProblem;
-use ZF\Rest\Exception\CreationException;
 use ZF\Rest\AbstractResourceListener;
+use ZF\Rest\Exception\CreationException;
 
 class DoctrineAdapterResource extends AbstractResourceListener
 {

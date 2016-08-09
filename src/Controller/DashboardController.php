@@ -15,8 +15,8 @@ use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
 use ZF\Apigility\Admin\Model\RpcServiceModelFactory;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Entity;
 use ZF\Hal\Collection;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
 
 class DashboardController extends AbstractActionController

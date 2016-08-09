@@ -7,8 +7,8 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Hydrator\Strategy\StrategyInterface;
+use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 

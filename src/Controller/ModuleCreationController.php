@@ -8,8 +8,8 @@ namespace ZF\Apigility\Admin\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
+use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;

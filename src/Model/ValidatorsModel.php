@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\Validator\ValidatorPluginManager;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Validator\ValidatorPluginManager;
 use ZF\Apigility\Admin\Exception;
 
 class ValidatorsModel extends AbstractPluginManagerModel

@@ -6,13 +6,13 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use MongoConnectionException;
 use PDO;
 use PDOException;
-use MongoConnectionException;
 use ZF\Apigility\Admin\Exception;
+use ZF\Apigility\Admin\InputFilter\Authentication;
 use ZF\Configuration\ConfigResource;
 use ZF\Rest\Exception\CreationException;
-use ZF\Apigility\Admin\InputFilter\Authentication;
 
 class AuthenticationModel
 {

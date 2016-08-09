@@ -16,8 +16,8 @@ use ZF\Apigility\Admin\Model\AuthorizationEntity;
 use ZF\Apigility\Admin\Model\AuthorizationModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class AuthorizationModelTest extends TestCase
 {

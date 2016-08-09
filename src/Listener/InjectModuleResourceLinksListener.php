@@ -12,9 +12,9 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteMatch;
 use ZF\Apigility\Admin\Model;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
-use ZF\Hal\Entity;
 use ZF\Hal\View\HalJsonModel;
 
 class InjectModuleResourceLinksListener

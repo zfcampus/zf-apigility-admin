@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
 use Zend\Filter\StaticFilter;
 use ZF\Apigility\Admin\Utility;
-use ReflectionClass;
 
 class DbConnectedRestServiceModel
 {

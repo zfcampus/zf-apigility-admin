@@ -10,7 +10,6 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Stdlib\ArrayUtils;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
-use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Configuration\ConfigResource;
 
 class AuthenticationModelTest extends TestCase

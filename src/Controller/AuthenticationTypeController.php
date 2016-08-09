@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use ZF\ContentNegotiation\ViewModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
+use ZF\ContentNegotiation\ViewModel;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
 
 class AuthenticationTypeController extends AbstractAuthenticationController

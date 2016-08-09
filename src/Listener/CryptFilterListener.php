@@ -7,9 +7,9 @@
 namespace ZF\Apigility\Admin\Listener;
 
 use ReflectionClass;
+use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\EventManager\EventManagerInterface;
 use Zend\Filter\Compress\CompressionAlgorithmInterface;
 use Zend\Filter\Encrypt\EncryptionAlgorithmInterface;
 use Zend\Mvc\MvcEvent;

@@ -11,7 +11,6 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
 use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\Parameters;
 use ZF\Apigility\Admin\Controller\PackageController;
 use ZF\ContentNegotiation\ControllerPlugin\BodyParam;
 use ZF\ContentNegotiation\ControllerPlugin\BodyParams;

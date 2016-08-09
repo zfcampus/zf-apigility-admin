@@ -14,8 +14,8 @@ use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
 use ZF\Hal\Collection as HalCollection;
-use ZF\Hal\Link\Link;
 use ZF\Hal\Entity as HalEntity;
+use ZF\Hal\Link\Link;
 
 class InputFilterController extends AbstractActionController
 {

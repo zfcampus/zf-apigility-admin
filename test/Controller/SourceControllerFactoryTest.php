@@ -9,8 +9,6 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Controller\SourceController;
-use ZF\Apigility\Admin\Controller\SourceControllerFactory;
 use ZF\Apigility\Admin\Model\ModuleModel;
 
 class SourceControllerFactoryTest extends TestCase

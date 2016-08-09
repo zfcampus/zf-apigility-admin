@@ -14,8 +14,6 @@ use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\ModuleCreationController;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Configuration\ModuleUtils;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
 class ModuleCreationControllerTest extends TestCase
