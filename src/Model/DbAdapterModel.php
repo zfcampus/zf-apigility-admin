@@ -92,8 +92,7 @@ class DbAdapterModel
     {
         $config = [];
         $fromConfigFile = $this->localConfig->fetch(true);
-        if (isset($fromConfigFile['db'])
-            && isset($fromConfigFile['db']['adapters'])
+        if (isset($fromConfigFile['db']['adapters'])
             && is_array($fromConfigFile['db']['adapters'])
         ) {
             $config = $fromConfigFile['db']['adapters'];

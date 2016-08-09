@@ -83,7 +83,7 @@ class DbConnectedRestServiceEntity extends RestServiceEntity
         $data['table_name']    = $this->tableName;
         $data['table_service'] = $this->tableService;
 
-        if (! isset($data['service_name']) || empty($data['service_name'])) {
+        if (empty($data['service_name'])) {
             $data['service_name'] = $this->tableName;
         }
 

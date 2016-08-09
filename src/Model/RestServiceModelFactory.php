@@ -23,9 +23,7 @@ class RestServiceModelFactory extends RpcServiceModelFactory
      */
     public function factory($module, $type = self::TYPE_DEFAULT)
     {
-        if (isset($this->models[$type])
-            && isset($this->models[$type][$module])
-        ) {
+        if (isset($this->models[$type][$module])) {
             return $this->models[$type][$module];
         }
 

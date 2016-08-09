@@ -118,9 +118,8 @@ class RpcServiceResource extends AbstractResourceListener
             'selector'     => null,
         ];
 
-        if (! isset($data['service_name'])
+        if (empty($data['service_name'])
             || ! is_string($data['service_name'])
-            || empty($data['service_name'])
         ) {
             throw new CreationException('Unable to create RPC service; missing service_name');
         }
@@ -131,24 +130,21 @@ class RpcServiceResource extends AbstractResourceListener
             throw new CreationException('Service by that name already exists', 409);
         }
 
-        if (! isset($data['route_match'])
+        if (empty($data['route_match'])
             || ! is_string($data['route_match'])
-            || empty($data['route_match'])
         ) {
             throw new CreationException('Unable to create RPC service; missing route');
         }
         $creationData['route_match'] = $data['route_match'];
 
-        if (isset($data['http_methods'])
+        if (! empty($data['http_methods'])
             && (is_string($data['http_methods']) || is_array($data['http_methods']))
-            && ! empty($data['http_methods'])
         ) {
             $creationData['http_methods'] = $data['http_methods'];
         }
 
-        if (isset($data['selector'])
+        if (! empty($data['selector'])
             && is_string($data['selector'])
-            && ! empty($data['selector'])
         ) {
             $creationData['selector'] = $data['selector'];
         }

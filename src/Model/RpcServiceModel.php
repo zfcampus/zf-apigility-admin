@@ -84,9 +84,7 @@ class RpcServiceModel
             $data['http_methods'] = $rpcConfig['http_methods'];
         }
 
-        if (isset($rpcConfig['service_name'])
-            && ! empty($rpcConfig['service_name'])
-        ) {
+        if (! empty($rpcConfig['service_name'])) {
             $data['service_name'] = $rpcConfig['service_name'];
         } else {
             $data['service_name'] = $controllerServiceName;
@@ -101,21 +99,15 @@ class RpcServiceModel
 
         if (isset($config['zf-content-negotiation'])) {
             $contentNegotiationConfig = $config['zf-content-negotiation'];
-            if (isset($contentNegotiationConfig['controllers'])
-                && isset($contentNegotiationConfig['controllers'][$controllerServiceName])
-            ) {
+            if (isset($contentNegotiationConfig['controllers'][$controllerServiceName])) {
                 $data['selector'] = $contentNegotiationConfig['controllers'][$controllerServiceName];
             }
 
-            if (isset($contentNegotiationConfig['accept_whitelist'])
-                && isset($contentNegotiationConfig['accept_whitelist'][$controllerServiceName])
-            ) {
+            if (isset($contentNegotiationConfig['accept_whitelist'][$controllerServiceName])) {
                 $data['accept_whitelist'] = $contentNegotiationConfig['accept_whitelist'][$controllerServiceName];
             }
 
-            if (isset($contentNegotiationConfig['content_type_whitelist'])
-                && isset($contentNegotiationConfig['content_type_whitelist'][$controllerServiceName])
-            ) {
+            if (isset($contentNegotiationConfig['content_type_whitelist'][$controllerServiceName])) {
                 $data['content_type_whitelist'] =
                     $contentNegotiationConfig['content_type_whitelist'][$controllerServiceName];
             }
@@ -736,9 +728,7 @@ class RpcServiceModel
      */
     protected function getRouteMatchStringFromModuleConfig($routeName, array $config)
     {
-        if (! isset($config['router'])
-            || ! isset($config['router']['routes'])
-        ) {
+        if (! isset($config['router']['routes'])) {
             return false;
         }
 
@@ -751,9 +741,7 @@ class RpcServiceModel
 
         $config = $config[$routeName];
 
-        if (! isset($config['options'])
-            || ! isset($config['options']['route'])
-        ) {
+        if (! isset($config['options']['route'])) {
             return false;
         }
 

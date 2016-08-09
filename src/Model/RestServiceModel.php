@@ -162,9 +162,7 @@ class RestServiceModel implements EventManagerAwareInterface
     public function fetch($controllerService, $isAFetchOperation = true)
     {
         $config = $this->configResource->fetch(true);
-        if (! isset($config['zf-rest'])
-            || ! isset($config['zf-rest'][$controllerService])
-        ) {
+        if (! isset($config['zf-rest'][$controllerService])) {
             throw new Exception\RuntimeException(sprintf(
                 'Could not find REST resource by name of %s',
                 $controllerService
@@ -199,9 +197,7 @@ class RestServiceModel implements EventManagerAwareInterface
             $entity = $eventResults->last();
         }
 
-        if (! isset($entity->serviceName)
-            || empty($entity->serviceName)
-        ) {
+        if (empty($entity->serviceName)) {
             $serviceName = $controllerService;
             $pattern = vsprintf(
                 '#%sV[^%s]+%sRest%s(?P<service>[^%s]+)%sController#',
@@ -771,7 +767,7 @@ class RestServiceModel implements EventManagerAwareInterface
                 'is_collection'          => true,
             ],
         ]]];
-        if (isset($details->hydratorName) && $details->hydratorName) {
+        if (! empty($details->hydratorName)) {
             $config['zf-hal']['metadata_map'][$entityClass]['hydrator'] = $details->hydratorName;
         }
         $this->configResource->patch($config, true);
@@ -1242,25 +1238,19 @@ class RestServiceModel implements EventManagerAwareInterface
         }
         $config = $config['zf-content-negotiation'];
 
-        if (isset($config['controllers'])
-            && isset($config['controllers'][$controllerServiceName])
-        ) {
+        if (isset($config['controllers'][$controllerServiceName])) {
             $metadata->exchangeArray([
                 'selector' => $config['controllers'][$controllerServiceName],
             ]);
         }
 
-        if (isset($config['accept_whitelist'])
-            && isset($config['accept_whitelist'][$controllerServiceName])
-        ) {
+        if (isset($config['accept_whitelist'][$controllerServiceName])) {
             $metadata->exchangeArray([
                 'accept_whitelist' => $config['accept_whitelist'][$controllerServiceName],
             ]);
         }
 
-        if (isset($config['content_type_whitelist'])
-            && isset($config['content_type_whitelist'][$controllerServiceName])
-        ) {
+        if (isset($config['content_type_whitelist'][$controllerServiceName])) {
             $metadata->exchangeArray([
                 'content_type_whitelist' => $config['content_type_whitelist'][$controllerServiceName],
             ]);
@@ -1276,9 +1266,7 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function mergeHalConfig($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
-        if (! isset($config['zf-hal'])
-            || ! isset($config['zf-hal']['metadata_map'])
-        ) {
+        if (! isset($config['zf-hal']['metadata_map'])) {
             return;
         }
 
@@ -1325,7 +1313,7 @@ class RestServiceModel implements EventManagerAwareInterface
             return $config['zf-rest'][$controllerServiceName]['entity_class'];
         }
 
-        $module = ($metadata->module == $this->module) ? $this->module : $metadata->module;
+        $module = $metadata->module == $this->module ? $this->module : $metadata->module;
         $q = preg_quote('\\');
         $pattern = sprintf(
             '#%s(?P<version>%sV[a-zA-Z0-9]+)%sRest%s(?P<service>[^%s]+)%sController#',
@@ -1340,7 +1328,7 @@ class RestServiceModel implements EventManagerAwareInterface
             return null;
         }
 
-        if (isset($matches['version']) && ! empty($matches['version'])) {
+        if (! empty($matches['version'])) {
             return sprintf(
                 '%s%s\\Rest\\%s\\%sEntity',
                 $module,
@@ -1363,10 +1351,7 @@ class RestServiceModel implements EventManagerAwareInterface
      */
     protected function deriveCollectionClass($controllerServiceName, RestServiceEntity $metadata, array $config)
     {
-        if (isset($config['zf-rest'])
-            && isset($config['zf-rest'][$controllerServiceName])
-            && isset($config['zf-rest'][$controllerServiceName]['collection_class'])
-        ) {
+        if (isset($config['zf-rest'][$controllerServiceName]['collection_class'])) {
             return $config['zf-rest'][$controllerServiceName]['collection_class'];
         }
 
@@ -1385,7 +1370,7 @@ class RestServiceModel implements EventManagerAwareInterface
             return null;
         }
 
-        if (isset($matches['version']) && ! empty($matches['version'])) {
+        if (! empty($matches['version'])) {
             return sprintf(
                 '%s%s\\Rest\\%s\\%sCollection',
                 $module,
