@@ -15,6 +15,7 @@ class ModulePathSpecFactory
     /**
      * @param ContainerInterface $container
      * @return ModulePathSpec
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

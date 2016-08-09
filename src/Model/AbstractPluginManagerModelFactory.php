@@ -30,6 +30,7 @@ abstract class AbstractPluginManagerModelFactory implements FactoryInterface
      * @param string $requestedName
      * @param null|array $options
      * @return mixed A model instance that composes a plugin manager.
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

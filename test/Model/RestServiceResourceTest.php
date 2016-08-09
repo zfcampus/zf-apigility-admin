@@ -15,12 +15,11 @@ use ZF\Apigility\Admin\Model\DbConnectedRestServiceModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Apigility\Admin\Model\RestServiceEntity;
 use ZF\Apigility\Admin\Model\RestServiceModel;
 use ZF\Apigility\Admin\Model\RestServiceModelFactory;
 use ZF\Apigility\Admin\Model\RestServiceResource;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class RestServiceResourceTest extends TestCase
 {
@@ -28,7 +27,7 @@ class RestServiceResourceTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {
@@ -60,7 +59,7 @@ class RestServiceResourceTest extends TestCase
         $this->cleanUpAssets();
 
         $modules = [
-            'BarConf' => new BarConf\Module()
+            'BarConf' => new BarConf\Module(),
         ];
 
         $this->moduleEntity = new ModuleEntity($this->module, [], [], false);

@@ -80,8 +80,7 @@ class DoctrineAdapterModel
     public function fetchAll()
     {
         $fromConfigFile = $this->localConfig->fetch(true);
-        if (isset($fromConfigFile['doctrine'])
-            && isset($fromConfigFile['doctrine']['connection'])
+        if (isset($fromConfigFile['doctrine']['connection'])
             && is_array($fromConfigFile['doctrine']['connection'])
         ) {
             foreach ($fromConfigFile['doctrine']['connection'] as $connection) {

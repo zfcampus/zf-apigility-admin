@@ -10,7 +10,6 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Stdlib\ArrayUtils;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
-use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Configuration\ConfigResource;
 
 class AuthenticationModelTest extends TestCase
@@ -359,7 +358,7 @@ class AuthenticationModelTest extends TestCase
             'dsn'         => 'mongodb:300.300.300.300',
             'database'    => 'wrong',
             'route_match' => '/api/oauth',
-            'dsn_type'    => 'Mongo'
+            'dsn_type'    => 'Mongo',
         ];
         $model = $this->createModelFromConfigArrays([], []);
 
@@ -418,9 +417,9 @@ class AuthenticationModelTest extends TestCase
                                 'Status\V1' => 'test1',
                                 'Status\V2' => 'test2',
                                 'Foo'       => 'test3',
-                                'Bar'       => 'test4'
-                            ]
-                        ]
+                                'Bar'       => 'test4',
+                            ],
+                        ],
                     ],
                     'router' => [
                         'routes' => [
@@ -428,11 +427,11 @@ class AuthenticationModelTest extends TestCase
                                 'type' => 'regex',
                                 'options' => [
                                     'regex' => '(?P<oauth>(/oauth_mongo|/oauth_pdo))',
-                                    'spec' => '%oauth%'
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'spec' => '%oauth%',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 [ // local
                     'zf-mvc-auth' => [
@@ -443,8 +442,8 @@ class AuthenticationModelTest extends TestCase
                                     'options' => [
                                         'accept_schemes' => ['basic'],
                                         'realm' => 'api',
-                                        'htpasswd' => 'data/htpasswd'
-                                    ]
+                                        'htpasswd' => 'data/htpasswd',
+                                    ],
                                 ],
                                 'test2' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\HttpAdapter',
@@ -454,8 +453,7 @@ class AuthenticationModelTest extends TestCase
                                         'digest_domains' => 'domain.com',
                                         'nonce_timeout' => 3600,
                                         'htdigest' => 'data/htpasswd',
-
-                                    ]
+                                    ],
                                 ],
                                 'test3' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
@@ -466,9 +464,9 @@ class AuthenticationModelTest extends TestCase
                                         'username' => 'test',
                                         'password' => 'test',
                                         'options' => [
-                                            1002 => 'SET NAMES utf8'
-                                        ]
-                                    ]
+                                            1002 => 'SET NAMES utf8',
+                                        ],
+                                    ],
                                 ],
                                 'test4' => [
                                     'adapter' => 'ZF\MvcAuth\Authentication\OAuth2Adapter',
@@ -482,14 +480,14 @@ class AuthenticationModelTest extends TestCase
                                             'username' => 'username',
                                             'password' => 'password',
                                             'connectTimeoutMS' => 500,
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -551,7 +549,7 @@ class AuthenticationModelTest extends TestCase
                 'name' => 'test10',
                 'type' => 'basic',
                 'realm' => 'api',
-                'htpasswd' => __DIR__ . '/TestAsset/htpasswd'
+                'htpasswd' => __DIR__ . '/TestAsset/htpasswd',
             ],
             [
                 'name'           => 'test11',
@@ -559,7 +557,7 @@ class AuthenticationModelTest extends TestCase
                 'realm'          => 'api',
                 'digest_domains' => 'domain.com',
                 'nonce_timeout'  => 3600,
-                'htdigest'       => __DIR__ . '/TestAsset/htdigest'
+                'htdigest'       => __DIR__ . '/TestAsset/htdigest',
             ],
             [
                 'name'            => 'test12',
@@ -570,8 +568,8 @@ class AuthenticationModelTest extends TestCase
                 'oauth2_username' => null,
                 'oauth2_password' => null,
                 'oauth2_options'  => [
-                    'foo' => 'bar'
-                ]
+                    'foo' => 'bar',
+                ],
             ],
             [
                 'name'                => 'test13',
@@ -582,8 +580,8 @@ class AuthenticationModelTest extends TestCase
                 'oauth2_route'        => '/oauth13',
                 'oauth2_locator_name' => null,
                 'oauth2_options'  => [
-                    'foo' => 'bar'
-                ]
+                    'foo' => 'bar',
+                ],
             ],
         ];
     }
@@ -748,10 +746,10 @@ class AuthenticationModelTest extends TestCase
                         'http' => [
                             'accept_schemes' => ['basic'],
                             'realm' => 'My Web Site',
-                            'htpasswd' => __DIR__ . '/TestAsset/htpasswd'
-                        ]
-                    ]
-                ]
+                            'htpasswd' => __DIR__ . '/TestAsset/htpasswd',
+                        ],
+                    ],
+                ],
             ],
             'http_digest' => [
                 'zf-mvc-auth' => [
@@ -761,10 +759,10 @@ class AuthenticationModelTest extends TestCase
                             'realm' => 'My Web Site',
                             'digest_domains' => 'domain.com',
                             'nonce_timeout' => 3600,
-                            'htdigest' => __DIR__ . '/TestAsset/htdigest'
-                        ]
-                    ]
-                ]
+                            'htdigest' => __DIR__ . '/TestAsset/htdigest',
+                        ],
+                    ],
+                ],
             ],
             'oauth2_pdo' => [
                 'zf-oauth2' => [
@@ -773,9 +771,9 @@ class AuthenticationModelTest extends TestCase
                         'dsn_type'  => 'PDO',
                         'dsn'       => 'sqlite:/' . __DIR__ . '/TestAsset/db.sqlite',
                         'username'  => null,
-                        'password'  => null
-                    ]
-                ]
+                        'password'  => null,
+                    ],
+                ],
             ],
             'oauth2_mongo' => [
                 'zf-oauth2' => [
@@ -784,10 +782,10 @@ class AuthenticationModelTest extends TestCase
                         'dsn_type'     => 'Mongo',
                         'dsn'          => 'mongodb://localhost',
                         'database'     => 'zf-apigility-admin-test',
-                        'locator_name' => 'MongoDB'
-                    ]
-                ]
-            ]
+                        'locator_name' => 'MongoDB',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -802,11 +800,11 @@ class AuthenticationModelTest extends TestCase
                 'routes' => [
                     'oauth' => [
                         'options' => [
-                            'route' => '/oauth'
-                        ]
-                    ]
-                ]
-            ]
+                            'route' => '/oauth',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($this->getOldAuthenticationConfig() as $name => $local) {
@@ -848,8 +846,8 @@ class AuthenticationModelTest extends TestCase
                             ],
                         ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
         $model = $this->createModelFromConfigArrays([], $local);
 

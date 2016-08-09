@@ -14,7 +14,7 @@ class ModuleNameValidator extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::API_NAME => "'%value%' is not a valid api name"
+        self::API_NAME => "'%value%' is not a valid api name",
     ];
 
     /**

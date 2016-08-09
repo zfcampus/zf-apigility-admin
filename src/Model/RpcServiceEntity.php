@@ -127,9 +127,8 @@ class RpcServiceEntity
             }
         }
 
-        if (null === $this->controllerServiceName
+        if (empty($this->controllerServiceName)
             || ! is_string($this->controllerServiceName)
-            || empty($this->controllerServiceName)
         ) {
             throw new RuntimeException(sprintf(
                 '%s requires a controller service name; none present following population',

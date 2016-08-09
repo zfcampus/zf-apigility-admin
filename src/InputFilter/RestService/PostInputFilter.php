@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter\RestService;
 
 use Zend\InputFilter\InputFilter;
+use ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator;
 
 class PostInputFilter extends InputFilter
 {
@@ -29,7 +30,7 @@ class PostInputFilter extends InputFilter
             'name' => 'service_name',
             'required' => false,
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator'],
+                ['name' => ServiceNameValidator::class],
             ],
         ]);
         $this->add([
@@ -61,7 +62,7 @@ class PostInputFilter extends InputFilter
      */
     public function getMessages()
     {
-        if (is_array($this->localMessages) && ! empty($this->localMessages)) {
+        if (is_array($this->localMessages) && $this->localMessages) {
             return $this->localMessages;
         }
         return parent::getMessages();
@@ -81,9 +82,9 @@ class PostInputFilter extends InputFilter
     {
         $context = $this->getRawValues();
 
-        if ((! isset($context['service_name']) || $context['service_name'] === null)
-            && (! isset($context['adapter_name']) || $context['adapter_name'] === null)
-            && (! isset($context['table_name']) || $context['table_name'] === null)
+        if (! isset($context['service_name'])
+            && ! isset($context['adapter_name'])
+            && ! isset($context['table_name'])
         ) {
             $this->localMessages = [
                 'service_name' => 'You must provide either a Code-Connected service name'
@@ -97,9 +98,9 @@ class PostInputFilter extends InputFilter
             return true;
         }
 
-        if (isset($context['service_name']) && $context['service_name'] !== null) {
-            if ((isset($context['adapter_name']) && $context['adapter_name'] !== null)
-                || (isset($context['table_name']) && $context['table_name'] !== null)
+        if (isset($context['service_name'])) {
+            if (isset($context['adapter_name'])
+                || isset($context['table_name'])
             ) {
                 $this->localMessages = [
                     'service_name' => 'You must provide either a Code-Connected service name'
@@ -110,8 +111,8 @@ class PostInputFilter extends InputFilter
             return true;
         }
 
-        if ((isset($context['adapter_name']) && ! empty($context['adapter_name']))
-            && (! isset($context['table_name']) || $context['table_name'] === null)
+        if (! empty($context['adapter_name'])
+            && ! isset($context['table_name'])
         ) {
             $this->localMessages = [
                 'table_name' => 'DB-Connected services require both a database adapter and table name',
@@ -119,8 +120,8 @@ class PostInputFilter extends InputFilter
             return false;
         }
 
-        if ((! isset($context['adapter_name']) || $context['adapter_name'] === null)
-            && (isset($context['table_name']) && ! empty($context['table_name']))
+        if (! isset($context['adapter_name'])
+            && ! empty($context['table_name'])
         ) {
             $this->localMessages = [
                 'adapter_name' => 'DB-Connected services require both a database adapter and table name',

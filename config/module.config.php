@@ -291,7 +291,7 @@ return [
                                             'route' => '/rpc[/:controller_service_name]',
                                             'defaults' => [
                                                 'controller' => Controller\RpcService::class,
-                                                'controller_type' => 'rpc'
+                                                'controller_type' => 'rpc',
                                             ],
                                         ],
                                         'may_terminate' => true,
@@ -303,8 +303,8 @@ return [
                                                     'defaults' => [
                                                         'controller' => Controller\InputFilter::class,
                                                         'action'     => 'index',
-                                                    ]
-                                                ]
+                                                    ],
+                                                ],
                                             ],
                                             'doc' => [
                                                 'type' => 'Segment',
@@ -313,10 +313,10 @@ return [
                                                     'defaults' => [
                                                         'controller' => Controller\Documentation::class,
                                                         'action'     => 'index',
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
                                     ],
                                     'rest-service' => [
                                         'type' => 'Segment',
@@ -324,7 +324,7 @@ return [
                                             'route' => '/rest[/:controller_service_name]',
                                             'defaults' => [
                                                 'controller' => Controller\RestService::class,
-                                                'controller_type' => 'rest'
+                                                'controller_type' => 'rest',
                                             ],
                                         ],
                                         'may_terminate' => true,
@@ -336,8 +336,8 @@ return [
                                                     'defaults' => [
                                                         'controller' => Controller\InputFilter::class,
                                                         'action'     => 'index',
-                                                    ]
-                                                ]
+                                                    ],
+                                                ],
                                             ],
                                             'doc' => [
                                                 'type' => 'Segment',
@@ -346,10 +346,10 @@ return [
                                                     'defaults' => [
                                                         'controller' => Controller\Documentation::class,
                                                         'action'     => 'index',
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
                                     ],
                                     'db-autodiscovery' => [
                                         'type' => 'Segment',
@@ -690,7 +690,7 @@ return [
                 'hydrator'        => 'ArraySerializable',
                 'route_identifier_name' => 'content_name',
                 'entity_identifier_name' => 'content_name',
-                'route_name'      => 'zf-apigility/api/content-negotiation'
+                'route_name'      => 'zf-apigility/api/content-negotiation',
             ],
             Model\DbConnectedRestServiceEntity::class => [
                 'hydrator'        => 'ArraySerializable',
@@ -757,7 +757,7 @@ return [
                     [
                         'rel' => 'input_filter',
                         'route' => [
-                            'name' => 'zf-apigility/api/module/rest-service/input-filter'
+                            'name' => 'zf-apigility/api/module/rest-service/input-filter',
                         ],
                     ],
                     [
@@ -765,7 +765,7 @@ return [
                         'route' => [
                             'name' => 'zf-apigility/api/module/rest-service/doc',
                         ],
-                    ]
+                    ],
                 ],
             ],
             Model\RpcInputFilterCollection::class => [
@@ -790,7 +790,7 @@ return [
                     [
                         'rel' => 'input_filter',
                         'route' => [
-                            'name' => 'zf-apigility/api/module/rpc-service/input-filter'
+                            'name' => 'zf-apigility/api/module/rpc-service/input-filter',
                         ],
                     ],
                     [
@@ -798,7 +798,7 @@ return [
                         'route' => [
                             'name' => 'zf-apigility/api/module/rpc-service/doc',
                         ],
-                    ]
+                    ],
                 ],
             ],
         ],
@@ -950,7 +950,7 @@ return [
         ],
         Controller\Strategy::class => [
             'http_methods' => ['GET'],
-            'route_name'   => 'zf-apigility/api/strategy'
+            'route_name'   => 'zf-apigility/api/strategy',
         ],
         Controller\Package::class => [
             'http_methods' => ['GET', 'POST'],
@@ -1483,7 +1483,7 @@ return [
             InputFilter\VersionInputFilter::class                  => InvokableFactory::class,
 
             InputFilter\InputFilter::class => InputFilter\Factory\InputFilterInputFilterFactory::class,
-        ]
+        ],
     ],
 
     'zf-content-validation' => [

@@ -12,9 +12,9 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteMatch;
 use ZF\Apigility\Admin\Model;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
 use ZF\Hal\Link\LinkCollection;
-use ZF\Hal\Entity;
 use ZF\Hal\View\HalJsonModel;
 
 class InjectModuleResourceLinksListener
@@ -201,17 +201,20 @@ class InjectModuleResourceLinksListener
     {
         $entity = $e->getParam('entity');
         if ($entity instanceof Model\ModuleEntity) {
-            return $this->injectModuleCollectionRelationalLinks($entity, $e);
+            $this->injectModuleCollectionRelationalLinks($entity, $e);
+            return;
         }
 
         if ($entity instanceof Model\RestServiceEntity
             || $entity instanceof Model\RpcServiceEntity
         ) {
-            return $this->injectServiceCollectionRelationalLinks($entity, $e);
+            $this->injectServiceCollectionRelationalLinks($entity, $e);
+            return;
         }
 
         if ($entity instanceof Model\InputFilterEntity) {
-            return $this->normalizeInputFilterEntityName($entity, $e);
+            $this->normalizeInputFilterEntityName($entity, $e);
+            return;
         }
     }
 
@@ -226,8 +229,6 @@ class InjectModuleResourceLinksListener
     {
         $asArray = $resource->getArrayCopy();
         $module  = $asArray['name'];
-        $rest    = $asArray['rest'];
-        $rpc     = $asArray['rpc'];
 
         unset($asArray['rest']);
         unset($asArray['rpc']);

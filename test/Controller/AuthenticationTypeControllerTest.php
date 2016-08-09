@@ -84,7 +84,7 @@ class AuthenticationTypeControllerTest extends TestCase
     public function invalidRequestMethods()
     {
         return [
-            ['post', 'put', 'patch', 'delete']
+            ['post', 'put', 'patch', 'delete'],
         ];
     }
 

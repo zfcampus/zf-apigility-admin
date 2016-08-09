@@ -7,7 +7,6 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use Version;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\VersioningModel;
 use ZF\Configuration\ConfigResource;
@@ -55,7 +54,7 @@ class VersioningModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     public function removeDir($dir)
     {

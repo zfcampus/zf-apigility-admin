@@ -14,6 +14,7 @@ class DbAdapterResourceFactory
     /**
      * @param ContainerInterface $container
      * @return DbAdapterResource
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

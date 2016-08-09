@@ -89,7 +89,7 @@ class ContentNegotiationModel
      * Fetch configuration details for a named adapter
      *
      * @param  string $name
-     * @return ContentNegotiationEntity
+     * @return ContentNegotiationEntity|false
      */
     public function fetch($name)
     {

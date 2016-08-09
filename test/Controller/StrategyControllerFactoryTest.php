@@ -9,8 +9,6 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Controller\StrategyController;
-use ZF\Apigility\Admin\Controller\StrategyControllerFactory;
 
 class StrategyControllerFactoryTest extends TestCase
 {

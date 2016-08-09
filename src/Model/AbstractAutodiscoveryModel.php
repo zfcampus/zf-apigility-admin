@@ -1,10 +1,14 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZF\Apigility\Admin\Model;
 
+use Exception;
 use Zend\Filter\StaticFilter;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Exception;
 
 /**
  * This class is instantiated with a $config in some implementations (DbAutodiscoveryModel)
@@ -28,18 +32,18 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $validators = [
         'text' => [
-            'name' => 'Zend\Validator\StringLength',
+            'name' => \Zend\Validator\StringLength::class,
             'options' => [
                 'min' => 1,
                 'max' => 1,
             ],
         ],
         'unique' => [
-            'name' => 'ZF\ContentValidation\Validator\DbNoRecordExists',
+            'name' => \ZF\ContentValidation\Validator\DbNoRecordExists::class,
             'options' => [],
         ],
         'foreign_key' => [
-            'name' => 'ZF\ContentValidation\Validator\DbRecordExists',
+            'name' => \ZF\ContentValidation\Validator\DbRecordExists::class,
             'options' => [],
         ],
     ];
@@ -49,12 +53,12 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $filters = [
         'text' => [
-            ['name' => 'Zend\Filter\StringTrim'],
-            ['name' => 'Zend\Filter\StripTags'],
+            ['name' => \Zend\Filter\StringTrim::class],
+            ['name' => \Zend\Filter\StripTags::class],
         ],
         'integer' => [
-            ['name' => 'Zend\Filter\StripTags'],
-            ['name' => 'Zend\Filter\Digits'],
+            ['name' => \Zend\Filter\StripTags::class],
+            ['name' => \Zend\Filter\Digits::class],
         ],
     ];
 
@@ -105,7 +109,7 @@ abstract class AbstractAutodiscoveryModel
     protected function moduleHasService($module, $version, $tableName)
     {
         $resourceName = StaticFilter::execute($tableName, 'WordUnderscoreToCamelCase');
-        $resourceClass     = sprintf(
+        $resourceClass = sprintf(
             '%s\\V%s\\Rest\\%s\\%sResource',
             $module,
             $version,

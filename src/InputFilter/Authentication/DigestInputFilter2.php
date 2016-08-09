@@ -18,7 +18,7 @@ class DigestInputFilter2 extends BaseInputFilter
         ]);
         $this->add([
             'name' => 'digest_domains',
-            'error_message' => 'Please provide a digest domains for HTTP digest authentication'
+            'error_message' => 'Please provide a digest domains for HTTP digest authentication',
         ]);
         $this->add([
             'name' => 'nonce_timeout',
@@ -30,7 +30,7 @@ class DigestInputFilter2 extends BaseInputFilter
                     }],
                 ],
             ],
-            'error_message' => 'Please provide a valid nonce timeout for HTTP digest authentication'
+            'error_message' => 'Please provide a valid nonce timeout for HTTP digest authentication',
         ]);
         $this->add([
             'name' => 'htdigest',

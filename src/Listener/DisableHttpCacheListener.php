@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Listener;
 
-use Zend\Http\Headers;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Header\GenericMultiHeader;
+use Zend\Http\Headers;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteMatch;
@@ -16,7 +16,7 @@ use Zend\Router\RouteMatch;
 class DisableHttpCacheListener
 {
     /**
-     * @param MvcEvent
+     * @param MvcEvent $e
      * @return void
      */
     public function __invoke(MvcEvent $e)

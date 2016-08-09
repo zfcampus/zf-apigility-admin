@@ -6,8 +6,6 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Validator;
 
-use Zend\Validator\Exception;
-
 class HttpMethodArrayValidator extends AbstractValidator
 {
     const HTTP_METHOD_ARRAY = 'httpMethodArray';
@@ -21,20 +19,19 @@ class HttpMethodArrayValidator extends AbstractValidator
         'POST',
         'PATCH',
         'PUT',
-        'DELETE'
+        'DELETE',
     ];
 
     /**
      * @var array
      */
     protected $messageTemplates = [
-        self::HTTP_METHOD_ARRAY => "'%value%' is not http method"
+        self::HTTP_METHOD_ARRAY => "'%value%' is not http method",
     ];
 
     /**
      * @param  mixed $value
      * @return bool
-     * @throws Exception\RuntimeException If validation of $value is impossible
      */
     public function isValid($value)
     {

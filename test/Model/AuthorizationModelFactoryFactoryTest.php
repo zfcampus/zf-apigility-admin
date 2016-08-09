@@ -9,12 +9,12 @@ namespace ZFTest\Apigility\Admin\Model;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use ZF\Configuration\ConfigResourceFactory;
-use ZF\Configuration\ResourceFactory;
 use ZF\Apigility\Admin\Model\AuthorizationModelFactory;
 use ZF\Apigility\Admin\Model\AuthorizationModelFactoryFactory;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
+use ZF\Configuration\ConfigResourceFactory;
+use ZF\Configuration\ResourceFactory;
 
 class AuthorizationModelFactoryFactoryTest extends TestCase
 {

@@ -11,7 +11,7 @@ use Zend\Mvc\MvcEvent;
 class NormalizeMatchedControllerServiceNameListener
 {
     /**
-     * @param MvcEvent
+     * @param MvcEvent $e
      * @return void
      */
     public function __invoke(MvcEvent $e)

@@ -8,9 +8,9 @@ namespace ZFTest\Apigility\Admin\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
-use Zend\Http\Headers;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Header\GenericMultiHeader;
+use Zend\Http\Headers;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;

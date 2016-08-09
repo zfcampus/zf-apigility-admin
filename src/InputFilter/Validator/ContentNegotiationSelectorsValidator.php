@@ -51,7 +51,7 @@ class ContentNegotiationSelectorsValidator extends ZfAbstractValidator
             }
 
             $interfaces = class_implements($className);
-            if (false === $interfaces || ! in_array('Zend\View\Model\ModelInterface', $interfaces)) {
+            if (false === $interfaces || ! in_array(\Zend\View\Model\ModelInterface::class, $interfaces)) {
                 $isValid = false;
                 $this->error(self::INVALID_VIEW_MODEL, $className);
                 continue;

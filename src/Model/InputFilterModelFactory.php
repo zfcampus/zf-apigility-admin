@@ -21,14 +21,15 @@ class InputFilterModelFactory implements FactoryInterface
      * @param string $requestedName
      * @param null|array $options
      * @return InputFilterModel
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (! $container->has('ZF\Configuration\ConfigResourceFactory')) {
+        if (! $container->has(ConfigResourceFactory::class)) {
             throw new ServiceNotCreatedException(sprintf(
-                '%s\\InputFilterModel requires that the ZF\Configuration\ConfigResourceFactory'
-                . ' service be present; service not found',
-                __NAMESPACE__
+                '%s requires that the %s service be present; service not found',
+                InputFilterModel::class,
+                ConfigResourceFactory::class
             ));
         }
         return new InputFilterModel($container->get(ConfigResourceFactory::class));

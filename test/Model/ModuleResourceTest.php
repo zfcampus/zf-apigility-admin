@@ -9,8 +9,8 @@ namespace ZFTest\Apigility\Admin\Model;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionClass;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\Apigility\Admin\Model\ModuleResource;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
+use ZF\Apigility\Admin\Model\ModuleResource;
 use ZF\Configuration\ModuleUtils;
 
 class ModuleResourceTest extends TestCase
@@ -87,7 +87,7 @@ class ModuleResourceTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     public function removeDir($dir)
     {
@@ -118,7 +118,7 @@ class ModuleResourceTest extends TestCase
         $moduleName = uniqid('Foo');
         $module = $this->resource->create([
             'name'    => $moduleName,
-            'version' => '2'
+            'version' => '2',
         ]);
         $this->assertInstanceOf('ZF\Apigility\Admin\Model\ModuleEntity', $module);
         $this->assertEquals([2], $module->getVersions());

@@ -7,7 +7,6 @@
 namespace ZF\Apigility\Admin\Model;
 
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
-use ZF\Configuration\ModuleUtils;
 
 class AuthorizationModelFactory
 {
@@ -40,9 +39,9 @@ class AuthorizationModelFactory
      */
     public function __construct(ModulePathSpec $modules, ConfigResourceFactory $configFactory, ModuleModel $moduleModel)
     {
-        $this->modules            = $modules;
-        $this->configFactory      = $configFactory;
-        $this->moduleModel        = $moduleModel;
+        $this->modules       = $modules;
+        $this->configFactory = $configFactory;
+        $this->moduleModel   = $moduleModel;
     }
 
     /**

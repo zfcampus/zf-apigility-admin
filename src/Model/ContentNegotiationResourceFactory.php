@@ -14,6 +14,7 @@ class ContentNegotiationResourceFactory
     /**
      * @param ContainerInterface $container
      * @return ContentNegotiationResource
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

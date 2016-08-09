@@ -6,6 +6,9 @@
 
 namespace ZF\Apigility\Admin\InputFilter\RpcService;
 
+use ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator;
+use ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator;
+
 class PatchInputFilter extends PostInputFilter
 {
     public function init()
@@ -21,14 +24,14 @@ class PatchInputFilter extends PostInputFilter
         $this->add([
             'name' => 'accept_whitelist',
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator']
+                ['name' => MediaTypeArrayValidator::class],
             ],
             'error_message' => 'The Accept Whitelist must be an array of valid media type expressions',
         ]);
         $this->add([
             'name' => 'content_type_whitelist',
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\MediaTypeArrayValidator']
+                ['name' => MediaTypeArrayValidator::class],
             ],
             'error_message' => 'The Content-Type Whitelist must be an array of valid media type expressions',
         ]);
@@ -43,7 +46,7 @@ class PatchInputFilter extends PostInputFilter
         $this->add([
             'name' => 'http_methods',
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator']
+                ['name' => HttpMethodArrayValidator::class],
             ],
             'error_message' => 'The HTTP Methods must be an array of valid HTTP method names',
         ]);

@@ -25,14 +25,14 @@ class InputFilterInputFilterTest extends TestCase
                             [
                                 'name' => 'Zend\Filter\Boolean',
                                 'options' => ['casting' => false],
-                            ]
+                            ],
                         ],
                         'validators' => [],
                         'allow_empty' => true,
                         'continue_if_empty' => false,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -55,12 +55,12 @@ class InputFilterInputFilterTest extends TestCase
                             [
                                 'name' => 'Zend\Filter\Bool',
                                 'options' => ['casting' => false],
-                            ]
+                            ],
                         ],
                         'validators' => [],
                         'allow_empty' => true,
                         'continue_if_empty' => false,
-                    ]
+                    ],
                 ],
                 [
                     'inputFilter' => 'Zend\Filter\Bool',

@@ -16,6 +16,7 @@ class DbAdapterModelFactory
     /**
      * @param ContainerInterface $container
      * @return DbAdapterModel
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

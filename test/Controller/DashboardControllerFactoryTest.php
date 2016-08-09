@@ -9,8 +9,6 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Controller\DashboardController;
-use ZF\Apigility\Admin\Controller\DashboardControllerFactory;
 use ZF\Apigility\Admin\Model;
 
 class DashboardControllerFactoryTest extends TestCase

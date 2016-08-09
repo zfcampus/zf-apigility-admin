@@ -12,19 +12,18 @@ use ZF\Apigility\Admin\Exception;
 
 class RestServiceModelFactory extends RpcServiceModelFactory
 {
-    const TYPE_DEFAULT      = 'ZF\Apigility\Admin\Model\RestServiceModel';
-    const TYPE_DB_CONNECTED = 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel';
+    const TYPE_DEFAULT      = RestServiceModel::class;
+    const TYPE_DB_CONNECTED = DbConnectedRestServiceModel::class;
 
     /**
      * @param string $module
      * @param string $type
      * @return RestServiceModel
+     * @throws Exception\InvalidArgumentException
      */
     public function factory($module, $type = self::TYPE_DEFAULT)
     {
-        if (isset($this->models[$type])
-            && isset($this->models[$type][$module])
-        ) {
+        if (isset($this->models[$type][$module])) {
             return $this->models[$type][$module];
         }
 

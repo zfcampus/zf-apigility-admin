@@ -6,16 +6,17 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use ZF\Apigility\Admin\Model\AuthenticationModel;
+use Zend\Http\Request;
+use Zend\Stdlib\ResponseInterface;
+use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\Admin\Model\AuthenticationEntity;
+use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Entity;
 use ZF\Hal\Collection;
+use ZF\Hal\Entity;
 use ZF\Hal\Link\Link;
-use Zend\Http\Request;
-use ZF\Apigility\Admin\Exception;
 
 class AuthenticationController extends AbstractAuthenticationController
 {
@@ -47,7 +48,7 @@ class AuthenticationController extends AbstractAuthenticationController
      * Manage the authentication API version 1
      *
      * @param  Request $request
-     * @return ViewModel
+     * @return ViewModel|ApiProblemResponse|ResponseInterface
      */
     protected function authVersion1(Request $request)
     {
@@ -97,7 +98,7 @@ class AuthenticationController extends AbstractAuthenticationController
      * Manage the authentication API version 2
      *
      * @param  Request $request
-     * @return ViewModel
+     * @return ViewModel|ApiProblemResponse|\Zend\Http\Response
      */
     protected function authVersion2(Request $request)
     {
@@ -161,7 +162,7 @@ class AuthenticationController extends AbstractAuthenticationController
      * Since Apigility 1.1
      *
      * @param  Request $request
-     * @return ViewModel
+     * @return ViewModel|ApiProblemResponse
      */
     protected function mappingAuthentication(Request $request)
     {
@@ -271,7 +272,7 @@ class AuthenticationController extends AbstractAuthenticationController
             'Location',
             $this->url()->fromRoute(
                 'zf-apigility/api/authentication',
-                [ 'authentication_adapter' => $entity['name'] ]
+                ['authentication_adapter' => $entity['name']]
             )
         );
 
@@ -281,6 +282,8 @@ class AuthenticationController extends AbstractAuthenticationController
     /**
      * Update an existing authentication adapter
      *
+     * @param string $adapter
+     * @param array $params
      * @return ApiProblemResponse|ViewModel
      */
     private function updateAuthenticationAdapter($adapter, $params)
@@ -298,6 +301,7 @@ class AuthenticationController extends AbstractAuthenticationController
     /**
      * Remove an existing authentication adapter
      *
+     * @param string $adapter
      * @return ApiProblemResponse|\Zend\Http\Response
      */
     private function removeAuthenticationAdapter($adapter)
@@ -346,7 +350,7 @@ class AuthenticationController extends AbstractAuthenticationController
      *
      * @param string $module
      * @param string|int $version
-     * @return ApiProblemResponse|\Zend\Http\Response
+     * @return ApiProblemResponse|ResponseInterface
      */
     private function removeAuthenticationMap($module, $version)
     {
@@ -377,8 +381,8 @@ class AuthenticationController extends AbstractAuthenticationController
                 'rel' => 'self',
                 'route' => [
                     'name'   => 'zf-apigility/api/authentication',
-                    'params' => ['authentication_adapter' => $entity['name']]
-                ]
+                    'params' => ['authentication_adapter' => $entity['name']],
+                ],
             ]));
             $halCollection[] = $halEntity;
         }
@@ -398,8 +402,8 @@ class AuthenticationController extends AbstractAuthenticationController
             'rel' => 'self',
             'route' => [
                 'name'   => 'zf-apigility/api/authentication',
-                'params' => ['authentication_adapter' => $entity['name']]
-            ]
+                'params' => ['authentication_adapter' => $entity['name']],
+            ],
         ]));
         return new ViewModel(['payload' => $halEntity]);
     }
@@ -413,7 +417,7 @@ class AuthenticationController extends AbstractAuthenticationController
     private function createAuthenticationMapResult($adapter)
     {
         $model = new ViewModel([
-            'authentication' => $adapter
+            'authentication' => $adapter,
         ]);
         $model->setTerminal(true);
         return $model;

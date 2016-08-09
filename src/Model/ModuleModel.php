@@ -70,7 +70,7 @@ class ModuleModel
      * Export the $config array in a human readable format
      *
      * @param  array $config
-     * @param  integer $space the initial indentation value
+     * @param  int $indent the initial indentation value
      * @return string
      */
     public static function exportConfig($config, $indent = 0)
@@ -114,7 +114,8 @@ class ModuleModel
      *
      * @param  string $module
      * @param  ModulePathSpec $pathSpec
-     * @return boolean
+     * @return bool
+     * @throws \Exception
      */
     public function createModule($module, ModulePathSpec $pathSpec)
     {
@@ -150,11 +151,11 @@ class ModuleModel
         }
 
         $view = new ViewModel([
-            'module'  => $module
+            'module' => $module,
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml',
+            'module/skeleton'      => __DIR__ . '/../../view/module/skeleton.phtml',
             'module/skeleton-psr4' => __DIR__ . '/../../view/module/skeleton-psr4.phtml',
         ]);
 
@@ -202,7 +203,7 @@ class ModuleModel
      * Update a module (adding the ApigilityModule interface)
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function updateModule($module)
     {
@@ -252,7 +253,7 @@ class ModuleModel
      * @param  string $module
      * @param  string $path
      * @param  bool $recursive
-     * @return boolean
+     * @return bool
      */
     public function deleteModule($module, $path = '.', $recursive = false)
     {
@@ -391,9 +392,9 @@ class ModuleModel
             );
         }
 
-        $r        = new ReflectionObject($module);
-        $path     = dirname($r->getFileName());
-        $dirSep   = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
+        $r       = new ReflectionObject($module);
+        $path    = dirname($r->getFileName());
+        $dirSep  = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
         $pattern = sprintf(
             '#%ssrc%s%s#',
             $dirSep,
@@ -407,7 +408,7 @@ class ModuleModel
             return [1];
         }
 
-        $versions  = [];
+        $versions = [];
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
                 $versions[] = (int) $matches['version'];

@@ -8,7 +8,6 @@ namespace ZFTest\Apigility\Admin\Listener;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
-use Prophecy\Argument;
 use Zend\Mvc\ApplicationInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Listener\EnableHalRenderCollectionsListener;

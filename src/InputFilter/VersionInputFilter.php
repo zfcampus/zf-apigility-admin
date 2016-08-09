@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter;
 
 use Zend\InputFilter\InputFilter;
+use ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator;
 
 class VersionInputFilter extends InputFilter
 {
@@ -15,7 +16,7 @@ class VersionInputFilter extends InputFilter
         $this->add([
             'name' => 'module',
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator'],
+                ['name' => ModuleNameValidator::class],
             ],
             'error_message' => 'Please provide a valid API module name',
         ]);

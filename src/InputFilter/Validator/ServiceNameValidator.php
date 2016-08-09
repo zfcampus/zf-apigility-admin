@@ -14,7 +14,7 @@ class ServiceNameValidator extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::SERVICE_NAME => "'%value%' is not a valid service name"
+        self::SERVICE_NAME => "'%value%' is not a valid service name",
     ];
 
     /**

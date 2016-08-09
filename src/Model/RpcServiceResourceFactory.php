@@ -14,6 +14,7 @@ class RpcServiceResourceFactory
     /**
      * @param ContainerInterface $container
      * @return RpcServiceResource
+     * @throws ServiceNotCreatedException
      */
     public function __invoke(ContainerInterface $container)
     {

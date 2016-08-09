@@ -9,9 +9,6 @@ namespace ZF\Apigility\Admin\Model;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Apigility\Admin\Model\VersioningModelFactory;
-use ZF\Apigility\Admin\Model\VersioningModelFactoryFactory;
 use ZF\Configuration\ConfigResourceFactory;
 use ZF\Configuration\ResourceFactory;
 

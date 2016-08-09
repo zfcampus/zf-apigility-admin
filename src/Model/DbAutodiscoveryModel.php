@@ -85,7 +85,7 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
                                     'adapter' => $adapter_name,
                                     'table' => $constraintObj->getReferencedTableName(),
                                     //TODO: handle composite key constraint
-                                    'field' => $referencedColumns[0]
+                                    'field' => $referencedColumns[0],
                                 ];
                                 $item['validators'][] = $validator;
                                 break;

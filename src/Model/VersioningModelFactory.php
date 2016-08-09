@@ -6,7 +6,6 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
 /**
@@ -29,7 +28,7 @@ class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
     protected $models = [];
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $moduleUtils;
 

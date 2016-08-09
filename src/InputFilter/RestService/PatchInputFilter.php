@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter\RestService;
 
 use Zend\Validator\Callback as CallbackValidator;
+use ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator;
 
 class PatchInputFilter extends PostInputFilter
 {
@@ -95,7 +96,7 @@ class PatchInputFilter extends PostInputFilter
             'allow_empty' => true,
             'continue_if_empty' => true,
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator']
+                ['name' => HttpMethodArrayValidator::class],
             ],
             'error_message' => 'The Collection HTTP Methods must be an array of valid HTTP methods',
         ]);
@@ -105,7 +106,7 @@ class PatchInputFilter extends PostInputFilter
             'allow_empty' => true,
             'continue_if_empty' => true,
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\HttpMethodArrayValidator']
+                ['name' => HttpMethodArrayValidator::class],
             ],
             'error_message' => 'The Entity HTTP Methods must be an array of valid HTTP methods',
         ]);

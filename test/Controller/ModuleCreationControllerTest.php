@@ -14,8 +14,6 @@ use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\ModuleCreationController;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Configuration\ModuleUtils;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
 class ModuleCreationControllerTest extends TestCase
@@ -121,7 +119,7 @@ class ModuleCreationControllerTest extends TestCase
     {
         $files = array_diff(scandir($dir), ['.','..']);
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
+            is_dir("$dir/$file") ? $this->removeDir("$dir/$file") : unlink("$dir/$file");
         }
         return @rmdir($dir);
     }

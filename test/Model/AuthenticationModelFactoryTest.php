@@ -11,11 +11,11 @@ use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\Config\Writer\WriterInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use ZF\Configuration\ConfigResource;
-use ZF\Configuration\ConfigWriter;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
 use ZF\Apigility\Admin\Model\AuthenticationModelFactory;
 use ZF\Apigility\Admin\Model\ModuleModel;
+use ZF\Configuration\ConfigResource;
+use ZF\Configuration\ConfigWriter;
 
 class AuthenticationModelFactoryTest extends TestCase
 {

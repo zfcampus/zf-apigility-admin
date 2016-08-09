@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\HydratorPluginManager;
+use Zend\ServiceManager\ServiceManager;
 use ZF\Apigility\Admin\Exception;
 
 class HydratorsModel extends AbstractPluginManagerModel

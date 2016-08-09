@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use ZF\ContentNegotiation\ViewModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
+use ZF\ContentNegotiation\ViewModel;
 use ZF\MvcAuth\Authentication\DefaultAuthenticationListener as AuthListener;
 
 class AuthenticationTypeController extends AbstractAuthenticationController
@@ -78,7 +78,7 @@ class AuthenticationTypeController extends AbstractAuthenticationController
     private function createViewModel($adapters)
     {
         $model = new ViewModel([
-            'auth-types' => $adapters
+            'auth-types' => $adapters,
         ]);
         $model->setTerminal(true);
         return $model;

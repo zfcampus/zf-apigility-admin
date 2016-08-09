@@ -6,19 +6,18 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use MongoConnectionException;
 use PDO;
 use PDOException;
-use MongoConnectionException;
 use ZF\Apigility\Admin\Exception;
+use ZF\Apigility\Admin\InputFilter\Authentication;
 use ZF\Configuration\ConfigResource;
 use ZF\Rest\Exception\CreationException;
-use ZF\Apigility\Admin\InputFilter\Authentication;
 
 class AuthenticationModel
 {
-
-    const ADAPTER_HTTP   = 'ZF\\MvcAuth\\Authentication\\HttpAdapter';
-    const ADAPTER_OAUTH2 = 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter';
+    const ADAPTER_HTTP   = \ZF\MvcAuth\Authentication\HttpAdapter::class;
+    const ADAPTER_OAUTH2 = \ZF\MvcAuth\Authentication\OAuth2Adapter::class;
 
     /**
      * @var ConfigResource
@@ -38,6 +37,7 @@ class AuthenticationModel
     /**
      * @param ConfigResource $globalConfig
      * @param ConfigResource $localConfig
+     * @param ModuleModel $modules
      */
     public function __construct(ConfigResource $globalConfig, ConfigResource $localConfig, ModuleModel $modules)
     {
@@ -89,7 +89,7 @@ class AuthenticationModel
      *
      * Since Apigility 1.1
      *
-     * @param  array $authenticationConfig
+     * @param array $adapter
      * @return array
      */
     public function createAuthenticationAdapter(array $adapter)
@@ -121,7 +121,8 @@ class AuthenticationModel
      *
      * Since Apigility 1.1
      *
-     * @param  array $authenticationConfig
+     * @param string $name
+     * @param array $adapter
      * @return array
      */
     public function updateAuthenticationAdapter($name, array $adapter)
@@ -228,7 +229,7 @@ class AuthenticationModel
      * Since Apigility 1.1
      *
      * @param  string $name
-     * @return boolen
+     * @return bool
      */
     public function removeAuthenticationAdapter($name)
     {
@@ -318,7 +319,7 @@ class AuthenticationModel
     /**
      * Fetch configuration details for authentication
      *
-     * @return AuthenticationEntity
+     * @return AuthenticationEntity|false
      */
     public function fetch()
     {
@@ -342,7 +343,7 @@ class AuthenticationModel
      * Used since Apigility 1.1
      *
      * @param  string $name
-     * @return array
+     * @return array|false
      */
     public function fetchAuthenticationAdapter($name)
     {
@@ -386,9 +387,9 @@ class AuthenticationModel
      *
      * Used since Apigility 1.1
      *
-     * @param  string $module
-     * @param  integer $version
-     * @return string|boolean
+     * @param string $module
+     * @param int|false $version
+     * @return string|false
      */
     public function getAuthenticationMap($module, $version = false)
     {
@@ -415,8 +416,8 @@ class AuthenticationModel
      *
      * @param  string $auth
      * @param  string $module
-     * @param  integer $version
-     * @return boolean
+     * @param  int $version
+     * @return bool
      * @throws Exception\InvalidArgumentException
      */
     public function saveAuthenticationMap($auth, $module, $version = null)
@@ -444,8 +445,8 @@ class AuthenticationModel
      * Used since Apigility 1.1
      *
      * @param  string $module
-     * @param  integer $version
-     * @return boolean
+     * @param  int $version
+     * @return bool
      */
     public function removeAuthenticationMap($module, $version = null)
     {
@@ -612,14 +613,14 @@ class AuthenticationModel
         switch ($entity->getDsnType()) {
             case AuthenticationEntity::DSN_MONGO:
                 $toSet = [
-                    'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
+                    'storage' => \ZF\OAuth2\Adapter\MongoAdapter::class,
                     'mongo'   => $local,
                 ];
                 break;
             case AuthenticationEntity::DSN_PDO:
             default:
                 $toSet = [
-                    'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
+                    'storage' => \ZF\OAuth2\Adapter\PdoAdapter::class,
                     'db'      => $local,
                 ];
                 break;
@@ -637,7 +638,7 @@ class AuthenticationModel
      * @param  string $username
      * @param  string $password
      * @throws Exception\InvalidArgumentException on invalid DSN
-     * @return boolean
+     * @return bool
      */
     protected function validateDsn($dsn, $username = null, $password = null, $dsnType = AuthenticationEntity::DSN_PDO)
     {
@@ -678,6 +679,9 @@ class AuthenticationModel
 
     /**
      * Add a new authentication adapter in local config
+     *
+     * @param array $adapter
+     * @return true
      */
     protected function saveAuthenticationAdapter(array $adapter)
     {
@@ -689,8 +693,8 @@ class AuthenticationModel
                     'options' => [
                         'accept_schemes' => [AuthenticationEntity::TYPE_BASIC],
                         'realm'          => $adapter['realm'],
-                        'htpasswd'       => $adapter['htpasswd']
-                    ]
+                        'htpasswd'       => $adapter['htpasswd'],
+                    ],
                 ];
                 break;
             case AuthenticationEntity::TYPE_DIGEST:
@@ -701,8 +705,8 @@ class AuthenticationModel
                         'realm'          => $adapter['realm'],
                         'digest_domains' => $adapter['digest_domains'],
                         'nonce_timeout'  => $adapter['nonce_timeout'],
-                        'htdigest'       => $adapter['htdigest']
-                    ]
+                        'htdigest'       => $adapter['htdigest'],
+                    ],
                 ];
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
@@ -713,8 +717,8 @@ class AuthenticationModel
                             'storage' => [
                                 'adapter' => strtolower(AuthenticationEntity::DSN_PDO),
                                 'dsn'     => $adapter['oauth2_dsn'],
-                                'route'   => $adapter['oauth2_route']
-                            ]
+                                'route'   => $adapter['oauth2_route'],
+                            ],
                         ];
                         if (isset($adapter['oauth2_username'])) {
                             $config['storage']['username'] = $adapter['oauth2_username'];
@@ -730,8 +734,8 @@ class AuthenticationModel
                                 'adapter'  => strtolower(AuthenticationEntity::DSN_MONGO),
                                 'dsn'      => $adapter['oauth2_dsn'],
                                 'database' => $adapter['oauth2_database'],
-                                'route'   => $adapter['oauth2_route']
-                            ]
+                                'route'    => $adapter['oauth2_route'],
+                            ],
                         ];
                         if (isset($adapter['oauth2_locator_name'])) {
                             $config['storage']['locator_name'] = $adapter['oauth2_locator_name'];
@@ -790,7 +794,7 @@ class AuthenticationModel
 
         $options = [
             'spec'  => '%oauth%',
-            'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
+            'regex' => '(?P<oauth>(' . implode('|', $routes) . '))',
         ];
         $this->globalConfig->patchKey('router.routes.oauth.options', $options);
         $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
@@ -802,7 +806,7 @@ class AuthenticationModel
      * Since Apigility 1.1
      *
      * @param  string $url
-     * @return boolean
+     * @return bool
      */
     protected function removeOAuth2Route($url)
     {
@@ -826,7 +830,7 @@ class AuthenticationModel
             });
             $options = [
                 'spec'  => '%oauth%',
-                'regex' => '(?P<oauth>(' . implode('|', $routes) . '))'
+                'regex' => '(?P<oauth>(' . implode('|', $routes) . '))',
             ];
             $this->globalConfig->patchKey('router.routes.oauth.options', $options);
             $this->globalConfig->patchKey('router.routes.oauth.type', 'regex');
@@ -919,7 +923,7 @@ class AuthenticationModel
             'zf-mvc-auth.authentication.http',
             'zf-oauth2.db',
             'zf-oauth2.mongo',
-            'zf-oauth2.storage'
+            'zf-oauth2.storage',
         ];
         foreach ($configKeys as $key) {
             $this->globalConfig->deleteKey($key);
@@ -933,7 +937,7 @@ class AuthenticationModel
      * based on APIs defined. It reads the old configuration and generates an
      * authentication mapping for each API and version.
      *
-     * @return boolean|string Boolean false if nothing was performed; string
+     * @return bool|string Boolean false if nothing was performed; string
      *     adapter name otherwise.
      */
     public function transformAuthPerApis()
@@ -951,7 +955,7 @@ class AuthenticationModel
                     'name'     => 'http_basic',
                     'type'     => AuthenticationEntity::TYPE_BASIC,
                     'realm'    => $oldAuth['realm'],
-                    'htpasswd' => $oldAuth['htpasswd']
+                    'htpasswd' => $oldAuth['htpasswd'],
                 ];
                 break;
             case 'http_digest':
@@ -961,7 +965,7 @@ class AuthenticationModel
                     'realm'          => $oldAuth['realm'],
                     'htdigest'       => $oldAuth['htdigest'],
                     'digest_domains' => $oldAuth['digest_domains'],
-                    'nonce_timeout'  => $oldAuth['nonce_timeout']
+                    'nonce_timeout'  => $oldAuth['nonce_timeout'],
                 ];
                 break;
             case AuthenticationEntity::TYPE_OAUTH2:
@@ -969,7 +973,7 @@ class AuthenticationModel
                     'type'         => AuthenticationEntity::TYPE_OAUTH2,
                     'oauth2_type'  => $oldAuth['dsn_type'],
                     'oauth2_dsn'   => $oldAuth['dsn'],
-                    'oauth2_route' => $oldAuth['route_match']
+                    'oauth2_route' => $oldAuth['route_match'],
                 ];
                 switch (strtolower($oldAuth['dsn_type'])) {
                     case strtolower(AuthenticationEntity::DSN_PDO):

@@ -9,8 +9,8 @@ namespace ZF\Apigility\Admin\Model;
 use RuntimeException;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Hal\Collection as HalCollection;
-use ZF\Hal\Link\Link;
 use ZF\Hal\Entity as HalEntity;
+use ZF\Hal\Link\Link;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
@@ -97,7 +97,7 @@ class RestServiceResource extends AbstractResourceListener
      * Create a new REST service
      *
      * @param  array|object $data
-     * @return RestServiceEntity
+     * @return RestServiceEntity|ApiProblem
      * @throws CreationException
      */
     public function create($data)
@@ -236,7 +236,7 @@ class RestServiceResource extends AbstractResourceListener
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
-                    $model   = $this->restFactory->factory(
+                    $model = $this->restFactory->factory(
                         $this->getModuleName(),
                         RestServiceModelFactory::TYPE_DB_CONNECTED
                     );
@@ -271,8 +271,8 @@ class RestServiceResource extends AbstractResourceListener
         $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
             $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
-            $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
-            $links    = $entity->getLinks();
+            $entity = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
+            $links  = $entity->getLinks();
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [

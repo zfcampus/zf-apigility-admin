@@ -6,13 +6,13 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
+use ReflectionClass;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\View\ApiProblemModel;
 use ZF\ContentNegotiation\ViewModel;
-use ReflectionClass;
 
 class SourceController extends AbstractActionController
 {
@@ -81,7 +81,7 @@ class SourceController extends AbstractActionController
                     'module' => $module,
                     'class'  => $class,
                     'file'   => $fileName,
-                    'source' => $this->highlightFileWithNum($fileName)
+                    'source' => $this->highlightFileWithNum($fileName),
                 ];
 
                 $model = new ViewModel($metadata);
@@ -122,7 +122,7 @@ class SourceController extends AbstractActionController
      * Provided for testing.
      *
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {
