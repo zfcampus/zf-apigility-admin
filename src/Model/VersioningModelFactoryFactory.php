@@ -10,6 +10,9 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use ZF\Configuration\ConfigResourceFactory;
 
+/**
+ * @deprecated use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactoryFactory instead
+ */
 class VersioningModelFactoryFactory
 {
     /**
