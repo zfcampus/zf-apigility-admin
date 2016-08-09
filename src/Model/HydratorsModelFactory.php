@@ -16,5 +16,5 @@ class HydratorsModelFactory extends AbstractPluginManagerModelFactory
     /**
      * @var string
      */
-    protected $pluginManagerModel = 'ZF\Apigility\Admin\Model\HydratorsModel';
+    protected $pluginManagerModel = HydratorsModel::class;
 }

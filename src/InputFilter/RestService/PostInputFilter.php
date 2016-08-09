@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Admin\InputFilter\RestService;
 
 use Zend\InputFilter\InputFilter;
+use ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator;
 
 class PostInputFilter extends InputFilter
 {
@@ -29,7 +30,7 @@ class PostInputFilter extends InputFilter
             'name' => 'service_name',
             'required' => false,
             'validators' => [
-                ['name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator'],
+                ['name' => ServiceNameValidator::class],
             ],
         ]);
         $this->add([

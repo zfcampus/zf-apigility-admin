@@ -40,7 +40,7 @@ class RestServiceEntity
 
     protected $filters = [];
 
-    protected $hydratorName = 'Zend\Hydrator\ArraySerializable';
+    protected $hydratorName = \Zend\Hydrator\ArraySerializable::class;
 
     protected $inputFilters;
 

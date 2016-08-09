@@ -12,8 +12,8 @@ use ZF\Apigility\Admin\Exception;
 
 class RestServiceModelFactory extends RpcServiceModelFactory
 {
-    const TYPE_DEFAULT      = 'ZF\Apigility\Admin\Model\RestServiceModel';
-    const TYPE_DB_CONNECTED = 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel';
+    const TYPE_DEFAULT      = RestServiceModel::class;
+    const TYPE_DB_CONNECTED = DbConnectedRestServiceModel::class;
 
     /**
      * @param string $module

@@ -16,7 +16,7 @@ class PostInputFilter extends InputFilter
             'name' => 'service_name',
             'validators' => [
                 [
-                    'name' => 'ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator',
+                    'name' => \ZF\Apigility\Admin\InputFilter\Validator\ServiceNameValidator::class,
                 ],
             ],
             'error_message' => 'Service Name is required, and must be a valid PHP class name',

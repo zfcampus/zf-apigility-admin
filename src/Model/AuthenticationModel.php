@@ -16,8 +16,8 @@ use ZF\Apigility\Admin\InputFilter\Authentication;
 
 class AuthenticationModel
 {
-    const ADAPTER_HTTP   = 'ZF\\MvcAuth\\Authentication\\HttpAdapter';
-    const ADAPTER_OAUTH2 = 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter';
+    const ADAPTER_HTTP   = \ZF\MvcAuth\Authentication\HttpAdapter::class;
+    const ADAPTER_OAUTH2 = \ZF\MvcAuth\Authentication\OAuth2Adapter::class;
 
     /**
      * @var ConfigResource
@@ -613,14 +613,14 @@ class AuthenticationModel
         switch ($entity->getDsnType()) {
             case AuthenticationEntity::DSN_MONGO:
                 $toSet = [
-                    'storage' => 'ZF\OAuth2\Adapter\MongoAdapter',
+                    'storage' => \ZF\OAuth2\Adapter\MongoAdapter::class,
                     'mongo'   => $local,
                 ];
                 break;
             case AuthenticationEntity::DSN_PDO:
             default:
                 $toSet = [
-                    'storage' => 'ZF\OAuth2\Adapter\PdoAdapter',
+                    'storage' => \ZF\OAuth2\Adapter\PdoAdapter::class,
                     'db'      => $local,
                 ];
                 break;

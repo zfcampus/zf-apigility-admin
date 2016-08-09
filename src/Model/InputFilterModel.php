@@ -276,14 +276,14 @@ class InputFilterModel
     protected function getCollectionType($controller)
     {
         if (strstr($controller, '\\Rest\\')) {
-            return sprintf('%s\\RestInputFilterCollection', __NAMESPACE__);
+            return RestInputFilterCollection::class;
         }
 
         if (strstr($controller, '\\Rpc\\')) {
-            return sprintf('%s\\RpcInputFilterCollection', __NAMESPACE__);
+            return RpcInputFilterCollection::class;
         }
 
-        return sprintf('%s\\InputFilterCollection', __NAMESPACE__);
+        return InputFilterCollection::class;
     }
 
     /**
@@ -295,13 +295,13 @@ class InputFilterModel
     protected function getEntityType($controller)
     {
         if (strstr($controller, '\\Rest\\')) {
-            return sprintf('%s\\RestInputFilterEntity', __NAMESPACE__);
+            return RestInputFilterEntity::class;
         }
 
         if (strstr($controller, '\\Rpc\\')) {
-            return sprintf('%s\\RpcInputFilterEntity', __NAMESPACE__);
+            return RpcInputFilterEntity::class;
         }
 
-        return sprintf('%s\\InputFilterEntity', __NAMESPACE__);
+        return InputFilterEntity::class;
     }
 }

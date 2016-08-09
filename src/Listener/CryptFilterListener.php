@@ -10,6 +10,8 @@ use ReflectionClass;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Filter\Compress\CompressionAlgorithmInterface;
+use Zend\Filter\Encrypt\EncryptionAlgorithmInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
@@ -49,7 +51,7 @@ class CryptFilterListener implements ListenerAggregateInterface
         }
 
         $controller = $matches->getParam('controller', false);
-        if ($controller !== 'ZF\Apigility\Admin\Controller\InputFilter') {
+        if ($controller !== \ZF\Apigility\Admin\Controller\InputFilter::class) {
             // Not the InputFilter controller; nothing to do
             return;
         }
@@ -79,8 +81,8 @@ class CryptFilterListener implements ListenerAggregateInterface
 
             // If filter implements CompressionAlgorithmInterface or EncryptionAlgorithmInterface,
             // we change the filter's name to the parent, and we add the adapter param to filter's name.
-            if ($class->implementsInterface('Zend\Filter\Compress\CompressionAlgorithmInterface')
-                || $class->implementsInterface('Zend\Filter\Encrypt\EncryptionAlgorithmInterface')
+            if ($class->implementsInterface(CompressionAlgorithmInterface::class)
+                || $class->implementsInterface(EncryptionAlgorithmInterface::class)
             ) {
                 $name    = substr($filter, 0, strrpos($filter, '\\'));
                 $adapter = substr($filter, strrpos($filter, '\\') + 1);

@@ -28,18 +28,18 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $validators = [
         'text' => [
-            'name' => 'Zend\Validator\StringLength',
+            'name' => \Zend\Validator\StringLength::class,
             'options' => [
                 'min' => 1,
                 'max' => 1,
             ],
         ],
         'unique' => [
-            'name' => 'ZF\ContentValidation\Validator\DbNoRecordExists',
+            'name' => \ZF\ContentValidation\Validator\DbNoRecordExists::class,
             'options' => [],
         ],
         'foreign_key' => [
-            'name' => 'ZF\ContentValidation\Validator\DbRecordExists',
+            'name' => \ZF\ContentValidation\Validator\DbRecordExists::class,
             'options' => [],
         ],
     ];
@@ -49,12 +49,12 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $filters = [
         'text' => [
-            ['name' => 'Zend\Filter\StringTrim'],
-            ['name' => 'Zend\Filter\StripTags'],
+            ['name' => \Zend\Filter\StringTrim::class],
+            ['name' => \Zend\Filter\StripTags::class],
         ],
         'integer' => [
-            ['name' => 'Zend\Filter\StripTags'],
-            ['name' => 'Zend\Filter\Digits'],
+            ['name' => \Zend\Filter\StripTags::class],
+            ['name' => \Zend\Filter\Digits::class],
         ],
     ];
 
