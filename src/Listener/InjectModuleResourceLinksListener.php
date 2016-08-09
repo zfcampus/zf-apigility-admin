@@ -201,17 +201,20 @@ class InjectModuleResourceLinksListener
     {
         $entity = $e->getParam('entity');
         if ($entity instanceof Model\ModuleEntity) {
-            return $this->injectModuleCollectionRelationalLinks($entity, $e);
+            $this->injectModuleCollectionRelationalLinks($entity, $e);
+            return;
         }
 
         if ($entity instanceof Model\RestServiceEntity
             || $entity instanceof Model\RpcServiceEntity
         ) {
-            return $this->injectServiceCollectionRelationalLinks($entity, $e);
+            $this->injectServiceCollectionRelationalLinks($entity, $e);
+            return;
         }
 
         if ($entity instanceof Model\InputFilterEntity) {
-            return $this->normalizeInputFilterEntityName($entity, $e);
+            $this->normalizeInputFilterEntityName($entity, $e);
+            return;
         }
     }
 
