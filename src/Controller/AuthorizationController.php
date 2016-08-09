@@ -122,6 +122,7 @@ class AuthorizationController extends AbstractActionController
      *
      * Provided for testing.
      *
+     * @deprecated since 1.5; unused, and will be deleted.
      * @param  Request $request
      * @return $this
      */
