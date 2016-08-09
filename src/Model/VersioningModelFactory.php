@@ -11,7 +11,7 @@ use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 /**
  * Class VersioningModelFactory
  *
- * @deprecated use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
+ * @deprecated since 1.5; use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
  */
 class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
 {
