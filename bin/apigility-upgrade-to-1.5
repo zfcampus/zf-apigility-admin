@@ -28,10 +28,12 @@ $modulesToRemove = [
     'ZF\DevelopmentMode',
 ];
 $modulesToAdd = [
+    'Zend\Cache',
     'Zend\Db',
     'Zend\Filter',
     'Zend\Hydrator',
     'Zend\InputFilter',
+    'Zend\Log',
     'Zend\Paginator',
     'Zend\Router',
     'Zend\Validator',
@@ -136,10 +138,10 @@ function updateComposerJson($path)
         unset($composer['require-dev']['zendframework/zftool']);
     }
 
-    // Add entries that may not exist already
-    if (! isset($composer['require-dev']['zfcampus/zf-asset-manager'])) {
-        $composer['require-dev']['zfcampus/zf-asset-manager'] = '^1.0';
-    }
+    // Add entries
+    $composer['require']['zendframework/zend-cache'] = '^2.7.1';
+    $composer['require']['zendframework/zend-log'] = '^2.9';
+    $composer['require-dev']['zfcampus/zf-asset-manager'] = '^1.0';
 
     // Update existing entries
     $composer['require']['zfcampus/zf-development-mode'] = '^3.0';

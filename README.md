@@ -116,6 +116,8 @@ update your application using the following steps:
     - `require.zfcampus/zf-development-mode` constraint becomes `^3.0`
     - `require-dev.zendframework/zend-developer-tools` becomes `^1.0`
   - Add:
+    - `require.zendframework/zend-cache`, with a constraint of `2.7.1`
+    - `require.zendframework/zend-log`, with a constraint of `2.9`
     - `require-dev.zfcampus/zf-asset-manager`, with a constraint of `^1.0`
 - Update your `config/modules.config.php`:
   - Remove:
