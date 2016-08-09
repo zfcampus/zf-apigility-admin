@@ -365,7 +365,7 @@ class AuthenticationModelTest extends TestCase
         }
 
         $toCreate = [
-            'dsn'         => 'mongodb:300.300.300.300',
+            'dsn'         => 'mongodb:.300.300.300.300',
             'database'    => 'wrong',
             'route_match' => '/api/oauth',
             'dsn_type'    => 'Mongo',

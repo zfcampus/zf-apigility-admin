@@ -6,7 +6,9 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use MongoClient;
 use MongoConnectionException;
+use MongoDB\Driver\Exception\InvalidArgumentException as MongoDbInvalidArgumentException;
 use PDO;
 use PDOException;
 use ZF\Apigility\Admin\Exception;
@@ -653,6 +655,7 @@ class AuthenticationModel
             return true;
         } catch (MongoConnectionException $mongoException) {
         } catch (PDOException $pdoException) {
+        } catch (MongoDbInvalidArgumentException $exception) {
         }
 
         throw new Exception\InvalidArgumentException(
@@ -663,11 +666,11 @@ class AuthenticationModel
 
     /**
      * @param  $dsn
-     * @return \MongoClient
+     * @return MongoClient
      */
     protected function createMongoDSN($dsn)
     {
-        return new \MongoClient($dsn);
+        return new MongoClient($dsn);
     }
 
     /**
