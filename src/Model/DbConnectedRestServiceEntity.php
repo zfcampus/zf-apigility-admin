@@ -6,13 +6,14 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use Zend\Hydrator\ArraySerializable;
 use ZF\Rest\Exception\CreationException;
 
 class DbConnectedRestServiceEntity extends RestServiceEntity
 {
     protected $adapterName;
 
-    protected $hydratorName = \Zend\Hydrator\ArraySerializable::class;
+    protected $hydratorName = ArraySerializable::class;
 
     protected $tableName;
 

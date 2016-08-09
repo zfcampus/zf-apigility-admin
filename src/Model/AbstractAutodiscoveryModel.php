@@ -7,8 +7,14 @@
 namespace ZF\Apigility\Admin\Model;
 
 use Exception;
+use Zend\Filter\Digits;
 use Zend\Filter\StaticFilter;
+use Zend\Filter\StringTrim;
+use Zend\Filter\StripTags;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Validator\StringLength;
+use ZF\ContentValidation\Validator\DbNoRecordExists;
+use ZF\ContentValidation\Validator\DbRecordExists;
 
 /**
  * This class is instantiated with a $config in some implementations (DbAutodiscoveryModel)
@@ -32,18 +38,18 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $validators = [
         'text' => [
-            'name' => \Zend\Validator\StringLength::class,
+            'name' => StringLength::class,
             'options' => [
                 'min' => 1,
                 'max' => 1,
             ],
         ],
         'unique' => [
-            'name' => \ZF\ContentValidation\Validator\DbNoRecordExists::class,
+            'name' => DbNoRecordExists::class,
             'options' => [],
         ],
         'foreign_key' => [
-            'name' => \ZF\ContentValidation\Validator\DbRecordExists::class,
+            'name' => DbRecordExists::class,
             'options' => [],
         ],
     ];
@@ -53,12 +59,12 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $filters = [
         'text' => [
-            ['name' => \Zend\Filter\StringTrim::class],
-            ['name' => \Zend\Filter\StripTags::class],
+            ['name' => StringTrim::class],
+            ['name' => StripTags::class],
         ],
         'integer' => [
-            ['name' => \Zend\Filter\StripTags::class],
-            ['name' => \Zend\Filter\Digits::class],
+            ['name' => StripTags::class],
+            ['name' => Digits::class],
         ],
     ];
 

@@ -12,12 +12,16 @@ use PDOException;
 use ZF\Apigility\Admin\Exception;
 use ZF\Apigility\Admin\InputFilter\Authentication;
 use ZF\Configuration\ConfigResource;
+use ZF\Mvc\Authentication\HttpAdapter;
+use ZF\Mvc\Authentication\OAuth2Adapter;
+use ZF\OAuth2\Adapter\MongoAdapter;
+use ZF\OAuth2\Adapter\PdoAdapter;
 use ZF\Rest\Exception\CreationException;
 
 class AuthenticationModel
 {
-    const ADAPTER_HTTP   = \ZF\MvcAuth\Authentication\HttpAdapter::class;
-    const ADAPTER_OAUTH2 = \ZF\MvcAuth\Authentication\OAuth2Adapter::class;
+    const ADAPTER_HTTP   = HttpAdapter::class;
+    const ADAPTER_OAUTH2 = OAuth2Adapter::class;
 
     /**
      * @var ConfigResource
@@ -613,14 +617,14 @@ class AuthenticationModel
         switch ($entity->getDsnType()) {
             case AuthenticationEntity::DSN_MONGO:
                 $toSet = [
-                    'storage' => \ZF\OAuth2\Adapter\MongoAdapter::class,
+                    'storage' => MongoAdapter::class,
                     'mongo'   => $local,
                 ];
                 break;
             case AuthenticationEntity::DSN_PDO:
             default:
                 $toSet = [
-                    'storage' => \ZF\OAuth2\Adapter\PdoAdapter::class,
+                    'storage' => PdoAdapter::class,
                     'db'      => $local,
                 ];
                 break;
