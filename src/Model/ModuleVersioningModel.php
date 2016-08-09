@@ -176,7 +176,7 @@ final class ModuleVersioningModel
         $config = $this->configResource->fetch(true);
 
         return isset($config['zf-versioning']['default_version'])
-        && ($config['zf-versioning']['default_version'] === $defaultVersion);
+            && $config['zf-versioning']['default_version'] === $defaultVersion;
     }
 
     /**
