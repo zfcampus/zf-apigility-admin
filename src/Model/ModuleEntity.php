@@ -194,8 +194,6 @@ class ModuleEntity
                 case 'default_version':
                     $this->defaultVersion = (int) $value;
                     break;
-                default:
-                    break;
             }
         }
     }
