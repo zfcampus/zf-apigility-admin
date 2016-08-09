@@ -51,12 +51,12 @@ class VersioningModel
      */
     private function getModuleVersioningModel($name, $srcPath = null)
     {
-        $name  = $this->normalizeModule($name);
+        $name = $this->normalizeModule($name);
         $hasPathSpec = null !== $this->pathSpec;
 
         if ($hasPathSpec) {
             $pathSpecType = $this->pathSpec->getPathSpec();
-            if (!$srcPath) {
+            if (! $srcPath) {
                 $srcPath = $this->pathSpec->getModuleSourcePath($name);
             }
             $configDirPath = $this->pathSpec->getModuleConfigPath($name);
@@ -81,7 +81,7 @@ class VersioningModel
      * Create a new version for a module
      *
      * @param  string $module
-     * @param  integer $version
+     * @param  int $version
      * @param  bool|string $path
      * @return bool
      * @deprecated
@@ -110,8 +110,8 @@ class VersioningModel
      * Updates the default version of a module that will be used if no version is
      * specified by the API consumer.
      *
-     * @param  integer $defaultVersion
-     * @return boolean
+     * @param  int $defaultVersion
+     * @return bool
      * @deprecated
      */
     public function setDefaultVersion($defaultVersion)
@@ -145,7 +145,7 @@ class VersioningModel
      * Usually, this is the "src/{modulename}" subdirectory of the
      * module.
      *
-     * @param  string $module
+     * @param string $module
      * @param bool $appendNamespace If true, it will append the module's namespace to the path - for PSR0 compatibility
      * @return string
      * @deprecated
@@ -164,7 +164,7 @@ class VersioningModel
         // .. or fall back to the old method, which only supports PSR-0
         $moduleClass = sprintf('%s\\Module', $module);
 
-        if (!class_exists($moduleClass)) {
+        if (! class_exists($moduleClass)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The module %s doesn\'t exist',
                 $module
@@ -180,12 +180,12 @@ class VersioningModel
             }
             $srcPath = implode(DIRECTORY_SEPARATOR, $parts);
         } else {
-            if (!$appendNamespace && substr($srcPath, - strlen($module)) == $module) {
+            if (! $appendNamespace && substr($srcPath, - strlen($module)) == $module) {
                 $srcPath = substr($srcPath, 0, strlen($srcPath) - strlen($module) - 1);
             }
         }
 
-        if (!file_exists($srcPath) && !is_dir($srcPath)) {
+        if (! file_exists($srcPath) && ! is_dir($srcPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The module "%s" has a malformed directory structure; cannot determine source path',
                 $module

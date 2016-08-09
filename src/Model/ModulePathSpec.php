@@ -43,7 +43,7 @@ class ModulePathSpec
      */
     protected $psrSpecs = [
         self::PSR_0 => '%modulePath%/src/%moduleName%',
-        self::PSR_4 => '%modulePath%/src'
+        self::PSR_4 => '%modulePath%/src',
     ];
 
     /**
@@ -80,7 +80,7 @@ class ModulePathSpec
     {
         $sourcePathSpec = strtolower($sourcePathSpec);
 
-        if (!array_key_exists($sourcePathSpec, $this->psrSpecs)) {
+        if (! array_key_exists($sourcePathSpec, $this->psrSpecs)) {
             throw new InvalidArgumentException(sprintf(
                 "Invalid sourcePathSpec. Valid values are %s and %s",
                 self::PSR_0,
@@ -130,7 +130,7 @@ class ModulePathSpec
     /**
      * Returns the path for the module name that is specified.
      *
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModulePath($moduleName)
@@ -148,9 +148,9 @@ class ModulePathSpec
     /**
      * Returns the source path for the module that is specified
      *
-     * @param $moduleName
+     * @param string $moduleName
      * @param bool $fullPath
-     * @return mixed
+     * @return string
      */
     public function getModuleSourcePath($moduleName, $fullPath = true)
     {
@@ -187,7 +187,7 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        if (!empty($serviceName)) {
+        if (! empty($serviceName)) {
             $path .= $serviceName;
         }
 
@@ -195,10 +195,10 @@ class ModulePathSpec
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @param int $version
-     * @param null $serviceName
-     * @return mixed|string
+     * @param string $serviceName
+     * @return string
      */
     public function getRpcPath($moduleName, $version = 1, $serviceName = null)
     {
@@ -212,7 +212,7 @@ class ModulePathSpec
             $path .= "/";
         }
 
-        if (!empty($serviceName)) {
+        if (! empty($serviceName)) {
             $path .= $serviceName;
         }
 
@@ -220,7 +220,7 @@ class ModulePathSpec
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModuleConfigPath($moduleName)
@@ -229,7 +229,7 @@ class ModulePathSpec
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModuleConfigFilePath($moduleName)
@@ -238,7 +238,7 @@ class ModulePathSpec
     }
 
     /**
-     * @param $moduleName
+     * @param string $moduleName
      * @return string
      */
     public function getModuleViewPath($moduleName)
@@ -249,8 +249,7 @@ class ModulePathSpec
     /**
      * Normalizes a path by converting back-slashes into normal slashes. This function should always remain idempotent.
      *
-     * @param $path
-     *
+     * @param string $path
      * @return string
      */
     public function normalizePath($path)
@@ -262,8 +261,7 @@ class ModulePathSpec
      * Normalizes a module name by converting periods and forward slashes into backslashes (for namespaces). This
      * function should always remain idempotent.
      *
-     * @param $moduleName
-     *
+     * @param string $moduleName
      * @return string
      */
     public function normalizeModuleName($moduleName)

@@ -23,25 +23,25 @@ class PatchInputFilterTest extends TestCase
     {
         return [
             'all-inputs-present' => [[
-                'accept_whitelist' =>  [
+                'accept_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
                 ],
                 'collection_class' => 'Zend\Paginator\Paginator',
-                'collection_http_methods' =>  [
+                'collection_http_methods' => [
                     0 => 'GET',
                     1 => 'POST',
                 ],
                 'collection_name' => 'foo_bar',
-                'collection_query_whitelist' =>  [
+                'collection_query_whitelist' => [
                 ],
-                'content_type_whitelist' =>  [
+                'content_type_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
                 ],
                 'entity_class' => 'StdClass',
-                'entity_http_methods' =>  [
+                'entity_http_methods' => [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
@@ -58,25 +58,25 @@ class PatchInputFilterTest extends TestCase
                 'service_name' => 'Baz_Bat',
             ]],
             'page_size-negative' => [[
-                'accept_whitelist' =>  [
+                'accept_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
                 ],
                 'collection_class' => 'Zend\Paginator\Paginator',
-                'collection_http_methods' =>  [
+                'collection_http_methods' => [
                     0 => 'GET',
                     1 => 'POST',
                 ],
                 'collection_name' => 'foo_bar',
-                'collection_query_whitelist' =>  [
+                'collection_query_whitelist' => [
                 ],
-                'content_type_whitelist' =>  [
+                'content_type_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
                 ],
                 'entity_class' => 'StdClass',
-                'entity_http_methods' =>  [
+                'entity_http_methods' => [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
@@ -99,24 +99,24 @@ class PatchInputFilterTest extends TestCase
     {
         return [
             'missing-service-name' => [[
-                'accept_whitelist' =>  [
+                'accept_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
                 ],
                 'collection_class' => null,
-                'collection_http_methods' =>  [
+                'collection_http_methods' => [
                     0 => 'GET',
                     1 => 'POST',
                 ],
-                'collection_query_whitelist' =>  [
+                'collection_query_whitelist' => [
                 ],
-                'content_type_whitelist' =>  [
+                'content_type_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
                 ],
                 'entity_class' => null,
-                'entity_http_methods' =>  [
+                'entity_http_methods' => [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',
@@ -132,25 +132,25 @@ class PatchInputFilterTest extends TestCase
                 'service_name',
             ]],
             'empty-inputs' => [[
-                'accept_whitelist' =>  [
+                'accept_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/hal+json',
                     2 => 'application/json',
                 ],
                 'collection_class' => null,
-                'collection_http_methods' =>  [
+                'collection_http_methods' => [
                     0 => 'GET',
                     1 => 'POST',
                 ],
                 'collection_name' => null,
-                'collection_query_whitelist' =>  [
+                'collection_query_whitelist' => [
                 ],
-                'content_type_whitelist' =>  [
+                'content_type_whitelist' => [
                     0 => 'application/vnd.foo_bar.v1+json',
                     1 => 'application/json',
                 ],
                 'entity_class' => null,
-                'entity_http_methods' =>  [
+                'entity_http_methods' => [
                     0 => 'GET',
                     1 => 'PATCH',
                     2 => 'PUT',

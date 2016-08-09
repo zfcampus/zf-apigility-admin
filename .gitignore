@@ -1,4 +1,3 @@
-composer.lock
 test/Model/TestAsset/module/FooConf/config/module.config.php
 test/Model/TestAsset/module/BarConf/config/module.config.php
 test/Model/TestAsset/module/AuthConf/config/module.config.php
@@ -10,3 +9,4 @@ vendor/*
 .buildpath
 .settings
 .idea
+phpunit.xml

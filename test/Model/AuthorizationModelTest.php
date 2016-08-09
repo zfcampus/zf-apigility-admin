@@ -16,8 +16,8 @@ use ZF\Apigility\Admin\Model\AuthorizationEntity;
 use ZF\Apigility\Admin\Model\AuthorizationModel;
 use ZF\Apigility\Admin\Model\ModuleEntity;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Configuration\ResourceFactory;
 use ZF\Configuration\ModuleUtils;
+use ZF\Configuration\ResourceFactory;
 
 class AuthorizationModelTest extends TestCase
 {
@@ -25,7 +25,7 @@ class AuthorizationModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {
@@ -127,7 +127,7 @@ class AuthorizationModelTest extends TestCase
         $normalized = [];
         foreach ($entity->getArrayCopy() as $spec => $privileges) {
             preg_match('/^(?P<service>[^:]+)(::(?P<action>.*))?$/', $spec, $matches);
-            if (!isset($matches['action'])) {
+            if (! isset($matches['action'])) {
                 $normalized[$matches['service']]['actions']['index'] = $privileges;
             } elseif (preg_match('/^__(?P<type>collection|entity)__$/', $matches['action'], $actionMatches)) {
                 $type = $actionMatches['type'];

@@ -6,14 +6,14 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Http\Request as HttpRequest;
+use Zend\Mvc\Controller\AbstractActionController;
 use ZF\Apigility\Admin\Model\DocumentationModel;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\ContentNegotiation\ViewModel;
-use ZF\Hal\Link\Link as HalLink;
 use ZF\Hal\Entity as HalEntity;
+use ZF\Hal\Link\Link as HalLink;
 
 class DocumentationController extends AbstractActionController
 {

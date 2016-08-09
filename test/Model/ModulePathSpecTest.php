@@ -7,7 +7,6 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Configuration\ModuleUtils;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 
 class ModulePathSpecTest extends TestCase

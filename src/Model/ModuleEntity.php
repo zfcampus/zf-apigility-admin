@@ -48,7 +48,7 @@ class ModuleEntity
     protected $versions = [];
 
     /**
-     * @param  string $name
+     * @param  string $namespace
      * @param  array $restServices
      * @param  array $rpcServices
      * @param  bool $isVendor
@@ -60,7 +60,7 @@ class ModuleEntity
         array $rpcServices = [],
         $isVendor = null
     ) {
-        if (!class_exists($namespace . '\\Module')) {
+        if (! class_exists($namespace . '\\Module')) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid module "%s"; no Module class exists for that module',
                 $namespace
@@ -165,36 +165,34 @@ class ModuleEntity
                     $this->isVendor = (bool) $value;
                     break;
                 case 'rest':
-                    if (!is_array($value) && ! $value instanceof Collection) {
+                    if (! is_array($value) && ! $value instanceof Collection) {
                         throw new InvalidArgumentException(sprintf(
                             'REST services must be an array or ZF\Hal\Collection; received "%s"',
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
                     $this->restServices = $value;
                     break;
                 case 'rpc':
-                    if (!is_array($value) && ! $value instanceof Collection) {
+                    if (! is_array($value) && ! $value instanceof Collection) {
                         throw new InvalidArgumentException(sprintf(
                             'RPC services must be an array or ZF\Hal\Collection; received "%s"',
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
                     $this->rpcServices = $value;
                     break;
                 case 'versions':
-                    if (!is_array($value)) {
+                    if (! is_array($value)) {
                         throw new InvalidArgumentException(
                             'Versions must be an array; received "%s"',
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         );
                     }
                     $this->versions = $value;
                     break;
                 case 'default_version':
                     $this->defaultVersion = (int) $value;
-                    break;
-                default:
                     break;
             }
         }

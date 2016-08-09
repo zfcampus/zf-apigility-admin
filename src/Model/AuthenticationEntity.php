@@ -150,7 +150,7 @@ class AuthenticationEntity
                     $array['database'] = $this->database;
 
                     // Allow server strings that do not include "mongodb://" prefix
-                    if (!empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
+                    if (! empty($this->dsn) && 0 !== strpos($this->dsn, 'mongodb://')) {
                         $array['dsn'] = 'mongodb://' . $this->dsn;
                     }
                 }
@@ -175,7 +175,7 @@ class AuthenticationEntity
 
         foreach ($array as $key => $value) {
             $key = strtolower(str_replace('_', '', $key));
-            if (!in_array($key, $allowedKeys)) {
+            if (! in_array($key, $allowedKeys)) {
                 continue;
             }
             switch ($key) {

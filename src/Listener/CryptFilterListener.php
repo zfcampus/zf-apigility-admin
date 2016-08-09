@@ -7,14 +7,22 @@
 namespace ZF\Apigility\Admin\Listener;
 
 use ReflectionClass;
-use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Filter\Compress\CompressionAlgorithmInterface;
+use Zend\Filter\Encrypt\EncryptionAlgorithmInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\ContentNegotiation\ParameterDataContainer;
 
-class CryptFilterListener extends AbstractListenerAggregate
+class CryptFilterListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    use ListenerAggregateTrait;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         // Trigger between content negotiation (-625) and content validation (-650)
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -630);
@@ -24,6 +32,7 @@ class CryptFilterListener extends AbstractListenerAggregate
      * Adjust the filter options for Crypt filter adapters
      *
      * @param MvcEvent $e
+     * @return void|true
      */
     public function onRoute(MvcEvent $e)
     {
@@ -42,7 +51,7 @@ class CryptFilterListener extends AbstractListenerAggregate
         }
 
         $controller = $matches->getParam('controller', false);
-        if ($controller !== 'ZF\Apigility\Admin\Controller\InputFilter') {
+        if ($controller !== \ZF\Apigility\Admin\Controller\InputFilter::class) {
             // Not the InputFilter controller; nothing to do
             return;
         }
@@ -72,8 +81,8 @@ class CryptFilterListener extends AbstractListenerAggregate
 
             // If filter implements CompressionAlgorithmInterface or EncryptionAlgorithmInterface,
             // we change the filter's name to the parent, and we add the adapter param to filter's name.
-            if ($class->implementsInterface('Zend\Filter\Compress\CompressionAlgorithmInterface')
-                || $class->implementsInterface('Zend\Filter\Encrypt\EncryptionAlgorithmInterface')
+            if ($class->implementsInterface(CompressionAlgorithmInterface::class)
+                || $class->implementsInterface(EncryptionAlgorithmInterface::class)
             ) {
                 $name    = substr($filter, 0, strrpos($filter, '\\'));
                 $adapter = substr($filter, strrpos($filter, '\\') + 1);

@@ -1,55 +1,55 @@
 <?php
-return array(
-    'zf-mvc-auth' => array(
-        'authentication' => array(
-            'adapters' => array(
-                'testbasic' => array(
+return [
+    'zf-mvc-auth' => [
+        'authentication' => [
+            'adapters' => [
+                'testbasic' => [
                     'adapter' => 'ZF\\MvcAuth\\Authentication\\HttpAdapter',
-                    'options' => array(
-                        'accept_schemes' => array('basic'),
+                    'options' => [
+                        'accept_schemes' => ['basic'],
                         'realm' => 'api',
                         'htpasswd' => __DIR__ . '/htpasswd',
-                    ),
-                ),
-                'testdigest' => array(
+                    ],
+                ],
+                'testdigest' => [
                     'adapter' => 'ZF\\MvcAuth\\Authentication\\HttpAdapter',
-                    'options' => array(
-                        'accept_schemes' => array('digest'),
+                    'options' => [
+                        'accept_schemes' => ['digest'],
                         'realm' => 'api',
                         'digest_domains' => '/',
                         'nonce_timeout' => '3600',
                         'htdigest' => __DIR__ . '/htdigest',
-                    ),
-                ),
-                'testoauth2pdo' => array(
+                    ],
+                ],
+                'testoauth2pdo' => [
                     'adapter' => 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter',
-                    'storage' => array(
+                    'storage' => [
                         'adapter' => 'pdo',
                         'route' => '/oauth2pdo',
                         'dsn' => 'mysql:host=localhost;dbname=oauth2',
                         'username' => 'username',
                         'password' => 'password',
-                        'options' => array(
+                        'options' => [
                             1002 => 'SET NAMES utf8',
-                        ),
-                    ),
-                ),
-                'testoauth2mongo' => array(
+                        ],
+                    ],
+                ],
+                'testoauth2mongo' => [
                     'adapter' => 'ZF\\MvcAuth\\Authentication\\OAuth2Adapter',
-                    'storage' => array(
+                    'storage' => [
                         'adapter' => 'mongo',
                         'route' => '/oauth2mongo',
                         'locator_name' => 'SomeServiceName',
                         'dsn' => 'mongodb://localhost',
                         'database' => 'oauth2',
-                        'options' => array(
+                        'options' => [
                             'username' => 'username',
                             'password' => 'password',
                             'connectTimeoutMS' => 500,
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-);
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

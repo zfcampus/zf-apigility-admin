@@ -70,7 +70,7 @@ class ModuleModel
      * Export the $config array in a human readable format
      *
      * @param  array $config
-     * @param  integer $space the initial indentation value
+     * @param  int $indent the initial indentation value
      * @return string
      */
     public static function exportConfig($config, $indent = 0)
@@ -102,7 +102,7 @@ class ModuleModel
     public function getModule($moduleName)
     {
         $modules = $this->getEnabledModules();
-        if (!array_key_exists($moduleName, $modules)) {
+        if (! array_key_exists($moduleName, $modules)) {
             return null;
         }
 
@@ -113,14 +113,14 @@ class ModuleModel
      * Create a module
      *
      * @param  string $module
-     * @param  string $path
-     * @param  integer $ver
-     * @return boolean
+     * @param  ModulePathSpec $pathSpec
+     * @return bool
+     * @throws \Exception
      */
     public function createModule($module, ModulePathSpec $pathSpec)
     {
         $path = $pathSpec->getApplicationPath();
-        $application = require "$path/config/application.config.php";
+        $application = require sprintf('%s/config/application.config.php', $path);
         if (is_array($application)
             && isset($application['modules'])
             && in_array($module, $application['modules'], true)
@@ -129,7 +129,7 @@ class ModuleModel
             return false;
         }
 
-        $modulePath = $pathSpec->getModulePath($module, $path);
+        $modulePath = $pathSpec->getModulePath($module);
         if (file_exists($modulePath)) {
             throw new \Exception(sprintf(
                 'Cannot create new API module; module by the name "%s" already exists',
@@ -146,16 +146,16 @@ class ModuleModel
         mkdir($pathSpec->getRestPath($module, 1), 0775, true);
         mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
 
-        if (!file_put_contents("$moduleConfigPath/module.config.php", "<" . "?php\nreturn array(\n);")) {
+        if (! file_put_contents(sprintf('%s/module.config.php', $moduleConfigPath), "<" . "?php\nreturn array(\n);")) {
             return false;
         }
 
         $view = new ViewModel([
-            'module'  => $module
+            'module' => $module,
         ]);
 
         $resolver = new Resolver\TemplateMapResolver([
-            'module/skeleton' => __DIR__ . '/../../view/module/skeleton.phtml',
+            'module/skeleton'      => __DIR__ . '/../../view/module/skeleton.phtml',
             'module/skeleton-psr4' => __DIR__ . '/../../view/module/skeleton-psr4.phtml',
         ]);
 
@@ -164,17 +164,23 @@ class ModuleModel
 
         if ($pathSpec->getPathSpec() === ModulePathSpec::PSR_0) {
             $view->setTemplate('module/skeleton');
-            $moduleRelClassPath = "$moduleSourceRelativePath/Module.php";
+            $moduleRelClassPath = sprintf('%s/Module.php', $moduleSourceRelativePath);
 
-            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';")) {
+            if (! file_put_contents(
+                sprintf('%s/Module.php', $modulePath),
+                "<" . "?php\nrequire __DIR__ . '$moduleRelClassPath';"
+            )) {
                 return false;
             }
-            if (!file_put_contents("$moduleSourcePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+            if (! file_put_contents(
+                sprintf('%s/Module.php', $moduleSourcePath),
+                "<" . "?php\n" . $renderer->render($view)
+            )) {
                 return false;
             }
         } else {
             $view->setTemplate('module/skeleton-psr4');
-            if (!file_put_contents("$modulePath/Module.php", "<" . "?php\n" . $renderer->render($view))) {
+            if (! file_put_contents(sprintf('%s/Module.php', $modulePath), "<" . "?php\n" . $renderer->render($view))) {
                 return false;
             }
         }
@@ -197,13 +203,13 @@ class ModuleModel
      * Update a module (adding the ApigilityModule interface)
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function updateModule($module)
     {
         $modules = $this->moduleManager->getLoadedModules();
 
-        if (!isset($modules[$module])) {
+        if (! isset($modules[$module])) {
             return false;
         }
 
@@ -234,7 +240,7 @@ class ModuleModel
         }
 
         copy($objModule->getFileName(), $objModule->getFileName() . '.old');
-        if (!file_put_contents($objModule->getFileName(), $replacement)) {
+        if (! file_put_contents($objModule->getFileName(), $replacement)) {
             return false;
         }
 
@@ -247,11 +253,11 @@ class ModuleModel
      * @param  string $module
      * @param  string $path
      * @param  bool $recursive
-     * @return boolean
+     * @return bool
      */
     public function deleteModule($module, $path = '.', $recursive = false)
     {
-        $application = require "$path/config/application.config.php";
+        $application = require sprintf('%s/config/application.config.php', $path);
         if (! is_array($application)
             || ! isset($application['modules'])
             || ! in_array($module, $application['modules'], true)
@@ -297,7 +303,7 @@ class ModuleModel
 
         $this->modules = [];
         foreach ($this->moduleManager->getLoadedModules() as $moduleName => $module) {
-            if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+            if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
                 continue;
             }
 
@@ -332,7 +338,7 @@ class ModuleModel
      */
     protected function getModuleDefaultVersion($module)
     {
-        if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+        if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
             throw new Exception\InvalidArgumentException(
                 'Expected ApigilityProviderInterface or ApigilityModuleInterface'
             );
@@ -380,29 +386,29 @@ class ModuleModel
      */
     protected function getVersionsByModule($moduleName, $module)
     {
-        if (!$module instanceof ApigilityProviderInterface && !$module instanceof ApigilityModuleInterface) {
+        if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
             throw new Exception\InvalidArgumentException(
                 'Expected ApigilityProviderInterface or ApigilityModuleInterface'
             );
         }
 
-        $r        = new ReflectionObject($module);
-        $path     = dirname($r->getFileName());
-        $dirSep   = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
+        $r       = new ReflectionObject($module);
+        $path    = dirname($r->getFileName());
+        $dirSep  = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
         $pattern = sprintf(
             '#%ssrc%s%s#',
             $dirSep,
             $dirSep,
             str_replace('\\', $dirSep, $moduleName)
         );
-        if (!preg_match($pattern, $path)) {
+        if (! preg_match($pattern, $path)) {
             $path = sprintf('%s/src/%s', $path, str_replace('\\', '/', $moduleName));
         }
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return [1];
         }
 
-        $versions  = [];
+        $versions = [];
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
             if (preg_match('/\\V(?P<version>\d+)$/', $dir, $matches)) {
                 $versions[] = (int) $matches['version'];

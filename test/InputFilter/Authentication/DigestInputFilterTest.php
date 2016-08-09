@@ -39,8 +39,8 @@ class DigestInputFilterTest extends TestCase
                     'digest_domains' => 'foo.local',
                     'realm' => 'My Realm',
                     'htdigest' => 'tmp/file.htpasswd',
-                    'nonce_timeout' => 3600
-                ]
+                    'nonce_timeout' => 3600,
+                ],
             ],
         ];
     }

@@ -6,8 +6,6 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Validator;
 
-use Zend\Validator\Exception;
-
 class MediaTypeArrayValidator extends AbstractValidator
 {
     const MEDIA_TYPE_ARRAY = 'mediaTypeArray';
@@ -16,13 +14,12 @@ class MediaTypeArrayValidator extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::MEDIA_TYPE_ARRAY => "'%value%' is not a correctly formatted media type"
+        self::MEDIA_TYPE_ARRAY => "'%value%' is not a correctly formatted media type",
     ];
 
     /**
      * @param  mixed $value
      * @return bool
-     * @throws Exception\RuntimeException If validation of $value is impossible
      */
     public function isValid($value)
     {

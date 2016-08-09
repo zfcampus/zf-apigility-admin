@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\Validator\ValidatorPluginManager;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Validator\ValidatorPluginManager;
 use ZF\Apigility\Admin\Exception;
 
 class ValidatorsModel extends AbstractPluginManagerModel
@@ -22,6 +22,7 @@ class ValidatorsModel extends AbstractPluginManagerModel
      * Zend\Validator\ValidatorPluginManager.
      *
      * @param ServiceManager $pluginManager
+     * @param ValidatorMetadataModel $metadata
      */
     public function __construct(ServiceManager $pluginManager, ValidatorMetadataModel $metadata = null)
     {

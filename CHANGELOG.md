@@ -6,13 +6,116 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) updates the
+  component to be forwards compatible with Zend Framework component v3 releases,
+  while retaining support for v2 releases. This includes supporting both v2 and
+  v3 versions of factory invocation, and triggering event listeners using syntax
+  that works on both v2 and v3 releases of zend-eventmanager, amonst other
+  changes.
+
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) adds a script
+  to assist users in updating existing Apigility applications to use Zend
+  Framework component v3 releases:
+
+  ```bash
+  $ ./vendor/bin/apigility-upgrade-to-1.5 -h
+  ```
+
+  In most cases, you can call it without arguments. Running the script updates
+  your `composer.json` to remove several entries, update others, and add some;
+  it then updates your list of modules, and then installs dependencies for you.
+
+  If you need to update manually for any reason, you will need to
+  [follow the steps in the README](README.md#upgrading-to-v3-zend-framework-components-from-1.5).
+
 - [#321](https://github.com/zfcampus/zf-apigility-admin/pull/321) adds a
   `patchList()` stub to the REST resource class template, so that it's present
   by default.
+
 - [#327](https://github.com/zfcampus/zf-apigility-admin/pull/327) adds support
   for working with modules that are in PSR-4 directory format. While the admin
   still does not create PSR-4 modules, it will now correctly interact with those
   that you manually convert to PSR-4.
+
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) extracts
+  listeners previously defined in the `Module` class into their own classes.
+  These include:
+
+  - `ZF\Apigility\Admin\DisableHttpCacheListener`, which listens on the
+    `MvcEvent::EVENT_FINISH` event at high priority in order to return cache
+    busting headers in the returned response.
+  - `ZF\Apigility\Admin\EnableHalRenderCollectionsListener`, which listens on
+    the `MvcEvent::EVENT_ROUTE` event at low priority in order to set the
+    "render collections" flag on zf-hal's `Hal` plugin if a controller from the
+    module is matched.
+  - `ZF\Apigility\Admin\InjectModuleResourceLinksListener`, which listens on the
+    `MvcEvent::EVENT_RENDER` event at high priority in order to attach listeners to
+    events on the zf-hal `Hal` plugin. These listeners were also previously
+    defined in the `Module` class, and are now part of this new listener, as it
+    aggregates some state used by each.
+  - `ZF\Apigility\Admin\NormalizeMatchedControllerServiceNameListener`, which
+    listens on the `MvcEvent::EVENT_ROUTE` at low priority in order to
+    normalize the controller service name provided via the URI to a FQCN.
+  - `ZF\Apigility\Admin\NormalizeMatchedInputFilterNameListener`, which listens
+    on the `MvcEvent::EVENT_ROUTE` at low priority in order to normalize the
+    input filter name provided via the URI to a FQCN.
+
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) extracts
+  service factories previously defined in the `Module` class into their own
+  classes. These include:
+  - `ZF\Apigility\Admin\Model\AuthenticationModelFactory`
+  - `ZF\Apigility\Admin\Model\AuthorizationModelFactory`
+  - `ZF\Apigility\Admin\Model\ContentNegotiationModelFactory`
+  - `ZF\Apigility\Admin\Model\ContentNegotiationResourceFactory`
+  - `ZF\Apigility\Admin\Model\DbAdapterModelFactory`
+  - `ZF\Apigility\Admin\Model\DbAdapterResourceFactory`
+  - `ZF\Apigility\Admin\Model\DbAutodiscoveryModelFactory`
+  - `ZF\Apigility\Admin\Model\DoctrineAdapterModelFactory`
+  - `ZF\Apigility\Admin\Model\DoctrineAdapterResourceFactory`
+  - `ZF\Apigility\Admin\Model\DocumentationModelFactory`
+  - `ZF\Apigility\Admin\Model\FiltersModelFactory`
+  - `ZF\Apigility\Admin\Model\InputFilterModelFactory`
+  - `ZF\Apigility\Admin\Model\ModuleModelFactory`
+  - `ZF\Apigility\Admin\Model\ModulePathSpecFactory`
+  - `ZF\Apigility\Admin\Model\ModuleResourceFactory`
+  - `ZF\Apigility\Admin\Model\ModuleVersioningModelFactory`
+  - `ZF\Apigility\Admin\Model\ModuleVersioningModelFactoryFactory`
+  - `ZF\Apigility\Admin\Model\RestServiceModelFactory`
+  - `ZF\Apigility\Admin\Model\RestServiceModelFactoryFactory`
+  - `ZF\Apigility\Admin\Model\RestServiceResourceFactory`
+  - `ZF\Apigility\Admin\Model\RpcServiceModelFactoryFactory`
+  - `ZF\Apigility\Admin\Model\RpcServiceResourceFactory`
+  - `ZF\Apigility\Admin\Model\ValidatorMetadataModelFactory`
+  - `ZF\Apigility\Admin\Model\ValidatorsModelFactory`
+  - `ZF\Apigility\Admin\Model\VersioningModelFactory`
+  - `ZF\Apigility\Admin\Model\VersioningModelFactoryFactory`
+
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) extracts
+  controller factories previously defined in the `Module` class into their own
+  classes, and updates several factories that already existed. Factories that
+  existed were updated to follow both the zend-servicemanager v2 and v3
+  signatures, to allow compatibility with both versions; as such, if you were
+  extending these previously, you may potentially experience breakage due to
+  signatures. The new classes include:
+  - `ZF\Apigility\Admin\Controller\AuthenticationControllerFactory`
+  - `ZF\Apigility\Admin\Controller\AuthenticationTypeControllerFactory`
+  - `ZF\Apigility\Admin\Controller\AuthorizationControllerFactory`
+  - `ZF\Apigility\Admin\Controller\ConfigControllerFactory`
+  - `ZF\Apigility\Admin\Controller\DashboardControllerFactory`
+  - `ZF\Apigility\Admin\Controller\DbAutodiscoveryControllerFactory`
+  - `ZF\Apigility\Admin\Controller\DocumentationControllerFactory`
+  - `ZF\Apigility\Admin\Controller\FiltersControllerFactory`
+  - `ZF\Apigility\Admin\Controller\HydratorsControllerFactory`
+  - `ZF\Apigility\Admin\Controller\InputFilterControllerFactory`
+  - `ZF\Apigility\Admin\Controller\ModuleConfigControllerFactory`
+  - `ZF\Apigility\Admin\Controller\ModuleCreationControllerFactory`
+  - `ZF\Apigility\Admin\Controller\SourceControllerFactory`
+  - `ZF\Apigility\Admin\Controller\StrategyControllerFactory`
+  - `ZF\Apigility\Admin\Controller\ValidatorsControllerFactory`
+  - `ZF\Apigility\Admin\Controller\VersioningControllerFactory`
+
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) exposes the
+  module to zend-component-installer.
 
 ### Deprecated
 
@@ -20,11 +123,29 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) removes
+  support for PHP 5.5.
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) removes the
+  dependency on rwoverdijk/assetmanager, allowing usage of any tool that
+  understands the same configuration (and, specifically, the
+  `asset_manager.resolver_configs.paths` configuration directive). However, **this
+  means that for those upgrading via simple `composer update`, you will also
+  need to execute `composer require rwoverdijk/assetmanager` immediately for
+  your application to continue to work.**
 
 ### Fixed
 
-- Nothing.
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) updates
+  `ZF\Apigility\Admin\Controller\StrategyController` to accept a
+  `ContainerInterface` to its constructor, instead of relying on auto-injection
+  of a zend-servicemanager instance via an initializer; this change removes
+  deprecation notices from its usage of `getServiceLocator()` (it no longer
+  calls that method), and documents the dependency explicitly. If you were
+  extending this class previously, you may need to update your factory.
+- [#348](https://github.com/zfcampus/zf-apigility-admin/pull/348) updates
+  `ZF\Apigility\Admin\Model\DoctrineAdapterResource`'s contructor to make the
+  second argument, `$loadedModules`, optional. If you were extending the class
+  previously, you may need to update your signature.
 
 ## 1.4.3 - 2016-08-05
 

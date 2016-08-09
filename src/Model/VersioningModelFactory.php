@@ -6,13 +6,12 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
 /**
  * Class VersioningModelFactory
  *
- * @deprecated use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
+ * @deprecated since 1.5; use \ZF\Apigility\Admin\Model\ModuleVersioningModelFactory instead
  */
 class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
 {
@@ -29,7 +28,7 @@ class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
     protected $models = [];
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $moduleUtils;
 
@@ -88,7 +87,7 @@ class VersioningModelFactory implements ModuleVersioningModelFactoryInterface
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath    = dirname($moduleConfigPath) . '/documentation.config.php';
-        if (!file_exists($docConfigPath)) {
+        if (! file_exists($docConfigPath)) {
             return null;
         }
         $documentation = include $docConfigPath;

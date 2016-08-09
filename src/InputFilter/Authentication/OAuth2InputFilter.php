@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\InputFilter\Authentication;
 
-use Zend\InputFilter\InputFilter;
 use Traversable;
+use Zend\InputFilter\InputFilter;
 
 /**
  * @todo DSN validation
@@ -25,7 +25,7 @@ class OAuth2InputFilter extends InputFilter
                 [
                     'name' => 'Callback',
                     'options' => ['callback' => function ($value, $context) {
-                        if (! isset($context['dsn_type']) || empty($context['dsn_type'])) {
+                        if (empty($context['dsn_type'])) {
                             // PDO is default DSN type; mark as invalid if none provided
                             return false;
                         }

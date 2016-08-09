@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Http\Request;
+use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 use ZF\Configuration\ConfigResource;
@@ -25,7 +25,7 @@ abstract class AbstractConfigController extends AbstractActionController
         $returnTrees = 'application/json' == $accept ? false : true;
 
         $config = $this->getConfig();
-        if (!$config instanceof ConfigResource) {
+        if (! $config instanceof ConfigResource) {
             return $config;
         }
 
@@ -43,7 +43,7 @@ abstract class AbstractConfigController extends AbstractActionController
                 }
 
                 // If tree was submitted, but not Accepted, create dot-separated values
-                if ($submitTrees && !$returnTrees) {
+                if ($submitTrees && ! $returnTrees) {
                     return $config->traverseArray($params);
                 }
 
@@ -66,7 +66,7 @@ abstract class AbstractConfigController extends AbstractActionController
      * Provided for testing.
      *
      * @param  Request $request
-     * @return self
+     * @return $this
      */
     public function setRequest(Request $request)
     {
@@ -85,7 +85,7 @@ abstract class AbstractConfigController extends AbstractActionController
      */
     protected function getBodyParams($useTrees)
     {
-        if (!$useTrees) {
+        if (! $useTrees) {
             return $this->bodyParams();
         }
 
@@ -101,7 +101,7 @@ abstract class AbstractConfigController extends AbstractActionController
      */
     protected function getHeaderType($headers, $header)
     {
-        if (!$headers->has($header)) {
+        if (! $headers->has($header)) {
             return 'application/json';
         }
 

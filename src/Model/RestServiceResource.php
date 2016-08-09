@@ -9,8 +9,8 @@ namespace ZF\Apigility\Admin\Model;
 use RuntimeException;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Hal\Collection as HalCollection;
-use ZF\Hal\Link\Link;
 use ZF\Hal\Entity as HalEntity;
+use ZF\Hal\Link\Link;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
@@ -68,7 +68,7 @@ class RestServiceResource extends AbstractResourceListener
         }
 
         $moduleName = $this->getEvent()->getRouteParam('name', false);
-        if (!$moduleName) {
+        if (! $moduleName) {
             throw new RuntimeException(sprintf(
                 '%s cannot operate correctly without a "name" segment in the route matches',
                 __CLASS__
@@ -79,6 +79,8 @@ class RestServiceResource extends AbstractResourceListener
     }
 
     /**
+     * @param string $type One of the RestServiceModelFactory::TYPE_* constants;
+     *     defaults to RestServiceModelFactory::TYPE_DEFAULT.
      * @return RestServiceModel
      */
     public function getModel($type = RestServiceModelFactory::TYPE_DEFAULT)
@@ -95,7 +97,7 @@ class RestServiceResource extends AbstractResourceListener
      * Create a new REST service
      *
      * @param  array|object $data
-     * @return RestServiceEntity
+     * @return RestServiceEntity|ApiProblem
      * @throws CreationException
      */
     public function create($data)
@@ -136,7 +138,7 @@ class RestServiceResource extends AbstractResourceListener
     public function fetch($id)
     {
         $service = $this->getModel()->fetch($id);
-        if (!$service instanceof RestServiceEntity) {
+        if (! $service instanceof RestServiceEntity) {
             return new ApiProblem(404, 'REST service not found');
         }
 
@@ -178,7 +180,7 @@ class RestServiceResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 
@@ -234,7 +236,7 @@ class RestServiceResource extends AbstractResourceListener
         try {
             switch (true) {
                 case ($entity instanceof DbConnectedRestServiceEntity):
-                    $model   = $this->restFactory->factory(
+                    $model = $this->restFactory->factory(
                         $this->getModuleName(),
                         RestServiceModelFactory::TYPE_DB_CONNECTED
                     );
@@ -259,8 +261,8 @@ class RestServiceResource extends AbstractResourceListener
     protected function injectInputFilters(RestServiceEntity $service)
     {
         $inputFilters = $this->inputFilterModel->fetch($this->moduleName, $service->controllerServiceName);
-        if (!$inputFilters instanceof InputFilterCollection
-            || !count($inputFilters)
+        if (! $inputFilters instanceof InputFilterCollection
+            || ! count($inputFilters)
         ) {
             return;
         }
@@ -269,8 +271,8 @@ class RestServiceResource extends AbstractResourceListener
         $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
             $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
-            $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
-            $links    = $entity->getLinks();
+            $entity = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
+            $links  = $entity->getLinks();
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [
@@ -307,7 +309,7 @@ class RestServiceResource extends AbstractResourceListener
             $this->moduleName,
             $service->controllerServiceName
         );
-        if (!$documentation) {
+        if (! $documentation) {
             return;
         }
         $entity = new HalEntity($documentation, 'documentation');

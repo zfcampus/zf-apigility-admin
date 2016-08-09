@@ -22,10 +22,14 @@ class ModuleResource extends AbstractResourceListener
      */
     protected $modulePath = '.';
 
+    /**
+     * @var ModulePathSpec
+     */
     protected $modulePathSpec;
 
     /**
      * @param ModuleModel $modules
+     * @param ModulePathSpec $pathSpec
      */
     public function __construct(ModuleModel $modules, ModulePathSpec $pathSpec)
     {
@@ -37,8 +41,7 @@ class ModuleResource extends AbstractResourceListener
      * Set path to use when creating new modules
      *
      * @param  string $path
-     * @return self
-     * @throws InvalidArgumentException for invalid paths
+     * @return $this
      */
     public function setModulePath($path)
     {
@@ -64,14 +67,13 @@ class ModuleResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!isset($data['name'])) {
+        if (! isset($data['name'])) {
             throw new CreationException('Missing module name');
         }
 
         $version = isset($data['version']) ? $data['version'] : 1;
-        $name    = $data['name'];
-        $name    = str_replace(['.', '/'], '\\', $name);
-        if (!preg_match('#^[a-zA-Z][a-zA-Z0-9_]*(\\\\[a-zA-Z][a-zA-Z0-9_]*)*$#', $name)) {
+        $name    = str_replace(['.', '/'], '\\', $data['name']);
+        if (! preg_match('#^[a-zA-Z][a-zA-Z0-9_]*(\\\\[a-zA-Z][a-zA-Z0-9_]*)*$#', $name)) {
             throw new CreationException('Invalid module name; must be a valid PHP namespace name');
         }
 
@@ -95,7 +97,7 @@ class ModuleResource extends AbstractResourceListener
     public function fetch($id)
     {
         $module = $this->modules->getModule($id);
-        if (!$module instanceof ModuleEntity) {
+        if (! $module instanceof ModuleEntity) {
             return new ApiProblem(404, 'Module not found or is not apigility-enabled');
         }
         return $module;
@@ -116,7 +118,7 @@ class ModuleResource extends AbstractResourceListener
      * Delete a module (and, optionally, all code within it)
      *
      * @param  string $id
-     * @return bool
+     * @return bool|ApiProblem
      */
     public function delete($id)
     {
@@ -124,7 +126,7 @@ class ModuleResource extends AbstractResourceListener
         $recursive = $request->getQuery('recursive', false);
 
         $module = $this->modules->getModule($id);
-        if (!$module instanceof ModuleEntity) {
+        if (! $module instanceof ModuleEntity) {
             return new ApiProblem(404, 'Module not found or is not apigility-enabled');
         }
 

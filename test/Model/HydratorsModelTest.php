@@ -6,6 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use Interop\Container\ContainerInterface;
 use Zend\Hydrator\HydratorPluginManager;
 use ZF\Apigility\Admin\Model\HydratorsModel;
 
@@ -14,7 +15,7 @@ class HydratorsModelTest extends AbstractPluginManagerModelTest
     public function setUp()
     {
         $this->namespace = '\\Hydrator\\';
-        $this->plugins = new HydratorPluginManager();
+        $this->plugins = new HydratorPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->model = new HydratorsModel($this->plugins);
     }
 

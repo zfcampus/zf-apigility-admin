@@ -6,16 +6,15 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
-use Zend\Stdlib\Parameters;
+use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\PackageController;
 use ZF\ContentNegotiation\ControllerPlugin\BodyParam;
 use ZF\ContentNegotiation\ControllerPlugin\BodyParams;
-use Zend\Mvc\MvcEvent;
 use ZF\ContentNegotiation\ParameterDataContainer;
-use Zend\Mvc\Router\RouteMatch;
 
 class PackageControllerTest extends TestCase
 {
@@ -23,7 +22,7 @@ class PackageControllerTest extends TestCase
     {
         // Seed with symlink path for zfdeploy.php
         $this->controller = new PackageController('vendor/bin/zfdeploy.php');
-        $this->plugins = new ControllerPluginManager();
+        $this->plugins = new ControllerPluginManager($this->prophesize(ContainerInterface::class)->reveal());
         $this->plugins->setService('bodyParam', new BodyParam());
         $this->plugins->setService('bodyParams', new BodyParams());
         $this->controller->setPluginManager($this->plugins);

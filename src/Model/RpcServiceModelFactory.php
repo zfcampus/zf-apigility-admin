@@ -8,7 +8,6 @@ namespace ZF\Apigility\Admin\Model;
 
 use Zend\EventManager\SharedEventManagerInterface;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
-use ZF\Configuration\ModuleUtils;
 
 class RpcServiceModelFactory
 {
@@ -30,7 +29,7 @@ class RpcServiceModelFactory
     protected $moduleModel;
 
     /**
-     * @var ModuleUtils
+     * @var ModulePathSpec
      */
     protected $modules;
 
@@ -40,8 +39,8 @@ class RpcServiceModelFactory
     protected $sharedEventManager;
 
     /**
-     * @param  ModuleUtils $modules
-     * @param  ConfigResource $config
+     * @param  ModulePathSpec $modules
+     * @param  ConfigResourceFactory $configFactory
      * @param  SharedEventManagerInterface $sharedEvents
      * @param  ModuleModel $moduleModel
      */

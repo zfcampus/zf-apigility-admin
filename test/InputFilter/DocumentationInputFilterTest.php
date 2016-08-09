@@ -122,7 +122,7 @@ class DocumentationInputFilterTest extends TestCase
                 [
                     'Foobar' => [
                         'An invalid key was encountered in the top position for "Foobar";'
-                        . ' must be one of an HTTP method, collection, entity, or description'
+                        . ' must be one of an HTTP method, collection, entity, or description',
                     ],
                 ],
             ],
@@ -131,7 +131,7 @@ class DocumentationInputFilterTest extends TestCase
                 [
                     'GET' => [
                         'HTTP methods cannot be present when "collection" or "entity" is also present;'
-                        . ' please verify data for "GET"'
+                        . ' please verify data for "GET"',
                     ],
                 ],
             ],
@@ -140,7 +140,7 @@ class DocumentationInputFilterTest extends TestCase
                 [
                     'Foo' => [
                         'Documentable elements must be any or all of description, request or response;'
-                        . ' please verify "Foo"'
+                        . ' please verify "Foo"',
                     ],
                 ],
             ],
@@ -154,8 +154,8 @@ class DocumentationInputFilterTest extends TestCase
                 [
                     'description' => 'foobar',
                     'entity' => [
-                        'GET' => ['description' => 'foobar', 'response' => 500]
-                    ]
+                        'GET' => ['description' => 'foobar', 'response' => 500],
+                    ],
                 ],
                 [
                     'response' => ['Documentable elements must be strings; please verify "response"'],
@@ -165,7 +165,7 @@ class DocumentationInputFilterTest extends TestCase
                 ['description' => 5],
                 [
                     'description' => [
-                        'Description must be provided as a string; please verify description for "description"'
+                        'Description must be provided as a string; please verify description for "description"',
                     ],
                 ],
             ],
@@ -173,7 +173,7 @@ class DocumentationInputFilterTest extends TestCase
                 ['collection' => ['description' => 5]],
                 [
                     'collection' => [
-                        'Description must be provided as a string; please verify description for "description"'
+                        'Description must be provided as a string; please verify description for "description"',
                     ],
                 ],
             ],
@@ -182,7 +182,7 @@ class DocumentationInputFilterTest extends TestCase
                 [
                     'collection' => [
                         'Collections and entities methods must be an array of HTTP methods;'
-                        . ' received invalid entry for "collection"'
+                        . ' received invalid entry for "collection"',
                     ],
                 ],
             ],
@@ -190,7 +190,7 @@ class DocumentationInputFilterTest extends TestCase
                 ['collection' => ['Foo' => 'bar']],
                 [
                     'collection' => [
-                        'Key must be description or an HTTP indexed list; please verify documentation for "Foo"'
+                        'Key must be description or an HTTP indexed list; please verify documentation for "Foo"',
                     ],
                 ],
             ],

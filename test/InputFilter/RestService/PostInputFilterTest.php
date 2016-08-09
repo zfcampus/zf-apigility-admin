@@ -8,7 +8,6 @@ namespace ZFTest\Apigility\Admin\InputFilter\RestService;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\InputFilter\Factory;
-use ZF\Apigility\Admin\InputFilter\RestService\PostInputFilter;
 
 class PostInputFilterTest extends TestCase
 {
@@ -55,7 +54,7 @@ class PostInputFilterTest extends TestCase
             'conflict' => [
                 ['service_name' => 'Foo', 'adapter_name' => 'bar'],
                 ['service_name'],
-            ]
+            ],
         ];
     }
 

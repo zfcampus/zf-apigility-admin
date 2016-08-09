@@ -57,7 +57,7 @@ class ContentNegotiationModel
      */
     public function remove($name)
     {
-        $key =  'zf-content-negotiation.selectors.' . $name;
+        $key = 'zf-content-negotiation.selectors.' . $name;
         $this->globalConfig->deleteKey($key);
         return true;
     }
@@ -89,13 +89,13 @@ class ContentNegotiationModel
      * Fetch configuration details for a named adapter
      *
      * @param  string $name
-     * @return ContentNegotiationEntity
+     * @return ContentNegotiationEntity|false
      */
     public function fetch($name)
     {
         $config = $this->globalConfig->fetch(true);
-        if (!isset($config['zf-content-negotiation']['selectors'][$name])
-            || !is_array($config['zf-content-negotiation']['selectors'][$name])
+        if (! isset($config['zf-content-negotiation']['selectors'][$name])
+            || ! is_array($config['zf-content-negotiation']['selectors'][$name])
         ) {
             return false;
         }

@@ -80,8 +80,7 @@ class DoctrineAdapterModel
     public function fetchAll()
     {
         $fromConfigFile = $this->localConfig->fetch(true);
-        if (isset($fromConfigFile['doctrine'])
-            && isset($fromConfigFile['doctrine']['connection'])
+        if (isset($fromConfigFile['doctrine']['connection'])
             && is_array($fromConfigFile['doctrine']['connection'])
         ) {
             foreach ($fromConfigFile['doctrine']['connection'] as $connection) {
@@ -115,11 +114,8 @@ class DoctrineAdapterModel
     public function fetch($name)
     {
         $config = $this->localConfig->fetch(true);
-        if (!isset($config['doctrine'])
-            || !isset($config['doctrine']['connection'])
-            || !is_array($config['doctrine']['connection'])
-            || !isset($config['doctrine']['connection'][$name])
-            || !is_array($config['doctrine']['connection'][$name])
+        if (! isset($config['doctrine']['connection'][$name])
+            || ! is_array($config['doctrine']['connection'][$name])
         ) {
             return false;
         }

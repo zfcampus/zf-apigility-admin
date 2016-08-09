@@ -8,7 +8,6 @@ namespace ZFTest\Apigility\Admin\InputFilter\Authentication;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\InputFilter\Factory;
-use ZF\Apigility\Admin\InputFilter\Authentication\OAuth2InputFilter;
 
 class OAuth2InputFilterTest extends TestCase
 {

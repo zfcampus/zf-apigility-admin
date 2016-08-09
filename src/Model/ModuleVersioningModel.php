@@ -99,11 +99,12 @@ final class ModuleVersioningModel
         );
     }
 
-        /**
+    /**
      * Create a new version for a module
      *
-     * @param  integer $version
-     * @return bool
+     * @param  int $version
+     * @return true
+     * @throws Exception\InvalidArgumentException|Exception\RuntimeException
      */
     public function createVersion($version)
     {
@@ -117,7 +118,7 @@ final class ModuleVersioningModel
         }
 
         $previous = (int) $version - 1;
-        if (!in_array($previous, $versions)) {
+        if (! in_array($previous, $versions)) {
             throw new Exception\RuntimeException(sprintf(
                 'The previous API version %d doesn\'t exist, I cannot create version %d',
                 $previous,
@@ -159,8 +160,8 @@ final class ModuleVersioningModel
      * Updates the default version of a module that will be used if no version is
      * specified by the API consumer.
      *
-     * @param  integer $defaultVersion
-     * @return boolean
+     * @param  int $defaultVersion
+     * @return bool
      */
     public function setDefaultVersion($defaultVersion)
     {
@@ -168,14 +169,14 @@ final class ModuleVersioningModel
 
         $this->configResource->patch([
             'zf-versioning' => [
-                'default_version' => $defaultVersion
-            ]
+                'default_version' => $defaultVersion,
+            ],
         ], true);
 
         $config = $this->configResource->fetch(true);
 
         return isset($config['zf-versioning']['default_version'])
-        && ($config['zf-versioning']['default_version'] === $defaultVersion);
+            && $config['zf-versioning']['default_version'] === $defaultVersion;
     }
 
     /**
@@ -221,10 +222,10 @@ final class ModuleVersioningModel
     /**
      * Update a PHP configuration file from $previous to $version version
      *
-     * @param  string  $file
-     * @param  integer $previous Previous version
-     * @param  integer $version New version
-     * @return boolean
+     * @param  string $file
+     * @param  int $previous Previous version
+     * @param  int $version New version
+     * @return bool
      */
     protected function updateConfigVersion($file, $previous, $version)
     {
@@ -242,7 +243,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-hal']['metadata_map'])) {
             $newValues = $this->changeVersionArray($config['zf-hal']['metadata_map'], $previous, $version);
             $this->configResource->patch([
-                'zf-hal' => ['metadata_map' => $newValues]
+                'zf-hal' => ['metadata_map' => $newValues],
             ], true);
         }
 
@@ -250,7 +251,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-rpc'])) {
             $newValues = $this->changeVersionArray($config['zf-rpc'], $previous, $version);
             $this->configResource->patch([
-                'zf-rpc' => $newValues
+                'zf-rpc' => $newValues,
             ], true);
         }
 
@@ -258,7 +259,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-rest'])) {
             $newValues = $this->changeVersionArray($config['zf-rest'], $previous, $version);
             $this->configResource->patch([
-                'zf-rest' => $newValues
+                'zf-rest' => $newValues,
             ], true);
         }
 
@@ -288,7 +289,7 @@ final class ModuleVersioningModel
                     }
 
                     $this->configResource->patch([
-                        'zf-content-negotiation' => [$key => $newValues]
+                        'zf-content-negotiation' => [$key => $newValues],
                     ], true);
                 }
             }
@@ -298,7 +299,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-mvc-auth']['authorization'])) {
             $newValues = $this->changeVersionArray($config['zf-mvc-auth']['authorization'], $previous, $version);
             $this->configResource->patch([
-                'zf-mvc-auth' => ['authorization' => $newValues]
+                'zf-mvc-auth' => ['authorization' => $newValues],
             ], true);
         }
 
@@ -306,14 +307,14 @@ final class ModuleVersioningModel
         if (isset($config['zf-content-validation'])) {
             $newValues = $this->changeVersionArray($config['zf-content-validation'], $previous, $version);
             $this->configResource->patch([
-                'zf-content-validation' => $newValues
+                'zf-content-validation' => $newValues,
             ], true);
         }
 
         if (isset($config['input_filter_specs'])) {
             $newValues = $this->changeVersionArray($config['input_filter_specs'], $previous, $version);
             $this->configResource->patch([
-                'input_filter_specs' => $newValues
+                'input_filter_specs' => $newValues,
             ], true);
         }
 
@@ -321,7 +322,7 @@ final class ModuleVersioningModel
         if (isset($config['zf-apigility']['db-connected'])) {
             $newValues = $this->changeVersionArray($config['zf-apigility']['db-connected'], $previous, $version);
             $this->configResource->patch([
-                'zf-apigility' => ['db-connected' => $newValues]
+                'zf-apigility' => ['db-connected' => $newValues],
             ], true);
         }
 
@@ -329,7 +330,7 @@ final class ModuleVersioningModel
         if (isset($config['service_manager'])) {
             $newValues = $this->changeVersionArray($config['service_manager'], $previous, $version);
             $this->configResource->patch([
-                'service_manager' => $newValues
+                'service_manager' => $newValues,
             ], true);
         }
 
@@ -337,7 +338,7 @@ final class ModuleVersioningModel
         if (isset($config['controllers'])) {
             $newValues = $this->changeVersionArray($config['controllers'], $previous, $version);
             $this->configResource->patch([
-                'controllers' => $newValues
+                'controllers' => $newValues,
             ], true);
         }
 
@@ -348,8 +349,8 @@ final class ModuleVersioningModel
      * Change version in a namespace
      *
      * @param  string $string
-     * @param  integer $previous
-     * @param  integer $version
+     * @param  int $previous
+     * @param  int $version
      * @return string
      */
     protected function changeVersionNamespace($string, $previous, $version)
@@ -361,8 +362,8 @@ final class ModuleVersioningModel
      * Change version in an array
      *
      * @param  array $data
-     * @param  integer $previous
-     * @param  integer $version
+     * @param  int $previous
+     * @param  int $version
      * @return array
      */
     protected function changeVersionArray($data, $previous, $version)
@@ -391,7 +392,7 @@ final class ModuleVersioningModel
         }
 
         $this->moduleNameFilter = new FilterChain();
-        $this->moduleNameFilter->attachByName('Word\CamelCaseToDash')
+        $this->moduleNameFilter->attachByName('WordCamelCaseToDash')
             ->attachByName('StringToLower');
         return $this->moduleNameFilter;
     }
@@ -399,13 +400,13 @@ final class ModuleVersioningModel
     /**
      * Update the documentation to add a new $version based on the $previous
      *
-     * @param  integer $previous Previous version
-     * @param  integer $version New version
+     * @param  int $previous Previous version
+     * @param  int $version New version
      * @return true
      */
     protected function updateDocumentationVersion($previous, $version)
     {
-        if (!$this->docsConfigResource) {
+        if (! $this->docsConfigResource) {
             // Nothing to do
             return true;
         }
@@ -417,14 +418,13 @@ final class ModuleVersioningModel
     }
 
     /**
-     * setPathSpecType
-     * @param $pathSpecType
+     * @param string $pathSpecType
      * @return void
      */
     private function setPathSpecType($pathSpecType)
     {
         $pathSpecType = (string) $pathSpecType;
-        if (!in_array($pathSpecType, [ModulePathSpec::PSR_0, ModulePathSpec::PSR_4])) {
+        if (! in_array($pathSpecType, [ModulePathSpec::PSR_0, ModulePathSpec::PSR_4])) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid $setPathSpecType parameter supplied. Please use the ModulePathSpec::PSR_0 or ' .
                 'ModulePathSpec::PSR_4 constants.',
@@ -448,7 +448,7 @@ final class ModuleVersioningModel
             $srcPath .= DIRECTORY_SEPARATOR . $this->moduleName;
         }
 
-        if (!file_exists($srcPath) || !is_dir($srcPath) || !is_writable($srcPath)) {
+        if (! file_exists($srcPath) || ! is_dir($srcPath) || ! is_writable($srcPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Could not find source directory at path "%s". Make sure the directory exists and is writable.',
                 $srcPath
@@ -459,14 +459,13 @@ final class ModuleVersioningModel
     }
 
     /**
-     * setConfigDirPath
-     * @param $configDirPath
+     * @param string $configDirPath
      * @return void
      */
     private function setConfigDirPath($configDirPath)
     {
         $configDirPath = (string)$configDirPath;
-        if (!is_readable($configDirPath) || !is_dir($configDirPath)) {
+        if (! is_readable($configDirPath) || ! is_dir($configDirPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Could not find config directory at path "%s". Make sure the directory exists.',
                 $configDirPath

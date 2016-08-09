@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
 use Zend\Filter\StaticFilter;
 use ZF\Apigility\Admin\Utility;
-use ReflectionClass;
 
 class DbConnectedRestServiceModel
 {
@@ -29,27 +29,24 @@ class DbConnectedRestServiceModel
      * Determine if the given entity is DB-connected, and, if so, recast to a DbConnectedRestServiceEntity
      *
      * @param  \Zend\EventManager\Event $e
-     * @return null|DbConnectedRestServiceEntity
+     * @return void|DbConnectedRestServiceEntity
      */
     public static function onFetch($e)
     {
         $entity = $e->getParam('entity', false);
-        if (!$entity) {
+        if (! $entity) {
             // No entity; nothing to do
             return;
         }
 
         $config = $e->getParam('config', []);
-        if (!isset($config['zf-apigility'])
-            || !isset($config['zf-apigility']['db-connected'])
-            || !isset($config['zf-apigility']['db-connected'][$entity->resourceClass])
-        ) {
+        if (! isset($config['zf-apigility']['db-connected'][$entity->resourceClass])) {
             // No DB-connected configuration for this service; nothing to do
             return;
         }
         $config = $config['zf-apigility']['db-connected'][$entity->resourceClass];
 
-        if (!isset($config['table_service'])) {
+        if (! isset($config['table_service'])) {
             $config['table_service'] = sprintf('%s\\Table', $entity->resourceClass);
         }
 
@@ -215,8 +212,7 @@ class DbConnectedRestServiceModel
     /**
      * Update the HAL configuration for the service
      *
-     * @param  RestServiceEntity $original
-     * @param  RestServiceEntity $update
+     * @param DbConnectedRestServiceEntity $entity
      */
     public function updateHalConfig(DbConnectedRestServiceEntity $entity)
     {

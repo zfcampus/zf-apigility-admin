@@ -7,7 +7,6 @@
 namespace ZF\Apigility\Admin\InputFilter;
 
 use Zend\InputFilter\Input;
-use Zend\Validator\Regex;
 
 class CreateContentNegotiationInputFilter extends ContentNegotiationInputFilter
 {

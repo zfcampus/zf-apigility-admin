@@ -1,10 +1,20 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZF\Apigility\Admin\Model;
 
-use Zend\Filter\StaticFilter;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Exception;
+use Zend\Filter\Digits;
+use Zend\Filter\StaticFilter;
+use Zend\Filter\StringTrim;
+use Zend\Filter\StripTags;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Validator\StringLength;
+use ZF\ContentValidation\Validator\DbNoRecordExists;
+use ZF\ContentValidation\Validator\DbRecordExists;
 
 /**
  * This class is instantiated with a $config in some implementations (DbAutodiscoveryModel)
@@ -28,18 +38,18 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $validators = [
         'text' => [
-            'name' => 'Zend\Validator\StringLength',
+            'name' => StringLength::class,
             'options' => [
                 'min' => 1,
                 'max' => 1,
             ],
         ],
         'unique' => [
-            'name' => 'ZF\ContentValidation\Validator\DbNoRecordExists',
+            'name' => DbNoRecordExists::class,
             'options' => [],
         ],
         'foreign_key' => [
-            'name' => 'ZF\ContentValidation\Validator\DbRecordExists',
+            'name' => DbRecordExists::class,
             'options' => [],
         ],
     ];
@@ -49,12 +59,12 @@ abstract class AbstractAutodiscoveryModel
      */
     protected $filters = [
         'text' => [
-            ['name' => 'Zend\Filter\StringTrim'],
-            ['name' => 'Zend\Filter\StripTags'],
+            ['name' => StringTrim::class],
+            ['name' => StripTags::class],
         ],
         'integer' => [
-            ['name' => 'Zend\Filter\StripTags'],
-            ['name' => 'Zend\Filter\Digits'],
+            ['name' => StripTags::class],
+            ['name' => Digits::class],
         ],
     ];
 
@@ -62,6 +72,7 @@ abstract class AbstractAutodiscoveryModel
      * Get service locator
      *
      * @return ServiceLocatorInterface
+     * @throws Exception if no service locator is composed
      */
     public function getServiceLocator()
     {
@@ -104,7 +115,7 @@ abstract class AbstractAutodiscoveryModel
     protected function moduleHasService($module, $version, $tableName)
     {
         $resourceName = StaticFilter::execute($tableName, 'WordUnderscoreToCamelCase');
-        $resourceClass     = sprintf(
+        $resourceClass = sprintf(
             '%s\\V%s\\Rest\\%s\\%sResource',
             $module,
             $version,

@@ -41,7 +41,7 @@ class RpcServiceEntity
 
     public function __get($name)
     {
-        if (!isset($this->{$name})) {
+        if (! isset($this->{$name})) {
             throw new \OutOfRangeException(sprintf(
                 '%s does not contain a property by the name of "%s"',
                 __CLASS__,
@@ -65,7 +65,7 @@ class RpcServiceEntity
 
             switch ($key) {
                 case 'acceptwhitelist':
-                    if (!is_array($value)) {
+                    if (! is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
                             __CLASS__,
@@ -75,7 +75,7 @@ class RpcServiceEntity
                     $this->acceptWhitelist = $value;
                     break;
                 case 'contenttypewhitelist':
-                    if (!is_array($value)) {
+                    if (! is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
                             __CLASS__,
@@ -91,7 +91,7 @@ class RpcServiceEntity
                     $this->controllerServiceName = $value;
                     break;
                 case 'httpmethods':
-                    if (!is_array($value)) {
+                    if (! is_array($value)) {
                         throw new InvalidArgumentException(sprintf(
                             '%s expects an array value for "%s"; received "%s"',
                             __CLASS__,
@@ -127,9 +127,8 @@ class RpcServiceEntity
             }
         }
 
-        if (null === $this->controllerServiceName
-            || !is_string($this->controllerServiceName)
-            || empty($this->controllerServiceName)
+        if (empty($this->controllerServiceName)
+            || ! is_string($this->controllerServiceName)
         ) {
             throw new RuntimeException(sprintf(
                 '%s requires a controller service name; none present following population',

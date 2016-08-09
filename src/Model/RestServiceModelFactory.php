@@ -6,23 +6,24 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ReflectionClass;
+use Zend\EventManager\EventManager;
 use ZF\Apigility\Admin\Exception;
 
 class RestServiceModelFactory extends RpcServiceModelFactory
 {
-    const TYPE_DEFAULT      = 'ZF\Apigility\Admin\Model\RestServiceModel';
-    const TYPE_DB_CONNECTED = 'ZF\Apigility\Admin\Model\DbConnectedRestServiceModel';
+    const TYPE_DEFAULT      = RestServiceModel::class;
+    const TYPE_DB_CONNECTED = DbConnectedRestServiceModel::class;
 
     /**
      * @param string $module
      * @param string $type
      * @return RestServiceModel
+     * @throws Exception\InvalidArgumentException
      */
     public function factory($module, $type = self::TYPE_DEFAULT)
     {
-        if (isset($this->models[$type])
-            && isset($this->models[$type][$module])
-        ) {
+        if (isset($this->models[$type][$module])) {
             return $this->models[$type][$module];
         }
 
@@ -31,7 +32,7 @@ class RestServiceModelFactory extends RpcServiceModelFactory
         $moduleEntity = $this->moduleModel->getModule($moduleName);
 
         $restModel = new RestServiceModel($moduleEntity, $this->modules, $config);
-        $restModel->getEventManager()->setSharedManager($this->sharedEventManager);
+        $restModel->setEventManager($this->createEventManager());
 
         switch ($type) {
             case self::TYPE_DEFAULT:
@@ -47,5 +48,25 @@ class RestServiceModelFactory extends RpcServiceModelFactory
                     $type
                 ));
         }
+    }
+
+    /**
+     * Create and return an EventManager composing the shared event manager instance.
+     *
+     * @return EventManager
+     */
+    private function createEventManager()
+    {
+        $r = new ReflectionClass(EventManager::class);
+
+        if ($r->hasMethod('setSharedManager')) {
+            // zend-eventmanager v2 initialization
+            $eventManager = new EventManager();
+            $eventManager->setSharedManager($this->sharedEventManager);
+            return $eventManager;
+        }
+
+        // zend-eventmanager v3 initialization
+        return new EventManager($this->sharedEventManager);
     }
 }

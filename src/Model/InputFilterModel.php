@@ -6,8 +6,8 @@
 
 namespace ZF\Apigility\Admin\Model;
 
-use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
+use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 
 class InputFilterModel
 {
@@ -20,7 +20,7 @@ class InputFilterModel
      * $validatorPlugins should typically be an instance of
      * Zend\Validator\ValidatorPluginManager.
      *
-     * @param ServiceManager $validatorPlugins
+     * @param ConfigResourceFactory $configFactory
      */
     public function __construct(ConfigResourceFactory $configFactory)
     {
@@ -45,7 +45,7 @@ class InputFilterModel
      *
      * @param  string $module
      * @param  string $controller
-     * @param  array $inputFilterName
+     * @param  array $inputFilter
      * @return false|InputFilterEntity
      */
     public function update($module, $controller, $inputFilter)
@@ -57,9 +57,9 @@ class InputFilterModel
      * Remove the named input
      *
      * @param  string $module
-     * @param  string $controlller
+     * @param  string $controller
      * @param  string $inputname
-     * @return boolean
+     * @return bool
      */
     public function remove($module, $controller, $inputname)
     {
@@ -81,7 +81,7 @@ class InputFilterModel
         $collectionType = $this->getCollectionType($controller);
         $entityType     = $this->getEntityType($controller);
 
-        if (!isset($config['zf-content-validation'][$controller]['input_filter'])) {
+        if (! isset($config['zf-content-validation'][$controller]['input_filter'])) {
             return new $collectionType();
         }
 
@@ -119,18 +119,18 @@ class InputFilterModel
      * @param  string $controller
      * @param  array  $inputFilter
      * @param  string $validatorName
-     * @return array|boolean
+     * @return array|bool
      */
     protected function addInputFilter($module, $controller, $inputFilter, $validatorName = null)
     {
-        if (!$this->controllerExists($module, $controller)) {
+        if (! $this->controllerExists($module, $controller)) {
             return false;
         }
 
         $configModule = $this->configFactory->factory($module);
         $config       = $configModule->fetch(true);
 
-        if (!isset($config['zf-content-validation'][$controller])) {
+        if (! isset($config['zf-content-validation'][$controller])) {
             $validatorName = $validatorName ?: $this->generateValidatorName($controller);
             $config = $configModule->patchKey(
                 ['zf-content-validation', $controller, 'input_filter'],
@@ -140,18 +140,18 @@ class InputFilterModel
 
         $validator = $config['zf-content-validation'][$controller]['input_filter'];
 
-        if (!isset($config['input_filter_specs'])) {
+        if (! isset($config['input_filter_specs'])) {
             $config['input_filter_specs'] = [];
         }
 
-        if (!isset($config['input_filter_specs'][$validator])) {
+        if (! isset($config['input_filter_specs'][$validator])) {
             $config['input_filter_specs'][$validator] = [];
         }
 
         $config['input_filter_specs'][$validator] = $inputFilter;
 
         $updated = $configModule->patchKey(['input_filter_specs', $validator], $inputFilter);
-        if (!is_array($updated)) {
+        if (! is_array($updated)) {
             return false;
         }
 
@@ -167,11 +167,11 @@ class InputFilterModel
      * @param  string $module
      * @param  string $controller
      * @param  string $inputFilterName
-     * @return boolean
+     * @return bool
      */
     protected function removeInputFilter($module, $controller, $inputFilterName)
     {
-        if (!$this->controllerExists($module, $controller)) {
+        if (! $this->controllerExists($module, $controller)) {
             return false;
         }
 
@@ -179,7 +179,7 @@ class InputFilterModel
         $config       = $configModule->fetch(true);
         $validator    = $config['zf-content-validation'][$controller]['input_filter'];
 
-        if (!isset($config['input_filter_specs'][$validator])) {
+        if (! isset($config['input_filter_specs'][$validator])) {
             return false;
         }
 
@@ -223,12 +223,12 @@ class InputFilterModel
      * Check if the module exists
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function moduleExists($module)
     {
         try {
-            $configModule = $this->configFactory->factory($module);
+            $this->configFactory->factory($module);
         } catch (InvalidArgumentConfiguration $e) {
             return false;
         }
@@ -240,7 +240,7 @@ class InputFilterModel
      *
      * @param  string $module
      * @param  string $controller
-     * @return boolean
+     * @return bool
      */
     public function controllerExists($module, $controller)
     {
@@ -276,14 +276,14 @@ class InputFilterModel
     protected function getCollectionType($controller)
     {
         if (strstr($controller, '\\Rest\\')) {
-            return sprintf('%s\\RestInputFilterCollection', __NAMESPACE__);
+            return RestInputFilterCollection::class;
         }
 
         if (strstr($controller, '\\Rpc\\')) {
-            return sprintf('%s\\RpcInputFilterCollection', __NAMESPACE__);
+            return RpcInputFilterCollection::class;
         }
 
-        return sprintf('%s\\InputFilterCollection', __NAMESPACE__);
+        return InputFilterCollection::class;
     }
 
     /**
@@ -295,13 +295,13 @@ class InputFilterModel
     protected function getEntityType($controller)
     {
         if (strstr($controller, '\\Rest\\')) {
-            return sprintf('%s\\RestInputFilterEntity', __NAMESPACE__);
+            return RestInputFilterEntity::class;
         }
 
         if (strstr($controller, '\\Rpc\\')) {
-            return sprintf('%s\\RpcInputFilterEntity', __NAMESPACE__);
+            return RpcInputFilterEntity::class;
         }
 
-        return sprintf('%s\\InputFilterEntity', __NAMESPACE__);
+        return InputFilterEntity::class;
     }
 }

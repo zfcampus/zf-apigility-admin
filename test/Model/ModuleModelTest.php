@@ -336,7 +336,7 @@ class ModuleModelTest extends TestCase
         $this->assertTrue($this->model->deleteModule($module, $modulePath, true));
         $this->assertFalse(
             file_exists(sprintf('%s/module/%s', $modulePath, $module)),
-            shell_exec('tree ' . $modulePath)
+            'Module class found in tree when it not have been'
         );
     }
 
@@ -393,7 +393,7 @@ class ModuleModelTest extends TestCase
      * Remove a directory even if not empty (recursive delete)
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     protected function removeDir($dir)
     {

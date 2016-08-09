@@ -6,9 +6,9 @@
 
 namespace ZF\Apigility\Admin\Model;
 
+use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
 use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
-use ZF\Configuration\Exception\InvalidArgumentException as InvalidArgumentConfiguration;
 
 class DocumentationModel
 {
@@ -20,6 +20,9 @@ class DocumentationModel
      */
     protected $configFactory;
 
+    /**
+     * @var ModuleUtils
+     */
     protected $moduleUtils;
 
     public function __construct(ConfigResourceFactory $configFactory, ModuleUtils $moduleUtils)
@@ -49,7 +52,7 @@ class DocumentationModel
                         'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
                         'DELETE' => ['description' => null, 'request' => null, 'response' => null],
                     ],
-                    'description' => null
+                    'description' => null,
                 ];
             case self::TYPE_RPC:
                 return [
@@ -100,12 +103,12 @@ class DocumentationModel
      * Check if the module exists
      *
      * @param  string $module
-     * @return boolean
+     * @return bool
      */
     public function moduleExists($module)
     {
         try {
-            $configModule = $this->configFactory->factory($module);
+            $this->configFactory->factory($module);
         } catch (InvalidArgumentConfiguration $e) {
             return false;
         }
@@ -118,7 +121,7 @@ class DocumentationModel
      *
      * @param  string $module
      * @param  string $controller
-     * @return boolean
+     * @return bool
      */
     public function controllerExists($module, $controller)
     {
@@ -153,7 +156,7 @@ class DocumentationModel
     {
         $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
         $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
-        $docArray = (file_exists($docConfigPath)) ? include $docConfigPath : [];
+        $docArray = file_exists($docConfigPath) ? include $docConfigPath : [];
         return $this->configFactory->createConfigResource($docArray, $docConfigPath);
     }
 }

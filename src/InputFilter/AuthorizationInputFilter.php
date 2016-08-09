@@ -29,7 +29,7 @@ class AuthorizationInputFilter extends InputFilter
                 $isValid = false;
             }
 
-            if (!is_array($httpMethods)) {
+            if (! is_array($httpMethods)) {
                 $this->messages[$className][] = 'Values for each controller must be an http method'
                     . ' keyed array of true/false values';
                 $isValid = false;
@@ -37,7 +37,7 @@ class AuthorizationInputFilter extends InputFilter
             }
 
             foreach ($httpMethods as $httpMethod => $isRequired) {
-                if (!in_array($httpMethod, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])) {
+                if (! in_array($httpMethod, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])) {
                     $this->messages[$className][] = 'Invalid HTTP method (' . $httpMethod . ') provided.';
                     $isValid = false;
                 }

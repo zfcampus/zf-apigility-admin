@@ -25,7 +25,7 @@ class DbAdapterResource extends AbstractResourceListener
     public function fetch($id)
     {
         $entity = $this->model->fetch($id);
-        if (!$entity) {
+        if (! $entity) {
             return new ApiProblem(404, 'Adapter not found');
         }
         return $entity;
@@ -42,7 +42,7 @@ class DbAdapterResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!isset($data['adapter_name'])) {
+        if (! isset($data['adapter_name'])) {
             throw new CreationException('Missing adapter_name', 422);
         }
 
@@ -58,7 +58,7 @@ class DbAdapterResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 

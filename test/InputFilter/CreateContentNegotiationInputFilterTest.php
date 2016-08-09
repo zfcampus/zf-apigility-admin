@@ -72,7 +72,7 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                     'content_name' => 1,
                     'selectors' => [
                         'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
-                    ]
+                    ],
                 ],
                 ['content_name' => [
                     'invalidType' => 'Value must be a string; received integer',
@@ -83,7 +83,7 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                     'content_name' => 1.1,
                     'selectors' => [
                         'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
-                    ]
+                    ],
                 ],
                 ['content_name' => [
                     'invalidType' => 'Value must be a string; received double',
@@ -94,7 +94,7 @@ class CreateContentNegotiationInputFilterTest extends TestCase
                     'content_name' => ['content_name'],
                     'selectors' => [
                         'Zend\View\Model\ViewModel' => ['text/html', 'application/xhtml+xml'],
-                    ]
+                    ],
                 ],
                 ['content_name' => [
                     'invalidType' => 'Value must be a string; received array',

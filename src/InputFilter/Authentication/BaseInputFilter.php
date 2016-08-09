@@ -17,7 +17,7 @@ class BaseInputFilter extends InputFilter
             'error_message' => 'Please provide a name for HTTP authentication',
             'filters' => [
                 ['name' => 'StringToLower'],
-            ]
+            ],
         ]);
         $this->add([
             'name' => 'type',
@@ -31,8 +31,8 @@ class BaseInputFilter extends InputFilter
                     'options' => ['callback' => function ($value) {
                         return in_array($value, ['basic', 'digest', 'oauth2']);
                     }],
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 }

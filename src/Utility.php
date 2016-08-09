@@ -11,7 +11,7 @@ class Utility
      * Recursive delete
      *
      * @param  string $dir
-     * @return boolean
+     * @return bool
      */
     public static function recursiveDelete($dir)
     {
@@ -23,7 +23,7 @@ class Utility
             if ($obj == '.' || $obj == '..') {
                 continue;
             }
-            if (!@unlink($dir . '/' . $obj)) {
+            if (! @unlink($dir . '/' . $obj)) {
                 self::recursiveDelete($dir . '/' . $obj);
             }
         }

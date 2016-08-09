@@ -10,8 +10,8 @@ use RuntimeException;
 use Zend\Mvc\Controller\ControllerManager;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Hal\Collection as HalCollection;
-use ZF\Hal\Link\Link;
 use ZF\Hal\Entity as HalEntity;
+use ZF\Hal\Link\Link;
 use ZF\Rest\AbstractResourceListener;
 use ZF\Rest\Exception\CreationException;
 use ZF\Rest\Exception\PatchException;
@@ -49,8 +49,10 @@ class RpcServiceResource extends AbstractResourceListener
     protected $rpcFactory;
 
     /**
-     * @param  RpcServiceModelFactory $rpcFactory
-     * @param  InputFilterModel $inputFilterModel
+     * @param RpcServiceModelFactory $rpcFactory
+     * @param InputFilterModel $inputFilterModel
+     * @param ControllerManager $controllerManager
+     * @param DocumentationModel $documentationModel
      */
     public function __construct(
         RpcServiceModelFactory $rpcFactory,
@@ -75,7 +77,7 @@ class RpcServiceResource extends AbstractResourceListener
         }
 
         $moduleName = $this->getEvent()->getRouteParam('name', false);
-        if (!$moduleName) {
+        if (! $moduleName) {
             throw new RuntimeException(sprintf(
                 '%s cannot operate correctly without a "name" segment in the route matches',
                 __CLASS__
@@ -102,7 +104,7 @@ class RpcServiceResource extends AbstractResourceListener
      * Create a new RPC service
      *
      * @param  array|object $data
-     * @return RpcServiceEntity
+     * @return RpcServiceEntity|ApiProblem
      * @throws CreationException
      */
     public function create($data)
@@ -116,9 +118,8 @@ class RpcServiceResource extends AbstractResourceListener
             'selector'     => null,
         ];
 
-        if (!isset($data['service_name'])
-            || !is_string($data['service_name'])
-            || empty($data['service_name'])
+        if (empty($data['service_name'])
+            || ! is_string($data['service_name'])
         ) {
             throw new CreationException('Unable to create RPC service; missing service_name');
         }
@@ -129,24 +130,21 @@ class RpcServiceResource extends AbstractResourceListener
             throw new CreationException('Service by that name already exists', 409);
         }
 
-        if (!isset($data['route_match'])
-            || !is_string($data['route_match'])
-            || empty($data['route_match'])
+        if (empty($data['route_match'])
+            || ! is_string($data['route_match'])
         ) {
             throw new CreationException('Unable to create RPC service; missing route');
         }
         $creationData['route_match'] = $data['route_match'];
 
-        if (isset($data['http_methods'])
+        if (! empty($data['http_methods'])
             && (is_string($data['http_methods']) || is_array($data['http_methods']))
-            && !empty($data['http_methods'])
         ) {
             $creationData['http_methods'] = $data['http_methods'];
         }
 
-        if (isset($data['selector'])
+        if (! empty($data['selector'])
             && is_string($data['selector'])
-            && !empty($data['selector'])
         ) {
             $creationData['selector'] = $data['selector'];
         }
@@ -177,7 +175,7 @@ class RpcServiceResource extends AbstractResourceListener
     public function fetch($id)
     {
         $service = $this->getModel()->fetch($id);
-        if (!$service instanceof RpcServiceEntity) {
+        if (! $service instanceof RpcServiceEntity) {
             return new ApiProblem(404, 'RPC service not found');
         }
         $this->injectInputFilters($service);
@@ -220,7 +218,7 @@ class RpcServiceResource extends AbstractResourceListener
             $data = (array) $data;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return new ApiProblem(400, 'Invalid data provided for update');
         }
 
@@ -289,8 +287,8 @@ class RpcServiceResource extends AbstractResourceListener
     protected function injectInputFilters(RpcServiceEntity $service)
     {
         $inputFilters = $this->inputFilterModel->fetch($this->moduleName, $service->controllerServiceName);
-        if (!$inputFilters instanceof InputFilterCollection
-            || !count($inputFilters)
+        if (! $inputFilters instanceof InputFilterCollection
+            || ! count($inputFilters)
         ) {
             return;
         }
@@ -299,8 +297,8 @@ class RpcServiceResource extends AbstractResourceListener
         $parentName = str_replace('\\', '-', $service->controllerServiceName);
         foreach ($inputFilters as $inputFilter) {
             $inputFilter['input_filter_name'] = str_replace('\\', '-', $inputFilter['input_filter_name']);
-            $entity   = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
-            $links    = $entity->getLinks();
+            $entity = new HalEntity($inputFilter, $inputFilter['input_filter_name']);
+            $links  = $entity->getLinks();
             $links->add(Link::factory([
                 'rel' => 'self',
                 'route' => [
@@ -334,7 +332,7 @@ class RpcServiceResource extends AbstractResourceListener
             $this->moduleName,
             $service->controllerServiceName
         );
-        if (!$documentation) {
+        if (! $documentation) {
             return;
         }
         $entity = new HalEntity($documentation, 'documentation');
@@ -350,7 +348,7 @@ class RpcServiceResource extends AbstractResourceListener
     protected function injectControllerClass(RpcServiceEntity $service)
     {
         $controllerServiceName = $service->controllerServiceName;
-        if (!$this->controllerManager->has($controllerServiceName)) {
+        if (! $this->controllerManager->has($controllerServiceName)) {
             return;
         }
 

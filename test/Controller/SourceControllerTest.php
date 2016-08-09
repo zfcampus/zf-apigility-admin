@@ -11,8 +11,6 @@ use Zend\Http\Request;
 use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Admin\Controller\SourceController;
 use ZF\Apigility\Admin\Model\ModuleModel;
-use ZF\Apigility\Admin\Model\ModulePathSpec;
-use ZF\Configuration\ModuleUtils;
 use ZFTest\Apigility\Admin\Model\TestAsset\Bar\Module as BarModule;
 
 class SourceControllerTest extends TestCase

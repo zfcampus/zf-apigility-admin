@@ -49,6 +49,123 @@ enable the module in your application. When doing so, you will add the module to
 `config/development.config.php.dist` file instead of the `config/application.config.php` file, and
 enable it via `php public/index.php development enable`.
 
+Upgrading
+---------
+
+We strive to make upgrading as simple as a `composer update`; however, from time
+to time, there may be other steps involved. This section documents those.
+
+### Initial upgrade to 1.5
+
+If you are upgrading to version 1.5 or higher from a pre-1.5 version, there are
+a few changes to be aware of.
+
+First, version 1.5 drops the requirement for rwoverdijk/assetmanager. However,
+in order to use the admin UI, you will need some way to access the public assets
+provided by the UI and zf-apigility modules. You have three options:
+
+1. Install rwoverdijk/assetmanager: `composer require rwoverdijk/assetmanager`.
+   Be aware, however, that as of the time of the 1.5.0 release, this module is
+   not compatible with v3 releases of zend-mvc. If you are looking for a quick
+   upgrade, and do not care what versions of Zend Framework components you
+   install, this is the easiest path.
+
+2. Install [zf-asset-manager](https://github.com/zfcampus/zf-asset-manager). This
+   is a Composer plugin, and operates when installing or uninstalling a package.
+   If you add this, you will need to follow these steps:
+
+    - `composer require --dev zfcampus/zf-asset-manager`
+    - `rm -Rf ./vendor`
+    - `composer install`
+    -
+   The additional steps are necessary in order for the plugin to pick up on the
+   assets from the other components.
+
+3. Manually copy or symlink in the assets required to your public directory. As
+   examples:
+   
+    - `ln -s vendor/zfcampus/zf-apigility/asset/zf-apigility public/zf-apigility`
+    - `ln -s vendor/zfcampus/zf-apigility-admin-ui/dist/apigility-ui public/apigility-ui`
+
+Each of the three will accomplish the goal of making the assets publicly
+available via your application's web server.
+
+### Upgrading to v3 Zend Framework components from 1.5
+
+After upgrading to version 1.5 of this module, you can then upgrade your
+application to take advantage of Zend Framework v3 components. The easiest way
+to do that is to use the provided script:
+
+```bash
+$ ./vendor/bin/apigility-upgrade-to-1.5
+```
+
+This script will update your Composer requirements and constraints, update your
+modules list to list ZF components and remove unneeded/obsolete components, and
+then re-install all dependencies.
+
+If you do not wish to use the script, or the script fails, you may manually
+update your application using the following steps:
+
+- Update your `composer.json`:
+  - Remove:
+    - `require.zendframework/zendframework`
+    - `require.rwoverdijk/assetmanager`
+    - `require-dev.zendframework/zftool`
+  - Update:
+    - `require.zfcampus/zf-development-mode` constraint becomes `^3.0`
+    - `require-dev.zendframework/zend-developer-tools` becomes `^1.0`
+  - Add:
+    - `require.zendframework/zend-cache`, with a constraint of `2.7.1`
+    - `require.zendframework/zend-log`, with a constraint of `2.9`
+    - `require-dev.zfcampus/zf-asset-manager`, with a constraint of `^1.0`
+- Update your `config/modules.config.php`:
+  - Remove:
+    - `AssetManager`
+    - `ZF\DevelopmentMode`
+  - Add, at the top of the list:
+    - `Zend\Db`
+    - `Zend\Filter`
+    - `Zend\Hydrator`
+    - `Zend\InputFilter`
+    - `Zend\Paginator`
+    - `Zend\Router`
+    - `Zend\Validator`
+- Update your `config/development.config.php` and
+  `config/development.config.php.dist` files:
+  - Remove from the modules list:
+    - 'ZFTool`
+- Remove `composer.lock`
+- Remove, recursively, the `vendor/` subdirectory
+- Execute `composer install`
+
+> ### Development Mode
+>
+> Prior to 1.5 and running the upgrade script or following the upgrade
+> instructions from above, Apigility used zf-development-mode v2 releases,
+> which relied on the Console &lt;-&gt; MVC integration present by default in
+> zend-mvc v2 releases.
+>
+> zf-development-mode v3 operates differently, however, and instead ships as
+> a Composer vendor binary, with no additional requirements. Invocation is now:
+>
+> ```bash
+> $ ./vendor/bin/zf-development-mode enable
+> ```
+>
+> and
+>
+> ```bash
+> $ ./vendor/bin/zf-development-mode disable
+> ```
+>
+> You can also query for status:
+>
+> ```bash
+> $ ./vendor/bin/zf-development-mode status
+> ```
+
+
 Configuration
 -------------
 
