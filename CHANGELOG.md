@@ -20,11 +20,14 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.5.1 - TBD
+## 1.5.1 - 2016-08-10
 
 ### Added
 
-- Nothing.
+- [#353](https://github.com/zfcampus/zf-apigility-admin/pull/353) adds the
+  `apigility-version` API, to allow reporting to the UI the current Apigility
+  skeleton version. It returns the value of `Apigility\VERSION` if defined, and
+  `@dev` if not.
 
 ### Deprecated
 
