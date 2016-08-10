@@ -64,6 +64,7 @@ return [
             Controller\Versioning::class               => Controller\VersioningController::class,
         ],
         'factories' => [
+            Controller\ApigilityVersionController::class => InvokableFactory::class,
             Controller\AppController::class            => InvokableFactory::class,
             Controller\AuthenticationController::class => Controller\AuthenticationControllerFactory::class,
             Controller\AuthenticationType::class       => Controller\AuthenticationTypeControllerFactory::class,
@@ -113,6 +114,16 @@ return [
                         ],
                         'may_terminate' => false,
                         'child_routes' => [
+                            'apigility-version' => [
+                                'type' => 'Literal',
+                                'options' => [
+                                    'route' => '/apigility-version',
+                                    'defaults' => [
+                                        'controller' => Controller\ApigilityVersionController::class,
+                                        'action'     => 'index',
+                                    ],
+                                ],
+                            ],
                             'dashboard' => [
                                 'type' => 'Literal',
                                 'options' => [
@@ -459,6 +470,7 @@ return [
 
     'zf-content-negotiation' => [
         'controllers' => [
+            Controller\ApigilityVersionController::class => 'Json',
             Controller\Authentication::class           => 'HalJson',
             Controller\AuthenticationType::class       => 'Json',
             Controller\Authorization::class            => 'HalJson',
@@ -488,6 +500,10 @@ return [
             Controller\Versioning::class               => 'Json',
         ],
         'accept_whitelist' => [
+            Controller\ApigilityVersionController::class => [
+                'application/json',
+                'application/*+json',
+            ],
             Controller\Authentication::class => [
                 'application/json',
                 'application/*+json',
@@ -864,6 +880,10 @@ return [
     ],
 
     'zf-rpc' => [
+        Controller\ApigilityVersionController::class => [
+            'http_methods' => ['GET'],
+            'route_name'   => 'zf-apigility/api/apigility-version',
+        ],
         Controller\Authentication::class => [
             'http_methods' => ['GET', 'POST', 'PUT', 'DELETE'],
             'route_name'   => 'zf-apigility/api/authentication',
