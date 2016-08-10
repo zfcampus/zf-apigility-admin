@@ -134,7 +134,7 @@ update your application using the following steps:
 - Update your `config/development.config.php` and
   `config/development.config.php.dist` files:
   - Remove from the modules list:
-    - 'ZFTool`
+    - `ZFTool`
 - Remove `composer.lock`
 - Remove, recursively, the `vendor/` subdirectory
 - Execute `composer install`
@@ -165,7 +165,6 @@ update your application using the following steps:
 > $ ./vendor/bin/zf-development-mode status
 > ```
 
-
 Configuration
 -------------
 
@@ -186,6 +185,27 @@ API Endpoints
 -------------
 
 All routes are prefixed with `/apigility` by default.
+
+### api/apigility-version
+
+- Since 1.5.1
+
+Returns the current Apigility version if it can be discovered, and the string
+`@dev` otherwise. The payload is in the `version` key:
+
+```json
+{
+    "version": "1.4.0"
+}
+```
+
+- `Accept`: `application/json`
+
+- `Content-Type`: `application/json`
+
+- Methods: `GET`
+
+- Errors: none
 
 ### api/config
 
