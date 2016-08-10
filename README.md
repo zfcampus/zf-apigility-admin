@@ -118,16 +118,21 @@ update your application using the following steps:
   - Add:
     - `require.zendframework/zend-cache`, with a constraint of `2.7.1`
     - `require.zendframework/zend-log`, with a constraint of `2.9`
+    - `require.zendframework/zend-mvc-i18n`, with a constraint of `1.0`
     - `require-dev.zfcampus/zf-asset-manager`, with a constraint of `^1.0`
 - Update your `config/modules.config.php`:
   - Remove:
     - `AssetManager`
     - `ZF\DevelopmentMode`
   - Add, at the top of the list:
+    - `Zend\Cache`
     - `Zend\Db`
     - `Zend\Filter`
     - `Zend\Hydrator`
     - `Zend\InputFilter`
+    - `Zend\I18n`
+    - `Zend\Log`
+    - `Zend\Mvc\I18n`
     - `Zend\Paginator`
     - `Zend\Router`
     - `Zend\Validator`

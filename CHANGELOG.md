@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.5.2 - TBD
+## 1.5.2 - 2016-08-10
 
 ### Added
 
@@ -36,7 +36,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#354](https://github.com/zfcampus/zf-apigility-admin/pull/354) updates the
+  upgrade script to add dependencies required by Apigility 1.3 and earlier
+  skeletons. These changes include:
+  - adding zendframework/zend-mvc-i18n as a dependency
+  - adding the `Zend\I18n` and `Zend\Mvc\I18n` modules to `config/modules.config.php`
 
 ## 1.5.1 - 2016-08-10
 
