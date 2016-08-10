@@ -33,7 +33,9 @@ $modulesToAdd = [
     'Zend\Filter',
     'Zend\Hydrator',
     'Zend\InputFilter',
+    'Zend\I18n',
     'Zend\Log',
+    'Zend\Mvc\I18n',
     'Zend\Paginator',
     'Zend\Router',
     'Zend\Validator',
@@ -140,6 +142,7 @@ function updateComposerJson($path)
 
     // Add entries
     $composer['require']['zendframework/zend-cache'] = '^2.7.1';
+    $composer['require']['zendframework/zend-mvc-i18n'] = '^1.0';
     $composer['require']['zendframework/zend-log'] = '^2.9';
     $composer['require-dev']['zfcampus/zf-asset-manager'] = '^1.0';
 
