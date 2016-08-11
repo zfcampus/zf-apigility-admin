@@ -405,7 +405,7 @@ class ModuleModel
             }
         }
 
-        if (!$versions) {
+        if (! $versions) {
             return [1];
         }
 
