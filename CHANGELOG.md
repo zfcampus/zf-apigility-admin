@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.4 - TBD
+## 1.5.4 - 2016-08-11
 
 ### Added
 
@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#357](https://github.com/zfcampus/zf-apigility-admin/pull/357) fixes an issue
+  with detection of module versions when using Apigility-generated PSR-4
+  modules.
 
 ## 1.5.3 - 2016-08-11
 
