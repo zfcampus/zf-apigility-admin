@@ -62,8 +62,7 @@ class VersioningModel
             $configDirPath = $this->pathSpec->getModuleConfigPath($name);
         } else {
             $pathSpecType = ModulePathSpec::PSR_0;
-            // second parameter is false because PSR-0 path will be appended inside ModuleVersioningModel
-            $srcPath = $this->getModuleSourcePath($name, false);
+            $srcPath = $this->getModuleSourcePath($name);
             $configDirPath = $this->locateConfigPath($srcPath);
         }
 

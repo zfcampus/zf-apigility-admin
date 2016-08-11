@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.3 - TBD
+## 1.5.3 - 2016-08-11
 
 ### Added
 
@@ -18,7 +18,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#356](https://github.com/zfcampus/zf-apigility-admin/pull/356) fixes a fatal
+  error when calling the versioning API, due to providing the
+  `VersioningController` with an incorrect versioning model factory.
+- [#356](https://github.com/zfcampus/zf-apigility-admin/pull/356) fixes issues
+  when versioning API modules that are in PSR-4 layout. The `ModuleModel` now
+  autodiscovers which layout (PSR-0 or PSR-4) is used by a given module.
 
 ## 1.5.2 - 2016-08-10
 

@@ -17,7 +17,7 @@ use ZF\Configuration\ConfigResource;
  *
  * @author Gabriel Somoza <gabriel@somoza.me>
  */
-final class ModuleVersioningModel
+class ModuleVersioningModel
 {
     /** Regex to extract module versions from a module's source path */
     const REGEX_VERSION_DIR = '#V(?P<version>\d+)$#';
@@ -444,9 +444,6 @@ final class ModuleVersioningModel
     private function setVersionsPath($srcPath)
     {
         $srcPath = (string) $srcPath;
-        if ($this->pathSpecType == ModulePathSpec::PSR_0) {
-            $srcPath .= DIRECTORY_SEPARATOR . $this->moduleName;
-        }
 
         if (! file_exists($srcPath) || ! is_dir($srcPath) || ! is_writable($srcPath)) {
             throw new Exception\InvalidArgumentException(sprintf(
