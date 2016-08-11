@@ -10,7 +10,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZF\Apigility\Admin\Model\VersioningModelFactory;
+use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
 
 class VersioningControllerFactory implements FactoryInterface
 {
@@ -22,7 +22,7 @@ class VersioningControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new VersioningController($container->get(VersioningModelFactory::class));
+        return new VersioningController($container->get(ModuleVersioningModelFactory::class));
     }
 
     /**
