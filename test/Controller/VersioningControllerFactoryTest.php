@@ -9,15 +9,15 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Model\VersioningModelFactory;
+use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
 
 class VersioningControllerFactoryTest extends TestCase
 {
     public function setUp()
     {
-        $this->model = $this->prophesize(VersioningModelFactory::class)->reveal();
+        $this->model = $this->prophesize(ModuleVersioningModelFactory::class)->reveal();
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->container->get(VersioningModelFactory::class)->willReturn($this->model);
+        $this->container->get(ModuleVersioningModelFactory::class)->willReturn($this->model);
     }
 
     public function testInvokableFactoryReturnsVersioningController()

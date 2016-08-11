@@ -162,8 +162,17 @@ class ModulePathSpec
             $replace = ['', $moduleName];
         }
 
-        $moduleSourcePath = str_replace($find, $replace, $this->moduleSourcePathSpec);
+        foreach ($this->psrSpecs as $psr => $pathSpec) {
+            $path = $this->normalizePath(str_replace($find, $replace, $pathSpec));
 
+            if (is_dir($path) && file_exists($path . '/Module.php')) {
+                $this->currentSpec = $psr;
+                $this->moduleSourcePathSpec = $pathSpec;
+                return $path;
+            }
+        }
+
+        $moduleSourcePath = str_replace($find, $replace, $this->moduleSourcePathSpec);
         return $this->normalizePath($moduleSourcePath);
     }
 
