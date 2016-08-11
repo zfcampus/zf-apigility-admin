@@ -165,7 +165,7 @@ class ModulePathSpec
         foreach ($this->psrSpecs as $psr => $pathSpec) {
             $path = $this->normalizePath(str_replace($find, $replace, $pathSpec));
 
-            if (is_dir($path) && file_exists($path . DIRECTORY_SEPARATOR . 'Module.php')) {
+            if (is_dir($path) && file_exists($path . '/Module.php')) {
                 $this->currentSpec = $psr;
                 $this->moduleSourcePathSpec = $pathSpec;
                 return $path;

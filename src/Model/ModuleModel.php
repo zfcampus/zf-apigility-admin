@@ -394,7 +394,7 @@ class ModuleModel
 
         $r    = new ReflectionObject($module);
         $path = dirname($r->getFileName());
-        if (! is_dir($path) || ! file_exists($path . DIRECTORY_SEPARATOR . 'Module.php')) {
+        if (! is_dir($path) || ! file_exists($path . '/Module.php')) {
             return [1];
         }
 
