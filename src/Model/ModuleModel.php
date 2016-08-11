@@ -385,7 +385,9 @@ class ModuleModel
      */
     protected function getVersionsByModule($moduleName, $module)
     {
-        if (! $module instanceof ApigilityProviderInterface && ! $module instanceof ApigilityModuleInterface) {
+        if (! $module instanceof ApigilityProviderInterface
+            && ! $module instanceof ApigilityModuleInterface
+        ) {
             throw new Exception\InvalidArgumentException(
                 'Expected ApigilityProviderInterface or ApigilityModuleInterface'
             );
