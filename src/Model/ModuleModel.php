@@ -378,10 +378,9 @@ class ModuleModel
      * version subnamespace; if found, that version
      * is added to the list.
      *
-     * @param  string $moduleName
-     * @param $module
-     * @throws \ZF\Apigility\Admin\Exception\InvalidArgumentException
-     * @internal param array $services
+     * @param string $moduleName
+     * @param ApigilityProviderInterface|ApigilityModuleInterface $module
+     * @throws Exception\InvalidArgumentException
      * @return array
      */
     protected function getVersionsByModule($moduleName, $module)
@@ -394,8 +393,8 @@ class ModuleModel
 
         $r    = new ReflectionObject($module);
         $path = dirname($r->getFileName());
-        if (! is_dir($path) || ! file_exists($path . '/Module.php')) {
-            return [1];
+        if (! preg_match('/\/src(\/' . $moduleName . ')?$/', $path)) {
+            $path .= DIRECTORY_SEPARATOR . 'src';
         }
 
         $versions = [];
