@@ -12,7 +12,7 @@ use ZF\Configuration\ResourceFactory;
  * Class ModuleVersioningModelFactory
  * @author Gabriel Somoza <gabriel@somoza.me>
  */
-final class ModuleVersioningModelFactory implements ModuleVersioningModelFactoryInterface
+class ModuleVersioningModelFactory implements ModuleVersioningModelFactoryInterface
 {
     /** @var ResourceFactory */
     private $configFactory;

@@ -17,7 +17,7 @@ use ZF\Configuration\ConfigResource;
  *
  * @author Gabriel Somoza <gabriel@somoza.me>
  */
-final class ModuleVersioningModel
+class ModuleVersioningModel
 {
     /** Regex to extract module versions from a module's source path */
     const REGEX_VERSION_DIR = '#V(?P<version>\d+)$#';

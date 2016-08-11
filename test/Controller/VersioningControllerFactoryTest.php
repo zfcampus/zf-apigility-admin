@@ -9,20 +9,13 @@ namespace ZF\Apigility\Admin\Controller;
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
-use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\ModuleVersioningModelFactory;
-use ZF\Configuration\ResourceFactory;
 
 class VersioningControllerFactoryTest extends TestCase
 {
     public function setUp()
     {
-        // ModuleVersioningModelFactory is final class, can't be prophesized
-        $this->model = new ModuleVersioningModelFactory(
-            $this->prophesize(ResourceFactory::class)->reveal(),
-            $this->prophesize(ModulePathSpec::class)->reveal()
-        );
-
+        $this->model = $this->prophesize(ModuleVersioningModelFactory::class)->reveal();
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->container->get(ModuleVersioningModelFactory::class)->willReturn($this->model);
     }
