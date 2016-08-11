@@ -393,7 +393,7 @@ class ModuleModel
             );
         }
 
-        $path = $this->detectSourcePathFromModule($module);
+        $path = $this->detectSourcePathFromModule($moduleName, $module);
 
         $versions = [];
         foreach (Glob::glob($path . DIRECTORY_SEPARATOR . 'V*') as $dir) {
