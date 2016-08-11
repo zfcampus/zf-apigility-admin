@@ -444,9 +444,6 @@ final class ModuleVersioningModel
     private function setVersionsPath($srcPath)
     {
         $srcPath = (string) $srcPath;
-        if ($this->pathSpecType == ModulePathSpec::PSR_0) {
-            $srcPath .= DIRECTORY_SEPARATOR . $this->moduleName;
-        }
 
         if (! file_exists($srcPath) || ! is_dir($srcPath) || ! is_writable($srcPath)) {
             throw new Exception\InvalidArgumentException(sprintf(

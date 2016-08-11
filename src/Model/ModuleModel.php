@@ -392,19 +392,9 @@ class ModuleModel
             );
         }
 
-        $r       = new ReflectionObject($module);
-        $path    = dirname($r->getFileName());
-        $dirSep  = sprintf('(?:%s|%s)', preg_quote('/'), preg_quote('\\'));
-        $pattern = sprintf(
-            '#%ssrc%s%s#',
-            $dirSep,
-            $dirSep,
-            str_replace('\\', $dirSep, $moduleName)
-        );
-        if (! preg_match($pattern, $path)) {
-            $path = sprintf('%s/src/%s', $path, str_replace('\\', '/', $moduleName));
-        }
-        if (! file_exists($path)) {
+        $r    = new ReflectionObject($module);
+        $path = dirname($r->getFileName());
+        if (! is_dir($path) || ! file_exists($path . DIRECTORY_SEPARATOR . 'Module.php')) {
             return [1];
         }
 
@@ -415,7 +405,7 @@ class ModuleModel
             }
         }
 
-        if (empty($versions)) {
+        if (!$versions) {
             return [1];
         }
 
