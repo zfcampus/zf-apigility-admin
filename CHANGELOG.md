@@ -2,11 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.5 - TBD
+## 1.5.5 - 2016-08-12
 
 ### Added
 
-- Nothing.
+- [#358](https://github.com/zfcampus/zf-apigility-admin/pull/358) adds
+  documentation for the `zf-apigility-admin.path_spec` configuration value to
+  both the README and the module configuration file.
 
 ### Deprecated
 
