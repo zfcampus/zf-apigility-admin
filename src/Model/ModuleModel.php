@@ -42,11 +42,6 @@ class ModuleModel
     protected $moduleManager;
 
     /**
-     * @var string
-     */
-    protected $modulePathSpec;
-
-    /**
      * @var array
      */
     protected $modules;
