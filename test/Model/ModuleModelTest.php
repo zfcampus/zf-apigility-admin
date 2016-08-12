@@ -513,7 +513,19 @@ class ModuleModelTest extends TestCase
         $this->assertInternalType('array', $modules);
         $this->assertContains('Foo', $modules);
 
+        $contents = file_get_contents("$modulePath/config/modules.config.php");
+
         $this->removeDir($modulePath);
-        return true;
+
+        return $contents;
+    }
+
+    /**
+     * @depends testWritesToModuleConfigFileOnModuleCreationWhenModuleConfigFileExists
+     */
+    public function testWritesShortArrayNotationByDefault($contents)
+    {
+        $this->assertNotContains('array(', $contents);
+        $this->assertContains('return [', $contents);
     }
 }

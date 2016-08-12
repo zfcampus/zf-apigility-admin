@@ -79,6 +79,7 @@ class ModuleModel
             static::$valueGenerator = new ValueGenerator();
         }
         static::$valueGenerator->setValue($config);
+        static::$valueGenerator->setType(ValueGenerator::TYPE_ARRAY_SHORT);
         static::$valueGenerator->setArrayDepth($indent);
 
         return static::$valueGenerator;
