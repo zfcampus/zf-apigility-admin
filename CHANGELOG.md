@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.5.6 - TBD
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 1.5.5 - 2016-08-12
 
 ### Added
