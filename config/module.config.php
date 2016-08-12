@@ -9,6 +9,15 @@ namespace ZF\Apigility\Admin;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
+    'zf-apigility-admin' => [
+        // path_spec defines whether modules should be created using PSR-0
+        //     or PSR-4 module structure; the default is to use PSR-0.
+        //     Valid values are:
+        //     - ZF\Apigility\Admin\Model\ModulePathSpec::PSR_0 ("psr-0")
+        //     - ZF\Apigility\Admin\Model\ModulePathSpec::PSR_4 ("psr-4")
+        // 'path_spec' => 'psr-0',
+    ],
+
     'service_manager' => [
         'factories' => [
             // @codingStandardsIgnoreStart
