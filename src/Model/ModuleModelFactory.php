@@ -27,11 +27,15 @@ class ModuleModelFactory
 
         $config = $this->getConfig($container);
 
-        return new ModuleModel(
+        $model = new ModuleModel(
             $container->get('ModuleManager'),
             $this->getNamedConfigArray('zf-rest', $config),
             $this->getNamedConfigArray('zf-rpc', $config)
         );
+
+        $model->setUseShortArrayNotation($this->useShortArrayNotation($config));
+
+        return $model;
     }
 
     /**
@@ -53,5 +57,23 @@ class ModuleModelFactory
         return (isset($config[$name]) && is_array($config[$name]))
             ? $config[$name]
             : [];
+    }
+
+    /**
+     * Determine whether or not to enable generation of short array notation
+     *
+     * @param array $config
+     * @return bool
+     */
+    private function useShortArrayNotation(array $config)
+    {
+        $config = $this->getNamedConfigArray('zf-configuration', $config);
+        if (! isset($config['enable_short_array'])
+            || false === $config['enable_short_array']
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

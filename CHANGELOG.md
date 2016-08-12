@@ -20,7 +20,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#360](https://github.com/zfcampus/zf-apigility-admin/pull/360) fixes how the
+  `ModuleModel` generates configuration, allowing it to generate short array
+  syntax. The behavior is configurable using the
+  `zf-configuration.enable_short_array` configuration value.
 
 ## 1.5.4 - 2016-08-11
 

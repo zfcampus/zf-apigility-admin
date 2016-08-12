@@ -21,6 +21,16 @@ use ZF\Apigility\Provider\ApigilityProviderInterface;
 class ModuleModel
 {
     /**
+     * @var bool
+     */
+    protected static $useShortArrayNotation = false;
+
+    /**
+     * @var ValueGenerator
+     */
+    protected static $valueGenerator;
+
+    /**
      * Services for each module
      * @var array
      */
@@ -45,13 +55,6 @@ class ModuleModel
      * @var array
      */
     protected $rpcConfig;
-
-    /**
-     * @var ValueGenerator
-     */
-    protected static $valueGenerator;
-
-    protected $modulePathSpec;
 
     /**
      * @param  ModuleManager $moduleManager
@@ -79,9 +82,26 @@ class ModuleModel
             static::$valueGenerator = new ValueGenerator();
         }
         static::$valueGenerator->setValue($config);
+        static::$valueGenerator->setType(
+            static::$useShortArrayNotation
+            ? ValueGenerator::TYPE_ARRAY_SHORT
+            : ValueGenerator::TYPE_ARRAY_LONG
+        );
         static::$valueGenerator->setArrayDepth($indent);
 
         return static::$valueGenerator;
+    }
+
+    /**
+     * Set the flag indicating whether or not generated config files should use
+     * short array notation.
+     *
+     * @var bool $flag
+     * @return void
+     */
+    public function setUseShortArrayNotation($flag = true)
+    {
+        static::$useShortArrayNotation = (bool) $flag;
     }
 
     /**
