@@ -173,13 +173,25 @@ update your application using the following steps:
 Configuration
 -------------
 
-There is no custom user level configuration for this module.
-
 Since this particular module is responsible for providing APIs and the Apigility Admin UI, it has a
 significant amount of configuration that it requires in order to function in a development
 environment. Since it is highly unlikely that developers would need to modify the system-level
 configuration, it is omitted in this README, but can be found [within the
 repository](https://github.com/zfcampus/zf-apigility-admin/tree/master/config/module.config.php).
+
+Additionally, the module defines the following module-specific configuration,
+under the top-level key `zf-apigility-admin`:
+
+### Key: path_spec
+
+By default, zf-apigility-admin will create new Apigility modules using
+[PSR-0](http://www.php-fig.org/psr/psr-0/) directory structure. You can switch
+to [PSR-4](http://www.php-fig.org/psr/psr-4/) using the
+`zf-apigility-admin.path_spec` configuration, which accepts one of the following
+values:
+
+- `ZF\Apigility\Admin\Model\ModulePathSpec::PSR_0` ('psr-0')
+- `ZF\Apigility\Admin\Model\ModulePathSpec::PSR_4` ('psr-4')
 
 Routes
 ------
