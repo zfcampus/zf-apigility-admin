@@ -166,7 +166,11 @@ class ModuleModel
         mkdir($pathSpec->getRestPath($module, 1), 0775, true);
         mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
 
-        if (! file_put_contents(sprintf('%s/module.config.php', $moduleConfigPath), "<" . "?php\nreturn array(\n);")) {
+        $payload = static::$useShortArrayNotation
+            ? "[\n]"
+            : "array(\n)";
+        $payload = sprintf('<' . "?php\n return %s;", $payload);
+        if (! file_put_contents(sprintf('%s/module.config.php', $moduleConfigPath), $payload)) {
             return false;
         }
 

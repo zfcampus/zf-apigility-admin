@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#361](https://github.com/zfcampus/zf-apigility-admin/pull/361) updates the
+  `ModuleModel` to vary the contents of a generated `module.config.php` based on
+  the short-array notation configuration setting.
 
 ## 1.5.5 - 2016-08-12
 
