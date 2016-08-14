@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.5.7 - TBD
+## 1.5.7 - 2016-08-14
 
 ### Added
 
@@ -36,7 +36,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#362](https://github.com/zfcampus/zf-apigility-admin/pull/362) adds an entry
+  to remove `ZF\Apigility\Provider` from the module list in the
+  `apigility-update-to-1.5` script. The package does not need to be listed as a
+  module, as Composer will autoload all interfaces it defines.
 
 ## 1.5.6 - 2016-08-14
 
