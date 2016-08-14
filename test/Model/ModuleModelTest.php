@@ -517,7 +517,7 @@ class ModuleModelTest extends TestCase
         $this->removeDir($modulePath);
     }
 
-    public function testWritesShortArrayNotationWhenRequested()
+    public function testWritesShortArrayNotationToApplicationModulesConfigurationWhenRequested()
     {
         $this->model->setUseShortArrayNotation(true);
 
@@ -537,6 +537,30 @@ class ModuleModelTest extends TestCase
         $this->assertTrue($this->model->createModule($module, $pathSpec));
 
         $contents = file_get_contents("$modulePath/config/modules.config.php");
+        $this->assertNotContains('array(', $contents);
+        $this->assertContains('return [', $contents);
+    }
+
+    public function testWritesShortArrayNotationToNewModuleConfigurationWhenRequested()
+    {
+        $this->model->setUseShortArrayNotation(true);
+
+        $module     = 'Foo';
+        $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
+
+        mkdir("$modulePath/module", 0775, true);
+        mkdir("$modulePath/config", 0775, true);
+        file_put_contents(
+            "$modulePath/config/application.config.php",
+            '<' . '?php return array(\'modules\' => include __DIR__ . \'/modules.config.php\');'
+        );
+        file_put_contents("$modulePath/config/modules.config.php", '<' . '?php return array();');
+
+        $pathSpec = $this->getPathSpec($modulePath);
+
+        $this->assertTrue($this->model->createModule($module, $pathSpec));
+
+        $contents = file_get_contents("$modulePath/module/Foo/config/module.config.php");
         $this->assertNotContains('array(', $contents);
         $this->assertContains('return [', $contents);
     }
