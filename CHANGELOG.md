@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.6 - TBD
+## 1.5.6 - 2016-08-14
 
 ### Added
 
@@ -21,6 +21,10 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#361](https://github.com/zfcampus/zf-apigility-admin/pull/361) updates the
   `ModuleModel` to vary the contents of a generated `module.config.php` based on
   the short-array notation configuration setting.
+- This release updates the following dependencies to the listed minimum
+  supported versions:
+  - zfcampus/zf-apigility-admin-ui: 1.3.7
+  - zfcampus/zf-configuration: 1.2.1
 
 ## 1.5.5 - 2016-08-12
 
