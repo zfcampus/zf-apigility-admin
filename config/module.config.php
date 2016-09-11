@@ -1441,6 +1441,7 @@ return [
             'allowAbsolute' => 'bool',
             'allowRelative' => 'bool',
         ],
+        'Zend\Validator\Uuid' => [],
         'Zend\I18n\Validator\Alnum' => [
             'allowwhitespace' => 'bool',
         ],
