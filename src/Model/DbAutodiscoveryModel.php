@@ -8,6 +8,7 @@ namespace ZF\Apigility\Admin\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Metadata\Metadata;
+use Zend\Db\Exception\InvalidArgumentException;
 
 /**
  * Class DbAutodiscoveryModel
@@ -34,7 +35,10 @@ class DbAutodiscoveryModel extends AbstractAutodiscoveryModel
 
         try {
             $metadata = new Metadata($adapter);
-        } catch (\Exception $e) {
+        } catch (InvalidArgumentException $e) {
+            if (strpos($e->getMessage(), 'Unknown adapter platform') === false) {
+                throw $e;
+            }
             return [];
         }
 
