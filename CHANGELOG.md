@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#363](https://github.com/zfcampus/zf-apigility-admin/pull/363) adds an entry
   for `Zend\Validator\Uuid` to the validator metadata.
+- [#368](https://github.com/zfcampus/zf-apigility-admin/pull/368) updates the 
+  `bin/apigility-upgrade-to-1.5` script to also inject a stub into the
+  `public/index.php` that will intercept `php public/index.php development
+  [enable|disable]` commands, and proxy them to the v3 zf-development-mode
+  tooling.
 
 ### Deprecated
 
