@@ -19,7 +19,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#365](https://github.com/zfcampus/zf-apigility-admin/pull/365) updates the 
+  logic in the `DbAutodiscoveryModel` to catch and report exceptions due to
+  metadata discovery issues (typically invalid character sets) that were
+  previously returning an empty list, providing better diagnostic details to
+  end-users.
 
 ## 1.5.7 - 2016-08-14
 
