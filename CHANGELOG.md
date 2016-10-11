@@ -24,7 +24,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#363](https://github.com/zfcampus/zf-apigility-admin/pull/363) adds an entry
+  for `Zend\Validator\Uuid` to the validator metadata.
 
 ### Deprecated
 
