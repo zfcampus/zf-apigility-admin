@@ -393,7 +393,12 @@ if (php_sapi_name() === 'cli'
     && 'development' == $argv[1]
     && in_array($argv[2], ['disable', 'enable'])
 ) {
-    system('./vendor/bin/zf-development-mode ' . $argv[2], $return);
+    // Windows needs to execute the batch scripts that Composer generates,
+    // and not the Unix shell version.
+    $script = defined('PHP_WINDOWS_VERSION_BUILD') && constant('PHP_WINDOWS_VERSION_BUILD')
+        ? '.\\vendor\\bin\\zf-development-mode.bat'
+        : './vendor/bin/zf-development-mode';
+    system(sprintf('%s %s', $script, $argv[2]), $return);
     exit($return);
 }
 EOT;
