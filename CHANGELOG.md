@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.9 - TBD
+## 1.5.9 - 2016-10-12
 
 ### Added
 
@@ -18,7 +18,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#369](https://github.com/zfcampus/zf-apigility-admin/pull/369) updates the
+  migration script's `public/index.php` changes such that the stub generated now
+  will vary the script location for `zf-development-mode` based on whether or
+  not a Windows operating system is detected.
 
 ## 1.5.8 - 2016-10-11
 
