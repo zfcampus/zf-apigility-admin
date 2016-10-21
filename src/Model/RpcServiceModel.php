@@ -764,7 +764,7 @@ class RpcServiceModel
         );
     }
 
-     /**
+    /**
      * Converts a module name (which could include namespace separators) into a string that can be used in regex
      * matches. Use-cases:
      *      - Acme\Account => Acme\\Account
