@@ -763,7 +763,7 @@ class RpcServiceModel
             $this->moduleEntity->getLatestVersion()
         );
     }
-    
+
      /**
      * Converts a module name (which could include namespace separators) into a string that can be used in regex
      * matches. Use-cases:
