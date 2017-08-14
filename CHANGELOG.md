@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#370](https://github.com/zfcampus/zf-apigility-admin/pull/370) provides a fix
+  to the `RpcServiceModel::fetchAll()` method that allows it to work with PSR-4
+  structured modules.
 
 ## 1.5.9 - 2016-10-12
 
