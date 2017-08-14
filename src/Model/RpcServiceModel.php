@@ -146,7 +146,7 @@ class RpcServiceModel
             $namespaceSep = preg_quote('\\');
             $pattern = sprintf(
                 '#%s%sV%s#',
-                $this->module,
+                $this->moduleNameToRegex(),
                 $namespaceSep,
                 $version
             );
@@ -762,5 +762,20 @@ class RpcServiceModel
             $this->normalize($this->module),
             $this->moduleEntity->getLatestVersion()
         );
+    }
+
+    /**
+     * Converts a module name (which could include namespace separators) into a string that can be used in regex
+     * matches. Use-cases:
+     *      - Acme\Account => Acme\\Account
+     *      - Acme\\Account (ideally it should never happen) => Acme\\Account
+     *      - Acme => Acme
+     *
+     * @return string
+     */
+    private function moduleNameToRegex()
+    {
+        // find all backslashes (\) that are NOT followed by another \ and replace them with \\ (two of them)
+        return preg_replace('#\\\\(?!\\\\)#', '\\\\\\\\', $this->module);
     }
 }
