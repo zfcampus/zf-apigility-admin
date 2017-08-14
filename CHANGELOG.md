@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.10 - TBD
+## 1.5.10 - 2017-08-14
 
 ### Added
 
