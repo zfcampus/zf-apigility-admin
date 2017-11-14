@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5d864bde2eea1925a20710f08e3b466",
+    "content-hash": "87bbe1578ed4504fe9ae3184577137fb",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -2362,12 +2362,12 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kherge-php/json.git",
+                "url": "https://github.com/kherge-abandoned/php-json.git",
                 "reference": "60c696c9370a1e5136816ca557c17f82a6fa83f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kherge-php/json/zipball/60c696c9370a1e5136816ca557c17f82a6fa83f1",
+                "url": "https://api.github.com/repos/kherge-abandoned/php-json/zipball/60c696c9370a1e5136816ca557c17f82a6fa83f1",
                 "reference": "60c696c9370a1e5136816ca557c17f82a6fa83f1",
                 "shasum": ""
             },
@@ -2415,7 +2415,6 @@
                 "schema",
                 "validate"
             ],
-            "abandoned": "kherge/json",
             "time": "2013-10-30T16:51:34+00:00"
         },
         {
@@ -2473,7 +2472,6 @@
                 "phar",
                 "update"
             ],
-            "abandoned": true,
             "time": "2013-10-30T17:23:01+00:00"
         },
         {
@@ -2582,7 +2580,6 @@
             ],
             "description": "A parsing and comparison library for semantic versioning.",
             "homepage": "http://github.com/kherge/Version",
-            "abandoned": true,
             "time": "2012-08-16T17:13:03+00:00"
         },
         {
