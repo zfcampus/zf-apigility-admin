@@ -8,11 +8,11 @@ services:
 cache:
   directories:
     - $HOME/.composer/cache
-    - vendor
 
 env:
   global:
-    - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
+    - COMPOSER_ARGS="--no-interaction"
+    - LEGACY_DEPS="phpunit/phpunit"
 
 matrix:
   fast_finish: true
@@ -53,24 +53,23 @@ matrix:
     - php: hhvm
   
 notifications:
-  irc: "irc.freenode.org#apigility-dev"
   email: false
 
 before_install:
-  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - if [[ $TEST_COVERAGE != 'true' && "$(php --version | grep xdebug -ci)" -ge 1 ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
   - if [[ $EXT_MONGODB == 'true' && $TRAVIS_PHP_VERSION == '7' ]]; then echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ; fi
   - if [[ $EXT_MONGODB == 'true' && $TRAVIS_PHP_VERSION == 'hhvm' ]]; then echo "extension = mongodb.so" >> /etc/hhvm/php.ini ; fi
   - if [[ $EXT_MONGODB != 'true' && $TRAVIS_PHP_VERSION != 'hhvm' ]]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ; fi
   - if [[ $EXT_MONGODB != 'true' && $TRAVIS_PHP_VERSION == 'hhvm' ]]; then echo "extension = mongo.so" >> /etc/hhvm/php.ini ; fi
-  - travis_retry composer self-update
 
 install:
-  - if [[ $EXT_MONGODB == 'true' ]]; then composer require --dev $COMPOSER_ARGS alcaeus/mongo-php-adapter ; fi
+  - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
+  - if [[ $TRAVIS_PHP_VERSION =~ ^5.6 ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
-  - travis_retry composer install $COMPOSER_ARGS
+  - if [[ $EXT_MONGODB == 'true' ]]; then composer require --dev $COMPOSER_ARGS alcaeus/mongo-php-adapter ; fi
   - if [[ $TRAVIS_PHP_VERSION != 'hhvm' ]]; then php -m ; fi
-  - composer show
+  - stty cols 120 && composer show
 
 script:
   - composer test
