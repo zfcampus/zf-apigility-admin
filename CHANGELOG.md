@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
+### Changed
+
+- Nothing.
+
 ### Deprecated
 
 - Nothing.
@@ -19,6 +23,31 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Fixed
 
 - Nothing.
+
+## 1.5.11 - 2017-11-14
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#378](https://github.com/zfcampus/zf-apigility-admin/pull/378) modifies the
+  package requirements to exclude zf-configuration v1.3.1, as that version has a
+  backwards-incompatible change that prevents creation of services via the
+  admin.
 
 ## 1.5.10 - 2017-08-14
 
