@@ -23,6 +23,7 @@ matrix:
     - php: 5.6
       env:
         - DEPS=locked
+        - ALTERNATE_DEPS="phpunit/phpunit"
     - php: 5.6
       env:
         - DEPS=latest
@@ -36,6 +37,18 @@ matrix:
         - EXT_MONGODB=true
         - CS_CHECK=true
     - php: 7
+      env:
+        - DEPS=latest
+        - EXT_MONGODB=true
+    - php: 7.1
+      env:
+        - DEPS=lowest
+        - EXT_MONGODB=true
+    - php: 7.1
+      env:
+        - DEPS=locked
+        - EXT_MONGODB=true
+    - php: 7.1
       env:
         - DEPS=latest
         - EXT_MONGODB=true
@@ -64,7 +77,7 @@ before_install:
 
 install:
   - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
-  - if [[ $TRAVIS_PHP_VERSION =~ ^5.6 ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
+  - if [[ $ALTERNATE_DEPS ~= '' ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $ALTERNATE_DEPS ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
   - if [[ $EXT_MONGODB == 'true' ]]; then composer require --dev $COMPOSER_ARGS alcaeus/mongo-php-adapter ; fi
