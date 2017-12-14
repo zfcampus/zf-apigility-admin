@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.5.12 - 2017-12-14
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#381](https://github.com/zfcampus/zf-apigility-admin/pull/381) updates the
+  signature of `PostInputFilter::isValid()` to be compatible with
+  `Zend\InputFilter\BaseInputFilter::isValid()` across all compatible versions
+  of zend-inputfilter, eliminating an error when using zend-inputfilter 2.8+.
+
 ## 1.5.11 - 2017-11-14
 
 ### Added
