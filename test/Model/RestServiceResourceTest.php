@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use BarConf;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Zend\Config\Writer\PhpArray;
 use Zend\EventManager\SharedEventManager;

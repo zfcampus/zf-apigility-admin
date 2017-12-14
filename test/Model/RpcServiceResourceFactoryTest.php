@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use ZF\Apigility\Admin\Model\DocumentationModel;
@@ -29,10 +29,8 @@ class RpcServiceResourceFactoryTest extends TestCase
 
         $this->container->has(RpcServiceModelFactory::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            'missing its ' . RpcServiceModelFactory::class. ' dependency'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('missing its ' . RpcServiceModelFactory::class. ' dependency');
         $factory($this->container->reveal());
     }
 
@@ -43,10 +41,8 @@ class RpcServiceResourceFactoryTest extends TestCase
         $this->container->has(RpcServiceModelFactory::class)->willReturn(true);
         $this->container->has(InputFilterModel::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            'missing its ' . InputFilterModel::class. ' dependency'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('missing its ' . InputFilterModel::class. ' dependency');
         $factory($this->container->reveal());
     }
 
@@ -58,10 +54,8 @@ class RpcServiceResourceFactoryTest extends TestCase
         $this->container->has(InputFilterModel::class)->willReturn(true);
         $this->container->has('ControllerManager')->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            'missing its ControllerManager dependency'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('missing its ControllerManager dependency');
         $factory($this->container->reveal());
     }
 

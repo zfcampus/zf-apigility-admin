@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Apigility\Admin\Model\ModulePathSpecFactory;
@@ -26,7 +26,8 @@ class ModulePathSpecFactoryTest extends TestCase
 
         $this->container->has(ModuleUtils::class)->willReturn(false);
 
-        $this->setExpectedException(ServiceNotCreatedException::class, ModuleUtils::class . ' service is not present');
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage(ModuleUtils::class . ' service is not present');
         $factory($this->container->reveal());
     }
 
@@ -44,7 +45,8 @@ class ModulePathSpecFactoryTest extends TestCase
             ],
         ]);
 
-        $this->setExpectedException(ServiceNotCreatedException::class, 'Invalid module path');
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('Invalid module path');
         $factory($this->container->reveal());
     }
 

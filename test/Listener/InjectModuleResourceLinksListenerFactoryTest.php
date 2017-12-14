@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Listener;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListener;
 use ZF\Apigility\Admin\Listener\InjectModuleResourceLinksListenerFactory;
 

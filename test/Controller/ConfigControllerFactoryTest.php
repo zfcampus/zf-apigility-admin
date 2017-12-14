@@ -7,7 +7,7 @@
 namespace ZF\Apigility\Admin\Controller;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\AbstractPluginManager;
 use ZF\Configuration\ConfigResource;
 

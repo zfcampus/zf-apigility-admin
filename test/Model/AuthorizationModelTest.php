@@ -10,7 +10,7 @@ use AuthConf;
 use AuthConfDefaults;
 use AuthConfWithConfig;
 use FooConf;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\AuthorizationEntity;
 use ZF\Apigility\Admin\Model\AuthorizationModel;

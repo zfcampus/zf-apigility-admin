@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use ZF\Apigility\Admin\Model\DbAdapterModel;
 use ZF\Apigility\Admin\Model\DbAdapterResource;
@@ -25,10 +25,8 @@ class DbAdapterResourceFactoryTest extends TestCase
         $factory = new DbAdapterResourceFactory();
         $this->container->has(DbAdapterModel::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            DbAdapterModel::class . ' service is not present'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage(DbAdapterModel::class . ' service is not present');
 
         $factory($this->container->reveal());
     }

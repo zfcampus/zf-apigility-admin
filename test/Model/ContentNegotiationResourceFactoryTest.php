@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use ZF\Apigility\Admin\Model\ContentNegotiationModel;
 use ZF\Apigility\Admin\Model\ContentNegotiationResource;
@@ -25,10 +25,8 @@ class ContentNegotiationResourceFactoryTest extends TestCase
         $factory = new ContentNegotiationResourceFactory();
         $this->container->has(ContentNegotiationModel::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            ContentNegotiationModel::class . ' service is not present'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage(ContentNegotiationModel::class . ' service is not present');
 
         $factory($this->container->reveal());
     }

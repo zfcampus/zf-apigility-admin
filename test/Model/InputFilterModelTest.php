@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\InputFilterModel;
 use ZF\Configuration\ModuleUtils;

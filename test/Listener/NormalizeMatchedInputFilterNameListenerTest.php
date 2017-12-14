@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Listener;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Listener\NormalizeMatchedInputFilterNameListener;
