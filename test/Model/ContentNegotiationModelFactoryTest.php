@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Zend\Config\Writer\WriterInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
@@ -32,7 +32,8 @@ class ContentNegotiationModelFactoryTest extends TestCase
         $this->container->get('config')->shouldNotBeCalled();
         $this->container->get(ConfigWriter::class)->shouldNotBeCalled();
 
-        $this->setExpectedException(ServiceNotCreatedException::class, 'config service is not present');
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('config service is not present');
         $factory($this->container->reveal());
     }
 

@@ -6,9 +6,9 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use ZF\Apigility\Admin\Model\ModuleModel;
+use PHPUnit\Framework\TestCase;
 use Test;
+use ZF\Apigility\Admin\Model\ModuleModel;
 use ZF\Apigility\Admin\Model\ModulePathSpec;
 use ZF\Configuration\ModuleUtils;
 
@@ -486,7 +486,9 @@ class ModuleModelTest extends TestCase
 
         $this->assertTrue($this->model->createModule($module, $pathSpec));
 
-        $this->setExpectedException('Exception', 'exists', 409);
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('exists');
+        $this->expectExceptionCode(409);
 
         $this->model->createModule($module, $pathSpec);
     }

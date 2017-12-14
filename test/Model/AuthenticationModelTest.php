@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use MongoClient;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Stdlib\ArrayUtils;
 use ZF\Apigility\Admin\Model\AuthenticationModel;
@@ -372,7 +372,9 @@ class AuthenticationModelTest extends TestCase
         ];
         $model = $this->createModelFromConfigArrays([], []);
 
-        $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
+        $this->expectException('ZF\Apigility\Admin\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('DSN');
+        $this->expectExceptionCode(422);
         $model->create($toCreate);
     }
 
@@ -389,7 +391,9 @@ class AuthenticationModelTest extends TestCase
         ];
         $model = $this->createModelFromConfigArrays([], []);
 
-        $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
+        $this->expectException('ZF\Apigility\Admin\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('DSN');
+        $this->expectExceptionCode(422);
         $model->create($toCreate);
     }
 
@@ -411,7 +415,9 @@ class AuthenticationModelTest extends TestCase
             'dsn' => 'sqlite:/tmp/' . uniqid() . '/.db',
         ];
 
-        $this->setExpectedException('ZF\Apigility\Admin\Exception\InvalidArgumentException', 'DSN', 422);
+        $this->expectException('ZF\Apigility\Admin\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('DSN');
+        $this->expectExceptionCode(422);
         $entity = $model->update($newConfig);
     }
 

@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Config\Writer\PhpArray as ConfigWriter;
 use Zend\Stdlib\ArrayUtils;
 use ZF\Apigility\Admin\Model\DbAdapterModel;

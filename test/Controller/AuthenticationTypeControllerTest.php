@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Controller;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Controller\AuthenticationTypeController;

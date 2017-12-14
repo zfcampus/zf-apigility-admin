@@ -8,7 +8,7 @@ namespace ZFTest\Apigility\Admin\Model;
 
 use BarConf;
 use BazConf;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\ModuleEntity;
@@ -126,7 +126,7 @@ class RestServiceModelTest extends TestCase
 
     public function testRejectInvalidRestServiceName1()
     {
-        $this->setExpectedException('ZF\Rest\Exception\CreationException');
+        $this->expectException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
         $restServiceEntity->exchangeArray(['servicename' => 'Foo Bar']);
         $this->codeRest->createService($restServiceEntity);
@@ -134,7 +134,7 @@ class RestServiceModelTest extends TestCase
 
     public function testRejectInvalidRestServiceName2()
     {
-        $this->setExpectedException('ZF\Rest\Exception\CreationException');
+        $this->expectException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
         $restServiceEntity->exchangeArray(['serivcename' => 'Foo:Bar']);
         $this->codeRest->createService($restServiceEntity);
@@ -142,7 +142,7 @@ class RestServiceModelTest extends TestCase
 
     public function testRejectInvalidRestServiceName3()
     {
-        $this->setExpectedException('ZF\Rest\Exception\CreationException');
+        $this->expectException('ZF\Rest\Exception\CreationException');
         $restServiceEntity = new NewRestServiceEntity();
         $restServiceEntity->exchangeArray(['servicename' => 'Foo/Bar']);
         $this->codeRest->createService($restServiceEntity);
@@ -723,7 +723,9 @@ class RestServiceModelTest extends TestCase
         $fooPath = __DIR__ . '/TestAsset/module/BarConf/src/BarConf/V1/Rest/Foo';
         $this->assertTrue(file_exists($fooPath));
 
-        $this->setExpectedException('ZF\Apigility\Admin\Exception\RuntimeException', 'find', 404);
+        $this->expectException('ZF\Apigility\Admin\Exception\RuntimeException');
+        $this->expectExceptionMessage('find');
+        $this->expectExceptionCode(404);
         $this->codeRest->fetch($service->controllerServiceName);
     }
 
@@ -750,7 +752,9 @@ class RestServiceModelTest extends TestCase
         $fooPath = __DIR__ . '/TestAsset/module/BazConf/src/V1/Rest/Foo';
         $this->assertTrue(file_exists($fooPath));
 
-        $this->setExpectedException('ZF\Apigility\Admin\Exception\RuntimeException', 'find', 404);
+        $this->expectException('ZF\Apigility\Admin\Exception\RuntimeException');
+        $this->expectExceptionMessage('find');
+        $this->expectExceptionCode(404);
         $this->codeRest->fetch($service->controllerServiceName);
     }
 

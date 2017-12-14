@@ -6,11 +6,12 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Config\Writer\WriterInterface;
 use ZF\Apigility\Admin\Model\DocumentationModel;
 use ZF\Configuration\ResourceFactory;
 
-class DocumentationModelTest extends \PHPUnit_Framework_TestCase
+class DocumentationModelTest extends TestCase
 {
     protected $actualDocData;
 
@@ -20,14 +21,11 @@ class DocumentationModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->actualDocData = include __DIR__ . '/TestAsset/module/Doc/config/documentation.config.php';
 
-        $mockModuleUtils = $this->getMock(
-            'ZF\Configuration\ModuleUtils',
-            ['getModuleConfigPath'],
-            [],
-            '',
-            false
-        );
-        $mockModuleUtils->expects($this->any())
+        $mockModuleUtils = $this->getMockBuilder('ZF\Configuration\ModuleUtils')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockModuleUtils
+            ->expects($this->any())
             ->method('getModuleConfigPath')
             ->will($this->returnValue(__DIR__ . '/TestAsset/module/Doc/config/module.config.php'));
 

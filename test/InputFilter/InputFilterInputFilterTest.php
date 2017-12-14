@@ -2,7 +2,7 @@
 
 namespace ZFTest\Apigility\Admin\InputFilter;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\InputFilter\Factory;
 use ZF\Apigility\Admin\InputFilter\InputFilterInputFilter;
 

@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Listener;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Admin\Listener\CryptFilterListener;
 use ZFTest\Apigility\Admin\RouteAssetsTrait;
@@ -19,7 +19,7 @@ class CryptFilterListenerTest extends TestCase
     {
         $this->listener   = new CryptFilterListener();
         $this->event      = new MvcEvent();
-        $this->request    = $this->getMock('Zend\Http\Request');
+        $this->request    = $this->createMock('Zend\Http\Request');
         $this->routeMatch = $this->getMockBuilder($this->getRouteMatchClass())
             ->disableOriginalConstructor(true)
             ->getMock();
@@ -44,7 +44,7 @@ class CryptFilterListenerTest extends TestCase
 
     public function testReturnsNullIfRequestIsNotAnHttpRequest()
     {
-        $request = $this->getMock('Zend\Stdlib\RequestInterface');
+        $request = $this->createMock('Zend\Stdlib\RequestInterface');
         $this->event->setRequest($request);
         $this->assertNull($this->listener->onRoute($this->event));
     }

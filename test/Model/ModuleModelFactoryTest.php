@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Zend\ModuleManager\ModuleManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
@@ -32,7 +32,8 @@ class ModuleModelFactoryTest extends TestCase
 
         $this->container->has('ModuleManager')->willReturn(false);
 
-        $this->setExpectedException(ServiceNotCreatedException::class, 'ModuleManager service is not present');
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('ModuleManager service is not present');
         $factory($this->container->reveal());
     }
 

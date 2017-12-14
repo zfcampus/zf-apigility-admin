@@ -8,7 +8,7 @@ namespace ZFTest\Apigility\Admin\Model;
 
 use BazConf;
 use FooConf;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\Apigility\Admin\Model\ModuleEntity;
@@ -100,7 +100,7 @@ class RpcServiceModelTest extends TestCase
         /**
          * @todo define exception in Rpc namespace
          */
-        $this->setExpectedException('ZF\Rest\Exception\CreationException');
+        $this->expectException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo Bar', 'route', []);
     }
 
@@ -109,7 +109,7 @@ class RpcServiceModelTest extends TestCase
         /**
          * @todo define exception in Rpc namespace
         */
-        $this->setExpectedException('ZF\Rest\Exception\CreationException');
+        $this->expectException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo:Bar', 'route', []);
     }
 
@@ -118,7 +118,7 @@ class RpcServiceModelTest extends TestCase
         /**
          * @todo define exception in Rpc namespace
         */
-        $this->setExpectedException('ZF\Rest\Exception\CreationException');
+        $this->expectException('ZF\Rest\Exception\CreationException');
         $this->codeRpc->createService('Foo/Bar', 'route', []);
     }
 

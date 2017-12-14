@@ -28,7 +28,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#383](https://github.com/zfcampus/zf-apigility-admin/pull/383) adds official
+  support for PHP 7.1 and 7.2 by ensuring we test against both versions during
+  continuous integration. Tests passed with no additional code changes.
 
 ### Changed
 
