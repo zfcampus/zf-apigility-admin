@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ModuleManager\ModuleManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -28,10 +28,8 @@ class DoctrineAdapterResourceFactoryTest extends TestCase
         $factory = new DoctrineAdapterResourceFactory();
         $this->container->has(DoctrineAdapterModel::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            DoctrineAdapterModel::class . ' service is not present'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage(DoctrineAdapterModel::class . ' service is not present');
 
         $factory($this->container->reveal());
     }

@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use ZF\Apigility\Admin\Model\DocumentationModel;
 use ZF\Apigility\Admin\Model\InputFilterModel;
@@ -28,10 +28,8 @@ class RestServiceResourceFactoryTest extends TestCase
 
         $this->container->has(RestServiceModelFactory::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            'missing its ' . RestServiceModelFactory::class. ' dependency'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('missing its ' . RestServiceModelFactory::class. ' dependency');
         $factory($this->container->reveal());
     }
 
@@ -42,10 +40,8 @@ class RestServiceResourceFactoryTest extends TestCase
         $this->container->has(RestServiceModelFactory::class)->willReturn(true);
         $this->container->has(InputFilterModel::class)->willReturn(false);
 
-        $this->setExpectedException(
-            ServiceNotCreatedException::class,
-            'missing its ' . InputFilterModel::class. ' dependency'
-        );
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('missing its ' . InputFilterModel::class. ' dependency');
         $factory($this->container->reveal());
     }
 

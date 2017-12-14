@@ -2,7 +2,7 @@
 
 namespace ZFTest\Apigility\Admin\InputFilter\RpcService;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\InputFilter\Factory;
 
 class PostInputFilterTest extends TestCase

@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\Model;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ZF\Apigility\Admin\Model\DoctrineAdapterModel;
 use ZF\Configuration\ConfigResource;
 
@@ -14,7 +14,7 @@ class DoctrineAdapterModelTest extends TestCase
 {
     public function getMockWriter()
     {
-        return $this->getMock('Zend\Config\Writer\WriterInterface');
+        return $this->createMock('Zend\Config\Writer\WriterInterface');
     }
 
     public function getGlobalConfig()

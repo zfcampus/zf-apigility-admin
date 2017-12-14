@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Controller;
 
 use FilesystemIterator;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ZF\Apigility\Admin\Controller\FsPermissionsController;

@@ -7,7 +7,7 @@
 namespace ZFTest\Apigility\Admin\Model;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\ModuleManager\ModuleManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
@@ -81,7 +81,8 @@ class RestServiceModelFactoryFactoryTest extends TestCase
             $this->container->has($dependency)->willReturn($presence);
         }
 
-        $this->setExpectedException(ServiceNotCreatedException::class, 'missing one or more dependencies');
+        $this->expectException(ServiceNotCreatedException::class);
+        $this->expectExceptionMessage('missing one or more dependencies');
         $factory($this->container->reveal());
     }
 

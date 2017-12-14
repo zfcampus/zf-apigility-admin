@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Admin\InputFilter\Validator;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ZF\Apigility\Admin\InputFilter\Validator\ModuleNameValidator;
 
 class ModuleNameTest extends TestCase

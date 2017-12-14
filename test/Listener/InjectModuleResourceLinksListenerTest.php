@@ -8,7 +8,7 @@ namespace ZFTest\Apigility\Admin\Listener;
 
 use Closure;
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use ReflectionProperty;
 use stdClass;
