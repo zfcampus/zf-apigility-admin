@@ -15,9 +15,10 @@ class AuthorizationInputFilter extends InputFilter
     /**
      * Is the data set valid?
      *
+     * @param  mixed|null $context
      * @return bool
      */
-    public function isValid()
+    public function isValid($context = null)
     {
         $this->messages = [];
         $isValid = true;
