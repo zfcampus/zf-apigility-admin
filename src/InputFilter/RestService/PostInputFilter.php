@@ -47,7 +47,7 @@ class PostInputFilter extends InputFilter
      * Override isValid to provide conditional input checking
      * @return bool
      */
-    public function isValid()
+    public function isValid($context = null)
     {
         if (! $this->isValidService()) {
             return false;
