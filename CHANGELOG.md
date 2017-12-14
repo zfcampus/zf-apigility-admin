@@ -24,6 +24,35 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing
 
+## 1.5.13 - 2017-12-14
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#382](https://github.com/zfcampus/zf-apigility-admin/pull/382) updates the
+  signatures of each of the following listed filters to be compatible with
+  `Zend\InputFilter\BaseInputFilter::isValid()` across all compatible versions
+  of zend-inputfilter, eliminating an error when using zend-inputfilter 2.8+:
+
+  - `AuthorizationInputFilter`
+  - `DocumentationInputFilter`
+  - `InputFilterInputFilter`
+
 ## 1.5.12 - 2017-12-14
 
 ### Added
