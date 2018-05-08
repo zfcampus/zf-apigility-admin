@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#373](https://github.com/zfcampus/zf-apigility-admin/pull/373) adds a new optional argument to `ModuleModel::createModule()`, `int $version = 1`. This
+  option allows a newly created module to start at a version greater than 1 if desired.
 
 ### Changed
 
