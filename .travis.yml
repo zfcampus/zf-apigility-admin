@@ -24,7 +24,7 @@ matrix:
       env:
         - DEPS=locked
         - ENABLE_EXT_MONGO=true
-        - ALTERNATE_DEPS="phpunit/phpunit zendframework/zend-code"
+        - ALTERNATE_DEPS="phpunit/phpunit zendframework/zend-code zendframework/zend-permissions-rbac"
     - php: 5.6
       env:
         - DEPS=latest
@@ -36,7 +36,7 @@ matrix:
     - php: 7
       env:
         - DEPS=locked
-        - ALTERNATE_DEPS="phpunit/phpunit zendframework/zend-code"
+        - ALTERNATE_DEPS="phpunit/phpunit zendframework/zend-code zendframework/zend-permissions-rbac"
         - ENABLE_EXT_MONGODB=true
         - CS_CHECK=true
     - php: 7
@@ -67,20 +67,6 @@ matrix:
       env:
         - DEPS=latest
         - ENABLE_EXT_MONGODB=true
-    - php: hhvm
-      env:
-        - DEPS=lowest
-        - ENABLE_HHVM_MONGO=true
-    - php: hhvm
-      env:
-        - DEPS=locked
-        - ENABLE_HHVM_MONGO=true
-    - php: hhvm
-      env:
-        - DEPS=latest
-        - ENABLE_HHVM_MONGODB=true
-  allow_failures:
-    - php: hhvm
   
 notifications:
   email: false
@@ -90,9 +76,6 @@ before_install:
   - if [[ $TEST_COVERAGE != 'true' && "$(php --version | grep xdebug -ci)" -ge 1 ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
   - if [[ $ENABLE_EXT_MONGO == 'true' ]]; then echo "Enabling mongo extension"; echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ; fi
   - if [[ $ENABLE_EXT_MONGODB == 'true' ]]; then echo "Enabling mongodb extension"; echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ; fi
-  - if [[ $ENABLE_HHVM_MONGO == 'true' ]]; then echo "Enabling mongo extension"; echo "extension = mongo.so" >> /etc/hhvm/php.ini ; fi
-  - if [[ $ENABLE_HHVM_MONGODB == 'true' ]]; then echo "Enabling mongodb extension"; echo "extension = mongodb.so" >> /etc/hhvm/php.ini ; fi
-  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' ]]; then php -m ; fi
 
 install:
   - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs

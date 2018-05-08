@@ -10,7 +10,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#392](https://github.com/zfcampus/zf-apigility-admin/pull/392) updates all dependency constraints to pin to versions that
+  support PHP 7.2 where possible.
 
 ### Deprecated
 
@@ -18,33 +19,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#392](https://github.com/zfcampus/zf-apigility-admin/pull/392) removes support for HHVM.
 
 ### Fixed
 
 - Nothing.
-
-## 1.5.14 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing
 
 ## 1.5.13 - 2017-12-14
 
