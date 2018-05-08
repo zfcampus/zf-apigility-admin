@@ -222,7 +222,11 @@ class ModuleModelTest extends TestCase
         }
     }
 
-    public function testCreateModule()
+    /**
+     * @dataProvider getModuleVersionDataProvider
+     * @return bool
+     */
+    public function testCreateModule($version)
     {
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
@@ -233,10 +237,10 @@ class ModuleModelTest extends TestCase
 
         $pathSpec = $this->getPathSpec($modulePath);
 
-        $this->assertTrue($this->model->createModule($module, $pathSpec));
+        $this->assertTrue($this->model->createModule($module, $pathSpec, $version));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rpc"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V1/Rest"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V$version/Rpc"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/V$version/Rest"));
         $this->assertTrue(file_exists("$modulePath/module/$module/view"));
         $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/src/$module/Module.php"));
@@ -246,11 +250,11 @@ class ModuleModelTest extends TestCase
         return true;
     }
 
-
     /**
+     * @dataProvider getModuleVersionDataProvider
      * @group feature/psr4
      */
-    public function testCreateModulePSR4()
+    public function testCreateModulePSR4($version)
     {
         $module     = 'Foo';
         $modulePath = sys_get_temp_dir() . "/" . uniqid(str_replace('\\', '_', __NAMESPACE__) . '_');
@@ -261,16 +265,26 @@ class ModuleModelTest extends TestCase
 
         $pathSpec = $this->getPathSpec($modulePath, 'psr-4');
 
-        $this->assertTrue($this->model->createModule($module, $pathSpec));
+        $this->assertTrue($this->model->createModule($module, $pathSpec, $version));
         $this->assertTrue(file_exists("$modulePath/module/$module"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/V1/Rpc"));
-        $this->assertTrue(file_exists("$modulePath/module/$module/src/V1/Rest"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/V$version/Rpc"));
+        $this->assertTrue(file_exists("$modulePath/module/$module/src/V$version/Rest"));
         $this->assertTrue(file_exists("$modulePath/module/$module/view"));
         $this->assertTrue(file_exists("$modulePath/module/$module/Module.php"));
         $this->assertTrue(file_exists("$modulePath/module/$module/config/module.config.php"));
 
         $this->removeDir($modulePath);
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getModuleVersionDataProvider()
+    {
+        return array_map(function ($item) {
+            return [$item];
+        }, range(1, 10));
     }
 
     protected function getPathSpec($modulePath, $spec = 'psr-0')

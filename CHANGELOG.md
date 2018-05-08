@@ -2,15 +2,17 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.5.14 - TBD
+## 1.6.0 - 2018-05-08
 
 ### Added
 
-- Nothing.
+- [#373](https://github.com/zfcampus/zf-apigility-admin/pull/373) adds a new optional argument to `ModuleModel::createModule()`, `int $version = 1`. This
+  option allows a newly created module to start at a version greater than 1 if desired.
 
 ### Changed
 
-- Nothing.
+- [#392](https://github.com/zfcampus/zf-apigility-admin/pull/392) updates all dependency constraints to pin to versions that
+  support PHP 7.2 where possible.
 
 ### Deprecated
 
@@ -18,7 +20,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#392](https://github.com/zfcampus/zf-apigility-admin/pull/392) removes support for HHVM.
 
 ### Fixed
 
