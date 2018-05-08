@@ -134,10 +134,11 @@ class ModuleModel
      *
      * @param  string $module
      * @param  ModulePathSpec $pathSpec
+     * @param  int $version
      * @return bool
      * @throws \Exception
      */
-    public function createModule($module, ModulePathSpec $pathSpec)
+    public function createModule($module, ModulePathSpec $pathSpec, $version = 1)
     {
         $path = $pathSpec->getApplicationPath();
         $application = require sprintf('%s/config/application.config.php', $path);
@@ -163,8 +164,8 @@ class ModuleModel
 
         mkdir($moduleConfigPath, 0775, true);
         mkdir($pathSpec->getModuleViewPath($module), 0775, true);
-        mkdir($pathSpec->getRestPath($module, 1), 0775, true);
-        mkdir($pathSpec->getRpcPath($module, 1), 0775, true);
+        mkdir($pathSpec->getRestPath($module, $version), 0775, true);
+        mkdir($pathSpec->getRpcPath($module, $version), 0775, true);
 
         $payload = static::$useShortArrayNotation
             ? "[\n]"
