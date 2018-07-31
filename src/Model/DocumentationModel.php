@@ -38,30 +38,30 @@ class DocumentationModel
                 return [
                     'collection' => [
                         'description' => null,
-                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                        'GET'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
                     ],
                     'entity' => [
                         'description' => null,
-                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                        'GET'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
                     ],
                     'description' => null,
                 ];
             case self::TYPE_RPC:
                 return [
                     'description' => null,
-                    'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                    'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                    'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                    'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                    'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                    'GET'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'POST'   => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'PUT'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'PATCH'  => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'DELETE' => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
                 ];
         }
     }
