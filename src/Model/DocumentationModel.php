@@ -38,30 +38,30 @@ class DocumentationModel
                 return [
                     'collection' => [
                         'description' => null,
-                        'GET'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'GET'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                     ],
                     'entity' => [
                         'description' => null,
-                        'GET'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'GET'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                     ],
                     'description' => null,
                 ];
             case self::TYPE_RPC:
                 return [
                     'description' => null,
-                    'GET'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                    'POST'   => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                    'PUT'    => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                    'PATCH'  => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
-                    'DELETE' => ['operationId' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'GET'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'POST'   => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'PUT'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'PATCH'  => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                 ];
         }
     }
