@@ -31,7 +31,7 @@
         "zendframework/zend-eventmanager": "^2.6.3 || ^3.0.1",
         "zendframework/zend-filter": "^2.8",
         "zendframework/zend-http": "^2.8",
-        "zendframework/zend-hydrator": "^1.1 || ^2.4",
+        "zendframework/zend-hydrator": "^1.1 || ^2.4 || ^3.0",
         "zendframework/zend-inputfilter": "^2.8.1",
         "zendframework/zend-modulemanager": "^2.8.2",
         "zendframework/zend-mvc": "^2.7.15 || ^3.1.1",
