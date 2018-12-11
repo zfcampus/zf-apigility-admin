@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.6.1 - TBD
+## 1.7.0 - 2018-12-11
 
 ### Added
 
-- Nothing.
+- [#396](https://github.com/zfcampus/zf-apigility-admin/pull/396) adds support for zend-hydrator v3 releases, and maintains compatibility
+  with v1 and v2.
 
 ### Changed
 
