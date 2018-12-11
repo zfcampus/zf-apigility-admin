@@ -24,7 +24,7 @@ matrix:
       env:
         - DEPS=locked
         - ENABLE_EXT_MONGO=true
-        - ALTERNATE_DEPS="phpunit/phpunit zendframework/zend-code zendframework/zend-permissions-rbac zendframework/zend-hydrator"
+        - ALTERNATE_DEPS="phpunit/phpunit zendframework/zend-code zendframework/zend-permissions-rbac zendframework/zend-hydrator zfcampus/zf-oauth2"
     - php: 5.6
       env:
         - DEPS=latest
