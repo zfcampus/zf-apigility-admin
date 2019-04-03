@@ -194,9 +194,9 @@ class PackageController extends AbstractActionController
 
         $modules = array_map(
             function ($entry) {
-                return substr($entry, 7);
+                return basename($entry);
             },
-            glob('module/*', GLOB_ONLYDIR)
+            glob(realpath('module') . '/*', GLOB_ONLYDIR)
         );
 
         $toInclude = [];
