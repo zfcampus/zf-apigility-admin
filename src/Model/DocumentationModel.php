@@ -33,6 +33,8 @@ class DocumentationModel
 
     public function getSchemaTemplate($type = self::TYPE_REST)
     {
+        // phpcs:disable
+        // @codingStandardsIgnoreStart
         switch ($type) {
             case self::TYPE_REST:
                 return [
@@ -64,6 +66,8 @@ class DocumentationModel
                     'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                 ];
         }
+        // @codingStandardsIgnoreEnd
+        // phpcs:enable
     }
 
     public function fetchDocumentation($module, $controllerServiceName)
