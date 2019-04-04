@@ -19,6 +19,7 @@ class DocumentationInputFilter extends InputFilter
      * @var array
      */
     protected $validHttpMethodDocumentationKeys = [
+        'identifier',
         'description',
         'request',
         'response',

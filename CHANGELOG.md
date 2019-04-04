@@ -2,15 +2,18 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.7.1 - TBD
+## 1.8.0 - 2019-04-04
 
 ### Added
 
-- Nothing.
+- [#393](https://github.com/zfcampus/zf-apigility-admin/pull/393) adds the documentation key "identifier" to the `DocumentationModel` and
+  allowed documentation keys; the key is used in conjunction with the API
+  Blueprint "identifier" and Swagger "operationId" fields.
 
 ### Changed
 
-- Nothing.
+- [#398](https://github.com/zfcampus/zf-apigility-admin/pull/398) changes how paths are globbed to use `realpath()` when providing a path
+  to `glob()`, fixing an issue when used on IBM i platforms.
 
 ### Deprecated
 

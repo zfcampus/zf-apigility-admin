@@ -33,37 +33,41 @@ class DocumentationModel
 
     public function getSchemaTemplate($type = self::TYPE_REST)
     {
+        // phpcs:disable
+        // @codingStandardsIgnoreStart
         switch ($type) {
             case self::TYPE_REST:
                 return [
                     'collection' => [
                         'description' => null,
-                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                        'GET'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                     ],
                     'entity' => [
                         'description' => null,
-                        'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                        'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                        'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                        'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                        'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                        'GET'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'POST'   => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PUT'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'PATCH'  => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                        'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                     ],
                     'description' => null,
                 ];
             case self::TYPE_RPC:
                 return [
                     'description' => null,
-                    'GET'    => ['description' => null, 'request' => null, 'response' => null],
-                    'POST'   => ['description' => null, 'request' => null, 'response' => null],
-                    'PUT'    => ['description' => null, 'request' => null, 'response' => null],
-                    'PATCH'  => ['description' => null, 'request' => null, 'response' => null],
-                    'DELETE' => ['description' => null, 'request' => null, 'response' => null],
+                    'GET'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'POST'   => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'PUT'    => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'PATCH'  => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
+                    'DELETE' => ['identifier' => null, 'description' => null, 'request' => null, 'response' => null],
                 ];
         }
+        // @codingStandardsIgnoreEnd
+        // phpcs:enable
     }
 
     public function fetchDocumentation($module, $controllerServiceName)
