@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#393](https://github.com/zfcampus/zf-apigility-admin/pull/393) adds the documentation key "identifier" to the `DocumentationModel` and allowed documentation keys; the key is used in conjunction with the API Blueprint "identifier" and Swagger "operationId" fields.
 
 ### Changed
 
