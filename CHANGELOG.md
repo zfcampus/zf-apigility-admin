@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.8.0 - TBD
+## 1.8.0 - 2019-04-04
 
 ### Added
 
@@ -14,28 +14,6 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#398](https://github.com/zfcampus/zf-apigility-admin/pull/398) changes how paths are globbed to use `realpath()` when providing a path
   to `glob()`, fixing an issue when used on IBM i platforms.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.7.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
 
 ### Deprecated
 
