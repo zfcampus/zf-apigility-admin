@@ -3,7 +3,7 @@ Apigility Admin
 
 > ## Repository abandoned 2019-12-31
 >
-> This repository has moved to laminas-api-tools/api-tools-admin.
+> This repository has moved to [laminas-api-tools/api-tools-admin](https://github.com/laminas-api-tools/api-tools-admin).
 
 [![Build Status](https://travis-ci.org/zfcampus/zf-apigility-admin.png)](https://travis-ci.org/zfcampus/zf-apigility-admin)
 
